@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+                a:layout_width="fill_parent"
+                a:layout_height="fill_parent"
+                style="@style/list_item_item">
+
+    <ImageView a:id="@+id/friend_icon"
+               style="@style/list_item_item"
+               a:padding="0dp"
+               a:layout_centerInParent="true"
+               a:layout_width="50dp"
+               a:layout_height="50dp"
+               a:layout_alignParentLeft="true"/>
+
+    <TextView a:id="@+id/friend_online"
+              style="@style/friend_online"
+              a:layout_centerInParent="true"
+              a:layout_width="20dp"
+              a:layout_height="wrap_content"
+              a:layout_alignParentRight="true"/>
+
+    <TextView
+            a:id="@+id/friend_name"
+            style="@style/list_item_item"
+            a:layout_centerInParent="true"
+            a:layout_toRightOf="@id/friend_icon"
+            a:layout_toLeftOf="@id/friend_online"
+            a:layout_width="fill_parent"
+            a:layout_height="fill_parent"
+            a:singleLine="true"
+            a:ellipsize="end"/>
+
+</RelativeLayout>

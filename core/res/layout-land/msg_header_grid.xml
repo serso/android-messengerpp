@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout
+        xmlns:a="http://schemas.android.com/apk/res/android"
+        a:layout_width="wrap_content"
+        a:layout_height="fill_parent"
+        style="@style/header">
+
+    <LinearLayout a:id="@+id/header_left"
+                  a:orientation="vertical"
+                  a:layout_width="50dp"
+                  a:layout_height="50dp"
+                  a:layout_alignParentTop="true"/>
+
+    <LinearLayout a:id="@+id/header_right"
+                  a:orientation="vertical"
+                  a:layout_width="50dp"
+                  a:layout_height="50dp"
+                  a:layout_alignParentBottom="true"/>
+
+    <LinearLayout a:id="@+id/header_center"
+                  a:orientation="vertical"
+                  a:gravity="center"
+                  a:layout_centerVertical="true"
+                  a:layout_width="50dp"
+                  a:layout_height="match_parent"/>
+</RelativeLayout>

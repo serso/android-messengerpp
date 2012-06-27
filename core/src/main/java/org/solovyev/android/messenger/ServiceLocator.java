@@ -1,0 +1,69 @@
+package org.solovyev.android.messenger;
+
+import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.http.RemoteFileService;
+import org.solovyev.android.messenger.chats.ApiChatService;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.longpoll.ApiLongPollService;
+import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.registration.RegistrationService;
+import org.solovyev.android.messenger.security.AuthService;
+import org.solovyev.android.messenger.security.AuthServiceFacade;
+import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.messenger.users.ApiUserService;
+import org.solovyev.android.messenger.users.UserService;
+
+/**
+ * User: serso
+ * Date: 5/24/12
+ * Time: 9:32 PM
+ */
+public interface ServiceLocator {
+
+    /*
+    **********************************************************************
+    *
+    *                           SERVICES
+    *
+    **********************************************************************
+    */
+    @NotNull
+    AuthService getAuthService();
+
+    @NotNull
+    AuthServiceFacade getAuthServiceFacade();
+
+    @NotNull
+    UserService getUserService();
+
+    @NotNull
+    ChatService getChatService();
+
+    @NotNull
+    ChatMessageService getChatMessageService();
+
+    @NotNull
+    SyncService getSyncService();
+
+    @NotNull
+    RemoteFileService getRemoteFileService();
+
+    @NotNull
+    RegistrationService getRegistrationService();
+
+    /*
+    **********************************************************************
+    *
+    *                           API Services
+    *
+    **********************************************************************
+    */
+    @NotNull
+    ApiUserService getApiUserService();
+
+    @NotNull
+    ApiChatService getApiChatService();
+
+    @NotNull
+    ApiLongPollService getApiLongPollService();
+}

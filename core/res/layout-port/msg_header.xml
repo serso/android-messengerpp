@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:a="http://schemas.android.com/apk/res/android"
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:orientation="horizontal"
+        style="@style/header">
+
+    <LinearLayout a:id="@+id/header_left"
+                  a:orientation="horizontal"
+                  a:gravity="center"
+                  a:layout_width="50dp"
+                  a:layout_height="wrap_content"
+                  a:layout_alignParentLeft="true"/>
+
+    <LinearLayout a:id="@+id/header_right"
+                  a:orientation="horizontal"
+                  a:gravity="center"
+                  a:layout_width="50dp"
+                  a:layout_height="wrap_content"
+                  a:layout_alignParentRight="true"/>
+
+    <LinearLayout a:id="@+id/header_center"
+                  a:orientation="horizontal"
+                  a:gravity="center"
+                  a:paddingLeft="5dp"
+                  a:paddingRight="5dp"
+                  a:layout_toLeftOf="@id/header_right"
+                  a:layout_toRightOf="@id/header_left"
+                  a:layout_width="match_parent"
+                  a:layout_height="wrap_content"/>
+
+</RelativeLayout>

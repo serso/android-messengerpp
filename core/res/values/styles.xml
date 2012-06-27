@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="header">
+        <item name="android:padding">5dp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:background">@color/base</item>
+    </style>
+
+    <style name="footer">
+        <item name="android:padding">5dp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:background">@color/base</item>
+    </style>
+
+    <style name="footer_button_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/default_button_dark</item>
+        <item name="android:layout_marginLeft">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+    </style>
+
+    <style name="content">
+        <item name="android:background">@color/base_bg</item>
+    </style>
+
+    <!-- LIST -->
+
+    <style name="list">
+        <item name="android:textColor">@android:color/black</item>
+
+        <item name="android:background">@color/base_bg</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+
+        <item name="android:divider">@android:color/black</item>
+        <item name="android:dividerHeight">1px</item>
+    </style>
+
+    <style name="list_item">
+        <item name="android:background">@drawable/item_states</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text</item>
+        <!--NOTE: separate definition in order to override them-->
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+    </style>
+
+    <style name="list_item_back" parent="list_item"></style>
+    <style name="list_item_category" parent="list_item">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="list_item_item" parent="list_item"></style>
+
+    <style name="list_item_filter">
+        <item name="android:background">@drawable/bottom_border</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+    </style>
+
+    <style name="list_item_filter_box">
+        <item name="android:background">@color/base_bg</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">5dp</item>
+    </style>
+
+
+    <style name="list_item_chat_last_message">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text</item>
+        <!--<item name="android:background">@color/message_bg</item>-->
+    </style>
+
+    <style name="list_item_chat_last_message_time">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/text_link</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="list_item_chat_title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_name</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+
+    <!-- SEARCH -->
+    <style name="search_input">
+        <item name="android:layout_height">40dp</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="search_button" parent="search_input">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:src">@drawable/search</item>
+        <item name="android:contentDescription">@string/c_search</item>
+    </style>
+
+    <style name="search_box" parent="search_input">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="friends_search_box" parent="search_box">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="header_icon">
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">30dp</item>
+    </style>
+
+    <style name="header_text">
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/header_text</item>
+    </style>
+
+    <style name="sub_header_text">
+        <item name="android:gravity">left</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:background">@drawable/item_title</item>
+    </style>
+
+    <!-- ITEM -->
+
+    <style name="item_title" parent="sub_header_text"/>
+
+    <style name="item_content_container">
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <style name="item_content_text" parent="item_content_container">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:gravity">left|top</item>
+    </style>
+
+    <style name="item_content">
+    </style>
+
+    <style name="grid_cell" parent="item_content_text">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="grid_header" parent="item_content_text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="viewpager_title">
+
+    </style>
+    <style name="list_item_message" parent="list_item">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <style name="list_item_message_date" parent="list_item">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/text_lighter</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="message_box">
+        <item name="android:gravity">top|left</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:background">@color/base_bg</item>
+        <item name="android:freezesText">true</item>
+    </style>
+
+    <style name="message_header_title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/base_bg</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="friend_online" parent="list_item">
+    </style>
+
+    <style name="footer_image_label">
+        <item name="android:textSize">15sp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+
+</resources>

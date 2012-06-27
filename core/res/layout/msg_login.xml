@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent"
+              a:orientation="vertical">
+
+    <TextView a:id="@+id/login_label"
+              a:text="@string/c_login_label"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content"/>
+
+    <EditText a:id="@+id/login"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content"
+              a:inputType="text"/>
+
+    <TextView a:id="@+id/password_label"
+              a:text="@string/c_password_label"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content"/>
+
+    <EditText a:id="@+id/password"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content"
+              a:inputType="textPassword"/>
+
+    <LinearLayout
+            a:layout_height="wrap_content"
+            a:layout_width="fill_parent">
+
+        <Button
+                a:id="@+id/register_button"
+                a:layout_height="wrap_content"
+                a:layout_width="0dp"
+                a:layout_weight="1"
+                a:text="@string/c_register"/>
+
+        <Button
+                a:id="@+id/login_button"
+                a:layout_height="wrap_content"
+                a:layout_width="0dp"
+                a:layout_weight="1"
+                a:text="@string/c_login"/>
+
+    </LinearLayout>
+
+</LinearLayout>

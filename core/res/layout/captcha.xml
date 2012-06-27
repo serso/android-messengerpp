@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+                a:layout_width="wrap_content"
+                a:layout_height="wrap_content"
+                a:gravity="center">
+
+    <TextView a:id="@+id/captcha_label"
+              a:text="@string/c_captcha_label"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content"
+              a:layout_alignParentTop="true"/>
+
+
+    <EditText a:id="@+id/captcha_code"
+              a:layout_width="fill_parent"
+              a:layout_height="wrap_content"
+              a:inputType="text"
+              a:layout_alignParentBottom="true"/>
+
+    <ImageView
+            a:id="@+id/captcha_image"
+            a:layout_below="@id/captcha_label"
+            a:layout_above="@id/captcha_code"
+            a:layout_width="fill_parent"
+            a:layout_height="wrap_content"
+            a:contentDescription="@string/c_captcha"/>
+
+</RelativeLayout>

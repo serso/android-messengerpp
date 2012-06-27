@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="header_text">#ffffffff</color>
+    <color name="base">#ff0d5171</color>
+    <color name="base_bg">#ffffffff</color>
+    <color name="text">#ff363636</color>
+    <color name="text_lighter">#ff5e5e5e</color>
+    <color name="text_name">#ff0e1825</color>
+    <!--<color name="text_link">#ff3266a2</color>-->
+    <color name="text_link">#ff363636</color>
+    <color name="selected">#ff4a9be9</color>
+    <color name="gray">#ffdddddd</color>
+
+    <color name="image_button_unselected">#ff999999</color>
+    <color name="image_button_selected">#ffffffff</color>
+
+    <color name="message_bg">#ffecf0f5</color>
+
+</resources>

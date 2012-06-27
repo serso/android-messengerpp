@@ -1,0 +1,32 @@
+<resources>
+    <string name="c_login_label">Login</string>
+    <string name="c_password_label">Password</string>
+
+    <string name="c_register">Register</string>
+    <string name="c_login">Login</string>
+
+    <string name="c_phone_number_label">Phone number</string>
+    <string name="c_first_name_label">First name</string>
+    <string name="c_last_name_label">Last name</string>
+    <string name="c_verification_code">Verification code</string>
+    <string name="c_or">or</string>
+    <string name="c_next">Next</string>
+
+    <string name="c_captcha_label">Please enter the code on the image below</string>
+    <string name="c_captcha">Captcha</string>
+
+    <string name="c_refresh">Refresh</string>
+    <string name="c_search">Search</string>
+
+    <string name="c_task_is_already_running">Synchronization is already in progress!</string>
+    <string name="c_chats">Chats</string>
+    <string name="c_friend">Friend</string>
+    <string name="c_friends">Friends</string>
+    <string name="c_online_friends">Online friends</string>
+    <string name="c_messages">Messages</string>
+
+    <string name="c_send">Send</string>
+    <string name="c_attach">Attach</string>
+    <string name="c_write_the_msg">Write the message</string>
+
+</resources>

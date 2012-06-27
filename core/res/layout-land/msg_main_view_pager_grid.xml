@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+~ Copyright (c) 2009-2011. Created by serso aka se.solovyev.
+~ For more information, please, contact se.solovyev@gmail.com
+~ or visit http://se.solovyev.org
+-->
+
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+                a:layout_width="fill_parent"
+                a:layout_height="fill_parent"
+                a:id="@+id/main"
+                a:background="@color/base_bg">
+
+    <include layout="@layout/msg_footer_grid"
+             a:id="@+id/footer"
+             a:layout_width="wrap_content"
+             a:layout_height="match_parent"
+             a:layout_alignParentLeft="true"/>
+
+    <include layout="@layout/msg_header_grid"
+             a:id="@+id/header"
+             a:layout_width="wrap_content"
+             a:layout_height="match_parent"
+             a:layout_alignParentRight="true"/>
+
+    <LinearLayout a:orientation="vertical"
+                  a:layout_width="match_parent"
+                  a:layout_height="match_parent"
+                  a:layout_toLeftOf="@id/header"
+                  a:layout_toRightOf="@id/footer"
+                  style="@style/content">
+
+        <include layout="@layout/msg_border"
+                 a:layout_weight="0"
+                 a:layout_width="fill_parent"
+                 a:layout_height="0dp"/>
+
+        <include layout="@layout/msg_main_content_view_pager"
+                 a:layout_height="0dp"
+                 a:layout_width="fill_parent"
+                 a:layout_weight="9"/>
+
+        <include layout="@layout/msg_border"
+                 a:layout_weight="0"
+                 a:layout_width="fill_parent"
+                 a:layout_height="0dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
