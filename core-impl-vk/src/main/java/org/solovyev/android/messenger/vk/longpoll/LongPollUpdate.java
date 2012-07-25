@@ -45,22 +45,22 @@ public interface LongPollUpdate {
                             // MAGIC MAGIC MAGIC
                             int chatId = chatUserId - 2000000000;
 
-                            return new MessageAdded(String.valueOf(chatId), chatUserId);
+                            return MessageAdded.forChat(String.valueOf(chatId));
 
                         } else {
                             int userId = chatUserId;
-                            return new MessageAdded(userId, chatUserId);
+                            return MessageAdded.forFriend(String.valueOf(userId));
                         }
                     case 8:
-                        return new FriendOnline(-jsonArray.get(1).getAsInt(), true);
+                        return new FriendOnline(String.valueOf(-jsonArray.get(1).getAsInt()), true);
                     case 9:
-                        return new FriendOnline(-jsonArray.get(1).getAsInt(), false);
+                        return new FriendOnline(String.valueOf(-jsonArray.get(1).getAsInt()), false);
                     case 51:
-                        return new ChatChanged(jsonArray.get(1).getAsInt());
+                        return new ChatChanged(jsonArray.get(1).getAsString());
                     case 61:
-                        return new UserStartTypingInPrivateChat(jsonArray.get(1).getAsInt());
+                        return new UserStartTypingInPrivateChat(jsonArray.get(1).getAsString());
                     case 62:
-                        return new UserStartTypingInChat(jsonArray.get(1).getAsInt(), jsonArray.get(2).getAsString());
+                        return new UserStartTypingInChat(jsonArray.get(1).getAsString(), jsonArray.get(2).getAsString());
                 }
 
                 return new EmptyLongPollUpdate();
@@ -88,12 +88,13 @@ public interface LongPollUpdate {
 
     static class UserStartTypingInChat implements LongPollUpdate {
 
-        private final int userId;
+        @NotNull
+        private final String userId;
 
         @NotNull
         private final String chatId;
 
-        public UserStartTypingInChat(int userId, @NotNull String chatId) {
+        public UserStartTypingInChat(@NotNull String userId, @NotNull String chatId) {
             this.userId = userId;
             this.chatId = chatId;
         }
@@ -119,9 +120,9 @@ public interface LongPollUpdate {
     static class UserStartTypingInPrivateChat implements LongPollUpdate {
 
         @NotNull
-        private Integer userId;
+        private String userId;
 
-        public UserStartTypingInPrivateChat(@NotNull Integer userId) {
+        public UserStartTypingInPrivateChat(@NotNull String userId) {
             this.userId = userId;
         }
 
@@ -146,15 +147,16 @@ public interface LongPollUpdate {
 
     static class ChatChanged implements LongPollUpdate {
 
-        private final int chatId;
+        @NotNull
+        private final String chatId;
 
-        public ChatChanged(int chatId) {
+        public ChatChanged(@NotNull String chatId) {
             this.chatId = chatId;
         }
 
         @Override
         public void doUpdate(@NotNull User user, @NotNull Context context) {
-            getChatService().syncChat(String.valueOf(chatId), user.getId(), context);
+            getChatService().syncChat(chatId, user.getId(), context);
         }
 
 
@@ -177,24 +179,30 @@ public interface LongPollUpdate {
     static class MessageAdded implements LongPollUpdate {
 
         @Nullable
-        private final Integer friendId;
+        private String friendId;
 
         @Nullable
-        private final String chatId;
+        private String chatId;
 
-        @NotNull
-        private final Integer chatUserId;
-
-        public MessageAdded(@NotNull Integer friendId, @NotNull Integer chatUserId) {
-            this.friendId = friendId;
-            this.chatUserId = chatUserId;
-            this.chatId = null;
+        private MessageAdded() {
         }
 
-        public MessageAdded(@NotNull String chatId, @NotNull Integer chatUserId) {
-            this.chatUserId = chatUserId;
-            this.friendId = null;
-            this.chatId = chatId;
+        public static MessageAdded forChat(@NotNull String chatId) {
+            final MessageAdded result = new MessageAdded();
+
+            result.friendId = null;
+            result.chatId = chatId;
+
+            return result;
+        }
+
+        public static MessageAdded forFriend(@NotNull String friendId) {
+            final MessageAdded result = new MessageAdded();
+
+            result.friendId = friendId;
+            result.chatId = null;
+
+            return result;
         }
 
         @Override
@@ -215,14 +223,15 @@ public interface LongPollUpdate {
             return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
         }
     }
+
     static class FriendOnline implements LongPollUpdate {
 
         @NotNull
-        private final Integer friendId;
+        private final String friendId;
 
         private final boolean online;
 
-        public FriendOnline(@NotNull Integer friendId, boolean online) {
+        public FriendOnline(@NotNull String friendId, boolean online) {
             this.friendId = friendId;
             this.online = online;
         }
@@ -231,9 +240,9 @@ public interface LongPollUpdate {
         public void doUpdate(@NotNull User user, @NotNull Context context) {
             final User friend = getUserService().getUserById(friendId, context).cloneWithNewStatus(online);
             if (online) {
-                getUserService().fireUserEvent(user, UserEventType.friend_online, friend);
+                getUserService().fireUserEvent(user, UserEventType.contact_online, friend);
             } else {
-                getUserService().fireUserEvent(user, UserEventType.friend_offline, friend);
+                getUserService().fireUserEvent(user, UserEventType.contact_offline, friend);
             }
         }
 
@@ -241,6 +250,7 @@ public interface LongPollUpdate {
             return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService();
         }
     }
+
     static class RemoveMessage implements LongPollUpdate {
 
         @NotNull

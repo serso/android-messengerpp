@@ -13,18 +13,18 @@ import java.util.List;
 */
 public class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
 
-    // ids of friends which were removed on the remote server
+    // ids of objects which were removed on the remote server
     @NotNull
     private final List<ID> removedObjectIds;
 
-    // friends which were added on the remote server
+    // objects which were added on the remote server
     @NotNull
     private final List<T> addedObjectLinks;
 
     @NotNull
     private final List<T> addedObjects;
 
-    // nothing changed => just update friends' properties
+    // nothing changed => just update objects' properties
     @NotNull
     private final List<T> updatedObjects;
 

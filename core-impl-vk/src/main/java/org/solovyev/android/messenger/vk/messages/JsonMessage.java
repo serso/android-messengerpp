@@ -23,10 +23,10 @@ import java.util.List;
 public class JsonMessage {
 
     @Nullable
-    private Integer mid;
+    private String mid;
 
     @Nullable
-    private Integer uid;
+    private String uid;
 
     @Nullable
     private String date;
@@ -62,12 +62,12 @@ public class JsonMessage {
     private Integer admin_id;
 
     @Nullable
-    public Integer getMid() {
+    public String getMid() {
         return mid;
     }
 
     @Nullable
-    public Integer getUid() {
+    public String getUid() {
         return uid;
     }
 
@@ -128,7 +128,7 @@ public class JsonMessage {
 
     @NotNull
     public LiteChatMessage toLiteChatMessage(@NotNull User user,
-                                             @Nullable Integer explicitUserId,
+                                             @Nullable String explicitUserId,
                                              @NotNull UserService userService,
                                              @NotNull Context context) throws IllegalJsonException {
         if (mid == null || uid == null || date == null) {
@@ -166,7 +166,7 @@ public class JsonMessage {
     }
 
     @NotNull
-    public ChatMessage toChatMessage(@NotNull User user, @Nullable Integer explicitUserId, @NotNull UserService userService, @NotNull Context context) throws IllegalJsonException {
+    public ChatMessage toChatMessage(@NotNull User user, @Nullable String explicitUserId, @NotNull UserService userService, @NotNull Context context) throws IllegalJsonException {
         if (read_state == null || out == null) {
             throw new IllegalJsonException();
         }

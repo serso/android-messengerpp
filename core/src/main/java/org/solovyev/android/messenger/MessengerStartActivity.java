@@ -2,8 +2,8 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.os.Bundle;
-import org.solovyev.android.messenger.security.AuthServiceFacade;
-import org.solovyev.android.messenger.users.MessengerFriendsActivity;
+import org.solovyev.android.messenger.security.AuthService;
+import org.solovyev.android.messenger.users.MessengerContactsActivity;
 
 /**
  * User: serso
@@ -16,12 +16,13 @@ public class MessengerStartActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final AuthServiceFacade asf = MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthServiceFacade();
-        if ( asf.isUserLoggedIn() ) {
+        final AuthService as = MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthService();
+        final String realm = MessengerConfigurationImpl.getInstance().getRealm().getId();
+        if ( as.isUserLoggedIn(realm) ) {
             // user is logged => sync all data
             MessengerConfigurationImpl.getInstance().getServiceLocator().getSyncService().syncAll(this);
 
-            MessengerFriendsActivity.startActivity(this);
+            MessengerContactsActivity.startActivity(this);
         } else {
             MessengerLoginActivity.startActivity(this);
         }

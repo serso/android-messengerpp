@@ -26,31 +26,31 @@ public interface UserDao {
     User insertUser(@NotNull User user);
 
     @Nullable
-    User loadUserById(@NotNull Integer userId);
+    User loadUserById(@NotNull String userId);
 
     @NotNull
-    List<AProperty> loadUserPropertiesById(@NotNull Integer userId);
+    List<AProperty> loadUserPropertiesById(@NotNull String userId);
 
     void updateUser(@NotNull User user);
 
     @NotNull
-    List<Integer> loadUserIds();
+    List<String> loadUserIds();
 
     /*
     **********************************************************************
     *
-    *                           FRIENDS
+    *                           CONTACTS
     *
     **********************************************************************
     */
 
     @NotNull
-    List<Integer> loadUserFriendIds(@NotNull Integer userId);
+    List<String> loadUserContactIds(@NotNull String userId);
 
     @NotNull
-    List<User> loadUserFriends(@NotNull Integer userId);
+    List<User> loadUserContacts(@NotNull String userId);
 
     @NotNull
-    MergeDaoResult<User, Integer> mergeUserFriends(@NotNull Integer userId, @NotNull List<User> friends);
+    MergeDaoResult<User, String> mergeUserContacts(@NotNull String userId, @NotNull List<User> contacts);
 
 }

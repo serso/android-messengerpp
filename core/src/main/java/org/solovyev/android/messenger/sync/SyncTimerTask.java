@@ -3,6 +3,9 @@ package org.solovyev.android.messenger.sync;
 import android.content.Context;
 import android.util.Log;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.ServiceLocator;
+import org.solovyev.android.messenger.realms.Realm;
 
 import java.lang.ref.WeakReference;
 import java.util.TimerTask;
@@ -25,13 +28,23 @@ public class SyncTimerTask extends TimerTask {
     public void run() {
         final Context context = this.contextRef.get();
         if (context != null) {
-            for (SyncTask syncTask : SyncTask.values()) {
-                if (syncTask.isTime(context)) {
-                    Log.i("SyncTask", "Sync task started: " + syncTask);
-                    syncTask.doTask(context);
-                    Log.i("SyncTask", "Sync task ended: " + syncTask);
+            for (Realm realm : getServiceLocator().getRealmService().getRealms()) {
+                final SyncData syncData = new SyncDataImpl(realm.getId());
+
+                for (SyncTask syncTask : SyncTask.values()) {
+                    if (syncTask.isTime(syncData, context)) {
+                        Log.i("SyncTask", "Sync task started: " + syncTask);
+                        syncTask.doTask(syncData, context);
+                        Log.i("SyncTask", "Sync task ended: " + syncTask);
+                    }
                 }
+
             }
         }
+    }
+
+    @NotNull
+    private ServiceLocator getServiceLocator() {
+        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 }

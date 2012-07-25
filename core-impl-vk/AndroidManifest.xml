@@ -36,9 +36,9 @@
 
         <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.chats.MessengerChatsActivity"/>
 
-        <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.users.MessengerFriendsListActivity"/>
+        <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.users.MessengerContactsListActivity"/>
 
-        <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.users.MessengerFriendsActivity"/>
+        <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.users.MessengerContactsActivity"/>
         <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.messages.MessengerMessagesActivity"/>
 
 <!--        <provider android:authorities="NotesSearchSuggestions" android:name=".NotesSuggestionsProvider"/>

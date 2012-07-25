@@ -5,6 +5,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatMessage;
@@ -36,7 +37,7 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
     private String chatId;
 
     @Nullable
-    private Integer userId;
+    private String userId;
 
     @NotNull
     private User user;
@@ -47,34 +48,54 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
     @NotNull
     private Context context;
 
-    public VkMessagesGetHistoryHttpTransaction(@NotNull String chatId, @NotNull User user, @NotNull Context context) {
+    private VkMessagesGetHistoryHttpTransaction() {
         super("messages.getHistory");
-        this.chatId = chatId;
-        this.user = user;
-        this.context = context;
     }
 
-    public VkMessagesGetHistoryHttpTransaction(@NotNull String chatId, @NotNull User user, @NotNull Integer offset, @NotNull Context context) {
-        super("messages.getHistory");
-        this.chatId = chatId;
-        this.user = user;
-        this.offset = offset;
-        this.context = context;
+    @NotNull
+    public static HttpTransaction<List<ChatMessage>> forChat(@NotNull String chatId, @NotNull User user, @NotNull Context context) {
+        final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction();
+
+        result.chatId = chatId;
+        result.user = user;
+        result.context = context;
+
+        return result;
     }
 
-    public VkMessagesGetHistoryHttpTransaction(@NotNull Integer userId, @NotNull User user, @NotNull Context context) {
-        super("messages.getHistory");
-        this.userId = userId;
-        this.user = user;
-        this.context = context;
+    @NotNull
+    public static HttpTransaction<List<ChatMessage>> forChat(@NotNull String chatId, @NotNull User user, @NotNull Integer offset, @NotNull Context context) {
+        final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction();
+
+        result.chatId = chatId;
+        result.user = user;
+        result.offset = offset;
+        result.context = context;
+
+        return result;
     }
 
-    public VkMessagesGetHistoryHttpTransaction(@NotNull Integer userId, @NotNull User user, @NotNull Integer offset, @NotNull Context context) {
-        super("messages.getHistory");
-        this.userId = userId;
-        this.user = user;
-        this.offset = offset;
-        this.context = context;
+    @NotNull
+    public static HttpTransaction<List<ChatMessage>> forUser(@NotNull String userId, @NotNull User user, @NotNull Context context) {
+        final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction();
+
+        result.userId = userId;
+        result.user = user;
+        result.context = context;
+
+        return result;
+    }
+
+    @NotNull
+    public static HttpTransaction<List<ChatMessage>> forUser(@NotNull String userId, @NotNull User user, @NotNull Integer offset, @NotNull Context context) {
+        final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction();
+
+        result.userId = userId;
+        result.user = user;
+        result.offset = offset;
+        result.context = context;
+
+        return result;
     }
 
     @NotNull

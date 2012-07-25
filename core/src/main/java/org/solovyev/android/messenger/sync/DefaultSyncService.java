@@ -4,6 +4,9 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
+import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.ServiceLocator;
+import org.solovyev.android.messenger.realms.Realm;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -24,24 +27,32 @@ public class DefaultSyncService implements SyncService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (SyncTask syncTask : SyncTask.values()) {
-                    try {
+                for (Realm realm : getServiceLocator().getRealmService().getRealms()) {
+                    final SyncData syncData = new SyncDataImpl(realm.getId());
+
+                    for (SyncTask syncTask : SyncTask.values()) {
                         try {
-                            checkRunningTask(syncTask);
-                            if (syncTask.isTime(context)) {
-                                syncTask.doTask(context);
+                            try {
+                                checkRunningTask(syncTask);
+                                if (syncTask.isTime(syncData, context)) {
+                                    syncTask.doTask(syncData, context);
+                                }
+                            } finally {
+                                releaseRunningTask(syncTask);
                             }
-                        } finally {
-                            releaseRunningTask(syncTask);
+                        } catch (TaskIsAlreadyRunningException e) {
+                            // ok, task is already running => start another task
+                        } catch (RuntimeException e) {
+                            MessengerCommonActivityImpl.handleExceptionStatic(context, e);
                         }
-                    } catch (TaskIsAlreadyRunningException e) {
-                        // ok, task is already running => start another task
-                    } catch (RuntimeException e) {
-                        MessengerCommonActivityImpl.handleExceptionStatic(context, e);
                     }
                 }
             }
         }).start();
+    }
+
+    private ServiceLocator getServiceLocator() {
+        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override

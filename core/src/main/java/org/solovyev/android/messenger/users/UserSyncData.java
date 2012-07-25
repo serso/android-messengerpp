@@ -10,13 +10,13 @@ import org.solovyev.common.JCloneable;
  * Date: 5/30/12
  * Time: 10:43 PM
  */
-public interface UserSyncData extends JCloneable<UserSyncData> {
+public interface UserSyncData extends MutableUserSyncData, JCloneable<UserSyncData> {
 
     @Nullable
     DateTime getLastPropertiesSyncDate();
 
     @Nullable
-    DateTime getLastFriendsSyncDate();
+    DateTime getLastContactsSyncDate();
 
     @Nullable
     DateTime getLastChatsSyncDate();
@@ -24,15 +24,27 @@ public interface UserSyncData extends JCloneable<UserSyncData> {
     @Nullable
     DateTime getLastUserIconsSyncData();
 
+    /*
+    **********************************************************************
+    *
+    *                           UPDATE
+    *
+    **********************************************************************
+    */
+
     @NotNull
+    @Override
     UserSyncData updateChatsSyncDate();
 
     @NotNull
+    @Override
     UserSyncData updatePropertiesSyncDate();
 
     @NotNull
-    UserSyncData updateFriendsSyncDate();
+    @Override
+    UserSyncData updateContactsSyncDate();
 
     @NotNull
-    UserSyncData updateUserIconsSyncData();
+    @Override
+    UserSyncData updateUserIconsSyncDate();
 }

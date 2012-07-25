@@ -18,15 +18,15 @@ import java.util.List;
 public class VkFriendsGetHttpTransaction extends AbstractVkHttpTransaction<List<User>> {
 
     @NotNull
-    private final Integer userId;
+    private final String userId;
 
-    private VkFriendsGetHttpTransaction(@NotNull Integer userId) {
+    private VkFriendsGetHttpTransaction(@NotNull String userId) {
         super("friends.get");
         this.userId = userId;
     }
 
     @NotNull
-    public static VkFriendsGetHttpTransaction newInstance(@NotNull Integer userId) {
+    public static VkFriendsGetHttpTransaction newInstance(@NotNull String userId) {
         return new VkFriendsGetHttpTransaction(userId);
     }
 
@@ -44,7 +44,7 @@ public class VkFriendsGetHttpTransaction extends AbstractVkHttpTransaction<List<
     public List<NameValuePair> getRequestParameters() {
         final List<NameValuePair> result = super.getRequestParameters();
 
-        result.add(new BasicNameValuePair("uid", String.valueOf(userId)));
+        result.add(new BasicNameValuePair("uid", userId));
         result.add(new BasicNameValuePair("fields", ApiUserField.getAllFieldsRequestParameter()));
         //result.add(new BasicNameValuePair("fields", ApiUserField.uid + "," + ApiUserField.first_name + "," + ApiUserField.last_name));
 

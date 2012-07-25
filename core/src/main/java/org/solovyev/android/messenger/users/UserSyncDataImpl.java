@@ -18,7 +18,7 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
     private DateTime lastPropertiesSyncDate;
 
     @Nullable
-    private DateTime lastFriendsSyncDate;
+    private DateTime lastContactsSyncDate;
 
     @Nullable
     private DateTime lastChatsSyncDate;
@@ -30,11 +30,11 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
     }
 
     private UserSyncDataImpl(@Nullable DateTime lastPropertiesSyncDate,
-                             @Nullable DateTime lastFriendsSyncDate,
+                             @Nullable DateTime lastContactsSyncDate,
                              @Nullable DateTime lastChatsSyncDate,
                              @Nullable DateTime lastUserIconsSyncDate) {
         this.lastPropertiesSyncDate = lastPropertiesSyncDate;
-        this.lastFriendsSyncDate = lastFriendsSyncDate;
+        this.lastContactsSyncDate = lastContactsSyncDate;
         this.lastChatsSyncDate = lastChatsSyncDate;
         this.lastUserIconsSyncDate = lastUserIconsSyncDate;
     }
@@ -42,35 +42,35 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
 
     @NotNull
     public static UserSyncDataImpl newInstance(@Nullable DateTime lastPropertiesSyncDate,
-                                               @Nullable DateTime lastFriendsSyncDate,
+                                               @Nullable DateTime lastContactsSyncDate,
                                                @Nullable DateTime lastChatsSyncDate,
                                                @Nullable DateTime lastUserIconsSyncDate) {
-        return new UserSyncDataImpl(lastPropertiesSyncDate, lastFriendsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
+        return new UserSyncDataImpl(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
     }
 
     @NotNull
     public static UserSyncDataImpl copyOf(@NotNull UserSyncData userSyncData) {
-        return new UserSyncDataImpl(userSyncData.getLastPropertiesSyncDate(), userSyncData.getLastFriendsSyncDate(), userSyncData.getLastChatsSyncDate(), userSyncData.getLastUserIconsSyncData());
+        return new UserSyncDataImpl(userSyncData.getLastPropertiesSyncDate(), userSyncData.getLastContactsSyncDate(), userSyncData.getLastChatsSyncDate(), userSyncData.getLastUserIconsSyncData());
     }
 
     @NotNull
     public static UserSyncDataImpl newInstanceFromStrings(@Nullable String lastPropertiesSyncDateString,
-                                                          @Nullable String lastFriendsSyncDateString,
+                                                          @Nullable String lastContactsSyncDateString,
                                                           @Nullable String lastChatsSyncDateString,
                                                           @Nullable String lastUserIconsSyncDateString) {
 
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
         final DateTime lastPropertiesSyncDate = lastPropertiesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastPropertiesSyncDateString);
-        final DateTime lastFriendsSyncDate = lastFriendsSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastFriendsSyncDateString);
+        final DateTime lastContactsSyncDate = lastContactsSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastContactsSyncDateString);
         final DateTime lastChatsSyncDate = lastChatsSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastChatsSyncDateString);
         final DateTime lastUserIconsSyncDate = lastUserIconsSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastUserIconsSyncDateString);
-        return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastFriendsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
+        return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
     }
 
     @Override
     @Nullable
-    public DateTime getLastFriendsSyncDate() {
-        return lastFriendsSyncDate;
+    public DateTime getLastContactsSyncDate() {
+        return lastContactsSyncDate;
     }
 
     @Nullable
@@ -102,15 +102,15 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
 
     @NotNull
     @Override
-    public UserSyncData updateFriendsSyncDate() {
+    public UserSyncData updateContactsSyncDate() {
         final UserSyncDataImpl clone = this.clone();
-        clone.lastFriendsSyncDate = DateTime.now();
+        clone.lastContactsSyncDate = DateTime.now();
         return clone;
     }
 
     @NotNull
     @Override
-    public UserSyncData updateUserIconsSyncData() {
+    public UserSyncData updateUserIconsSyncDate() {
         final UserSyncDataImpl clone = this.clone();
         clone.lastUserIconsSyncDate = DateTime.now();
         return clone;    }

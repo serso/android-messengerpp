@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.VersionedEntity;
-import org.solovyev.android.ext.VersionedEntityMapper;
+import org.solovyev.android.ext.StringVersionedEntityMapper;
 import org.solovyev.common.utils.Converter;
 
 import java.util.Collections;
@@ -28,7 +28,7 @@ public class UserMapper implements Converter<Cursor, User> {
     @NotNull
     @Override
     public User convert(@NotNull Cursor c) {
-        final VersionedEntity versionedEntity = VersionedEntityMapper.getInstance().convert(c);
+        final VersionedEntity<String> versionedEntity = StringVersionedEntityMapper.getInstance().convert(c);
 
         final UserSyncData userSyncData = UserSyncDataImpl.newInstanceFromStrings(c.getString(2), c.getString(3), c.getString(4), c.getString(5));
 

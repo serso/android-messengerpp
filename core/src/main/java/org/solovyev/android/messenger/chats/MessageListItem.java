@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -7,14 +8,20 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
+import org.solovyev.android.list.ListItemOnClickData;
+import org.solovyev.android.list.SimpleMenuOnClick;
+import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+
+import java.util.Arrays;
 
 /**
  * User: serso
@@ -57,7 +64,7 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
 
     @Override
     public OnClickAction getOnClickAction() {
-        return null;
+        return new SimpleMenuOnClick<MessageListItem>(Arrays.<LabeledMenuItem<ListItemOnClickData<MessageListItem>>>asList(MenuItems.values()), this);
     }
 
     @Override
@@ -130,7 +137,7 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
     }
 
     private boolean isUserMessagesToTheRight(@NotNull SharedPreferences preferences) {
-        return MessengerApplication.Preferences.Gui.Chat.userIconPosition.getPreference(preferences) == MessengerApplication.Preferences.Gui.Chat.UserIconPosition.right;
+        return MessengerApplication.Preferences.Gui.Chat.userMessagesPosition.getPreference(preferences) == MessengerApplication.Preferences.Gui.Chat.UserIconPosition.right;
     }
 
     private boolean isUserMessage() {
@@ -149,9 +156,9 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
             fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showUserIcon.getPreference(preferences));
         } else {
             if (chat.isPrivate()) {
-                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showFriendIconInPrivateChat.getPreference(preferences));
+                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showContactIconInPrivateChat.getPreference(preferences));
             } else {
-                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showFriendIconInChat.getPreference(preferences));
+                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showContactIconInChat.getPreference(preferences));
             }
         }
     }
@@ -212,6 +219,33 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
             } else {
                 return 0;
             }
+        }
+    }
+
+    private static enum MenuItems implements LabeledMenuItem<ListItemOnClickData<MessageListItem>> {
+
+        copy(R.string.c_copy) {
+            @Override
+            public void onClick(@NotNull ListItemOnClickData<MessageListItem> data, @NotNull Context context) {
+                final android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
+
+                final MessageListItem messageListItem = data.getDataObject();
+                clipboard.setText(messageListItem.message.getBody());
+
+                Toast.makeText(context, context.getString(R.string.c_message_copied), Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        private int captionResId;
+
+        private MenuItems(int captionResId) {
+            this.captionResId = captionResId;
+        }
+
+        @NotNull
+        @Override
+        public String getCaption(@NotNull Context context) {
+            return context.getString(captionResId);
         }
     }
 }

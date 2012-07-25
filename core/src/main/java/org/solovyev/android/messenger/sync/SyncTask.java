@@ -4,7 +4,7 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
-import org.solovyev.android.messenger.security.AuthServiceFacade;
+import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 
@@ -17,11 +17,11 @@ public enum SyncTask {
 
     user_properties {
         @Override
-        public boolean isTime(@NotNull Context context) {
+        public boolean isTime(@NotNull SyncData syncData, @NotNull Context context) {
             boolean result = false;
 
             try {
-                final User user = getAuthServiceFacade().getUser(context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
                 final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
                 if (lastPropertiesSyncDate == null || lastPropertiesSyncDate.plusHours(1).isBefore(DateTime.now())) {
                     result = true;
@@ -34,9 +34,9 @@ public enum SyncTask {
         }
 
         @Override
-        public void doTask(@NotNull Context context) {
+        public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthServiceFacade().getUser(context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
                 MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().syncUserProperties(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
@@ -44,15 +44,15 @@ public enum SyncTask {
         }
     },
 
-    user_friends {
+    user_contacts {
         @Override
-        public boolean isTime(@NotNull Context context) {
+        public boolean isTime(@NotNull SyncData syncData, @NotNull Context context) {
             boolean result = false;
 
             try {
-                final User user = getAuthServiceFacade().getUser(context);
-                final DateTime lastFriendsSyncDate = user.getUserSyncData().getLastFriendsSyncDate();
-                if (lastFriendsSyncDate == null || lastFriendsSyncDate.plusHours(1).isBefore(DateTime.now())) {
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
+                if (lastContactsSyncDate == null || lastContactsSyncDate.plusHours(1).isBefore(DateTime.now())) {
                     result = true;
                 }
             } catch (UserIsNotLoggedInException e) {
@@ -63,10 +63,10 @@ public enum SyncTask {
         }
 
         @Override
-        public void doTask(@NotNull Context context) {
+        public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthServiceFacade().getUser(context);
-                MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().syncUserFriends(user.getId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().syncUserContacts(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -76,11 +76,11 @@ public enum SyncTask {
     user_icons {
 
         @Override
-        public boolean isTime(@NotNull Context context) {
+        public boolean isTime(@NotNull SyncData syncData, @NotNull Context context) {
             boolean result = false;
 
             try {
-                final User user = getAuthServiceFacade().getUser(context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
                 final DateTime lastUserIconsSyncDate = user.getUserSyncData().getLastUserIconsSyncData();
                 if (lastUserIconsSyncDate == null || lastUserIconsSyncDate.plusDays(1).isBefore(DateTime.now())) {
                     result = true;
@@ -93,9 +93,9 @@ public enum SyncTask {
         }
 
         @Override
-        public void doTask(@NotNull Context context) {
+        public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthServiceFacade().getUser(context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
 
                 MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().fetchUserIcons(user, context);
 
@@ -105,17 +105,17 @@ public enum SyncTask {
         }
     },
 
-    check_online_user_friends {
+    check_online_user_contacts {
         @Override
-        public boolean isTime(@NotNull Context context) {
+        public boolean isTime(@NotNull SyncData syncData, @NotNull Context context) {
             return true;
         }
 
         @Override
-        public void doTask(@NotNull Context context) {
+        public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthServiceFacade().getUser(context);
-                MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().checkOnlineUserFriends(user.getId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().checkOnlineUseContacts(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -124,14 +124,14 @@ public enum SyncTask {
 
     user_chats {
         @Override
-        public boolean isTime(@NotNull Context context) {
+        public boolean isTime(@NotNull SyncData syncData, @NotNull Context context) {
             return true;
         }
 
         @Override
-        public void doTask(@NotNull Context context) {
+        public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthServiceFacade().getUser(context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
                 MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().syncUserChats(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
@@ -141,14 +141,14 @@ public enum SyncTask {
 
     chat_messages {
         @Override
-        public boolean isTime(@NotNull Context context) {
+        public boolean isTime(@NotNull SyncData syncData, @NotNull Context context) {
             return true;
         }
 
         @Override
-        public void doTask(@NotNull Context context) {
+        public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthServiceFacade().getUser(context);
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
                 MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService().syncChatMessages(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
@@ -157,11 +157,11 @@ public enum SyncTask {
     };
 
     @NotNull
-    private static AuthServiceFacade getAuthServiceFacade() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthServiceFacade();
+    private static AuthService getAuthService() {
+        return MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthService();
     }
 
-    public abstract boolean isTime(@NotNull Context context);
+    public abstract boolean isTime(@NotNull SyncData syncData, @NotNull Context context);
 
-    public abstract void doTask(@NotNull Context context);
+    public abstract void doTask(@NotNull SyncData syncData, @NotNull Context context);
 }

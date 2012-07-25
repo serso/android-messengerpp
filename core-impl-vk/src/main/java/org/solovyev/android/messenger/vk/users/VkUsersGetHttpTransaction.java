@@ -29,12 +29,12 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
     private static final Integer MAX_CHUNK = 1000;
 
     @NotNull
-    private final List<Integer> userIds;
+    private final List<String> userIds;
 
     @org.jetbrains.annotations.Nullable
     private final List<ApiUserField> apiUserFields;
 
-    private VkUsersGetHttpTransaction(@NotNull List<Integer> userIds, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
+    private VkUsersGetHttpTransaction(@NotNull List<String> userIds, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
         super("users.get");
         this.apiUserFields = apiUserFields;
         assert !userIds.isEmpty();
@@ -43,10 +43,10 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
     }
 
     @NotNull
-    public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@NotNull List<Integer> userIds, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
+    public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@NotNull List<String> userIds, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
         final List<VkUsersGetHttpTransaction> result = new ArrayList<VkUsersGetHttpTransaction>();
 
-        for (List<Integer> userIdsChunk : CollectionsUtils2.split(userIds, MAX_CHUNK)) {
+        for (List<String> userIdsChunk : CollectionsUtils2.split(userIds, MAX_CHUNK)) {
             result.add(new VkUsersGetHttpTransaction(userIdsChunk, apiUserFields));
         }
 
@@ -55,9 +55,9 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 
     @NotNull
     public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@NotNull List<User> users, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
-        return newInstancesForUserIds(Lists.transform(users, new Function<User, Integer>() {
+        return newInstancesForUserIds(Lists.transform(users, new Function<User, String>() {
             @Override
-            public Integer apply(@Nullable User user) {
+            public String apply(@Nullable User user) {
                 assert user != null;
                 return user.getId();
             }
@@ -65,7 +65,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
     }
 
     @NotNull
-    public static VkUsersGetHttpTransaction newInstance(@NotNull Integer userId, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
+    public static VkUsersGetHttpTransaction newInstance(@NotNull String userId, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
         return new VkUsersGetHttpTransaction(Arrays.asList(userId), apiUserFields);
     }
 

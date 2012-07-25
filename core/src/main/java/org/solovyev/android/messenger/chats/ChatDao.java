@@ -16,10 +16,10 @@ import java.util.List;
 public interface ChatDao {
 
     @NotNull
-    MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull Integer userId, @NotNull List<? extends ApiChat> chats);
+    MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> chats);
 
     @NotNull
-    List<String> loadUserChatIds(@NotNull Integer userId);
+    List<String> loadUserChatIds(@NotNull String userId);
 
     @NotNull
     List<String> loadChatIds();
@@ -28,7 +28,7 @@ public interface ChatDao {
     List<AProperty> loadChatPropertiesById(@NotNull String chatId);
 
     @NotNull
-    List<Chat> loadUserChats(@NotNull Integer userId);
+    List<Chat> loadUserChats(@NotNull String userId);
 
     @NotNull
     List<User> loadChatParticipants(@NotNull String chatId);

@@ -17,15 +17,15 @@ import java.util.List;
 * Date: 6/2/12
 * Time: 3:12 PM
 */
-class FriendsAsyncLoader extends AbstractAsyncLoader<User> {
+class ContactsAsyncLoader extends AbstractAsyncLoader<User> {
 
-    FriendsAsyncLoader(@NotNull User user, @NotNull Context context, @NotNull ListItemArrayAdapter adapter, @Nullable Runnable onPostExecute) {
+    ContactsAsyncLoader(@NotNull User user, @NotNull Context context, @NotNull ListItemArrayAdapter adapter, @Nullable Runnable onPostExecute) {
         super(user, context, adapter, onPostExecute);
     }
 
     @NotNull
     protected List<User> getElements(@NotNull Context context) {
-        return getServiceLocator().getUserService().getUserFriends(getUser().getId(), context);
+        return getServiceLocator().getUserService().getUserContacts(getUser().getId(), context);
     }
 
     @Override
@@ -35,7 +35,7 @@ class FriendsAsyncLoader extends AbstractAsyncLoader<User> {
 
     @NotNull
     @Override
-    protected ListItem<?> createListItem(@NotNull User friend) {
-        return new FriendListItem(getUser(), friend);
+    protected ListItem<?> createListItem(@NotNull User contact) {
+        return new ContactListItem(getUser(), contact);
     }
 }

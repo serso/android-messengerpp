@@ -23,7 +23,7 @@ import java.util.List;
 class JsonUser {
 
     @Nullable
-    private Integer uid;
+    private String uid;
 
     @Nullable
     private String first_name;
@@ -93,7 +93,7 @@ class JsonUser {
         properties.add(APropertyImpl.newInstance("photoBig", photo_big));
         properties.add(APropertyImpl.newInstance("photoRec", photo_rec));
 
-        return UserImpl.newInstance(new VersionedEntityImpl(uid), UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
+        return UserImpl.newInstance(new VersionedEntityImpl<String>(uid), UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
     }
 
     @Nullable

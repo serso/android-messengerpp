@@ -43,7 +43,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
     private final String explicitChatId;
 
     @Nullable
-    private final Integer explicitUserId;
+    private final String explicitUserId;
     
     @NotNull
     private final UserService userService;
@@ -53,7 +53,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
     public JsonChatConverter(@NotNull User user,
                              @Nullable String explicitChatId,
-                             @Nullable Integer explicitUserId,
+                             @Nullable String explicitUserId,
                              @NotNull UserService userService,
                              @NotNull Context context) {
         this.user = user;
@@ -124,7 +124,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                             final String participantsStr = jsonMessage.getChat_active();
                             if (!StringUtils.isEmpty(participantsStr)) {
                                 for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
-                                    chat.addParticipant(userService.getUserById(participantId, context));
+                                    chat.addParticipant(userService.getUserById(String.valueOf(participantId), context));
                                 }
                             }
 

@@ -59,6 +59,8 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
     @Nullable
     private PullToRefreshListView2 pullLv;
 
+    private boolean dualPane;
+
     public AbstractMessengerListFragment(@NotNull String tag) {
         this.tag = tag;
     }
@@ -74,6 +76,8 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
             MessengerLoginActivity.startActivity(getActivity());
         }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -341,6 +345,39 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
             }
         });
         listLoader.execute();
+
+        final View rightContentPane = getActivity().findViewById(R.id.right_content_pane);
+        dualPane = rightContentPane != null && rightContentPane.getVisibility() == View.VISIBLE;
+
+        if (savedInstanceState != null) {
+            final int position = savedInstanceState.getInt("position", 0);
+            setSelection(position);
+        }
+
+        if (isDualPane()) {
+            // In dual-pane mode, list view highlights selected item.
+            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
+    }
+
+    @Override
+    public void setSelection(int position) {
+        super.setSelection(position);
+        if ( isDualPane() ) {
+            updateRightPane();
+        }
+    }
+
+    protected abstract void updateRightPane();
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", getSelectedItemPosition());
+    }
+
+    public boolean isDualPane() {
+        return dualPane;
     }
 
     @Override

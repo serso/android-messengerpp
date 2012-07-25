@@ -111,7 +111,7 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 
     @Override
     @NotNull
-    public Integer getId() {
+    public String getId() {
         return liteChatMessage.getId();
     }
 
@@ -137,6 +137,11 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
         if (!liteChatMessage.equals(that.liteChatMessage)) return false;
 
         return true;
+    }
+
+    @Override
+    public boolean equalsVersion(Object that) {
+        return this.equals(that) && this.liteChatMessage.equalsVersion(((ChatMessageImpl) that).liteChatMessage);
     }
 
     @Override

@@ -9,14 +9,16 @@ public enum UserEventType {
     added,
     changed,
 
-    friend_added,
-    friend_added_batch,
-    friend_removed,
+    contact_added,
+    contact_added_batch,
+    // data == id of removed contact for current user
+    contact_removed,
 
     chat_added,
     chat_added_batch,
+    // data == id of removed chat for current user
     chat_removed,
 
-    friend_online,
-    friend_offline;
+    contact_online,
+    contact_offline;
 }

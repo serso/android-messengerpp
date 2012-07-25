@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.users.User;
  * Date: 5/24/12
  * Time: 9:34 PM
  */
-public interface ApiAuthenticator {
+public interface RealmAuthService {
 
     /**
      *
@@ -21,7 +21,9 @@ public interface ApiAuthenticator {
      * @throws InvalidCredentialsException exception if either login or password is incorrect or user with specified login was not found
      */
     @NotNull
-    AuthData loginUser(@NotNull String login, @NotNull String password, @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
+    AuthData loginUser(@NotNull String login,
+                       @NotNull String password,
+                       @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
 
     void logoutUser(@NotNull User user);
 }

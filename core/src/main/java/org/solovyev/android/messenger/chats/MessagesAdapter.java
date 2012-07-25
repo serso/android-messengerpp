@@ -31,7 +31,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
     // map of list items saying that someone start typing message
     // key: user id
     @NotNull
-    private final Map<Integer, ListItem<?>> userTypingListItems = Collections.synchronizedMap(new HashMap<Integer, ListItem<?>>());
+    private final Map<String, ListItem<?>> userTypingListItems = Collections.synchronizedMap(new HashMap<String, ListItem<?>>());
 
     public MessagesAdapter(@NotNull Context context, @NotNull User user, @NotNull Chat chat) {
         super(context, new ArrayList<ListItem<? extends View>>(), user);
@@ -43,7 +43,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
 
         if (chatEventType == ChatEventType.message_removed) {
             if (eventChat.equals(chat)) {
-                final Integer messageId = (Integer) data;
+                final String messageId = (String) data;
                 removeMessageListItem(messageId);
             }
         }
@@ -88,12 +88,12 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
         }
 
         if (chatEventType.isEvent(ChatEventType.user_start_typing, eventChat, chat)) {
-            final Integer userId = (Integer) data;
+            final String userId = (String) data;
 
             if (!userTypingListItems.containsKey(userId)) {
                 final Context context = getContext();
 
-                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(-userId);
+                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("typing" + userId);
                 liteChatMessage.setSendDate(DateTime.now());
                 liteChatMessage.setAuthor(MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getUserById(userId, context));
                 liteChatMessage.setBody("User start typing...");
@@ -139,7 +139,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
         remove(createListItem(message));
     }
 
-    private void removeMessageListItem(@NotNull Integer messageId) {
+    private void removeMessageListItem(@NotNull String messageId) {
         // todo serso: not good solution => better way is to load full message object (but it can take long time)
         final ChatMessage message = ChatMessageImpl.newInstance(LiteChatMessageImpl.newInstance(messageId));
         removeListItem(message);

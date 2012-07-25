@@ -12,13 +12,13 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 /**
  * User: serso
  * Date: 6/2/12
- * Time: 5:14 PM
+ * Time: 4:09 PM
  */
-public class MessengerOnlineFriendsFragment extends AbstractMessengerFriendsFragment {
+public class MessengerContactsFragment extends AbstractMessengerContactsFragment {
+
     @NotNull
-    @Override
     protected AbstractAsyncLoader<User> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter adapter, @NotNull Runnable onPostExecute) {
-        return new OnlineFriendsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
+        return new ContactsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
     }
 
     @Override
@@ -27,13 +27,13 @@ public class MessengerOnlineFriendsFragment extends AbstractMessengerFriendsFrag
             @Override
             public void onRefresh() {
                 try {
-                    getServiceLocator().getSyncService().sync(SyncTask.check_online_user_friends, getActivity(), new Runnable() {
+                    getServiceLocator().getSyncService().sync(SyncTask.user_contacts, getActivity(), new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();
                         }
                     });
-                    Toast.makeText(getActivity(), "Online statuses check started!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "User contacts sync started!", Toast.LENGTH_SHORT).show();
                 } catch (TaskIsAlreadyRunningException e) {
                     e.showMessage(getActivity());
                 }
@@ -42,7 +42,7 @@ public class MessengerOnlineFriendsFragment extends AbstractMessengerFriendsFrag
     }
 
     @NotNull
-    protected AbstractFriendsAdapter createAdapter() {
-        return new OnlineFriendsAdapter(getActivity(), getUser());
+    protected AbstractContactsAdapter createAdapter() {
+        return new ContactsAdapter(getActivity(), getUser());
     }
 }

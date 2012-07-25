@@ -16,6 +16,7 @@ import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.utils.CollectionsUtils;
 import org.solovyev.common.utils.ListListenersContainer;
@@ -29,6 +30,9 @@ import java.util.*;
  * Time: 2:43 AM
  */
 public class DefaultChatService implements ChatService, ChatEventListener, UserEventListener {
+
+    @NotNull
+    private final Realm realm;
 
     @NotNull
     private static final String EVENT_TAG = "ChatEvent";
@@ -47,7 +51,8 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @NotNull
     private final Object lock = new Object();
 
-    public DefaultChatService() {
+    public DefaultChatService(@NotNull Realm realm) {
+        this.realm = realm;
         listeners.addListener(this);
     }
 
@@ -65,7 +70,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public Chat createPrivateChat(@NotNull Integer userId, @NotNull Integer secondUserId, @NotNull Context context) {
+    public Chat createPrivateChat(@NotNull String userId, @NotNull String secondUserId, @NotNull Context context) {
         Chat result;
 
         final String chatId = createPrivateChatId(userId, secondUserId);
@@ -87,13 +92,13 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<Chat> loadUserChats(@NotNull Integer userId, @NotNull Context context) {
+    public List<Chat> loadUserChats(@NotNull String userId, @NotNull Context context) {
         return getChatDao(context).loadUserChats(userId);
     }
 
     @NotNull
     @Override
-    public MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull Integer userId, @NotNull List<? extends ApiChat> chats, @NotNull Context context) {
+    public MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> chats, @NotNull Context context) {
         synchronized (lock) {
             return getChatDao(context).mergeUserChats(userId, chats);
         }
@@ -106,8 +111,8 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<ChatMessage> syncChatMessages(@NotNull Integer userId, @NotNull Context context) {
-        final List<ChatMessage> chatMessages = getApiChatService().getChatMessages(userId, context);
+    public List<ChatMessage> syncChatMessages(@NotNull String userId, @NotNull Context context) {
+        final List<ChatMessage> chatMessages = realm.getRealmChatService().getChatMessages(userId, context);
 
 /*        synchronized (userChatsCache) {
             userChatsCache.put(userId, chats);
@@ -151,8 +156,8 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<ChatMessage> syncNewerChatMessagesForChat(@NotNull String chatId, @NotNull Integer userId, @NotNull Context context) {
-        final List<ChatMessage> messages = getApiChatService().getNewerChatMessagesForChat(chatId, userId, context);
+    public List<ChatMessage> syncNewerChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context) {
+        final List<ChatMessage> messages = realm.getRealmChatService().getNewerChatMessagesForChat(chatId, userId, context);
 
         syncChatMessagesForChat(chatId, context, messages);
 
@@ -164,7 +169,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         Chat chat = this.getChatById(chatId, context);
 
         if (chat != null) {
-            final MergeDaoResult<ChatMessage, Integer> result;
+            final MergeDaoResult<ChatMessage, String> result;
             synchronized (lock) {
                 result = getChatMessageDao(context).mergeChatMessages(chatId, messages, false, context);
 
@@ -199,7 +204,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<ChatMessage> syncOlderChatMessagesForChat(@NotNull String chatId, @NotNull Integer userId, @NotNull Context context) {
+    public List<ChatMessage> syncOlderChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context) {
         final Integer offset = getChatMessageService().getChatMessages(chatId, context).size();
 
         final Chat chat = this.getChatById(chatId, context);
@@ -207,7 +212,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         final List<ChatMessage> messages;
 
         if (chat != null) {
-            messages = getApiChatService().getOlderChatMessagesForChat(chatId, userId, offset, context);
+            messages = realm.getRealmChatService().getOlderChatMessagesForChat(chatId, userId, offset, context);
             syncChatMessagesForChat(chatId, context, messages);
         } else {
             messages = Collections.emptyList();
@@ -218,20 +223,20 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     }
 
     @Override
-    public void syncChat(@NotNull String chatId, @NotNull Integer userId, @NotNull Context context) {
+    public void syncChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context) {
         // todo serso: check if OK
         syncNewerChatMessagesForChat(chatId, userId, context);
     }
 
     @Nullable
     @Override
-    public Integer getSecondUserId(@NotNull Chat chat) {
+    public String getSecondUserId(@NotNull Chat chat) {
         boolean first = true;
         for (String userId : Splitter.on('_').split(chat.getId())) {
             if ( first ) {
                 first = false;
             } else {
-                return Integer.valueOf(userId);
+                return userId;
             }
         }
 
@@ -261,20 +266,20 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public String createPrivateChatId(@NotNull Integer userId, @NotNull Integer secondUserId) {
+    public String createPrivateChatId(@NotNull String userId, @NotNull String secondUserId) {
         return userId + "_" + secondUserId;
     }
 
     @NotNull
     @Override
-    public ChatMessage sendChatMessage(@NotNull Integer userId, @NotNull Chat chat, @NotNull ChatMessage chatMessage, @NotNull Context context) {
-        final Integer chatMessageId = getApiChatService().sendChatMessage(chat, chatMessage, context);
+    public ChatMessage sendChatMessage(@NotNull String userId, @NotNull Chat chat, @NotNull ChatMessage chatMessage, @NotNull Context context) {
+        final String chatMessageId = realm.getRealmChatService().sendChatMessage(chat, chatMessage, context);
 
         final LiteChatMessageImpl msgResult = LiteChatMessageImpl.newInstance(chatMessageId);
 
         msgResult.setAuthor(getUserService().getUserById(userId, context));
         if ( chat.isPrivate() ) {
-            final Integer secondUserId = chat.getSecondUserId();
+            final String secondUserId = chat.getSecondUserId();
             msgResult.setRecipient(getUserService().getUserById(secondUserId, context));
         }
         msgResult.setBody(chatMessage.getBody());
@@ -318,7 +323,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<User> getParticipantsExcept(@NotNull String chatId, @NotNull final Integer userId, @NotNull Context context) {
+    public List<User> getParticipantsExcept(@NotNull String chatId, @NotNull final String userId, @NotNull Context context) {
         final List<User> participants = getParticipants(chatId, context);
         return Lists.newArrayList(Iterables.filter(participants, new Predicate<User>() {
             @Override
@@ -354,16 +359,6 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @NotNull
     private ChatDao getChatDao(@NotNull Context context) {
         return MessengerConfigurationImpl.getInstance().getDaoLocator().getChatDao(context);
-    }
-
-    @NotNull
-    private ApiUserService getApiUserService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getApiUserService();
-    }
-
-    @NotNull
-    private ApiChatService getApiChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getApiChatService();
     }
 
     @Override
@@ -431,7 +426,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
                 if (data instanceof ChatMessage) {
                     final ChatMessage message = (ChatMessage) data;
                     final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getId());
-                    if (messageFromCache == null || message.getId() > messageFromCache.getId()) {
+                    if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate()) ) {
                         lastMessagesCache.put(eventChat.getId(), message);
                         changesLastMessages.put(eventChat, message);
                     }
@@ -446,13 +441,13 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
                     for (ChatMessage message : messages) {
                         if (newestMessage == null) {
                             newestMessage = message;
-                        } else if (message.getId() > newestMessage.getId()) {
+                        } else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
                             newestMessage = message;
                         }
                     }
 
                     final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getId());
-                    if (newestMessage != null && (messageFromCache == null || newestMessage.getId() > messageFromCache.getId())) {
+                    if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
                         lastMessagesCache.put(eventChat.getId(), newestMessage);
                         changesLastMessages.put(eventChat, newestMessage);
                     }

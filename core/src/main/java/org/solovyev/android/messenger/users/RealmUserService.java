@@ -10,13 +10,13 @@ import java.util.List;
  * Date: 5/25/12
  * Time: 8:33 PM
  */
-public interface ApiUserService {
+public interface RealmUserService {
 
     @Nullable
-    User getUserById(@NotNull Integer userId);
+    User getUserById(@NotNull String userId);
 
     @NotNull
-    List<User> getUserFriends(@NotNull Integer userId);
+    List<User> getUserContacts(@NotNull String userId);
 
     @NotNull
     List<User> checkOnlineUsers(@NotNull List<User> users);

@@ -13,27 +13,19 @@ import org.solovyev.android.messenger.users.User;
  */
 public interface AuthServiceFacade {
 
-    void loginUser(@NotNull Context context, @NotNull String login, @NotNull String password, @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
+    @NotNull
+    AuthData loginUser(@NotNull String login,
+                       @NotNull String password,
+                       @Nullable ResolvedCaptcha resolvedCaptcha,
+                       @NotNull Context context) throws InvalidCredentialsException;
 
-    /**
-     * @return current logged in user, must be invoked after successful user login
-     * @throws IllegalStateException if no successful login has been done
-     * @param context
-     */
     @NotNull
     User getUser(@NotNull Context context) throws UserIsNotLoggedInException;
 
-    @NotNull
-    AuthData getAuthData() throws UserIsNotLoggedInException;
-
-    /**
-     * @return true if user has been logged in
-     */
     boolean isUserLoggedIn();
 
-    /**
-     * Method logs out user
-     * @param context
-     */
     void logoutUser(@NotNull Context context);
+
+    @NotNull
+    AuthData getAuthData() throws UserIsNotLoggedInException;
 }

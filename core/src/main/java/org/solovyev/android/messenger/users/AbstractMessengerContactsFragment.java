@@ -9,12 +9,12 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
  * Date: 6/2/12
  * Time: 5:11 PM
  */
-public abstract class AbstractMessengerFriendsFragment extends AbstractMessengerListFragment<User> {
+public abstract class AbstractMessengerContactsFragment extends AbstractMessengerListFragment<User> {
 
     @NotNull
-    private static String TAG = "FriendsFragment";
+    private static String TAG = "ContactsFragment";
 
-    public AbstractMessengerFriendsFragment() {
+    public AbstractMessengerContactsFragment() {
         super(TAG);
     }
 
@@ -26,5 +26,10 @@ public abstract class AbstractMessengerFriendsFragment extends AbstractMessenger
     @Override
     protected boolean isFilterEnabled() {
         return true;
+    }
+
+    @Override
+    protected void updateRightPane() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

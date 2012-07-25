@@ -2,7 +2,8 @@ package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.security.ApiAuthenticator;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 
 /**
  * User: serso
@@ -12,10 +13,7 @@ import org.solovyev.android.messenger.security.ApiAuthenticator;
 public class MessengerConfigurationImpl implements MessengerConfiguration {
 
     @NotNull
-    private String realm;
-
-    @NotNull
-    private ApiAuthenticator authenticator;
+    private String realmId;
 
     @NotNull
     private DaoLocator daoLocator;
@@ -41,21 +39,13 @@ public class MessengerConfigurationImpl implements MessengerConfiguration {
     }
 
     @NotNull
-    public String getRealm() {
-        return realm;
-    }
-
-    public void setRealm(@NotNull String realm) {
-        this.realm = realm;
-    }
-
-    @NotNull
-    public ApiAuthenticator getAuthenticator() {
-        return authenticator;
-    }
-
-    public void setAuthenticator(@NotNull ApiAuthenticator authenticator) {
-        this.authenticator = authenticator;
+    @Override
+    public Realm getRealm() {
+        try {
+            return this.getServiceLocator().getRealmService().getRealmById(this.realmId);
+        } catch (UnsupportedRealmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @NotNull
@@ -93,5 +83,9 @@ public class MessengerConfigurationImpl implements MessengerConfiguration {
 
     public void setSqliteOpenHelper(@NotNull SQLiteOpenHelper sqliteOpenHelper) {
         this.sqliteOpenHelper = sqliteOpenHelper;
+    }
+
+    public void setRealmId(@NotNull String realmId) {
+        this.realmId = realmId;
     }
 }

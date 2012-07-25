@@ -10,7 +10,7 @@
               a:layout_height="wrap_content"
               style="@style/message_header_title"/>
 
-    <TextView a:id="@+id/friend_online"
+    <TextView a:id="@+id/contact_online"
               style="@style/message_header_title"
               a:layout_width="wrap_content"
               a:layout_height="wrap_content"/>

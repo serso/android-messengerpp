@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.vk.http;
 
+import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -10,6 +11,7 @@ import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.ServiceLocator;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 
@@ -39,11 +41,16 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
     public List<NameValuePair> getRequestParameters() {
         final ArrayList<NameValuePair> result = new ArrayList<NameValuePair>();
         try {
-            result.add(new BasicNameValuePair("access_token", MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthServiceFacade().getAuthData().getAccessToken()));
+            result.add(new BasicNameValuePair("access_token", getServiceLocator().getAuthServiceFacade().getAuthData().getAccessToken()));
         } catch (UserIsNotLoggedInException e) {
             // todo serso: think
         }
         return result;
+    }
+
+    @NotNull
+    private ServiceLocator getServiceLocator() {
+        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override
@@ -51,14 +58,13 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
         try {
             final HttpEntity httpEntity = response.getEntity();
             final String json = EntityUtils.toString(httpEntity);
+
+            Log.d(AbstractVkHttpTransaction.class.getSimpleName(), "Json: " + json);
+
             try {
                 return getResponseFromJson(json);
             } catch (IllegalJsonException e) {
-                try {
-                    throw VkResponseErrorException.newInstance(json, this);
-                } catch (IllegalJsonException e1) {
-                    throw new RuntimeException(e1);
-                }
+                throw VkResponseErrorException.newInstance(json, this);
             }
         } catch (IOException e) {
             throw new RuntimeIoException(e);

@@ -23,7 +23,7 @@ import java.util.List;
  * Date: 6/25/12
  * Time: 11:25 PM
  */
-public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Integer> {
+public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<String> {
 
     @NotNull
     private final ChatMessage chatMessage;
@@ -59,9 +59,9 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Int
 
             final List<LiteChatMessage> fwdMessages = chatMessage.getFwdMessages();
             if (!fwdMessages.isEmpty()) {
-                final String fwdMessagesParam = StringUtils2.getAllValues(Lists.transform(fwdMessages, new Function<LiteChatMessage, Integer>() {
+                final String fwdMessagesParam = StringUtils2.getAllValues(Lists.transform(fwdMessages, new Function<LiteChatMessage, String>() {
                     @Override
-                    public Integer apply(@Nullable LiteChatMessage fwdMessage) {
+                    public String apply(@Nullable LiteChatMessage fwdMessage) {
                         assert fwdMessage != null;
                         return fwdMessage.getId();
                     }
@@ -78,14 +78,13 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Int
     }
 
     @Override
-    protected Integer getResponseFromJson(@NotNull String json) throws IllegalJsonException {
+    protected String getResponseFromJson(@NotNull String json) throws IllegalJsonException {
         return new Gson().fromJson(json, JsonResult.class).response;
     }
 
     public static class JsonResult {
 
         @Nullable
-        private Integer response;
-
+        private String response;
     }
 }

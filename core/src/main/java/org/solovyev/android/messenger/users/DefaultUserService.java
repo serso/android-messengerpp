@@ -9,11 +9,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.VersionedEntityImpl;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.utils.CollectionsUtils;
 import org.solovyev.common.utils.StringUtils;
 
@@ -27,31 +27,35 @@ import java.util.*;
 public class DefaultUserService implements UserService, UserEventListener, ChatEventListener {
 
     @NotNull
+    private final Realm realm;
+
+    @NotNull
     private final Object lock = new Object();
 
     @NotNull
     private final UserEventContainer listeners = new ListUserEventContainer();
 
-    // key: user id, value: list of user friends
+    // key: user id, value: list of user contacts
     @NotNull
-    private final Map<Integer, List<User>> userFriendsCache = new HashMap<Integer, List<User>>();
+    private final Map<String, List<User>> userContactsCache = new HashMap<String, List<User>>();
 
     // key: user id, value: list of user chats
     @NotNull
-    private final Map<Integer, List<Chat>> userChatsCache = new HashMap<Integer, List<Chat>>();
+    private final Map<String, List<Chat>> userChatsCache = new HashMap<String, List<Chat>>();
 
     // key: user id, value: user object
     @NotNull
-    private final Map<Integer, User> usersCache = new HashMap<Integer, User>();
+    private final Map<String, User> usersCache = new HashMap<String, User>();
 
 
-    public DefaultUserService() {
+    public DefaultUserService(@NotNull Realm realm) {
+        this.realm = realm;
         listeners.addUserEventListener(this);
     }
 
     @NotNull
     @Override
-    public User getUserById(@NotNull Integer userId, @NotNull Context context) {
+    public User getUserById(@NotNull String userId, @NotNull Context context) {
         boolean saved = true;
 
         User result;
@@ -67,11 +71,11 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             }
 
             if (result == null) {
-                result = getApiUserService().getUserById(userId);
+                result = realm.getRealmUserService().getUserById(userId);
             }
 
             if (result == null) {
-                result = UserImpl.newInstance(new VersionedEntityImpl(userId));
+                result = UserImpl.newInstance(userId);
             } else {
                 // user was loaded either from dao or from API => cache
                 synchronized (usersCache) {
@@ -105,15 +109,15 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public List<User> getUserFriends(@NotNull Integer userId, @NotNull Context context) {
+    public List<User> getUserContacts(@NotNull String userId, @NotNull Context context) {
         List<User> result;
 
-        synchronized (userFriendsCache) {
-            result = userFriendsCache.get(userId);
+        synchronized (userContactsCache) {
+            result = userContactsCache.get(userId);
             if (result == null) {
-                result = getUserDao(context).loadUserFriends(userId);
+                result = getUserDao(context).loadUserContacts(userId);
                 if (!CollectionsUtils.isEmpty(result)) {
-                    userFriendsCache.put(userId, result);
+                    userContactsCache.put(userId, result);
                 }
             }
         }
@@ -124,7 +128,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public List<Chat> getUserChats(@NotNull Integer userId, @NotNull Context context) {
+    public List<Chat> getUserChats(@NotNull String userId, @NotNull Context context) {
         List<Chat> result;
 
         synchronized (userChatsCache) {
@@ -143,7 +147,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public Chat getPrivateChat(@NotNull Integer userId, @NotNull final Integer secondUserId, @NotNull final Context context) {
+    public Chat getPrivateChat(@NotNull String userId, @NotNull final String secondUserId, @NotNull final Context context) {
         Chat result;
 
         try {
@@ -177,11 +181,11 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public List<User> getOnlineUserFriends(@NotNull Integer userId, @NotNull Context context) {
-        return Lists.newArrayList(Iterables.filter(getUserFriends(userId, context), new Predicate<User>() {
+    public List<User> getOnlineUserContacts(@NotNull String userId, @NotNull Context context) {
+        return Lists.newArrayList(Iterables.filter(getUserContacts(userId, context), new Predicate<User>() {
             @Override
-            public boolean apply(@javax.annotation.Nullable User friend) {
-                return friend != null && friend.isOnline();
+            public boolean apply(@javax.annotation.Nullable User contact) {
+                return contact != null && contact.isOnline();
             }
         }));
     }
@@ -204,8 +208,8 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     */
 
     @Override
-    public void syncUserProperties(@NotNull Integer userId, @NotNull Context context) {
-        final User user = getApiUserService().getUserById(userId);
+    public void syncUserProperties(@NotNull String userId, @NotNull Context context) {
+        final User user = realm.getRealmUserService().getUserById(userId);
         if (user != null) {
             synchronized (lock) {
                 getUserDao(context).updateUser(user);
@@ -216,51 +220,51 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     @NotNull
-    public List<User> syncUserFriends(@NotNull Integer userId, @NotNull Context context) {
-        final List<User> friends = getApiUserService().getUserFriends(userId);
-        synchronized (userFriendsCache) {
-            userFriendsCache.put(userId, friends);
+    public List<User> syncUserContacts(@NotNull String userId, @NotNull Context context) {
+        final List<User> contacts = realm.getRealmUserService().getUserContacts(userId);
+        synchronized (userContactsCache) {
+            userContactsCache.put(userId, contacts);
         }
 
         User user = getUserById(userId, context);
-        final MergeDaoResult<User, Integer> result;
+        final MergeDaoResult<User, String> result;
         synchronized (lock) {
-            result = getUserDao(context).mergeUserFriends(userId, friends);
+            result = getUserDao(context).mergeUserContacts(userId, contacts);
 
             // update sync data
-            user = user.updateFriendsSyncDate();
+            user = user.updateContactsSyncDate();
             updateUser(user, context);
         }
 
-        final List<UserEvent> userEvents = new ArrayList<UserEvent>(friends.size());
+        final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
-        userEvents.add(new UserEvent(user, UserEventType.friend_added_batch, result.getAddedObjectLinks()));
+        userEvents.add(new UserEvent(user, UserEventType.contact_added_batch, result.getAddedObjectLinks()));
 
-        final List<User> addedFriends = result.getAddedObjects();
-        for (User addedFriend : addedFriends) {
-            userEvents.add(new UserEvent(addedFriend, UserEventType.added, null));
+        final List<User> addedContacts = result.getAddedObjects();
+        for (User addedContact : addedContacts) {
+            userEvents.add(new UserEvent(addedContact, UserEventType.added, null));
         }
-        userEvents.add(new UserEvent(user, UserEventType.friend_added_batch, addedFriends));
+        userEvents.add(new UserEvent(user, UserEventType.contact_added_batch, addedContacts));
 
 
-        for (Integer removedFriendId : result.getRemovedObjectIds()) {
-            userEvents.add(new UserEvent(user, UserEventType.friend_removed, removedFriendId));
+        for (String removedContactId : result.getRemovedObjectIds()) {
+            userEvents.add(new UserEvent(user, UserEventType.contact_removed, removedContactId));
         }
 
-        for (User updatedFriend : result.getUpdatedObjects()) {
-            userEvents.add(new UserEvent(updatedFriend, UserEventType.changed, null));
-            userEvents.add(new UserEvent(user, updatedFriend.isOnline() ? UserEventType.friend_online : UserEventType.friend_offline, updatedFriend));
+        for (User updatedContact : result.getUpdatedObjects()) {
+            userEvents.add(new UserEvent(updatedContact, UserEventType.changed, null));
+            userEvents.add(new UserEvent(user, updatedContact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline, updatedContact));
         }
 
         listeners.fireUserEvents(userEvents);
 
-        return Collections.unmodifiableList(friends);
+        return Collections.unmodifiableList(contacts);
     }
 
     @NotNull
     @Override
-    public List<Chat> syncUserChats(@NotNull Integer userId, @NotNull Context context) {
-        final List<ApiChat> apiChats = getApiChatService().getUserChats(userId, context);
+    public List<Chat> syncUserChats(@NotNull String userId, @NotNull Context context) {
+        final List<ApiChat> apiChats = realm.getRealmChatService().getUserChats(userId, context);
 
         final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
             @Override
@@ -280,7 +284,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void mergeUserChats(@NotNull Integer userId, @NotNull List<? extends ApiChat> apiChats, @NotNull Context context) {
+    public void mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> apiChats, @NotNull Context context) {
         User user = this.getUserById(userId, context);
 
         final MergeDaoResult<ApiChat, String> result;
@@ -334,25 +338,20 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @NotNull
-    private ApiChatService getApiChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getApiChatService();
-    }
-
-    @NotNull
     private ChatService getChatService() {
         return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
     }
 
     @Override
-    public void checkOnlineUserFriends(@NotNull Integer userId, @NotNull Context context) {
-        final List<User> friends = getApiUserService().checkOnlineUsers(getUserFriends(userId, context));
+    public void checkOnlineUseContacts(@NotNull String userId, @NotNull Context context) {
+        final List<User> contacts = realm.getRealmUserService().checkOnlineUsers(getUserContacts(userId, context));
 
         final User user = getUserById(userId, context);
 
-        final List<UserEvent> userEvents = new ArrayList<UserEvent>(friends.size());
+        final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
-        for (User friend : friends) {
-            userEvents.add(new UserEvent(user, friend.isOnline() ? UserEventType.friend_online : UserEventType.friend_offline, friend));
+        for (User contact : contacts) {
+            userEvents.add(new UserEvent(user, contact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline, contact));
         }
 
         listeners.fireUserEvents(userEvents);
@@ -362,10 +361,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @Override
     public void fetchUserIcons(@NotNull User user, @NotNull Context context) {
         this.fetchUserIcon(user, context);
-        this.fetchFriendsIcons(user, context);
+        this.fetchContactsIcons(user, context);
 
         // update sync data
-        user = user.updateFriendsSyncDate();
+        user = user.updateContactsSyncDate();
         updateUser(user, context);
     }
 
@@ -384,13 +383,14 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     public void fetchUserIcon(@NotNull User user, @NotNull Context context) {
         final String userIconUri = getUserIconUri(user, context);
         if (!StringUtils.isEmpty(userIconUri)) {
+            assert userIconUri != null;
             MessengerConfigurationImpl.getInstance().getServiceLocator().getRemoteFileService().loadImage(userIconUri);
         }
     }
 
-    public void fetchFriendsIcons(@NotNull User user, @NotNull Context context) {
-        for (User friend : getUserFriends(user.getId(), context)) {
-            fetchUserIcon(friend, context);
+    public void fetchContactsIcons(@NotNull User user, @NotNull Context context) {
+        for (User contact : getUserContacts(user.getId(), context)) {
+            fetchUserIcon(contact, context);
         }
     }
 
@@ -402,11 +402,6 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @NotNull
     private UserDao getUserDao(@NotNull Context context) {
         return MessengerConfigurationImpl.getInstance().getDaoLocator().getUserDao(context);
-    }
-
-    @NotNull
-    private ApiUserService getApiUserService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getApiUserService();
     }
 
     /*
@@ -440,58 +435,57 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @Override
     public void onUserEvent(@NotNull User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
 
-        synchronized (userFriendsCache) {
+        synchronized (userContactsCache) {
 
             if (userEventType == UserEventType.changed) {
-                // user changed => update it in friends cache
-                for (List<User> friends : userFriendsCache.values()) {
-                    for (int i = 0; i < friends.size(); i++) {
-                        final User friend = friends.get(i);
-                        if (friend.equals(eventUser)) {
-                            friends.set(i, eventUser);
+                // user changed => update it in contacts cache
+                for (List<User> contacts : userContactsCache.values()) {
+                    for (int i = 0; i < contacts.size(); i++) {
+                        final User contact = contacts.get(i);
+                        if (contact.equals(eventUser)) {
+                            contacts.set(i, eventUser);
                         }
                     }
                 }
             }
 
-            if (userEventType == UserEventType.friend_added) {
-                // friend added => need to add to list of cached friends
-                if (data instanceof User) {
-                    final User friend = ((User) data);
-                    final List<User> friends = userFriendsCache.get(eventUser.getId());
-                    if (friends != null) {
+            if (userEventType == UserEventType.contact_added) {
+                // contact added => need to add to list of cached contacts
+                final User contact = ((User) data);
+                final List<User> contacts = userContactsCache.get(eventUser.getId());
+                if (contacts != null) {
+                    // check if not contains as can be added in parallel
+                    if (!Iterables.contains(contacts, contact)) {
+                        contacts.add(contact);
+                    }
+                }
+            }
+
+            if (userEventType == UserEventType.contact_added_batch) {
+                // contacts added => need to add to list of cached contacts
+                final List<User> contacts = (List<User>) data;
+                final List<User> contactsFromCache = userContactsCache.get(eventUser.getId());
+                if (contactsFromCache != null) {
+                    for (User contact : contacts) {
                         // check if not contains as can be added in parallel
-                        if (!Iterables.contains(friends, friend)) {
-                            friends.add(friend);
+                        if (!Iterables.contains(contactsFromCache, contact)) {
+                            contactsFromCache.add(contact);
                         }
                     }
                 }
             }
 
-            if (userEventType == UserEventType.friend_added_batch) {
-                // friends added => need to add to list of cached friends
-                if (data instanceof List) {
-                    final List<User> friends = (List<User>) data;
-                    final List<User> friendsFromCache = userFriendsCache.get(eventUser.getId());
-                    if (friendsFromCache != null) {
-                        for (User friend : friends) {
-                            // check if not contains as can be added in parallel
-                            if (!Iterables.contains(friendsFromCache, friend)) {
-                                friendsFromCache.add(friend);
-                            }
+            if (userEventType == UserEventType.contact_removed) {
+                // contact removed => try to remove from cached contacts
+                final String removedContactId = ((String) data);
+                final List<User> contacts = userContactsCache.get(eventUser.getId());
+                if (contacts != null) {
+                    Iterables.removeIf(contacts, new Predicate<User>() {
+                        @Override
+                        public boolean apply(@javax.annotation.Nullable User contact) {
+                            return contact != null && contact.getId().equals(removedContactId);
                         }
-                    }
-                }
-            }
-
-            if (userEventType == UserEventType.friend_removed) {
-                // friend removed => try to remove from cached friends
-                if (data instanceof User) {
-                    final User friend = ((User) data);
-                    final List<User> friends = userFriendsCache.get(eventUser.getId());
-                    if (friends != null) {
-                        friends.remove(friend);
-                    }
+                    });
                 }
             }
         }
@@ -510,26 +504,22 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             }
 
             if (userEventType == UserEventType.chat_added_batch) {
-                if (data instanceof List) {
-                    final List<Chat> chats = (List<Chat>) data;
-                    final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getId());
-                    if (chatsFromCache != null) {
-                        for (Chat chat : chats) {
-                            if (!Iterables.contains(chatsFromCache, chat)) {
-                                chatsFromCache.add(chat);
-                            }
+                final List<Chat> chats = (List<Chat>) data;
+                final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getId());
+                if (chatsFromCache != null) {
+                    for (Chat chat : chats) {
+                        if (!Iterables.contains(chatsFromCache, chat)) {
+                            chatsFromCache.add(chat);
                         }
                     }
                 }
             }
 
             if (userEventType == UserEventType.chat_removed) {
-                if (data instanceof Chat) {
-                    final Chat chat = ((Chat) data);
-                    final List<Chat> chats = userChatsCache.get(eventUser.getId());
-                    if (chats != null) {
-                        chats.remove(chat);
-                    }
+                final Chat chat = ((Chat) data);
+                final List<Chat> chats = userChatsCache.get(eventUser.getId());
+                if (chats != null) {
+                    chats.remove(chat);
                 }
             }
         }

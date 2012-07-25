@@ -29,12 +29,13 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
     @NotNull
     @Override
     public ChatMessage convert(@NotNull Cursor c) {
-        final Integer messageId = c.getInt(0);
+        final String messageId = c.getString(0);
+        final String chatId = c.getString(1);
 
         final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageId);
-        liteChatMessage.setAuthor(userService.getUserById(c.getInt(2), context));
+        liteChatMessage.setAuthor(userService.getUserById(c.getString(2), context));
         if (!c.isNull(3)) {
-            int recipientId = c.getInt(3);
+            final String recipientId = c.getString(3);
             liteChatMessage.setRecipient(userService.getUserById(recipientId, context));
         }
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();

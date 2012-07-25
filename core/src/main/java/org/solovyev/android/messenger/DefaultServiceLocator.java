@@ -4,12 +4,13 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.http.HttpRemoteFileService;
 import org.solovyev.android.http.RemoteFileService;
-import org.solovyev.android.messenger.chats.ApiChatService;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
-import org.solovyev.android.messenger.longpoll.ApiLongPollService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
+import org.solovyev.android.messenger.realms.DefaultRealmService;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
@@ -17,9 +18,10 @@ import org.solovyev.android.messenger.security.AuthServiceFacadeImpl;
 import org.solovyev.android.messenger.security.AuthServiceImpl;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.ApiUserService;
 import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.UserService;
+
+import java.util.Arrays;
 
 /**
  * User: serso
@@ -33,24 +35,18 @@ public class DefaultServiceLocator implements ServiceLocator {
     private AuthServiceFacade authServiceFacade;
 
     @NotNull
-    private final DefaultUserService userService = new DefaultUserService();
+    private final DefaultUserService userService;
 
     @NotNull
-    private final DefaultChatService chatService = new DefaultChatService();
+    private final DefaultChatService chatService;
+
+    @NotNull
+    private final RealmService realmService;
 
     @NotNull
     private final DefaultChatMessageService chatMessageService = new DefaultChatMessageService();
 
     private SyncService syncService;
-
-    @NotNull
-    private ApiUserService apiUserService;
-
-    @NotNull
-    private ApiChatService apiChatService;
-
-    @NotNull
-    private ApiLongPollService apiLongPollService;
 
     @NotNull
     private RemoteFileService remoteFileService;
@@ -59,36 +55,16 @@ public class DefaultServiceLocator implements ServiceLocator {
     private RegistrationService registrationService;
 
     public DefaultServiceLocator(@NotNull Context context,
-                                 @NotNull ApiUserService apiUserService,
-                                 @NotNull ApiChatService apiChatService,
-                                 @NotNull ApiLongPollService apiLongPollService,
-                                 @NotNull RegistrationService registrationService) {
-        this.apiUserService = apiUserService;
-        this.apiChatService = apiChatService;
-        this.apiLongPollService = apiLongPollService;
+                                 @NotNull RegistrationService registrationService,
+                                 @NotNull Realm realm) {
         this.registrationService = registrationService;
-        this.remoteFileService = new HttpRemoteFileService(context, MessengerConfigurationImpl.getInstance().getRealm());
+        this.remoteFileService = new HttpRemoteFileService(context, "messenger");
+        this.realmService = new DefaultRealmService(Arrays.asList(realm));
 
+        userService = new DefaultUserService(realm);
+        chatService = new DefaultChatService(realm);
         userService.addUserEventListener(chatService);
         chatService.addChatEventListener(userService);
-    }
-
-    @Override
-    @NotNull
-    public ApiUserService getApiUserService() {
-        return apiUserService;
-    }
-
-    @Override
-    @NotNull
-    public ApiChatService getApiChatService() {
-        return apiChatService;
-    }
-
-    @NotNull
-    @Override
-    public ApiLongPollService getApiLongPollService() {
-        return apiLongPollService;
     }
 
     @NotNull
@@ -98,6 +74,21 @@ public class DefaultServiceLocator implements ServiceLocator {
             authService = new AuthServiceImpl();
         }
         return authService;
+    }
+
+    @NotNull
+    @Override
+    public AuthServiceFacade getAuthServiceFacade() {
+        if (authServiceFacade == null) {
+            authServiceFacade = new AuthServiceFacadeImpl(MessengerConfigurationImpl.getInstance().getRealm().getId(), getAuthService());
+        }
+        return authServiceFacade;
+    }
+
+    @NotNull
+    @Override
+    public RealmService getRealmService() {
+        return this.realmService;
     }
 
     @NotNull
@@ -138,14 +129,5 @@ public class DefaultServiceLocator implements ServiceLocator {
     @Override
     public RegistrationService getRegistrationService() {
         return registrationService;
-    }
-
-    @NotNull
-    @Override
-    public synchronized AuthServiceFacade getAuthServiceFacade() {
-        if (authServiceFacade == null) {
-            authServiceFacade = new AuthServiceFacadeImpl();
-        }
-        return authServiceFacade;
     }
 }

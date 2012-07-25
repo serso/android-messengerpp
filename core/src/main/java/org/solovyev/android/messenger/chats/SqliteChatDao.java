@@ -43,7 +43,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
     @NotNull
     @Override
-    public List<String> loadUserChatIds(@NotNull Integer userId) {
+    public List<String> loadUserChatIds(@NotNull String userId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
     }
 
@@ -66,7 +66,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
     @NotNull
     @Override
-    public List<Chat> loadUserChats(@NotNull Integer userId) {
+    public List<Chat> loadUserChats(@NotNull String userId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
     }
 
@@ -112,12 +112,12 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
     private static final class LoadChatsByUserId extends AbstractDbQuery<List<Chat>> {
 
         @NotNull
-        private final Integer userId;
+        private final String userId;
 
         @NotNull
         private final ChatDao chatDao;
 
-        private LoadChatsByUserId(@NotNull Context context, @NotNull Integer userId, @NotNull SQLiteOpenHelper sqliteOpenHelper, @NotNull ChatDao chatDao) {
+        private LoadChatsByUserId(@NotNull Context context, @NotNull String userId, @NotNull SQLiteOpenHelper sqliteOpenHelper, @NotNull ChatDao chatDao) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
             this.chatDao = chatDao;
@@ -126,7 +126,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.query("chats", null, "id in (select chat_id from user_chats where user_id = ? ) ", new String[]{String.valueOf(userId)}, null, null, null);
+            return db.query("chats", null, "id in (select chat_id from user_chats where user_id = ? ) ", new String[]{userId}, null, null, null);
         }
 
         @NotNull
@@ -145,7 +145,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
     @NotNull
     @Override
-    public MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull Integer userId, @NotNull List<? extends ApiChat> apiChats) {
+    public MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> apiChats) {
         final MergeDaoResultImpl<ApiChat, String> result = new MergeDaoResultImpl<ApiChat, String>(apiChats);
 
         final List<String> chatsFromDb = loadUserChatIds(userId);
@@ -240,9 +240,9 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
     private static final class LoadChatIdsByUserId extends AbstractDbQuery<List<String>> {
 
         @NotNull
-        private final Integer userId;
+        private final String userId;
 
-        private LoadChatIdsByUserId(@NotNull Context context, @NotNull Integer userId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        private LoadChatIdsByUserId(@NotNull Context context, @NotNull String userId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
         }
@@ -250,7 +250,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.query("chats", null, "id in (select chat_id from user_chats where user_id = ? ) ", new String[]{String.valueOf(userId)}, null, null, null);
+            return db.query("chats", null, "id in (select chat_id from user_chats where user_id = ? ) ", new String[]{userId}, null, null, null);
         }
 
         @NotNull
@@ -278,22 +278,22 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
     private static final class RemoveChats implements DbExec {
 
         @NotNull
-        private Integer userId;
+        private String userId;
 
         @NotNull
         private List<String> chatIds;
 
-        private RemoveChats(@NotNull Integer userId, @NotNull List<String> chatIds) {
+        private RemoveChats(@NotNull String userId, @NotNull List<String> chatIds) {
             this.userId = userId;
             this.chatIds = chatIds;
         }
 
         @NotNull
-        private static List<RemoveChats> newInstances(@NotNull Integer userId, @NotNull List<String> chatIds) {
+        private static List<RemoveChats> newInstances(@NotNull String userId, @NotNull List<String> chatIds) {
             final List<RemoveChats> result = new ArrayList<RemoveChats>();
 
-            for (List<String> friendIdsChunk : CollectionsUtils2.split(chatIds, MAX_IN_COUNT)) {
-                result.add(new RemoveChats(userId, friendIdsChunk));
+            for (List<String> chatIdsChunk : CollectionsUtils2.split(chatIds, MAX_IN_COUNT)) {
+                result.add(new RemoveChats(userId, chatIdsChunk));
             }
 
             return result;
@@ -301,7 +301,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
         @Override
         public void exec(@NotNull SQLiteDatabase db) {
-            db.delete("user_chats", "user_id = ? and chat_id in " + AndroidDbUtils.inClause(chatIds), AndroidDbUtils.inClauseValues(chatIds, String.valueOf(userId)));
+            db.delete("user_chats", "user_id = ? and chat_id in " + AndroidDbUtils.inClause(chatIds), AndroidDbUtils.inClauseValues(chatIds, userId));
         }
     }
 
@@ -390,12 +390,12 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
     private static final class InsertChatLink implements DbExec {
 
         @NotNull
-        private Integer userId;
+        private String userId;
 
         @NotNull
         private String chatId;
 
-        private InsertChatLink(@NotNull Integer userId, @NotNull String chatId) {
+        private InsertChatLink(@NotNull String userId, @NotNull String chatId) {
             this.userId = userId;
             this.chatId = chatId;
         }

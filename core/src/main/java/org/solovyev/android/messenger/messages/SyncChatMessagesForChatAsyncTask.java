@@ -66,14 +66,14 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
     public static class Input {
 
         @NotNull
-        private Integer userId;
+        private String userId;
 
         @NotNull
         private String chatId;
 
         private boolean older;
 
-        public Input(@NotNull Integer userId, @NotNull String chatId, boolean older) {
+        public Input(@NotNull String userId, @NotNull String chatId, boolean older) {
             this.userId = userId;
             this.chatId = chatId;
             this.older = older;

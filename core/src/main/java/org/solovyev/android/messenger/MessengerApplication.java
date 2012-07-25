@@ -14,7 +14,6 @@ import org.joda.time.DateTimeZone;
 import org.solovyev.android.date.FastDateTimeZoneProvider;
 import org.solovyev.android.db.CommonSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
-import org.solovyev.android.messenger.security.ApiAuthenticator;
 import org.solovyev.android.messenger.users.DummyMessengerApi;
 import org.solovyev.android.prefs.BooleanPreference;
 import org.solovyev.android.prefs.Preference;
@@ -34,9 +33,9 @@ public abstract class MessengerApplication extends Application implements Messen
         public static class Gui {
             public static class Chat {
                 public static Preference<Boolean> showUserIcon = new BooleanPreference("gui.chat.showUserIcon", true);
-                public static Preference<Boolean> showFriendIconInChat = new BooleanPreference("gui.chat.showFriendIconInChat", true);
-                public static Preference<Boolean> showFriendIconInPrivateChat = new BooleanPreference("gui.chat.showFriendIconInPrivateChat", true);
-                public static Preference<UserIconPosition> userIconPosition = StringPreference.newInstance("gui.chat.userIconPosition", UserIconPosition.right, UserIconPosition.class);
+                public static Preference<Boolean> showContactIconInChat = new BooleanPreference("gui.chat.showContactIconInChat", true);
+                public static Preference<Boolean> showContactIconInPrivateChat = new BooleanPreference("gui.chat.showContactIconInPrivateChat", true);
+                public static Preference<UserIconPosition> userMessagesPosition = StringPreference.newInstance("gui.chat.userMessagesPosition", UserIconPosition.left, UserIconPosition.class);
 
                 public static enum UserIconPosition {
                     left,
@@ -55,14 +54,12 @@ public abstract class MessengerApplication extends Application implements Messen
 
         DateTimeZone.setDefault(DateTimeZone.UTC);
 
-        MessengerConfigurationImpl.getInstance().setRealm(getRealm());
         final CommonSQLiteOpenHelper sqliteOpenHelper = new CommonSQLiteOpenHelper(this, getSqliteOpenHelperConfiguration());
-
         MessengerConfigurationImpl.getInstance().setSqliteOpenHelper(sqliteOpenHelper);
 
+        MessengerConfigurationImpl.getInstance().setRealmId(getRealmId());
         MessengerConfigurationImpl.getInstance().setServiceLocator(getServiceLocator());
         MessengerConfigurationImpl.getInstance().setDaoLocator(getDaoLocator());
-        MessengerConfigurationImpl.getInstance().setAuthenticator(getAuthenticator());
 
         final Intent intent = new Intent();
         intent.setClass(this, MessengerService.class);
@@ -74,6 +71,9 @@ public abstract class MessengerApplication extends Application implements Messen
         // load persistence data
         MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthService().load(this);
     }
+
+    @NotNull
+    protected abstract String getRealmId();
 
     @NotNull
     protected abstract SQLiteOpenHelperConfiguration getSqliteOpenHelperConfiguration();
@@ -98,12 +98,6 @@ public abstract class MessengerApplication extends Application implements Messen
     public MessengerApi getMessengerApi() {
         return connection.getMessengerApi();
     }
-
-    @NotNull
-    protected abstract String getRealm();
-
-    @NotNull
-    protected abstract ApiAuthenticator getAuthenticator();
 
     @NotNull
     protected abstract ServiceLocator getServiceLocator();

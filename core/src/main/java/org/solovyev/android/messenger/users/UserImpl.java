@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.APropertyImpl;
 import org.solovyev.android.VersionedEntity;
+import org.solovyev.android.VersionedEntityImpl;
 import org.solovyev.common.JObject;
 import org.solovyev.common.utils.StringUtils;
 
@@ -21,7 +22,7 @@ import java.util.*;
 public class UserImpl extends JObject implements User {
 
     @NotNull
-    private VersionedEntity versionedEntity;
+    private VersionedEntity<String> versionedEntity;
 
     @NotNull
     private String login;
@@ -39,7 +40,7 @@ public class UserImpl extends JObject implements User {
     }
 
     @NotNull
-    public static User newInstance(@NotNull VersionedEntity versionedEntity,
+    public static User newInstance(@NotNull VersionedEntity<String> versionedEntity,
                                    @NotNull UserSyncData userSyncData,
                                    @NotNull List<AProperty> properties) {
         final UserImpl result = new UserImpl();
@@ -57,8 +58,8 @@ public class UserImpl extends JObject implements User {
     }
 
     @NotNull
-    public static User newInstance(@NotNull VersionedEntity versionedEntity) {
-        return newInstance(versionedEntity, UserSyncDataImpl.newInstance(null, null, null, null), Collections.<AProperty>emptyList());
+    public static User newInstance(@NotNull String userId) {
+        return newInstance(new VersionedEntityImpl<String>(userId), UserSyncDataImpl.newInstance(null, null, null, null), Collections.<AProperty>emptyList());
     }
 
     @NotNull
@@ -89,7 +90,7 @@ public class UserImpl extends JObject implements User {
 
     @Override
     @NotNull
-    public Integer getId() {
+    public String getId() {
         return versionedEntity.getId();
     }
 
@@ -156,9 +157,9 @@ public class UserImpl extends JObject implements User {
 
     @NotNull
     @Override
-    public User updateFriendsSyncDate() {
+    public User updateContactsSyncDate() {
         final UserImpl clone = this.clone();
-        clone.userSyncData = clone.userSyncData.updateFriendsSyncDate();
+        clone.userSyncData = clone.userSyncData.updateContactsSyncDate();
         return clone;
     }
 
@@ -166,7 +167,7 @@ public class UserImpl extends JObject implements User {
     @Override
     public User updateUserIconsSyncDate() {
         final UserImpl clone = this.clone();
-        clone.userSyncData = clone.userSyncData.updateUserIconsSyncData();
+        clone.userSyncData = clone.userSyncData.updateUserIconsSyncDate();
         return clone;
     }
 
@@ -207,6 +208,11 @@ public class UserImpl extends JObject implements User {
         if (!versionedEntity.equals(user.versionedEntity)) return false;
 
         return true;
+    }
+
+    @Override
+    public boolean equalsVersion(Object that) {
+        return this.equals(that) && this.versionedEntity.equalsVersion(((UserImpl) that).versionedEntity);
     }
 
     @Override

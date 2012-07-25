@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: 6/24/12
  * Time: 12:09 AM
  */
-public interface ApiLongPollService {
+public interface RealmLongPollService {
 
     @Nullable
     Object startLongPolling();

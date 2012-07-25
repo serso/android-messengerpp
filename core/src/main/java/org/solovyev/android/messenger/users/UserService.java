@@ -17,19 +17,19 @@ public interface UserService extends UserEventContainer {
 
     // NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
     @NotNull
-    User getUserById(@NotNull Integer userId, @NotNull Context context);
+    User getUserById(@NotNull String userId, @NotNull Context context);
 
     @NotNull
-    List<User> getUserFriends(@NotNull Integer userId, @NotNull Context context);
+    List<User> getUserContacts(@NotNull String userId, @NotNull Context context);
 
     @NotNull
-    List<Chat> getUserChats(@NotNull Integer userId, @NotNull Context context);
+    List<Chat> getUserChats(@NotNull String userId, @NotNull Context context);
 
     @NotNull
-    Chat getPrivateChat(@NotNull Integer userId, @NotNull Integer secondUserId, @NotNull Context context);
+    Chat getPrivateChat(@NotNull String userId, @NotNull String secondUserId, @NotNull Context context);
 
     @NotNull
-    List<User> getOnlineUserFriends(@NotNull Integer userId, @NotNull Context context);
+    List<User> getOnlineUserContacts(@NotNull String userId, @NotNull Context context);
 
     void updateUser(@NotNull User user, @NotNull Context context);
 
@@ -43,17 +43,17 @@ public interface UserService extends UserEventContainer {
     **********************************************************************
     */
 
-    void syncUserProperties(@NotNull Integer userId, @NotNull Context context);
+    void syncUserProperties(@NotNull String userId, @NotNull Context context);
 
     @NotNull
-    List<User> syncUserFriends(@NotNull Integer userId, @NotNull Context context);
+    List<User> syncUserContacts(@NotNull String userId, @NotNull Context context);
 
     @NotNull
-    List<Chat> syncUserChats(@NotNull Integer userId, @NotNull Context context);
+    List<Chat> syncUserChats(@NotNull String userId, @NotNull Context context);
 
-    void mergeUserChats(@NotNull Integer userId, @NotNull List<? extends ApiChat> apiChats, @NotNull Context context);
+    void mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> apiChats, @NotNull Context context);
 
-    void checkOnlineUserFriends(@NotNull Integer userId, @NotNull Context context);
+    void checkOnlineUseContacts(@NotNull String userId, @NotNull Context context);
 
     void fetchUserIcons(@NotNull User user, @NotNull Context context);
 }

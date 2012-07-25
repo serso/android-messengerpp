@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.AProperty;
+import org.solovyev.android.VersionedEntity;
 
 import java.util.List;
 
@@ -12,16 +13,13 @@ import java.util.List;
  * Date: 6/11/12
  * Time: 7:38 PM
  */
-public interface Chat {
-
-    @NotNull
-    String getId();
+public interface Chat extends VersionedEntity<String> {
 
     boolean isPrivate();
 
     // must be called only after isPrivate() check
     @NotNull
-    Integer getSecondUserId();
+    String getSecondUserId();
 
     @NotNull
     Integer getMessagesCount();

@@ -14,7 +14,7 @@ public class DummyMessengerApi implements MessengerApi {
 
 
     @Override
-    public void loginUser(String login, String password, ServiceCallback callback) throws RemoteException {
+    public void loginUser(String realm, String login, String password, ServiceCallback callback) throws RemoteException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

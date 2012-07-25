@@ -75,13 +75,9 @@ public class VkAuthenticationHttpTransaction
         try {
             final String json = StringUtils.convertStream(response.getEntity().getContent());
             try {
-                return JsonResult.toAuthResult(json);
+                return JsonResult.toAuthResult(json, login);
             } catch (IllegalJsonException e) {
-                try {
-                    throw VkResponseErrorException.newInstance(json, this);
-                } catch (IllegalJsonException e1) {
-                    throw new RuntimeException(e1);
-                }
+                throw VkResponseErrorException.newInstance(json, this);
             }
         } catch (IOException e) {
             throw new RuntimeIoException(e);
@@ -97,19 +93,21 @@ public class VkAuthenticationHttpTransaction
         private Integer expires_in;
 
         @Nullable
-        private Integer user_id;
+        private String user_id;
 
         @NotNull
-        private static AuthData toAuthResult(@NotNull JsonResult jsonResult) {
+        private static AuthData toAuthResult(@NotNull JsonResult jsonResult, @NotNull String login) {
             final AuthDataImpl result = new AuthDataImpl();
+
             result.setAccessToken(jsonResult.access_token);
-            result.setExpiresIn(jsonResult.expires_in);
             result.setUserId(jsonResult.user_id);
+            result.setUserLogin(login);
+
             return result;
         }
 
         @NotNull
-        public static AuthData toAuthResult(@NotNull String json) throws IllegalJsonException {
+        public static AuthData toAuthResult(@NotNull String json, @NotNull String login) throws IllegalJsonException {
             final Gson gson = new Gson();
 
             final JsonResult jsonResult = gson.fromJson(json, JsonResult.class);
@@ -118,7 +116,7 @@ public class VkAuthenticationHttpTransaction
                 throw new IllegalJsonException();
             }
 
-            return toAuthResult(jsonResult);
+            return toAuthResult(jsonResult, login);
         }
     }
 }

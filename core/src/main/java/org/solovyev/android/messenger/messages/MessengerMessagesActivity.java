@@ -56,7 +56,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     private Chat chat;
 
     @Nullable
-    private User friend;
+    private User contact;
 
     public MessengerMessagesActivity() {
         super(R.layout.msg_main_view_pager_grid, false);
@@ -88,7 +88,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId(), this);
         if (chat.isPrivate()) {
             if (!participants.isEmpty()) {
-                friend = participants.get(0);
+                contact = participants.get(0);
             }
         }
 
@@ -149,30 +149,30 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         getHeaderCenter().addView(headerCenterView);
 
         // online icon
-        if (friend != null) {
-            changeOnlineStatus(friend.isOnline());
+        if (contact != null) {
+            changeOnlineStatus(contact.isOnline());
         }
 
-        // friend icon
-        if (friend != null) {
-            final ImageView friendIcon = createFooterImageButton(R.drawable.empty_icon, R.string.c_friend);
+        // contact icon
+        if (contact != null) {
+            final ImageView contactIcon = createFooterImageButton(R.drawable.empty_icon, R.string.c_contact);
 
-            final String imageUri = friend.getPropertyValueByName("photo");
+            final String imageUri = contact.getPropertyValueByName("photo");
             if (!StringUtils.isEmpty(imageUri)) {
-                MessengerConfigurationImpl.getInstance().getServiceLocator().getRemoteFileService().loadImage(imageUri, friendIcon, R.drawable.empty_icon);
+                MessengerConfigurationImpl.getInstance().getServiceLocator().getRemoteFileService().loadImage(imageUri, contactIcon, R.drawable.empty_icon);
             }
 
-            getHeaderRight().addView(friendIcon, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            getHeaderRight().addView(contactIcon, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
 
     private void changeOnlineStatus(boolean online) {
         if (AndroidUtils.getScreenOrientation(this) != Configuration.ORIENTATION_LANDSCAPE) {
-            final TextView friendOnline = (TextView) getHeaderCenter().findViewById(R.id.friend_online);
+            final TextView contactOnline = (TextView) getHeaderCenter().findViewById(R.id.contact_online);
             if (online) {
-                friendOnline.setText("·");
+                contactOnline.setText("·");
             } else {
-                friendOnline.setText("");
+                contactOnline.setText("");
             }
         }
     }
@@ -207,26 +207,26 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (friend != null) {
-                    if (userEventType == UserEventType.friend_online) {
-                        final User eventFriend = (User) data;
-                        if (friend.equals(eventFriend)) {
+                if (contact != null) {
+                    if (userEventType == UserEventType.contact_online) {
+                        final User eventContact = (User) data;
+                        if (contact.equals(eventContact)) {
                             changeOnlineStatus(true);
-                            friend = eventFriend;
+                            contact = eventContact;
                         }
                     }
 
-                    if (userEventType == UserEventType.friend_offline) {
-                        final User eventFriend = (User) data;
-                        if (friend.equals(eventFriend)) {
+                    if (userEventType == UserEventType.contact_offline) {
+                        final User eventContact = (User) data;
+                        if (contact.equals(eventContact)) {
                             changeOnlineStatus(false);
-                            friend = eventFriend;
+                            contact = eventContact;
                         }
                     }
 
                     if (userEventType == UserEventType.changed) {
-                        if (eventUser.equals(friend)) {
-                            friend = eventUser;
+                        if (eventUser.equals(contact)) {
+                            contact = eventUser;
                         }
                     }
                 }

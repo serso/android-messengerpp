@@ -17,10 +17,10 @@ import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
  * Date: 6/1/12
  * Time: 6:53 PM
  */
-public class MessengerFriendsListActivity extends MessengerListActivity {
+public class MessengerContactsListActivity extends MessengerListActivity {
 
     @NotNull
-    private FriendsAdapter adapter;
+    private ContactsAdapter adapter;
 
     @Nullable
     private UserEventListener userEventListener;
@@ -34,12 +34,12 @@ public class MessengerFriendsListActivity extends MessengerListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new FriendsAdapter(this, getUser());
+        adapter = new ContactsAdapter(this, getUser());
 
         userEventListener = new UiThreadUserEventListener();
         getServiceLocator().getUserService().addUserEventListener(userEventListener);
 
-        new FriendsAsyncLoader(getUser(), this, adapter, null).execute();
+        new ContactsAsyncLoader(getUser(), this, adapter, null).execute();
 
         final ListView lv = getListView();
         lv.setTextFilterEnabled(true);
@@ -54,7 +54,7 @@ public class MessengerFriendsListActivity extends MessengerListActivity {
 
                 final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
                 if (onClickAction != null) {
-                    onClickAction.onClick(MessengerFriendsListActivity.this, adapter, getListView());
+                    onClickAction.onClick(MessengerContactsListActivity.this, adapter, getListView());
                 }
             }
         });
@@ -66,7 +66,7 @@ public class MessengerFriendsListActivity extends MessengerListActivity {
 
                 final ListItem.OnClickAction onLongClickAction = listItem.getOnLongClickAction();
                 if (onLongClickAction != null) {
-                    onLongClickAction.onClick(MessengerFriendsListActivity.this, adapter, getListView());
+                    onLongClickAction.onClick(MessengerContactsListActivity.this, adapter, getListView());
                     return true;
                 }
 
@@ -79,23 +79,13 @@ public class MessengerFriendsListActivity extends MessengerListActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    getServiceLocator().getSyncService().sync(SyncTask.user_friends, MessengerFriendsListActivity.this, null);
+                    getServiceLocator().getSyncService().sync(SyncTask.user_contacts, MessengerContactsListActivity.this, null);
                 } catch (TaskIsAlreadyRunningException e) {
-                    e.showMessage(MessengerFriendsListActivity.this);
+                    e.showMessage(MessengerContactsListActivity.this);
                 }
             }
         });
         getFooterLeft().addView(syncButton);
-
-        final ImageButton logoutButton = createFooterButton(org.solovyev.android.ext.R.drawable.home, org.solovyev.android.ext.R.string.c_home);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getServiceLocator().getAuthServiceFacade().logoutUser(MessengerFriendsListActivity.this);
-                MessengerLoginActivity.startActivity(MessengerFriendsListActivity.this);
-            }
-        });
-        getFooterLeft().addView(logoutButton);
     }
 
     @NotNull
@@ -116,10 +106,10 @@ public class MessengerFriendsListActivity extends MessengerListActivity {
 
         @Override
         public void onUserEvent(@NotNull final User eventUser, @NotNull final UserEventType userEventType, final @Nullable Object data) {
-            new UiThreadRunnable(MessengerFriendsListActivity.this, new Runnable() {
+            new UiThreadRunnable(MessengerContactsListActivity.this, new Runnable() {
                 @Override
                 public void run() {
-                    MessengerFriendsListActivity.this.adapter.onUserEvent(eventUser, userEventType, data);
+                    MessengerContactsListActivity.this.adapter.onUserEvent(eventUser, userEventType, data);
                 }
             }).run();
         }

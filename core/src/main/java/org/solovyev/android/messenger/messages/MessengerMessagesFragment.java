@@ -90,6 +90,10 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     }
 
     @Override
+    protected void updateRightPane() {
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
 

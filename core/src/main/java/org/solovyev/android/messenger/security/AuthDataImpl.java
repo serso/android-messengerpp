@@ -18,11 +18,11 @@ public class AuthDataImpl implements AuthData {
 
     @Element
     @NotNull
-    private Integer expiresIn;
+    private String userId;
 
     @Element
     @NotNull
-    private Integer userId;
+    private String userLogin;
 
     public AuthDataImpl() {
     }
@@ -31,12 +31,12 @@ public class AuthDataImpl implements AuthData {
         this.accessToken = accessToken;
     }
 
-    public void setExpiresIn(@NotNull Integer expiresIn) {
-        this.expiresIn = expiresIn;
+    public void setUserId(@NotNull String userId) {
+        this.userId = userId;
     }
 
-    public void setUserId(@NotNull Integer userId) {
-        this.userId = userId;
+    public void setUserLogin(@NotNull String userLogin) {
+        this.userLogin = userLogin;
     }
 
     @Override
@@ -45,15 +45,16 @@ public class AuthDataImpl implements AuthData {
         return accessToken;
     }
 
-    @Override
-    @NotNull
-    public Integer getExpiresIn() {
-        return expiresIn;
-    }
 
     @Override
     @NotNull
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
+    }
+
+    @NotNull
+    @Override
+    public String getUserLogin() {
+        return this.userLogin;
     }
 }

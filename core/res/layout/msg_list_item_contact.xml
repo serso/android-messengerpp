@@ -5,7 +5,7 @@
                 a:layout_height="fill_parent"
                 style="@style/list_item_item">
 
-    <ImageView a:id="@+id/friend_icon"
+    <ImageView a:id="@+id/contact_icon"
                style="@style/list_item_item"
                a:padding="0dp"
                a:layout_centerInParent="true"
@@ -13,19 +13,19 @@
                a:layout_height="50dp"
                a:layout_alignParentLeft="true"/>
 
-    <TextView a:id="@+id/friend_online"
-              style="@style/friend_online"
+    <TextView a:id="@+id/contact_online"
+              style="@style/contact_online"
               a:layout_centerInParent="true"
               a:layout_width="20dp"
               a:layout_height="wrap_content"
               a:layout_alignParentRight="true"/>
 
     <TextView
-            a:id="@+id/friend_name"
+            a:id="@+id/contact_name"
             style="@style/list_item_item"
             a:layout_centerInParent="true"
-            a:layout_toRightOf="@id/friend_icon"
-            a:layout_toLeftOf="@id/friend_online"
+            a:layout_toRightOf="@id/contact_icon"
+            a:layout_toLeftOf="@id/contact_online"
             a:layout_width="fill_parent"
             a:layout_height="fill_parent"
             a:singleLine="true"

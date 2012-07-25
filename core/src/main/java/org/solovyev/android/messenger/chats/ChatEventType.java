@@ -16,11 +16,17 @@ public enum ChatEventType {
 
     message_added,
     message_added_batch,
+
+    // data == id of removed message
     message_removed,
+
+    // data == changed message for chat
     message_changed,
 
+    // data == new last message for chat
     last_message_changed,
 
+    // data == id of user which start typing in chat
     user_start_typing;
 
     public boolean isEvent (@NotNull ChatEventType chatEventType, @NotNull Chat eventChat, @NotNull Chat chat) {

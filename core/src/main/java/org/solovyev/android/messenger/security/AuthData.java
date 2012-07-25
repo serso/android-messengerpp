@@ -13,8 +13,8 @@ public interface AuthData {
     String getAccessToken();
 
     @NotNull
-    Integer getExpiresIn();
+    String getUserId();
 
     @NotNull
-    Integer getUserId();
+    String getUserLogin();
 }

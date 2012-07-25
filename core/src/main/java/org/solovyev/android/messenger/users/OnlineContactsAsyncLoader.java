@@ -17,15 +17,15 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 5:24 PM
  */
-public class OnlineFriendsAsyncLoader extends AbstractAsyncLoader<User> {
+public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<User> {
 
-    OnlineFriendsAsyncLoader(@NotNull User user, @NotNull Context context, @NotNull ListItemArrayAdapter adapter, @Nullable Runnable onPostExecute) {
+    OnlineContactsAsyncLoader(@NotNull User user, @NotNull Context context, @NotNull ListItemArrayAdapter adapter, @Nullable Runnable onPostExecute) {
         super(user, context, adapter, onPostExecute);
     }
 
     @NotNull
     protected List<User> getElements(@NotNull Context context) {
-        return getServiceLocator().getUserService().getOnlineUserFriends(getUser().getId(), context);
+        return getServiceLocator().getUserService().getOnlineUserContacts(getUser().getId(), context);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class OnlineFriendsAsyncLoader extends AbstractAsyncLoader<User> {
 
     @NotNull
     @Override
-    protected ListItem<?> createListItem(@NotNull User friend) {
-        return new FriendListItem(getUser(), friend);
+    protected ListItem<?> createListItem(@NotNull User contact) {
+        return new ContactListItem(getUser(), contact);
     }
 }

@@ -44,6 +44,11 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
     }
 
     @Override
+    protected void updateRightPane() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = super.onCreateView(inflater, container, savedInstanceState);
         return root;

@@ -22,7 +22,7 @@ import org.solovyev.android.messenger.chats.MessengerChatsActivity;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
-import org.solovyev.android.messenger.users.MessengerFriendsActivity;
+import org.solovyev.android.messenger.users.MessengerContactsActivity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.TextViewBuilder;
 
@@ -78,17 +78,17 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
                 }
             });
 
-            final MsgImageButton friendsButton;
-            if (activity instanceof MessengerFriendsActivity) {
-                friendsButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_friends_icon_active, R.string.c_friends, activity), true);
+            final MsgImageButton contactsButton;
+            if (activity instanceof MessengerContactsActivity) {
+                contactsButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_contacts_icon_active, R.string.c_contacts, activity), true);
             } else {
-                friendsButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_friends_icon, R.string.c_friends, activity), false);
+                contactsButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_contacts_icon, R.string.c_contacts, activity), false);
             }
-            addCenterButton(activity, friendsButton);
-            friendsButton.button.setOnClickListener(new View.OnClickListener() {
+            addCenterButton(activity, contactsButton);
+            contactsButton.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MessengerFriendsActivity.startActivity(activity);
+                    MessengerContactsActivity.startActivity(activity);
                 }
             });
 
@@ -188,7 +188,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
         }
     }
 
-    private void checkUserLoggedIn(Activity activity) {
+    private void checkUserLoggedIn(@NotNull Activity activity) {
         try {
             this.user = getServiceLocator().getAuthServiceFacade().getUser(activity);
         } catch (UserIsNotLoggedInException e) {

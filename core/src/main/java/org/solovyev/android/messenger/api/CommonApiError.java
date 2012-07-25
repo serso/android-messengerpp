@@ -24,6 +24,16 @@ public class CommonApiError implements ApiError {
     private Captcha captcha;
 
     @NotNull
+    public static CommonApiError newInstance(@NotNull String errorId, @Nullable String errorDescription) {
+        final CommonApiError result = new CommonApiError();
+
+        result.errorId = errorId;
+        result.errorDescription = errorDescription;
+
+        return result;
+    }
+
+    @NotNull
     public static CommonApiError fromJson(@NotNull String json) throws IllegalJsonException {
         final Gson gson = new Gson();
         final CommonErrorJson commonJsonError = gson.fromJson(json, CommonErrorJson.class);

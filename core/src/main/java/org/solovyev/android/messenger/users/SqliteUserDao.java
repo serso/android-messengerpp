@@ -17,12 +17,15 @@ import org.solovyev.android.AProperty;
 import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.db.IdMapper;
+import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.properties.PropertyByIdDbQuery;
 import org.solovyev.common.utils.CollectionsUtils;
 import org.solovyev.common.utils.CollectionsUtils2;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * User: serso
@@ -44,14 +47,14 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     @Nullable
     @Override
-    public User loadUserById(@NotNull Integer userId) {
+    public User loadUserById(@NotNull String userId) {
         final List<User> users = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadByUserId(getContext(), userId, getSqliteOpenHelper(), this));
         return CollectionsUtils.getFirstListElement(users);
     }
 
     @NotNull
     @Override
-    public List<AProperty> loadUserPropertiesById(@NotNull Integer userId) {
+    public List<AProperty> loadUserPropertiesById(@NotNull String userId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadUserPropertiesDbQuery(userId, getContext(), getSqliteOpenHelper()));
     }
 
@@ -62,51 +65,51 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     @NotNull
     @Override
-    public List<Integer> loadUserIds() {
+    public List<String> loadUserIds() {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadUserIds(getContext(), getSqliteOpenHelper()));
     }
 
     @NotNull
     @Override
-    public List<Integer> loadUserFriendIds(@NotNull Integer userId) {
-        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadFriendIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
+    public List<String> loadUserContactIds(@NotNull String userId) {
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadContactIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
     }
 
     @NotNull
     @Override
-    public List<User> loadUserFriends(@NotNull Integer userId) {
-        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadFriendsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
+    public List<User> loadUserContacts(@NotNull String userId) {
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadContactsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
     }
 
     @NotNull
     @Override
-    public MergeDaoResult<User, Integer> mergeUserFriends(@NotNull Integer userId, @NotNull List<User> friends) {
-        final MergeDaoResultImpl<User, Integer> result = new MergeDaoResultImpl<User, Integer>(friends);
+    public MergeDaoResult<User, String> mergeUserContacts(@NotNull String userId, @NotNull List<User> contacts) {
+        final MergeDaoResultImpl<User, String> result = new MergeDaoResultImpl<User, String>(contacts);
 
-        final List<Integer> friendIdsFromDb = loadUserFriendIds(userId);
-        for (final Integer friendIdFromDb : friendIdsFromDb) {
+        final List<String> contactIdsFromDb = loadUserContactIds(userId);
+        for (final String contactIdFromDb : contactIdsFromDb) {
             try {
-                // friend exists both in db and on remote server => just update friend properties
-                result.addUpdatedObject(Iterables.find(friends, new UserByIdFinder(friendIdFromDb)));
+                // contact exists both in db and on remote server => just update contact properties
+                result.addUpdatedObject(Iterables.find(contacts, new UserByIdFinder(contactIdFromDb)));
             } catch (NoSuchElementException e) {
-                // friend was removed on remote server => need to remove from local db
-                result.addRemovedObjectId(friendIdFromDb);
+                // contact was removed on remote server => need to remove from local db
+                result.addRemovedObjectId(contactIdFromDb);
             }
         }
 
-        final List<Integer> userIdsFromDb = loadUserIds();
-        for (User friend : friends) {
+        final List<String> userIdsFromDb = loadUserIds();
+        for (User contact : contacts) {
             try {
-                // friend exists both in db and on remote server => case already covered above
-                Iterables.find(friendIdsFromDb, Predicates.equalTo(friend.getId()));
+                // contact exists both in db and on remote server => case already covered above
+                Iterables.find(contactIdsFromDb, Predicates.equalTo(contact.getId()));
             } catch (NoSuchElementException e) {
-                // friend was added on remote server => need to add to local db
-                if (userIdsFromDb.contains(friend.getId())) {
+                // contact was added on remote server => need to add to local db
+                if (userIdsFromDb.contains(contact.getId())) {
                     // only link must be added - user already in users table
-                    result.addAddedObjectLink(friend);
+                    result.addAddedObjectLink(contact);
                 } else {
                     // no user information in local db is available - full user insertion
-                    result.addAddedObject(friend);
+                    result.addAddedObject(contact);
                 }
             }
         }
@@ -114,27 +117,27 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         final List<DbExec> execs = new ArrayList<DbExec>();
 
         if (!result.getRemovedObjectIds().isEmpty()) {
-            execs.addAll(RemoveFriends.newInstances(userId, result.getRemovedObjectIds()));
+            execs.addAll(RemoveContacts.newInstances(userId, result.getRemovedObjectIds()));
         }
 
-        for (User updatedFriend : result.getUpdatedObjects()) {
-            execs.add(new UpdateUser(updatedFriend));
-            execs.add(new DeleteUserProperties(updatedFriend));
-            execs.add(new InsertUserProperties(updatedFriend));
+        for (User updatedContact : result.getUpdatedObjects()) {
+            execs.add(new UpdateUser(updatedContact));
+            execs.add(new DeleteUserProperties(updatedContact));
+            execs.add(new InsertUserProperties(updatedContact));
         }
 
-        for (User addedFriendLink : result.getAddedObjectLinks()) {
-            execs.add(new UpdateUser(addedFriendLink));
-            execs.add(new DeleteUserProperties(addedFriendLink));
-            execs.add(new InsertUserProperties(addedFriendLink));
-            execs.add(new InsertFriend(userId, addedFriendLink.getId()));
+        for (User addedContactLink : result.getAddedObjectLinks()) {
+            execs.add(new UpdateUser(addedContactLink));
+            execs.add(new DeleteUserProperties(addedContactLink));
+            execs.add(new InsertUserProperties(addedContactLink));
+            execs.add(new InsertContact(userId, addedContactLink.getId()));
         }
 
 
-        for (User addedFriend : result.getAddedObjects()) {
-            execs.add(new InsertUser(addedFriend));
-            execs.add(new InsertUserProperties(addedFriend));
-            execs.add(new InsertFriend(userId, addedFriend.getId()));
+        for (User addedContact : result.getAddedObjects()) {
+            execs.add(new InsertUser(addedContact));
+            execs.add(new InsertUserProperties(addedContact));
+            execs.add(new InsertContact(userId, addedContact.getId()));
         }
 
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
@@ -143,47 +146,47 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
     }
 
 
-    private static final class InsertFriend implements DbExec {
+    private static final class InsertContact implements DbExec {
 
         @NotNull
-        private Integer userId;
+        private String userId;
 
         @NotNull
-        private Integer friendId;
+        private String contactId;
 
-        private InsertFriend(@NotNull Integer userId, @NotNull Integer friendId) {
+        private InsertContact(@NotNull String userId, @NotNull String contactId) {
             this.userId = userId;
-            this.friendId = friendId;
+            this.contactId = contactId;
         }
 
         @Override
         public void exec(@NotNull SQLiteDatabase db) {
             final ContentValues values = new ContentValues();
             values.put("user_id", userId);
-            values.put("friend_id", friendId);
-            db.insert("user_friends", null, values);
+            values.put("contact_id", contactId);
+            db.insert("user_contacts", null, values);
         }
     }
 
-    private static final class RemoveFriends implements DbExec {
+    private static final class RemoveContacts implements DbExec {
 
         @NotNull
-        private Integer userId;
+        private String userId;
 
         @NotNull
-        private List<Integer> friendIds;
+        private List<String> contactIds;
 
-        private RemoveFriends(@NotNull Integer userId, @NotNull List<Integer> friendIds) {
+        private RemoveContacts(@NotNull String userId, @NotNull List<String> contactIds) {
             this.userId = userId;
-            this.friendIds = friendIds;
+            this.contactIds = contactIds;
         }
 
         @NotNull
-        private static List<RemoveFriends> newInstances(@NotNull Integer userId, @NotNull List<Integer> friendIds) {
-            final List<RemoveFriends> result = new ArrayList<RemoveFriends>();
+        private static List<RemoveContacts> newInstances(@NotNull String userId, @NotNull List<String> contactIds) {
+            final List<RemoveContacts> result = new ArrayList<RemoveContacts>();
 
-            for (List<Integer> friendIdsChunk : CollectionsUtils2.split(friendIds, MAX_IN_COUNT)) {
-                result.add(new RemoveFriends(userId, friendIdsChunk));
+            for (List<String> contactIdsChunk : CollectionsUtils2.split(contactIds, MAX_IN_COUNT)) {
+                result.add(new RemoveContacts(userId, contactIdsChunk));
             }
 
             return result;
@@ -191,16 +194,16 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
         @Override
         public void exec(@NotNull SQLiteDatabase db) {
-            db.delete("user_friends", "user_id = ? and friend_id in " + AndroidDbUtils.inClause(friendIds), AndroidDbUtils.inClauseValues(friendIds, String.valueOf(userId)));
+            db.delete("user_contacts", "user_id = ? and contact_id in " + AndroidDbUtils.inClause(contactIds), AndroidDbUtils.inClauseValues(contactIds, userId));
         }
     }
 
-    private static final class LoadFriendIdsByUserId extends AbstractDbQuery<List<Integer>> {
+    private static final class LoadContactIdsByUserId extends AbstractDbQuery<List<String>> {
 
         @NotNull
-        private final Integer userId;
+        private final String userId;
 
-        private LoadFriendIdsByUserId(@NotNull Context context, @NotNull Integer userId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        private LoadContactIdsByUserId(@NotNull Context context, @NotNull String userId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
         }
@@ -208,17 +211,17 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.query("users", null, "id in (select friend_id from user_friends where user_id = ? ) ", new String[]{String.valueOf(userId)}, null, null, null);
+            return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? ) ", new String[]{userId}, null, null, null);
         }
 
         @NotNull
         @Override
-        public List<Integer> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<Integer>(IdMapper.getInstance()).convert(cursor);
+        public List<String> retrieveData(@NotNull Cursor cursor) {
+            return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
         }
     }
 
-    private static final class LoadUserIds extends AbstractDbQuery<List<Integer>> {
+    private static final class LoadUserIds extends AbstractDbQuery<List<String>> {
 
         private LoadUserIds(@NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
@@ -232,20 +235,20 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
         @NotNull
         @Override
-        public List<Integer> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<Integer>(IdMapper.getInstance()).convert(cursor);
+        public List<String> retrieveData(@NotNull Cursor cursor) {
+            return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
         }
     }
 
-    private static final class LoadFriendsByUserId extends AbstractDbQuery<List<User>> {
+    private static final class LoadContactsByUserId extends AbstractDbQuery<List<User>> {
 
         @NotNull
-        private final Integer userId;
+        private final String userId;
 
         @NotNull
         private final UserDao userDao;
 
-        private LoadFriendsByUserId(@NotNull Context context, @NotNull Integer userId, @NotNull SQLiteOpenHelper sqliteOpenHelper, @NotNull UserDao userDao) {
+        private LoadContactsByUserId(@NotNull Context context, @NotNull String userId, @NotNull SQLiteOpenHelper sqliteOpenHelper, @NotNull UserDao userDao) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
             this.userDao = userDao;
@@ -254,7 +257,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.query("users", null, "id in (select friend_id from user_friends where user_id = ? ) ", new String[]{String.valueOf(userId)}, null, null, null);
+            return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? ) ", new String[]{userId}, null, null, null);
         }
 
         @NotNull
@@ -267,12 +270,15 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
     private static final class LoadByUserId extends AbstractDbQuery<List<User>> {
 
         @NotNull
-        private final Integer userId;
+        private final String userId;
 
         @NotNull
         private final UserDao userDao;
 
-        private LoadByUserId(@NotNull Context context, @NotNull Integer userId, @NotNull SQLiteOpenHelper sqliteOpenHelper, @NotNull UserDao userDao) {
+        private LoadByUserId(@NotNull Context context,
+                             @NotNull String userId,
+                             @NotNull SQLiteOpenHelper sqliteOpenHelper,
+                             @NotNull UserDao userDao) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
             this.userDao = userDao;
@@ -281,7 +287,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.query("users", null, "id = ? ", new String[]{String.valueOf(userId)}, null, null, null);
+            return db.query("users", null, "id = ? ", new String[]{userId}, null, null, null);
         }
 
         @NotNull
@@ -293,8 +299,8 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     public static final class LoadUserPropertiesDbQuery extends PropertyByIdDbQuery {
 
-        public LoadUserPropertiesDbQuery(@NotNull Integer userId, @NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
-            super(context, sqliteOpenHelper, "user_properties", "user_id", String.valueOf(userId));
+        public LoadUserPropertiesDbQuery(@NotNull String userId, @NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+            super(context, sqliteOpenHelper, "user_properties", "user_id", userId);
         }
     }
 
@@ -311,14 +317,14 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
             final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
             final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
-            final DateTime lastFriendsSyncDate = user.getUserSyncData().getLastFriendsSyncDate();
+            final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
 
             final ContentValues values = new ContentValues();
 
             values.put("id", user.getId());
             values.put("version", user.getVersion());
             values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
-            values.put("last_friends_sync_date", lastFriendsSyncDate == null ? null : dateTimeFormatter.print(lastFriendsSyncDate));
+            values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
 
             db.insert("users", null, values);
         }
@@ -337,13 +343,13 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
             final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
             final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
-            final DateTime lastFriendsSyncDate = user.getUserSyncData().getLastFriendsSyncDate();
+            final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
 
             final ContentValues values = new ContentValues();
             values.put("id", user.getId());
             values.put("version", user.getVersion());
             values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
-            values.put("last_friends_sync_date", lastFriendsSyncDate == null ? null : dateTimeFormatter.print(lastFriendsSyncDate));
+            values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
 
             db.update("users", values, "id = ?", new String[]{String.valueOf(user.getId())});
         }
@@ -386,9 +392,9 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
     private static class UserByIdFinder implements Predicate<User> {
 
         @NotNull
-        private final Integer userId;
+        private final String userId;
 
-        public UserByIdFinder(@NotNull Integer userId) {
+        public UserByIdFinder(@NotNull String userId) {
             this.userId = userId;
         }
 

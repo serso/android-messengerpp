@@ -119,7 +119,7 @@
         <item name="android:inputType">text</item>
     </style>
 
-    <style name="friends_search_box" parent="search_box">
+    <style name="contacts_search_box" parent="search_box">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:focusable">true</item>
     </style>
@@ -209,7 +209,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="friend_online" parent="list_item">
+    <style name="contact_online" parent="list_item">
     </style>
 
     <style name="footer_image_label">

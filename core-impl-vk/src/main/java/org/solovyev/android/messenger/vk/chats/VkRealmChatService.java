@@ -23,10 +23,10 @@ import java.util.List;
  * Date: 6/6/12
  * Time: 3:30 PM
  */
-public class VkApiChatService implements ApiChatService {
+public class VkRealmChatService implements RealmChatService {
 
     @NotNull
-    private static final String TAG = VkApiChatService.class.getSimpleName();
+    private static final String TAG = VkRealmChatService.class.getSimpleName();
 
     /*@NotNull
     @Override
@@ -44,7 +44,7 @@ public class VkApiChatService implements ApiChatService {
 
     @NotNull
     @Override
-    public List<ChatMessage> getChatMessages(@NotNull Integer userId, @NotNull Context context) {
+    public List<ChatMessage> getChatMessages(@NotNull String userId, @NotNull Context context) {
         try {
             return AndroidHttpUtils.execute(new VkMessagesGetHttpTransaction(getUser(userId, context), context));
         } catch (IOException e) {
@@ -54,23 +54,23 @@ public class VkApiChatService implements ApiChatService {
 
     @NotNull
     @Override
-    public List<ChatMessage> getNewerChatMessagesForChat(@NotNull String chatId, @NotNull Integer userId, @NotNull Context context) {
+    public List<ChatMessage> getNewerChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context) {
         return getChatMessagesForChat(chatId, userId, context, new VkHttpTransactionForMessagesForChatProvider() {
             @NotNull
             @Override
-            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@NotNull User user, @NotNull Integer secondUserId, @NotNull Context context) {
-                return Arrays.asList(new VkMessagesGetHistoryHttpTransaction(secondUserId, user, context));
+            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@NotNull User user, @NotNull String secondUserId, @NotNull Context context) {
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(secondUserId, user, context));
             }
 
             @NotNull
             @Override
             public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@NotNull User user, @NotNull String chatId, @NotNull Context context) {
-                return Arrays.asList(new VkMessagesGetHistoryHttpTransaction(chatId, user, context));
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(chatId, user, context));
             }
         });
     }
 
-    private List<ChatMessage> getChatMessagesForChat(@NotNull String chatId, @NotNull Integer userId, @NotNull Context context, @NotNull VkHttpTransactionForMessagesForChatProvider p) {
+    private List<ChatMessage> getChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context, @NotNull VkHttpTransactionForMessagesForChatProvider p) {
         final Chat chat = getChatService().getChatById(chatId, context);
 
         if (chat != null) {
@@ -78,17 +78,14 @@ public class VkApiChatService implements ApiChatService {
                 if (chat.isPrivate()) {
                     final int index = chatId.indexOf("_");
                     if (index >= 0) {
-                        try {
-                            final Integer secondUserId = Integer.valueOf(chatId.substring(index + 1, chatId.length()));
-                            final List<ChatMessage> result = new ArrayList<ChatMessage>(100);
-                            for (List<ChatMessage> messages : AndroidHttpUtils.execute(p.getForPrivateChat(getUser(userId, context), secondUserId, context))) {
-                                result.addAll(messages);
-                            }
-                            return result;
-                        } catch (NumberFormatException e) {
-                            Log.e(TAG, "Unable to get second user from chat id: " + chatId);
-                            return Collections.emptyList();
+
+                        final String secondUserId = chatId.substring(index + 1, chatId.length());
+                        final List<ChatMessage> result = new ArrayList<ChatMessage>(100);
+                        for (List<ChatMessage> messages : AndroidHttpUtils.execute(p.getForPrivateChat(getUser(userId, context), secondUserId, context))) {
+                            result.addAll(messages);
                         }
+                        return result;
+
                     } else {
                         Log.e(TAG, "Chat is private but don't have '_', chat id: " + chatId);
                         return Collections.emptyList();
@@ -112,32 +109,33 @@ public class VkApiChatService implements ApiChatService {
 
     @NotNull
     @Override
-    public List<ChatMessage> getOlderChatMessagesForChat(@NotNull String chatId, @NotNull Integer userId, @NotNull final Integer offset, @NotNull Context context) {
+    public List<ChatMessage> getOlderChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull final Integer offset, @NotNull Context context) {
         return getChatMessagesForChat(chatId, userId, context, new VkHttpTransactionForMessagesForChatProvider() {
             @NotNull
             @Override
-            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@NotNull User user, @NotNull Integer secondUserId, @NotNull Context context) {
-                return Arrays.asList(new VkMessagesGetHistoryHttpTransaction(secondUserId, user, offset, context));
+            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@NotNull User user, @NotNull String secondUserId, @NotNull Context context) {
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(secondUserId, user, offset, context));
             }
 
             @NotNull
             @Override
             public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@NotNull User user, @NotNull String chatId, @NotNull Context context) {
-                return Arrays.asList(new VkMessagesGetHistoryHttpTransaction(chatId, user, offset, context));
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(chatId, user, offset, context));
             }
         });
     }
 
     private static interface VkHttpTransactionForMessagesForChatProvider {
         @NotNull
-        List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@NotNull User user, @NotNull Integer secondUserId, @NotNull Context context);
+        List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@NotNull User user, @NotNull String secondUserId, @NotNull Context context);
 
         @NotNull
         List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@NotNull User user, @NotNull String chatId, @NotNull Context context);
 
     }
 
-    private User getUser(Integer userId, Context context) {
+    @NotNull
+    private User getUser(@NotNull String userId, @NotNull Context context) {
         return getUserService().getUserById(userId, context);
     }
 
@@ -154,7 +152,7 @@ public class VkApiChatService implements ApiChatService {
 
     @NotNull
     @Override
-    public List<ApiChat> getUserChats(@NotNull Integer userId, @NotNull Context context) {
+    public List<ApiChat> getUserChats(@NotNull String userId, @NotNull Context context) {
         try {
             final User user = MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getUserById(userId, context);
             return AndroidHttpUtils.execute(VkMessagesGetDialogsHttpTransaction.newInstance(user, context));
@@ -165,7 +163,7 @@ public class VkApiChatService implements ApiChatService {
 
     @NotNull
     @Override
-    public Integer sendChatMessage(@NotNull Chat chat, @NotNull ChatMessage chatMessage, @NotNull Context context) {
+    public String sendChatMessage(@NotNull Chat chat, @NotNull ChatMessage chatMessage, @NotNull Context context) {
         try {
             return AndroidHttpUtils.execute(new VkMessagesSendHttpTransaction(chatMessage, chat));
         } catch (IOException e) {

@@ -11,6 +11,8 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.solovyev.android.ResolvedCaptcha;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 
 import java.io.StringWriter;
@@ -35,18 +37,24 @@ public class AuthServiceImpl implements AuthService {
     @NotNull
     private final Object lock = new Object();
 
+    @NotNull
     @Override
-    public void loginUser(@NotNull Context context, @NotNull String realm, @NotNull String login, @NotNull String password, @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
-        final ApiAuthenticator authenticator = MessengerConfigurationImpl.getInstance().getAuthenticator();
+    public AuthData loginUser(@NotNull String realm,
+                              @NotNull String login,
+                              @NotNull String password,
+                              @Nullable ResolvedCaptcha resolvedCaptcha,
+                              @NotNull Context context) throws InvalidCredentialsException {
 
-        final AuthData authData;
+        final RealmAuthService realmAuthService = getRealmService(realm).getRealmAuthService();
+
+        final AuthData result;
         synchronized (lock) {
             if (!isUserLoggedIn(realm)) {
-                authData = authenticator.loginUser(login, password, resolvedCaptcha);
-                authDataMap.put(realm, authData);
+                result = realmAuthService.loginUser(login, password, resolvedCaptcha);
+                authDataMap.put(realm, result);
             } else {
                 try {
-                    authData = getAuthData(realm);
+                    result = getAuthData(realm);
                 } catch (UserIsNotLoggedInException e) {
                     // unavailable
                     throw new AssertionError(e);
@@ -55,12 +63,23 @@ public class AuthServiceImpl implements AuthService {
         }
 
         save(context);
+
+        return result;
+    }
+
+    @NotNull
+    private Realm getRealmService(@NotNull String realm) {
+        try {
+            return MessengerConfigurationImpl.getInstance().getServiceLocator().getRealmService().getRealmById(realm);
+        } catch (UnsupportedRealmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     @NotNull
     @Override
-    public User getUser(@NotNull Context context, @NotNull String realm) throws UserIsNotLoggedInException {
+    public User getUser(@NotNull String realm, @NotNull Context context) throws UserIsNotLoggedInException {
         return getUserById(context, getAuthData(realm));
     }
 
@@ -80,22 +99,45 @@ public class AuthServiceImpl implements AuthService {
         return authData;
     }
 
-    @Override
-    public void load(@NotNull Context context) {
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    @NotNull
+    private User getUserById(@NotNull Context context, @NotNull AuthData authData) {
+        return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getUserById(authData.getUserId(), context);
+    }
 
-        final String value = preferences.getString(AUTH_XML, null);
-        if (value != null) {
-            final Serializer serializer = new Persister();
-            try {
-                final AuthServiceImpl authService = serializer.read(AuthServiceImpl.class, value);
-                authDataMap.clear();
-                authDataMap.putAll(authService.authDataMap);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+    @Override
+    public boolean isUserLoggedIn(@NotNull String realm) {
+        synchronized (lock) {
+            return authDataMap.get(realm) != null;
         }
     }
+
+    @Override
+    public void logoutUser(@NotNull String realm, @NotNull Context context) {
+        synchronized (lock) {
+            if (isUserLoggedIn(realm)) {
+                final RealmAuthService realmAuthService = getRealmService(realm).getRealmAuthService();
+
+                try {
+                    realmAuthService.logoutUser(getUser(realm, context));
+                } catch (UserIsNotLoggedInException e) {
+                    // unavailable
+                    throw new AssertionError(e);
+                }
+
+                this.authDataMap.remove(realm);
+            }
+        }
+
+        save(context);
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           SAVING/RESTORING STATE
+    *
+    **********************************************************************
+    */
 
     @Override
     public void save(@NotNull Context context) {
@@ -116,36 +158,21 @@ public class AuthServiceImpl implements AuthService {
         editor.commit();
     }
 
-    @NotNull
-    private User getUserById(@NotNull Context context, @NotNull AuthData authData) {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getUserById(authData.getUserId(), context);
-    }
-
     @Override
-    public boolean isUserLoggedIn(@NotNull String realm) {
-        synchronized (lock) {
-            return authDataMap.get(realm) != null;
-        }
-    }
+    public void load(@NotNull Context context) {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-    @Override
-    public void logoutUser(@NotNull Context context, @NotNull String realm) {
-        synchronized (lock) {
-            if (isUserLoggedIn(realm)) {
-                final ApiAuthenticator authenticator = MessengerConfigurationImpl.getInstance().getAuthenticator();
-
-                try {
-                    authenticator.logoutUser(getUser(context, realm));
-                } catch (UserIsNotLoggedInException e) {
-                    // unavailable
-                    throw new AssertionError(e);
-                }
-
-                this.authDataMap.remove(realm);
+        final String value = preferences.getString(AUTH_XML, null);
+        if (value != null) {
+            final Serializer serializer = new Persister();
+            try {
+                final AuthServiceImpl authService = serializer.read(AuthServiceImpl.class, value);
+                authDataMap.clear();
+                authDataMap.putAll(authService.authDataMap);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
-
-        save(context);
     }
 
 }

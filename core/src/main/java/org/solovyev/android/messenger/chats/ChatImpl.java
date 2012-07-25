@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.APropertyImpl;
+import org.solovyev.android.VersionedEntity;
+import org.solovyev.android.VersionedEntityImpl;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.common.JObject;
 
@@ -20,7 +22,7 @@ import java.util.List;
 public class ChatImpl extends JObject implements Chat {
 
     @NotNull
-    private String id;
+    private VersionedEntity<String> versionedEntity;
 
     private boolean privateChat;
 
@@ -37,7 +39,7 @@ public class ChatImpl extends JObject implements Chat {
                     @NotNull Integer messagesCount,
                     @NotNull List<AProperty> properties,
                     @Nullable DateTime lastMessageSyncDate) {
-        this.id = id;
+        this.versionedEntity = new VersionedEntityImpl<String>(id);
         this.messagesCount = messagesCount;
         this.lastMessageSyncDate = lastMessageSyncDate;
 
@@ -55,7 +57,7 @@ public class ChatImpl extends JObject implements Chat {
     public ChatImpl(@NotNull String id,
                     @NotNull Integer messagesCount,
                     boolean privateChat) {
-        this.id = id;
+        this.versionedEntity = new VersionedEntityImpl<String>(id);
         this.messagesCount = messagesCount;
         this.privateChat = privateChat;
         this.properties = new ArrayList<AProperty>();
@@ -111,7 +113,7 @@ public class ChatImpl extends JObject implements Chat {
 
     @NotNull
     @Override
-    public Integer getSecondUserId() {
+    public String getSecondUserId() {
         assert isPrivate();
 
         return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService().getSecondUserId(this);
@@ -125,7 +127,13 @@ public class ChatImpl extends JObject implements Chat {
     @Override
     @NotNull
     public String getId() {
-        return id;
+        return this.versionedEntity.getId();
+    }
+
+    @NotNull
+    @Override
+    public Integer getVersion() {
+        return this.versionedEntity.getVersion();
     }
 
     @Override
@@ -133,24 +141,28 @@ public class ChatImpl extends JObject implements Chat {
         if (this == o) return true;
         if (!(o instanceof ChatImpl)) return false;
 
-        ChatImpl chat = (ChatImpl) o;
+        ChatImpl that = (ChatImpl) o;
 
-        if (!id.equals(chat.id)) return false;
+        if (!this.versionedEntity.equals(that.versionedEntity)) return false;
 
         return true;
     }
 
     @Override
+    public boolean equalsVersion(Object that) {
+        return this.equals(that) && this.versionedEntity.equalsVersion(((ChatImpl) that).versionedEntity);
+    }
+
+    @Override
     public int hashCode() {
-        return id.hashCode();
+        return this.versionedEntity.hashCode();
     }
 
     @Override
     public String toString() {
         return "ChatImpl{" +
-                "id='" + id + '\'' +
+                "versionedEntity=" + versionedEntity +
                 ", privateChat=" + privateChat +
                 '}';
     }
-
 }

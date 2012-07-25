@@ -16,7 +16,7 @@ import org.solovyev.common.JObject;
 public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
 
     @NotNull
-    private VersionedEntity versionedEntity;
+    private VersionedEntity<String> versionedEntity;
 
     @NotNull
     private User author;
@@ -33,13 +33,13 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
     @NotNull
     private String body = "";
 
-    private LiteChatMessageImpl(@NotNull VersionedEntity versionedEntity) {
+    private LiteChatMessageImpl(@NotNull VersionedEntity<String> versionedEntity) {
         this.versionedEntity = versionedEntity;
     }
 
     @NotNull
-    public static LiteChatMessageImpl newInstance(@NotNull Integer id) {
-        return new LiteChatMessageImpl(new VersionedEntityImpl(id));
+    public static LiteChatMessageImpl newInstance(@NotNull String id) {
+        return new LiteChatMessageImpl(new VersionedEntityImpl<String>(id));
     }
 
     @NotNull
@@ -96,7 +96,7 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
 
     @Override
     @NotNull
-    public Integer getId() {
+    public String getId() {
         return versionedEntity.getId();
     }
 
@@ -141,6 +141,11 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
         if (!versionedEntity.equals(that.versionedEntity)) return false;
 
         return true;
+    }
+
+    @Override
+    public boolean equalsVersion(Object that) {
+        return this.equals(that) && this.versionedEntity.equalsVersion(((LiteChatMessageImpl) that).versionedEntity);
     }
 
     @Override

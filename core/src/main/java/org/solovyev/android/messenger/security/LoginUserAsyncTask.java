@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.ResolvedCaptcha;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 
 import java.util.List;
 
@@ -16,8 +17,12 @@ import java.util.List;
  */
 public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsyncTask.Input, Void, Void> {
 
-    public LoginUserAsyncTask(@NotNull Context context) {
+    @NotNull
+    private String realmId;
+
+    public LoginUserAsyncTask(@NotNull Context context, @NotNull String realmId) {
         super(context, true);
+        this.realmId = realmId;
     }
 
     @Override
@@ -28,7 +33,7 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
         final Context context = getContext();
         if (context != null) {
             try {
-                getAuthServiceFacade().loginUser(context, input.login, input.password, input.resolvedCaptcha);
+                getServiceLocator().getAuthService().loginUser(realmId, input.login, input.password, input.resolvedCaptcha, context);
             } catch (InvalidCredentialsException e) {
                 throwException(e);
             }
@@ -43,11 +48,6 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
         if (context != null) {
             MessengerConfigurationImpl.getInstance().getServiceLocator().getSyncService().syncAll(context);
         }
-    }
-
-    @NotNull
-    private AuthServiceFacade getAuthServiceFacade() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthServiceFacade();
     }
 
     public static class Input {

@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.vk.longpoll;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.http.AndroidHttpUtils;
-import org.solovyev.android.messenger.longpoll.ApiLongPollService;
+import org.solovyev.android.messenger.longpoll.RealmLongPollService;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.io.IOException;
  * Date: 6/24/12
  * Time: 12:19 AM
  */
-public class VkApiLongPollService implements ApiLongPollService {
+public class VkRealmLongPollService implements RealmLongPollService {
 
     @Override
     public Object startLongPolling() {

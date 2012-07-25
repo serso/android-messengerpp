@@ -13,7 +13,7 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface User extends VersionedEntity /*, Parcelable*/ {
+public interface User extends VersionedEntity<String>, MutableUserSyncData /*, Parcelable*/ {
 
     @NotNull
     public static final Parcelable.Creator<User> CREATOR = new UserParcelableCreator();
@@ -39,20 +39,28 @@ public interface User extends VersionedEntity /*, Parcelable*/ {
     UserSyncData getUserSyncData();
 
     @NotNull
+    User clone();
+
+    @NotNull
+    User cloneWithNewStatus(boolean online);
+
+    /*
+    **********************************************************************
+    *
+    *                           UPDATE SYNC DATA
+    *
+    **********************************************************************
+    */
+
+    @NotNull
     User updateChatsSyncDate();
 
     @NotNull
     User updatePropertiesSyncDate();
 
     @NotNull
-    User updateFriendsSyncDate();
+    User updateContactsSyncDate();
 
     @NotNull
     User updateUserIconsSyncDate();
-
-    @NotNull
-    User clone();
-
-    @NotNull
-    User cloneWithNewStatus(boolean online);
 }

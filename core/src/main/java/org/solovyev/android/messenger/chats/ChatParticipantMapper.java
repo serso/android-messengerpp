@@ -28,7 +28,7 @@ public class ChatParticipantMapper implements Converter<Cursor, User> {
     @NotNull
     @Override
     public User convert(@NotNull Cursor cursor) {
-        final Integer userId = cursor.getInt(0);
+        final String userId = cursor.getString(0);
         return userService.getUserById(userId, context);
     }
 }

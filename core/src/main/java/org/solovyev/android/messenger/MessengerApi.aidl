@@ -9,5 +9,5 @@ import org.solovyev.android.messenger.ServiceCallback;
  */
 interface MessengerApi {
 
-    void loginUser(String login, String password, ServiceCallback callback);
+    void loginUser(String realm, String login, String password, ServiceCallback callback);
 }

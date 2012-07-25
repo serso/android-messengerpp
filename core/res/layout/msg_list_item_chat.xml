@@ -10,7 +10,7 @@
                a:layout_height="50dp"
                a:layout_alignParentLeft="true"/>
 
-    <!--    <TextView a:id="@+id/friend_online"
+    <!--    <TextView a:id="@+id/contact_online"
     style="@style/list_item_item"
     a:layout_width="20dp"
     a:layout_height="wrap_content"

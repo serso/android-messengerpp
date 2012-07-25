@@ -19,13 +19,13 @@ public interface ChatMessageDao {
     List<ChatMessage> loadChatMessages(@NotNull String chatId);
 
     @NotNull
-    MergeDaoResult<ChatMessage, Integer> mergeChatMessages(@NotNull String chatId, @NotNull List<ChatMessage> messages, boolean allowDelete, @NotNull Context context);
+    MergeDaoResult<ChatMessage, String> mergeChatMessages(@NotNull String chatId, @NotNull List<ChatMessage> messages, boolean allowDelete, @NotNull Context context);
 
     @NotNull
-    List<Integer> loadChatMessageIds(@NotNull String chatId);
+    List<String> loadChatMessageIds(@NotNull String chatId);
 
     @NotNull
-    Integer getOldestMessageForChat(@NotNull String chatId);
+    String getOldestMessageForChat(@NotNull String chatId);
 
     @Nullable
     ChatMessage loadLastChatMessage(@NotNull String chatId);

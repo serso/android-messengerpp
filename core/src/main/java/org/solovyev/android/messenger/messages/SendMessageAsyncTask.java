@@ -101,7 +101,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
         @NotNull
         public ChatMessage sendChatMessage(@NotNull Context context) {
-            final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(-1);
+            final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("");
             liteChatMessage.setAuthor(author);
             liteChatMessage.setBody(message);
 

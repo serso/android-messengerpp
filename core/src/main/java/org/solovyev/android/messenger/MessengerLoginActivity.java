@@ -3,6 +3,7 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,7 +17,7 @@ import org.solovyev.android.ResolvedCaptcha;
 import org.solovyev.android.messenger.api.ApiError;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
 import org.solovyev.android.messenger.security.LoginUserAsyncTask;
-import org.solovyev.android.messenger.users.MessengerFriendsActivity;
+import org.solovyev.android.messenger.users.MessengerContactsActivity;
 import org.solovyev.android.messenger.view.CaptchaViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.utils.StringUtils;
@@ -28,15 +29,34 @@ import org.solovyev.common.utils.StringUtils;
  */
 public class MessengerLoginActivity extends Activity implements CaptchaViewBuilder.CaptchaEnteredListener {
 
+    @NotNull
+    private static String REALM = "realm";
+
     public static void startActivity(@NotNull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerLoginActivity.class);
+        result.putExtra(REALM, MessengerConfigurationImpl.getInstance().getRealm().getId());
         activity.startActivity(result);
     }
+
+    @NotNull
+    private String realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Intent intent = getIntent();
+        if (intent != null) {
+            final String realm =intent.getStringExtra(REALM);
+            if (realm != null) {
+                this.realm = realm;
+            } else {
+                Log.e(MessengerLoginActivity.class.getSimpleName(), "Login activity started without realm id!");
+            }
+        } else {
+            Log.e(MessengerLoginActivity.class.getSimpleName(), "Login activity started without realm id!");
+        }
 
         setContentView(R.layout.msg_main);
 
@@ -50,7 +70,6 @@ public class MessengerLoginActivity extends Activity implements CaptchaViewBuild
                 MessengerRegistrationActivity.startActivity(MessengerLoginActivity.this);
             }
         });
-
 
         final Button loginButton = (Button) content.findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -69,12 +88,12 @@ public class MessengerLoginActivity extends Activity implements CaptchaViewBuild
         final String login = loginInput.getText().toString();
         final String password = passwordInput.getText().toString();
 
-        new LoginUserAsyncTask(this) {
+        new LoginUserAsyncTask(this, realm) {
 
             @Override
             protected void onSuccessPostExecute(@Nullable Void result) {
                 super.onSuccessPostExecute(result);
-                MessengerFriendsActivity.startActivity(MessengerLoginActivity.this);
+                MessengerContactsActivity.startActivity(MessengerLoginActivity.this);
             }
 
             @Override
@@ -110,9 +129,14 @@ public class MessengerLoginActivity extends Activity implements CaptchaViewBuild
     protected void onRestart() {
         super.onRestart();
 
-        if (MessengerConfigurationImpl.getInstance().getServiceLocator().getAuthServiceFacade().isUserLoggedIn()) {
-            MessengerFriendsActivity.startActivity(this);
+        if (getServiceLocator().getAuthService().isUserLoggedIn(realm)) {
+            MessengerContactsActivity.startActivity(this);
         }
+    }
+
+    @NotNull
+    private ServiceLocator getServiceLocator() {
+        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override

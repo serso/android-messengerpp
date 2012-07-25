@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.users.User;
  * Date: 6/6/12
  * Time: 1:58 PM
  */
-public interface LiteChatMessage extends VersionedEntity {
+public interface LiteChatMessage extends VersionedEntity<String> {
 
     @NotNull
     User getAuthor();

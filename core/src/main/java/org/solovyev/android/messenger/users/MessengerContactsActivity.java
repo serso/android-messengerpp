@@ -16,17 +16,17 @@ import org.solovyev.android.messenger.R;
  * Date: 6/2/12
  * Time: 3:52 PM
  */
-public class MessengerFriendsActivity extends MessengerFragmentActivity implements ViewPager.OnPageChangeListener {
+public class MessengerContactsActivity extends MessengerFragmentActivity implements ViewPager.OnPageChangeListener {
 
     private int pagerPosition = 0;
 
-    public MessengerFriendsActivity() {
+    public MessengerContactsActivity() {
         super(R.layout.msg_main_view_pager);
     }
 
     public static void startActivity(@NotNull Activity activity) {
         final Intent result = new Intent();
-        result.setClass(activity, MessengerFriendsActivity.class);
+        result.setClass(activity, MessengerContactsActivity.class);
         activity.startActivity(result);
     }
 
@@ -34,7 +34,7 @@ public class MessengerFriendsActivity extends MessengerFragmentActivity implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final FriendsFragmentPagerAdapter adapter = new FriendsFragmentPagerAdapter(getSupportFragmentManager(), getString(R.string.c_friends), getString(R.string.c_online_friends));
+        final ContactsFragmentPagerAdapter adapter = new ContactsFragmentPagerAdapter(getSupportFragmentManager(), getString(R.string.c_contacts), getString(R.string.c_online_contacts));
 
         initTitleForViewPager(this, this, adapter);
     }
@@ -52,18 +52,20 @@ public class MessengerFriendsActivity extends MessengerFragmentActivity implemen
     public void onPageScrollStateChanged(int state) {
     }
 
-    public static class FriendsFragmentPagerAdapter extends FragmentPagerAdapter {
+    public static class ContactsFragmentPagerAdapter extends FragmentPagerAdapter {
 
         @NotNull
-        private String friendsTitle;
+        private String contactsTitle;
 
         @NotNull
-        private String onlineFriendsTitle;
+        private String onlineContactsTitle;
 
-        public FriendsFragmentPagerAdapter(@NotNull FragmentManager fm, @NotNull String friendsTitle, @NotNull String onlineFriendsTitle) {
+        public ContactsFragmentPagerAdapter(@NotNull FragmentManager fm,
+                                            @NotNull String contactsTitle,
+                                            @NotNull String onlineContactsTitle) {
             super(fm);
-            this.friendsTitle = friendsTitle;
-            this.onlineFriendsTitle = onlineFriendsTitle;
+            this.contactsTitle = contactsTitle;
+            this.onlineContactsTitle = onlineContactsTitle;
         }
 
         @Override
@@ -75,9 +77,9 @@ public class MessengerFriendsActivity extends MessengerFragmentActivity implemen
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new MessengerFriendsFragment();
+                    return new MessengerContactsFragment();
                 case 1:
-                    return new MessengerOnlineFriendsFragment();
+                    return new MessengerOnlineContactsFragment();
                 default:
                     return null;
             }
@@ -88,9 +90,9 @@ public class MessengerFriendsActivity extends MessengerFragmentActivity implemen
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return friendsTitle;
+                    return contactsTitle;
                 case 1:
-                    return onlineFriendsTitle;
+                    return onlineContactsTitle;
                 default:
                     return null;
             }

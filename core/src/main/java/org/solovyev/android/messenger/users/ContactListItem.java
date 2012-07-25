@@ -23,20 +23,20 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
  * Date: 6/1/12
  * Time: 7:04 PM
  */
-public class FriendListItem implements ListItem<View>, UserEventListener, Comparable<FriendListItem> {
+public class ContactListItem implements ListItem<View>, UserEventListener, Comparable<ContactListItem> {
 
     @NotNull
-    private static final String TAG_PREFIX = "friend_list_item_view_";
+    private static final String TAG_PREFIX = "contact_list_item_view_";
 
     @NotNull
     private User user;
 
     @NotNull
-    private User friend;
+    private User contact;
 
-    public FriendListItem(@NotNull User user, @NotNull User friend) {
+    public ContactListItem(@NotNull User user, @NotNull User contact) {
         this.user = user;
-        this.friend = friend;
+        this.contact = contact;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FriendListItem implements ListItem<View>, UserEventListener, Compar
 
                         @Override
                         protected Chat doInBackground(Void... params) {
-                            return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getPrivateChat(user.getId(), friend.getId(), context);
+                            return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getPrivateChat(user.getId(), contact.getId(), context);
                         }
 
                         @Override
@@ -58,7 +58,7 @@ public class FriendListItem implements ListItem<View>, UserEventListener, Compar
                             MessengerMessagesActivity.startActivity((Activity) context, chat);
                         }
 
-                    }.execute();
+                    }.execute(null, null);
                 }
             }
         };
@@ -84,14 +84,14 @@ public class FriendListItem implements ListItem<View>, UserEventListener, Compar
     @NotNull
     @Override
     public View build(@NotNull Context context) {
-        final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_friend).build(context);
+        final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_contact).build(context);
         fillView(view, context);
         return view;
     }
 
     @NotNull
     private String createTag() {
-        return TAG_PREFIX + friend.getId();
+        return TAG_PREFIX + contact.getId();
     }
 
     private void fillView(@NotNull final ViewGroup view, @NotNull Context context) {
@@ -100,18 +100,18 @@ public class FriendListItem implements ListItem<View>, UserEventListener, Compar
         if (!tag.equals(view.getTag())) {
             view.setTag(tag);
 
-            final ImageView friendIcon = (ImageView) view.findViewById(R.id.friend_icon);
+            final ImageView contactIcon = (ImageView) view.findViewById(R.id.contact_icon);
 
-            MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().setUserIcon(friendIcon, friend, context);
+            MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().setUserIcon(contactIcon, contact, context);
 
-            final TextView friendName = (TextView) view.findViewById(R.id.friend_name);
-            friendName.setText(friend.getDisplayName());
+            final TextView contactName = (TextView) view.findViewById(R.id.contact_name);
+            contactName.setText(contact.getDisplayName());
 
-            final TextView friendOnline = (TextView) view.findViewById(R.id.friend_online);
-            if (friend.isOnline()) {
-                friendOnline.setText("·");
+            final TextView contactOnline = (TextView) view.findViewById(R.id.contact_online);
+            if (contact.isOnline()) {
+                contactOnline.setText("·");
             } else {
-                friendOnline.setText("");
+                contactOnline.setText("");
             }
         }
     }
@@ -123,8 +123,8 @@ public class FriendListItem implements ListItem<View>, UserEventListener, Compar
                 user = eventUser;
             }
 
-            if (eventUser.equals(friend)) {
-                friend = eventUser;
+            if (eventUser.equals(contact)) {
+                contact = eventUser;
             }
         }
     }
@@ -132,11 +132,11 @@ public class FriendListItem implements ListItem<View>, UserEventListener, Compar
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FriendListItem)) return false;
+        if (!(o instanceof ContactListItem)) return false;
 
-        FriendListItem that = (FriendListItem) o;
+        ContactListItem that = (ContactListItem) o;
 
-        if (!friend.equals(that.friend)) return false;
+        if (!contact.equals(that.contact)) return false;
         if (!user.equals(that.user)) return false;
 
         return true;
@@ -145,18 +145,18 @@ public class FriendListItem implements ListItem<View>, UserEventListener, Compar
     @Override
     public int hashCode() {
         int result = user.hashCode();
-        result = 31 * result + friend.hashCode();
+        result = 31 * result + contact.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         // NOTE: this code is used inside the ArrayAdapter for filtering
-        return friend.getDisplayName();
+        return contact.getDisplayName();
     }
 
     @Override
-    public int compareTo(@NotNull FriendListItem another) {
+    public int compareTo(@NotNull ContactListItem another) {
         return this.toString().compareTo(another.toString());
     }
 }

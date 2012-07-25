@@ -16,8 +16,11 @@ import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
-import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.db.IdMapper;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatMessageMapper;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.utils.CollectionsUtils;
@@ -40,7 +43,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
     @NotNull
     @Override
-    public List<Integer> loadChatMessageIds(@NotNull String chatId) {
+    public List<String> loadChatMessageIds(@NotNull String chatId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessageIdsByChatId(getContext(), chatId, getSqliteOpenHelper()));
     }
 
@@ -52,7 +55,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
     @NotNull
     @Override
-    public Integer getOldestMessageForChat(@NotNull String chatId) {
+    public String getOldestMessageForChat(@NotNull String chatId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new OldestChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
     }
 
@@ -66,13 +69,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
     @NotNull
     @Override
-    public MergeDaoResult<ChatMessage, Integer> mergeChatMessages(@NotNull String chatId, @NotNull List<ChatMessage> messages, boolean allowDelete, @NotNull Context context) {
-        final MergeDaoResultImpl<ChatMessage, Integer> result = new MergeDaoResultImpl<ChatMessage, Integer>(messages);
+    public MergeDaoResult<ChatMessage, String> mergeChatMessages(@NotNull String chatId, @NotNull List<ChatMessage> messages, boolean allowDelete, @NotNull Context context) {
+        final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>(messages);
 
         final Chat chat = getChatService().getChatById(chatId, context);
 
-        final List<Integer> messageIdsFromDb = loadChatMessageIds(chatId);
-        for (final Integer chatMessageIdFromDb : messageIdsFromDb) {
+        final List<String> messageIdsFromDb = loadChatMessageIds(chatId);
+        for (final String chatMessageIdFromDb : messageIdsFromDb) {
             try {
                 // message exists both in db and on remote server => just update message properties
                 result.addUpdatedObject(Iterables.find(messages, new ChatMessageByIdFinder(chatMessageIdFromDb)));
@@ -121,7 +124,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
     }
 
-    private static class LoadChatMessageIdsByChatId extends AbstractDbQuery<List<Integer>> {
+    private static class LoadChatMessageIdsByChatId extends AbstractDbQuery<List<String>> {
 
         @NotNull
         private final String chatId;
@@ -139,17 +142,17 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
         @NotNull
         @Override
-        public List<Integer> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<Integer>(IdMapper.getInstance()).convert(cursor);
+        public List<String> retrieveData(@NotNull Cursor cursor) {
+            return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
         }
     }
 
     private static class ChatMessageByIdFinder implements Predicate<ChatMessage> {
 
         @NotNull
-        private final Integer messageId;
+        private final String messageId;
 
-        public ChatMessageByIdFinder(@NotNull Integer messageId) {
+        public ChatMessageByIdFinder(@NotNull String messageId) {
             this.messageId = messageId;
         }
 
@@ -224,17 +227,17 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     private static final class RemoveMessages implements DbExec {
 
         @NotNull
-        private List<Integer> messagesIds;
+        private List<String> messagesIds;
 
-        private RemoveMessages(@NotNull List<Integer> messagesIds) {
+        private RemoveMessages(@NotNull List<String> messagesIds) {
             this.messagesIds = messagesIds;
         }
 
         @NotNull
-        private static List<RemoveMessages> newInstances(@NotNull List<Integer> messagesIds) {
+        private static List<RemoveMessages> newInstances(@NotNull List<String> messagesIds) {
             final List<RemoveMessages> result = new ArrayList<RemoveMessages>();
 
-            for (List<Integer> messagesIdsChunk : CollectionsUtils2.split(messagesIds, MAX_IN_COUNT)) {
+            for (List<String> messagesIdsChunk : CollectionsUtils2.split(messagesIds, MAX_IN_COUNT)) {
                 result.add(new RemoveMessages(messagesIdsChunk));
             }
 
@@ -300,7 +303,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService();
     }
 
-    private static class OldestChatMessageLoader extends AbstractDbQuery<Integer> {
+    private static class OldestChatMessageLoader extends AbstractDbQuery<String> {
 
         @NotNull
         private String chatId;
@@ -313,16 +316,16 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.rawQuery("select min(id) from messages where chat_id = ?", new String[]{chatId});
+            return db.rawQuery("select min(send_date) from messages where chat_id = ?", new String[]{chatId});
         }
 
         @NotNull
         @Override
-        public Integer retrieveData(@NotNull Cursor cursor) {
+        public String retrieveData(@NotNull Cursor cursor) {
             if (cursor.moveToFirst()) {
-                return cursor.getInt(0);
+                return cursor.getString(0);
             } else {
-                return 0;
+                return "";
             }
         }
     }

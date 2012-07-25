@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger;
 
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.security.ApiAuthenticator;
+import org.solovyev.android.messenger.realms.Realm;
 
 /**
  * User: serso
@@ -11,10 +11,7 @@ import org.solovyev.android.messenger.security.ApiAuthenticator;
 public interface MessengerConfiguration extends MessengerApiProvider {
 
     @NotNull
-    String getRealm();
-
-    @NotNull
-    ApiAuthenticator getAuthenticator();
+    Realm getRealm();
 
     @NotNull
     DaoLocator getDaoLocator();
