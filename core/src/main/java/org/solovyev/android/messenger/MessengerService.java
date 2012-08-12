@@ -1,25 +1,47 @@
 package org.solovyev.android.messenger;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.network.NetworkData;
 import org.solovyev.android.network.NetworkState;
 import org.solovyev.android.network.NetworkStateController;
 import org.solovyev.android.network.NetworkStateListener;
+import roboguice.service.RoboService;
 
 /**
  * User: serso
  * Date: 5/25/12
  * Time: 8:38 PM
  */
-public class MessengerService extends Service implements NetworkStateListener {
+public class MessengerService extends RoboService implements NetworkStateListener {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private Realm realm;
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
     @NotNull
     public static final String API_SERVICE = "org.solovyev.android.messenger.API_SERVICE";
 
@@ -32,10 +54,14 @@ public class MessengerService extends Service implements NetworkStateListener {
     @NotNull
     private final MessengerApi.Stub remoteMessengerApi = new MessengerApi.Stub() {
 
+        @Inject
+        @NotNull
+        public AuthService authService;
+
         @Override
         public void loginUser(String realm, String login, String password, ServiceCallback callback) throws RemoteException {
             try {
-                getServiceLocator().getAuthService().loginUser(realm, login, password, null, MessengerService.this);
+                this.authService.loginUser(realm, login, password, null, MessengerService.this);
                 callback.onSuccess();
             } catch (InvalidCredentialsException e) {
                 callback.onFailure(e.getMessage());
@@ -62,7 +88,7 @@ public class MessengerService extends Service implements NetworkStateListener {
         //timer.scheduleAtFixedRate(new SyncTimerTask(this), 10000L, 30L * 1000L);
 
         synchronized (realmConnectionLock) {
-            this.realmConnection = MessengerConfigurationImpl.getInstance().getRealm().createRealmConnection(this);
+            this.realmConnection = this.realm.createRealmConnection(this);
 
             if (networkData.getState() == NetworkState.CONNECTED) {
 
@@ -77,11 +103,6 @@ public class MessengerService extends Service implements NetworkStateListener {
 
             }
         }
-    }
-
-    @NotNull
-    private static ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override

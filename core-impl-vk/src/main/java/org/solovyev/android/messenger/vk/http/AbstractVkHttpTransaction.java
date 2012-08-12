@@ -10,8 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
-import org.solovyev.android.messenger.ServiceLocator;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 
@@ -41,16 +40,11 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
     public List<NameValuePair> getRequestParameters() {
         final ArrayList<NameValuePair> result = new ArrayList<NameValuePair>();
         try {
-            result.add(new BasicNameValuePair("access_token", getServiceLocator().getAuthServiceFacade().getAuthData().getAccessToken()));
+            result.add(new BasicNameValuePair("access_token", MessengerApplication.getServiceLocator().getAuthServiceFacade().getAuthData().getAccessToken()));
         } catch (UserIsNotLoggedInException e) {
             // todo serso: think
         }
         return result;
-    }
-
-    @NotNull
-    private ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override

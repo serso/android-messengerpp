@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.ActivityDestroyerController;
@@ -16,18 +17,43 @@ import org.solovyev.android.Captcha;
 import org.solovyev.android.ResolvedCaptcha;
 import org.solovyev.android.messenger.api.ApiError;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.LoginUserAsyncTask;
 import org.solovyev.android.messenger.users.MessengerContactsActivity;
 import org.solovyev.android.messenger.view.CaptchaViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.StringUtils;
+import roboguice.RoboGuice;
+import roboguice.activity.RoboActivity;
 
 /**
  * User: serso
  * Date: 5/24/12
  * Time: 10:15 PM
  */
-public class MessengerLoginActivity extends Activity implements CaptchaViewBuilder.CaptchaEnteredListener {
+public class MessengerLoginActivity extends RoboActivity implements CaptchaViewBuilder.CaptchaEnteredListener {
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private AuthService authService;
+
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
 
     @NotNull
     private static String REALM = "realm";
@@ -35,7 +61,7 @@ public class MessengerLoginActivity extends Activity implements CaptchaViewBuild
     public static void startActivity(@NotNull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerLoginActivity.class);
-        result.putExtra(REALM, MessengerConfigurationImpl.getInstance().getRealm().getId());
+        result.putExtra(REALM, RoboGuice.getInjector(activity).getInstance(Realm.class).getId());
         activity.startActivity(result);
     }
 
@@ -129,14 +155,9 @@ public class MessengerLoginActivity extends Activity implements CaptchaViewBuild
     protected void onRestart() {
         super.onRestart();
 
-        if (getServiceLocator().getAuthService().isUserLoggedIn(realm)) {
+        if (this.authService.isUserLoggedIn(realm)) {
             MessengerContactsActivity.startActivity(this);
         }
-    }
-
-    @NotNull
-    private ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override

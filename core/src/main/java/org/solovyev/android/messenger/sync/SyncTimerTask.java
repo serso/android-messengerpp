@@ -3,9 +3,9 @@ package org.solovyev.android.messenger.sync;
 import android.content.Context;
 import android.util.Log;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
-import org.solovyev.android.messenger.ServiceLocator;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
+import roboguice.RoboGuice;
 
 import java.lang.ref.WeakReference;
 import java.util.TimerTask;
@@ -28,7 +28,7 @@ public class SyncTimerTask extends TimerTask {
     public void run() {
         final Context context = this.contextRef.get();
         if (context != null) {
-            for (Realm realm : getServiceLocator().getRealmService().getRealms()) {
+            for (Realm realm : RoboGuice.getInjector(context).getInstance(RealmService.class).getRealms()) {
                 final SyncData syncData = new SyncDataImpl(realm.getId());
 
                 for (SyncTask syncTask : SyncTask.values()) {
@@ -41,10 +41,5 @@ public class SyncTimerTask extends TimerTask {
 
             }
         }
-    }
-
-    @NotNull
-    private ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 }

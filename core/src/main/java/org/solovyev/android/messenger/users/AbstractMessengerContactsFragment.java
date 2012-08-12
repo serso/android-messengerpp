@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
@@ -44,7 +43,7 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
 
                 @Override
                 protected Chat doInBackground(Void... params) {
-                    return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getPrivateChat(contactListItem.getUser().getId(), contactListItem.getContact().getId(), getActivity());
+                    return getUserService().getPrivateChat(contactListItem.getUser().getId(), contactListItem.getContact().getId(), getActivity());
                 }
 
                 @Override

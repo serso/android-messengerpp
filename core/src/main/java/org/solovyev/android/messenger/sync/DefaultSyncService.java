@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
-import org.solovyev.android.messenger.ServiceLocator;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -17,7 +18,29 @@ import java.util.Set;
  * Date: 6/8/12
  * Time: 6:15 PM
  */
+@Singleton
 public class DefaultSyncService implements SyncService {
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private RealmService realmService;
+
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
 
     @NotNull
     private final Set<SyncTask> runningTasks = EnumSet.noneOf(SyncTask.class);
@@ -25,9 +48,10 @@ public class DefaultSyncService implements SyncService {
     @Override
     public void syncAll(@NotNull final Context context) {
         new Thread(new Runnable() {
+
             @Override
             public void run() {
-                for (Realm realm : getServiceLocator().getRealmService().getRealms()) {
+                for (Realm realm : DefaultSyncService.this.realmService.getRealms()) {
                     final SyncData syncData = new SyncDataImpl(realm.getId());
 
                     for (SyncTask syncTask : SyncTask.values()) {
@@ -49,10 +73,6 @@ public class DefaultSyncService implements SyncService {
                 }
             }
         }).start();
-    }
-
-    private ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override

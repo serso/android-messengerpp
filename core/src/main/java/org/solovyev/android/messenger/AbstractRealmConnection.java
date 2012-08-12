@@ -43,11 +43,6 @@ public abstract class AbstractRealmConnection implements RealmConnection {
         }
     }
 
-    @NotNull
-    protected ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
-    }
-
     public boolean isStopped() {
         return stopPolling.get();
     }

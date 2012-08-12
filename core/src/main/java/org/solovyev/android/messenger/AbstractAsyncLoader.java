@@ -87,9 +87,4 @@ public abstract class AbstractAsyncLoader<R> extends MessengerAsyncTask<Void, Vo
 
     @NotNull
     protected abstract ListItem<?> createListItem(@NotNull R element);
-
-    @NotNull
-    protected final ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
-    }
 }

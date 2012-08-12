@@ -4,7 +4,7 @@ import android.content.Context;
 import com.google.gson.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -113,7 +113,7 @@ public interface LongPollUpdate {
 
         @NotNull
         private static ChatService getChatService() {
-            return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+            return MessengerApplication.getServiceLocator().getChatService();
         }
     }
 
@@ -141,7 +141,7 @@ public interface LongPollUpdate {
 
         @NotNull
         private static ChatService getChatService() {
-            return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+            return MessengerApplication.getServiceLocator().getChatService();
         }
     }
 
@@ -162,7 +162,7 @@ public interface LongPollUpdate {
 
         @NotNull
         private ChatService getChatService() {
-            return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+            return MessengerApplication.getServiceLocator().getChatService();
         }
     }
 
@@ -220,7 +220,7 @@ public interface LongPollUpdate {
 
         @NotNull
         private ChatService getChatService() {
-            return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+            return MessengerApplication.getServiceLocator().getChatService();
         }
     }
 
@@ -247,7 +247,7 @@ public interface LongPollUpdate {
         }
 
         private UserService getUserService() {
-            return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService();
+            return MessengerApplication.getServiceLocator().getUserService();
         }
     }
 

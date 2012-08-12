@@ -8,13 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
-import org.solovyev.android.messenger.UiThreadRunnable;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.view.AbstractOnRefreshListener;
@@ -30,6 +28,28 @@ import java.util.List;
  * Time: 5:38 PM
  */
 public class MessengerMessagesFragment extends AbstractMessengerListFragment<ChatMessage> implements PullToRefreshListViewProvider {
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private ChatService chatService;
+
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
+
 
     @NotNull
     private static final String TAG = "MessagesFragment";
@@ -73,7 +93,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         if (chat == null) {
             final String chatId = savedInstanceState.getString(CHAT_ID);
             if (chatId != null) {
-                chat = getServiceLocator().getChatService().getChatById(chatId, getActivity());
+                chat = this.chatService.getChatById(chatId, getActivity());
             }
 
             if (chat == null) {
@@ -86,7 +106,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onActivityCreated(savedInstanceState);
 
         chatEventListener = new UiThreadUserChatListener();
-        getServiceLocator().getChatService().addChatEventListener(chatEventListener);
+        this.chatService.addChatEventListener(chatEventListener);
     }
 
     @Override
@@ -98,7 +118,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onDestroyView();
 
         if (chatEventListener != null) {
-            getServiceLocator().getChatService().removeChatEventListener(chatEventListener);
+            this.chatService.removeChatEventListener(chatEventListener);
         }
     }
 
@@ -196,10 +216,11 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Override
     protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter adapter, @NotNull Runnable onPostExecute) {
         return new AbstractAsyncLoader<ChatMessage>(getUser(), getActivity(), adapter, onPostExecute) {
+
             @NotNull
             @Override
             protected List<ChatMessage> getElements(@NotNull Context context) {
-                return getServiceLocator().getChatMessageService().getChatMessages(chat.getId(), getActivity());
+                return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getId(), getActivity());
             }
 
             @Override

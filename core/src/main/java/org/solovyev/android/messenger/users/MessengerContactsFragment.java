@@ -27,7 +27,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
             @Override
             public void onRefresh() {
                 try {
-                    getServiceLocator().getSyncService().sync(SyncTask.user_contacts, getActivity(), new Runnable() {
+                    getSyncService().sync(SyncTask.user_contacts, getActivity(), new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

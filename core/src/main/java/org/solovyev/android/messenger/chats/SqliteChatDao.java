@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -16,7 +17,6 @@ import org.solovyev.android.AProperty;
 import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.properties.PropertyByIdDbQuery;
@@ -24,6 +24,7 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.utils.CollectionsUtils2;
+import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +36,22 @@ import java.util.NoSuchElementException;
  * Date: 6/6/12
  * Time: 3:27 PM
  */
+@ContextSingleton
 public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private UserService userService;
+
+    @Inject
     public SqliteChatDao(@NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
         super(context, sqliteOpenHelper);
     }
@@ -73,7 +88,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
     @NotNull
     @Override
     public List<User> loadChatParticipants(@NotNull String chatId) {
-        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatParticipants(getContext(), chatId, getSqliteOpenHelper()));
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatParticipants(getContext(), chatId, userService, getSqliteOpenHelper()));
     }
 
     @Override
@@ -86,9 +101,16 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         @NotNull
         private final String chatId;
 
-        private LoadChatParticipants(@NotNull Context context, @NotNull String chatId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        @NotNull
+        private final UserService userService;
+
+        private LoadChatParticipants(@NotNull Context context,
+                                     @NotNull String chatId,
+                                     @NotNull UserService userService,
+                                     @NotNull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
             this.chatId = chatId;
+            this.userService = userService;
         }
 
         @NotNull
@@ -100,12 +122,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         @NotNull
         @Override
         public List<User> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<User>(new ChatParticipantMapper(getUserService(), getContext())).convert(cursor);
-        }
-
-        @NotNull
-        private UserService getUserService() {
-            return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService();
+            return new ListMapper<User>(new ChatParticipantMapper(userService, getContext())).convert(cursor);
         }
     }
 

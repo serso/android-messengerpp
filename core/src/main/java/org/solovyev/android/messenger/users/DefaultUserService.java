@@ -7,13 +7,17 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.text.StringUtils;
 
@@ -24,10 +28,39 @@ import java.util.*;
  * Date: 5/24/12
  * Time: 10:30 PM
  */
+@Singleton
 public class DefaultUserService implements UserService, UserEventListener, ChatEventListener {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+    @Inject
     @NotNull
-    private final Realm realm;
+    private Realm realm;
+
+    @Inject
+    @NotNull
+    private ChatService chatService;
+
+    @Inject
+    @NotNull
+    private Provider<UserDao> userDaoProvider;
+
+    @Inject
+    @NotNull
+    private RemoteFileService remoteFileService;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
 
     @NotNull
     private final Object lock = new Object();
@@ -47,10 +80,13 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @NotNull
     private final Map<String, User> usersCache = new HashMap<String, User>();
 
-
-    public DefaultUserService(@NotNull Realm realm) {
-        this.realm = realm;
+    public DefaultUserService() {
         listeners.addUserEventListener(this);
+    }
+
+    @Override
+    public void init() {
+        chatService.addChatEventListener(this);
     }
 
     @NotNull
@@ -339,7 +375,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     private ChatService getChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+        return this.chatService;
     }
 
     @Override
@@ -374,7 +410,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         final String userIconUri = getUserIconUri(user, context);
         if (!StringUtils.isEmpty(userIconUri)) {
-            MessengerConfigurationImpl.getInstance().getServiceLocator().getRemoteFileService().loadImage(userIconUri, imageView, R.drawable.empty_icon);
+            this.remoteFileService.loadImage(userIconUri, imageView, R.drawable.empty_icon);
         } else {
             imageView.setImageDrawable(defaultUserIcon);
         }
@@ -384,7 +420,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         final String userIconUri = getUserIconUri(user, context);
         if (!StringUtils.isEmpty(userIconUri)) {
             assert userIconUri != null;
-            MessengerConfigurationImpl.getInstance().getServiceLocator().getRemoteFileService().loadImage(userIconUri);
+            this.remoteFileService.loadImage(userIconUri);
         }
     }
 
@@ -401,7 +437,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     private UserDao getUserDao(@NotNull Context context) {
-        return MessengerConfigurationImpl.getInstance().getDaoLocator().getUserDao(context);
+        return RoboGuiceUtils.getInContextScope(context, userDaoProvider);
     }
 
     /*

@@ -37,7 +37,7 @@ public class MessengerContactsListActivity extends MessengerListActivity {
         adapter = new ContactsAdapter(this, getUser());
 
         userEventListener = new UiThreadUserEventListener();
-        getServiceLocator().getUserService().addUserEventListener(userEventListener);
+        this.getUserService().addUserEventListener(userEventListener);
 
         new ContactsAsyncLoader(getUser(), this, adapter, null).execute();
 
@@ -79,7 +79,7 @@ public class MessengerContactsListActivity extends MessengerListActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    getServiceLocator().getSyncService().sync(SyncTask.user_contacts, MessengerContactsListActivity.this, null);
+                    getSyncService().sync(SyncTask.user_contacts, MessengerContactsListActivity.this, null);
                 } catch (TaskIsAlreadyRunningException e) {
                     e.showMessage(MessengerContactsListActivity.this);
                 }
@@ -88,17 +88,12 @@ public class MessengerContactsListActivity extends MessengerListActivity {
         getFooterLeft().addView(syncButton);
     }
 
-    @NotNull
-    public ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
         if (userEventListener != null) {
-            getServiceLocator().getUserService().removeUserEventListener(userEventListener);
+            getUserService().removeUserEventListener(userEventListener);
         }
     }
 

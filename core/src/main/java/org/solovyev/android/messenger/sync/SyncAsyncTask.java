@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.sync;
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.realms.Realm;
 
@@ -26,7 +27,7 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doWork(@NotNull List<Void> voids) {
-        for (Realm realm : getServiceLocator().getRealmService().getRealms()) {
+        for (Realm realm : MessengerApplication.getServiceLocator().getRealmService().getRealms()) {
             final SyncData syncData = new SyncDataImpl(realm.getId());
 
             for (SyncTask syncTask : syncTasks) {

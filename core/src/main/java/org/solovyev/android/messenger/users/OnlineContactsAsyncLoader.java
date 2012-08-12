@@ -8,6 +8,7 @@ import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerApplication;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +26,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<User> {
 
     @NotNull
     protected List<User> getElements(@NotNull Context context) {
-        return getServiceLocator().getUserService().getOnlineUserContacts(getUser().getId(), context);
+        return MessengerApplication.getServiceLocator().getUserService().getOnlineUserContacts(getUser().getId(), context);
     }
 
     @Override

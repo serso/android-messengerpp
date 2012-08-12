@@ -4,8 +4,6 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.async.CommonAsyncTask;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
-import org.solovyev.android.messenger.ServiceLocator;
 
 /**
  * User: serso
@@ -28,10 +26,5 @@ public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsync
         if (context != null) {
             MessengerCommonActivityImpl.handleExceptionStatic(context, e);
         }
-    }
-
-    @NotNull
-    protected ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 }

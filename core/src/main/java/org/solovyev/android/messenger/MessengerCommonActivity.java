@@ -24,9 +24,6 @@ public interface MessengerCommonActivity {
     void onRestart(@NotNull Activity activity);
 
     @NotNull
-    ServiceLocator getServiceLocator();
-
-    @NotNull
     ImageButton createFooterImageButton(int imageResId, int contentDescriptionResId, @NotNull Activity activity);
 
     @NotNull

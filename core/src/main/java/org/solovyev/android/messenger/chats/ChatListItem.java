@@ -15,7 +15,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.users.User;
@@ -155,7 +155,7 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
 
     @NotNull
     private ChatService getChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+        return MessengerApplication.getServiceLocator().getChatService();
     }
 
     @NotNull

@@ -11,16 +11,16 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AndroidUtils;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatListItem;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -36,6 +36,10 @@ import java.util.List;
  * Time: 10:42 PM
  */
 public class MessengerMessagesActivity extends MessengerFragmentActivity implements ViewPager.OnPageChangeListener, UserEventListener {
+
+    @Inject
+    @NotNull
+    private RemoteFileService remoteFileService;
 
     @NotNull
     private static final String CHAT_ID = "chat_id";
@@ -70,7 +74,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         if (intent != null) {
             final String chatId = intent.getExtras().getString(CHAT_ID);
             if (chatId != null) {
-                final Chat chatFromService = getServiceLocator().getChatService().getChatById(chatId, this);
+                final Chat chatFromService = getChatService().getChatById(chatId, this);
                 if (chatFromService != null) {
                     this.chat = chatFromService;
                 } else {
@@ -83,7 +87,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
             this.finish();
         }
 
-        getServiceLocator().getUserService().addUserEventListener(this);
+        getUserService().addUserEventListener(this);
 
         final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId(), this);
         if (chat.isPrivate()) {
@@ -159,7 +163,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
             final String imageUri = contact.getPropertyValueByName("photo");
             if (!StringUtils.isEmpty(imageUri)) {
-                MessengerConfigurationImpl.getInstance().getServiceLocator().getRemoteFileService().loadImage(imageUri, contactIcon, R.drawable.empty_icon);
+                remoteFileService.loadImage(imageUri, contactIcon, R.drawable.empty_icon);
             }
 
             getHeaderRight().addView(contactIcon, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -175,11 +179,6 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
                 contactOnline.setText("");
             }
         }
-    }
-
-    @NotNull
-    private ChatService getChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
     }
 
     @Override
@@ -199,7 +198,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     protected void onDestroy() {
         super.onDestroy();
 
-        getServiceLocator().getUserService().removeUserEventListener(this);
+        getUserService().removeUserEventListener(this);
     }
 
     @Override

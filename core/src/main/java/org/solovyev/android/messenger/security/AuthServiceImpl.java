@@ -3,6 +3,8 @@ package org.solovyev.android.messenger.security;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.simpleframework.xml.ElementMap;
@@ -10,10 +12,11 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.solovyev.android.ResolvedCaptcha;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -24,6 +27,7 @@ import java.util.Map;
  * Date: 5/24/12
  * Time: 9:22 PM
  */
+@Singleton
 @Root
 public class AuthServiceImpl implements AuthService {
 
@@ -36,6 +40,14 @@ public class AuthServiceImpl implements AuthService {
 
     @NotNull
     private final Object lock = new Object();
+
+    @Inject
+    @NotNull
+    private RealmService realmService;
+
+    @Inject
+    @NotNull
+    private UserService userService;
 
     @NotNull
     @Override
@@ -70,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
     @NotNull
     private Realm getRealmService(@NotNull String realm) {
         try {
-            return MessengerConfigurationImpl.getInstance().getServiceLocator().getRealmService().getRealmById(realm);
+            return realmService.getRealmById(realm);
         } catch (UnsupportedRealmException e) {
             throw new RuntimeException(e);
         }
@@ -101,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
 
     @NotNull
     private User getUserById(@NotNull Context context, @NotNull AuthData authData) {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getUserById(authData.getUserId(), context);
+        return this.userService.getUserById(authData.getUserId(), context);
     }
 
     @Override

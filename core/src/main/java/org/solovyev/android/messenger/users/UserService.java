@@ -15,6 +15,9 @@ import java.util.List;
  */
 public interface UserService extends UserEventContainer {
 
+    // initial initialization: will be called once on application start
+    void init();
+
     // NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
     @NotNull
     User getUserById(@NotNull String userId, @NotNull Context context);

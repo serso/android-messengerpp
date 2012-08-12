@@ -16,7 +16,6 @@ import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -59,7 +58,6 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
         this.message = message;
         this.leftTag = LEFT_VIEW_TAG + "_" + message.getId();
         this.rightTag = RIGHT_VIEW_TAG + "_" + message.getId();
-
     }
 
     @Override
@@ -166,7 +164,7 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
     private void fillMessageIcon(@NotNull Context context, @NotNull ImageView messageIcon, @NotNull Boolean show) {
         if (show) {
             messageIcon.setVisibility(View.VISIBLE);
-            MessengerConfigurationImpl.getInstance().getServiceLocator().getChatMessageService().setMessageIcon(messageIcon, message, chat, user, context);
+            MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(messageIcon, message, chat, user, context);
         } else {
             messageIcon.setImageResource(R.drawable.empty_icon);
             messageIcon.setVisibility(View.GONE);

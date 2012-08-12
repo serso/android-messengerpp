@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.User;
 
 import java.util.Comparator;
@@ -26,7 +27,7 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<Chat> {
     @NotNull
     @Override
     protected List<Chat> getElements(@NotNull Context context) {
-        return getServiceLocator().getUserService().getUserChats(getUser().getId(), context);
+        return MessengerApplication.getServiceLocator().getUserService().getUserChats(getUser().getId(), context);
     }
 
     @Override

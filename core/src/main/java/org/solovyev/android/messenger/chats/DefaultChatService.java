@@ -8,11 +8,14 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
@@ -21,6 +24,7 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.text.StringUtils;
 import org.solovyev.common.utils.ListListenersContainer;
@@ -32,11 +36,46 @@ import java.util.*;
  * Date: 6/6/12
  * Time: 2:43 AM
  */
+@Singleton
 public class DefaultChatService implements ChatService, ChatEventListener, UserEventListener {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+    @Inject
     @NotNull
-    private final Realm realm;
+    private Realm realm;
 
+    @Inject
+    @NotNull
+    private Provider<ChatMessageDao> chatMessageDaoProvider;
+
+    @Inject
+    @NotNull
+    private Provider<ChatDao> chatDaoProvider;
+
+    @Inject
+    @NotNull
+    private ChatMessageService chatMessageService;
+
+    @Inject
+    @NotNull
+    private UserService userService;
+
+    @Inject
+    @NotNull
+    private RemoteFileService remoteFileService;
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
     @NotNull
     private static final String EVENT_TAG = "ChatEvent";
 
@@ -54,9 +93,13 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @NotNull
     private final Object lock = new Object();
 
-    public DefaultChatService(@NotNull Realm realm) {
-        this.realm = realm;
+    public DefaultChatService() {
         listeners.addListener(this);
+    }
+
+    @Override
+    public void init() {
+        userService.addUserEventListener(this);
     }
 
     @NotNull
@@ -202,7 +245,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     private ChatMessageDao getChatMessageDao(@NotNull Context context) {
-        return MessengerConfigurationImpl.getInstance().getDaoLocator().getChatMessageDao(context);
+        return RoboGuiceUtils.getInContextScope(context, chatMessageDaoProvider);
     }
 
     @NotNull
@@ -261,7 +304,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         }
 
         if (!StringUtils.isEmpty(imageUri)) {
-            MessengerConfigurationImpl.getInstance().getServiceLocator().getRemoteFileService().loadImage(imageUri, imageView, R.drawable.empty_icon);
+            this.remoteFileService.loadImage(imageUri, imageView, R.drawable.empty_icon);
         } else {
             imageView.setImageDrawable(defaultChatIcon);
         }
@@ -302,7 +345,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     private ChatMessageService getChatMessageService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatMessageService();
+        return this.chatMessageService;
     }
 
     @NotNull
@@ -356,12 +399,12 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     private UserService getUserService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService();
+        return this.userService;
     }
 
     @NotNull
     private ChatDao getChatDao(@NotNull Context context) {
-        return MessengerConfigurationImpl.getInstance().getDaoLocator().getChatDao(context);
+        return RoboGuiceUtils.getInContextScope(context, chatDaoProvider);
     }
 
     @Override

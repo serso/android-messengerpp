@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.APropertyImpl;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.common.JObject;
 import org.solovyev.common.VersionedEntity;
 import org.solovyev.common.VersionedEntityImpl;
@@ -116,7 +116,7 @@ public class ChatImpl extends JObject implements Chat {
     public String getSecondUserId() {
         assert isPrivate();
 
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService().getSecondUserId(this);
+        return MessengerApplication.getServiceLocator().getChatService().getSecondUserId(this);
     }
 
     @Override

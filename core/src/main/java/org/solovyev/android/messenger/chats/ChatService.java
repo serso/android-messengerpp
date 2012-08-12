@@ -16,6 +16,9 @@ import java.util.List;
  */
 public interface ChatService extends ChatEventContainer {
 
+    // initial initialization: will be called once on application start
+    void init();
+
     @NotNull
     Chat updateChat(@NotNull Chat chat, @NotNull Context context);
 

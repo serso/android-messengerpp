@@ -1,9 +1,12 @@
 package org.solovyev.android.messenger.security;
 
 import android.content.Context;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.ResolvedCaptcha;
+import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.users.User;
 
 /**
@@ -11,6 +14,7 @@ import org.solovyev.android.messenger.users.User;
  * Date: 7/25/12
  * Time: 7:01 PM
  */
+@Singleton
 public class AuthServiceFacadeImpl implements AuthServiceFacade {
 
     @NotNull
@@ -19,8 +23,10 @@ public class AuthServiceFacadeImpl implements AuthServiceFacade {
     @NotNull
     private final AuthService authService;
 
-    public AuthServiceFacadeImpl(@NotNull String realm, @NotNull AuthService authService) {
-        this.realm = realm;
+    @Inject
+    public AuthServiceFacadeImpl(@NotNull MessengerConfiguration configuration,
+                                 @NotNull AuthService authService) {
+        this.realm = configuration.getRealm().getId();
         this.authService = authService;
     }
 

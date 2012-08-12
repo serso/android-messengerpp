@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
@@ -21,6 +22,7 @@ import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.properties.PropertyByIdDbQuery;
 import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.utils.CollectionsUtils2;
+import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +34,10 @@ import java.util.NoSuchElementException;
  * Date: 5/30/12
  * Time: 2:13 AM
  */
+@ContextSingleton
 public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
+    @Inject
     public SqliteUserDao(@NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
         super(context, sqliteOpenHelper);
     }

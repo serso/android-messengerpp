@@ -1,26 +1,62 @@
 package org.solovyev.android.messenger;
 
-import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
+import roboguice.activity.RoboListActivity;
 
 /**
  * User: serso
  * Date: 6/1/12
  * Time: 7:28 PM
  */
-public abstract class MessengerListActivity extends ListActivity {
+public abstract class MessengerListActivity extends RoboListActivity {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELD
+    *
+    **********************************************************************
+    */
+    @Inject
+    @NotNull
+    private UserService userService;
+
+    @Inject
+    @NotNull
+    private SyncService syncService;
+
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
     @NotNull
     private final MessengerCommonActivity activity;
 
     protected MessengerListActivity() {
         activity = new MessengerCommonActivityImpl(R.layout.msg_main_list, getSyncButtonListener());
+    }
+
+    @NotNull
+    protected UserService getUserService() {
+        return userService;
+    }
+
+    @NotNull
+    protected SyncService getSyncService() {
+        return syncService;
     }
 
     @Nullable
@@ -51,11 +87,6 @@ public abstract class MessengerListActivity extends ListActivity {
     @NotNull
     public ViewGroup getFooterLeft() {
         return activity.getFooterLeft(this);
-    }
-
-    @NotNull
-    public ServiceLocator getServiceLocator() {
-        return activity.getServiceLocator();
     }
 
     @NotNull

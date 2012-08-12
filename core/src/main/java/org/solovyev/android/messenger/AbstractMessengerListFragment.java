@@ -3,7 +3,6 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -13,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
@@ -20,14 +20,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
-import org.solovyev.android.messenger.users.ContactDualPaneController;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventListener;
-import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import roboguice.fragment.RoboListFragment;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,7 +38,40 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractMessengerListFragment<T> extends ListFragment implements AbsListView.OnScrollListener {
+public abstract class AbstractMessengerListFragment<T> extends RoboListFragment implements AbsListView.OnScrollListener {
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private UserService userService;
+
+    @Inject
+    @NotNull
+    private ChatService chatService;
+
+    @Inject
+    @NotNull
+    private AuthServiceFacade authServiceFacade;
+
+    @Inject
+    @NotNull
+    private SyncService syncService;
+
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
 
     @Nullable
     private UserEventListener userEventListener;
@@ -72,13 +106,31 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
         Log.d(tag, "onCreate: " + this);
 
         try {
-            this.user = getServiceLocator().getAuthServiceFacade().getUser(getActivity());
+            this.user = this.authServiceFacade.getUser(getActivity());
         } catch (UserIsNotLoggedInException e) {
             MessengerLoginActivity.startActivity(getActivity());
         }
     }
 
+    @NotNull
+    protected UserService getUserService() {
+        return userService;
+    }
 
+    @NotNull
+    protected AuthServiceFacade getAuthServiceFacade() {
+        return authServiceFacade;
+    }
+
+    @NotNull
+    protected SyncService getSyncService() {
+        return syncService;
+    }
+
+    @NotNull
+    protected ChatService getChatService() {
+        return chatService;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -287,7 +339,7 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
         adapter = createAdapter();
 
         userEventListener = new UiThreadUserEventListener();
-        getServiceLocator().getUserService().addUserEventListener(userEventListener);
+        this.userService.addUserEventListener(userEventListener);
 
         final ListView lv = getListView();
         lv.setTextFilterEnabled(true);
@@ -395,7 +447,7 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
         }
 
         if (userEventListener != null) {
-            getServiceLocator().getUserService().removeUserEventListener(userEventListener);
+            this.userService.removeUserEventListener(userEventListener);
         }
     }
 
@@ -420,11 +472,6 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
     @NotNull
     protected User getUser() {
         return this.user;
-    }
-
-    @NotNull
-    public static ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @NotNull

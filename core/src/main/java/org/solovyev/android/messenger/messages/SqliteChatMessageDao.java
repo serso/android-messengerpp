@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.format.DateTimeFormatter;
@@ -15,7 +16,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatMessageMapper;
@@ -25,6 +25,7 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.utils.CollectionsUtils2;
+import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,26 @@ import java.util.NoSuchElementException;
  * Date: 6/11/12
  * Time: 7:41 PM
  */
+@ContextSingleton
 public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMessageDao {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private ChatService chatService;
+
+    @Inject
+    @NotNull
+    private UserService userService;
+
+    @Inject
     public SqliteChatMessageDao(@NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
         super(context, sqliteOpenHelper);
     }
@@ -50,7 +69,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     @NotNull
     @Override
     public List<ChatMessage> loadChatMessages(@NotNull String chatId) {
-        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessages(getContext(), chatId, getSqliteOpenHelper()));
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessages(getContext(), chatId, this.userService, getSqliteOpenHelper()));
     }
 
     @NotNull
@@ -63,7 +82,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     @Override
     public ChatMessage loadLastChatMessage(@NotNull String chatId) {
         final Integer lastChatMessageId = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
-        final List<ChatMessage> messages = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, getSqliteOpenHelper()));
+        final List<ChatMessage> messages = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
         return CollectionsUtils.getFirstListElement(messages);
     }
 
@@ -121,7 +140,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
     @NotNull
     private ChatService getChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+        return this.chatService;
     }
 
     private static class LoadChatMessageIdsByChatId extends AbstractDbQuery<List<String>> {
@@ -256,9 +275,16 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @NotNull
         private final String chatId;
 
-        private LoadChatMessages(@NotNull Context context, @NotNull String chatId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        @NotNull
+        private final UserService userService;
+
+        private LoadChatMessages(@NotNull Context context,
+                                 @NotNull String chatId,
+                                 @NotNull UserService userService,
+                                 @NotNull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
             this.chatId = chatId;
+            this.userService = userService;
         }
 
         @NotNull
@@ -270,7 +296,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @NotNull
         @Override
         public List<ChatMessage> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<ChatMessage>(new ChatMessageMapper(getUserService(), getContext())).convert(cursor);
+            return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService, getContext())).convert(cursor);
         }
     }
 
@@ -279,9 +305,16 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @NotNull
         private final Integer messageId;
 
-        private LoadChatMessage(@NotNull Context context, @NotNull Integer messageId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        @NotNull
+        private final UserService userService;
+
+        private LoadChatMessage(@NotNull Context context,
+                                @NotNull Integer messageId,
+                                @NotNull UserService userService,
+                                @NotNull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
             this.messageId = messageId;
+            this.userService = userService;
         }
 
         @NotNull
@@ -293,14 +326,8 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @NotNull
         @Override
         public List<ChatMessage> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<ChatMessage>(new ChatMessageMapper(getUserService(), getContext())).convert(cursor);
+            return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService, getContext())).convert(cursor);
         }
-    }
-
-
-    @NotNull
-    private static UserService getUserService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService();
     }
 
     private static class OldestChatMessageLoader extends AbstractDbQuery<String> {

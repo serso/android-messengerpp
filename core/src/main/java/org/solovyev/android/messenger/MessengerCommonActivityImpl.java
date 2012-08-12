@@ -33,6 +33,7 @@ import org.solovyev.android.view.TextViewBuilder;
  */
 public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
+
     @NotNull
     private User user;
 
@@ -45,6 +46,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
     @NotNull
     private ButtonBarPosition buttonBarPosition = ButtonBarPosition.bottom;
+
     private boolean showImageButtonLabels = false;
 
     public MessengerCommonActivityImpl(int layoutId, @Nullable View.OnClickListener syncButtonListener) {
@@ -214,7 +216,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
     private void checkUserLoggedIn(@NotNull Activity activity) {
         try {
-            this.user = getServiceLocator().getAuthServiceFacade().getUser(activity);
+            this.user = MessengerApplication.getServiceLocator().getAuthServiceFacade().getUser(activity);
         } catch (UserIsNotLoggedInException e) {
             MessengerLoginActivity.startActivity(activity);
         }
@@ -229,12 +231,6 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     @NotNull
     public User getUser() {
         return user;
-    }
-
-    @Override
-    @NotNull
-    public ServiceLocator getServiceLocator() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator();
     }
 
     @Override

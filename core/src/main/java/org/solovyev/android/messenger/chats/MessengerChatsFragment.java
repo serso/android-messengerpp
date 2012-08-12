@@ -40,7 +40,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
         super.onActivityCreated(savedInstanceState);
 
         chatEventListener = new UiThreadUserChatListener();
-        getServiceLocator().getChatService().addChatEventListener(chatEventListener);
+        getChatService().addChatEventListener(chatEventListener);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
         super.onDestroyView();
 
         if (chatEventListener != null) {
-            getServiceLocator().getChatService().removeChatEventListener(chatEventListener);
+            getChatService().removeChatEventListener(chatEventListener);
         }
     }
 
@@ -69,7 +69,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
             @Override
             public void onRefresh() {
                 try {
-                    getServiceLocator().getSyncService().sync(SyncTask.user_chats, getActivity(), new Runnable() {
+                    getSyncService().sync(SyncTask.user_chats, getActivity(), new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();
@@ -89,7 +89,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
             @Override
             public void onRefresh() {
                 try {
-                    getServiceLocator().getSyncService().sync(SyncTask.user_chats, getActivity(), new Runnable() {
+                    getSyncService().sync(SyncTask.user_chats, getActivity(), new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

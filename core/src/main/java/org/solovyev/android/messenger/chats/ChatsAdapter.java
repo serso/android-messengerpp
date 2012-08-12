@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -88,7 +88,7 @@ public class ChatsAdapter extends AbstractMessengerListItemAdapter implements Ch
 
     @NotNull
     private ChatService getChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+        return MessengerApplication.getServiceLocator().getChatService();
     }
 
     @Override

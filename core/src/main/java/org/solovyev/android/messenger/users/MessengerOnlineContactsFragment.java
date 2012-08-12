@@ -4,6 +4,7 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.view.AbstractOnRefreshListener;
@@ -27,7 +28,7 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
             @Override
             public void onRefresh() {
                 try {
-                    getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, getActivity(), new Runnable() {
+                    MessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, getActivity(), new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

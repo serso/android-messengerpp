@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
@@ -55,7 +55,7 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
 
                         @Override
                         protected Chat doInBackground(Void... params) {
-                            return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getPrivateChat(user.getId(), contact.getId(), context);
+                            return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getId(), contact.getId(), context);
                         }
 
                         @Override
@@ -110,7 +110,7 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
 
             final ImageView contactIcon = (ImageView) view.findViewById(R.id.contact_icon);
 
-            MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().setUserIcon(contactIcon, contact, context);
+            MessengerApplication.getServiceLocator().getUserService().setUserIcon(contactIcon, contact, context);
 
             final TextView contactName = (TextView) view.findViewById(R.id.contact_name);
             contactName.setText(contact.getDisplayName());

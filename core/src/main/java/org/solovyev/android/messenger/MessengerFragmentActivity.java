@@ -2,22 +2,49 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
+import roboguice.activity.RoboFragmentActivity;
 
 /**
  * User: serso
  * Date: 6/1/12
  * Time: 7:28 PM
  */
-public abstract class MessengerFragmentActivity extends FragmentActivity {
+public abstract class MessengerFragmentActivity extends RoboFragmentActivity {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private UserService userService;
+
+    @Inject
+    @NotNull
+    private ChatService chatService;
+
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
     @NotNull
     private final MessengerCommonActivity activity;
 
@@ -27,6 +54,16 @@ public abstract class MessengerFragmentActivity extends FragmentActivity {
 
     protected MessengerFragmentActivity(int layoutId, boolean createFooterButtons) {
         activity = new MessengerCommonActivityImpl(layoutId, null, createFooterButtons);
+    }
+
+    @NotNull
+    protected UserService getUserService() {
+        return userService;
+    }
+
+    @NotNull
+    protected ChatService getChatService() {
+        return chatService;
     }
 
     @Override
@@ -69,11 +106,6 @@ public abstract class MessengerFragmentActivity extends FragmentActivity {
     @NotNull
     public ViewGroup getHeaderRight() {
         return this.activity.getHeaderRight(this);
-    }
-
-    @NotNull
-    public ServiceLocator getServiceLocator() {
-        return activity.getServiceLocator();
     }
 
     @NotNull

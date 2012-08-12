@@ -13,9 +13,4 @@ public interface MessengerConfiguration extends MessengerApiProvider {
     @NotNull
     Realm getRealm();
 
-    @NotNull
-    DaoLocator getDaoLocator();
-
-    @NotNull
-    ServiceLocator getServiceLocator();
 }

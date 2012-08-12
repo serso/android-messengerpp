@@ -7,17 +7,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.StringUtils;
+import roboguice.activity.RoboActivity;
 
 /**
  * User: serso
  * Date: 5/24/12
  * Time: 10:15 PM
  */
-public class MessengerRegistrationActivity extends Activity {
+public class MessengerRegistrationActivity extends RoboActivity {
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @NotNull
+    private RegistrationService registrationService;
 
     public static void startActivity(@NotNull Activity activity) {
         final Intent result = new Intent();
@@ -51,17 +65,12 @@ public class MessengerRegistrationActivity extends Activity {
                     final String firstName = firstNameInput.getText().toString();
                     final String lastName = lastNameInput.getText().toString();
 
-                    getRegistrationService().requestVerificationCode(phoneNumber, firstName, lastName);
+                    registrationService.requestVerificationCode(phoneNumber, firstName, lastName);
                 } else {
-                    getRegistrationService().checkVerificationCode(verificationCode);
+                    registrationService.checkVerificationCode(verificationCode);
                 }
             }
         });
 
-    }
-
-    @NotNull
-    private RegistrationService getRegistrationService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getRegistrationService();
     }
 }

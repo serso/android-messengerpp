@@ -4,7 +4,7 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.users.User;
@@ -53,12 +53,12 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
     @NotNull
     private static ChatService getChatService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getChatService();
+        return MessengerApplication.getServiceLocator().getChatService();
     }
 
     @NotNull
     private static UserService getUserService() {
-        return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService();
+        return MessengerApplication.getServiceLocator().getUserService();
     }
 
     public static class Input {

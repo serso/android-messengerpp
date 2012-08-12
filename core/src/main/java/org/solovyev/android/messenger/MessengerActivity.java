@@ -45,11 +45,6 @@ public abstract class MessengerActivity extends Activity {
     }
 
     @NotNull
-    public ServiceLocator getServiceLocator() {
-        return activity.getServiceLocator();
-    }
-
-    @NotNull
     public ImageButton createFooterButton(int imageResId, int contentDescriptionResId) {
         return activity.createFooterImageButton(imageResId, contentDescriptionResId, this);
     }
