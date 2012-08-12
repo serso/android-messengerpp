@@ -11,13 +11,14 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTimeZone;
-import org.solovyev.android.date.FastDateTimeZoneProvider;
 import org.solovyev.android.db.CommonSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.messenger.users.DummyMessengerApi;
+import org.solovyev.android.network.NetworkStateController;
 import org.solovyev.android.prefs.BooleanPreference;
 import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
+import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 
 /**
  * User: serso
@@ -53,6 +54,8 @@ public abstract class MessengerApplication extends Application implements Messen
         System.setProperty("org.joda.time.DateTimeZone.Provider", FastDateTimeZoneProvider.class.getName());
 
         DateTimeZone.setDefault(DateTimeZone.UTC);
+
+        NetworkStateController.getInstance().startListening(this);
 
         final CommonSQLiteOpenHelper sqliteOpenHelper = new CommonSQLiteOpenHelper(this, getSqliteOpenHelperConfiguration());
         MessengerConfigurationImpl.getInstance().setSqliteOpenHelper(sqliteOpenHelper);

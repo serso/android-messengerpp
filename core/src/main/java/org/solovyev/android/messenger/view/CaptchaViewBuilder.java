@@ -15,7 +15,7 @@ import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.view.DialogBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.utils.CollectionsUtils;
+import org.solovyev.common.collections.CollectionsUtils;
 
 import java.util.List;
 

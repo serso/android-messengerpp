@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.utils.Converter;
+import org.solovyev.common.Converter;
 
 /**
  * User: serso

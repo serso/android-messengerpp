@@ -52,9 +52,9 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
                 // then - transform user objects to list items objects
                 addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter((List<User>) data, new Predicate<User>() {
                     @Override
-                    public boolean apply(@javax.annotation.Nullable User contacts) {
-                        assert contacts != null;
-                        return canAddContact(contacts);
+                    public boolean apply(@javax.annotation.Nullable User contact) {
+                        assert contact != null;
+                        return canAddContact(contact);
                     }
                 }), new Function<User, ListItem<?>>() {
                     @Override

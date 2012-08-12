@@ -3,8 +3,8 @@ package org.solovyev.android.messenger.chats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.VersionedEntity;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.common.VersionedEntity;
 
 /**
  * User: serso

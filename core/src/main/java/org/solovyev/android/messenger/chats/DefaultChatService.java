@@ -17,10 +17,13 @@ import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.*;
-import org.solovyev.common.utils.CollectionsUtils;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserEventListener;
+import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.collections.CollectionsUtils;
+import org.solovyev.common.text.StringUtils;
 import org.solovyev.common.utils.ListListenersContainer;
-import org.solovyev.common.utils.StringUtils;
 
 import java.util.*;
 

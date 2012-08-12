@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms;
 
 import android.database.Cursor;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.common.utils.Converter;
+import org.solovyev.common.Converter;
 
 /**
  * User: serso

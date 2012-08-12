@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.utils.CollectionsUtils;
-import org.solovyev.common.utils.Converter;
+import org.solovyev.common.Converter;
+import org.solovyev.common.collections.CollectionsUtils;
 
 import java.util.ArrayList;
 import java.util.List;

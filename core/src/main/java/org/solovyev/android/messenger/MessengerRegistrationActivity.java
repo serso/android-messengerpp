@@ -10,7 +10,7 @@ import android.widget.EditText;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.text.StringUtils;
 
 /**
  * User: serso

@@ -20,9 +20,9 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.vk.messages.JsonMessages;
-import org.solovyev.common.utils.CollectionsUtils;
-import org.solovyev.common.utils.Converter;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.Converter;
+import org.solovyev.common.collections.CollectionsUtils;
+import org.solovyev.common.text.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

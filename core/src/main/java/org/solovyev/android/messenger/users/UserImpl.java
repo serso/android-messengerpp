@@ -6,10 +6,10 @@ import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.APropertyImpl;
-import org.solovyev.android.VersionedEntity;
-import org.solovyev.android.VersionedEntityImpl;
 import org.solovyev.common.JObject;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.VersionedEntity;
+import org.solovyev.common.VersionedEntityImpl;
+import org.solovyev.common.text.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.*;

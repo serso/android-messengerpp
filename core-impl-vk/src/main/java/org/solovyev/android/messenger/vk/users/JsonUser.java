@@ -5,12 +5,12 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.APropertyImpl;
-import org.solovyev.android.VersionedEntityImpl;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserImpl;
 import org.solovyev.android.messenger.users.UserSyncDataImpl;
+import org.solovyev.common.VersionedEntityImpl;
 
 import java.util.ArrayList;
 import java.util.List;

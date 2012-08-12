@@ -5,7 +5,7 @@ import android.database.Cursor;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.utils.Converter;
+import org.solovyev.common.Converter;
 
 /**
  * User: serso

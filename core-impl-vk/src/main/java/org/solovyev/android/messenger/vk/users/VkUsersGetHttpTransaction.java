@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.vk.http.AbstractVkHttpTransaction;
-import org.solovyev.common.utils.CollectionsUtils;
+import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.utils.CollectionsUtils2;
 import org.solovyev.common.utils.StringUtils2;
 

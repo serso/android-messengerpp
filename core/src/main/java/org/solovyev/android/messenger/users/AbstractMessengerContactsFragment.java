@@ -1,7 +1,11 @@
 package org.solovyev.android.messenger.users;
 
+import android.os.AsyncTask;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
+import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 /**
@@ -30,6 +34,28 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
 
     @Override
     protected void updateRightPane() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        int selectedItemPosition = getSelectedItemPosition();
+
+        final AbstractMessengerListItemAdapter adapter = getAdapter();
+        if (selectedItemPosition >= 0 && selectedItemPosition < adapter.getCount()) {
+            final ContactListItem contactListItem = (ContactListItem) adapter.getItem(selectedItemPosition);
+
+            new AsyncTask<Void, Void, Chat>() {
+
+                @Override
+                protected Chat doInBackground(Void... params) {
+                    return MessengerConfigurationImpl.getInstance().getServiceLocator().getUserService().getPrivateChat(contactListItem.getUser().getId(), contactListItem.getContact().getId(), getActivity());
+                }
+
+                @Override
+                protected void onPostExecute(@NotNull Chat chat) {
+                    super.onPostExecute(chat);
+
+                }
+
+            }.execute(null, null);
+        }
     }
+
+
 }

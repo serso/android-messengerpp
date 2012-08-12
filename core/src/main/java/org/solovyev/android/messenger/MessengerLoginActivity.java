@@ -20,7 +20,7 @@ import org.solovyev.android.messenger.security.LoginUserAsyncTask;
 import org.solovyev.android.messenger.users.MessengerContactsActivity;
 import org.solovyev.android.messenger.view.CaptchaViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.text.StringUtils;
 
 /**
  * User: serso

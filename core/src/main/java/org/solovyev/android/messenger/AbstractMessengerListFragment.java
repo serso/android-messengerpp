@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
+import org.solovyev.android.messenger.users.ContactDualPaneController;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -262,7 +263,7 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
     protected void fillListView(@NotNull ListView lv, @NotNull Context context) {
         lv.setScrollbarFadingEnabled(true);
         lv.setOnScrollListener(this);
-        lv.setDividerHeight(2);
+        lv.setDividerHeight(1);
     }
 
     private void prepareLoadingView(@NotNull Resources resources, @Nullable LoadingLayout loadingView) {
@@ -348,6 +349,9 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
 
         final View rightContentPane = getActivity().findViewById(R.id.right_content_pane);
         dualPane = rightContentPane != null && rightContentPane.getVisibility() == View.VISIBLE;
+        if ( isDualPane() ) {
+            ContactDualPaneController.getInstance().registerDualPaneFragment(this);
+        }
 
         if (savedInstanceState != null) {
             final int position = savedInstanceState.getInt("position", 0);
@@ -359,6 +363,8 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
     }
+
+
 
     @Override
     public void setSelection(int position) {
@@ -395,6 +401,10 @@ public abstract class AbstractMessengerListFragment<T> extends ListFragment impl
 
     @Override
     public void onDestroy() {
+        if (isDualPane()) {
+            ContactDualPaneController.getInstance().unregisterDualPaneFragment(this);
+        }
+
         super.onDestroy();
     }
 

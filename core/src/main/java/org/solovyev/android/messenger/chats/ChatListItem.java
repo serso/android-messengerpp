@@ -20,7 +20,7 @@ import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.text.StringUtils;
 
 /**
  * User: serso

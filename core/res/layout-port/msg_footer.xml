@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:layout_width="fill_parent"
+              a:layout_width="match_parent"
               a:layout_height="wrap_content"
               a:orientation="vertical">
 
@@ -13,7 +13,7 @@
 
     <RelativeLayout
             a:layout_width="match_parent"
-            a:layout_height="60dp"
+            a:layout_height="wrap_content"
             a:orientation="horizontal"
             a:padding="0dp"
             style="@style/footer">
@@ -22,14 +22,14 @@
                       a:orientation="horizontal"
                       a:gravity="center"
                       a:layout_width="wrap_content"
-                      a:layout_height="match_parent"
+                      a:layout_height="wrap_content"
                       a:layout_alignParentLeft="true"/>
 
         <LinearLayout a:id="@+id/footer_right"
                       a:orientation="horizontal"
                       a:gravity="center"
                       a:layout_width="wrap_content"
-                      a:layout_height="match_parent"
+                      a:layout_height="wrap_content"
                       a:layout_alignParentRight="true"/>
 
         <LinearLayout a:id="@+id/footer_center"
@@ -39,8 +39,8 @@
                       a:paddingRight="5dp"
                       a:layout_toLeftOf="@id/footer_right"
                       a:layout_toRightOf="@id/footer_left"
-                      a:layout_width="wrap_content"
-                      a:layout_height="match_parent"/>
+                      a:layout_width="match_parent"
+                      a:layout_height="wrap_content"/>
 
     </RelativeLayout>
 

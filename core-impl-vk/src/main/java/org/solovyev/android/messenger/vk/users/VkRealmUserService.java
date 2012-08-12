@@ -5,7 +5,7 @@ import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.http.AndroidHttpUtils;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.utils.CollectionsUtils;
+import org.solovyev.common.collections.CollectionsUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

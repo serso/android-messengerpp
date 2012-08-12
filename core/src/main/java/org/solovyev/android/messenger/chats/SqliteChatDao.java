@@ -22,7 +22,7 @@ import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.utils.CollectionsUtils;
+import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.utils.CollectionsUtils2;
 
 import java.util.ArrayList;

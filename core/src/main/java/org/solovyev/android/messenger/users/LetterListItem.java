@@ -9,12 +9,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.view.TextViewBuilder;
 import org.solovyev.common.utils.StringUtils2;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;

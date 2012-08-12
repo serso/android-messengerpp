@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.text.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -10,4 +10,6 @@ public interface RealmConnection {
     void start();
 
     void stop();
+
+    boolean isStopped();
 }

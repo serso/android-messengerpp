@@ -19,7 +19,7 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.properties.PropertyByIdDbQuery;
-import org.solovyev.common.utils.CollectionsUtils;
+import org.solovyev.common.collections.CollectionsUtils;
 import org.solovyev.common.utils.CollectionsUtils2;
 
 import java.util.ArrayList;

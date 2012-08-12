@@ -14,8 +14,8 @@ import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.common.utils.CollectionsUtils;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.collections.CollectionsUtils;
+import org.solovyev.common.text.StringUtils;
 
 import java.util.*;
 

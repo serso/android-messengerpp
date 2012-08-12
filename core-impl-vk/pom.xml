@@ -26,77 +26,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.solovyev</groupId>
-            <artifactId>common</artifactId>
-            <version>0.3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>common</artifactId>
-            <version>0.1.8</version>
-            <type>apklib</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>common-ext</artifactId>
-            <version>1.0.8</version>
-            <type>apklib</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>billing</artifactId>
-            <version>0.1</version>
-            <!--<type>apklib</type>-->
-        </dependency>
-
-        <!-- OTHER -->
-
-        <dependency>
-            <groupId>com.github.handmark.pulltorefresh</groupId>
-            <artifactId>pulltorefresh-library</artifactId>
-            <version>1.3.0</version>
-            <type>apklib</type>
-        </dependency>
-
-        <!--  Gson: Java to Json conversion -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-
-        <!-- Async HTTP client -->
-        <dependency>
-            <groupId>android-async-http</groupId>
-            <artifactId>android-async-http</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-
-        <!-- Titles in ViewPager -->
-        <dependency>
-            <groupId>com.viewpagerindicator</groupId>
-            <artifactId>library</artifactId>
-            <version>2.3.1</version>
-            <type>apklib</type>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>11.0.2</version>
-        </dependency>
-
-        <!-- Joda time -->
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <version>4.0.1.2</version>
@@ -108,12 +37,6 @@
             <artifactId>junit</artifactId>
             <version>4.8.2</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>admob</groupId>
-            <artifactId>admob</artifactId>
-            <version>6.0.0</version>
         </dependency>
 
         <dependency>

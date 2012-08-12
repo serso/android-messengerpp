@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.messages;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
-import org.solovyev.android.VersionedEntity;
+import org.solovyev.common.VersionedEntity;
 
 /**
  * User: serso

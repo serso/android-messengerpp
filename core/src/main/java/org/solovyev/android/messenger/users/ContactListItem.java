@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
@@ -43,8 +44,13 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
     public OnClickAction getOnClickAction() {
         return new OnClickAction() {
             @Override
-            public void onClick(@NotNull final Context context, @NotNull ListAdapter<ListItem<? extends View>> adapter, @NotNull ListView listView) {
-                if (context instanceof Activity) {
+            public void onClick(@NotNull final Context context, @NotNull final ListAdapter<ListItem<? extends View>> adapter, @NotNull ListView listView) {
+
+                final AbstractMessengerListFragment<?> rightPaneFragment = ContactDualPaneController.getInstance().getDualPaneFragment(context);
+                if (rightPaneFragment != null) {
+                    rightPaneFragment.setSelection(adapter.getPosition(ContactListItem.this));
+                } else {
+
                     new AsyncTask<Void, Void, Chat>() {
 
                         @Override
@@ -55,11 +61,13 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
                         @Override
                         protected void onPostExecute(@NotNull Chat chat) {
                             super.onPostExecute(chat);
+
                             MessengerMessagesActivity.startActivity((Activity) context, chat);
                         }
 
                     }.execute(null, null);
                 }
+
             }
         };
     }
@@ -158,5 +166,15 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
     @Override
     public int compareTo(@NotNull ContactListItem another) {
         return this.toString().compareTo(another.toString());
+    }
+
+    @NotNull
+    public User getContact() {
+        return contact;
+    }
+
+    @NotNull
+    public User getUser() {
+        return user;
     }
 }

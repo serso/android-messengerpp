@@ -4,9 +4,9 @@ import android.database.Cursor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AProperty;
-import org.solovyev.android.VersionedEntity;
 import org.solovyev.android.ext.StringVersionedEntityMapper;
-import org.solovyev.common.utils.Converter;
+import org.solovyev.common.Converter;
+import org.solovyev.common.VersionedEntity;
 
 import java.util.Collections;
 import java.util.List;

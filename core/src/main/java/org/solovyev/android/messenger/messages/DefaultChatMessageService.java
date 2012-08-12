@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.utils.StringUtils;
+import org.solovyev.common.text.StringUtils;
 
 import java.util.List;
 

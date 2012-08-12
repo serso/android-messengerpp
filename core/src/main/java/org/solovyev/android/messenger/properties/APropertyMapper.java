@@ -4,7 +4,7 @@ import android.database.Cursor;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.APropertyImpl;
-import org.solovyev.common.utils.Converter;
+import org.solovyev.common.Converter;
 
 /**
  * User: serso

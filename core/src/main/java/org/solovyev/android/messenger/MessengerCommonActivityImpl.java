@@ -41,17 +41,21 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     @Nullable
     private View.OnClickListener syncButtonListener;
 
-    private boolean createFooterButtons = true;
+    private boolean createButtons = true;
+
+    @NotNull
+    private ButtonBarPosition buttonBarPosition = ButtonBarPosition.bottom;
+    private boolean showImageButtonLabels = false;
 
     public MessengerCommonActivityImpl(int layoutId, @Nullable View.OnClickListener syncButtonListener) {
         this.layoutId = layoutId;
         this.syncButtonListener = syncButtonListener;
     }
 
-    public MessengerCommonActivityImpl(int layoutId, @Nullable View.OnClickListener syncButtonListener, boolean createFooterButtons) {
+    public MessengerCommonActivityImpl(int layoutId, @Nullable View.OnClickListener syncButtonListener, boolean createButtons) {
         this.layoutId = layoutId;
         this.syncButtonListener = syncButtonListener;
-        this.createFooterButtons = createFooterButtons;
+        this.createButtons = createButtons;
     }
 
     @Override
@@ -63,20 +67,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
         activity.setContentView(layoutId);
 
-        if (createFooterButtons) {
-            final MsgImageButton messagesButton;
-            if (activity instanceof MessengerChatsActivity || activity instanceof MessengerMessagesActivity) {
-                messagesButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_messages_icon_active, R.string.c_messages, activity), true);
-            } else {
-                messagesButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_messages_icon, R.string.c_messages, activity), false);
-            }
-            addCenterButton(activity, messagesButton);
-            messagesButton.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MessengerChatsActivity.startActivity(activity);
-                }
-            });
+        if (createButtons) {
 
             final MsgImageButton contactsButton;
             if (activity instanceof MessengerContactsActivity) {
@@ -92,12 +83,17 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
                 }
             });
 
-            final MsgImageButton searchButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_search_icon, R.string.c_search, activity), false);
-            addCenterButton(activity, searchButton);
-            searchButton.button.setOnClickListener(new View.OnClickListener() {
+            final MsgImageButton messagesButton;
+            if (activity instanceof MessengerChatsActivity || activity instanceof MessengerMessagesActivity) {
+                messagesButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_messages_icon_active, R.string.c_messages, activity), true);
+            } else {
+                messagesButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_messages_icon, R.string.c_messages, activity), false);
+            }
+            addCenterButton(activity, messagesButton);
+            messagesButton.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(activity, "Not implemented yet!", Toast.LENGTH_SHORT).show();
+                    MessengerChatsActivity.startActivity(activity);
                 }
             });
 
@@ -142,49 +138,77 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     private void addCenterButton(@NotNull Activity activity, @NotNull MsgImageButton msgImageButton) {
-        addFooterButton(activity, msgImageButton, 10, 35, FooterPosition.center);
+        addButtonToButtonBar(activity, msgImageButton, 10, 50, ButtonPosition.center);
     }
 
     private void addLeftButton(@NotNull Activity activity, @NotNull MsgImageButton msgImageButton) {
-        addFooterButton(activity, msgImageButton, 10, 35, FooterPosition.left);
+        addButtonToButtonBar(activity, msgImageButton, 10, 50, ButtonPosition.left);
     }
 
     private void addRightButton(@NotNull Activity activity, @NotNull MsgImageButton msgImageButton) {
-        addFooterButton(activity, msgImageButton, 10, 35, FooterPosition.right);
+        addButtonToButtonBar(activity, msgImageButton, 10, 50, ButtonPosition.right);
     }
 
-    private static enum FooterPosition {
+    private static enum ButtonPosition {
         left,
         center,
-        right;
+        right
     }
 
-    private void addFooterButton(@NotNull Activity activity, @NotNull MsgImageButton msgImageButton, int padding, int imageSize, @NotNull FooterPosition position) {
-        final LinearLayout imageWithLabel = new LinearLayout(activity);
-        imageWithLabel.setOrientation(LinearLayout.VERTICAL);
-        imageWithLabel.setGravity(Gravity.CENTER);
-        imageWithLabel.setPadding(padding, 0, padding, 0);
+    private static enum ButtonBarPosition {
+        top,
+        bottom
+    }
+
+    private void addButtonToButtonBar(@NotNull Activity activity,
+                                      @NotNull MsgImageButton msgImageButton,
+                                      int padding,
+                                      int imageSize,
+                                      @NotNull ButtonPosition position) {
+
+        final LinearLayout imageButtonLayout = new LinearLayout(activity);
+        imageButtonLayout.setOrientation(LinearLayout.VERTICAL);
+        imageButtonLayout.setGravity(Gravity.CENTER);
+        imageButtonLayout.setPadding(padding, 0, padding, 0);
 
         int size = AndroidUtils.toPixels(activity.getResources().getDisplayMetrics(), imageSize);
         msgImageButton.button.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageWithLabel.addView(msgImageButton.button, new ViewGroup.LayoutParams(size, size));
+        imageButtonLayout.addView(msgImageButton.button, new ViewGroup.LayoutParams(size, size));
 
-        final TextView label = TextViewBuilder.newInstance(R.layout.msg_footer_image_label, null).build(activity);
-        label.setText(msgImageButton.button.getContentDescription());
-        if (msgImageButton.selected) {
-            label.setTextColor(activity.getResources().getColor(R.color.image_button_selected));
-        } else {
-            label.setTextColor(activity.getResources().getColor(R.color.image_button_unselected));
+        if (showImageButtonLabels) {
+
+            final TextView label = TextViewBuilder.newInstance(R.layout.msg_footer_image_label, null).build(activity);
+            label.setText(msgImageButton.button.getContentDescription());
+            if (msgImageButton.selected) {
+                label.setTextColor(activity.getResources().getColor(R.color.image_button_selected));
+            } else {
+                label.setTextColor(activity.getResources().getColor(R.color.image_button_unselected));
+            }
+
+            imageButtonLayout.addView(label, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        imageWithLabel.addView(label, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        addButtonToButtonBar(activity, position, imageButtonLayout);
+    }
 
-        if (position == FooterPosition.center) {
-            getFooterCenter(activity).addView(imageWithLabel, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        } else if (position == FooterPosition.left) {
-            getFooterLeft(activity).addView(imageWithLabel, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    private void addButtonToButtonBar(@NotNull Activity activity, @NotNull ButtonPosition position, @NotNull View button) {
+        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (buttonBarPosition == ButtonBarPosition.bottom) {
+            if (position == ButtonPosition.center) {
+                getFooterCenter(activity).addView(button, params);
+            } else if (position == ButtonPosition.left) {
+                getFooterLeft(activity).addView(button, params);
+            } else {
+                getFooterRight(activity).addView(button, params);
+            }
         } else {
-            getFooterRight(activity).addView(imageWithLabel, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            if (position == ButtonPosition.center) {
+                getHeaderCenter(activity).addView(button, params);
+            } else if (position == ButtonPosition.left) {
+                getHeaderLeft(activity).addView(button, params);
+            } else {
+                getHeaderRight(activity).addView(button, params);
+            }
         }
     }
 

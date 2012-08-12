@@ -9,7 +9,7 @@ import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
-import org.solovyev.common.utils.CompareTools;
+import org.solovyev.common.compare.CompareTools;
 
 import java.util.Comparator;
 import java.util.List;

@@ -30,7 +30,7 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
     @NotNull
     private static final Integer MAX_COUNT = 100;
 
-    @NotNull
+    @Nullable
     private Integer count;
 
     @Nullable
@@ -103,7 +103,9 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
     public List<NameValuePair> getRequestParameters() {
         final List<NameValuePair> requestParameters = super.getRequestParameters();
 
-        requestParameters.add(new BasicNameValuePair("count", String.valueOf(count)));
+        if (count != null) {
+            requestParameters.add(new BasicNameValuePair("count", String.valueOf(count)));
+        }
 
         if (userId != null) {
             requestParameters.add(new BasicNameValuePair("uid", String.valueOf(userId)));

@@ -5,10 +5,10 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.AProperty;
 import org.solovyev.android.APropertyImpl;
-import org.solovyev.android.VersionedEntity;
-import org.solovyev.android.VersionedEntityImpl;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.common.JObject;
+import org.solovyev.common.VersionedEntity;
+import org.solovyev.common.VersionedEntityImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
