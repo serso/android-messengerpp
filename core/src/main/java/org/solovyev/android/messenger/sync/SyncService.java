@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface SyncService {
 
-    void syncAll(@NotNull Context context);
+    void syncAll(@NotNull Context context) throws SyncAllTaskIsAlreadyRunning;
 
     void sync(@NotNull SyncTask syncTask, @NotNull Context context, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException;
 }

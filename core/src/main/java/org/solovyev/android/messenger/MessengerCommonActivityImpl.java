@@ -2,8 +2,10 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -73,9 +75,30 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
         if (showActionBarTabs) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
             addTab(activity, "contacts", MessengerContactsFragment.class, null, R.string.c_contacts, R.drawable.msg_footer_contacts_icon);
             addTab(activity, "messages", MessengerChatsFragment.class, null, R.string.c_messages, R.drawable.msg_footer_messages_icon);
-            addTab(activity, "settings", MessengerChatsFragment.class, null, R.string.c_settings, R.drawable.msg_footer_settings_icon);
+
+            // settings tab
+            final ActionBar.Tab tab = actionBar.newTab();
+            tab.setTag("settings");
+            tab.setText(R.string.c_settings);
+            //tab.setIcon(R.drawable.msg_footer_settings_icon);
+            tab.setTabListener(new ActionBar.TabListener() {
+                @Override
+                public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                    activity.startActivity(new Intent(activity.getApplicationContext(), MessengerPreferencesActivity.class));
+                }
+
+                @Override
+                public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                }
+
+                @Override
+                public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                }
+            });
+            actionBar.addTab(tab);
 
             int navPosition = -1;
             if (savedInstanceState != null) {

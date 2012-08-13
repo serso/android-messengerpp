@@ -13,6 +13,7 @@ import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
 import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
@@ -119,38 +120,24 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 
-        menuItems.add(new ShowAllContactsMenuItem());
-        menuItems.add(new ShowOnlineContactsMenuItem());
+        menuItems.add(new ToggleContactsMenuItem());
+        menuItems.add(new ToggleFilterInputMenuItem(this));
 
         this.menu = ListActivityMenu.fromLayout(R.menu.contacts, menuItems, SherlockMenuHelper.getInstance());
         this.menu.onCreateOptionsMenu(this.getActivity(), menu);
     }
 
-    private class ShowOnlineContactsMenuItem implements IdentifiableMenuItem<MenuItem> {
+    private class ToggleContactsMenuItem implements IdentifiableMenuItem<MenuItem> {
 
         @NotNull
         @Override
         public Integer getItemId() {
-            return R.id.show_online_contacts;
+            return R.id.toggle_contacts;
         }
 
         @Override
         public void onClick(@NotNull MenuItem data, @NotNull Context context) {
-            changeMode(MessengerContactsMode.only_online_contacts);
-        }
-    }
-
-    private class ShowAllContactsMenuItem implements IdentifiableMenuItem<MenuItem> {
-
-        @NotNull
-        @Override
-        public Integer getItemId() {
-            return R.id.show_all_contacts;
-        }
-
-        @Override
-        public void onClick(@NotNull MenuItem data, @NotNull Context context) {
-            changeMode(MessengerContactsMode.all_contacts);
+            changeMode(mode == MessengerContactsMode.only_online_contacts ? MessengerContactsMode.all_contacts : MessengerContactsMode.only_online_contacts);
         }
     }
 }

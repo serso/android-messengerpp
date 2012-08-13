@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.google.inject.Inject;
@@ -29,6 +30,7 @@ import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.text.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -63,7 +65,6 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     @Inject
     @NotNull
     private SyncService syncService;
-
 
     /*
     **********************************************************************
@@ -133,18 +134,18 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(tag, "onCreateView: " + this);
 
         final LinearLayout root = new LinearLayout(this.getActivity());
         root.setOrientation(LinearLayout.VERTICAL);
+        root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
         if (isFilterEnabled()) {
-            final View searchBoxLayout = ViewFromLayoutBuilder.newInstance(R.layout.msg_list_filter).build(this.getActivity());
-            root.addView(searchBoxLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            filterInput = (EditText) searchBoxLayout.findViewById(R.id.filter_box);
+            final ViewGroup filterBoxParent = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.msg_list_filter).build(this.getActivity());
+
+            filterInput = (EditText) filterBoxParent.findViewById(R.id.filter_box);
             filterInput.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -159,15 +160,31 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
                 public void afterTextChanged(Editable s) {
                 }
             });
+
+            root.addView(filterBoxParent, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         final View listViewParent = createListView(inflater, container);
         final ListView listView = getListView(listViewParent);
+
         final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
         params.gravity = Gravity.CENTER_VERTICAL;
         root.addView(listViewParent, params);
 
         return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (isFilterEnabled()){
+            if (StringUtils.isEmpty(filterInput.getText().toString())) {
+                setFilterBoxVisible(false);
+            } else{
+                setFilterBoxVisible(true);
+            }
+        }
     }
 
     @NotNull
@@ -176,6 +193,49 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     }
 
     protected abstract boolean isFilterEnabled();
+
+    public void toggleFilterBox() {
+        if (isFilterEnabled()) {
+            assert filterInput != null;
+
+            final ViewGroup filterBox = (ViewGroup) getView().findViewById(R.id.filter_box_parent);
+            if (filterBox != null) {
+                int visibility = filterBox.getVisibility();
+
+                if (visibility != View.VISIBLE) {
+                    filterBox.setVisibility(View.VISIBLE);
+                    filterInput.requestFocus();
+
+                    final InputMethodManager manager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    manager.showSoftInput(filterInput, InputMethodManager.SHOW_IMPLICIT);
+
+                } else if (visibility != View.GONE) {
+                    // if filter box is visible before hiding it clear filter query
+                    filterInput.getText().clear();
+                    filterInput.clearFocus();
+
+                    filterBox.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+
+    public void setFilterBoxVisible(boolean visible) {
+        if (isFilterEnabled()) {
+            final ViewGroup filterBox = (ViewGroup) getView().findViewById(R.id.filter_box_parent);
+            if (filterBox != null) {
+                setFilterBoxVisible(visible, filterBox);
+            }
+        }
+    }
+
+    private void setFilterBoxVisible(boolean visible, @NotNull ViewGroup filterBox) {
+        if (visible) {
+            filterBox.setVisibility(View.VISIBLE);
+        } else {
+            filterBox.setVisibility(View.GONE);
+        }
+    }
 
     protected AbstractMessengerListItemAdapter getAdapter() {
         return adapter;
@@ -403,7 +463,7 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
 
         final View rightContentPane = getActivity().findViewById(R.id.right_content_pane);
         dualPane = rightContentPane != null && rightContentPane.getVisibility() == View.VISIBLE;
-        if ( isDualPane() ) {
+        if (isDualPane()) {
             ContactDualPaneController.getInstance().registerDualPaneFragment(this);
         }
 
@@ -419,11 +479,10 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     }
 
 
-
     @Override
     public void setSelection(int position) {
         super.setSelection(position);
-        if ( isDualPane() ) {
+        if (isDualPane()) {
             updateRightPane();
         }
     }
@@ -495,10 +554,10 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
         if (this.firstVisibleItem.get() >= 0 && visibleItemCount > 0) {
             boolean scrollUp = false;
             boolean scrollDown = false;
-            if ( firstVisibleItem < this.firstVisibleItem.get() ) {
+            if (firstVisibleItem < this.firstVisibleItem.get()) {
                 scrollUp = true;
             }
-            if ( firstVisibleItem > this.firstVisibleItem.get() ) {
+            if (firstVisibleItem > this.firstVisibleItem.get()) {
                 scrollDown = true;
             }
 
@@ -516,11 +575,11 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
                         }
                     }
 
-                    if ( scrollDown ) {
+                    if (scrollDown) {
                         onItemReachedFromTop(lastVisibleItem);
                     }
 
-                    if ( scrollUp ) {
+                    if (scrollUp) {
                         onItemReachedFromBottom(lastVisibleItem);
                     }
 

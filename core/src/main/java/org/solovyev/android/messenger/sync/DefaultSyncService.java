@@ -12,6 +12,7 @@ import org.solovyev.android.messenger.realms.RealmService;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * User: serso
@@ -45,34 +46,58 @@ public class DefaultSyncService implements SyncService {
     @NotNull
     private final Set<SyncTask> runningTasks = EnumSet.noneOf(SyncTask.class);
 
+    @NotNull
+    private final AtomicBoolean syncAllTaskRunning = new AtomicBoolean(false);
+
     @Override
-    public void syncAll(@NotNull final Context context) {
+    public void syncAll(@NotNull final Context context) throws SyncAllTaskIsAlreadyRunning {
+
+        synchronized (syncAllTaskRunning) {
+            if ( syncAllTaskRunning.get() ) {
+                throw new SyncAllTaskIsAlreadyRunning();
+            } else {
+                syncAllTaskRunning.set(true);
+            }
+        }
+
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                for (Realm realm : DefaultSyncService.this.realmService.getRealms()) {
-                    final SyncData syncData = new SyncDataImpl(realm.getId());
 
-                    for (SyncTask syncTask : SyncTask.values()) {
-                        try {
+                try {
+
+                    for (Realm realm : DefaultSyncService.this.realmService.getRealms()) {
+                        final SyncData syncData = new SyncDataImpl(realm.getId());
+
+                        for (SyncTask syncTask : SyncTask.values()) {
                             try {
-                                checkRunningTask(syncTask);
-                                if (syncTask.isTime(syncData, context)) {
-                                    syncTask.doTask(syncData, context);
+                                try {
+                                    checkRunningTask(syncTask);
+                                    if (syncTask.isTime(syncData, context)) {
+                                        syncTask.doTask(syncData, context);
+                                    }
+                                } finally {
+                                    releaseRunningTask(syncTask);
                                 }
-                            } finally {
-                                releaseRunningTask(syncTask);
+                            } catch (TaskIsAlreadyRunningException e) {
+                                // ok, task is already running => start another task
+                            } catch (RuntimeException e) {
+                                MessengerCommonActivityImpl.handleExceptionStatic(context, e);
                             }
-                        } catch (TaskIsAlreadyRunningException e) {
-                            // ok, task is already running => start another task
-                        } catch (RuntimeException e) {
-                            MessengerCommonActivityImpl.handleExceptionStatic(context, e);
                         }
                     }
+
+                } finally {
+                    synchronized (syncAllTaskRunning) {
+                        syncAllTaskRunning.set(false);
+                    }
                 }
+
             }
         }).start();
+
+
     }
 
     @Override

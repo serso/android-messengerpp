@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="drawing.png">
+   sodipodi:docname="message_bubble.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="311.88747"
-     inkscape:cy="699.55835"
+     inkscape:zoom="3.959798"
+     inkscape:cx="121.43909"
+     inkscape:cy="627.7856"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -52,7 +52,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#dddddd;fill-opacity:1;stroke:#000000;stroke-width:0.20699032;stroke-opacity:1"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#000000;stroke-width:0.20699032000000001;stroke-opacity:1"
        id="rect3779"
        width="17.772804"
        height="17.772804"
@@ -60,15 +60,16 @@
        y="-296.41315"
        transform="matrix(-0.70710678,-0.70710678,0.70710678,-0.70710678,0,0)"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+       inkscape:export-ydpi="90"
+       inkscape:export-filename="/home/serso/projects/java/android/messenger/core/res/drawable/message_bubble_orig.png" />
     <rect
-       style="fill:#dddddd;fill-opacity:1;stroke:#000000;stroke-width:0.23424654;stroke-opacity:1"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#000000;stroke-width:0.23424654000000000;stroke-opacity:1"
        id="rect3759"
        width="99.619019"
        height="74.536797"
        x="42.18523"
        y="391.30963"
-       inkscape:export-filename="/home/serso/desktop/rect3779.png"
+       inkscape:export-filename="/home/serso/projects/java/android/messenger/core/res/drawable/message_bubble_orig.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
   </g>

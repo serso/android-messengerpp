@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.ResolvedCaptcha;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 
 import java.util.List;
 
@@ -45,7 +46,11 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
     protected void onSuccessPostExecute(@Nullable Void result) {
         final Context context = getContext();
         if (context != null) {
-            MessengerApplication.getServiceLocator().getSyncService().syncAll(context);
+            try {
+                MessengerApplication.getServiceLocator().getSyncService().syncAll(context);
+            } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+                // do not care
+            }
         }
     }
 

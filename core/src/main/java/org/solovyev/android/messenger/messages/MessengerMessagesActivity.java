@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
@@ -31,7 +29,7 @@ import java.util.List;
  * Date: 6/9/12
  * Time: 10:42 PM
  */
-public class MessengerMessagesActivity extends MessengerFragmentActivity implements ViewPager.OnPageChangeListener, UserEventListener {
+public class MessengerMessagesActivity extends MessengerFragmentActivity implements UserEventListener {
 
     @Inject
     @NotNull
@@ -98,6 +96,8 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         final MessengerMessagesFragment fragment = new MessengerMessagesFragment(chat);
         fragmentTransaction.add(R.id.content, fragment);
         fragmentTransaction.commit();
+
+        setTitle(createTitle());
 
         /*final MessagesFragmentPagerAdapter adapter = new MessagesFragmentPagerAdapter(getSupportFragmentManager(),
                 getString(R.string.c_messages), chat);
@@ -193,19 +193,6 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        this.pagerPosition = position;
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -242,47 +229,6 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
                 }
             }
         });
-    }
-
-    public static class MessagesFragmentPagerAdapter extends FragmentPagerAdapter {
-
-        @NotNull
-        private String chatsTitle;
-
-        @NotNull
-        private Chat chat;
-
-        public MessagesFragmentPagerAdapter(@NotNull FragmentManager fm, @NotNull String chatsTitle, @NotNull Chat chat) {
-            super(fm);
-            this.chatsTitle = chatsTitle;
-            this.chat = chat;
-        }
-
-        @Override
-        public int getCount() {
-            return 1;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new MessengerMessagesFragment(chat);
-                default:
-                    return null;
-            }
-
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return chatsTitle;
-                default:
-                    return null;
-            }
-        }
     }
 
     @Override

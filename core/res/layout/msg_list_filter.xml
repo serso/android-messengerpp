@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+                a:id="@+id/filter_box_parent"
                 a:layout_width="fill_parent"
                 a:layout_height="fill_parent"
                 style="@style/list_item_filter">

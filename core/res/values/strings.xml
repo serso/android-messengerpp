@@ -31,4 +31,8 @@
     <string name="c_write_the_msg">Write the message</string>
     <string name="c_message_copied">Message copied to clipboard!</string>
 
+    <string name="c_reload_local_data">Reload local data</string>
+    <string name="c_reload_local_data_summary">Clears data on devices and for full synchronization with server</string>
+    <string name="sync_task_is_running">Synchronization task is already running!</string>
+
 </resources>

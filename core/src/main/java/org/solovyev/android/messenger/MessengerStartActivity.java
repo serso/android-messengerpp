@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.AuthService;
+import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.MessengerContactsActivity;
 import roboguice.activity.RoboActivity;
@@ -35,7 +36,11 @@ public class MessengerStartActivity extends RoboActivity {
 
         if ( authService.isUserLoggedIn(realm.getId()) ) {
             // user is logged => sync all data
-            syncService.syncAll(this);
+            try {
+                syncService.syncAll(this);
+            } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+                // do not care
+            }
 
             MessengerContactsActivity.startActivity(this);
         } else {

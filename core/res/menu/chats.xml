@@ -2,10 +2,6 @@
 
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
-    <item a:id="@+id/toggle_contacts"
-          a:icon="@drawable/msg_footer_contacts_icon"
-          a:showAsAction="ifRoom"/>
-
     <item a:id="@+id/toggle_filter_box"
           a:icon="@drawable/search"
           a:showAsAction="ifRoom"/>

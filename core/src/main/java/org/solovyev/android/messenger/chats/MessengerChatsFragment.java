@@ -5,17 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
-import org.solovyev.android.messenger.UiThreadRunnable;
+import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.menu.IdentifiableMenuItem;
+import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
+import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +39,13 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
 
     public MessengerChatsFragment() {
         super(TAG);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -144,4 +157,35 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
     protected ChatsAdapter getAdapter() {
         return (ChatsAdapter) super.getAdapter();
     }
+
+    /*
+    **********************************************************************
+    *
+    *                           MENU
+    *
+    **********************************************************************
+    */
+
+    private ActivityMenu<Menu, MenuItem> menu;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return this.menu.onOptionsItemSelected(this.getActivity(), item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
+
+        menuItems.add(new ToggleFilterInputMenuItem(this));
+
+        this.menu = ListActivityMenu.fromLayout(R.menu.chats, menuItems, SherlockMenuHelper.getInstance());
+        this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+    }
+
 }
