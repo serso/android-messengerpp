@@ -135,6 +135,12 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
                 contact = eventUser;
             }
         }
+
+        if ( userEventType == UserEventType.contact_offline || userEventType == UserEventType.contact_online ) {
+            if ( eventUser.equals(user) && contact.equals(data) ) {
+                contact = (User) data;
+            }
+        }
     }
 
     @Override

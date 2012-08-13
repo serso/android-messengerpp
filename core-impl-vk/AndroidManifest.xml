@@ -9,7 +9,7 @@
 
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8"/>
 
-    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/icon" android:label="@string/c_app_name" android:name=".VkMessengerApplication">
+    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/icon" android:label="@string/c_app_name" android:name=".VkMessengerApplication" android:theme="@style/Theme.Sherlock">
 
         <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.MessengerStartActivity" android:windowSoftInputMode="adjustPan">
 

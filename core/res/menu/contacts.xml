@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:a="http://schemas.android.com/apk/res/android">
+
+
+    <item a:id="@+id/show_online_contacts"
+          a:icon="@drawable/msg_footer_contacts_icon_active"
+          a:showAsAction="ifRoom"/>
+
+    <item a:id="@+id/show_all_contacts"
+          a:icon="@drawable/msg_footer_contacts_icon"
+          a:showAsAction="ifRoom"/>
+
+
+</menu>

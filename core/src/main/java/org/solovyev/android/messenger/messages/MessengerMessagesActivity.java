@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.TextView;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,13 +20,9 @@ import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatListItem;
-import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.text.StringUtils;
-import org.solovyev.common.utils.StringUtils2;
 
 import java.util.List;
 
@@ -63,7 +59,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     private User contact;
 
     public MessengerMessagesActivity() {
-        super(R.layout.msg_main_view_pager_grid, false);
+        super(R.layout.msg_main, false, true);
     }
 
     @Override
@@ -96,7 +92,14 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
             }
         }
 
-        final MessagesFragmentPagerAdapter adapter = new MessagesFragmentPagerAdapter(getSupportFragmentManager(),
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        final MessengerMessagesFragment fragment = new MessengerMessagesFragment(chat);
+        fragmentTransaction.add(R.id.content, fragment);
+        fragmentTransaction.commit();
+
+        /*final MessagesFragmentPagerAdapter adapter = new MessagesFragmentPagerAdapter(getSupportFragmentManager(),
                 getString(R.string.c_messages), chat);
 
         pager = initTitleForViewPager(this, this, adapter);
@@ -148,9 +151,13 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         if (AndroidUtils.getScreenOrientation(this) != Configuration.ORIENTATION_LANDSCAPE) {
             // message title
             final TextView messageTitle = (TextView) headerCenterView.findViewById(R.id.message_header_title);
-            messageTitle.setText(ChatListItem.getDisplayName(chat, getChatService().getLastMessage(chat.getId(), this), getUser()));
+            messageTitle.setText(createTitle());
         }
         getHeaderCenter().addView(headerCenterView);
+
+        if ( contact != null ) {
+            setTitle(createTitle());
+        }
 
         // online icon
         if (contact != null) {
@@ -167,7 +174,11 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
             }
 
             getHeaderRight().addView(contactIcon, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        }
+        }*/
+    }
+
+    private String createTitle() {
+        return ChatListItem.getDisplayName(chat, getChatService().getLastMessage(chat.getId(), this), getUser());
     }
 
     private void changeOnlineStatus(boolean online) {
@@ -272,6 +283,17 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
                     return null;
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return false;
     }
 }
 

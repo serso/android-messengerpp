@@ -2,29 +2,33 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.AndroidUtils;
 import org.solovyev.android.AndroidUtils2;
 import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.ext.FooterButtonBuilder;
 import org.solovyev.android.ext.FooterImageButtonBuilder;
-import org.solovyev.android.messenger.chats.MessengerChatsActivity;
+import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
-import org.solovyev.android.messenger.users.MessengerContactsActivity;
+import org.solovyev.android.messenger.users.MessengerContactsFragment;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.view.TextViewBuilder;
+import org.solovyev.android.sherlock.tabs.ActionBarFragmentTabListener;
 
 /**
  * User: serso
@@ -33,186 +37,77 @@ import org.solovyev.android.view.TextViewBuilder;
  */
 public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
+    private static final String SELECTED_NAV = "selected_nav";
 
     @NotNull
     private User user;
 
     private int layoutId;
 
-    @Nullable
-    private View.OnClickListener syncButtonListener;
+    private boolean showActionBarTabs = true;
+    private boolean homeIcon = false;
 
-    private boolean createButtons = true;
-
-    @NotNull
-    private ButtonBarPosition buttonBarPosition = ButtonBarPosition.bottom;
-
-    private boolean showImageButtonLabels = false;
-
-    public MessengerCommonActivityImpl(int layoutId, @Nullable View.OnClickListener syncButtonListener) {
+    public MessengerCommonActivityImpl(int layoutId) {
         this.layoutId = layoutId;
-        this.syncButtonListener = syncButtonListener;
     }
 
-    public MessengerCommonActivityImpl(int layoutId, @Nullable View.OnClickListener syncButtonListener, boolean createButtons) {
+    public MessengerCommonActivityImpl(int layoutId, boolean showActionBarTabs, boolean homeIcon) {
         this.layoutId = layoutId;
-        this.syncButtonListener = syncButtonListener;
-        this.createButtons = createButtons;
+        this.showActionBarTabs = showActionBarTabs;
+        this.homeIcon = homeIcon;
     }
 
     @Override
-    public void onCreate(@NotNull final Activity activity) {
-
+    public void onCreate(@NotNull final SherlockFragmentActivity activity, Bundle savedInstanceState) {
         checkUserLoggedIn(activity);
 
         activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         activity.setContentView(layoutId);
 
-        if (createButtons) {
+        final ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(homeIcon);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
 
-            final MsgImageButton contactsButton;
-            if (activity instanceof MessengerContactsActivity) {
-                contactsButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_contacts_icon_active, R.string.c_contacts, activity), true);
-            } else {
-                contactsButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_contacts_icon, R.string.c_contacts, activity), false);
-            }
-            addCenterButton(activity, contactsButton);
-            contactsButton.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MessengerContactsActivity.startActivity(activity);
-                }
-            });
+        if (showActionBarTabs) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            addTab(activity, "contacts", MessengerContactsFragment.class, null, R.string.c_contacts, R.drawable.msg_footer_contacts_icon);
+            addTab(activity, "messages", MessengerChatsFragment.class, null, R.string.c_messages, R.drawable.msg_footer_messages_icon);
+            addTab(activity, "settings", MessengerChatsFragment.class, null, R.string.c_settings, R.drawable.msg_footer_settings_icon);
 
-            final MsgImageButton messagesButton;
-            if (activity instanceof MessengerChatsActivity || activity instanceof MessengerMessagesActivity) {
-                messagesButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_messages_icon_active, R.string.c_messages, activity), true);
-            } else {
-                messagesButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_messages_icon, R.string.c_messages, activity), false);
-            }
-            addCenterButton(activity, messagesButton);
-            messagesButton.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MessengerChatsActivity.startActivity(activity);
-                }
-            });
-
-            final MsgImageButton settingsButton = new MsgImageButton(createFooterImageButton(R.drawable.msg_footer_settings_icon, R.string.c_settings, activity), false);
-            addCenterButton(activity, settingsButton);
-            settingsButton.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(activity, "Not implemented yet!", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-/*        final ImageButton logoutButton = createFooterButton(org.solovyev.android.ext.R.drawable.home, org.solovyev.android.ext.R.string.c_home, activity);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getServiceLocator().getAuthServiceFacade().logoutUser(activity);
-                MessengerLoginActivity.startActivity(activity);
-            }
-        });
-        getFooterLeft(activity).addView(logoutButton);
-
-        if (syncButtonListener != null) {
-            final ImageButton syncButton = createFooterButton(R.drawable.refresh, R.string.c_refresh, activity);
-            syncButton.setOnClickListener(syncButtonListener);
-            getFooterRight(activity).addView(syncButton);
-        }*/
-
-    }
-
-    private static final class MsgImageButton {
-        @NotNull
-        private final ImageButton button;
-
-        private final boolean selected;
-
-        private MsgImageButton(@NotNull ImageButton button, boolean selected) {
-            this.button = button;
-            this.selected = selected;
-        }
-    }
-
-    private void addCenterButton(@NotNull Activity activity, @NotNull MsgImageButton msgImageButton) {
-        addButtonToButtonBar(activity, msgImageButton, 10, 50, ButtonPosition.center);
-    }
-
-    private void addLeftButton(@NotNull Activity activity, @NotNull MsgImageButton msgImageButton) {
-        addButtonToButtonBar(activity, msgImageButton, 10, 50, ButtonPosition.left);
-    }
-
-    private void addRightButton(@NotNull Activity activity, @NotNull MsgImageButton msgImageButton) {
-        addButtonToButtonBar(activity, msgImageButton, 10, 50, ButtonPosition.right);
-    }
-
-    private static enum ButtonPosition {
-        left,
-        center,
-        right
-    }
-
-    private static enum ButtonBarPosition {
-        top,
-        bottom
-    }
-
-    private void addButtonToButtonBar(@NotNull Activity activity,
-                                      @NotNull MsgImageButton msgImageButton,
-                                      int padding,
-                                      int imageSize,
-                                      @NotNull ButtonPosition position) {
-
-        final LinearLayout imageButtonLayout = new LinearLayout(activity);
-        imageButtonLayout.setOrientation(LinearLayout.VERTICAL);
-        imageButtonLayout.setGravity(Gravity.CENTER);
-        imageButtonLayout.setPadding(padding, 0, padding, 0);
-
-        int size = AndroidUtils.toPixels(activity.getResources().getDisplayMetrics(), imageSize);
-        msgImageButton.button.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageButtonLayout.addView(msgImageButton.button, new ViewGroup.LayoutParams(size, size));
-
-        if (showImageButtonLabels) {
-
-            final TextView label = TextViewBuilder.newInstance(R.layout.msg_footer_image_label, null).build(activity);
-            label.setText(msgImageButton.button.getContentDescription());
-            if (msgImageButton.selected) {
-                label.setTextColor(activity.getResources().getColor(R.color.image_button_selected));
-            } else {
-                label.setTextColor(activity.getResources().getColor(R.color.image_button_unselected));
+            int navPosition = -1;
+            if (savedInstanceState != null) {
+                navPosition = savedInstanceState.getInt(SELECTED_NAV, -1);
             }
 
-            imageButtonLayout.addView(label, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        }
-
-        addButtonToButtonBar(activity, position, imageButtonLayout);
-    }
-
-    private void addButtonToButtonBar(@NotNull Activity activity, @NotNull ButtonPosition position, @NotNull View button) {
-        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (buttonBarPosition == ButtonBarPosition.bottom) {
-            if (position == ButtonPosition.center) {
-                getFooterCenter(activity).addView(button, params);
-            } else if (position == ButtonPosition.left) {
-                getFooterLeft(activity).addView(button, params);
-            } else {
-                getFooterRight(activity).addView(button, params);
-            }
-        } else {
-            if (position == ButtonPosition.center) {
-                getHeaderCenter(activity).addView(button, params);
-            } else if (position == ButtonPosition.left) {
-                getHeaderLeft(activity).addView(button, params);
-            } else {
-                getHeaderRight(activity).addView(button, params);
+            if (navPosition >= 0) {
+                activity.getSupportActionBar().setSelectedNavigationItem(navPosition);
             }
         }
     }
+
+    @Override
+    public void onSaveInstanceState(@NotNull SherlockFragmentActivity activity, @NotNull Bundle outState) {
+        outState.putInt(SELECTED_NAV, activity.getSupportActionBar().getSelectedNavigationIndex());
+    }
+
+    private void addTab(@NotNull SherlockFragmentActivity activity,
+                        @NotNull String tag,
+                        @NotNull Class<? extends Fragment> fragmentClass,
+                        @Nullable Bundle fragmentArgs,
+                        int captionResId,
+                        int iconResId) {
+        final ActionBar actionBar = activity.getSupportActionBar();
+        final ActionBar.Tab tab = actionBar.newTab();
+        tab.setTag(tag);
+        tab.setText(captionResId);
+        //tab.setIcon(iconResId);
+        tab.setTabListener(new ActionBarFragmentTabListener(activity, tag, fragmentClass, fragmentArgs));
+        actionBar.addTab(tab);
+    }
+
 
     private void checkUserLoggedIn(@NotNull Activity activity) {
         try {

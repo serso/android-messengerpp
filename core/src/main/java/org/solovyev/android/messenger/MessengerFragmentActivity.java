@@ -7,19 +7,19 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import roboguice.activity.RoboFragmentActivity;
 
 /**
  * User: serso
  * Date: 6/1/12
  * Time: 7:28 PM
  */
-public abstract class MessengerFragmentActivity extends RoboFragmentActivity {
+public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActivity {
 
     /*
     **********************************************************************
@@ -49,11 +49,11 @@ public abstract class MessengerFragmentActivity extends RoboFragmentActivity {
     private final MessengerCommonActivity activity;
 
     protected MessengerFragmentActivity(int layoutId) {
-        activity = new MessengerCommonActivityImpl(layoutId, null);
+        activity = new MessengerCommonActivityImpl(layoutId);
     }
 
-    protected MessengerFragmentActivity(int layoutId, boolean createFooterButtons) {
-        activity = new MessengerCommonActivityImpl(layoutId, null, createFooterButtons);
+    protected MessengerFragmentActivity(int layoutId, boolean showActionBarTabs, boolean homeIcon) {
+        activity = new MessengerCommonActivityImpl(layoutId, showActionBarTabs, homeIcon);
     }
 
     @NotNull
@@ -70,7 +70,7 @@ public abstract class MessengerFragmentActivity extends RoboFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity.onCreate(this);
+        activity.onCreate(this, savedInstanceState);
     }
 
     @NotNull
@@ -126,6 +126,13 @@ public abstract class MessengerFragmentActivity extends RoboFragmentActivity {
     @NotNull
     public ViewPager initTitleForViewPager(@NotNull Activity activity, @NotNull ViewPager.OnPageChangeListener listener, @NotNull PagerAdapter adapter) {
         return this.activity.initTitleForViewPager(activity, listener, adapter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        this.activity.onSaveInstanceState(this, outState);
     }
 
     @Override

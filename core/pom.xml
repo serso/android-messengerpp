@@ -45,14 +45,14 @@
             <type>apklib</type>
         </dependency>
 
-        <!-- OTHER -->
-
         <dependency>
-            <groupId>android</groupId>
-            <artifactId>support-v4</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
+            <groupId>org.solovyev.android</groupId>
+            <artifactId>android-common-sherlock</artifactId>
+            <version>1.0.0</version>
+            <type>apklib</type>
         </dependency>
+
+        <!-- OTHER -->
 
         <!-- Pull-to-Refresh -->
         <dependency>
@@ -71,9 +71,22 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>11.0.2</version>
+            <groupId>com.actionbarsherlock</groupId>
+            <artifactId>library</artifactId>
+            <version>4.0.2</version>
+            <type>apklib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.roboguice</groupId>
+            <artifactId>roboguice</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.rtyley</groupId>
+            <artifactId>roboguice-sherlock</artifactId>
+            <version>1.5-SNAPSHOT</version>
         </dependency>
 
         <!--  Gson: Java to Json conversion -->
@@ -101,12 +114,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.roboguice</groupId>
-            <artifactId>roboguice</artifactId>
-            <version>2.0</version>
-        </dependency>
-
         <!-- Joda time -->
         <dependency>
             <groupId>joda-time</groupId>
@@ -132,6 +139,12 @@
             <groupId>com.intellij</groupId>
             <artifactId>annotations</artifactId>
             <version>7.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>11.0.2</version>
         </dependency>
 
 

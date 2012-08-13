@@ -1,11 +1,13 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.users.User;
 
@@ -19,7 +21,7 @@ public interface MessengerCommonActivity {
     @NotNull
     User getUser();
 
-    void onCreate(@NotNull Activity activity);
+    void onCreate(@NotNull SherlockFragmentActivity activity, Bundle savedInstanceState);
 
     void onRestart(@NotNull Activity activity);
 
@@ -56,4 +58,6 @@ public interface MessengerCommonActivity {
     ViewPager initTitleForViewPager(@NotNull Activity activity,
                                @NotNull ViewPager.OnPageChangeListener listener,
                                @NotNull PagerAdapter adapter);
+
+    void onSaveInstanceState(@NotNull SherlockFragmentActivity activity, @NotNull Bundle outState);
 }

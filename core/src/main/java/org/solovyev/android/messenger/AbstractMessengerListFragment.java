@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -28,7 +29,6 @@ import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import roboguice.fragment.RoboListFragment;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractMessengerListFragment<T> extends RoboListFragment implements AbsListView.OnScrollListener {
+public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListFragment implements AbsListView.OnScrollListener {
 
     /*
     **********************************************************************
@@ -131,6 +131,8 @@ public abstract class AbstractMessengerListFragment<T> extends RoboListFragment 
     protected ChatService getChatService() {
         return chatService;
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -431,7 +433,7 @@ public abstract class AbstractMessengerListFragment<T> extends RoboListFragment 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("position", getSelectedItemPosition());
+        //outState.putInt("position", getSelectedItemPosition());
     }
 
     public boolean isDualPane() {

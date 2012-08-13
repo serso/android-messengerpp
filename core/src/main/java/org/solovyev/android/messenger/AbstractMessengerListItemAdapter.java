@@ -100,6 +100,10 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
         this.getFilter().filter(filterText);
     }
 
+    public void refilter() {
+        this.getFilter().filter(filterText);
+    }
+
     public static final class ListItemComparator implements Comparator<ListItem<?>> {
 
         @NotNull
