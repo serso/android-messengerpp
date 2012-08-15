@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:layout_width="fill_parent"
+              a:layout_height="fill_parent"
+              a:orientation="vertical"
+              a:gravity="left"
+              style="@style/list_item_item">
+
+    <LinearLayout a:layout_height="wrap_content"
+                  a:background="@drawable/left_message_bubble"
+                  a:layout_width="wrap_content"
+                  a:paddingLeft="24px"
+                  a:paddingRight="5dp"
+                  a:paddingTop="5dp"
+                  a:paddingBottom="5dp"
+                  a:layout_marginBottom="5dp"
+                  a:orientation="horizontal">
+
+        <ImageView a:id="@+id/message_icon"
+                   a:layout_marginRight="5dp"
+                   a:layout_width="30dp"
+                   a:layout_height="30dp"/>
+
+        <EditText a:id="@+id/message_body"
+                  a:layout_gravity="top"
+                  style="@style/list_item_message"
+                  a:hint="@string/type_message"
+                  a:layout_width="wrap_content"
+                  a:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <Button a:id="@+id/send_button"
+            a:layout_gravity="left"
+            a:text="@string/send"
+            a:layout_height="wrap_content"
+            a:layout_width="wrap_content"/>
+
+</LinearLayout>

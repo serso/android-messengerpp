@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
@@ -183,12 +182,12 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
     private void changeOnlineStatus(boolean online) {
         if (AndroidUtils.getScreenOrientation(this) != Configuration.ORIENTATION_LANDSCAPE) {
-            final TextView contactOnline = (TextView) getHeaderCenter().findViewById(R.id.contact_online);
+           /* final TextView contactOnline = (TextView) getHeaderCenter().findViewById(R.id.contact_online);
             if (online) {
                 contactOnline.setText("·");
             } else {
                 contactOnline.setText("");
-            }
+            }*/
         }
     }
 

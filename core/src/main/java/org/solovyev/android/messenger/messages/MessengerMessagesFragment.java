@@ -1,16 +1,17 @@
 package org.solovyev.android.messenger.messages;
 
-import android.R;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.*;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -18,6 +19,9 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.utils.StringUtils2;
 
 import java.util.Comparator;
 import java.util.List;
@@ -40,6 +44,10 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Inject
     @NotNull
     private ChatService chatService;
+
+    @Inject
+    @NotNull
+    private RemoteFileService remoteFileService;
 
 
     /*
@@ -78,13 +86,58 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View result = super.onCreateView(inflater, container, savedInstanceState);
+        final RelativeLayout result = ViewFromLayoutBuilder.<RelativeLayout>newInstance(org.solovyev.android.messenger.R.layout.msg_messages).build(this.getActivity());
 
-        final ListView listView = getListView(result);
+        final View bubble = ViewFromLayoutBuilder.newInstance(org.solovyev.android.messenger.R.layout.msg_message_bubble).build(this.getActivity());
+
+        final ViewGroup messageBubbleParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.R.id.message_bubble);
+        messageBubbleParent.addView(bubble);
+
+        final View superResult = super.onCreateView(inflater, container, savedInstanceState);
+
+        final ListView listView = getListView(superResult);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setStackFromBottom(true);
 
+        final ViewGroup messagesParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.R.id.messages_list);
+        messagesParent.addView(superResult);
+
         return result;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        final EditText messageBody = (EditText) view.findViewById(R.id.message_body);
+        final Button sendButton = (Button) view.findViewById(R.id.send_button);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String messageText = StringUtils2.toHtml(messageBody.getText());
+
+                if (!StringUtils.isEmpty(messageText)) {
+                    final Activity activity = getActivity();
+                    Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
+
+                    new SendMessageAsyncTask(activity, chat) {
+                        @Override
+                        protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
+                            super.onSuccessPostExecute(result);
+                            messageBody.setText("");
+                        }
+                    }.execute(new SendMessageAsyncTask.Input(getUser(), messageText, chat));
+                }
+            }
+        });
+
+        // user` icon
+        final ImageView userIcon = (ImageView) view.findViewById(R.id.message_icon);
+
+        final String imageUri = getUser().getPropertyValueByName("photo");
+        if (!StringUtils.isEmpty(imageUri)) {
+            remoteFileService.loadImage(imageUri, userIcon, R.drawable.empty_icon);
+        }
     }
 
     @Override
@@ -270,7 +323,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     private ListView getListViewById() {
         final View view = getView();
         if (view != null) {
-            return (ListView) view.findViewById(R.id.list);
+            return (ListView) view.findViewById(android.R.id.list);
         } else {
             return null;
         }

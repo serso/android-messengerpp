@@ -42,6 +42,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListFragment implements AbsListView.OnScrollListener {
 
+    @NotNull
+    private static final String FILTER = "filter";
+
     /*
     **********************************************************************
     *
@@ -178,11 +181,17 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (isFilterEnabled()){
-            if (StringUtils.isEmpty(filterInput.getText().toString())) {
+        if (isFilterEnabled()) {
+            if ( savedInstanceState != null ) {
+                final String filter = savedInstanceState.getString(FILTER);
+                if (StringUtils.isEmpty(filter)) {
+                    setFilterBoxVisible(false);
+                } else{
+                    filterInput.setText(filter);
+                    setFilterBoxVisible(true);
+                }
+            } else {
                 setFilterBoxVisible(false);
-            } else{
-                setFilterBoxVisible(true);
             }
         }
     }
@@ -493,6 +502,10 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //outState.putInt("position", getSelectedItemPosition());
+
+        if (isFilterEnabled()) {
+            outState.putString(FILTER, filterInput.getText().toString());
+        }
     }
 
     public boolean isDualPane() {
