@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-                a:id="@+id/filter_box_parent"
-                a:layout_width="fill_parent"
-                a:layout_height="fill_parent"
-                style="@style/list_item_filter">
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:id="@+id/filter_box_parent"
+              a:layout_width="match_parent"
+              a:layout_height="match_parent"
+              a:orientation="horizontal"
+              style="@style/list_item_filter">
 
     <ImageView a:id="@+id/filter_icon"
                a:src="@drawable/search"
+               a:contentDescription="@string/filter_icon"
                a:layout_width="50dp"
-               a:layout_height="50dp"
-               a:layout_alignParentLeft="true"/>
+               a:layout_height="50dp"/>
 
     <EditText
             a:id="@+id/filter_box"
             style="@style/list_item_filter_box"
-            a:layout_centerInParent="true"
-            a:layout_toRightOf="@id/filter_icon"
-            a:layout_width="fill_parent"
+            a:layout_gravity="center_vertical|left"
+            a:layout_width="match_parent"
             a:layout_height="wrap_content"
             a:hint="@string/c_search_hint"/>
 
-</RelativeLayout>
+</LinearLayout>

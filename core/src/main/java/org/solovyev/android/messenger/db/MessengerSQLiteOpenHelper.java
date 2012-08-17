@@ -1,9 +1,11 @@
-package org.solovyev.android.db;
+package org.solovyev.android.messenger.db;
 
 import android.app.Application;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.db.CommonSQLiteOpenHelper;
+import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
 /**
  * User: serso

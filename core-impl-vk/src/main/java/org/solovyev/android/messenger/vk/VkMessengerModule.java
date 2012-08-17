@@ -2,9 +2,9 @@ package org.solovyev.android.messenger.vk;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
-import org.solovyev.android.db.MessengerSQLiteOpenHelper;
+import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
-import org.solovyev.android.http.MessengerRemoteFileService;
+import org.solovyev.android.messenger.http.MessengerRemoteFileService;
 import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;

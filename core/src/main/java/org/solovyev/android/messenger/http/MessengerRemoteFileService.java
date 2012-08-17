@@ -1,9 +1,10 @@
-package org.solovyev.android.http;
+package org.solovyev.android.messenger.http;
 
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.http.HttpRemoteFileService;
 
 /**
  * User: serso

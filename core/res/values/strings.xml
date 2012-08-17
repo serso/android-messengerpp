@@ -38,5 +38,6 @@
     <string name="send">Send</string>
     <string name="contact_icon">Contact icon</string>
     <string name="phone">Phone</string>
+    <string name="filter_icon">Filter icon</string>
 
 </resources>

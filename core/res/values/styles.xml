@@ -59,7 +59,7 @@
     <style name="list_item_item" parent="list_item"></style>
 
     <style name="list_item_filter">
-        <item name="android:background">@drawable/bottom_border</item>
+        <item name="android:background">@drawable/bottom_line</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:paddingLeft">5dp</item>
@@ -67,7 +67,7 @@
     </style>
 
     <style name="list_item_filter_box">
-        <item name="android:background">@color/base_bg</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:singleLine">true</item>
