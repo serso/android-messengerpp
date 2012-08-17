@@ -1,8 +1,10 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 
@@ -36,7 +38,22 @@ public interface UserService extends UserEventContainer {
 
     void updateUser(@NotNull User user, @NotNull Context context);
 
-    void setUserIcon(@NotNull ImageView imageView, @NotNull User user, @NotNull Context context);
+
+    /*
+    **********************************************************************
+    *
+    *                           ICONS/PHOTOS
+    *
+    **********************************************************************
+    */
+    @NotNull
+    Drawable getDefaultUserIcon(@NotNull Context context);
+
+    void setUserIcon(@NotNull User user, @NotNull Context context, @NotNull ImageView imageView);
+
+    void setUserIcon(@NotNull User user, @NotNull Context context, @NotNull OnImageLoadedListener imageLoadedListener);
+
+    void setUserPhoto(@NotNull ImageView imageView, @NotNull User user, @NotNull Context context);
 
     /*
     **********************************************************************

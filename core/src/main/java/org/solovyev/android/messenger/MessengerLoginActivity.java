@@ -86,7 +86,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
 
         setContentView(R.layout.msg_main);
 
-        final ViewGroup content = (ViewGroup) findViewById(R.id.content);
+        final ViewGroup content = (ViewGroup) findViewById(android.R.id.content);
         content.addView(ViewFromLayoutBuilder.newInstance(R.layout.msg_login).build(this), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
         final Button registerButton = (Button) content.findViewById(R.id.register_button);

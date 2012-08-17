@@ -11,5 +11,5 @@
           android:drawable="@color/selected"/>
 
     <!-- default -->
-    <item android:drawable="@android:color/transparent"/>
+    <item android:drawable="@color/selected"/>
 </selector>

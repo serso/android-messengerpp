@@ -43,7 +43,7 @@
 
     <style name="list_item">
         <item name="android:background">@drawable/item_states</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/text</item>
         <!--NOTE: separate definition in order to override them-->
         <item name="android:paddingTop">5dp</item>
@@ -177,13 +177,13 @@
     </style>
     <style name="list_item_message" parent="list_item">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:padding">0dp</item>
         <item name="android:paddingBottom">5dp</item>
     </style>
 
     <style name="list_item_message_date" parent="list_item">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">9sp</item>
         <item name="android:textColor">@color/text_lighter</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:padding">0dp</item>
@@ -215,6 +215,20 @@
     <style name="footer_image_label">
         <item name="android:textSize">15sp</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="Theme.Messenger" parent="Theme.Sherlock">
+        <item name="actionBarStyle">@style/Widget.Messenger.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Messenger.ActionBar</item>
+    </style>
+
+    <style name="Widget.Messenger.ActionBar" parent="Widget.Sherlock.ActionBar">
+<!--        <item name="titleTextStyle">@color/header_text</item>
+        <item name="android:titleTextStyle">@color/header_text</item>
+        <item name="subtitleTextStyle">@color/header_text</item>
+        <item name="android:subtitleTextStyle">@color/header_text</item>-->
+        <!--<item name="background">@color/selected</item>
+        <item name="android:background">@color/selected</item>-->
     </style>
 
 

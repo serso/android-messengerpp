@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.messages;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +85,16 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         return false;
     }
 
+    @NotNull
+    public Chat getChat() {
+        return chat;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final RelativeLayout result = ViewFromLayoutBuilder.<RelativeLayout>newInstance(org.solovyev.android.messenger.R.layout.msg_messages).build(this.getActivity());
@@ -91,7 +102,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         final View bubble = ViewFromLayoutBuilder.newInstance(org.solovyev.android.messenger.R.layout.msg_message_bubble).build(this.getActivity());
 
         final ViewGroup messageBubbleParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.R.id.message_bubble);
-        messageBubbleParent.addView(bubble);
+        messageBubbleParent.addView(bubble, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         final View superResult = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -101,6 +112,8 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
         final ViewGroup messagesParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.R.id.messages_list);
         messagesParent.addView(superResult);
+
+        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
 
         return result;
     }
@@ -150,7 +163,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             }
 
             if (chat == null) {
-                Log.e(TAG, "Chat is null and no data is stored in bundle");
+                Log.e(TAG, "Chat is null: unable to find chat with id: " + chatId);
                 getActivity().finish();
             }
         }
@@ -160,10 +173,6 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
         chatEventListener = new UiThreadUserChatListener();
         this.chatService.addChatEventListener(chatEventListener);
-    }
-
-    @Override
-    protected void updateRightPane() {
     }
 
     @Override
@@ -294,14 +303,17 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
                 scrollToTheEnd(200);
 
                 // load new messages for chat
-                new SyncChatMessagesForChatAsyncTask(null, getActivity()) {
-                    @Override
-                    protected void onSuccessPostExecute(@NotNull Input result) {
-                        super.onSuccessPostExecute(result);
-                        // let's wait 0.5 sec while sorting & filtering
-                        scrollToTheEnd(500);
-                    }
-                }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getId(), chat.getId(), false));
+                final FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    new SyncChatMessagesForChatAsyncTask(null, activity) {
+                        @Override
+                        protected void onSuccessPostExecute(@NotNull Input result) {
+                            super.onSuccessPostExecute(result);
+                            // let's wait 0.5 sec while sorting & filtering
+                            scrollToTheEnd(500);
+                        }
+                    }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getId(), chat.getId(), false));
+                }
             }
         };
     }
@@ -329,6 +341,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         }
     }
 
+    @NotNull
     @Override
     protected MessagesAdapter getAdapter() {
         return (MessagesAdapter) super.getAdapter();

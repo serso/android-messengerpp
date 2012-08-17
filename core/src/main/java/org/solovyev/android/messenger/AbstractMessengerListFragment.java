@@ -26,7 +26,10 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.*;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserEventListener;
+import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -42,8 +45,18 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListFragment implements AbsListView.OnScrollListener {
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
     @NotNull
     private static final String FILTER = "filter";
+
+    @NotNull
+    private static final String POSITION = "position";
 
     /*
     **********************************************************************
@@ -83,7 +96,6 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     @NotNull
     private User user;
 
-    @NotNull
     private AbstractMessengerListItemAdapter adapter;
 
     @Nullable
@@ -97,8 +109,6 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
 
     @Nullable
     private PullToRefreshListView2 pullLv;
-
-    private boolean dualPane;
 
     public AbstractMessengerListFragment(@NotNull String tag) {
         this.tag = tag;
@@ -174,6 +184,9 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
         params.gravity = Gravity.CENTER_VERTICAL;
         root.addView(listViewParent, params);
 
+        final MessengerMultiPaneManager mpm = MessengerApplication.getMultiPaneManager();
+        mpm.fillContentPane(this.getActivity(), container, root);
+
         return root;
     }
 
@@ -182,11 +195,11 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
         super.onViewCreated(view, savedInstanceState);
 
         if (isFilterEnabled()) {
-            if ( savedInstanceState != null ) {
+            if (savedInstanceState != null) {
                 final String filter = savedInstanceState.getString(FILTER);
                 if (StringUtils.isEmpty(filter)) {
                     setFilterBoxVisible(false);
-                } else{
+                } else {
                     filterInput.setText(filter);
                     setFilterBoxVisible(true);
                 }
@@ -246,6 +259,7 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
         }
     }
 
+    @NotNull
     protected AbstractMessengerListItemAdapter getAdapter() {
         return adapter;
     }
@@ -281,47 +295,42 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     private View createListView(@NotNull LayoutInflater inflater, ViewGroup container) {
         final Context context = getActivity();
 
-        FrameLayout root = new FrameLayout(context);
+        final FrameLayout root = new FrameLayout(context);
 
         // ------------------------------------------------------------------
 
-        LinearLayout pframe = new LinearLayout(context);
-        pframe.setId(INTERNAL_PROGRESS_CONTAINER_ID);
-        pframe.setOrientation(LinearLayout.VERTICAL);
-        pframe.setVisibility(View.GONE);
-        pframe.setGravity(Gravity.CENTER);
+        final LinearLayout progressContainer = new LinearLayout(context);
+        progressContainer.setId(INTERNAL_PROGRESS_CONTAINER_ID);
+        progressContainer.setOrientation(LinearLayout.VERTICAL);
+        progressContainer.setVisibility(View.GONE);
+        progressContainer.setGravity(Gravity.CENTER);
 
-        ProgressBar progress = new ProgressBar(context, null,
-                android.R.attr.progressBarStyleLarge);
-        pframe.addView(progress, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
+        progressContainer.addView(progress, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        root.addView(pframe, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        root.addView(progressContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
         // ------------------------------------------------------------------
 
-        FrameLayout lframe = new FrameLayout(context);
-        lframe.setId(INTERNAL_LIST_CONTAINER_ID);
+        final FrameLayout listViewContainer = new FrameLayout(context);
+        listViewContainer.setId(INTERNAL_LIST_CONTAINER_ID);
 
-        TextView tv = new TextView(context);
-        tv.setId(INTERNAL_EMPTY_ID);
-        tv.setGravity(Gravity.CENTER);
-        lframe.addView(tv, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        final TextView emptyListCaption = new TextView(context);
+        emptyListCaption.setId(INTERNAL_EMPTY_ID);
+        emptyListCaption.setGravity(Gravity.CENTER);
+        listViewContainer.addView(emptyListCaption, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
 
         final ListViewAwareOnRefreshListener topRefreshListener = getTopPullRefreshListener();
         final ListViewAwareOnRefreshListener bottomRefreshListener = getBottomPullRefreshListener();
 
-        final View lv;
-
+        final View listView;
 
         final Resources resources = context.getResources();
         if (topRefreshListener == null && bottomRefreshListener == null) {
-            lv = new ListView(context);
-            fillListView((ListView) lv, context);
-            lv.setId(android.R.id.list);
+            listView = new ListView(context);
+            fillListView((ListView) listView, context);
+            listView.setId(android.R.id.list);
         } else if (topRefreshListener != null && bottomRefreshListener != null) {
             pullLv = new PullToRefreshListView2(context, PullToRefreshBase.Mode.BOTH);
 
@@ -330,11 +339,11 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
 
             fillListView(pullLv.getRefreshableView(), context);
             pullLv.setShowIndicator(false);
-            prepareLoadingView(resources, pullLv.getHeaderLoadingView());
-            prepareLoadingView(resources, pullLv.getFooterLoadingView());
+            prepareLoadingView(resources, pullLv.getHeaderLoadingView(), container);
+            prepareLoadingView(resources, pullLv.getFooterLoadingView(), container);
 
             pullLv.setOnRefreshListener(new OnRefreshListener2Adapter(topRefreshListener, bottomRefreshListener));
-            lv = pullLv;
+            listView = pullLv;
         } else if (topRefreshListener != null) {
             pullLv = new PullToRefreshListView2(context, PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
 
@@ -343,12 +352,12 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
             fillListView(pullLv.getRefreshableView(), context);
 
             pullLv.setShowIndicator(false);
-            prepareLoadingView(resources, pullLv.getHeaderLoadingView());
-            prepareLoadingView(resources, pullLv.getFooterLoadingView());
+            prepareLoadingView(resources, pullLv.getHeaderLoadingView(), container);
+            prepareLoadingView(resources, pullLv.getFooterLoadingView(), container);
 
             pullLv.setOnRefreshListener(topRefreshListener);
 
-            lv = pullLv;
+            listView = pullLv;
         } else {
             pullLv = new PullToRefreshListView2(context, PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
 
@@ -356,24 +365,21 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
 
             fillListView(pullLv.getRefreshableView(), context);
             pullLv.setShowIndicator(false);
-            prepareLoadingView(resources, pullLv.getHeaderLoadingView());
-            prepareLoadingView(resources, pullLv.getFooterLoadingView());
+            prepareLoadingView(resources, pullLv.getHeaderLoadingView(), container);
+            prepareLoadingView(resources, pullLv.getFooterLoadingView(), container);
 
             pullLv.setOnRefreshListener(bottomRefreshListener);
 
-            lv = pullLv;
+            listView = pullLv;
         }
 
-        lframe.addView(lv, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        listViewContainer.addView(listView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
-        root.addView(lframe, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        root.addView(listViewContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
         // ------------------------------------------------------------------
 
-        root.setLayoutParams(new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
         return root;
     }
@@ -384,15 +390,17 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     }
 
     protected void fillListView(@NotNull ListView lv, @NotNull Context context) {
+        final Resources resources = context.getResources();
+
         lv.setScrollbarFadingEnabled(true);
+        lv.setCacheColorHint(resources.getColor(android.R.color.transparent));
         lv.setOnScrollListener(this);
         lv.setDividerHeight(1);
     }
 
-    private void prepareLoadingView(@NotNull Resources resources, @Nullable LoadingLayout loadingView) {
+    private void prepareLoadingView(@NotNull Resources resources, @Nullable LoadingLayout loadingView, @Nullable ViewGroup paneParent) {
         if (loadingView != null) {
-            loadingView.setTextColor(resources.getColor(R.color.text));
-            loadingView.setBackgroundColor(resources.getColor(R.color.base_bg));
+            MessengerApplication.getMultiPaneManager().fillLoadingLayout(this.getActivity(), paneParent, resources, loadingView);
         }
     }
 
@@ -424,6 +432,11 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
                                     final long id) {
                 final ListItem listItem = (ListItem) parent.getItemAtPosition(position);
 
+                // notify adapter
+                // todo serso: understand why here position starts from 1
+                adapter.getSelectedItemListener().onItemClick(parent, view, position - 1, id);
+                setSelection(position - 1);
+
                 final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
                 if (onClickAction != null) {
                     onClickAction.onClick(getActivity(), adapter, getListView());
@@ -446,6 +459,13 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
             }
         });
 
+        final int position;
+        if (savedInstanceState != null) {
+            position = savedInstanceState.getInt(POSITION, -1);
+        } else {
+            position = -1;
+        }
+
         listLoader = createAsyncLoader(adapter, new Runnable() {
             @Override
             public void run() {
@@ -462,6 +482,18 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
                     } else {
                         filterTextChanged("");
                     }
+
+                    if (position >= 0 && position < adapter.getCount()) {
+                        adapter.getSelectedItemListener().onItemClick(getListView(), null, position, 0);
+
+                        if (MessengerApplication.getMultiPaneManager().isDualPane(getActivity())) {
+                            final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
+                            if (onClickAction != null) {
+                                onClickAction.onClick(getActivity(), adapter, lv);
+                            }
+                        }
+                    }
+
                 } catch (IllegalStateException e) {
                     // todo serso: find the reason of the exception
                     Log.e(tag, e.getMessage(), e);
@@ -469,47 +501,19 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
             }
         });
         listLoader.execute();
-
-        final View rightContentPane = getActivity().findViewById(R.id.right_content_pane);
-        dualPane = rightContentPane != null && rightContentPane.getVisibility() == View.VISIBLE;
-        if (isDualPane()) {
-            ContactDualPaneController.getInstance().registerDualPaneFragment(this);
-        }
-
-        if (savedInstanceState != null) {
-            final int position = savedInstanceState.getInt("position", 0);
-            setSelection(position);
-        }
-
-        if (isDualPane()) {
-            // In dual-pane mode, list view highlights selected item.
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
     }
-
-
-    @Override
-    public void setSelection(int position) {
-        super.setSelection(position);
-        if (isDualPane()) {
-            updateRightPane();
-        }
-    }
-
-    protected abstract void updateRightPane();
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //outState.putInt("position", getSelectedItemPosition());
 
-        if (isFilterEnabled()) {
+        if (adapter != null) {
+            outState.putInt(POSITION, adapter.getSelectedItemPosition());
+        }
+
+        if (isFilterEnabled() && filterInput != null) {
             outState.putString(FILTER, filterInput.getText().toString());
         }
-    }
-
-    public boolean isDualPane() {
-        return dualPane;
     }
 
     @Override
@@ -527,10 +531,6 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
 
     @Override
     public void onDestroy() {
-        if (isDualPane()) {
-            ContactDualPaneController.getInstance().unregisterDualPaneFragment(this);
-        }
-
         super.onDestroy();
     }
 

@@ -1,10 +1,9 @@
 package org.solovyev.android.messenger.users;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,19 +11,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
 /**
  * User: serso
  * Date: 6/1/12
  * Time: 7:04 PM
  */
-public class ContactListItem implements ListItem<View>, UserEventListener, Comparable<ContactListItem> {
+public class ContactListItem implements ListItem<View>, UserEventListener, Comparable<ContactListItem>, Checkable {
 
     @NotNull
     private static final String TAG_PREFIX = "contact_list_item_view_";
@@ -34,6 +32,8 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
 
     @NotNull
     private User contact;
+
+    private boolean checked;
 
     public ContactListItem(@NotNull User user, @NotNull User contact) {
         this.user = user;
@@ -46,27 +46,8 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
             @Override
             public void onClick(@NotNull final Context context, @NotNull final ListAdapter<ListItem<? extends View>> adapter, @NotNull ListView listView) {
 
-                final AbstractMessengerListFragment<?> rightPaneFragment = ContactDualPaneController.getInstance().getDualPaneFragment(context);
-                if (rightPaneFragment != null) {
-                    rightPaneFragment.setSelection(adapter.getPosition(ContactListItem.this));
-                } else {
-
-                    new AsyncTask<Void, Void, Chat>() {
-
-                        @Override
-                        protected Chat doInBackground(Void... params) {
-                            return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getId(), contact.getId(), context);
-                        }
-
-                        @Override
-                        protected void onPostExecute(@NotNull Chat chat) {
-                            super.onPostExecute(chat);
-
-                            MessengerMessagesActivity.startActivity((Activity) context, chat);
-                        }
-
-                    }.execute(null, null);
-                }
+                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+                eventManager.fire(ContactGuiEventType.newContactClicked(contact));
 
             }
         };
@@ -102,15 +83,17 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
         return TAG_PREFIX + contact.getId();
     }
 
-    private void fillView(@NotNull final ViewGroup view, @NotNull Context context) {
+    private void fillView(@NotNull final ViewGroup view, @NotNull final Context context) {
         final String tag = createTag();
+
+        // todo serso: view.setSelected() doesn't work
+        toggleSelected(view, checked);
 
         if (!tag.equals(view.getTag())) {
             view.setTag(tag);
 
             final ImageView contactIcon = (ImageView) view.findViewById(R.id.contact_icon);
-
-            MessengerApplication.getServiceLocator().getUserService().setUserIcon(contactIcon, contact, context);
+            MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, context, contactIcon);
 
             final TextView contactName = (TextView) view.findViewById(R.id.contact_name);
             contactName.setText(contact.getDisplayName());
@@ -121,6 +104,14 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
             } else {
                 contactOnline.setText("");
             }
+        }
+    }
+
+    public static void toggleSelected(@NotNull ViewGroup view, boolean checked) {
+        if (checked) {
+            view.setBackgroundResource(R.drawable.item_states_selected);
+        } else {
+            view.setBackgroundResource(R.drawable.item_states);
         }
     }
 
@@ -136,8 +127,8 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
             }
         }
 
-        if ( userEventType == UserEventType.contact_offline || userEventType == UserEventType.contact_online ) {
-            if ( eventUser.equals(user) && contact.equals(data) ) {
+        if (userEventType == UserEventType.contact_offline || userEventType == UserEventType.contact_online) {
+            if (eventUser.equals(user) && contact.equals(data)) {
                 contact = (User) data;
             }
         }
@@ -182,5 +173,20 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
     @NotNull
     public User getUser() {
         return user;
+    }
+
+    @Override
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    @Override
+    public boolean isChecked() {
+        return checked;
+    }
+
+    @Override
+    public void toggle() {
+        this.checked = !checked;
     }
 }

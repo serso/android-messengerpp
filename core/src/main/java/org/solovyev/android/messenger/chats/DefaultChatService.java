@@ -90,6 +90,10 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @NotNull
     private final Map<String, ChatMessage> lastMessagesCache = new HashMap<String, ChatMessage>();
 
+    // key: chat id, value: chat
+    @NotNull
+    private final Map<String, Chat> chatsById = new HashMap<String, Chat>();
+
     @NotNull
     private final Object lock = new Object();
 
@@ -121,7 +125,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
         final String chatId = createPrivateChatId(userId, secondUserId);
         synchronized (lock) {
-            result = getChatDao(context).loadChatById(chatId);
+            result = getChatById(chatId, context);
             if ( result == null ) {
                 final ApiChatImpl apiChat = new ApiChatImpl(chatId, 0, true);
                 apiChat.addParticipant(getUserService().getUserById(userId, context));
@@ -152,7 +156,25 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @Override
     public Chat getChatById(@NotNull String chatId, @NotNull Context context) {
-        return getChatDao(context).loadChatById(chatId);
+        Chat result;
+
+        synchronized (chatsById) {
+            result = chatsById.get(chatId);
+        }
+
+        if (result == null) {
+            synchronized (lock) {
+                result = getChatDao(context).loadChatById(chatId);
+            }
+
+            if ( result != null ) {
+                synchronized (chatsById) {
+                    chatsById.put(result.getId(), result);
+                }
+            }
+        }
+
+        return result;
     }
 
     @NotNull
@@ -461,7 +483,12 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
                     }
                 }
             }
+        }
 
+        synchronized (chatsById) {
+            if ( chatEventType == ChatEventType.changed || chatEventType == ChatEventType.added || chatEventType == ChatEventType.last_message_changed ) {
+                chatsById.put(eventChat.getId(), eventChat);
+            }
         }
 
 

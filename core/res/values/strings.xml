@@ -36,5 +36,7 @@
     <string name="sync_task_is_running">Synchronization task is already running!</string>
     <string name="type_message">Type message</string>
     <string name="send">Send</string>
+    <string name="contact_icon">Contact icon</string>
+    <string name="phone">Phone</string>
 
 </resources>

@@ -11,7 +11,8 @@
                a:layout_centerInParent="true"
                a:layout_width="50dp"
                a:layout_height="50dp"
-               a:layout_alignParentLeft="true"/>
+               a:layout_alignParentLeft="true"
+               a:contentDescription="@string/contact_icon"/>
 
     <TextView a:id="@+id/contact_online"
               style="@style/contact_online"

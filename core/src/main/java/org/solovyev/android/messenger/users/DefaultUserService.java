@@ -12,6 +12,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
@@ -156,10 +157,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
                     userContactsCache.put(userId, result);
                 }
             }
-        }
 
-        // result list might be in cache and might updates due to some user events => must COPY
-        return new ArrayList<User>(result);
+            // result list might be in cache and might updates due to some user events => must COPY
+            return new ArrayList<User>(result);
+        }
     }
 
     @NotNull
@@ -184,31 +185,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @NotNull
     @Override
     public Chat getPrivateChat(@NotNull String userId, @NotNull final String secondUserId, @NotNull final Context context) {
-        Chat result;
+        final String chatId = getChatService().createPrivateChatId(userId, secondUserId);
 
-        try {
-            result = Iterables.find(getUserChats(userId, context), new Predicate<Chat>() {
-                @Override
-                public boolean apply(@javax.annotation.Nullable Chat chat) {
-                    assert chat != null;
-
-                    if (chat.isPrivate()) {
-
-                        final List<User> participants = getChatService().getParticipants(chat.getId(), context);
-                        return Iterables.any(participants, new Predicate<User>() {
-                            @Override
-                            public boolean apply(@javax.annotation.Nullable User participant) {
-                                assert participant != null;
-                                return secondUserId.equals(participant.getId());
-                            }
-                        });
-
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        } catch (NoSuchElementException e) {
+        Chat result = getChatService().getChatById(chatId, context);
+        if (result == null) {
             result = getChatService().createPrivateChat(userId, secondUserId, context);
         }
 
@@ -405,12 +385,40 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void setUserIcon(@NotNull ImageView imageView, @NotNull User user, @NotNull Context context) {
-        final Drawable defaultUserIcon = context.getResources().getDrawable(R.drawable.empty_icon);
+    public void setUserIcon(@NotNull User user, @NotNull Context context, @NotNull ImageView imageView) {
+        final Drawable defaultUserIcon = getDefaultUserIcon(context);
 
         final String userIconUri = getUserIconUri(user, context);
         if (!StringUtils.isEmpty(userIconUri)) {
             this.remoteFileService.loadImage(userIconUri, imageView, R.drawable.empty_icon);
+        } else {
+            imageView.setImageDrawable(defaultUserIcon);
+        }
+    }
+
+    @Override
+    @NotNull
+    public Drawable getDefaultUserIcon(@NotNull Context context) {
+        return context.getResources().getDrawable(R.drawable.empty_icon);
+    }
+
+    @Override
+    public void setUserIcon(@NotNull User user, @NotNull Context context, @NotNull OnImageLoadedListener imageLoadedListener) {
+        final String userIconUri = getUserIconUri(user, context);
+        if (!StringUtils.isEmpty(userIconUri)) {
+            this.remoteFileService.loadImage(userIconUri, imageLoadedListener);
+        } else {
+            imageLoadedListener.setDefaultImage();
+        }
+    }
+
+    @Override
+    public void setUserPhoto(@NotNull ImageView imageView, @NotNull User user, @NotNull Context context) {
+        final Drawable defaultUserIcon = getDefaultUserIcon(context);
+
+        final String userPhotoUri = getUserPhotoUri(user, context);
+        if (!StringUtils.isEmpty(userPhotoUri)) {
+            this.remoteFileService.loadImage(userPhotoUri, imageView, R.drawable.empty_icon);
         } else {
             imageView.setImageDrawable(defaultUserIcon);
         }
@@ -433,6 +441,15 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @Nullable
     private String getUserIconUri(@NotNull User user, @NotNull Context context) {
         return user.getPropertyValueByName("photo");
+    }
+
+    @Nullable
+    private String getUserPhotoUri(@NotNull User user, @NotNull Context context) {
+        String result = user.getPropertyValueByName("photoRec");
+        if ( result == null ) {
+            result = user.getPropertyValueByName("photoBig");
+        }
+        return result;
     }
 
     @NotNull

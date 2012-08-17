@@ -2,8 +2,10 @@
 
 <resources>
     <color name="header_text">#ffffffff</color>
-    <color name="base">#ff0d5171</color>
-    <color name="base_bg">#ffffffff</color>
+    <color name="base">#ffffffff</color>
+    <color name="base_bg_darker">#ffc2c2c2</color>
+    <color name="base_bg">#ffeeeeee</color>
+    <color name="base_bg_lighter">#fffefefe</color>
     <color name="text">#ff363636</color>
     <color name="text_lighter">#ff5e5e5e</color>
     <color name="text_name">#ff0e1825</color>

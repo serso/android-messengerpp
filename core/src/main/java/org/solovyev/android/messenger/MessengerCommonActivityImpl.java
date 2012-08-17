@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -63,7 +62,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     public void onCreate(@NotNull final SherlockFragmentActivity activity, Bundle savedInstanceState) {
         checkUserLoggedIn(activity);
 
-        activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         activity.setContentView(layoutId);
 
@@ -127,7 +126,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
         tab.setTag(tag);
         tab.setText(captionResId);
         //tab.setIcon(iconResId);
-        tab.setTabListener(new ActionBarFragmentTabListener(activity, tag, fragmentClass, fragmentArgs));
+        tab.setTabListener(new ActionBarFragmentTabListener(activity, tag, fragmentClass, fragmentArgs, R.id.content_first_pane));
         actionBar.addTab(tab);
     }
 

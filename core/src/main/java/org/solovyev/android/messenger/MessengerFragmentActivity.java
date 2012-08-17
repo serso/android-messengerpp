@@ -10,9 +10,11 @@ import android.widget.ImageButton;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
+import roboguice.event.EventManager;
 
 /**
  * User: serso
@@ -36,6 +38,16 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Inject
     @NotNull
     private ChatService chatService;
+
+    @Inject
+    @NotNull
+    private EventManager eventManager;
+
+    @Nullable
+    private ViewGroup secondPane;
+
+    @Nullable
+    private ViewGroup thirdPane;
 
 
     /*
@@ -66,11 +78,27 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         return chatService;
     }
 
+    @NotNull
+    protected EventManager getEventManager() {
+        return eventManager;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         activity.onCreate(this, savedInstanceState);
+
+        this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
+        this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
+    }
+
+    protected boolean isDualPane() {
+        return this.secondPane != null;
+    }
+
+    protected boolean isTriplePane() {
+        return this.thirdPane != null;
     }
 
     @NotNull

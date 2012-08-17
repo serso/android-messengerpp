@@ -385,10 +385,13 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
             for (AProperty property : user.getProperties()) {
                 final ContentValues values = new ContentValues();
-                values.put("user_id", user.getId());
-                values.put("property_name", property.getName());
-                values.put("property_value", property.getValue());
-                db.insert("user_properties", null, values);
+                final String value = property.getValue();
+                if (value != null) {
+                    values.put("user_id", user.getId());
+                    values.put("property_name", property.getName());
+                    values.put("property_value", value);
+                    db.insert("user_properties", null, values);
+                }
             }
         }
     }

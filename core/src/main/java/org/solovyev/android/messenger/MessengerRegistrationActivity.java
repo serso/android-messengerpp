@@ -45,7 +45,7 @@ public class MessengerRegistrationActivity extends RoboActivity {
 
         setContentView(R.layout.msg_main);
 
-        final ViewGroup content = (ViewGroup) findViewById(R.id.content);
+        final ViewGroup content = (ViewGroup) findViewById(android.R.id.content);
         content.addView(ViewFromLayoutBuilder.newInstance(R.layout.msg_register).build(this), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
         final Button loginButton = (Button) content.findViewById(R.id.next_button);

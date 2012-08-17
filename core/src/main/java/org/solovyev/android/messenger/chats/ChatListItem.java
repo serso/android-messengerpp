@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.chats;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,17 +17,19 @@ import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
+import org.solovyev.android.messenger.users.ContactListItem;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.StringUtils;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
 /**
  * User: serso
  * Date: 6/7/12
  * Time: 6:24 PM
  */
-public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, ChatEventListener {
+public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, ChatEventListener, Checkable {
 
     @NotNull
     private static final String TAG_PREFIX = "chat_list_item_view_";
@@ -41,10 +43,13 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
     @Nullable
     private ChatMessage lastChatMessage;
 
+    private boolean checked = false;
+
     public ChatListItem(@NotNull User user, @NotNull Chat chat, @Nullable Context context) {
         this.user = user;
         this.chat = chat;
         if (context != null) {
+            // todo serso: calling on the main thread
             this.lastChatMessage = getChatService().getLastMessage(chat.getId(), context);
         }
     }
@@ -54,9 +59,8 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
         return new OnClickAction() {
             @Override
             public void onClick(@NotNull Context context, @NotNull ListAdapter<ListItem<? extends View>> adapter, @NotNull ListView listView) {
-                if (context instanceof Activity) {
-                    MessengerMessagesActivity.startActivity((Activity) context, chat);
-                }
+                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+                eventManager.fire(ChatGuiEventType.newChatClicked(chat));
             }
         };
     }
@@ -108,12 +112,13 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
     private void fillView(@NotNull final ViewGroup view, @NotNull Context context) {
         final String tag = createTag();
 
+        ContactListItem.toggleSelected(view, checked);
+
         if (!tag.equals(view.getTag())) {
             view.setTag(tag);
 
             final ImageView chatIcon = (ImageView) view.findViewById(R.id.chat_icon);
             getChatService().setChatIcon(chatIcon, chat, user, context);
-
 
 
             final ChatMessage lastMessage = getLastMessage();
@@ -244,17 +249,32 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
 
     @Override
     public void onChatEvent(@NotNull Chat eventChat, @NotNull ChatEventType chatEventType, @Nullable Object data) {
-        if ( chatEventType == ChatEventType.changed ) {
-            if ( eventChat.equals(chat) ) {
+        if (chatEventType == ChatEventType.changed) {
+            if (eventChat.equals(chat)) {
                 chat = eventChat;
             }
         }
 
-        if ( chatEventType == ChatEventType.last_message_changed ) {
-            if ( eventChat.equals(chat) ) {
+        if (chatEventType == ChatEventType.last_message_changed) {
+            if (eventChat.equals(chat)) {
                 lastChatMessage = (ChatMessage) data;
             }
         }
+    }
+
+    @Override
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    @Override
+    public boolean isChecked() {
+        return checked;
+    }
+
+    @Override
+    public void toggle() {
+        this.checked = !checked;
     }
 
     public static final class Comparator implements java.util.Comparator<ListItem<? extends View>> {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.widget.Toast;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockPreferenceActivity;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ import java.util.List;
  * Date: 8/14/12
  * Time: 12:31 AM
  */
-public class MessengerPreferencesActivity extends RoboSherlockPreferenceActivity {
+public class MessengerPreferencesActivity extends SherlockPreferenceActivity {
 
     @InjectPreference("reload_data")
     @NotNull

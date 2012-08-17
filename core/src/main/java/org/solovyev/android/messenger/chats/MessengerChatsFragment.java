@@ -1,9 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -54,17 +51,6 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
 
         chatEventListener = new UiThreadUserChatListener();
         getChatService().addChatEventListener(chatEventListener);
-    }
-
-    @Override
-    protected void updateRightPane() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View root = super.onCreateView(inflater, container, savedInstanceState);
-        return root;
     }
 
     @Override

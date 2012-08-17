@@ -116,6 +116,11 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         return clone;    }
 
     @Override
+    public boolean isFirstSyncDone() {
+        return getLastContactsSyncDate() != null;
+    }
+
+    @Override
     @Nullable
     public DateTime getLastPropertiesSyncDate() {
         return lastPropertiesSyncDate;

@@ -12,6 +12,8 @@ import org.solovyev.common.JCloneable;
  */
 public interface UserSyncData extends MutableUserSyncData, JCloneable<UserSyncData> {
 
+    boolean isFirstSyncDone();
+
     @Nullable
     DateTime getLastPropertiesSyncDate();
 

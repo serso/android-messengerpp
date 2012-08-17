@@ -2,6 +2,8 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Checkable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
@@ -28,6 +30,13 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
 
     @Nullable
     private CharSequence filterText;
+
+    @Nullable
+    private ListItem selectedItem = null;
+    private int selectedItemPosition = -1;
+
+    @NotNull
+    private final AdapterView.OnItemClickListener selectedItemListener = new SelectedItemListener();
 
     public AbstractMessengerListItemAdapter(@NotNull Context context, @NotNull List<ListItem<? extends View>> listItems, @NotNull User user) {
         super(context, listItems);
@@ -118,5 +127,38 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
         public int compare(ListItem<?> lhs, ListItem<?> rhs) {
             return CompareTools.comparePreparedObjects(lhs.toString(), rhs.toString());
         }
+    }
+
+    @NotNull
+    public AdapterView.OnItemClickListener getSelectedItemListener() {
+        return selectedItemListener;
+    }
+
+    private final class SelectedItemListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            final ListItem selectedItem = getItem(position);
+            if (AbstractMessengerListItemAdapter.this.selectedItem != selectedItem) {
+                selectItem(selectedItem, true);
+                selectItem(AbstractMessengerListItemAdapter.this.selectedItem, false);
+
+                AbstractMessengerListItemAdapter.this.selectedItem = selectedItem;
+                AbstractMessengerListItemAdapter.this.selectedItemPosition = position;
+            }
+
+            notifyDataSetChanged();
+        }
+
+        private void selectItem(@Nullable ListItem item, boolean selected) {
+            if ( item instanceof Checkable) {
+                ((Checkable) item).setChecked(selected);
+            }
+        }
+    }
+
+    public int getSelectedItemPosition() {
+        return selectedItemPosition;
     }
 }

@@ -2,6 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * User: serso
@@ -10,19 +11,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class UiThreadRunnable implements Runnable {
 
-    @NotNull
+    @Nullable
     private final Activity activity;
 
     @NotNull
     private final Runnable action;
 
-    public UiThreadRunnable(@NotNull Activity activity, @NotNull Runnable runnable) {
+    public UiThreadRunnable(@Nullable Activity activity, @NotNull Runnable runnable) {
         this.activity = activity;
         this.action = runnable;
     }
 
     @Override
     public void run() {
-        this.activity.runOnUiThread(action);
+        if (this.activity != null) {
+            this.activity.runOnUiThread(action);
+        }
     }
 }

@@ -7,9 +7,9 @@
 
     <!--<uses-permission android:name="com.android.vending.BILLING"/>-->
 
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8"/>
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="13"/>
 
-    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/icon" android:label="@string/c_app_name" android:name=".VkMessengerApplication" android:theme="@style/Theme.Sherlock">
+    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/icon" android:label="@string/c_app_name" android:name=".VkMessengerApplication" android:theme="@style/Theme.Messenger">
 
         <activity android:label="@string/c_app_name" android:name="org.solovyev.android.messenger.MessengerStartActivity" android:windowSoftInputMode="adjustPan">
 

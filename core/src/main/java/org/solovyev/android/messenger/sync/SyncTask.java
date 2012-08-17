@@ -125,7 +125,19 @@ public enum SyncTask {
     user_chats {
         @Override
         public boolean isTime(@NotNull SyncData syncData, @NotNull Context context) {
-            return true;
+            boolean result = false;
+
+            try {
+                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                final DateTime lastChatsSyncDate = user.getUserSyncData().getLastChatsSyncDate();
+                if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(24).isBefore(DateTime.now())) {
+                    result = true;
+                }
+            } catch (UserIsNotLoggedInException e) {
+                // ok, user is not logged in
+            }
+
+            return result;
         }
 
         @Override
