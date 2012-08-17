@@ -37,6 +37,8 @@ public class MessengerPreferencesActivity extends SherlockPreferenceActivity {
 
         addPreferencesFromResource(R.xml.preferences);
 
+        reloadData = findPreference("reload_data");
+
         reloadData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
