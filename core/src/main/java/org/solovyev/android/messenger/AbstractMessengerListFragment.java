@@ -435,7 +435,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
                 // notify adapter
                 // todo serso: understand why here position starts from 1
                 adapter.getSelectedItemListener().onItemClick(parent, view, position - 1, id);
-                setSelection(position - 1);
 
                 final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
                 if (onClickAction != null) {

@@ -34,11 +34,25 @@
                       a:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <Button a:id="@+id/send_button"
-                a:layout_gravity="right"
-                a:text="@string/send"
-                a:layout_height="wrap_content"
-                a:layout_width="wrap_content"/>
+        <LinearLayout a:layout_height="wrap_content"
+                      a:layout_width="match_parent"
+                      a:gravity="right"
+                      a:orientation="horizontal">
+
+            <Button a:id="@+id/send_message_button"
+                    a:text="@string/send"
+                    a:layout_height="wrap_content"
+                    a:layout_width="wrap_content"
+                    a:layout_marginRight="2dp"
+                    style="@style/metro_button_style"/>
+
+            <Button a:id="@+id/clear_message_button"
+                    a:text="@string/clear"
+                    a:layout_height="wrap_content"
+                    a:layout_width="wrap_content"
+                    style="@style/metro_button_style"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

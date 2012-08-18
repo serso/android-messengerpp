@@ -39,5 +39,6 @@
     <string name="contact_icon">Contact icon</string>
     <string name="phone">Phone</string>
     <string name="filter_icon">Filter icon</string>
+    <string name="clear">Clear</string>
 
 </resources>

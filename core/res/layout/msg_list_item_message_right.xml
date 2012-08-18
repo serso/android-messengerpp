@@ -4,14 +4,14 @@
               a:layout_width="fill_parent"
               a:layout_height="fill_parent"
               a:gravity="right"
-              a:paddingLeft="50dp"
               style="@style/list_item_item">
 
     <LinearLayout a:layout_height="wrap_content"
                   a:background="@drawable/right_message_bubble"
                   a:layout_width="wrap_content"
-                  a:paddingLeft="5dp"
                   a:paddingRight="24px"
+                  a:paddingLeft="5dp"
+                  a:layout_marginLeft="50dp"
                   a:paddingTop="5dp"
                   a:paddingBottom="5dp"
                   a:orientation="horizontal">
@@ -19,21 +19,21 @@
         <LinearLayout a:layout_height="wrap_content"
                       a:layout_width="wrap_content"
                       a:paddingRight="5dp"
-                      a:layout_marginRight="30dp"
-                      a:layout_toLeftOf="@id/message_icon"
+                      a:layout_gravity="top"
+                      a:background="@android:color/transparent"
                       a:orientation="vertical">
 
-            <TextView a:id="@+id/message_body"
+            <EditText a:id="@+id/message_body"
                       style="@style/list_item_message"
+                      a:gravity="right"
                       a:layout_width="wrap_content"
                       a:layout_height="wrap_content"/>
 
             <TextView a:id="@+id/message_date"
                       style="@style/list_item_message_date"
-                      a:layout_width="wrap_content"
+                      a:layout_width="match_parent"
                       a:layout_height="wrap_content"
-                      a:layout_toLeftOf="@id/message_icon"
-                      a:layout_gravity="left"/>
+                      a:gravity="left"/>
 
         </LinearLayout>
 

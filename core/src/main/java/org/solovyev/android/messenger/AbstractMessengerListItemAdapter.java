@@ -146,9 +146,9 @@ public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListI
 
                 AbstractMessengerListItemAdapter.this.selectedItem = selectedItem;
                 AbstractMessengerListItemAdapter.this.selectedItemPosition = position;
-            }
 
-            notifyDataSetChanged();
+                notifyDataSetChanged();
+            }
         }
 
         private void selectItem(@Nullable ListItem item, boolean selected) {

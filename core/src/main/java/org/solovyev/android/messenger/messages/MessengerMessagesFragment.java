@@ -122,7 +122,8 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onViewCreated(view, savedInstanceState);
 
         final EditText messageBody = (EditText) view.findViewById(R.id.message_body);
-        final Button sendButton = (Button) view.findViewById(R.id.send_button);
+
+        final Button sendButton = (Button) view.findViewById(R.id.send_message_button);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +143,15 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
                 }
             }
         });
+
+        final Button clearButton = (Button) view.findViewById(R.id.clear_message_button);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                messageBody.setText("");
+            }
+        });
+
 
         // user` icon
         final ImageView userIcon = (ImageView) view.findViewById(R.id.message_icon);

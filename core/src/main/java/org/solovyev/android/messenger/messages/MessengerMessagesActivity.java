@@ -85,7 +85,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         final MessengerMessagesFragment fragment = new MessengerMessagesFragment(chat);
-        fragmentTransaction.add(android.R.id.content, fragment);
+        fragmentTransaction.add(R.id.content_first_pane, fragment);
         fragmentTransaction.commit();
 
         setTitle(createTitle());
