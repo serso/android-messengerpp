@@ -186,7 +186,10 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(CHAT_ID, chat.getId());
+
+        if (chat != null) {
+            outState.putString(CHAT_ID, chat.getId());
+        }
     }
 
     @Override

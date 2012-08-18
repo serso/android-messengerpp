@@ -20,7 +20,6 @@ import org.solovyev.android.messenger.api.ApiResponseErrorException;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.LoginUserAsyncTask;
-import org.solovyev.android.messenger.users.MessengerContactsActivity;
 import org.solovyev.android.messenger.view.CaptchaViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.StringUtils;
@@ -119,7 +118,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
             @Override
             protected void onSuccessPostExecute(@Nullable Void result) {
                 super.onSuccessPostExecute(result);
-                MessengerContactsActivity.startActivity(MessengerLoginActivity.this);
+                MessengerMainActivity.startActivity(MessengerLoginActivity.this);
             }
 
             @Override
@@ -156,7 +155,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
         super.onRestart();
 
         if (this.authService.isUserLoggedIn(realm)) {
-            MessengerContactsActivity.startActivity(this);
+            MessengerMainActivity.startActivity(this);
         }
     }
 

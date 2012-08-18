@@ -114,8 +114,6 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat, 
         return new ChatsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();

@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.users;
+package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,15 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEvent;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
+import org.solovyev.android.messenger.users.ContactGuiEvent;
+import org.solovyev.android.messenger.users.ContactGuiEventType;
+import org.solovyev.android.messenger.users.MessengerContactFragment;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Builder;
 import roboguice.event.EventListener;
 
@@ -25,7 +26,7 @@ import roboguice.event.EventListener;
  * Date: 6/2/12
  * Time: 3:52 PM
  */
-public class MessengerContactsActivity extends MessengerFragmentActivity implements EventListener {
+public class MessengerMainActivity extends MessengerFragmentActivity implements EventListener {
 
     @NotNull
     private static final String MESSAGES_PANE_TAG = "messages_pane";
@@ -33,13 +34,13 @@ public class MessengerContactsActivity extends MessengerFragmentActivity impleme
     @NotNull
     private static final String CONTACT_PANE_TAG = "contact_pane";
 
-    public MessengerContactsActivity() {
+    public MessengerMainActivity() {
         super(R.layout.msg_main);
     }
 
     public static void startActivity(@NotNull Activity activity) {
         final Intent result = new Intent();
-        result.setClass(activity, MessengerContactsActivity.class);
+        result.setClass(activity, MessengerMainActivity.class);
         activity.startActivity(result);
     }
 
@@ -169,7 +170,7 @@ public class MessengerContactsActivity extends MessengerFragmentActivity impleme
 
                 @Override
                 protected Chat doInBackground(Void... params) {
-                    return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(getUser().getId(), contact.getId(), MessengerContactsActivity.this);
+                    return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(getUser().getId(), contact.getId(), MessengerMainActivity.this);
                 }
 
                 @Override

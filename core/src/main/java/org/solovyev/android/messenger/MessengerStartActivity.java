@@ -12,7 +12,6 @@ import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.MessengerContactsActivity;
 import org.solovyev.android.messenger.users.User;
 import roboguice.activity.RoboActivity;
 
@@ -62,7 +61,7 @@ public class MessengerStartActivity extends RoboActivity {
                 Log.e(MessengerStartActivity.class.getSimpleName(), e.getMessage(), e);
             }
 
-            MessengerContactsActivity.startActivity(this);
+            MessengerMainActivity.startActivity(this);
         } else {
             MessengerLoginActivity.startActivity(this);
         }
