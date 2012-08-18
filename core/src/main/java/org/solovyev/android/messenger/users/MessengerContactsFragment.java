@@ -56,7 +56,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
     }
 
     @NotNull
-    protected AbstractAsyncLoader<User> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter adapter, @NotNull Runnable onPostExecute) {
+    protected AbstractAsyncLoader<User, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
         return new ContactsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
     }
 

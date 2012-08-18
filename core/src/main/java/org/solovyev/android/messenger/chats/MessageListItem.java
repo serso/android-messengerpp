@@ -27,7 +27,7 @@ import java.util.Arrays;
  * Date: 6/10/12
  * Time: 11:25 PM
  */
-public class MessageListItem implements ListItem<View>, ChatEventListener {
+public class MessageListItem implements ListItem, ChatEventListener {
 
     @NotNull
     private static final String LEFT_VIEW_TAG = "left";
@@ -197,7 +197,7 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
         }
     }
 
-    public static final class Comparator implements java.util.Comparator<ListItem<? extends View>> {
+    public static final class Comparator implements java.util.Comparator<MessageListItem> {
 
         @NotNull
         private static final Comparator instance = new Comparator();
@@ -211,12 +211,8 @@ public class MessageListItem implements ListItem<View>, ChatEventListener {
         }
 
         @Override
-        public int compare(@NotNull ListItem<? extends View> lhs, @NotNull ListItem<? extends View> rhs) {
-            if (lhs instanceof MessageListItem && rhs instanceof MessageListItem) {
-                return ((MessageListItem) lhs).message.getSendDate().compareTo(((MessageListItem) rhs).message.getSendDate());
-            } else {
-                return 0;
-            }
+        public int compare(@NotNull MessageListItem lhs, @NotNull MessageListItem rhs) {
+               return lhs.message.getSendDate().compareTo(rhs.message.getSendDate());
         }
     }
 

@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListFragment implements AbsListView.OnScrollListener {
+public abstract class AbstractMessengerListFragment<T, LI extends ListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener {
 
     /*
     **********************************************************************
@@ -96,7 +96,7 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     @NotNull
     private User user;
 
-    private AbstractMessengerListItemAdapter adapter;
+    private AbstractMessengerListItemAdapter<LI> adapter;
 
     @Nullable
     private MessengerAsyncTask<Void, Void, List<T>> listLoader;
@@ -549,10 +549,10 @@ public abstract class AbstractMessengerListFragment<T> extends RoboSherlockListF
     }
 
     @NotNull
-    protected abstract AbstractMessengerListItemAdapter createAdapter();
+    protected abstract AbstractMessengerListItemAdapter<LI> createAdapter();
 
     @NotNull
-    protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter adapter, @NotNull Runnable onPostExecute);
+    protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<LI> adapter, @NotNull Runnable onPostExecute);
 
     @Override
     public final void onScrollStateChanged(AbsListView view, int scrollState) {

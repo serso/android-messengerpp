@@ -15,10 +15,10 @@ import java.lang.ref.WeakReference;
 public class ToggleFilterInputMenuItem implements IdentifiableMenuItem<MenuItem> {
 
     @NotNull
-    private final WeakReference<AbstractMessengerListFragment<?>> fragmentRef;
+    private final WeakReference<AbstractMessengerListFragment<?, ?>> fragmentRef;
 
-    public ToggleFilterInputMenuItem(@NotNull AbstractMessengerListFragment<?> fragment) {
-        this.fragmentRef = new WeakReference<AbstractMessengerListFragment<?>>(fragment);
+    public ToggleFilterInputMenuItem(@NotNull AbstractMessengerListFragment<?, ?> fragment) {
+        this.fragmentRef = new WeakReference<AbstractMessengerListFragment<?, ?>>(fragment);
     }
 
     @NotNull
@@ -29,7 +29,7 @@ public class ToggleFilterInputMenuItem implements IdentifiableMenuItem<MenuItem>
 
     @Override
     public void onClick(@NotNull MenuItem data, @NotNull Context context) {
-        final AbstractMessengerListFragment<?> fragment =  fragmentRef.get();
+        final AbstractMessengerListFragment<?, ?> fragment =  fragmentRef.get();
         if ( fragment != null ) {
             fragment.toggleFilterBox();
         }

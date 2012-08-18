@@ -13,7 +13,6 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.http.RemoteFileService;
-import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
@@ -32,7 +31,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:38 PM
  */
-public class MessengerMessagesFragment extends AbstractMessengerListFragment<ChatMessage> implements PullToRefreshListViewProvider {
+public class MessengerMessagesFragment extends AbstractMessengerListFragment<ChatMessage, MessageListItem> implements PullToRefreshListViewProvider {
 
     /*
     **********************************************************************
@@ -265,7 +264,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     @NotNull
     @Override
-    protected AbstractMessengerListItemAdapter createAdapter() {
+    protected MessagesAdapter createAdapter() {
         return new MessagesAdapter(getActivity(), getUser(), chat);
     }
 
@@ -276,8 +275,8 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     @NotNull
     @Override
-    protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter adapter, @NotNull Runnable onPostExecute) {
-        return new AbstractAsyncLoader<ChatMessage>(getUser(), getActivity(), adapter, onPostExecute) {
+    protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<MessageListItem> adapter, @NotNull Runnable onPostExecute) {
+        return new AbstractAsyncLoader<ChatMessage, MessageListItem>(getUser(), getActivity(), adapter, onPostExecute) {
 
             @NotNull
             @Override
@@ -286,13 +285,13 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             }
 
             @Override
-            protected Comparator<? super ListItem<? extends View>> getComparator() {
+            protected Comparator<? super MessageListItem> getComparator() {
                 return MessageListItem.Comparator.getInstance();
             }
 
             @NotNull
             @Override
-            protected ListItem<?> createListItem(@NotNull ChatMessage message) {
+            protected MessageListItem createListItem(@NotNull ChatMessage message) {
                 return new MessageListItem(getUser(), chat, message);
             }
 

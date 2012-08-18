@@ -26,7 +26,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:37 PM
  */
-public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> {
+public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat, ChatListItem> {
 
     @NotNull
     private static final String TAG = "ChatsFragment";
@@ -104,13 +104,13 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat> 
 
     @NotNull
     @Override
-    protected AbstractMessengerListItemAdapter createAdapter() {
+    protected ChatsAdapter createAdapter() {
         return new ChatsAdapter(getActivity(), getUser());
     }
 
     @NotNull
     @Override
-    protected MessengerAsyncTask<Void, Void, List<Chat>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter adapter, @NotNull Runnable onPostExecute) {
+    protected MessengerAsyncTask<Void, Void, List<Chat>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ChatListItem> adapter, @NotNull Runnable onPostExecute) {
         return new ChatsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
     }
 

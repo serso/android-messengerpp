@@ -22,7 +22,7 @@ import roboguice.event.EventManager;
  * Date: 6/1/12
  * Time: 7:04 PM
  */
-public class ContactListItem implements ListItem<View>, UserEventListener, Comparable<ContactListItem>, Checkable {
+public class ContactListItem implements ListItem, UserEventListener, Comparable<ContactListItem>, Checkable {
 
     @NotNull
     private static final String TAG_PREFIX = "contact_list_item_view_";
@@ -44,7 +44,7 @@ public class ContactListItem implements ListItem<View>, UserEventListener, Compa
     public OnClickAction getOnClickAction() {
         return new OnClickAction() {
             @Override
-            public void onClick(@NotNull final Context context, @NotNull final ListAdapter<ListItem<? extends View>> adapter, @NotNull ListView listView) {
+            public void onClick(@NotNull final Context context, @NotNull final ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
 
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
                 eventManager.fire(ContactGuiEventType.newContactClicked(contact));

@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.Filter;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -11,7 +10,6 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.AdapterFilter;
-import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
 import org.solovyev.common.IPredicate;
@@ -25,13 +23,13 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 5:55 PM
  */
-public abstract class AbstractContactsAdapter extends AbstractMessengerListItemAdapter implements UserEventListener {
+public abstract class AbstractContactsAdapter extends AbstractMessengerListItemAdapter<ContactListItem> implements UserEventListener {
 
     @NotNull
     private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
 
     public AbstractContactsAdapter(@NotNull Context context, @NotNull User user) {
-        super(context, new ArrayList<ListItem<? extends View>>(), user);
+        super(context, new ArrayList<ContactListItem>(), user);
     }
 
     @Override
@@ -64,9 +62,9 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
                         assert contact != null;
                         return canAddContact(contact);
                     }
-                }), new Function<User, ListItem<?>>() {
+                }), new Function<User, ContactListItem>() {
                     @Override
-                    public ListItem<?> apply(@javax.annotation.Nullable User contact) {
+                    public ContactListItem apply(@javax.annotation.Nullable User contact) {
                         return createListItem(eventUser, contact);
                     }
                 })));
@@ -75,9 +73,9 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
 
         if (userEventType == UserEventType.changed) {
 
-            final ListItem<?> listItem = findInAllElements(getUser(), eventUser);
-            if (listItem instanceof UserEventListener) {
-                ((UserEventListener) listItem).onUserEvent(eventUser, userEventType, data);
+            final ContactListItem listItem = findInAllElements(getUser(), eventUser);
+            if (listItem != null) {
+                listItem.onUserEvent(eventUser, userEventType, data);
                 onListItemChanged(getUser(), eventUser);
             }
             //notifyDataSetChanged();
@@ -91,8 +89,8 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
     }
 
     @Nullable
-    protected ListItem<?> findInAllElements(@NotNull User user, @NotNull User contact) {
-        return Iterables.find(getAllElements(), Predicates.<ListItem<?>>equalTo(createListItem(user, contact)), null);
+    protected ContactListItem findInAllElements(@NotNull User user, @NotNull User contact) {
+        return Iterables.find(getAllElements(), Predicates.<ContactListItem>equalTo(createListItem(user, contact)), null);
     }
 
 
@@ -133,12 +131,12 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
         return new ContactsFilter(new AdapterHelper());
     }
 
-    private class ContactsFilter extends AdapterFilter<ListItem<? extends View>> {
+    private class ContactsFilter extends AdapterFilter<ContactListItem> {
 
         @NotNull
         private ContactFilter emptyPrefixFilter = new ContactFilter(null);
 
-        private ContactsFilter(@NotNull Helper<ListItem<? extends View>> helper) {
+        private ContactsFilter(@NotNull Helper<ContactListItem> helper) {
             super(helper);
         }
 
@@ -148,11 +146,11 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
         }
 
         @Override
-        protected IPredicate<ListItem<? extends View>> getFilter(@Nullable final CharSequence prefix) {
+        protected IPredicate<ContactListItem> getFilter(@Nullable final CharSequence prefix) {
             return StringUtils.isEmpty(prefix) ? emptyPrefixFilter : new ContactFilter(prefix);
         }
 
-        private class ContactFilter implements IPredicate<ListItem<? extends View>> {
+        private class ContactFilter implements IPredicate<ContactListItem> {
 
             @Nullable
             private final CharSequence prefix;
@@ -162,10 +160,9 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
             }
 
             @Override
-            public boolean apply(@Nullable ListItem<? extends View> listItem) {
-                if (listItem instanceof ContactListItem) {
-                    final ContactListItem contactListItem = (ContactListItem) listItem;
-                    final User contact = contactListItem.getContact();
+            public boolean apply(@Nullable ContactListItem listItem) {
+                if (listItem != null) {
+                    final User contact = listItem.getContact();
 
                     boolean shown = true;
                     if ( mode == MessengerContactsMode.all_contacts ) {
@@ -180,7 +177,7 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
 
                     if (shown) {
                         if (!StringUtils.isEmpty(prefix)) {
-                            shown = new PrefixFilter<ContactListItem>(prefix.toString().toLowerCase()).apply(contactListItem);
+                            shown = new PrefixFilter<ContactListItem>(prefix.toString().toLowerCase()).apply(listItem);
                         }
                     }
 

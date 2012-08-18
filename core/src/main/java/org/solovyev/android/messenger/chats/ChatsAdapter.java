@@ -1,14 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import android.view.View;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.User;
@@ -24,10 +22,10 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:48 PM
  */
-public class ChatsAdapter extends AbstractMessengerListItemAdapter implements ChatEventListener, UserEventListener {
+public class ChatsAdapter extends AbstractMessengerListItemAdapter<ChatListItem> implements ChatEventListener, UserEventListener {
 
     public ChatsAdapter(@NotNull Context context, @NotNull User user) {
-        super(context, new ArrayList<ListItem<? extends View>>(), user);
+        super(context, new ArrayList<ChatListItem>(), user);
     }
 
     @Override
@@ -51,9 +49,9 @@ public class ChatsAdapter extends AbstractMessengerListItemAdapter implements Ch
         if (userEventType == UserEventType.chat_added_batch) {
             if (eventUser.equals(getUser())) {
                 final List<Chat> chats = (List<Chat>) data;
-                addListItems(Lists.transform(chats, new Function<Chat, ListItem<?>>() {
+                addListItems(Lists.transform(chats, new Function<Chat, ChatListItem>() {
                     @Override
-                    public ListItem<?> apply(@javax.annotation.Nullable Chat chat) {
+                    public ChatListItem apply(@javax.annotation.Nullable Chat chat) {
                         assert chat != null;
                         return createListItem(eventUser, chat);
                     }
@@ -82,7 +80,7 @@ public class ChatsAdapter extends AbstractMessengerListItemAdapter implements Ch
     }
 
     @Override
-    protected Comparator<? super ListItem<? extends View>> getComparator() {
+    protected Comparator<? super ChatListItem> getComparator() {
         return ChatListItem.Comparator.getInstance();
     }
 
@@ -95,16 +93,16 @@ public class ChatsAdapter extends AbstractMessengerListItemAdapter implements Ch
     public void onChatEvent(@NotNull Chat eventChat, @NotNull ChatEventType chatEventType, @Nullable Object data) {
 
         if (chatEventType == ChatEventType.changed || chatEventType == ChatEventType.last_message_changed) {
-            final ListItem<?> chatListItem = findInAllElements(getUser(), eventChat);
-            if (chatListItem instanceof ChatListItem) {
-                ((ChatListItem) chatListItem).onChatEvent(eventChat, chatEventType, data);
+            final ChatListItem chatListItem = findInAllElements(getUser(), eventChat);
+            if (chatListItem != null) {
+                chatListItem.onChatEvent(eventChat, chatEventType, data);
             }
         }
     }
 
     @Nullable
-    protected ListItem<?> findInAllElements(@NotNull User user, @NotNull Chat chat) {
-        return Iterables.find(getAllElements(), Predicates.<ListItem<?>>equalTo(createListItem(user, chat)), null);
+    protected ChatListItem findInAllElements(@NotNull User user, @NotNull Chat chat) {
+        return Iterables.find(getAllElements(), Predicates.<ChatListItem>equalTo(createListItem(user, chat)), null);
     }
 
 }

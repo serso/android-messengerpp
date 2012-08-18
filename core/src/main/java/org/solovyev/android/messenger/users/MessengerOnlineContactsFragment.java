@@ -18,7 +18,7 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFragment {
     @NotNull
     @Override
-    protected AbstractAsyncLoader<User> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter adapter, @NotNull Runnable onPostExecute) {
+    protected AbstractAsyncLoader<User, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
         return new OnlineContactsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
     }
 

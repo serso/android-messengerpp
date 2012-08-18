@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
 import android.os.Handler;
-import android.view.View;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -10,7 +9,6 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.User;
@@ -23,7 +21,7 @@ import java.util.*;
  * Date: 6/10/12
  * Time: 11:27 PM
  */
-public class MessagesAdapter extends AbstractMessengerListItemAdapter implements ChatEventListener, UserEventListener {
+public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageListItem> implements ChatEventListener, UserEventListener {
 
     @NotNull
     private Chat chat;
@@ -31,10 +29,10 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
     // map of list items saying that someone start typing message
     // key: user id
     @NotNull
-    private final Map<String, ListItem<?>> userTypingListItems = Collections.synchronizedMap(new HashMap<String, ListItem<?>>());
+    private final Map<String, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<String, MessageListItem>());
 
     public MessagesAdapter(@NotNull Context context, @NotNull User user, @NotNull Chat chat) {
-        super(context, new ArrayList<ListItem<? extends View>>(), user);
+        super(context, new ArrayList<MessageListItem>(), user);
         this.chat = chat;
     }
 
@@ -58,16 +56,16 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
         if (chatEventType == ChatEventType.message_added_batch) {
             if (eventChat.equals(chat)) {
                 final List<ChatMessage> messages = (List<ChatMessage>) data;
-                addListItems(Lists.transform(messages, new Function<ChatMessage, ListItem<?>>() {
+                addListItems(Lists.transform(messages, new Function<ChatMessage, MessageListItem>() {
                     @Override
-                    public ListItem<?> apply(@javax.annotation.Nullable ChatMessage input) {
+                    public MessageListItem apply(@javax.annotation.Nullable ChatMessage input) {
                         assert input != null;
                         return createListItem(input);
                     }
                 }));
 
                 for (ChatMessage message : messages) {
-                    final ListItem<?> listItem = userTypingListItems.remove(message.getAuthor().getId());
+                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getId());
                     if ( listItem != null ) {
                         removeListItem(listItem);
                     }
@@ -78,9 +76,9 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
         if (chatEventType == ChatEventType.message_changed) {
             if (eventChat.equals(chat)) {
                 final ChatMessage message = (ChatMessage) data;
-                final ListItem<?> listItem = findInAllElements(message);
-                if (listItem instanceof ChatEventListener) {
-                    ((ChatEventListener) listItem).onChatEvent(eventChat, chatEventType, data);
+                final MessageListItem listItem = findInAllElements(message);
+                if (listItem != null) {
+                    listItem.onChatEvent(eventChat, chatEventType, data);
                 }
             }
 
@@ -98,7 +96,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
                 liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(userId, context));
                 liteChatMessage.setBody("User start typing...");
 
-                final ListItem<?> listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));
+                final MessageListItem listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));
                 addListItem(listItem);
                 userTypingListItems.put(userId, listItem);
 
@@ -115,12 +113,13 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter implements
     }
 
     @Override
-    protected Comparator<? super ListItem<? extends View>> getComparator() {
+    protected Comparator<? super MessageListItem> getComparator() {
         return MessageListItem.Comparator.getInstance();
     }
 
-    private ListItem<?> findInAllElements(@NotNull ChatMessage message) {
-        return Iterables.find(getAllElements(), Predicates.<ListItem<?>>equalTo(createListItem(message)), null);
+    @Nullable
+    private MessageListItem findInAllElements(@NotNull ChatMessage message) {
+        return Iterables.find(getAllElements(), Predicates.<MessageListItem>equalTo(createListItem(message)), null);
     }
 
     @NotNull

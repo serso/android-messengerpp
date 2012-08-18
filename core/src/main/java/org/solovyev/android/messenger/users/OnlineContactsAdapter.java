@@ -30,7 +30,7 @@ public class OnlineContactsAdapter extends AbstractContactsAdapter {
         if ( userEventType == UserEventType.contact_online) {
             if ( eventUser.equals(getUser()) ) {
                 final User onlineContact = (User)data;
-                final ListItem<?> listItem = findInAllElements(eventUser, onlineContact);
+                final ContactListItem listItem = findInAllElements(eventUser, onlineContact);
                 if ( listItem == null ) {
                     addListItem(eventUser, onlineContact);
                 }

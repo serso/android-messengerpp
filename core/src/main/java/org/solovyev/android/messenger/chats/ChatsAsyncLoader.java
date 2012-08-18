@@ -1,10 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import android.view.View;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -18,9 +16,9 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 6:23 PM
  */
-public class ChatsAsyncLoader extends AbstractAsyncLoader<Chat> {
+public class ChatsAsyncLoader extends AbstractAsyncLoader<Chat, ChatListItem> {
 
-    ChatsAsyncLoader(@NotNull User user, @NotNull Context context, @NotNull ListItemArrayAdapter adapter, @Nullable Runnable onPostExecute) {
+    ChatsAsyncLoader(@NotNull User user, @NotNull Context context, @NotNull ListItemArrayAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute) {
         super(user, context, adapter, onPostExecute);
     }
 
@@ -31,13 +29,13 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<Chat> {
     }
 
     @Override
-    protected Comparator<? super ListItem<? extends View>> getComparator() {
+    protected Comparator<? super ChatListItem> getComparator() {
         return ChatListItem.Comparator.getInstance();
     }
 
     @NotNull
     @Override
-    protected ListItem<?> createListItem(@NotNull Chat chat) {
+    protected ChatListItem createListItem(@NotNull Chat chat) {
         return new ChatListItem(getUser(), chat, getContext());
     }
 }

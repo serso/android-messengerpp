@@ -9,7 +9,7 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
  * Date: 6/2/12
  * Time: 5:11 PM
  */
-public abstract class AbstractMessengerContactsFragment extends AbstractMessengerListFragment<User> {
+public abstract class AbstractMessengerContactsFragment extends AbstractMessengerListFragment<User, ContactListItem> {
 
     @NotNull
     private static String TAG = "ContactsFragment";

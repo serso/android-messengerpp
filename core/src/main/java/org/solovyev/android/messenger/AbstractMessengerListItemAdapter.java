@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:58 PM
  */
-public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter implements UserEventListener {
+public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListItemArrayAdapter<LI> implements UserEventListener {
 
     @NotNull
     private User user;
@@ -38,7 +38,7 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
     @NotNull
     private final AdapterView.OnItemClickListener selectedItemListener = new SelectedItemListener();
 
-    public AbstractMessengerListItemAdapter(@NotNull Context context, @NotNull List<ListItem<? extends View>> listItems, @NotNull User user) {
+    public AbstractMessengerListItemAdapter(@NotNull Context context, @NotNull List<? extends LI> listItems, @NotNull User user) {
         super(context, listItems);
         this.user = user;
     }
@@ -65,10 +65,10 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
         }
     }
 
-    protected void addListItem(@NotNull ListItem<?> listItem) {
+    protected void addListItem(@NotNull LI listItem) {
         this.add(listItem);
 
-        final Comparator<? super ListItem<? extends View>> comparator = getComparator();
+        final Comparator<? super LI> comparator = getComparator();
         if (comparator != null) {
             sort(comparator);
         }
@@ -76,10 +76,10 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
         filter(filterText);
     }
 
-    protected void removeListItem(@NotNull ListItem<?> listItem) {
+    protected void removeListItem(@NotNull LI listItem) {
         this.remove(listItem);
 
-        final Comparator<? super ListItem<? extends View>> comparator = getComparator();
+        final Comparator<? super LI> comparator = getComparator();
         if (comparator != null) {
             sort(comparator);
         }
@@ -87,10 +87,10 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
         filter(filterText);
     }
 
-    protected void addListItems(@NotNull List<ListItem<?>> listItems) {
+    protected void addListItems(@NotNull List<LI> listItems) {
         this.addAll(listItems);
 
-        final Comparator<? super ListItem<? extends View>> comparator = getComparator();
+        final Comparator<? super LI> comparator = getComparator();
         if (comparator != null) {
             sort(comparator);
         }
@@ -99,7 +99,7 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
     }
 
     @Nullable
-    protected Comparator<? super ListItem<? extends View>> getComparator() {
+    protected Comparator<? super LI> getComparator() {
         return ListItemComparator.getInstance();
     }
 
@@ -113,7 +113,7 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
         this.getFilter().filter(filterText);
     }
 
-    public static final class ListItemComparator implements Comparator<ListItem<?>> {
+    public static final class ListItemComparator implements Comparator<ListItem> {
 
         @NotNull
         private static final ListItemComparator instance = new ListItemComparator();
@@ -124,7 +124,7 @@ public class AbstractMessengerListItemAdapter extends ListItemArrayAdapter imple
         }
 
         @Override
-        public int compare(ListItem<?> lhs, ListItem<?> rhs) {
+        public int compare(ListItem lhs, ListItem rhs) {
             return CompareTools.comparePreparedObjects(lhs.toString(), rhs.toString());
         }
     }

@@ -29,7 +29,7 @@ import roboguice.event.EventManager;
  * Date: 6/7/12
  * Time: 6:24 PM
  */
-public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, ChatEventListener, Checkable {
+public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEventListener, Checkable {
 
     @NotNull
     private static final String TAG_PREFIX = "chat_list_item_view_";
@@ -58,7 +58,7 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
     public OnClickAction getOnClickAction() {
         return new OnClickAction() {
             @Override
-            public void onClick(@NotNull Context context, @NotNull ListAdapter<ListItem<? extends View>> adapter, @NotNull ListView listView) {
+            public void onClick(@NotNull Context context, @NotNull ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
                 eventManager.fire(ChatGuiEventType.newChatClicked(chat));
             }
@@ -277,7 +277,7 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
         this.checked = !checked;
     }
 
-    public static final class Comparator implements java.util.Comparator<ListItem<? extends View>> {
+    public static final class Comparator implements java.util.Comparator<ChatListItem> {
 
         @NotNull
         private static final Comparator instance = new Comparator();
@@ -291,19 +291,15 @@ public class ChatListItem implements ListItem<View>, Comparable<ChatListItem>, C
         }
 
         @Override
-        public int compare(@NotNull ListItem<? extends View> lhs, @NotNull ListItem<? extends View> rhs) {
-            if (lhs instanceof ChatListItem && rhs instanceof ChatListItem) {
-                final ChatMessage llm = ((ChatListItem) lhs).getLastMessage();
-                final ChatMessage rlm = ((ChatListItem) rhs).getLastMessage();
-                if (llm != null && rlm != null) {
-                    return -llm.getSendDate().compareTo(rlm.getSendDate());
-                } else if (llm != null) {
-                    return -1;
-                } else {
-                    return 1;
-                }
+        public int compare(@NotNull ChatListItem lhs, @NotNull ChatListItem rhs) {
+            final ChatMessage llm = lhs.getLastMessage();
+            final ChatMessage rlm = rhs.getLastMessage();
+            if (llm != null && rlm != null) {
+                return -llm.getSendDate().compareTo(rlm.getSendDate());
+            } else if (llm != null) {
+                return -1;
             } else {
-                return 0;
+                return 1;
             }
         }
     }
