@@ -1,10 +1,15 @@
 package org.solovyev.android.messenger.vk.users;
 
+import android.content.Context;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.AProperty;
+import org.solovyev.android.APropertyImpl;
 import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.http.AndroidHttpUtils;
+import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.vk.R;
 import org.solovyev.common.collections.CollectionsUtils;
 
 import java.io.IOException;
@@ -53,6 +58,30 @@ public class VkRealmUserService implements RealmUserService {
             throw new RuntimeIoException(e);
         }
 
+        return result;
+    }
+
+    @NotNull
+    @Override
+    public List<AProperty> getUserProperties(@NotNull User user, @NotNull Context context) {
+        final List<AProperty> result = new ArrayList<AProperty>(user.getProperties().size());
+
+        for (AProperty property : user.getProperties()) {
+            final String name = property.getName();
+            if ( name.equals("nickName") ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.nickname), property.getValue()));
+            } else if ( name.equals("sex") ) {
+                result.add(APropertyImpl.newInstance(context.getString(org.solovyev.android.messenger.R.string.sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
+            } else if ( name.equals("bdate") ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.birth_date), property.getValue()));
+            } else if ( name.equals("countryId") ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.country), property.getValue()));
+            } else if ( name.equals("cityId") ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.city), property.getValue()));
+            }
+            
+        }
+        
         return result;
     }
 }

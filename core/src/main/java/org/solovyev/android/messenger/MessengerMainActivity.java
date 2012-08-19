@@ -14,12 +14,11 @@ import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
-import org.solovyev.android.messenger.users.ContactGuiEvent;
-import org.solovyev.android.messenger.users.ContactGuiEventType;
-import org.solovyev.android.messenger.users.MessengerContactFragment;
-import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.Builder;
 import roboguice.event.EventListener;
+
+import java.util.List;
 
 /**
  * User: serso
@@ -102,6 +101,28 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                         return new MessengerMessagesFragment(chat);
                     }
                 });
+
+                if ( isTriplePane() ) {
+                    if (chat.isPrivate()) {
+                        replaceFragment(CONTACT_PANE_TAG, R.id.content_third_pane, new Builder<Fragment>() {
+                            @NotNull
+                            @Override
+                            public Fragment build() {
+                                return new MessengerContactFragment(chat.getSecondUserId());
+                            }
+                        });
+                    } else {
+                        replaceFragment(CONTACT_PANE_TAG, R.id.content_third_pane, new Builder<Fragment>() {
+                            @NotNull
+                            @Override
+                            public Fragment build() {
+                                final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId(), MessengerMainActivity.this);
+                                return new MessengerContactsInfoFragment(participants);
+                            }
+                        });
+                    }
+                }
+
             } else {
                 MessengerMessagesActivity.startActivity(this, chat);
             }

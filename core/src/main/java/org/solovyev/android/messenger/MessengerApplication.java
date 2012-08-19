@@ -175,13 +175,12 @@ public abstract class MessengerApplication extends Application implements Messen
 
         RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
 
-
-        // load persistence data
-        this.authService.load(this);
-
         // init services
         this.userService.init();
         this.chatService.init();
+
+        // load persistence data
+        this.authService.load(this);
 
         NetworkStateController.getInstance().startListening(this);
 

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:id="@+id/contact_container"
               a:layout_width="match_parent"
               a:layout_height="match_parent"
               a:padding="5dp"
-              a:gravity="top|center"
+              a:gravity="top|center_horizontal"
               a:orientation="vertical">
 
     <ImageView a:id="@+id/contact_icon"
@@ -18,18 +19,6 @@
               a:layout_gravity="center"
               a:gravity="center"
               a:layout_width="match_parent"/>
-
-    <TextView a:id="@+id/contact_phone_label"
-              a:textColor="@color/selected"
-              a:layout_width="match_parent"
-              a:layout_height="wrap_content"
-              a:text="@string/phone"/>
-
-    <TextView a:id="@+id/contact_phone"
-              a:textColor="@color/text"
-              a:layout_width="match_parent"
-              a:layout_height="wrap_content"
-              a:text="@string/phone"/>
 
 
 </LinearLayout>

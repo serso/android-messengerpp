@@ -40,5 +40,8 @@
     <string name="phone">Phone</string>
     <string name="filter_icon">Filter icon</string>
     <string name="clear">Clear</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="sex">Sex</string>
 
 </resources>

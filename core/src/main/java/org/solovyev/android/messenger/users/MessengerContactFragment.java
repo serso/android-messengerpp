@@ -11,9 +11,13 @@ import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.AProperty;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+
+import java.util.List;
 
 /**
  * User: serso
@@ -26,16 +30,25 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     @NotNull
     private UserService userService;
 
+    @Inject
+    @NotNull
+    private Realm realm;
+
     @NotNull
     private static final String CONTACT_ID = "contact_id";
 
     private User contact;
+    private String contactId;
 
     public MessengerContactFragment() {
     }
 
     public MessengerContactFragment(@NotNull User contact) {
         this.contact = contact;
+    }
+
+    public MessengerContactFragment(@NotNull String contactId) {
+        this.contactId = contactId;
     }
 
     @Override
@@ -55,7 +68,11 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
         // restore state
         if (contact == null) {
-            final String contactId = savedInstanceState.getString(CONTACT_ID);
+            String contactId = this.contactId;
+            if ( contactId == null ) {
+                contactId = savedInstanceState.getString(CONTACT_ID);
+            }
+
             if (contactId != null) {
                 contact = this.userService.getUserById(contactId, getActivity());
             }
@@ -66,7 +83,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
             }
         }
 
-        final View root = getView();
+        final ViewGroup root = (ViewGroup)getView().findViewById(R.id.contact_container);
 
         final TextView contactName = (TextView) root.findViewById(R.id.contact_name);
         contactName.setText(contact.getDisplayName());
@@ -74,8 +91,18 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         final ImageView contactIcon = (ImageView) root.findViewById(R.id.contact_icon);
         MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact, getActivity());
 
-        final TextView contactPhone = (TextView) root.findViewById(R.id.contact_phone);
-        contactPhone.setText(contact.getPropertyValueByName("phone"));
+        final List<AProperty> contactProperties = realm.getRealmUserService().getUserProperties(contact, this.getActivity());
+        for (AProperty contactProperty : contactProperties) {
+            final View contactPropertyView = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact_property).build(this.getActivity());
+
+            final TextView propertyLabel = (TextView) contactPropertyView.findViewById(R.id.property_label);
+            propertyLabel.setText(contactProperty.getName());
+
+            final TextView propertyValue = (TextView) contactPropertyView.findViewById(R.id.property_value);
+            propertyValue.setText(contactProperty.getValue());
+
+            root.addView(contactPropertyView);
+        }
     }
 
     @Override
