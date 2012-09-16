@@ -88,9 +88,6 @@
         <profile>
             <!-- the standard profile runs the instrumentation tests -->
             <id>standard</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
 
         </profile>
 
