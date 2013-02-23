@@ -12,6 +12,7 @@
     <modules>
         <module>core</module>
         <module>realm-vk</module>
+        <module>app</module>
     </modules>
 
     <packaging>pom</packaging>
