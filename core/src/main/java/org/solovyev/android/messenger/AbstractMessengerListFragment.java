@@ -20,6 +20,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.AThreads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -619,12 +620,12 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
         @Override
         public void onUserEvent(@NotNull final User eventUser, @NotNull final UserEventType userEventType, final @Nullable Object data) {
-            new UiThreadRunnable(getActivity(), new Runnable() {
+            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
                     AbstractMessengerListFragment.this.adapter.onUserEvent(eventUser, userEventType, data);
                 }
-            }).run();
+            });
         }
     }
 }

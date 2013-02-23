@@ -29,7 +29,7 @@
 
         <dependency>
             <groupId>org.solovyev.android.messenger</groupId>
-            <artifactId>android-messenger-vk</artifactId>
+            <artifactId>android-messenger-realm-vk</artifactId>
             <version>1.0</version>
             <type>apklib</type>
         </dependency>

@@ -7,6 +7,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.AThreads;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
@@ -123,12 +124,12 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<Chat, 
 
         @Override
         public void onChatEvent(@NotNull final Chat eventChat, @NotNull final ChatEventType chatEventType, @Nullable final Object data) {
-            new UiThreadRunnable(getActivity(), new Runnable() {
+            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
                     getAdapter().onChatEvent(eventChat, chatEventType, data);
                 }
-            }).run();
+            });
         }
     }
 

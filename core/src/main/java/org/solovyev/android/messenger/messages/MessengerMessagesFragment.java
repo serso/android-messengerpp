@@ -12,6 +12,7 @@ import android.widget.*;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -395,12 +396,12 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
         @Override
         public void onChatEvent(@NotNull final Chat eventChat, @NotNull final ChatEventType chatEventType, @Nullable final Object data) {
-            new UiThreadRunnable(getActivity(), new Runnable() {
+            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
                     getAdapter().onChatEvent(eventChat, chatEventType, data);
                 }
-            }).run();
+            });
         }
     }
 
