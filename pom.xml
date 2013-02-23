@@ -11,7 +11,7 @@
 
     <modules>
         <module>core</module>
-        <module>core-impl-vk</module>
+        <module>realm-vk</module>
     </modules>
 
     <packaging>pom</packaging>
