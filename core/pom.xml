@@ -14,6 +14,13 @@
     <artifactId>android-messenger-core</artifactId>
     <name>Android Messenger Core</name>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <common.version>1.0.4-SNAPSHOT</common.version>
+        <android.common.version>1.0.7-SNAPSHOT</android.common.version>
+    </properties>
+
+
     <dependencies>
 
         <!-- OWN -->
@@ -21,34 +28,40 @@
         <dependency>
             <groupId>org.solovyev</groupId>
             <artifactId>common-core</artifactId>
-            <version>1.0.0</version>
+            <version>${common.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.solovyev</groupId>
+            <artifactId>common-core-jodatime</artifactId>
+            <version>${common.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
-            <artifactId>common-ext</artifactId>
-            <version>1.0.9</version>
+            <artifactId>android-common-ads</artifactId>
+            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
             <artifactId>android-common-http</artifactId>
-            <version>1.0.0</version>
+            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
             <artifactId>android-common-view</artifactId>
-            <version>1.0.0</version>
+            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
             <artifactId>android-common-sherlock</artifactId>
-            <version>1.0.0</version>
+            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
@@ -73,7 +86,7 @@
         <dependency>
             <groupId>com.actionbarsherlock</groupId>
             <artifactId>library</artifactId>
-            <version>4.0.2</version>
+            <version>4.2.0</version>
             <type>apklib</type>
         </dependency>
 
@@ -126,6 +139,12 @@
             <artifactId>android</artifactId>
             <version>4.0.1.2</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.7</version>
         </dependency>
 
         <dependency>

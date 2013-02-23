@@ -3,11 +3,11 @@ package org.solovyev.android.messenger.security;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.solovyev.android.http.AndroidHttpUtils;
-import org.solovyev.android.Captcha;
+import org.solovyev.android.captcha.Captcha;
+import org.solovyev.android.http.HttpTransactions;
+import org.solovyev.android.messenger.api.CommonApiError;
 import org.solovyev.android.messenger.vk.VkConfigurationImpl;
 import org.solovyev.android.messenger.vk.VkMessengerApplication;
-import org.solovyev.android.messenger.api.CommonApiError;
 import org.solovyev.android.messenger.vk.http.VkErrorType;
 import org.solovyev.android.messenger.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.vk.secutiry.VkAuthenticationHttpTransaction;
@@ -28,7 +28,7 @@ public class VkAuthenticationHttpTransactionTest {
     @Test
     public void testErrorResult() throws Exception {
         try {
-            AndroidHttpUtils.execute(new VkAuthenticationHttpTransaction("test", "test"));
+            HttpTransactions.execute(new VkAuthenticationHttpTransaction("test", "test"));
             Assert.fail();
         } catch (VkResponseErrorException e) {
             final CommonApiError vkError = e.getApiError();

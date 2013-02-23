@@ -2,10 +2,10 @@ package org.solovyev.android.messenger.vk;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
+import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.messenger.http.MessengerRemoteFileService;
-import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.MessengerConfigurationImpl;
 import org.solovyev.android.messenger.chats.ChatDao;
@@ -48,7 +48,7 @@ public class VkMessengerModule extends AbstractModule {
         bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
         bind(AuthService.class).to(AuthServiceImpl.class);
         bind(AuthServiceFacade.class).to(AuthServiceFacadeImpl.class);
-        bind(RemoteFileService.class).to(MessengerRemoteFileService.class);
+        bind(ImageLoader.class).to(MessengerRemoteFileService.class);
 
         bind(UserDao.class).to(SqliteUserDao.class);
         bind(UserService.class).to(DefaultUserService.class);

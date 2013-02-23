@@ -5,8 +5,8 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.AProperty;
-import org.solovyev.android.APropertyImpl;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.android.messenger.users.User;
 
 import java.util.ArrayList;

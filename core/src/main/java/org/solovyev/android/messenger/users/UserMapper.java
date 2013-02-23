@@ -3,8 +3,8 @@ package org.solovyev.android.messenger.users;
 import android.database.Cursor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.AProperty;
-import org.solovyev.android.ext.StringVersionedEntityMapper;
+import org.solovyev.android.db.StringVersionedEntityMapper;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 import org.solovyev.common.VersionedEntity;
 

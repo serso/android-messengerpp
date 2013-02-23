@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.AProperty;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 
 import java.util.List;

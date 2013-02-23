@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.security;
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.ResolvedCaptcha;
+import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;

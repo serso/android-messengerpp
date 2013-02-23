@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.api;
 import android.os.Parcelable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.Captcha;
+import org.solovyev.android.captcha.Captcha;
 
 /**
  * User: serso

@@ -10,11 +10,11 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 1:25 AM
  */
-public interface UserEventContainer {
+public interface UserEventListeners {
 
-    void addUserEventListener(@NotNull UserEventListener userEventListener);
+    boolean addListener(@NotNull UserEventListener listener);
 
-    void removeUserEventListener(@NotNull UserEventListener userEventListener);
+    boolean removeListener(@NotNull UserEventListener listener);
 
     void fireUserEvent(@NotNull User user, @NotNull UserEventType userEventType, @Nullable Object data);
 

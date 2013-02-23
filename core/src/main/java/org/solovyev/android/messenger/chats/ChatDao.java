@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.AProperty;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.users.User;
 

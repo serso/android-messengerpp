@@ -2,15 +2,15 @@ package org.solovyev.android.messenger.vk.users;
 
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.AProperty;
-import org.solovyev.android.APropertyImpl;
-import org.solovyev.android.RuntimeIoException;
-import org.solovyev.android.http.AndroidHttpUtils;
+import org.solovyev.android.http.HttpRuntimeIoException;
+import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.vk.R;
-import org.solovyev.common.collections.CollectionsUtils;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.common.collections.Collections;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,10 +27,10 @@ public class VkRealmUserService implements RealmUserService {
     @Override
     public User getUserById(@NotNull String userId) {
         try {
-            final List<User> users = AndroidHttpUtils.execute(VkUsersGetHttpTransaction.newInstance(userId, null));
-            return CollectionsUtils.getFirstListElement(users);
+            final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(userId, null));
+            return Collections.getFirstListElement(users);
         } catch (IOException e) {
-            throw new RuntimeIoException(e);
+            throw new HttpRuntimeIoException(e);
         }
     }
 
@@ -38,9 +38,9 @@ public class VkRealmUserService implements RealmUserService {
     @Override
     public List<User> getUserContacts(@NotNull String userId) {
         try {
-            return AndroidHttpUtils.execute(VkFriendsGetHttpTransaction.newInstance(userId));
+            return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(userId));
         } catch (IOException e) {
-            throw new RuntimeIoException(e);
+            throw new HttpRuntimeIoException(e);
         }
     }
 
@@ -52,10 +52,10 @@ public class VkRealmUserService implements RealmUserService {
 
         try {
             for (VkUsersGetHttpTransaction vkUsersGetHttpTransaction : VkUsersGetHttpTransaction.newInstancesForUsers(users, Arrays.asList(ApiUserField.online))) {
-                result.addAll(AndroidHttpUtils.execute(vkUsersGetHttpTransaction));
+                result.addAll(HttpTransactions.execute(vkUsersGetHttpTransaction));
             }
         } catch (IOException e) {
-            throw new RuntimeIoException(e);
+            throw new HttpRuntimeIoException(e);
         }
 
         return result;

@@ -12,17 +12,20 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.http.OnImageLoadedListener;
-import org.solovyev.android.http.RemoteFileService;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
-import org.solovyev.common.collections.CollectionsUtils;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.collections.Collections;
+import org.solovyev.common.text.Strings;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -53,7 +56,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Inject
     @NotNull
-    private RemoteFileService remoteFileService;
+    private ImageLoader imageLoader;
 
     /*
     **********************************************************************
@@ -67,7 +70,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     private final Object lock = new Object();
 
     @NotNull
-    private final UserEventContainer listeners = new ListUserEventContainer();
+    private final UserEventListeners listeners = new ListUserEventListeners();
 
     // key: user id, value: list of user contacts
     @NotNull
@@ -82,7 +85,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     private final Map<String, User> usersCache = new HashMap<String, User>();
 
     public DefaultUserService() {
-        listeners.addUserEventListener(this);
+        listeners.addListener(this);
     }
 
     @Override
@@ -153,7 +156,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             result = userContactsCache.get(userId);
             if (result == null) {
                 result = getUserDao(context).loadUserContacts(userId);
-                if (!CollectionsUtils.isEmpty(result)) {
+                if (!Collections.isEmpty(result)) {
                     userContactsCache.put(userId, result);
                 }
             }
@@ -172,7 +175,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             result = userChatsCache.get(userId);
             if (result == null) {
                 result = getChatService().loadUserChats(userId, context);
-                if (!CollectionsUtils.isEmpty(result)) {
+                if (!Collections.isEmpty(result)) {
                     userChatsCache.put(userId, result);
                 }
             }
@@ -274,7 +277,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         listeners.fireUserEvents(userEvents);
 
-        return Collections.unmodifiableList(contacts);
+        return java.util.Collections.unmodifiableList(contacts);
     }
 
     @NotNull
@@ -296,7 +299,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         mergeUserChats(userId, apiChats, context);
 
-        return Collections.unmodifiableList(chats);
+        return java.util.Collections.unmodifiableList(chats);
     }
 
     @Override
@@ -389,8 +392,8 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         final Drawable defaultUserIcon = getDefaultUserIcon(context);
 
         final String userIconUri = getUserIconUri(user, context);
-        if (!StringUtils.isEmpty(userIconUri)) {
-            this.remoteFileService.loadImage(userIconUri, imageView, R.drawable.empty_icon);
+        if (!Strings.isEmpty(userIconUri)) {
+            this.imageLoader.loadImage(userIconUri, imageView, R.drawable.empty_icon);
         } else {
             imageView.setImageDrawable(defaultUserIcon);
         }
@@ -405,8 +408,8 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @Override
     public void setUserIcon(@NotNull User user, @NotNull Context context, @NotNull OnImageLoadedListener imageLoadedListener) {
         final String userIconUri = getUserIconUri(user, context);
-        if (!StringUtils.isEmpty(userIconUri)) {
-            this.remoteFileService.loadImage(userIconUri, imageLoadedListener);
+        if (!Strings.isEmpty(userIconUri)) {
+            this.imageLoader.loadImage(userIconUri, imageLoadedListener);
         } else {
             imageLoadedListener.setDefaultImage();
         }
@@ -417,8 +420,8 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         final Drawable defaultUserIcon = getDefaultUserIcon(context);
 
         final String userPhotoUri = getUserPhotoUri(user, context);
-        if (!StringUtils.isEmpty(userPhotoUri)) {
-            this.remoteFileService.loadImage(userPhotoUri, imageView, R.drawable.empty_icon);
+        if (!Strings.isEmpty(userPhotoUri)) {
+            this.imageLoader.loadImage(userPhotoUri, imageView, R.drawable.empty_icon);
         } else {
             imageView.setImageDrawable(defaultUserIcon);
         }
@@ -426,9 +429,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     public void fetchUserIcon(@NotNull User user, @NotNull Context context) {
         final String userIconUri = getUserIconUri(user, context);
-        if (!StringUtils.isEmpty(userIconUri)) {
+        if (!Strings.isEmpty(userIconUri)) {
             assert userIconUri != null;
-            this.remoteFileService.loadImage(userIconUri);
+            this.imageLoader.loadImage(userIconUri);
         }
     }
 
@@ -466,13 +469,13 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     */
 
     @Override
-    public void addUserEventListener(@NotNull UserEventListener userEventListener) {
-        listeners.addUserEventListener(userEventListener);
+    public boolean addListener(@NotNull UserEventListener userEventListener) {
+        return listeners.addListener(userEventListener);
     }
 
     @Override
-    public void removeUserEventListener(@NotNull UserEventListener userEventListener) {
-        listeners.removeUserEventListener(userEventListener);
+    public boolean removeListener(@NotNull UserEventListener userEventListener) {
+        return listeners.removeListener(userEventListener);
     }
 
     @Override

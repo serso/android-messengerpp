@@ -7,13 +7,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.http.RemoteFileService;
+import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @Inject
     @NotNull
-    private RemoteFileService remoteFileService;
+    private ImageLoader imageLoader;
 
     @Inject
     @NotNull
@@ -54,8 +54,8 @@ public class DefaultChatMessageService implements ChatMessageService {
 
         final User author = message.getAuthor();
         final String userIconUri = author.getPropertyValueByName("photo");
-        if (!StringUtils.isEmpty(userIconUri)) {
-            this.remoteFileService.loadImage(userIconUri, imageView, R.drawable.empty_icon);
+        if (!Strings.isEmpty(userIconUri)) {
+            this.imageLoader.loadImage(userIconUri, imageView, R.drawable.empty_icon);
         } else {
             imageView.setImageDrawable(defaultChatIcon);
         }

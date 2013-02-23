@@ -10,9 +10,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
+import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
@@ -51,7 +51,7 @@ public class VkGetLongPollingDataHttpTransaction extends AbstractHttpTransaction
             final JsonLongPollData jsonLongPollData = gson.fromJson(json, JsonLongPollData.class);
             return jsonLongPollData.toResult();
         } catch (IOException e) {
-            throw new RuntimeIoException(e);
+            throw new HttpRuntimeIoException(e);
         } catch (IllegalJsonException e) {
             throw new IllegalJsonRuntimeException(e);
         }

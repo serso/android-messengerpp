@@ -23,8 +23,8 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.collections.CollectionsUtils;
-import org.solovyev.common.utils.CollectionsUtils2;
+import org.solovyev.common.collections.Collections;
+import org.solovyev.common.utils.Collections2;
 import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     public ChatMessage loadLastChatMessage(@NotNull String chatId) {
         final Integer lastChatMessageId = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
         final List<ChatMessage> messages = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
-        return CollectionsUtils.getFirstListElement(messages);
+        return Collections.getFirstListElement(messages);
     }
 
     @NotNull
@@ -256,7 +256,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         private static List<RemoveMessages> newInstances(@NotNull List<String> messagesIds) {
             final List<RemoveMessages> result = new ArrayList<RemoveMessages>();
 
-            for (List<String> messagesIdsChunk : CollectionsUtils2.split(messagesIds, MAX_IN_COUNT)) {
+            for (List<String> messagesIdsChunk : Collections2.split(messagesIds, MAX_IN_COUNT)) {
                 result.add(new RemoveMessages(messagesIdsChunk));
             }
 

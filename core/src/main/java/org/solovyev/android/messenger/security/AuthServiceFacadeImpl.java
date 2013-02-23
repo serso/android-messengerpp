@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.ResolvedCaptcha;
+import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.users.User;
 

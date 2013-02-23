@@ -12,7 +12,7 @@ import android.widget.*;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.http.RemoteFileService;
+import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
@@ -20,8 +20,8 @@ import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.text.StringUtils;
-import org.solovyev.common.utils.StringUtils2;
+import org.solovyev.common.text.Strings;
+import org.solovyev.common.utils.Strings2;
 
 import java.util.Comparator;
 import java.util.List;
@@ -47,8 +47,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     @Inject
     @NotNull
-    private RemoteFileService remoteFileService;
-
+    private ImageLoader imageLoader;
 
     /*
     **********************************************************************
@@ -127,9 +126,9 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String messageText = StringUtils2.toHtml(messageBody.getText());
+                final String messageText = Strings2.toHtml(messageBody.getText());
 
-                if (!StringUtils.isEmpty(messageText)) {
+                if (!Strings.isEmpty(messageText)) {
                     final Activity activity = getActivity();
                     Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
 
@@ -157,8 +156,8 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         final ImageView userIcon = (ImageView) view.findViewById(R.id.message_icon);
 
         final String imageUri = getUser().getPropertyValueByName("photo");
-        if (!StringUtils.isEmpty(imageUri)) {
-            remoteFileService.loadImage(imageUri, userIcon, R.drawable.empty_icon);
+        if (!Strings.isEmpty(imageUri)) {
+            imageLoader.loadImage(imageUri, userIcon, R.drawable.empty_icon);
         }
     }
 

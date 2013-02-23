@@ -14,14 +14,14 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.AProperty;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.db.StringIdMapper;
-import org.solovyev.common.collections.CollectionsUtils;
-import org.solovyev.common.utils.CollectionsUtils2;
+import org.solovyev.common.collections.Collections;
+import org.solovyev.common.utils.Collections2;
 import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
     @Override
     public User loadUserById(@NotNull String userId) {
         final List<User> users = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadByUserId(getContext(), userId, getSqliteOpenHelper(), this));
-        return CollectionsUtils.getFirstListElement(users);
+        return Collections.getFirstListElement(users);
     }
 
     @NotNull
@@ -189,7 +189,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         private static List<RemoveContacts> newInstances(@NotNull String userId, @NotNull List<String> contactIds) {
             final List<RemoveContacts> result = new ArrayList<RemoveContacts>();
 
-            for (List<String> contactIdsChunk : CollectionsUtils2.split(contactIds, MAX_IN_COUNT)) {
+            for (List<String> contactIdsChunk : Collections2.split(contactIds, MAX_IN_COUNT)) {
                 result.add(new RemoveContacts(userId, contactIdsChunk));
             }
 

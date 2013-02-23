@@ -6,16 +6,16 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.ResolvedCaptcha;
-import org.solovyev.android.RuntimeIoException;
+import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
+import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.AuthDataImpl;
 import org.solovyev.android.messenger.vk.VkConfigurationImpl;
 import org.solovyev.android.messenger.vk.http.VkResponseErrorException;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,14 +73,14 @@ public class VkAuthenticationHttpTransaction
     public AuthData getResponse(@NotNull HttpResponse response) {
 
         try {
-            final String json = StringUtils.convertStream(response.getEntity().getContent());
+            final String json = Strings.convertStream(response.getEntity().getContent());
             try {
                 return JsonResult.toAuthResult(json, login);
             } catch (IllegalJsonException e) {
                 throw VkResponseErrorException.newInstance(json, this);
             }
         } catch (IOException e) {
-            throw new RuntimeIoException(e);
+            throw new HttpRuntimeIoException(e);
         }
     }
 

@@ -11,7 +11,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 import roboguice.activity.RoboActivity;
 
 /**
@@ -55,7 +55,7 @@ public class MessengerRegistrationActivity extends RoboActivity {
                 final EditText verificationCodeInput = (EditText) content.findViewById(R.id.verification_code);
                 final String verificationCode = verificationCodeInput.getText().toString();
 
-                if (StringUtils.isEmpty(verificationCode)) {
+                if (Strings.isEmpty(verificationCode)) {
                     // no verification code => start registration procedure
                     final EditText phoneNumberInput = (EditText) content.findViewById(R.id.phone_number);
                     final EditText firstNameInput = (EditText) content.findViewById(R.id.first_name);

@@ -3,9 +3,11 @@ package org.solovyev.android.messenger.users;
 import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.common.utils.ListListenersContainer;
+import org.solovyev.common.listeners.JListeners;
+import org.solovyev.common.listeners.Listeners;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,22 +15,22 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 1:27 AM
  */
-public class ListUserEventContainer implements UserEventContainer {
+public class ListUserEventListeners implements UserEventListeners {
 
     @NotNull
     private static final String TAG = "UserEvent";
 
     @NotNull
-    private final ListListenersContainer<UserEventListener> listeners = new ListListenersContainer<UserEventListener>();
+    private final JListeners<UserEventListener> listeners = Listeners.newWeakRefListeners();
 
     @Override
-    public void addUserEventListener(@NotNull UserEventListener userEventListener) {
-        this.listeners.addListener(userEventListener);
+    public boolean addListener(@NotNull UserEventListener userEventListener) {
+        return this.listeners.addListener(userEventListener);
     }
 
     @Override
-    public void removeUserEventListener(@NotNull UserEventListener userEventListener) {
-        this.listeners.removeListener(userEventListener);
+    public boolean removeListener(@NotNull UserEventListener userEventListener) {
+        return this.listeners.removeListener(userEventListener);
     }
 
     @Override
@@ -38,7 +40,7 @@ public class ListUserEventContainer implements UserEventContainer {
 
     @Override
     public void fireUserEvents(@NotNull List<UserEvent> userEvents) {
-        final List<UserEventListener> listeners = this.listeners.getListeners();
+        final Collection<UserEventListener> listeners = this.listeners.getListeners();
 
         for (UserEvent userEvent : userEvents) {
             Log.d(TAG, "Event: " + userEvent.getUserEventType() + " for user: " + userEvent.getUser().getId() + " with data: " + userEvent.getData());

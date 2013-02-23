@@ -11,7 +11,7 @@ import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
-import org.solovyev.common.compare.CompareTools;
+import org.solovyev.common.Objects;
 
 import java.util.Comparator;
 import java.util.List;
@@ -125,7 +125,7 @@ public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListI
 
         @Override
         public int compare(ListItem lhs, ListItem rhs) {
-            return CompareTools.comparePreparedObjects(lhs.toString(), rhs.toString());
+            return Objects.compare(lhs.toString(), rhs.toString());
         }
     }
 

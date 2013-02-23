@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,13 +8,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.*;
+import org.solovyev.android.captcha.Captcha;
+import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.DownloadFileAsyncTask;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.view.DialogBuilder;
+import org.solovyev.android.view.DrawableFromIsConverter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.collections.CollectionsUtils;
+import org.solovyev.common.Builder;
+import org.solovyev.common.collections.Collections;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
  * Date: 5/29/12
  * Time: 9:39 PM
  */
-public class CaptchaViewBuilder implements DialogBuilder<AlertDialog> {
+public class CaptchaViewBuilder implements Builder<AlertDialog> {
 
     @NotNull
     private Context context;
@@ -61,15 +62,14 @@ public class CaptchaViewBuilder implements DialogBuilder<AlertDialog> {
         });
 
         final AlertDialog result = builder.create();
-        if (context instanceof Activity) {
-            ActivityDestroyerController.getInstance().put((Activity) context, new DialogOnActivityDestroyedListener(result));
-        }
+
+        // todo serso: fragment dialog!
 
         // at the end schedule captcha download
         new DownloadFileAsyncTask(context, new DownloadFileAsyncTask.OnPostExecute<List<Object>>() {
             @Override
             public void onPostExecute(@NotNull final List<Object> result) {
-                if (!CollectionsUtils.isEmpty(result)) {
+                if (!Collections.isEmpty(result)) {
                     captchaImage.setImageDrawable((Drawable) result.get(0));
                 }
             }

@@ -123,7 +123,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
         menuItems.add(new ToggleContactsMenuItem());
         menuItems.add(new ToggleFilterInputMenuItem(this));
 
-        this.menu = ListActivityMenu.fromLayout(R.menu.contacts, menuItems, SherlockMenuHelper.getInstance());
+        this.menu = ListActivityMenu.fromResource(R.menu.contacts, menuItems, SherlockMenuHelper.getInstance());
         this.menu.onCreateOptionsMenu(this.getActivity(), menu);
     }
 

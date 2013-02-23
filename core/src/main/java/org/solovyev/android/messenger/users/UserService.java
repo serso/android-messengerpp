@@ -15,7 +15,7 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:12 PM
  */
-public interface UserService extends UserEventContainer {
+public interface UserService extends UserEventListeners {
 
     // initial initialization: will be called once on application start
     void init();

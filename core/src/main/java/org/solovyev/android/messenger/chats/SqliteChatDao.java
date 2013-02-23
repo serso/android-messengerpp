@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.AProperty;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
@@ -22,8 +22,8 @@ import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.collections.CollectionsUtils;
-import org.solovyev.common.utils.CollectionsUtils2;
+import org.solovyev.common.collections.Collections;
+import org.solovyev.common.utils.Collections2;
 import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
     @Override
     public Chat loadChatById(@NotNull String chatId) {
-        return CollectionsUtils.getFirstListElement(AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadByChatId(getContext(), chatId, getSqliteOpenHelper(), this)));
+        return Collections.getFirstListElement(AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadByChatId(getContext(), chatId, getSqliteOpenHelper(), this)));
     }
 
     private static final class LoadChatParticipants extends AbstractDbQuery<List<User>> {
@@ -309,7 +309,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         private static List<RemoveChats> newInstances(@NotNull String userId, @NotNull List<String> chatIds) {
             final List<RemoveChats> result = new ArrayList<RemoveChats>();
 
-            for (List<String> chatIdsChunk : CollectionsUtils2.split(chatIds, MAX_IN_COUNT)) {
+            for (List<String> chatIdsChunk : Collections2.split(chatIds, MAX_IN_COUNT)) {
                 result.add(new RemoveChats(userId, chatIdsChunk));
             }
 

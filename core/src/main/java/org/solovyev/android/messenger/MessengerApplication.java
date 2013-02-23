@@ -18,7 +18,7 @@ import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTimeZone;
-import org.solovyev.android.AndroidUtils;
+import org.solovyev.android.Views;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -151,10 +151,10 @@ public abstract class MessengerApplication extends Application implements Messen
 
         public static class Gui {
             public static class Chat {
-                public static Preference<Boolean> showUserIcon = new BooleanPreference("gui.chat.showUserIcon", true);
-                public static Preference<Boolean> showContactIconInChat = new BooleanPreference("gui.chat.showContactIconInChat", true);
-                public static Preference<Boolean> showContactIconInPrivateChat = new BooleanPreference("gui.chat.showContactIconInPrivateChat", true);
-                public static Preference<UserIconPosition> userMessagesPosition = StringPreference.newInstance("gui.chat.userMessagesPosition", UserIconPosition.left, UserIconPosition.class);
+                public static Preference<Boolean> showUserIcon = BooleanPreference.of("gui.chat.showUserIcon", true);
+                public static Preference<Boolean> showContactIconInChat = BooleanPreference.of("gui.chat.showContactIconInChat", true);
+                public static Preference<Boolean> showContactIconInPrivateChat = BooleanPreference.of("gui.chat.showContactIconInPrivateChat", true);
+                public static Preference<UserIconPosition> userMessagesPosition = StringPreference.ofEnum("gui.chat.userMessagesPosition", UserIconPosition.left, UserIconPosition.class);
 
                 public static enum UserIconPosition {
                     left,
@@ -303,7 +303,7 @@ public abstract class MessengerApplication extends Application implements Messen
             } else if (this.isSecondPane(paneParent)) {
                 pane.setBackgroundColor(getResources().getColor(R.color.base_bg_lighter));
             } else if (this.isTriplePane(activity) && this.isThirdPane(paneParent)) {
-                if (AndroidUtils.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
+                if (Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
                     pane.setBackgroundDrawable(getResources().getDrawable(R.drawable.left_border));
                 } else {
                     pane.setBackgroundColor(getResources().getColor(R.color.base_bg_lighter));
@@ -323,7 +323,7 @@ public abstract class MessengerApplication extends Application implements Messen
             } else if (this.isSecondPane(paneParent)) {
                 loadingView.setBackgroundColor(resources.getColor(R.color.base_bg_lighter));
             } else if (this.isTriplePane(activity) && this.isThirdPane(paneParent)) {
-                if (AndroidUtils.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
+                if (Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
                     loadingView.setBackgroundColor(resources.getColor(R.color.base_bg));
                 } else {
                     loadingView.setBackgroundColor(resources.getColor(R.color.base_bg_lighter));

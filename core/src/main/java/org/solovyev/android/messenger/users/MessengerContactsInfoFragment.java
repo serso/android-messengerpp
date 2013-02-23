@@ -13,7 +13,7 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.AndroidUtils;
+import org.solovyev.android.Views;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.realms.Realm;
@@ -93,7 +93,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
         final ViewGroup root = (ViewGroup)getView().findViewById(R.id.contacts_container);
 
-        final boolean portrait = AndroidUtils.getScreenOrientation(this.getActivity()) == Configuration.ORIENTATION_PORTRAIT;
+        final boolean portrait = Views.getScreenOrientation(this.getActivity()) == Configuration.ORIENTATION_PORTRAIT;
 
         ViewGroup contactsRow = null;
         for (int i = 0; i < contacts.size(); i++) {

@@ -5,7 +5,7 @@
     <PreferenceScreen a:title="@string/c_appearance_preferences">
 
         <org.solovyev.android.ads.AdViewPreference
-                a:layout="@layout/admob_pref"/>
+                a:layout="@layout/acl_adview_pref"/>
 
     </PreferenceScreen>
 

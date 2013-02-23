@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -159,8 +159,8 @@ public class JsonMessage {
             sendDate = DateTime.now();
         }
         result.setSendDate(sendDate);
-        result.setBody(StringUtils.getNotEmpty(body, ""));
-        result.setTitle(StringUtils.getNotEmpty(title, ""));
+        result.setBody(Strings.getNotEmpty(body, ""));
+        result.setTitle(Strings.getNotEmpty(title, ""));
 
         return result;
     }

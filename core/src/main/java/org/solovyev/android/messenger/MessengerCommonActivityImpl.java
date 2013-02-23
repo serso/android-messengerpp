@@ -21,9 +21,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AndroidUtils2;
-import org.solovyev.android.RuntimeIoException;
-import org.solovyev.android.ext.FooterButtonBuilder;
-import org.solovyev.android.ext.FooterImageButtonBuilder;
+import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
@@ -167,19 +165,22 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     @Override
     @NotNull
     public ViewGroup getFooterLeft(@NotNull Activity activity) {
-        return (ViewGroup) activity.findViewById(org.solovyev.android.ext.R.id.footer_left);
+        throw new UnsupportedOperationException();
+        //return (ViewGroup) activity.findViewById(R.id.footer_left);
     }
 
     @Override
     @NotNull
     public ViewGroup getFooterCenter(@NotNull Activity activity) {
-        return (ViewGroup) activity.findViewById(org.solovyev.android.ext.R.id.footer_center);
+        throw new UnsupportedOperationException();
+        //return (ViewGroup) activity.findViewById(R.id.footer_center);
     }
 
     @Override
     @NotNull
     public ViewGroup getFooterRight(@NotNull Activity activity) {
-        return (ViewGroup) activity.findViewById(org.solovyev.android.ext.R.id.footer_right);
+        throw new UnsupportedOperationException();
+        //return (ViewGroup) activity.findViewById(R.id.footer_right);
     }
 
     @NotNull
@@ -234,7 +235,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     public static void handleExceptionStatic(@NotNull Context context, @NotNull Exception e) {
-        if (e instanceof RuntimeIoException) {
+        if (e instanceof HttpRuntimeIoException) {
             if (AndroidUtils2.isUiThread()) {
                 Toast.makeText(context, "No internet connection available: connect to the network and try again!", Toast.LENGTH_LONG).show();
             }

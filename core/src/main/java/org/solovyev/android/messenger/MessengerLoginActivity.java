@@ -12,9 +12,8 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.ActivityDestroyerController;
-import org.solovyev.android.Captcha;
-import org.solovyev.android.ResolvedCaptcha;
+import org.solovyev.android.captcha.Captcha;
+import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.api.ApiError;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
 import org.solovyev.android.messenger.realms.Realm;
@@ -22,7 +21,7 @@ import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.LoginUserAsyncTask;
 import org.solovyev.android.messenger.view.CaptchaViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
 
@@ -128,7 +127,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
                     final Captcha captcha = apiError.getCaptcha();
                     if (captcha == null) {
                         final String errorDescription = apiError.getErrorDescription();
-                        if (!StringUtils.isEmpty(errorDescription)) {
+                        if (!Strings.isEmpty(errorDescription)) {
                             Toast.makeText(MessengerLoginActivity.this, errorDescription, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(MessengerLoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -141,13 +140,6 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
                 }
             }
         }.execute(new LoginUserAsyncTask.Input(login, password, resolvedCaptcha));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        ActivityDestroyerController.getInstance().fireActivityDestroyed(this);
     }
 
     @Override

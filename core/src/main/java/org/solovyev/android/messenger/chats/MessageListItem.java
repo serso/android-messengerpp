@@ -62,7 +62,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
 
     @Override
     public OnClickAction getOnClickAction() {
-        return new SimpleMenuOnClick<MessageListItem>(Arrays.<LabeledMenuItem<ListItemOnClickData<MessageListItem>>>asList(MenuItems.values()), this);
+        return new SimpleMenuOnClick<MessageListItem>(Arrays.<LabeledMenuItem<ListItemOnClickData<MessageListItem>>>asList(MenuItems.values()), this, "message-context-menu");
     }
 
     @Override

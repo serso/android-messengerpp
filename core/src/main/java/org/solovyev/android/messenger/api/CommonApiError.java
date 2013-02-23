@@ -4,7 +4,7 @@ import android.os.Parcel;
 import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.Captcha;
+import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 
 /**

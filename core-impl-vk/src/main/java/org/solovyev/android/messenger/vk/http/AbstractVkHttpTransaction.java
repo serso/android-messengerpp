@@ -7,9 +7,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.RuntimeIoException;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
+import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
@@ -61,7 +61,7 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
                 throw VkResponseErrorException.newInstance(json, this);
             }
         } catch (IOException e) {
-            throw new RuntimeIoException(e);
+            throw new HttpRuntimeIoException(e);
         }
     }
 

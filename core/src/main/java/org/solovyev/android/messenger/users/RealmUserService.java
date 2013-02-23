@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.users;
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.AProperty;
+import org.solovyev.android.properties.AProperty;
 
 import java.util.List;
 

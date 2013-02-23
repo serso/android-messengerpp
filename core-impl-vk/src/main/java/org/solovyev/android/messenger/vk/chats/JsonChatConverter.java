@@ -21,8 +21,8 @@ import org.solovyev.android.messenger.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.vk.messages.JsonMessages;
 import org.solovyev.common.Converter;
-import org.solovyev.common.collections.CollectionsUtils;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.collections.Collections;
+import org.solovyev.common.text.Strings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +84,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
         try {
             final Splitter splitter = Splitter.on(",");
 
-            if (!CollectionsUtils.isEmpty(jsonMessages)) {
+            if (!Collections.isEmpty(jsonMessages)) {
                 for (JsonMessage jsonMessage : jsonMessages) {
                     final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, userService, context);
 
@@ -122,7 +122,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                             chat = new ApiChatImpl(chatId, jsonMessagesResult.getCount(), false);
 
                             final String participantsStr = jsonMessage.getChat_active();
-                            if (!StringUtils.isEmpty(participantsStr)) {
+                            if (!Strings.isEmpty(participantsStr)) {
                                 for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
                                     chat.addParticipant(userService.getUserById(String.valueOf(participantId), context));
                                 }

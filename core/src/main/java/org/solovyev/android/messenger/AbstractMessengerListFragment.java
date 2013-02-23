@@ -33,7 +33,7 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -197,7 +197,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         if (isFilterEnabled()) {
             if (savedInstanceState != null) {
                 final String filter = savedInstanceState.getString(FILTER);
-                if (StringUtils.isEmpty(filter)) {
+                if (Strings.isEmpty(filter)) {
                     setFilterBoxVisible(false);
                 } else {
                     filterInput.setText(filter);
@@ -418,7 +418,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         adapter = createAdapter();
 
         userEventListener = new UiThreadUserEventListener();
-        this.userService.addUserEventListener(userEventListener);
+        this.userService.addListener(userEventListener);
 
         final ListView lv = getListView();
         lv.setTextFilterEnabled(true);
@@ -524,7 +524,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         }
 
         if (userEventListener != null) {
-            this.userService.removeUserEventListener(userEventListener);
+            this.userService.removeListener(userEventListener);
         }
     }
 

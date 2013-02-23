@@ -6,7 +6,7 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
-import org.solovyev.common.collections.CollectionsUtils;
+import org.solovyev.common.collections.Collections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class JsonUserConverter implements Converter<String, List<User>> {
         final List<User> result = new ArrayList<User>(jsonUsers == null ? 0 : jsonUsers.size());
 
         try {
-            if (!CollectionsUtils.isEmpty(jsonUsers)) {
+            if (!Collections.isEmpty(jsonUsers)) {
                 for (JsonUser jsonUser : jsonUsers) {
                     result.add(jsonUser.toUser());
                 }

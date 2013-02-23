@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.android.messenger.vk.users.ApiUserField;
-import org.solovyev.common.utils.StringUtils2;
+import org.solovyev.common.utils.Strings2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +119,7 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
             requestParameters.add(new BasicNameValuePair("offset", String.valueOf(offset)));
         }
 
-        requestParameters.add(new BasicNameValuePair("fields", StringUtils2.getAllValues(Arrays.asList(ApiUserField.uid, ApiUserField.last_name))));
+        requestParameters.add(new BasicNameValuePair("fields", Strings2.getAllValues(Arrays.asList(ApiUserField.uid, ApiUserField.last_name))));
 
         return requestParameters;
     }

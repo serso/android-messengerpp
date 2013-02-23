@@ -13,7 +13,7 @@ import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +147,7 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
 
         @Override
         protected JPredicate<ContactListItem> getFilter(@Nullable final CharSequence prefix) {
-            return StringUtils.isEmpty(prefix) ? emptyPrefixFilter : new ContactFilter(prefix);
+            return Strings.isEmpty(prefix) ? emptyPrefixFilter : new ContactFilter(prefix);
         }
 
         private class ContactFilter implements JPredicate<ContactListItem> {
@@ -176,7 +176,7 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
                     }
 
                     if (shown) {
-                        if (!StringUtils.isEmpty(prefix)) {
+                        if (!Strings.isEmpty(prefix)) {
                             shown = new PrefixFilter<ContactListItem>(prefix.toString().toLowerCase()).apply(listItem);
                         }
                     }

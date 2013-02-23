@@ -10,7 +10,8 @@ import java.util.List;
  * Date: 6/1/12
  * Time: 6:29 PM
  */
-public class CollectionsUtils2 {
+public class Collections2 {
+
     @NotNull
     public static <E> List<List<E>> split(@NotNull List<E> list, int chunkSize) {
         final int size = list.size();

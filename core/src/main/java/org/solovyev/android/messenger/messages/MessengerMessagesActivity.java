@@ -9,7 +9,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.http.RemoteFileService;
+import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
@@ -29,7 +29,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
     @Inject
     @NotNull
-    private RemoteFileService remoteFileService;
+    private ImageLoader imageLoader;
 
     @NotNull
     private static final String CHAT_ID = "chat_id";
@@ -72,7 +72,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
             this.finish();
         }
 
-        getUserService().addUserEventListener(this);
+        getUserService().addListener(this);
 
         final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId(), this);
         if (chat.isPrivate()) {
@@ -103,7 +103,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     protected void onDestroy() {
         super.onDestroy();
 
-        getUserService().removeUserEventListener(this);
+        getUserService().removeListener(this);
     }
 
     @Override

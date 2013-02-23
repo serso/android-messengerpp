@@ -4,12 +4,12 @@ import android.os.Parcel;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.AProperty;
-import org.solovyev.android.APropertyImpl;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
 import org.solovyev.common.VersionedEntity;
 import org.solovyev.common.VersionedEntityImpl;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -114,7 +114,7 @@ public class UserImpl extends JObject implements User {
         final String lastName = getPropertyValueByName("lastName");
 
         result.append(firstName);
-        if (!StringUtils.isEmpty(firstName) && !StringUtils.isEmpty(lastName)) {
+        if (!Strings.isEmpty(firstName) && !Strings.isEmpty(lastName)) {
             result.append(" ");
         }
         result.append(lastName);

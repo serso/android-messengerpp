@@ -14,7 +14,7 @@ import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.http.RemoteFileService;
+import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
@@ -25,9 +25,10 @@ import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
-import org.solovyev.common.collections.CollectionsUtils;
-import org.solovyev.common.text.StringUtils;
-import org.solovyev.common.utils.ListListenersContainer;
+import org.solovyev.common.collections.Collections;
+import org.solovyev.common.listeners.JListeners;
+import org.solovyev.common.listeners.Listeners;
+import org.solovyev.common.text.Strings;
 
 import java.util.*;
 
@@ -68,7 +69,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @Inject
     @NotNull
-    private RemoteFileService remoteFileService;
+    private ImageLoader imageLoader;
     /*
     **********************************************************************
     *
@@ -80,7 +81,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     private static final String EVENT_TAG = "ChatEvent";
 
     @NotNull
-    private final ListListenersContainer<ChatEventListener> listeners = new ListListenersContainer<ChatEventListener>();
+    private final JListeners<ChatEventListener> listeners = Listeners.newWeakRefListeners();
 
     // key: chat id, value: list of participants
     @NotNull
@@ -103,7 +104,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @Override
     public void init() {
-        userService.addUserEventListener(this);
+        userService.addListener(this);
     }
 
     @NotNull
@@ -219,7 +220,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         listeners.fireUserEvents(userEvents);
         getChatService().fireChatEvents(chatEvents);*/
 
-        return Collections.unmodifiableList(chatMessages);
+        return java.util.Collections.unmodifiableList(chatMessages);
     }
 
     @NotNull
@@ -229,7 +230,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
         syncChatMessagesForChat(chatId, context, messages);
 
-        return Collections.unmodifiableList(messages);
+        return java.util.Collections.unmodifiableList(messages);
 
     }
 
@@ -283,11 +284,11 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
             messages = realm.getRealmChatService().getOlderChatMessagesForChat(chatId, userId, offset, context);
             syncChatMessagesForChat(chatId, context, messages);
         } else {
-            messages = Collections.emptyList();
+            messages = java.util.Collections.emptyList();
             Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + chatId);
         }
 
-        return Collections.unmodifiableList(messages);
+        return java.util.Collections.unmodifiableList(messages);
     }
 
     @Override
@@ -325,8 +326,8 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
             imageUri = null;
         }
 
-        if (!StringUtils.isEmpty(imageUri)) {
-            this.remoteFileService.loadImage(imageUri, imageView, R.drawable.empty_icon);
+        if (!Strings.isEmpty(imageUri)) {
+            this.imageLoader.loadImage(imageUri, imageView, R.drawable.empty_icon);
         } else {
             imageView.setImageDrawable(defaultChatIcon);
         }
@@ -379,7 +380,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
             result = chatParticipantsCache.get(chatId);
             if (result == null) {
                 result = getChatDao(context).loadChatParticipants(chatId);
-                if (!CollectionsUtils.isEmpty(result)) {
+                if (!Collections.isEmpty(result)) {
                     chatParticipantsCache.put(chatId, result);
                 }
             }
@@ -446,7 +447,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @Override
     public void fireChatEvents(@NotNull List<ChatEvent> chatEvents) {
-        final List<ChatEventListener> listeners = this.listeners.getListeners();
+        final Collection<ChatEventListener> listeners = this.listeners.getListeners();
         for (ChatEvent chatEvent : chatEvents) {
             Log.d(EVENT_TAG, "Event: " + chatEvent.getChatEventType() + " for chat: " + chatEvent.getChat().getId() + " with data: " + chatEvent.getData());
             for (ChatEventListener listener : listeners) {

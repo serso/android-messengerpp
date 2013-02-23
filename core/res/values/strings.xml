@@ -43,5 +43,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="sex">Sex</string>
+    <string name="c_search_hint">Search</string>
+    <string name="c_appearance_preferences">Appearance settings</string>
+    <string name="c_settings">Settings</string>
 
 </resources>

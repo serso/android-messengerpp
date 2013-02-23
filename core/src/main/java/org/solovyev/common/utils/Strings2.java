@@ -1,6 +1,7 @@
 package org.solovyev.common.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.common.text.Strings;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * Date: 6/1/12
  * Time: 8:14 PM
  */
-public class StringUtils2 {
+public class Strings2 {
 
     @NotNull
     private static final List<Character> ru = Arrays.asList('А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я');
@@ -61,7 +62,7 @@ public class StringUtils2 {
 
     @NotNull
     public static String toHtml(@NotNull CharSequence text) {
-        final String newLineStr = System.getProperty("line.separator");
+        final String newLineStr = Strings.LINE_SEPARATOR;
         assert newLineStr.length() == 1;
 
         final char newline = newLineStr.charAt(0);

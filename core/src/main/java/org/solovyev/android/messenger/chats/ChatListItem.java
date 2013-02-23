@@ -20,7 +20,7 @@ import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.users.ContactListItem;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.text.StringUtils;
+import org.solovyev.common.text.Strings;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -166,7 +166,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
     @NotNull
     private CharSequence getMessageTitle(@NotNull Chat chat, @NotNull ChatMessage message, @NotNull User user) {
         final String authorName = getMessageAuthorDisplayName(chat, message, user);
-        if (StringUtils.isEmpty(authorName)) {
+        if (Strings.isEmpty(authorName)) {
             return Html.fromHtml(message.getBody());
         } else {
             return authorName + ": " + Html.fromHtml(message.getBody());
@@ -225,7 +225,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
     @NotNull
     private static String getChatTitle(@NotNull Chat chat, @NotNull ChatMessage message, @NotNull User user) {
         final String title = message.getTitle();
-        if (StringUtils.isEmpty(title) || title.equals(" ... ")) {
+        if (Strings.isEmpty(title) || title.equals(" ... ")) {
 
             if (chat.isPrivate()) {
                 final User secondUser = message.getSecondUser(user);
