@@ -185,7 +185,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         params.gravity = Gravity.CENTER_VERTICAL;
         root.addView(listViewParent, params);
 
-        final MessengerMultiPaneManager mpm = MessengerApplication.getMultiPaneManager();
+        final MessengerMultiPaneManager mpm = AbstractMessengerApplication.getMultiPaneManager();
         mpm.fillContentPane(this.getActivity(), container, root);
 
         return root;
@@ -401,7 +401,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
     private void prepareLoadingView(@NotNull Resources resources, @Nullable LoadingLayout loadingView, @Nullable ViewGroup paneParent) {
         if (loadingView != null) {
-            MessengerApplication.getMultiPaneManager().fillLoadingLayout(this.getActivity(), paneParent, resources, loadingView);
+            AbstractMessengerApplication.getMultiPaneManager().fillLoadingLayout(this.getActivity(), paneParent, resources, loadingView);
         }
     }
 
@@ -486,7 +486,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
                     if (position >= 0 && position < adapter.getCount()) {
                         adapter.getSelectedItemListener().onItemClick(getListView(), null, position, 0);
 
-                        if (MessengerApplication.getMultiPaneManager().isDualPane(getActivity())) {
+                        if (AbstractMessengerApplication.getMultiPaneManager().isDualPane(getActivity())) {
                             final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
                             if (onClickAction != null) {
                                 onClickAction.onClick(getActivity(), adapter, lv);

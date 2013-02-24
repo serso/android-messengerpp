@@ -1,14 +1,14 @@
-package org.solovyev.android.messenger.vk;
+package org.solovyev.android.messenger;
 
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.vk.VkConfigurationImpl;
 
 /**
  * User: serso
  * Date: 5/24/12
  * Time: 9:48 PM
  */
-public class VkMessengerApplication extends MessengerApplication {
+public class MessengerApplication extends AbstractMessengerApplication {
 
     @NotNull
     public static final String CLIENT_ID = "2970921";
@@ -17,11 +17,8 @@ public class VkMessengerApplication extends MessengerApplication {
     public static final String CLIENT_SECRET = "Scm7M1vxOdDjpeVj81jw";
 
     @NotNull
-    public static final String DB_NAME = "vk";
+    public static final String DB_NAME = "mpp";
     public static final int DB_VERSION = 1;
-
-    @NotNull
-    public static final String REALM_ID = "vk";
 
 
     @Override

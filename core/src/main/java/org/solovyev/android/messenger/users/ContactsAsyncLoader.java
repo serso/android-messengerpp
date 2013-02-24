@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
-import org.solovyev.android.messenger.MessengerApplication;
 
 import java.util.Comparator;
 import java.util.List;
@@ -24,7 +24,7 @@ class ContactsAsyncLoader extends AbstractAsyncLoader<User, ContactListItem> {
 
     @NotNull
     protected List<User> getElements(@NotNull Context context) {
-        return MessengerApplication.getServiceLocator().getUserService().getUserContacts(getUser().getId(), context);
+        return AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(getUser().getId(), context);
     }
 
     @Override

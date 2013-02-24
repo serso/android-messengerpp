@@ -112,7 +112,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         final ViewGroup messagesParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.R.id.messages_list);
         messagesParent.addView(superResult);
 
-        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+        AbstractMessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
 
         return result;
     }
@@ -294,7 +294,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             @NotNull
             @Override
             protected List<ChatMessage> getElements(@NotNull Context context) {
-                return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getId(), getActivity());
+                return AbstractMessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getId(), getActivity());
             }
 
             @Override

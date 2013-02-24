@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.db;
 
-import android.app.Application;
+import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +16,8 @@ import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 public class MessengerSQLiteOpenHelper extends CommonSQLiteOpenHelper {
 
     @Inject
-    public MessengerSQLiteOpenHelper(@NotNull Application application,
+    public MessengerSQLiteOpenHelper(@NotNull Context context,
                                      @NotNull SQLiteOpenHelperConfiguration configuration) {
-        super(application, configuration);
+        super(context, configuration);
     }
 }

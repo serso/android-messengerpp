@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.vk;
+package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteDatabase;
 import com.google.inject.Singleton;
@@ -11,12 +11,12 @@ import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 * Time: 12:16 AM
 */
 @Singleton
-public class VkMessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
+public class MessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
 
     @NotNull
     @Override
     public String getName() {
-        return VkMessengerApplication.DB_NAME;
+        return MessengerApplication.DB_NAME;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class VkMessengerDbConfiguration implements SQLiteOpenHelperConfiguration
 
     @Override
     public int getVersion() {
-        return VkMessengerApplication.DB_VERSION;
+        return MessengerApplication.DB_VERSION;
     }
 }

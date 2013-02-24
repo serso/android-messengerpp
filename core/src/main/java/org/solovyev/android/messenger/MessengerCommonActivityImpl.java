@@ -20,7 +20,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.AndroidUtils2;
+import org.solovyev.android.AThreads;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
@@ -131,7 +131,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
     private void checkUserLoggedIn(@NotNull Activity activity) {
         try {
-            this.user = MessengerApplication.getServiceLocator().getAuthServiceFacade().getUser(activity);
+            this.user = AbstractMessengerApplication.getServiceLocator().getAuthServiceFacade().getUser(activity);
         } catch (UserIsNotLoggedInException e) {
             MessengerLoginActivity.startActivity(activity);
         }
@@ -236,17 +236,17 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
     public static void handleExceptionStatic(@NotNull Context context, @NotNull Exception e) {
         if (e instanceof HttpRuntimeIoException) {
-            if (AndroidUtils2.isUiThread()) {
+            if (AThreads.isUiThread()) {
                 Toast.makeText(context, "No internet connection available: connect to the network and try again!", Toast.LENGTH_LONG).show();
             }
             Log.d("Msg_NoInternet", e.getMessage(), e);
         } else if (e instanceof IllegalJsonRuntimeException) {
-            if (AndroidUtils2.isUiThread()) {
+            if (AThreads.isUiThread()) {
                 Toast.makeText(context, "The response from server is not valid!", Toast.LENGTH_LONG).show();
             }
             Log.e("Msg_InvalidJson", e.getMessage(), e);
         } else {
-            if (AndroidUtils2.isUiThread()) {
+            if (AThreads.isUiThread()) {
                 Toast.makeText(context, "Something is going wrong!", Toast.LENGTH_LONG).show();
             }
             Log.e("Msg_Exception", e.getMessage(), e);

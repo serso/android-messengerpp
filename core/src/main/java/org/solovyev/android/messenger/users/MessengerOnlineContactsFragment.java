@@ -3,8 +3,8 @@ package org.solovyev.android.messenger.users;
 import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.view.AbstractOnRefreshListener;
@@ -28,7 +28,7 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
             @Override
             public void onRefresh() {
                 try {
-                    MessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, getActivity(), new Runnable() {
+                    AbstractMessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, getActivity(), new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

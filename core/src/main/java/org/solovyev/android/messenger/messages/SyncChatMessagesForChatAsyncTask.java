@@ -4,7 +4,7 @@ import android.content.Context;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 
@@ -34,9 +34,9 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
         final Context context = getContext();
         if (context != null) {
             if (!input.older) {
-                MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.chatId, input.userId, context);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.chatId, input.userId, context);
             } else {
-                MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.chatId, input.userId, context);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.chatId, input.userId, context);
             }
         }
 

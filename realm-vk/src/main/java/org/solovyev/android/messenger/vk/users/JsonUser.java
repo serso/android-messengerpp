@@ -3,14 +3,14 @@ package org.solovyev.android.messenger.vk.users;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserImpl;
 import org.solovyev.android.messenger.users.UserSyncDataImpl;
-import org.solovyev.common.VersionedEntityImpl;
+import org.solovyev.android.messenger.vk.VkRealm;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.APropertyImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ class JsonUser {
 
         final String onlineProperty = getOnline();
         if (onlineProperty != null) {
-            properties.add(APropertyImpl.newInstance("online", onlineProperty));
+            properties.add(APropertyImpl.newInstance(User.PROPERTY_ONLINE, onlineProperty));
         }
         properties.add(APropertyImpl.newInstance("bdate", bdate));
         properties.add(APropertyImpl.newInstance("cityId", String.valueOf(city)));
@@ -93,7 +93,7 @@ class JsonUser {
         properties.add(APropertyImpl.newInstance("photoBig", photo_big));
         properties.add(APropertyImpl.newInstance("photoRec", photo_rec));
 
-        return UserImpl.newInstance(new VersionedEntityImpl<String>(uid), UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
+        return UserImpl.newInstance(VkRealm.REALM_ID, uid, UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
     }
 
     @Nullable

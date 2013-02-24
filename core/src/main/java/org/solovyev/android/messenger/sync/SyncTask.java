@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.sync;
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
@@ -37,7 +37,7 @@ public enum SyncTask {
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
                 final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                MessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getId(), context);
+                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -66,7 +66,7 @@ public enum SyncTask {
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
                 final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                MessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getId(), context);
+                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -97,7 +97,7 @@ public enum SyncTask {
             try {
                 final User user = getAuthService().getUser(syncData.getRealmId(), context);
 
-                MessengerApplication.getServiceLocator().getUserService().fetchUserIcons(user, context);
+                AbstractMessengerApplication.getServiceLocator().getUserService().fetchUserIcons(user, context);
 
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
@@ -115,7 +115,7 @@ public enum SyncTask {
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
                 final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                MessengerApplication.getServiceLocator().getUserService().checkOnlineUseContacts(user.getId(), context);
+                AbstractMessengerApplication.getServiceLocator().getUserService().checkOnlineUseContacts(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -144,7 +144,7 @@ public enum SyncTask {
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
                 final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                MessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getId(), context);
+                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -161,7 +161,7 @@ public enum SyncTask {
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
                 final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                MessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getId(), context);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getId(), context);
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -170,7 +170,7 @@ public enum SyncTask {
 
     @NotNull
     private static AuthService getAuthService() {
-        return MessengerApplication.getServiceLocator().getAuthService();
+        return AbstractMessengerApplication.getServiceLocator().getAuthService();
     }
 
     public abstract boolean isTime(@NotNull SyncData syncData, @NotNull Context context);

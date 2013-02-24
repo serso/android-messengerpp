@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -55,7 +55,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View result = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact).build(this.getActivity());
 
-        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+        AbstractMessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
 
         result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -89,7 +89,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         contactName.setText(contact.getDisplayName());
 
         final ImageView contactIcon = (ImageView) root.findViewById(R.id.contact_icon);
-        MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact, getActivity());
+        AbstractMessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact, getActivity());
 
         final List<AProperty> contactProperties = realm.getRealmUserService().getUserProperties(contact, this.getActivity());
         for (AProperty contactProperty : contactProperties) {

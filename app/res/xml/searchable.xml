@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<searchable xmlns:a="http://schemas.android.com/apk/res/android"
-            a:label="@string/c_app_name"
-            a:searchSuggestAuthority="NotesSearchSuggestions"
-            a:searchSuggestSelection=" ?">
-</searchable>

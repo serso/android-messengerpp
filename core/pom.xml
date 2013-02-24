@@ -13,11 +13,10 @@
 
     <artifactId>android-messenger-core</artifactId>
     <name>Android Messenger Core</name>
+    <version>1.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.version>1.0.4-SNAPSHOT</common.version>
-        <android.common.version>1.0.7-SNAPSHOT</android.common.version>
     </properties>
 
 
@@ -28,40 +27,34 @@
         <dependency>
             <groupId>org.solovyev</groupId>
             <artifactId>common-core</artifactId>
-            <version>${common.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev</groupId>
             <artifactId>common-core-jodatime</artifactId>
-            <version>${common.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
             <artifactId>android-common-ads</artifactId>
-            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
             <artifactId>android-common-http</artifactId>
-            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
             <artifactId>android-common-view</artifactId>
-            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
             <artifactId>android-common-sherlock</artifactId>
-            <version>${android.common.version}</version>
             <type>apklib</type>
         </dependency>
 
@@ -71,7 +64,6 @@
         <dependency>
             <groupId>com.github.handmark.pulltorefresh</groupId>
             <artifactId>pulltorefresh-library</artifactId>
-            <version>1.3.0</version>
             <type>apklib</type>
         </dependency>
 
@@ -79,34 +71,29 @@
         <dependency>
             <groupId>com.viewpagerindicator</groupId>
             <artifactId>library</artifactId>
-            <version>2.3.1</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>com.actionbarsherlock</groupId>
             <artifactId>library</artifactId>
-            <version>4.2.0</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>org.roboguice</groupId>
             <artifactId>roboguice</artifactId>
-            <version>2.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.rtyley</groupId>
             <artifactId>roboguice-sherlock</artifactId>
-            <version>1.5-SNAPSHOT</version>
         </dependency>
 
         <!--  Gson: Java to Json conversion -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.2.1</version>
         </dependency>
 
         <!--Simple XML-->
@@ -114,7 +101,6 @@
         <dependency>
             <groupId>org.simpleframework</groupId>
             <artifactId>simple-xml</artifactId>
-            <version>2.6.1</version>
             <exclusions>
                 <exclusion>
                     <artifactId>stax-api</artifactId>
@@ -131,41 +117,34 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>4.0.1.2</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.7</version>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>annotations</artifactId>
-            <version>7.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>11.0.2</version>
         </dependency>
-
 
     </dependencies>
 

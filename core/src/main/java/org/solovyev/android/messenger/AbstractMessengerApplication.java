@@ -39,7 +39,7 @@ import roboguice.RoboGuice;
  * Date: 5/25/12
  * Time: 8:16 PM
  */
-public abstract class MessengerApplication extends Application implements MessengerApiProvider, MessengerServiceLocator, MessengerMultiPaneManager {
+public abstract class AbstractMessengerApplication extends Application implements MessengerApiProvider, MessengerServiceLocator, MessengerMultiPaneManager {
 
     /*
     **********************************************************************
@@ -131,9 +131,9 @@ public abstract class MessengerApplication extends Application implements Messen
     private MessengerApiConnection connection;
 
     @NotNull
-    private static MessengerApplication instance;
+    private static AbstractMessengerApplication instance;
 
-    public MessengerApplication() {
+    public AbstractMessengerApplication() {
         instance = this;
     }
 
@@ -198,7 +198,7 @@ public abstract class MessengerApplication extends Application implements Messen
 
             Log.d(getClass().getSimpleName(), "bindService()");
         } else {
-            Toast.makeText(MessengerApplication.this, "Cannot bind - service already bound", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AbstractMessengerApplication.this, "Cannot bind - service already bound", Toast.LENGTH_SHORT).show();
         }
     }
 

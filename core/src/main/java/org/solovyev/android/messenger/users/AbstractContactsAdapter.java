@@ -96,7 +96,7 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
 
     protected void removeListItem(@NotNull User user, @NotNull String contactId) {
         // todo serso: not good solution => better way is to load full user object for contact (but it can take long time)
-        final User contact = UserImpl.newInstance(contactId);
+        final User contact = UserImpl.newFakeInstance(contactId);
         removeListItem(user, contact);
     }
 

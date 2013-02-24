@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0.0"
+          package="org.solovyev.android.messenger.test">
+
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8"/>
+
+    <instrumentation
+            android:targetPackage="org.solovyev.android.messenger"
+            android:name="android.test.InstrumentationTestRunner"/>
+
+    <application android:icon="@drawable/mpp_test_icon"
+                 android:label="@string/mpp_test_app_name">
+        <uses-library android:name="android.test.runner"/>
+    </application>
+
+</manifest>

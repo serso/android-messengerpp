@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.http.HttpTransactions;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -141,12 +141,12 @@ public class VkRealmChatService implements RealmChatService {
 
     @NotNull
     private UserService getUserService() {
-        return MessengerApplication.getServiceLocator().getUserService();
+        return AbstractMessengerApplication.getServiceLocator().getUserService();
     }
 
     @NotNull
     private ChatService getChatService() {
-        return MessengerApplication.getServiceLocator().getChatService();
+        return AbstractMessengerApplication.getServiceLocator().getChatService();
     }
 
 
@@ -154,7 +154,7 @@ public class VkRealmChatService implements RealmChatService {
     @Override
     public List<ApiChat> getUserChats(@NotNull String userId, @NotNull Context context) {
         try {
-            final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(userId, context);
+            final User user = AbstractMessengerApplication.getServiceLocator().getUserService().getUserById(userId, context);
             return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(user, context));
         } catch (IOException e) {
             throw new HttpRuntimeIoException(e);

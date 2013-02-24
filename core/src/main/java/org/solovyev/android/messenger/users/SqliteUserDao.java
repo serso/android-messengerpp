@@ -149,6 +149,14 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         return result;
     }
 
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
+
 
     private static final class InsertContact implements DbExec {
 
@@ -234,7 +242,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.query("users", null, null, null, null, null, null);
+            return db.query("users", new String[]{"id"}, null, null, null, null, null);
         }
 
         @NotNull
@@ -318,21 +326,12 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         public void exec(@NotNull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
-            final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-
-            final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
-            final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
-
-            final ContentValues values = new ContentValues();
-
-            values.put("id", user.getId());
-            values.put("version", user.getVersion());
-            values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
-            values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
+            final ContentValues values = getUserAsContentValues(user);
 
             db.insert("users", null, values);
         }
     }
+
 
     private static final class UpdateUser extends AbstractObjectDbExec<User> {
 
@@ -344,16 +343,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         public void exec(@NotNull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
-            final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-
-            final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
-            final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
-
-            final ContentValues values = new ContentValues();
-            values.put("id", user.getId());
-            values.put("version", user.getVersion());
-            values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
-            values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
+            final ContentValues values = getUserAsContentValues(user);
 
             db.update("users", values, "id = ?", new String[]{String.valueOf(user.getId())});
         }
@@ -409,5 +399,24 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         public boolean apply(@javax.annotation.Nullable User user) {
             return user != null && userId.equals(user.getId());
         }
+    }
+
+    @NotNull
+    private static ContentValues getUserAsContentValues(@NotNull User user) {
+        final ContentValues values = new ContentValues();
+
+        final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
+
+        final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
+        final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
+
+        values.put("id", user.getId());
+        values.put("version", user.getVersion());
+        values.put("realm_id", user.getRealmUser().getRealmId());
+        values.put("realm_user_id", user.getRealmUser().getRealmUserId());
+        values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
+        values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
+
+        return values;
     }
 }

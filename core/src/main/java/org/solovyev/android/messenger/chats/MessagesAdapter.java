@@ -9,8 +9,8 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 
@@ -93,7 +93,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
 
                 final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("typing" + userId);
                 liteChatMessage.setSendDate(DateTime.now());
-                liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(userId, context));
+                liteChatMessage.setAuthor(AbstractMessengerApplication.getServiceLocator().getUserService().getUserById(userId, context));
                 liteChatMessage.setBody("User start typing...");
 
                 final MessageListItem listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));

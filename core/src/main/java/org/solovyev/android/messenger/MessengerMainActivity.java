@@ -191,7 +191,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
 
                 @Override
                 protected Chat doInBackground(Void... params) {
-                    return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(getUser().getId(), contact.getId(), MessengerMainActivity.this);
+                    return AbstractMessengerApplication.getServiceLocator().getUserService().getPrivateChat(getUser().getId(), contact.getId(), MessengerMainActivity.this);
                 }
 
                 @Override

@@ -1,17 +1,15 @@
-package org.solovyev.android.messenger.vk;
+package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
-import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
-import org.solovyev.android.messenger.http.MessengerRemoteFileService;
-import org.solovyev.android.messenger.MessengerConfiguration;
-import org.solovyev.android.messenger.MessengerConfigurationImpl;
+import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
+import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
+import org.solovyev.android.messenger.http.MessengerRemoteFileService;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
@@ -30,6 +28,7 @@ import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.vk.VkRealm;
 import org.solovyev.android.messenger.vk.registration.DummyRegistrationService;
 
 /**
@@ -37,11 +36,11 @@ import org.solovyev.android.messenger.vk.registration.DummyRegistrationService;
  * Date: 8/12/12
  * Time: 10:27 PM
  */
-public class VkMessengerModule extends AbstractModule {
+public class MessengerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(SQLiteOpenHelperConfiguration.class).to(VkMessengerDbConfiguration.class);
+        bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
         bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
         bind(Realm.class).to(VkRealm.class);
         bind(RealmService.class).to(DefaultRealmService.class);

@@ -39,6 +39,10 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         this.lastUserIconsSyncDate = lastUserIconsSyncDate;
     }
 
+    @NotNull
+    public static UserSyncDataImpl newNeverSyncedInstance() {
+        return new UserSyncDataImpl(null, null, null, null);
+    }
 
     @NotNull
     public static UserSyncDataImpl newInstance(@Nullable DateTime lastPropertiesSyncDate,

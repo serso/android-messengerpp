@@ -17,8 +17,11 @@ import org.solovyev.android.messenger.vk.users.VkRealmUserService;
 */
 public class VkRealm extends AbstractRealm {
 
+    @NotNull
+    public static final String REALM_ID = "vk";
+
     public VkRealm() {
-        super(VkMessengerApplication.REALM_ID, new VkRealmUserService(), new VkRealmChatService(), new VkRealmAuthService());
+        super(REALM_ID, new VkRealmUserService(), new VkRealmChatService(), new VkRealmAuthService());
     }
 
     @NotNull

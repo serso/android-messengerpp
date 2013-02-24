@@ -15,7 +15,7 @@ import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -135,7 +135,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
     }
 
     private boolean isUserMessagesToTheRight(@NotNull SharedPreferences preferences) {
-        return MessengerApplication.Preferences.Gui.Chat.userMessagesPosition.getPreference(preferences) == MessengerApplication.Preferences.Gui.Chat.UserIconPosition.right;
+        return AbstractMessengerApplication.Preferences.Gui.Chat.userMessagesPosition.getPreference(preferences) == AbstractMessengerApplication.Preferences.Gui.Chat.UserIconPosition.right;
     }
 
     private boolean isUserMessage() {
@@ -151,12 +151,12 @@ public class MessageListItem implements ListItem, ChatEventListener {
 
         final ImageView messageIcon = (ImageView) root.findViewById(R.id.message_icon);
         if (userMessage) {
-            fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showUserIcon.getPreference(preferences));
+            fillMessageIcon(context, messageIcon, AbstractMessengerApplication.Preferences.Gui.Chat.showUserIcon.getPreference(preferences));
         } else {
             if (chat.isPrivate()) {
-                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showContactIconInPrivateChat.getPreference(preferences));
+                fillMessageIcon(context, messageIcon, AbstractMessengerApplication.Preferences.Gui.Chat.showContactIconInPrivateChat.getPreference(preferences));
             } else {
-                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showContactIconInChat.getPreference(preferences));
+                fillMessageIcon(context, messageIcon, AbstractMessengerApplication.Preferences.Gui.Chat.showContactIconInChat.getPreference(preferences));
             }
         }
     }
@@ -164,7 +164,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
     private void fillMessageIcon(@NotNull Context context, @NotNull ImageView messageIcon, @NotNull Boolean show) {
         if (show) {
             messageIcon.setVisibility(View.VISIBLE);
-            MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(messageIcon, message, chat, user, context);
+            AbstractMessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(messageIcon, message, chat, user, context);
         } else {
             messageIcon.setImageResource(R.drawable.empty_icon);
             messageIcon.setVisibility(View.GONE);

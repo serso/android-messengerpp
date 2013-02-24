@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.RoboGuice;
@@ -93,7 +93,7 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
             view.setTag(tag);
 
             final ImageView contactIcon = (ImageView) view.findViewById(R.id.contact_icon);
-            MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, context, contactIcon);
+            AbstractMessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, context, contactIcon);
 
             final TextView contactName = (TextView) view.findViewById(R.id.contact_name);
             contactName.setText(contact.getDisplayName());

@@ -79,8 +79,8 @@ public class MessengerStartActivity extends RoboActivity {
             Context context = getContext();
             if (context != null) {
                 for (User user : users) {
-                    MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getId(), context);
-                    MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getId(), context);
+                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getId(), context);
+                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserChats(user.getId(), context);
                 }
             }
 

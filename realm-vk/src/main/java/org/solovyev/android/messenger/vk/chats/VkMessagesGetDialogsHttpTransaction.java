@@ -4,7 +4,7 @@ import android.content.Context;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.User;
@@ -71,6 +71,6 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
 
     @Override
     protected List<ApiChat> getResponseFromJson(@NotNull String json) throws IllegalJsonException {
-        return new JsonChatConverter(user, null, null, MessengerApplication.getServiceLocator().getUserService(), context).convert(json);
+        return new JsonChatConverter(user, null, null, AbstractMessengerApplication.getServiceLocator().getUserService(), context).convert(json);
     }
 }

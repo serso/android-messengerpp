@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.users;
 
-import android.os.Parcel;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.realms.RealmUser;
+import org.solovyev.android.messenger.realms.RealmUserImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
@@ -28,6 +29,9 @@ public class UserImpl extends JObject implements User {
     private String login;
 
     @NotNull
+    private RealmUser realmUser;
+
+    @NotNull
     private UserSyncData userSyncData;
 
     @NotNull
@@ -40,12 +44,23 @@ public class UserImpl extends JObject implements User {
     }
 
     @NotNull
+    public static User newInstance(@NotNull String reamId,
+                                   @NotNull String realmUserId,
+                                   @NotNull UserSyncData userSyncData,
+                                   @NotNull List<AProperty> properties) {
+        final RealmUser realmUser = RealmUserImpl.newInstance(reamId, realmUserId);
+        return newInstance(new VersionedEntityImpl<String>(realmUser.getUserId()), realmUser, userSyncData, properties);
+    }
+
+    @NotNull
     public static User newInstance(@NotNull VersionedEntity<String> versionedEntity,
+                                   @NotNull RealmUser realmUser,
                                    @NotNull UserSyncData userSyncData,
                                    @NotNull List<AProperty> properties) {
         final UserImpl result = new UserImpl();
 
         result.versionedEntity = versionedEntity;
+        result.realmUser = realmUser;
         result.login = String.valueOf(versionedEntity.getId());
         result.userSyncData = userSyncData;
         result.properties.addAll(properties);
@@ -58,34 +73,8 @@ public class UserImpl extends JObject implements User {
     }
 
     @NotNull
-    public static User newInstance(@NotNull String userId) {
-        return newInstance(new VersionedEntityImpl<String>(userId), UserSyncDataImpl.newInstance(null, null, null, null), Collections.<AProperty>emptyList());
-    }
-
-    @NotNull
-    public static User fromParcel(@NotNull Parcel in) {
-        throw new UnsupportedOperationException();
-        /*final Integer id = in.readInt();
-        final Integer version = in.readInt();
-        final String login = in.readString();
-
-        final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-        final String lastPropertiesSyncDateString = in.readString();
-        DateTime lastPropertiesSyncDate = null;
-        if ( lastPropertiesSyncDateString != null ) {
-            lastPropertiesSyncDate = dateTimeFormatter.parseDateTime(lastPropertiesSyncDateString);
-        }
-
-        final String lastFriendsSyncDateString = in.readString();
-        DateTime lastFriendsSyncDate = null;
-        if ( lastFriendsSyncDateString != null ) {
-            lastFriendsSyncDate = dateTimeFormatter.parseDateTime(lastFriendsSyncDateString);
-        }
-
-        final List<AProperty> properties = new ArrayList<AProperty>();
-        in.readList(properties, Thread.currentThread().getContextClassLoader());
-
-        return newInstance(new VersionedEntityImpl(id, version), lastPropertiesSyncDate, lastFriendsSyncDate, properties);*/
+    public static User newFakeInstance(@NotNull String userId) {
+        return newInstance(new VersionedEntityImpl<String>(userId), RealmUserImpl.newInstance(FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
     }
 
     @Override
@@ -130,7 +119,7 @@ public class UserImpl extends JObject implements User {
 
     @Override
     public boolean isOnline() {
-        return Boolean.valueOf(getPropertyValueByName("online"));
+        return Boolean.valueOf(getPropertyValueByName(PROPERTY_ONLINE));
     }
 
     @Override
@@ -171,15 +160,16 @@ public class UserImpl extends JObject implements User {
         return clone;
     }
 
-    /*    @Override
-    public int describeContents() {
-        return 0;
-    }*/
-
     @Override
     @NotNull
     public List<AProperty> getProperties() {
         return Collections.unmodifiableList(properties);
+    }
+
+    @NotNull
+    @Override
+    public RealmUser getRealmUser() {
+        return this.realmUser;
     }
 
     @Override
@@ -187,25 +177,14 @@ public class UserImpl extends JObject implements User {
         return this.propertiesMap.get(name);
     }
 
-/*    @Override
-    public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(versionedEntity.getId());
-        out.writeInt(versionedEntity.getVersion());
-        out.writeString(login);
-        final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-        out.writeString(this.lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(this.lastPropertiesSyncDate));
-        out.writeString(this.lastFriendsSyncDate == null ? null : dateTimeFormatter.print(this.lastFriendsSyncDate));
-        out.writeList(properties);
-    }*/
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserImpl)) return false;
 
-        UserImpl user = (UserImpl) o;
+        final UserImpl that = (UserImpl) o;
 
-        if (!versionedEntity.equals(user.versionedEntity)) return false;
+        if (!versionedEntity.equals(that.versionedEntity)) return false;
 
         return true;
     }
@@ -233,6 +212,7 @@ public class UserImpl extends JObject implements User {
         final UserImpl clone = (UserImpl) super.clone();
 
         clone.versionedEntity = versionedEntity.clone();
+        clone.realmUser = realmUser.clone();
 
         return clone;
     }
@@ -245,11 +225,11 @@ public class UserImpl extends JObject implements User {
         Iterables.removeIf(clone.properties, new Predicate<AProperty>() {
             @Override
             public boolean apply(@Nullable AProperty property) {
-                return property != null && property.getName().equals("online");
+                return property != null && property.getName().equals(PROPERTY_ONLINE);
             }
         });
-        clone.properties.add(APropertyImpl.newInstance("online", Boolean.toString(online)));
-        clone.propertiesMap.put("online", Boolean.toString(online));
+        clone.properties.add(APropertyImpl.newInstance(PROPERTY_ONLINE, Boolean.toString(online)));
+        clone.propertiesMap.put(PROPERTY_ONLINE, Boolean.toString(online));
 
         return clone;
     }

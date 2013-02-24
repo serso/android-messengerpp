@@ -3,9 +3,9 @@ package org.solovyev.android.messenger.chats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.common.JObject;
 import org.solovyev.common.VersionedEntity;
 import org.solovyev.common.VersionedEntityImpl;
@@ -116,7 +116,7 @@ public class ChatImpl extends JObject implements Chat {
     public String getSecondUserId() {
         assert isPrivate();
 
-        return MessengerApplication.getServiceLocator().getChatService().getSecondUserId(this);
+        return AbstractMessengerApplication.getServiceLocator().getChatService().getSecondUserId(this);
     }
 
     @Override

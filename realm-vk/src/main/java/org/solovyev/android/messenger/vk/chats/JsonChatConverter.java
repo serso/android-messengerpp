@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatMessage;
@@ -95,7 +95,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         final User secondUser = message.getSecondUser(user);
 
                         if (secondUser != null) {
-                            final String chatId = MessengerApplication.getServiceLocator().getChatService().createPrivateChatId(user.getId(), secondUser.getId());
+                            final String chatId = AbstractMessengerApplication.getServiceLocator().getChatService().createPrivateChatId(user.getId(), secondUser.getId());
 
                             ApiChatImpl chat = fakeChats.get(chatId);
                             if (chat == null) {
