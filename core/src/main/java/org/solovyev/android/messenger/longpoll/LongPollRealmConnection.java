@@ -16,6 +16,7 @@ import org.solovyev.android.messenger.users.User;
  */
 public class LongPollRealmConnection extends AbstractRealmConnection {
 
+    public static final String TAG = "LongPolling";
     @NotNull
     private final RealmLongPollService realmLongPollService;
 
@@ -32,12 +33,12 @@ public class LongPollRealmConnection extends AbstractRealmConnection {
         while (!isStopped()) {
             try {
 
-                Log.i("LongPolling", "Long polling initiated!");
+                Log.i(TAG, "Long polling initiated!");
                 Object longPollingData = realmLongPollService.startLongPolling();
 
                 // second loop do long poll job for one session
                 while (!isStopped()) {
-                    Log.i("LongPolling", "Long polling started!");
+                    Log.i(TAG, "Long polling started!");
 
                     final User user = AbstractMessengerApplication.getServiceLocator().getAuthService().getUser(getRealm().getId(), getContext());
                     final LongPollResult longPollResult = realmLongPollService.waitForResult(longPollingData);
@@ -46,15 +47,16 @@ public class LongPollRealmConnection extends AbstractRealmConnection {
                         longPollResult.doUpdates(user, getContext());
                     }
 
-                    Log.i("LongPolling", "Long polling ended!");
+                    Log.i(TAG, "Long polling ended!");
 
                 }
 
             } catch (RuntimeException e) {
-                Log.e("LongPolling", e.getMessage(), e);
+                Log.e(TAG, e.getMessage(), e);
             } catch (UserIsNotLoggedInException e) {
-                // wait for login
+                waitForLogin();
             }
         }
     }
+
 }

@@ -73,7 +73,7 @@ public interface UserService extends UserEventListeners {
 
     void mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> apiChats, @NotNull Context context);
 
-    void checkOnlineUseContacts(@NotNull String userId, @NotNull Context context);
+    void checkOnlineUserContacts(@NotNull String userId, @NotNull Context context);
 
     void fetchUserIcons(@NotNull User user, @NotNull Context context);
 }

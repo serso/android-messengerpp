@@ -362,7 +362,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void checkOnlineUseContacts(@NotNull String userId, @NotNull Context context) {
+    public void checkOnlineUserContacts(@NotNull String userId, @NotNull Context context) {
         final List<User> contacts = realm.getRealmUserService().checkOnlineUsers(getUserContacts(userId, context));
 
         final User user = getUserById(userId, context);

@@ -6,6 +6,7 @@ package org.solovyev.android.messenger.security;
  * Time: 11:27 PM
  */
 public class UserIsNotLoggedInException extends Exception {
+
     public UserIsNotLoggedInException() {
     }
 

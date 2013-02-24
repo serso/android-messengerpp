@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
+import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.realms.Realm;
 
@@ -13,6 +14,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Time: 6:10 PM
  */
 public abstract class AbstractRealmConnection implements RealmConnection {
+
+    @NotNull
+    private static final String TAG = "RealmConnection";
 
     @NotNull
     private final Realm realm;
@@ -62,6 +66,14 @@ public abstract class AbstractRealmConnection implements RealmConnection {
     @Override
     public final void stop() {
         stopPolling.set(true);
+    }
+
+    protected final void waitForLogin() {
+        try {
+            Thread.sleep(5000L);
+        } catch (InterruptedException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
     public static class ContextIsNotActiveException extends Exception {

@@ -12,6 +12,7 @@
     <modules>
         <module>core</module>
         <module>realm-vk</module>
+        <module>realm-xmpp</module>
         <module>app</module>
         <module>app-test</module>
     </modules>
