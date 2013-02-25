@@ -3,7 +3,7 @@ package org.solovyev.android.messenger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 
 /**
  * User: serso
@@ -15,14 +15,14 @@ public class MessengerConfigurationImpl implements MessengerConfiguration {
 
     @Inject
     @NotNull
-    private Realm realm;
+    private RealmDef realm;
 
     public MessengerConfigurationImpl() {
     }
 
     @NotNull
     @Override
-    public Realm getRealm() {
+    public RealmDef getRealm() {
         return this.realm;
     }
 }

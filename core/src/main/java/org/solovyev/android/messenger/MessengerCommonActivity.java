@@ -18,9 +18,6 @@ import org.solovyev.android.messenger.users.User;
  */
 public interface MessengerCommonActivity {
 
-    @NotNull
-    User getUser();
-
     void onCreate(@NotNull SherlockFragmentActivity activity, Bundle savedInstanceState);
 
     void onRestart(@NotNull Activity activity);

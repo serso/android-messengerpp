@@ -24,9 +24,7 @@ import org.solovyev.android.AThreads;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
-import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.sherlock.tabs.ActionBarFragmentTabListener;
 
 /**
@@ -37,9 +35,6 @@ import org.solovyev.android.sherlock.tabs.ActionBarFragmentTabListener;
 public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
     private static final String SELECTED_NAV = "selected_nav";
-
-    @NotNull
-    private User user;
 
     private int layoutId;
 
@@ -58,8 +53,6 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
     @Override
     public void onCreate(@NotNull final SherlockFragmentActivity activity, Bundle savedInstanceState) {
-        checkUserLoggedIn(activity);
-
         //activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         activity.setContentView(layoutId);
@@ -128,24 +121,8 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
         actionBar.addTab(tab);
     }
 
-
-    private void checkUserLoggedIn(@NotNull Activity activity) {
-        try {
-            this.user = AbstractMessengerApplication.getServiceLocator().getAuthServiceFacade().getUser(activity);
-        } catch (UserIsNotLoggedInException e) {
-            MessengerLoginActivity.startActivity(activity);
-        }
-    }
-
     @Override
     public void onRestart(@NotNull Activity activity) {
-        checkUserLoggedIn(activity);
-    }
-
-    @Override
-    @NotNull
-    public User getUser() {
-        return user;
     }
 
     @Override

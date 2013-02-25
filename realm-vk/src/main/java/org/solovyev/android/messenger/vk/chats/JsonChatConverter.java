@@ -19,7 +19,7 @@ import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.vk.VkRealm;
+import org.solovyev.android.messenger.vk.VkRealmDef;
 import org.solovyev.android.messenger.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.vk.messages.JsonMessages;
@@ -124,7 +124,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         ApiChatImpl chat = chats.get(chatId);
                         if (chat == null) {
                             // create new chat object
-                            chat = ApiChatImpl.newInstance(RealmEntityImpl.newInstance(VkRealm.REALM_ID, chatId), jsonMessagesResult.getCount(), false);
+                            chat = ApiChatImpl.newInstance(RealmEntityImpl.newInstance(VkRealmDef.REALM_ID, chatId), jsonMessagesResult.getCount(), false);
 
                             final String participantsStr = jsonMessage.getChat_active();
                             if (!Strings.isEmpty(participantsStr)) {

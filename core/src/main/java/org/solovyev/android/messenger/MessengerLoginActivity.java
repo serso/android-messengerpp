@@ -16,7 +16,7 @@ import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.api.ApiError;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.LoginUserAsyncTask;
 import org.solovyev.android.messenger.view.CaptchaViewBuilder;
@@ -59,7 +59,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
     public static void startActivity(@NotNull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerLoginActivity.class);
-        result.putExtra(REALM, RoboGuice.getInjector(activity).getInstance(Realm.class).getId());
+        result.putExtra(REALM, RoboGuice.getInjector(activity).getInstance(RealmDef.class).getId());
         activity.startActivity(result);
     }
 

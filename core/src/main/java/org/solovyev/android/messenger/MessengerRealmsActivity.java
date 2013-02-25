@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.ConfiguredRealm;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.ConfiguredRealmListItem;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
@@ -34,7 +34,7 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
         setFragment(R.id.content_first_pane, new MessengerRealmsListFragment());
     }
 
-    public static class MessengerRealmsListFragment extends AbstractMessengerListFragment<ConfiguredRealm, ConfiguredRealmListItem> {
+    public static class MessengerRealmsListFragment extends AbstractMessengerListFragment<Realm, ConfiguredRealmListItem> {
 
         @Inject
         @NotNull
@@ -65,15 +65,15 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
         @Override
         protected AbstractMessengerListItemAdapter<ConfiguredRealmListItem> createAdapter() {
             final List<ConfiguredRealmListItem> listItems = new ArrayList<ConfiguredRealmListItem>();
-            for (ConfiguredRealm configuredRealm : realmService.getConfiguredRealms()) {
-                listItems.add(new ConfiguredRealmListItem(configuredRealm));
+            for (Realm realm : realmService.getRealms()) {
+                listItems.add(new ConfiguredRealmListItem(realm));
             }
             return new MessengerConfiguredRealmListItemAdapter(getActivity(), listItems, getUser());
         }
 
         @Nullable
         @Override
-        protected MessengerAsyncTask<Void, Void, List<ConfiguredRealm>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ConfiguredRealmListItem> adapter, @NotNull Runnable onPostExecute) {
+        protected MessengerAsyncTask<Void, Void, List<Realm>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ConfiguredRealmListItem> adapter, @NotNull Runnable onPostExecute) {
             return null;
         }
     }

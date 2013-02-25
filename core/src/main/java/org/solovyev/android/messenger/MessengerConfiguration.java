@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger;
 
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 
 /**
  * User: serso
@@ -11,6 +11,6 @@ import org.solovyev.android.messenger.realms.Realm;
 public interface MessengerConfiguration {
 
     @NotNull
-    Realm getRealm();
+    RealmDef getRealm();
 
 }

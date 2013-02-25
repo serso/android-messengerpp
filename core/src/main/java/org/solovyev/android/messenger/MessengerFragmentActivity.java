@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
 import roboguice.event.EventManager;
 
@@ -41,6 +41,10 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Inject
     @NotNull
     private ChatService chatService;
+
+    @Inject
+    @NotNull
+    private RealmService realmService;
 
     @Inject
     @NotNull
@@ -102,11 +106,6 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     protected boolean isTriplePane() {
         return this.thirdPane != null;
-    }
-
-    @NotNull
-    public User getUser() {
-        return activity.getUser();
     }
 
     @NotNull
@@ -178,5 +177,10 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
         fragmentTransaction.add(fragmentContainerViewId, fragment);
         fragmentTransaction.commit();
+    }
+
+    @NotNull
+    protected RealmService getRealmService() {
+        return realmService;
     }
 }

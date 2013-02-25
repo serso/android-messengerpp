@@ -15,7 +15,7 @@ import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.realms.DefaultRealmService;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.messenger.security.AuthService;
@@ -28,7 +28,7 @@ import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.vk.VkRealm;
+import org.solovyev.android.messenger.vk.VkRealmDef;
 import org.solovyev.android.messenger.vk.registration.DummyRegistrationService;
 import org.solovyev.android.network.MessengerNetworkStateService;
 import org.solovyev.android.network.NetworkStateService;
@@ -44,7 +44,7 @@ public class MessengerModule extends AbstractModule {
     protected void configure() {
         bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
         bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
-        bind(Realm.class).to(VkRealm.class);
+        bind(RealmDef.class).to(VkRealmDef.class);
         bind(RealmService.class).to(DefaultRealmService.class);
         bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
         bind(AuthService.class).to(AuthServiceImpl.class);

@@ -16,41 +16,53 @@ import java.util.*;
 public class DefaultRealmService implements RealmService {
 
     @NotNull
-    private final Map<String, Realm> realms = new HashMap<String, Realm>();
+    private final Map<String, RealmDef> realmDefs = new HashMap<String, RealmDef>();
 
     @NotNull
-    private final List<ConfiguredRealm> configuredRealms = new ArrayList<ConfiguredRealm>();
+    private final List<Realm> realms = new ArrayList<Realm>();
 
     @Inject
     public DefaultRealmService(@NotNull MessengerConfiguration configuration) {
         this(Arrays.asList(configuration.getRealm()));
     }
 
-    public DefaultRealmService(@NotNull List<? extends Realm> realms) {
-        for (Realm realm : realms) {
-            this.realms.put(realm.getId(), realm);
+    public DefaultRealmService(@NotNull List<? extends RealmDef> realmDefs) {
+        for (RealmDef realmDef : realmDefs) {
+            this.realmDefs.put(realmDef.getId(), realmDef);
         }
+    }
+
+    @NotNull
+    @Override
+    public Collection<RealmDef> getRealmDefs() {
+        return Collections.unmodifiableCollection(this.realmDefs.values());
     }
 
     @NotNull
     @Override
     public Collection<Realm> getRealms() {
-        return Collections.unmodifiableCollection(this.realms.values());
+        return Collections.unmodifiableCollection(this.realms);
     }
 
     @NotNull
     @Override
-    public Collection<ConfiguredRealm> getConfiguredRealms() {
-        return Collections.unmodifiableCollection(this.configuredRealms);
+    public RealmDef getRealmDefById(@NotNull String realmDefId) throws UnsupportedRealmException {
+        final RealmDef realm = this.realmDefs.get(realmDefId);
+        if ( realm == null ) {
+            throw new UnsupportedRealmException(realmDefId);
+        }
+        return realm;
     }
 
     @NotNull
     @Override
     public Realm getRealmById(@NotNull String realmId) throws UnsupportedRealmException {
-        final Realm realm = this.realms.get(realmId);
-        if ( realm == null ) {
-            throw new UnsupportedRealmException(realmId);
+        for (Realm realm : realms) {
+            if ( realm.getId().equals(realmId) ) {
+                return realm;
+            }
         }
-        return realm;
+
+        throw new UnsupportedRealmException(realmId);
     }
 }

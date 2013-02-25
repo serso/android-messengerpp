@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.users;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
@@ -76,7 +76,7 @@ public class UserImpl extends JObject implements User {
 
     @NotNull
     public static User newFakeInstance(@NotNull String userId) {
-        return newInstance(RealmEntityImpl.newInstance(Realm.FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
+        return newInstance(RealmEntityImpl.newInstance(RealmDef.FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
     }
 
     @Override

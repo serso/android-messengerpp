@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
+    <string name="mpp_test_realm_name">Test Realm</string>
     <string name="mpp_test_app_name">Messenger++ (Test)</string>
 </resources>

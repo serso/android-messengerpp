@@ -8,10 +8,12 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatListItem;
+import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -45,6 +47,9 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     @Nullable
     private User contact;
 
+    @Nullable
+    private User user;
+
     public MessengerMessagesActivity() {
         super(R.layout.msg_main, false, true);
     }
@@ -57,7 +62,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         if (intent != null) {
             final String chatId = intent.getExtras().getString(CHAT_ID);
             if (chatId != null) {
-                final Chat chatFromService = getChatService().getChatById(chatId, this);
+                final Chat chatFromService = getChatService().getChatById(chatId);
                 if (chatFromService != null) {
                     this.chat = chatFromService;
                 } else {
@@ -72,7 +77,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
         getUserService().addListener(this);
 
-        final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId(), this);
+        final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId());
         if (chat.isPrivate()) {
             if (!participants.isEmpty()) {
                 contact = participants.get(0);
@@ -88,7 +93,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         if ( contact != null ) {
             return contact.getDisplayName();
         } else {
-            return ChatListItem.getDisplayName(chat, getChatService().getLastMessage(chat.getId(), this), getUser());
+            return ChatListItem.getDisplayName(chat, getChatService().getLastMessage(chat.getId()), getUser());
         }
     }
 
@@ -140,6 +145,18 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         }
 
         return false;
+    }
+
+    @NotNull
+    public User getUser() {
+        if ( user == null ) {
+            try {
+                user = AbstractMessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmChat().getRealmId(), this);
+            } catch (UserIsNotLoggedInException e) {
+                // todo serso: continue
+            }
+        }
+        return user;
     }
 }
 

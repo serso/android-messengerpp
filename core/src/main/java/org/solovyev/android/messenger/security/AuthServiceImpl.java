@@ -12,7 +12,7 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.solovyev.android.captcha.ResolvedCaptcha;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
@@ -80,9 +80,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @NotNull
-    private Realm getRealmService(@NotNull String realm) {
+    private RealmDef getRealmService(@NotNull String realm) {
         try {
-            return realmService.getRealmById(realm);
+            return realmService.getRealmDefById(realm);
         } catch (UnsupportedRealmException e) {
             throw new RuntimeException(e);
         }
@@ -104,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
             if (isUserLoggedIn(realm)) {
                 authData = authDataMap.get(realm);
             } else {
-                throw new UserIsNotLoggedInException("User must be logged in before calling org.solovyev.android.messenger.security.AbstractAuthService.getUser!");
+                throw new UserIsNotLoggedInException("User must be logged in before calling getUser() method!");
             }
         }
 

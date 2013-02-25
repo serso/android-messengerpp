@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.solovyev.common.JCloneable;
 import org.solovyev.common.JObject;
 import org.solovyev.common.text.Strings;
@@ -8,9 +9,13 @@ import org.solovyev.common.text.Strings;
 public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityImpl>, RealmEntity {
 
     private static final String DELIMITER = "_";
+    private static final String DELIMITER_REALM = "~";
 
     @NotNull
     private String realmId;
+
+    @Nullable
+    private String realmDefId;
 
     @NotNull
     private String realmEntityId;
@@ -57,6 +62,21 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     @NotNull
     public String getRealmId() {
         return this.realmId;
+    }
+
+    @NotNull
+    @Override
+    public String getRealmDefId() {
+        if ( this.realmDefId == null ) {
+            final int index = realmId.indexOf(DELIMITER_REALM);
+            if ( index >= 0 ) {
+                this.realmDefId = entityId.substring(0, index);
+            } else {
+                throw new IllegalArgumentException("No realm def id is stored in realmId!");
+            }
+
+        }
+        return this.realmDefId;
     }
 
     @NotNull

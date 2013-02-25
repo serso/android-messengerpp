@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.ConfiguredRealm;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
@@ -43,21 +43,26 @@ public class MessengerStartActivity extends RoboActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Collection<ConfiguredRealm> configuredRealms = realmService.getConfiguredRealms();
-        if (configuredRealms.isEmpty()) {
+        final Collection<Realm> realms = realmService.getRealms();
+        if (realms.isEmpty()) {
 
             boolean atLeastOneRealmLogged = false;
+            boolean syncDone = false;
 
-            for (ConfiguredRealm configuredRealm : configuredRealms) {
+            for (Realm realm : realms) {
                 try {
-                    final User user = authService.getUser(configuredRealm.getRealm().getId(), this);
+                    final User user = authService.getUser(realm.getRealmDef().getId(), this);
 
                     if (!user.getUserSyncData().isFirstSyncDone()) {
-                        // user is logged first time => sync all data
-                        try {
-                            syncService.syncAll(this);
-                        } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
-                            // do not care
+                        if (!syncDone) {
+                            syncDone = true;
+
+                            // user is logged first time => sync all data
+                            try {
+                                syncService.syncAll(this);
+                            } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+                                // do not care
+                            }
                         }
                     } else {
                         // prefetch data

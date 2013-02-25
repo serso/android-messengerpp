@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.network.NetworkData;
 import org.solovyev.android.network.NetworkState;
@@ -67,7 +67,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
         //timer.scheduleAtFixedRate(new SyncTimerTask(this), 10000L, 30L * 1000L);
 
         synchronized (realmConnections) {
-            for (Realm realm : realmService.getRealms()) {
+            for (RealmDef realm : realmService.getRealmDefs()) {
                 final RealmConnection realmConnection = realm.createRealmConnection(this);
 
                 realmConnections.add(realmConnection);

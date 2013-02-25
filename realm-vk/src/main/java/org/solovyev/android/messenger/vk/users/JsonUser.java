@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserImpl;
 import org.solovyev.android.messenger.users.UserSyncDataImpl;
-import org.solovyev.android.messenger.vk.VkRealm;
+import org.solovyev.android.messenger.vk.VkRealmDef;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 
@@ -93,7 +93,7 @@ class JsonUser {
         properties.add(APropertyImpl.newInstance("photoBig", photo_big));
         properties.add(APropertyImpl.newInstance("photoRec", photo_rec));
 
-        return UserImpl.newInstance(VkRealm.REALM_ID, uid, UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
+        return UserImpl.newInstance(VkRealmDef.REALM_ID, uid, UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
     }
 
     @Nullable

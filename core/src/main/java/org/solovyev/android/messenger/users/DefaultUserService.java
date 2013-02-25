@@ -17,7 +17,7 @@ import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
@@ -46,7 +46,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     */
     @Inject
     @NotNull
-    private Realm realm;
+    private RealmDef realm;
 
     @Inject
     @NotNull
@@ -176,7 +176,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         synchronized (userChatsCache) {
             result = userChatsCache.get(userId);
             if (result == null) {
-                result = getChatService().loadUserChats(userId, context);
+                result = getChatService().loadUserChats(userId);
                 if (!Collections.isEmpty(result)) {
                     userChatsCache.put(userId, result);
                 }
@@ -195,9 +195,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         final String chatId = getChatService().createPrivateChatId(realmUser, secondRealmUser);
 
-        Chat result = getChatService().getChatById(chatId, context);
+        Chat result = getChatService().getChatById(chatId);
         if (result == null) {
-            result = getChatService().createPrivateChat(realmUser, secondRealmUser, context);
+            result = getChatService().createPrivateChat(realmUser, secondRealmUser);
         }
 
         return result;
@@ -313,7 +313,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         final MergeDaoResult<ApiChat, String> result;
         synchronized (lock) {
-            result = getChatService().mergeUserChats(userId, apiChats, context);
+            result = getChatService().mergeUserChats(userId, apiChats);
 
             // update sync data
             user = user.updateChatsSyncDate();

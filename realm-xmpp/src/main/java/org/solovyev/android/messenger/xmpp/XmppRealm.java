@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.RealmUserService;
 
@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.users.RealmUserService;
  * Date: 2/24/13
  * Time: 8:09 PM
  */
-public class XmppRealm implements Realm {
+public class XmppRealm implements RealmDef {
 
     @NotNull
     static final String REALM_ID = "xmpp";

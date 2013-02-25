@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
-import org.solovyev.android.messenger.realms.ConfiguredRealm;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 
 import java.util.Arrays;
@@ -70,8 +70,8 @@ public class DefaultSyncService implements SyncService {
             public void run() {
                 try {
 
-                    for (ConfiguredRealm configuredRealm : DefaultSyncService.this.realmService.getConfiguredRealms()) {
-                        final SyncData syncData = new SyncDataImpl(configuredRealm.getRealm().getId());
+                    for (Realm realm : DefaultSyncService.this.realmService.getRealms()) {
+                        final SyncData syncData = new SyncDataImpl(realm.getRealmDef().getId());
 
                         for (SyncTask syncTask : SyncTask.values()) {
                             try {

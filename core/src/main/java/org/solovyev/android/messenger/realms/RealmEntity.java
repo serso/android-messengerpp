@@ -22,6 +22,12 @@ public interface RealmEntity {
     String getRealmId();
 
     /**
+     * @return realm def id to which user is belonged to
+     */
+    @NotNull
+    String getRealmDefId();
+
+    /**
      * @return user id in realm
      */
     @NotNull

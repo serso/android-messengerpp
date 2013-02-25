@@ -5,7 +5,7 @@ import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 
@@ -20,7 +20,7 @@ public class LongPollRealmConnection extends AbstractRealmConnection {
     @NotNull
     private final RealmLongPollService realmLongPollService;
 
-    public LongPollRealmConnection(@NotNull Realm realm,
+    public LongPollRealmConnection(@NotNull RealmDef realm,
                                    @NotNull Context context,
                                    @NotNull RealmLongPollService realmLongPollService) {
         super(realm, context);
