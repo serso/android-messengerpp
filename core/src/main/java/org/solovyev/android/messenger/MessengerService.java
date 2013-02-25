@@ -2,19 +2,18 @@ package org.solovyev.android.messenger;
 
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.RemoteException;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.api.ApiResponseErrorException;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.security.AuthService;
-import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.network.NetworkData;
 import org.solovyev.android.network.NetworkState;
 import org.solovyev.android.network.NetworkStateListener;
 import org.solovyev.android.network.NetworkStateService;
 import roboguice.service.RoboService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: serso
@@ -33,7 +32,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
 
     @Inject
     @NotNull
-    private Realm realm;
+    private RealmService realmService;
 
     @Inject
     @NotNull
@@ -49,36 +48,12 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @NotNull
     public static final String API_SERVICE = "org.solovyev.android.messenger.API_SERVICE";
 
-    @Nullable
-    private RealmConnection realmConnection;
-
     @NotNull
-    private final Object realmConnectionLock = new Object();
-
-    @NotNull
-    private final MessengerApi.Stub remoteMessengerApi = new MessengerApi.Stub() {
-
-        @Inject
-        @NotNull
-        public AuthService authService;
-
-        @Override
-        public void loginUser(String realm, String login, String password, ServiceCallback callback) throws RemoteException {
-            try {
-                this.authService.loginUser(realm, login, password, null, MessengerService.this);
-                callback.onSuccess();
-            } catch (InvalidCredentialsException e) {
-                callback.onFailure(e.getMessage());
-            } catch (ApiResponseErrorException e) {
-                callback.onApiError(e.getApiError());
-            }
-        }
-
-    };
+    private final List<RealmConnection> realmConnections = new ArrayList<RealmConnection>();
 
     @Override
     public IBinder onBind(Intent intent) {
-        return remoteMessengerApi;
+        return null;
     }
 
     @Override
@@ -91,20 +66,15 @@ public class MessengerService extends RoboService implements NetworkStateListene
         //final Timer timer = new Timer("Messenger sync task", true);
         //timer.scheduleAtFixedRate(new SyncTimerTask(this), 10000L, 30L * 1000L);
 
-        synchronized (realmConnectionLock) {
-            this.realmConnection = this.realm.createRealmConnection(this);
+        synchronized (realmConnections) {
+            for (Realm realm : realmService.getRealms()) {
+                final RealmConnection realmConnection = realm.createRealmConnection(this);
 
-            if (networkData.getState() == NetworkState.CONNECTED) {
+                realmConnections.add(realmConnection);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        synchronized (realmConnectionLock) {
-                            realmConnection.start();
-                        }
-                    }
-                }).start();
-
+                if (networkData.getState() == NetworkState.CONNECTED) {
+                    startRealmConnection(realmConnection);
+                }
             }
         }
     }
@@ -114,9 +84,13 @@ public class MessengerService extends RoboService implements NetworkStateListene
         try {
             networkStateService.removeListener(this);
 
-            synchronized (this.realmConnectionLock) {
-                if (this.realmConnection != null && !this.realmConnection.isStopped()) {
-                    this.realmConnection.stop();
+            synchronized (this.realmConnections) {
+                for (RealmConnection realmConnection : realmConnections) {
+                    synchronized (realmConnection) {
+                        if (!realmConnection.isStopped()) {
+                            realmConnection.stop();
+                        }
+                    }
                 }
             }
         } finally {
@@ -126,28 +100,36 @@ public class MessengerService extends RoboService implements NetworkStateListene
 
     @Override
     public void onNetworkEvent(@NotNull NetworkData networkData) {
-        synchronized (this.realmConnectionLock) {
-            if (this.realmConnection != null) {
-                switch (networkData.getState()) {
-                    case UNKNOWN:
-                        break;
-                    case CONNECTED:
-                        if (this.realmConnection.isStopped()) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    realmConnection.start();
-                                }
-                            }).start();
-                        }
-                        break;
-                    case NOT_CONNECTED:
-                        if (!this.realmConnection.isStopped()) {
-                            realmConnection.stop();
-                        }
-                        break;
+        synchronized (this.realmConnections) {
+            for (final RealmConnection realmConnection : realmConnections) {
+                synchronized (realmConnection) {
+                    switch (networkData.getState()) {
+                        case UNKNOWN:
+                            break;
+                        case CONNECTED:
+                            if (realmConnection.isStopped()) {
+                                startRealmConnection(realmConnection);
+                            }
+                            break;
+                        case NOT_CONNECTED:
+                            if (!realmConnection.isStopped()) {
+                                realmConnection.stop();
+                            }
+                            break;
+                    }
                 }
             }
         }
+    }
+
+    private void startRealmConnection(@NotNull final RealmConnection realmConnection) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (realmConnection) {
+                    realmConnection.start();
+                }
+            }
+        }).start();
     }
 }

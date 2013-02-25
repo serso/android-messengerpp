@@ -25,7 +25,6 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.DummyMessengerApi;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.prefs.BooleanPreference;
@@ -39,7 +38,7 @@ import roboguice.RoboGuice;
  * Date: 5/25/12
  * Time: 8:16 PM
  */
-public abstract class AbstractMessengerApplication extends Application implements MessengerApiProvider, MessengerServiceLocator, MessengerMultiPaneManager {
+public abstract class AbstractMessengerApplication extends Application implements MessengerServiceLocator, MessengerMultiPaneManager {
 
     /*
     **********************************************************************
@@ -137,8 +136,6 @@ public abstract class AbstractMessengerApplication extends Application implement
     **********************************************************************
     */
 
-    private MessengerApiConnection connection;
-
     @NotNull
     private static AbstractMessengerApplication instance;
 
@@ -196,52 +193,6 @@ public abstract class AbstractMessengerApplication extends Application implement
         final Intent intent = new Intent();
         intent.setClass(this, MessengerService.class);
         startService(intent);
-        bindService();
-    }
-
-    private void bindService() {
-        if (connection == null) {
-            connection = new MessengerApiConnection();
-
-            bindService(new Intent(MessengerService.API_SERVICE), connection, Context.BIND_AUTO_CREATE);
-
-            Log.d(getClass().getSimpleName(), "bindService()");
-        } else {
-            Toast.makeText(AbstractMessengerApplication.this, "Cannot bind - service already bound", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @NotNull
-    @Override
-    public MessengerApi getMessengerApi() {
-        return connection.getMessengerApi();
-    }
-
-    private static final class MessengerApiConnection implements ServiceConnection, MessengerApiProvider {
-
-        @Nullable
-        private MessengerApi messengerApi;
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            messengerApi = MessengerApi.Stub.asInterface(service);
-            Log.d(getClass().getSimpleName(), "onServiceConnected()");
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            messengerApi = null;
-            Log.d(getClass().getSimpleName(), "onServiceDisconnected");
-        }
-
-        @NotNull
-        @Override
-        public MessengerApi getMessengerApi() {
-            MessengerApi localMessengerApi = messengerApi;
-            if (localMessengerApi == null) {
-                localMessengerApi = new DummyMessengerApi();
-            }
-            return localMessengerApi;
-        }
     }
 
     /*

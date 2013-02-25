@@ -17,9 +17,6 @@ public class MessengerConfigurationImpl implements MessengerConfiguration {
     @NotNull
     private Realm realm;
 
-    @NotNull
-    private MessengerApiProvider messengerApiProvider;
-
     public MessengerConfigurationImpl() {
     }
 
@@ -27,15 +24,5 @@ public class MessengerConfigurationImpl implements MessengerConfiguration {
     @Override
     public Realm getRealm() {
         return this.realm;
-    }
-
-    public void setMessengerApiProvider(@NotNull MessengerApiProvider messengerApiProvider) {
-        this.messengerApiProvider = messengerApiProvider;
-    }
-
-    @NotNull
-    @Override
-    public MessengerApi getMessengerApi() {
-        return messengerApiProvider.getMessengerApi();
     }
 }

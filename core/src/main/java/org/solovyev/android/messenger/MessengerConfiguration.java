@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.realms.Realm;
  * Date: 5/24/12
  * Time: 9:24 PM
  */
-public interface MessengerConfiguration extends MessengerApiProvider {
+public interface MessengerConfiguration {
 
     @NotNull
     Realm getRealm();
