@@ -4,6 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
@@ -21,6 +23,14 @@ import java.util.List;
  */
 public class ChatImpl extends JObject implements Chat {
 
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
+
     @NotNull
     private VersionedEntity<String> versionedEntity;
 
@@ -35,11 +45,23 @@ public class ChatImpl extends JObject implements Chat {
     @Nullable
     private DateTime lastMessageSyncDate;
 
-    public ChatImpl(@NotNull String id,
-                    @NotNull Integer messagesCount,
-                    @NotNull List<AProperty> properties,
-                    @Nullable DateTime lastMessageSyncDate) {
-        this.versionedEntity = new VersionedEntityImpl<String>(id);
+    @NotNull
+    private RealmEntity realmEntity;
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTRUCTORS
+    *
+    **********************************************************************
+    */
+
+    private ChatImpl(@NotNull RealmEntity realmEntity,
+                     @NotNull Integer messagesCount,
+                     @NotNull List<AProperty> properties,
+                     @Nullable DateTime lastMessageSyncDate) {
+        this.versionedEntity = new VersionedEntityImpl<String>(realmEntity.getEntityId());
+        this.realmEntity = realmEntity;
         this.messagesCount = messagesCount;
         this.lastMessageSyncDate = lastMessageSyncDate;
 
@@ -54,16 +76,39 @@ public class ChatImpl extends JObject implements Chat {
         }
     }
 
-    public ChatImpl(@NotNull String id,
-                    @NotNull Integer messagesCount,
-                    boolean privateChat) {
-        this.versionedEntity = new VersionedEntityImpl<String>(id);
+    private ChatImpl(@NotNull RealmEntity realmEntity,
+                     @NotNull Integer messagesCount,
+                     boolean privateChat) {
+        this.versionedEntity = new VersionedEntityImpl<String>(realmEntity.getEntityId());
+        this.realmEntity = realmEntity;
         this.messagesCount = messagesCount;
         this.privateChat = privateChat;
         this.properties = new ArrayList<AProperty>();
         properties.add(APropertyImpl.newInstance("private", Boolean.toString(privateChat)));
     }
 
+
+
+    @NotNull
+    public static Chat newFakeChat(@NotNull String chatId) {
+        return new ChatImpl(RealmEntityImpl.fromEntityId(chatId), 0, false);
+    }
+
+    @NotNull
+    public static Chat newInstance(@NotNull RealmEntity realmEntity,
+                                   @NotNull Integer messagesCount,
+                                   @NotNull List<AProperty> properties,
+                                   @Nullable DateTime lastMessageSyncDate) {
+        return new ChatImpl(realmEntity, messagesCount, properties, lastMessageSyncDate);
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           METHODS
+    *
+    **********************************************************************
+    */
 
     @NotNull
     public List<AProperty> getProperties() {
@@ -102,8 +147,15 @@ public class ChatImpl extends JObject implements Chat {
 
         // properties cannot be changed themselves but some can be removed or added
         clone.properties = new ArrayList<AProperty>(this.properties);
+        clone.realmEntity = realmEntity.clone();
 
         return clone;
+    }
+
+    @NotNull
+    @Override
+    public RealmEntity getRealmChat() {
+        return this.realmEntity;
     }
 
     @Override

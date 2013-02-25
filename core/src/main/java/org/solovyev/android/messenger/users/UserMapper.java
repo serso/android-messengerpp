@@ -4,7 +4,8 @@ import android.database.Cursor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.db.StringVersionedEntityMapper;
-import org.solovyev.android.messenger.realms.RealmUserImpl;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 import org.solovyev.common.VersionedEntity;
@@ -31,8 +32,7 @@ public class UserMapper implements Converter<Cursor, User> {
     public User convert(@NotNull Cursor c) {
         final VersionedEntity<String> versionedEntity = StringVersionedEntityMapper.getInstance().convert(c);
 
-        final String realmId = c.getString(2);
-        final String realmUserId = c.getString(3);
+        final RealmEntity realmEntity = RealmEntityMapper.newInstanceFor(2).convert(c);
 
         final UserSyncData userSyncData = UserSyncDataImpl.newInstanceFromStrings(c.getString(4), c.getString(5), c.getString(6), c.getString(7));
 
@@ -43,6 +43,6 @@ public class UserMapper implements Converter<Cursor, User> {
             properties = Collections.emptyList();
         }
 
-        return UserImpl.newInstance(versionedEntity, RealmUserImpl.newInstance(realmId, realmUserId), userSyncData, properties);
+        return UserImpl.newInstance(versionedEntity, realmEntity, userSyncData, properties);
     }
 }

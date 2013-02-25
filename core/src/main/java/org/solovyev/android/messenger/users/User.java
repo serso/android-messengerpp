@@ -26,9 +26,6 @@ public interface User extends VersionedEntity<String>, MutableUserSyncData {
     @NotNull
     public static final String PROPERTY_ONLINE = "online";
 
-    @NotNull
-    public static final String FAKE_REALM_ID = "fake";
-
 
     /*
     **********************************************************************

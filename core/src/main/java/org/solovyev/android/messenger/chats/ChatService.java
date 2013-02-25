@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 
 import java.util.List;
@@ -41,10 +42,10 @@ public interface ChatService extends ChatEventContainer {
     ChatMessage getLastMessage(@NotNull String chatId, @NotNull Context context);
 
     @NotNull
-    Chat createPrivateChat(@NotNull String userId, @NotNull String secondUserId, @NotNull Context context);
+    Chat createPrivateChat(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser, @NotNull Context context);
 
     @NotNull
-    String createPrivateChatId(@NotNull String userId, @NotNull String secondUserId);
+    String createPrivateChatId(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser);
 
     @NotNull
     ChatMessage sendChatMessage(@NotNull String userId, @NotNull Chat chat, @NotNull ChatMessage chatMessage, @NotNull Context context);

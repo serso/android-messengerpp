@@ -5,7 +5,7 @@ import org.solovyev.common.JCloneable;
 import org.solovyev.common.JObject;
 import org.solovyev.common.text.Strings;
 
-class RealmEntityImpl extends JObject implements JCloneable<RealmEntityImpl>, RealmEntity {
+public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityImpl>, RealmEntity {
 
     private static final String DELIMITER = "_";
 
@@ -15,26 +15,30 @@ class RealmEntityImpl extends JObject implements JCloneable<RealmEntityImpl>, Re
     @NotNull
     private String realmEntityId;
 
+    @NotNull
+    private String entityId;
+
     private RealmEntityImpl(@NotNull String realmId, @NotNull String realmEntityId) {
         this.realmId = realmId;
         this.realmEntityId = realmEntityId;
+        this.entityId = realmId + DELIMITER + realmEntityId;
     }
 
     @NotNull
-    public static RealmEntityImpl newInstance(@NotNull String realmId, @NotNull String realmUserId) {
+    public static RealmEntity newInstance(@NotNull String realmId, @NotNull String realmEntityId) {
         if (Strings.isEmpty(realmId)) {
             throw new IllegalArgumentException("Realm cannot be empty!");
         }
 
-        if (Strings.isEmpty(realmUserId)) {
+        if (Strings.isEmpty(realmEntityId)) {
             throw new IllegalArgumentException("Realm entity id cannot be empty!");
         }
 
-        return new RealmEntityImpl(realmId, realmUserId);
+        return new RealmEntityImpl(realmId, realmEntityId);
     }
 
     @NotNull
-    public static RealmEntityImpl fromEntityId(@NotNull String entityId) {
+    public static RealmEntity fromEntityId(@NotNull String entityId) {
         final int index = entityId.indexOf(DELIMITER);
         if ( index >= 0 ) {
             final String realmId = entityId.substring(0, index);
@@ -47,7 +51,7 @@ class RealmEntityImpl extends JObject implements JCloneable<RealmEntityImpl>, Re
 
     @NotNull
     public String getEntityId() {
-        return realmId + DELIMITER + realmEntityId;
+        return entityId;
     }
 
     @NotNull

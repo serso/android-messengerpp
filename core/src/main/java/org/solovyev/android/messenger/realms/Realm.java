@@ -14,6 +14,9 @@ import org.solovyev.android.messenger.users.RealmUserService;
  */
 public interface Realm {
 
+    @NotNull
+    String FAKE_REALM_ID = "fake";
+
     // realm's identifier. Must be unique for all existed realms
     @NotNull
     String getId();

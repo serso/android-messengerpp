@@ -62,7 +62,7 @@ public class ChatsAdapter extends AbstractMessengerListItemAdapter<ChatListItem>
 
     protected void removeListItem(@NotNull User user, @NotNull String chatId) {
         // todo serso: not good solution => better way is to load full user object for chat (but it can take long time)
-        final Chat chat = new ChatImpl(chatId, 0, false);
+        final Chat chat = ChatImpl.newFakeChat(chatId);
         removeListItem(user, chat);
     }
 

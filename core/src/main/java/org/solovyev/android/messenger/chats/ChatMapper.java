@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 
@@ -28,10 +30,12 @@ public class ChatMapper implements Converter<Cursor, Chat> {
     @Override
     public Chat convert(@NotNull Cursor c) {
         final String chatId = c.getString(0);
-        final Integer messagesCount = c.getInt(1);
+        final RealmEntity realmEntity = RealmEntityMapper.newInstanceFor(1).convert(c);
+
+        final Integer messagesCount = c.getInt(3);
 
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-        final String lastMessagesSyncDateString = c.getString(2);
+        final String lastMessagesSyncDateString = c.getString(4);
         final DateTime lastMessagesSyncDate = lastMessagesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastMessagesSyncDateString);
 
         final List<AProperty> properties = chatDao.loadChatPropertiesById(chatId);
@@ -39,6 +43,6 @@ public class ChatMapper implements Converter<Cursor, Chat> {
         //final List<ChatMessage> chatMessages = chatDao.loadChatMessages(chatId);
         //final List<User> chatParticipants = chatDao.loadChatParticipants(chatId);
 
-        return new ChatImpl(chatId, messagesCount, properties, lastMessagesSyncDate);
+        return ChatImpl.newInstance(realmEntity, messagesCount, properties, lastMessagesSyncDate);
     }
 }

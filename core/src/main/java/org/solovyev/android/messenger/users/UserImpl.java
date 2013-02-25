@@ -3,8 +3,9 @@ package org.solovyev.android.messenger.users;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmUserImpl;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
@@ -13,7 +14,11 @@ import org.solovyev.common.VersionedEntityImpl;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -48,7 +53,7 @@ public class UserImpl extends JObject implements User {
                                    @NotNull String realmUserId,
                                    @NotNull UserSyncData userSyncData,
                                    @NotNull List<AProperty> properties) {
-        final RealmEntity realmEntity = RealmUserImpl.newInstance(reamId, realmUserId);
+        final RealmEntity realmEntity = RealmEntityImpl.newInstance(reamId, realmUserId);
         return newInstance(new VersionedEntityImpl<String>(realmEntity.getEntityId()), realmEntity, userSyncData, properties);
     }
 
@@ -74,7 +79,7 @@ public class UserImpl extends JObject implements User {
 
     @NotNull
     public static User newFakeInstance(@NotNull String userId) {
-        return newInstance(new VersionedEntityImpl<String>(userId), RealmUserImpl.newInstance(FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
+        return newInstance(new VersionedEntityImpl<String>(userId), RealmEntityImpl.newInstance(Realm.FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
     }
 
     @Override

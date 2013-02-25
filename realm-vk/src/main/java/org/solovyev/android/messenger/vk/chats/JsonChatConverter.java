@@ -15,8 +15,11 @@ import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.vk.VkRealm;
 import org.solovyev.android.messenger.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.vk.messages.JsonMessages;
@@ -95,11 +98,13 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         final User secondUser = message.getSecondUser(user);
 
                         if (secondUser != null) {
-                            final String chatId = AbstractMessengerApplication.getServiceLocator().getChatService().createPrivateChatId(user.getId(), secondUser.getId());
+                            final RealmEntity realmUser = user.getRealmUser();
+                            final RealmEntity secondRealmUser = secondUser.getRealmUser();
+                            final String chatId = AbstractMessengerApplication.getServiceLocator().getChatService().createPrivateChatId(realmUser, secondRealmUser);
 
                             ApiChatImpl chat = fakeChats.get(chatId);
                             if (chat == null) {
-                                chat = new ApiChatImpl(chatId, jsonMessagesResult.getCount(), true);
+                                chat = new ApiChatImpl(RealmEntityImpl.fromEntityId(chatId), jsonMessagesResult.getCount(), true);
 
                                 chat.addParticipant(user);
                                 chat.addParticipant(secondUser);
@@ -119,7 +124,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         ApiChatImpl chat = chats.get(chatId);
                         if (chat == null) {
                             // create new chat object
-                            chat = new ApiChatImpl(chatId, jsonMessagesResult.getCount(), false);
+                            chat = new ApiChatImpl(RealmEntityImpl.newInstance(VkRealm.REALM_ID, chatId), jsonMessagesResult.getCount(), false);
 
                             final String participantsStr = jsonMessage.getChat_active();
                             if (!Strings.isEmpty(participantsStr)) {

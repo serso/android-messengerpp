@@ -18,6 +18,8 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
@@ -188,11 +190,14 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @NotNull
     @Override
     public Chat getPrivateChat(@NotNull String userId, @NotNull final String secondUserId, @NotNull final Context context) {
-        final String chatId = getChatService().createPrivateChatId(userId, secondUserId);
+        final RealmEntity realmUser = RealmEntityImpl.fromEntityId(userId);
+        final RealmEntity secondRealmUser = RealmEntityImpl.fromEntityId(secondUserId);
+
+        final String chatId = getChatService().createPrivateChatId(realmUser, secondRealmUser);
 
         Chat result = getChatService().getChatById(chatId, context);
         if (result == null) {
-            result = getChatService().createPrivateChat(userId, secondUserId, context);
+            result = getChatService().createPrivateChat(realmUser, secondRealmUser, context);
         }
 
         return result;

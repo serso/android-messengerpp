@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.android.messenger.users.User;
@@ -32,22 +33,24 @@ public class ApiChatImpl implements ApiChat {
     @NotNull
     private List<User> participants;
 
-    public ApiChatImpl(@NotNull String id,
+    public ApiChatImpl(@NotNull RealmEntity realmEntity,
                        @NotNull Integer messagesCount,
                        @NotNull List<AProperty> properties,
                        @NotNull List<ChatMessage> chatMessages,
                        @NotNull List<User> chatParticipants,
                        @Nullable DateTime lastMessageSyncDate) {
-        this.chat = new ChatImpl(id, messagesCount, properties, lastMessageSyncDate);
+        this.chat = ChatImpl.newInstance(realmEntity, messagesCount, properties, lastMessageSyncDate);
         this.messages = chatMessages;
 
         this.participants = chatParticipants;
     }
 
-    public ApiChatImpl(@NotNull String id, @NotNull Integer messagesCount, boolean privateChat) {
+    public ApiChatImpl(@NotNull RealmEntity realmEntity,
+                       @NotNull Integer messagesCount,
+                       boolean privateChat) {
         final List<AProperty> properties = new ArrayList<AProperty>();
         properties.add(APropertyImpl.newInstance("private", Boolean.toString(privateChat)));
-        this.chat = new ChatImpl(id, messagesCount, properties, null);
+        this.chat = ChatImpl.newInstance(realmEntity, messagesCount, properties, null);
 
         this.messages = new ArrayList<ChatMessage>(20);
         this.participants = new ArrayList<User>(3);

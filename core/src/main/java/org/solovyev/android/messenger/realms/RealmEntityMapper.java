@@ -9,17 +9,17 @@ import org.solovyev.common.Converter;
  * Date: 7/25/12
  * Time: 2:00 AM
  */
-public class RealmIdMapper<I> implements Converter<Cursor, RealmEntity> {
+public class RealmEntityMapper implements Converter<Cursor, RealmEntity> {
 
     private int cursorPosition;
 
-    private RealmIdMapper(int cursorPosition) {
+    private RealmEntityMapper(int cursorPosition) {
         this.cursorPosition = cursorPosition;
     }
 
     @NotNull
-    public static <I> RealmIdMapper<I> newInstanceFor(int cursorPosition) {
-        return new RealmIdMapper<I>(cursorPosition);
+    public static RealmEntityMapper newInstanceFor(int cursorPosition) {
+        return new RealmEntityMapper(cursorPosition);
     }
 
     @NotNull

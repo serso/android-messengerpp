@@ -8,9 +8,12 @@ import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.vk.VkRealm;
 
 import java.lang.reflect.Type;
 
@@ -120,20 +123,22 @@ public interface LongPollUpdate {
     static class UserStartTypingInPrivateChat implements LongPollUpdate {
 
         @NotNull
-        private String userId;
+        private String realmUserId;
 
-        public UserStartTypingInPrivateChat(@NotNull String userId) {
-            this.userId = userId;
+        public UserStartTypingInPrivateChat(@NotNull String realmUserId) {
+            this.realmUserId = realmUserId;
         }
 
         @Override
         public void doUpdate(@NotNull User user, @NotNull Context context) {
             // not self
-            if (!user.getId().equals(userId)) {
-                final String chatId = getChatService().createPrivateChatId(user.getId(), userId);
+            if (!user.getId().equals(realmUserId)) {
+                final RealmEntity secondRealmUser = RealmEntityImpl.newInstance(VkRealm.REALM_ID, realmUserId);
+
+                final String chatId = getChatService().createPrivateChatId(user.getRealmUser(), secondRealmUser);
                 Chat chat = getChatService().getChatById(chatId, context);
                 if (chat != null) {
-                    getChatService().fireChatEvent(chat, ChatEventType.user_start_typing, userId);
+                    getChatService().fireChatEvent(chat, ChatEventType.user_start_typing, secondRealmUser.getEntityId());
                 }
             }
         }
@@ -209,10 +214,10 @@ public interface LongPollUpdate {
         public void doUpdate(@NotNull User user, @NotNull Context context) {
             final String chatId;
             if (this.chatId != null) {
-                chatId = this.chatId;
+                chatId = RealmEntityImpl.newInstance(VkRealm.REALM_ID, this.chatId).getEntityId();
             } else {
                 assert friendId != null;
-                chatId = getChatService().createPrivateChatId(user.getId(), friendId);
+                chatId = getChatService().createPrivateChatId(user.getRealmUser(), RealmEntityImpl.newInstance(VkRealm.REALM_ID, friendId));
             }
 
             getChatService().syncNewerChatMessagesForChat(chatId, user.getId(), context);

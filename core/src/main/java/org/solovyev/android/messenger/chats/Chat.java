@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.chats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.VersionedEntity;
 
@@ -14,6 +15,9 @@ import java.util.List;
  * Time: 7:38 PM
  */
 public interface Chat extends VersionedEntity<String> {
+
+    @NotNull
+    RealmEntity getRealmChat();
 
     boolean isPrivate();
 
