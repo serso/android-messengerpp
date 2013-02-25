@@ -50,7 +50,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         this.chat = chat;
         if (context != null) {
             // todo serso: calling on the main thread
-            this.lastChatMessage = getChatService().getLastMessage(chat.getId(), context);
+            this.lastChatMessage = getChatService().getLastMessage(chat.getId());
         }
     }
 
@@ -118,7 +118,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
             view.setTag(tag);
 
             final ImageView chatIcon = (ImageView) view.findViewById(R.id.chat_icon);
-            getChatService().setChatIcon(chatIcon, chat, user, context);
+            getChatService().setChatIcon(chatIcon, chat, user);
 
 
             final ChatMessage lastMessage = getLastMessage();

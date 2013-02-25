@@ -182,7 +182,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         if (chat == null) {
             final String chatId = savedInstanceState.getString(CHAT_ID);
             if (chatId != null) {
-                chat = this.chatService.getChatById(chatId, getActivity());
+                chat = this.chatService.getChatById(chatId);
             }
 
             if (chat == null) {

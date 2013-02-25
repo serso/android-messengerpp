@@ -14,10 +14,13 @@ import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.Builder;
 import roboguice.event.EventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,7 +119,12 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                             @NotNull
                             @Override
                             public Fragment build() {
-                                final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId(), MessengerMainActivity.this);
+                                final List<User> participants = new ArrayList<User>();
+                                for (Realm realm : getRealmService().getRealms()) {
+                                    final User user = realm.getUser();
+                                    participants.addAll(getChatService().getParticipantsExcept(chat.getId(), user.getId()));
+
+                                }
                                 return new MessengerContactsInfoFragment(participants);
                             }
                         });
@@ -191,7 +199,12 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
 
                 @Override
                 protected Chat doInBackground(Void... params) {
-                    return AbstractMessengerApplication.getServiceLocator().getUserService().getPrivateChat(getUser().getId(), contact.getId(), MessengerMainActivity.this);
+                    try {
+                        final User user = getRealmService().getRealmById(contact.getRealmUser().getRealmId()).getUser();
+                        return AbstractMessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getId(), contact.getId(), MessengerMainActivity.this);
+                    } catch (UnsupportedRealmException e) {
+                        throw new AssertionError(e);
+                    }
                 }
 
                 @Override

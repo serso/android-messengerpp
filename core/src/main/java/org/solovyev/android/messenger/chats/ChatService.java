@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.chats;
 
-import android.content.Context;
 import android.widget.ImageView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,34 +20,34 @@ public interface ChatService extends ChatEventContainer {
     void init();
 
     @NotNull
-    Chat updateChat(@NotNull Chat chat, @NotNull Context context);
+    Chat updateChat(@NotNull Chat chat);
 
     @NotNull
-    List<Chat> loadUserChats(@NotNull String userId, @NotNull Context context);
+    List<Chat> loadUserChats(@NotNull String userId);
 
     @NotNull
-    MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> chats, @NotNull Context context);
+    MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> chats);
 
     @Nullable
-    Chat getChatById(@NotNull String chatId, @NotNull Context context);
+    Chat getChatById(@NotNull String chatId);
 
     @NotNull
-    List<User> getParticipants(@NotNull String chatId, @NotNull Context context);
+    List<User> getParticipants(@NotNull String chatId);
 
     @NotNull
-    List<User> getParticipantsExcept(@NotNull String chatId, @NotNull String userId, @NotNull Context context);
+    List<User> getParticipantsExcept(@NotNull String chatId, @NotNull String userId);
 
     @Nullable
-    ChatMessage getLastMessage(@NotNull String chatId, @NotNull Context context);
+    ChatMessage getLastMessage(@NotNull String chatId);
 
     @NotNull
-    Chat createPrivateChat(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser, @NotNull Context context);
+    Chat createPrivateChat(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser);
 
     @NotNull
     String createPrivateChatId(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser);
 
     @NotNull
-    ChatMessage sendChatMessage(@NotNull String userId, @NotNull Chat chat, @NotNull ChatMessage chatMessage, @NotNull Context context);
+    ChatMessage sendChatMessage(@NotNull String userId, @NotNull Chat chat, @NotNull ChatMessage chatMessage);
 
     /*
     **********************************************************************
@@ -59,18 +58,18 @@ public interface ChatService extends ChatEventContainer {
     */
 
     @NotNull
-    List<ChatMessage> syncChatMessages(@NotNull String userId, @NotNull Context context);
+    List<ChatMessage> syncChatMessages(@NotNull String userId);
 
     @NotNull
-    List<ChatMessage> syncNewerChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context);
+    List<ChatMessage> syncNewerChatMessagesForChat(@NotNull String chatId, @NotNull String userId);
 
     @NotNull
-    List<ChatMessage> syncOlderChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context);
+    List<ChatMessage> syncOlderChatMessagesForChat(@NotNull String chatId, @NotNull String userId);
 
-    void syncChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context);
+    void syncChat(@NotNull String chatId, @NotNull String userId);
 
     @Nullable
     String getSecondUserId(@NotNull Chat chat);
 
-    void setChatIcon(@NotNull ImageView imageView, @NotNull Chat chat, @NotNull User user, @NotNull Context context);
+    void setChatIcon(@NotNull ImageView imageView, @NotNull Chat chat, @NotNull User user);
 }

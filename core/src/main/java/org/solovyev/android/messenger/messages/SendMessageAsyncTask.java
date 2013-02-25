@@ -115,7 +115,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
                 chatMessage.addFwdMessage(fwdMessage);
             }
 
-            return getChatService().sendChatMessage(author.getId(), chat, chatMessage, context);
+            return getChatService().sendChatMessage(author.getId(), chat, chatMessage);
         }
 
     }

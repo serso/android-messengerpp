@@ -34,9 +34,9 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
         final Context context = getContext();
         if (context != null) {
             if (!input.older) {
-                AbstractMessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.chatId, input.userId, context);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.chatId, input.userId);
             } else {
-                AbstractMessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.chatId, input.userId, context);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.chatId, input.userId);
             }
         }
 

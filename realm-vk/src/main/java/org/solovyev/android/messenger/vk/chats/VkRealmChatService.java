@@ -71,7 +71,7 @@ public class VkRealmChatService implements RealmChatService {
     }
 
     private List<ChatMessage> getChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context, @NotNull VkHttpTransactionForMessagesForChatProvider p) {
-        final Chat chat = getChatService().getChatById(chatId, context);
+        final Chat chat = getChatService().getChatById(chatId);
 
         if (chat != null) {
             try {

@@ -95,7 +95,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     public MergeDaoResult<ChatMessage, String> mergeChatMessages(@NotNull String chatId, @NotNull List<ChatMessage> messages, boolean allowDelete, @NotNull Context context) {
         final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>(messages);
 
-        final Chat chat = getChatService().getChatById(chatId, context);
+        final Chat chat = getChatService().getChatById(chatId);
 
         final List<String> messageIdsFromDb = loadChatMessageIds(chatId);
         for (final String chatMessageIdFromDb : messageIdsFromDb) {

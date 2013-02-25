@@ -161,7 +161,7 @@ public enum SyncTask {
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
                 final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                AbstractMessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getId(), context);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getId());
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
