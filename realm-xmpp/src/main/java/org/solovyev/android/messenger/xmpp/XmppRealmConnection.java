@@ -4,7 +4,10 @@ import android.content.Context;
 import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.Realm;
@@ -47,8 +50,6 @@ public class XmppRealmConnection extends AbstractRealmConnection implements Real
                 try {
                     connection.connect();
 
-
-
                 } catch (XMPPException e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
@@ -74,6 +75,8 @@ public class XmppRealmConnection extends AbstractRealmConnection implements Real
             result.setUserLogin(login);
             result.setAccessToken("");
 
+            connection.getChatManager().addChatListener(new XmppChatListener());
+
             this.connection = connection;
 
             return result;
@@ -98,4 +101,5 @@ public class XmppRealmConnection extends AbstractRealmConnection implements Real
             throw new RealmIsNotConnectedException();
         }
     }
+
 }

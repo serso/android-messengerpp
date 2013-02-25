@@ -27,7 +27,7 @@ import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DummyMessengerApi;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.network.NetworkStateController;
+import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.prefs.BooleanPreference;
 import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
@@ -77,6 +77,10 @@ public abstract class AbstractMessengerApplication extends Application implement
     @NotNull
     private RealmService realmService;
 
+    @Inject
+    @NotNull
+    private NetworkStateService networkStateService;
+
     @Override
     @NotNull
     public ChatMessageService getChatMessageService() {
@@ -119,6 +123,11 @@ public abstract class AbstractMessengerApplication extends Application implement
         return authServiceFacade;
     }
 
+    @Override
+    @NotNull
+    public NetworkStateService getNetworkStateService() {
+        return networkStateService;
+    }
 
     /*
     **********************************************************************
@@ -182,7 +191,7 @@ public abstract class AbstractMessengerApplication extends Application implement
         // load persistence data
         this.authService.load(this);
 
-        NetworkStateController.getInstance().startListening(this);
+        this.networkStateService.startListening(this);
 
         final Intent intent = new Intent();
         intent.setClass(this, MessengerService.class);

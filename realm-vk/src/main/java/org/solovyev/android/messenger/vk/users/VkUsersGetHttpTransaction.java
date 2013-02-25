@@ -10,8 +10,7 @@ import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.common.collections.Collections;
-import org.solovyev.common.utils.Collections2;
-import org.solovyev.common.utils.Strings2;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
     public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@NotNull List<String> userIds, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
         final List<VkUsersGetHttpTransaction> result = new ArrayList<VkUsersGetHttpTransaction>();
 
-        for (List<String> userIdsChunk : Collections2.split(userIds, MAX_CHUNK)) {
+        for (List<String> userIdsChunk : Collections.split(userIds, MAX_CHUNK)) {
             result.add(new VkUsersGetHttpTransaction(userIdsChunk, apiUserFields));
         }
 
@@ -74,11 +73,11 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
     public List<NameValuePair> getRequestParameters() {
         final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-        result.add(new BasicNameValuePair("uids", Strings2.getAllValues(userIds)));
+        result.add(new BasicNameValuePair("uids", Strings.getAllValues(userIds)));
         if (Collections.isEmpty(apiUserFields)) {
             result.add(new BasicNameValuePair("fields", ApiUserField.getAllFieldsRequestParameter()));
         } else {
-            result.add(new BasicNameValuePair("fields", Strings2.getAllValues(apiUserFields)));
+            result.add(new BasicNameValuePair("fields", Strings.getAllValues(apiUserFields)));
         }
 
         return result;

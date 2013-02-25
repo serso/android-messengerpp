@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.users;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.RealmUser;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmUserImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
@@ -29,7 +29,7 @@ public class UserImpl extends JObject implements User {
     private String login;
 
     @NotNull
-    private RealmUser realmUser;
+    private RealmEntity realmEntity;
 
     @NotNull
     private UserSyncData userSyncData;
@@ -48,19 +48,19 @@ public class UserImpl extends JObject implements User {
                                    @NotNull String realmUserId,
                                    @NotNull UserSyncData userSyncData,
                                    @NotNull List<AProperty> properties) {
-        final RealmUser realmUser = RealmUserImpl.newInstance(reamId, realmUserId);
-        return newInstance(new VersionedEntityImpl<String>(realmUser.getUserId()), realmUser, userSyncData, properties);
+        final RealmEntity realmEntity = RealmUserImpl.newInstance(reamId, realmUserId);
+        return newInstance(new VersionedEntityImpl<String>(realmEntity.getEntityId()), realmEntity, userSyncData, properties);
     }
 
     @NotNull
     public static User newInstance(@NotNull VersionedEntity<String> versionedEntity,
-                                   @NotNull RealmUser realmUser,
+                                   @NotNull RealmEntity realmEntity,
                                    @NotNull UserSyncData userSyncData,
                                    @NotNull List<AProperty> properties) {
         final UserImpl result = new UserImpl();
 
         result.versionedEntity = versionedEntity;
-        result.realmUser = realmUser;
+        result.realmEntity = realmEntity;
         result.login = String.valueOf(versionedEntity.getId());
         result.userSyncData = userSyncData;
         result.properties.addAll(properties);
@@ -168,8 +168,8 @@ public class UserImpl extends JObject implements User {
 
     @NotNull
     @Override
-    public RealmUser getRealmUser() {
-        return this.realmUser;
+    public RealmEntity getRealmUser() {
+        return this.realmEntity;
     }
 
     @Override
@@ -212,7 +212,7 @@ public class UserImpl extends JObject implements User {
         final UserImpl clone = (UserImpl) super.clone();
 
         clone.versionedEntity = versionedEntity.clone();
-        clone.realmUser = realmUser.clone();
+        clone.realmEntity = realmEntity.clone();
 
         return clone;
     }

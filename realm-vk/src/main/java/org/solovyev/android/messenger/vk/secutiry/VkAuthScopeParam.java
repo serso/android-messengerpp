@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.vk.secutiry;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.common.utils.Strings2;
+import org.solovyev.common.text.Strings;
 
 /**
  * User: serso
@@ -26,7 +26,7 @@ public enum VkAuthScopeParam {
     @NotNull
     public static String getAllFieldsRequestParameter() {
         if (allFieldsRequestParameter == null) {
-            allFieldsRequestParameter = Strings2.getAllEnumValues(VkAuthScopeParam.class);
+            allFieldsRequestParameter = Strings.getAllEnumValues(VkAuthScopeParam.class);
         }
 
         return allFieldsRequestParameter;

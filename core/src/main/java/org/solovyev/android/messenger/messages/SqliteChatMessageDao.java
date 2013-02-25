@@ -13,7 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.*;
+import org.solovyev.android.db.AbstractDbQuery;
+import org.solovyev.android.db.AbstractObjectDbExec;
+import org.solovyev.android.db.AbstractSQLiteHelper;
+import org.solovyev.android.db.AndroidDbUtils;
+import org.solovyev.android.db.DbExec;
+import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.chats.Chat;
@@ -24,7 +29,6 @@ import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
-import org.solovyev.common.utils.Collections2;
 import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
@@ -256,7 +260,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         private static List<RemoveMessages> newInstances(@NotNull List<String> messagesIds) {
             final List<RemoveMessages> result = new ArrayList<RemoveMessages>();
 
-            for (List<String> messagesIdsChunk : Collections2.split(messagesIds, MAX_IN_COUNT)) {
+            for (List<String> messagesIdsChunk : Collections.split(messagesIds, MAX_IN_COUNT)) {
                 result.add(new RemoveMessages(messagesIdsChunk));
             }
 

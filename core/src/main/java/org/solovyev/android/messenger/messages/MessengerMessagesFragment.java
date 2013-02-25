@@ -8,21 +8,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.AbstractMessengerListFragment;
+import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEventListener;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.MessageListItem;
+import org.solovyev.android.messenger.chats.MessagesAdapter;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
-import org.solovyev.common.utils.Strings2;
 
 import java.util.Comparator;
 import java.util.List;
@@ -127,7 +141,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String messageText = Strings2.toHtml(messageBody.getText());
+                final String messageText = Strings.toHtml(messageBody.getText());
 
                 if (!Strings.isEmpty(messageText)) {
                     final Activity activity = getActivity();

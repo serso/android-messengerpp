@@ -17,7 +17,7 @@ import org.solovyev.android.messenger.users.RealmUserService;
 public class XmppRealm implements Realm {
 
     @NotNull
-    private static final String REALM_ID = "xmpp";
+    static final String REALM_ID = "xmpp";
 
     @NotNull
     private XmppRealmConnection xmppRealmConnection;

@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.vk.users;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.common.utils.Strings2;
+import org.solovyev.common.text.Strings;
 
 /**
  * User: serso
@@ -35,7 +35,7 @@ public enum ApiUserField {
     @NotNull
     public static String getAllFieldsRequestParameter() {
         if (allFieldsRequestParameter == null) {
-            allFieldsRequestParameter = Strings2.getAllEnumValues(ApiUserField.class);
+            allFieldsRequestParameter = Strings.getAllEnumValues(ApiUserField.class);
         }
 
         return allFieldsRequestParameter;

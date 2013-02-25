@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
  * Date: 2/24/13
  * Time: 4:10 PM
  */
-public interface RealmUser {
+public interface RealmEntity {
 
     /**
      * @return unique ID of user in application
      */
     @NotNull
-    String getUserId();
+    String getEntityId();
 
     /**
      * @return realm to which user is belonged to
@@ -25,8 +25,8 @@ public interface RealmUser {
      * @return user id in realm
      */
     @NotNull
-    String getRealmUserId();
+    String getRealmEntityId();
 
     @NotNull
-    RealmUser clone();
+    RealmEntity clone();
 }

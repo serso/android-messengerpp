@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
 import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
-import org.solovyev.android.messenger.http.MessengerRemoteFileService;
+import org.solovyev.android.messenger.http.MessengerCachingImageLoader;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
@@ -30,6 +30,8 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.vk.VkRealm;
 import org.solovyev.android.messenger.vk.registration.DummyRegistrationService;
+import org.solovyev.android.network.MessengerNetworkStateService;
+import org.solovyev.android.network.NetworkStateService;
 
 /**
  * User: serso
@@ -47,7 +49,8 @@ public class MessengerModule extends AbstractModule {
         bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
         bind(AuthService.class).to(AuthServiceImpl.class);
         bind(AuthServiceFacade.class).to(AuthServiceFacadeImpl.class);
-        bind(ImageLoader.class).to(MessengerRemoteFileService.class);
+        bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
+        bind(NetworkStateService.class).to(MessengerNetworkStateService.class);
 
         bind(UserDao.class).to(SqliteUserDao.class);
         bind(UserService.class).to(DefaultUserService.class);

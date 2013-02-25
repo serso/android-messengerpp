@@ -12,7 +12,7 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.LiteChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.vk.http.AbstractVkHttpTransaction;
-import org.solovyev.common.utils.Strings2;
+import org.solovyev.common.text.Strings;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -59,7 +59,7 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 
             final List<LiteChatMessage> fwdMessages = chatMessage.getFwdMessages();
             if (!fwdMessages.isEmpty()) {
-                final String fwdMessagesParam = Strings2.getAllValues(Lists.transform(fwdMessages, new Function<LiteChatMessage, String>() {
+                final String fwdMessagesParam = Strings.getAllValues(Lists.transform(fwdMessages, new Function<LiteChatMessage, String>() {
                     @Override
                     public String apply(@Nullable LiteChatMessage fwdMessage) {
                         assert fwdMessage != null;

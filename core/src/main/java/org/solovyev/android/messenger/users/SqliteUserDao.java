@@ -21,7 +21,6 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.common.collections.Collections;
-import org.solovyev.common.utils.Collections2;
 import roboguice.inject.ContextSingleton;
 
 import java.util.ArrayList;
@@ -197,7 +196,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         private static List<RemoveContacts> newInstances(@NotNull String userId, @NotNull List<String> contactIds) {
             final List<RemoveContacts> result = new ArrayList<RemoveContacts>();
 
-            for (List<String> contactIdsChunk : Collections2.split(contactIds, MAX_IN_COUNT)) {
+            for (List<String> contactIdsChunk : Collections.split(contactIds, MAX_IN_COUNT)) {
                 result.add(new RemoveContacts(userId, contactIdsChunk));
             }
 
@@ -413,7 +412,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         values.put("id", user.getId());
         values.put("version", user.getVersion());
         values.put("realm_id", user.getRealmUser().getRealmId());
-        values.put("realm_user_id", user.getRealmUser().getRealmUserId());
+        values.put("realm_user_id", user.getRealmUser().getRealmEntityId());
         values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
         values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
 

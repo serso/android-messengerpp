@@ -12,10 +12,10 @@ import org.solovyev.android.http.CachingImageLoader;
  * Time: 10:43 PM
  */
 @Singleton
-public class MessengerRemoteFileService extends CachingImageLoader {
+public class MessengerCachingImageLoader extends CachingImageLoader {
 
     @Inject
-    public MessengerRemoteFileService(@NotNull Context context) {
+    public MessengerCachingImageLoader(@NotNull Context context) {
         super(context, "messenger");
     }
 }

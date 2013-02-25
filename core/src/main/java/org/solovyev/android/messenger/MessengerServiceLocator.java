@@ -8,6 +8,7 @@ import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.network.NetworkStateService;
 
 /**
  * User: serso
@@ -36,4 +37,7 @@ public interface MessengerServiceLocator {
 
     @NotNull
     AuthServiceFacade getAuthServiceFacade();
+
+    @NotNull
+    NetworkStateService getNetworkStateService();
 }

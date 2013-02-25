@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.users;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.realms.RealmUser;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.VersionedEntity;
 
@@ -53,7 +53,7 @@ public interface User extends VersionedEntity<String>, MutableUserSyncData {
     List<AProperty> getProperties();
 
     @NotNull
-    RealmUser getRealmUser();
+    RealmEntity getRealmUser();
 
     @Nullable
     String getPropertyValueByName(@NotNull String name);

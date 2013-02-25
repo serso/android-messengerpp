@@ -12,8 +12,8 @@ import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.network.NetworkData;
 import org.solovyev.android.network.NetworkState;
-import org.solovyev.android.network.NetworkStateController;
 import org.solovyev.android.network.NetworkStateListener;
+import org.solovyev.android.network.NetworkStateService;
 import roboguice.service.RoboService;
 
 /**
@@ -34,6 +34,10 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Inject
     @NotNull
     private Realm realm;
+
+    @Inject
+    @NotNull
+    private NetworkStateService networkStateService;
 
     /*
     **********************************************************************
@@ -81,8 +85,8 @@ public class MessengerService extends RoboService implements NetworkStateListene
     public void onCreate() {
         super.onCreate();
 
-        NetworkStateController.getInstance().add(this);
-        final NetworkData networkData = NetworkStateController.getInstance().getNetworkData();
+        networkStateService.addListener(this);
+        final NetworkData networkData = networkStateService.getNetworkData();
 
         //final Timer timer = new Timer("Messenger sync task", true);
         //timer.scheduleAtFixedRate(new SyncTimerTask(this), 10000L, 30L * 1000L);
@@ -108,7 +112,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Override
     public void onDestroy() {
         try {
-            NetworkStateController.getInstance().remove(this);
+            networkStateService.removeListener(this);
 
             synchronized (this.realmConnectionLock) {
                 if (this.realmConnection != null && !this.realmConnection.isStopped()) {
