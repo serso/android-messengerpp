@@ -9,8 +9,6 @@ import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
-import org.solovyev.common.VersionedEntity;
-import org.solovyev.common.VersionedEntityImpl;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nullable;
@@ -28,7 +26,7 @@ import java.util.Map;
 public class UserImpl extends JObject implements User {
 
     @NotNull
-    private VersionedEntity<String> versionedEntity;
+    private String id;
 
     @NotNull
     private String login;
@@ -54,19 +52,18 @@ public class UserImpl extends JObject implements User {
                                    @NotNull UserSyncData userSyncData,
                                    @NotNull List<AProperty> properties) {
         final RealmEntity realmEntity = RealmEntityImpl.newInstance(reamId, realmUserId);
-        return newInstance(new VersionedEntityImpl<String>(realmEntity.getEntityId()), realmEntity, userSyncData, properties);
+        return newInstance(realmEntity, userSyncData, properties);
     }
 
     @NotNull
-    public static User newInstance(@NotNull VersionedEntity<String> versionedEntity,
-                                   @NotNull RealmEntity realmEntity,
+    public static User newInstance(@NotNull RealmEntity realmEntity,
                                    @NotNull UserSyncData userSyncData,
                                    @NotNull List<AProperty> properties) {
         final UserImpl result = new UserImpl();
 
-        result.versionedEntity = versionedEntity;
+        result.id = realmEntity.getEntityId();
         result.realmEntity = realmEntity;
-        result.login = String.valueOf(versionedEntity.getId());
+        result.login = result.id;
         result.userSyncData = userSyncData;
         result.properties.addAll(properties);
 
@@ -79,19 +76,13 @@ public class UserImpl extends JObject implements User {
 
     @NotNull
     public static User newFakeInstance(@NotNull String userId) {
-        return newInstance(new VersionedEntityImpl<String>(userId), RealmEntityImpl.newInstance(Realm.FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
+        return newInstance(RealmEntityImpl.newInstance(Realm.FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
     }
 
     @Override
     @NotNull
     public String getId() {
-        return versionedEntity.getId();
-    }
-
-    @Override
-    @NotNull
-    public Integer getVersion() {
-        return versionedEntity.getVersion();
+        return this.id;
     }
 
     @NotNull
@@ -189,25 +180,21 @@ public class UserImpl extends JObject implements User {
 
         final UserImpl that = (UserImpl) o;
 
-        if (!versionedEntity.equals(that.versionedEntity)) return false;
+        if (!id.equals(that.id)) return false;
 
         return true;
     }
 
-    @Override
-    public boolean equalsVersion(Object that) {
-        return this.equals(that) && this.versionedEntity.equalsVersion(((UserImpl) that).versionedEntity);
-    }
 
     @Override
     public int hashCode() {
-        return versionedEntity.hashCode();
+        return id.hashCode();
     }
 
     @Override
     public String toString() {
         return "UserImpl{" +
-                "versionedEntity=" + versionedEntity +
+                "id=" + id +
                 '}';
     }
 
@@ -216,7 +203,6 @@ public class UserImpl extends JObject implements User {
     public UserImpl clone() {
         final UserImpl clone = (UserImpl) super.clone();
 
-        clone.versionedEntity = versionedEntity.clone();
         clone.realmEntity = realmEntity.clone();
 
         return clone;

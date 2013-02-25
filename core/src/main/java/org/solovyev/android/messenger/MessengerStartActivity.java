@@ -7,7 +7,8 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.ConfiguredRealm;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
@@ -15,6 +16,7 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.User;
 import roboguice.activity.RoboActivity;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,7 +32,7 @@ public class MessengerStartActivity extends RoboActivity {
 
     @Inject
     @NotNull
-    private Realm realm;
+    private RealmService realmService;
 
     @Inject
     @NotNull
@@ -41,30 +43,43 @@ public class MessengerStartActivity extends RoboActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if ( authService.isUserLoggedIn(realm.getId()) ) {
+        final Collection<ConfiguredRealm> configuredRealms = realmService.getConfiguredRealms();
+        if (configuredRealms.isEmpty()) {
 
-            try {
-                final User user = authService.getUser(realm.getId(), this);
+            boolean atLeastOneRealmLogged = false;
 
-                if (!user.getUserSyncData().isFirstSyncDone()) {
-                    // user is logged first time => sync all data
-                    try {
-                        syncService.syncAll(this);
-                    } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
-                        // do not care
+            for (ConfiguredRealm configuredRealm : configuredRealms) {
+                try {
+                    final User user = authService.getUser(configuredRealm.getRealm().getId(), this);
+
+                    if (!user.getUserSyncData().isFirstSyncDone()) {
+                        // user is logged first time => sync all data
+                        try {
+                            syncService.syncAll(this);
+                        } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+                            // do not care
+                        }
+                    } else {
+                        // prefetch data
+                        new PreloadCachedData(this).execute(user);
                     }
-                } else {
-                    // prefetch data
-                    new PreloadCachedData(this).execute(user);
+
+                    atLeastOneRealmLogged = true;
+                } catch (UserIsNotLoggedInException e) {
+                    Log.e(MessengerStartActivity.class.getSimpleName(), e.getMessage(), e);
                 }
-            } catch (UserIsNotLoggedInException e) {
-                Log.e(MessengerStartActivity.class.getSimpleName(), e.getMessage(), e);
             }
 
-            MessengerMainActivity.startActivity(this);
+
+            if (atLeastOneRealmLogged) {
+                MessengerMainActivity.startActivity(this);
+            } else {
+                MessengerRealmsActivity.startActivity(this);
+            }
         } else {
-            MessengerLoginActivity.startActivity(this);
+            MessengerRealmsActivity.startActivity(this);
         }
+
         this.finish();
     }
 

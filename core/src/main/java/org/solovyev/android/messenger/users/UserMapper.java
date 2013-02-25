@@ -30,19 +30,17 @@ public class UserMapper implements Converter<Cursor, User> {
     @NotNull
     @Override
     public User convert(@NotNull Cursor c) {
-        final VersionedEntity<String> versionedEntity = StringVersionedEntityMapper.getInstance().convert(c);
-
-        final RealmEntity realmEntity = RealmEntityMapper.newInstanceFor(2).convert(c);
+        final RealmEntity realmEntity = RealmEntityMapper.newInstanceFor(1).convert(c);
 
         final UserSyncData userSyncData = UserSyncDataImpl.newInstanceFromStrings(c.getString(4), c.getString(5), c.getString(6), c.getString(7));
 
         final List<AProperty> properties;
         if (userDao != null) {
-            properties = userDao.loadUserPropertiesById(versionedEntity.getId());
+            properties = userDao.loadUserPropertiesById(realmEntity.getEntityId());
         } else {
             properties = Collections.emptyList();
         }
 
-        return UserImpl.newInstance(versionedEntity, realmEntity, userSyncData, properties);
+        return UserImpl.newInstance(realmEntity, userSyncData, properties);
     }
 }

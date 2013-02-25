@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.common.VersionedEntity;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface User extends VersionedEntity<String>, MutableUserSyncData {
+public interface User extends MutableUserSyncData {
 
     /*
     **********************************************************************
@@ -34,6 +33,9 @@ public interface User extends VersionedEntity<String>, MutableUserSyncData {
     *
     **********************************************************************
     */
+
+    @NotNull
+    String getId();
 
     @NotNull
     String getLogin();

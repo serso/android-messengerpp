@@ -6,12 +6,14 @@ import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.ConfiguredRealm;
 import org.solovyev.android.messenger.realms.RealmService;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -49,6 +51,9 @@ public class DefaultSyncService implements SyncService {
     @NotNull
     private final AtomicBoolean syncAllTaskRunning = new AtomicBoolean(false);
 
+    @NotNull
+    private final Executor executor = Executors.newSingleThreadExecutor();
+
     @Override
     public void syncAll(@NotNull final Context context) throws SyncAllTaskIsAlreadyRunning {
 
@@ -60,15 +65,13 @@ public class DefaultSyncService implements SyncService {
             }
         }
 
-        new Thread(new Runnable() {
-
+        executor.execute(new Runnable() {
             @Override
             public void run() {
-
                 try {
 
-                    for (Realm realm : DefaultSyncService.this.realmService.getRealms()) {
-                        final SyncData syncData = new SyncDataImpl(realm.getId());
+                    for (ConfiguredRealm configuredRealm : DefaultSyncService.this.realmService.getConfiguredRealms()) {
+                        final SyncData syncData = new SyncDataImpl(configuredRealm.getRealm().getId());
 
                         for (SyncTask syncTask : SyncTask.values()) {
                             try {
@@ -93,10 +96,8 @@ public class DefaultSyncService implements SyncService {
                         syncAllTaskRunning.set(false);
                     }
                 }
-
             }
-        }).start();
-
+        });
 
     }
 

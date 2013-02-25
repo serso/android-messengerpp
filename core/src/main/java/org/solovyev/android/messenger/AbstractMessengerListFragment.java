@@ -500,7 +500,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
                 }
             }
         });
-        listLoader.execute();
+        if (listLoader != null) {
+            listLoader.execute();
+        }
     }
 
     @Override
@@ -551,7 +553,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @NotNull
     protected abstract AbstractMessengerListItemAdapter<LI> createAdapter();
 
-    @NotNull
+    @Nullable
     protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<LI> adapter, @NotNull Runnable onPostExecute);
 
     @Override

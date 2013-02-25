@@ -3,8 +3,6 @@ package org.solovyev.android.messenger.messages;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
@@ -81,12 +79,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
             }
         }
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        final MessengerMessagesFragment fragment = new MessengerMessagesFragment(chat);
-        fragmentTransaction.add(R.id.content_first_pane, fragment);
-        fragmentTransaction.commit();
+        setFragment(R.id.content_first_pane, new MessengerMessagesFragment(chat));
 
         setTitle(createTitle());
     }

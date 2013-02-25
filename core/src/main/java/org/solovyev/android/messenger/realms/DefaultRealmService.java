@@ -18,6 +18,9 @@ public class DefaultRealmService implements RealmService {
     @NotNull
     private final Map<String, Realm> realms = new HashMap<String, Realm>();
 
+    @NotNull
+    private final List<ConfiguredRealm> configuredRealms = new ArrayList<ConfiguredRealm>();
+
     @Inject
     public DefaultRealmService(@NotNull MessengerConfiguration configuration) {
         this(Arrays.asList(configuration.getRealm()));
@@ -33,6 +36,12 @@ public class DefaultRealmService implements RealmService {
     @Override
     public Collection<Realm> getRealms() {
         return Collections.unmodifiableCollection(this.realms.values());
+    }
+
+    @NotNull
+    @Override
+    public Collection<ConfiguredRealm> getConfiguredRealms() {
+        return Collections.unmodifiableCollection(this.configuredRealms);
     }
 
     @NotNull

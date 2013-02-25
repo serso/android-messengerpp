@@ -17,6 +17,9 @@ public interface RealmService {
     @NotNull
     Collection<Realm> getRealms();
 
+    @NotNull
+    Collection<ConfiguredRealm> getConfiguredRealms();
+
     /**
      * Method returns the realm which previously has been registered in this service
      * @param realmId id of realm

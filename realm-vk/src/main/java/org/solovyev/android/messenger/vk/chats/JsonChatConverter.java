@@ -104,7 +104,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
                             ApiChatImpl chat = fakeChats.get(chatId);
                             if (chat == null) {
-                                chat = new ApiChatImpl(RealmEntityImpl.fromEntityId(chatId), jsonMessagesResult.getCount(), true);
+                                chat = ApiChatImpl.newInstance(RealmEntityImpl.fromEntityId(chatId), jsonMessagesResult.getCount(), true);
 
                                 chat.addParticipant(user);
                                 chat.addParticipant(secondUser);
@@ -124,7 +124,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         ApiChatImpl chat = chats.get(chatId);
                         if (chat == null) {
                             // create new chat object
-                            chat = new ApiChatImpl(RealmEntityImpl.newInstance(VkRealm.REALM_ID, chatId), jsonMessagesResult.getCount(), false);
+                            chat = ApiChatImpl.newInstance(RealmEntityImpl.newInstance(VkRealm.REALM_ID, chatId), jsonMessagesResult.getCount(), false);
 
                             final String participantsStr = jsonMessage.getChat_active();
                             if (!Strings.isEmpty(participantsStr)) {

@@ -2,6 +2,9 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
@@ -167,5 +170,13 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     protected void onRestart() {
         super.onRestart();
         this.activity.onRestart(this);
+    }
+
+    protected void setFragment(int fragmentContainerViewId, @NotNull Fragment fragment) {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.add(fragmentContainerViewId, fragment);
+        fragmentTransaction.commit();
     }
 }

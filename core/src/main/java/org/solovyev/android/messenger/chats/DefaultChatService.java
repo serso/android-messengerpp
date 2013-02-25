@@ -135,7 +135,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         synchronized (lock) {
             result = getChatById(chatId, context);
             if ( result == null ) {
-                final ApiChatImpl apiChat = new ApiChatImpl(RealmEntityImpl.fromEntityId(chatId), 0, true);
+                final ApiChatImpl apiChat = ApiChatImpl.newInstance(RealmEntityImpl.fromEntityId(chatId), 0, true);
                 apiChat.addParticipant(getUserService().getUserById(realmUser.getEntityId(), context));
                 apiChat.addParticipant(getUserService().getUserById(secondRealmUser.getEntityId(), context));
 

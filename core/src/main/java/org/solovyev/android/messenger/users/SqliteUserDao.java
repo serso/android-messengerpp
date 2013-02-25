@@ -410,7 +410,6 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
 
         values.put("id", user.getId());
-        values.put("version", user.getVersion());
         values.put("realm_id", user.getRealmUser().getRealmId());
         values.put("realm_user_id", user.getRealmUser().getRealmEntityId());
         values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));

@@ -20,6 +20,7 @@
 
         </activity>
 
+        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRealmsActivity"/>
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerLoginActivity"/>
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRegistrationActivity"/>
