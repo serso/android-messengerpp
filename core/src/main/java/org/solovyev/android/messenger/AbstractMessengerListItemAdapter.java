@@ -23,9 +23,6 @@ import java.util.List;
  */
 public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListItemArrayAdapter<LI> implements UserEventListener {
 
-    @NotNull
-    private User user;
-
     private boolean initialized = false;
 
     @Nullable
@@ -38,14 +35,8 @@ public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListI
     @NotNull
     private final AdapterView.OnItemClickListener selectedItemListener = new SelectedItemListener();
 
-    public AbstractMessengerListItemAdapter(@NotNull Context context, @NotNull List<? extends LI> listItems, @NotNull User user) {
+    public AbstractMessengerListItemAdapter(@NotNull Context context, @NotNull List<? extends LI> listItems) {
         super(context, listItems);
-        this.user = user;
-    }
-
-    @NotNull
-    protected User getUser() {
-        return user;
     }
 
     public boolean isInitialized() {
@@ -58,11 +49,6 @@ public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListI
 
     @Override
     public void onUserEvent(@NotNull User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
-        if (userEventType == UserEventType.changed) {
-            if (eventUser.equals(user)) {
-                user = eventUser;
-            }
-        }
     }
 
     protected void addListItem(@NotNull LI listItem) {

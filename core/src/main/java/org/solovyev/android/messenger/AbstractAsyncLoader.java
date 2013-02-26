@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.users.User;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,20 +19,15 @@ import java.util.List;
 public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends MessengerAsyncTask<Void, Void, List<R>> {
 
     @NotNull
-    private User user;
-
-    @NotNull
     private ListItemArrayAdapter<LI> adapter;
 
     @Nullable
     private Runnable onPostExecute;
 
-    public AbstractAsyncLoader(@NotNull User user,
-                               @NotNull Context context,
+    public AbstractAsyncLoader(@NotNull Context context,
                                @NotNull ListItemArrayAdapter<LI> adapter,
                                @Nullable Runnable onPostExecute) {
         super(context);
-        this.user = user;
         this.adapter = adapter;
         this.onPostExecute = onPostExecute;
     }
@@ -51,11 +45,6 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 
     @NotNull
     protected abstract List<R> getElements(@NotNull Context context);
-
-    @NotNull
-    protected User getUser() {
-        return user;
-    }
 
     @Override
     protected void onSuccessPostExecute(@Nullable final List<R> elements) {

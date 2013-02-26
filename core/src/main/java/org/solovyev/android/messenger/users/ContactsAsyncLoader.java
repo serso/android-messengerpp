@@ -7,7 +7,10 @@ import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,15 +19,31 @@ import java.util.List;
 * Date: 6/2/12
 * Time: 3:12 PM
 */
-class ContactsAsyncLoader extends AbstractAsyncLoader<User, ContactListItem> {
+class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListItem> {
 
-    ContactsAsyncLoader(@NotNull User user, @NotNull Context context, @NotNull ListItemArrayAdapter<ContactListItem> adapter, @Nullable Runnable onPostExecute) {
-        super(user, context, adapter, onPostExecute);
+    @NotNull
+    private final RealmService realmService;
+
+    ContactsAsyncLoader(@NotNull Context context,
+                        @NotNull ListItemArrayAdapter<ContactListItem> adapter,
+                        @Nullable Runnable onPostExecute,
+                        @NotNull RealmService realmService) {
+        super(context, adapter, onPostExecute);
+        this.realmService = realmService;
     }
 
     @NotNull
-    protected List<User> getElements(@NotNull Context context) {
-        return AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(getUser().getRealmUser());
+    protected List<UserContact> getElements(@NotNull Context context) {
+        final List<UserContact> result = new ArrayList<UserContact>();
+
+        for (Realm realm : realmService.getRealms()) {
+            final User user = realm.getUser();
+            for (User contact : AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getRealmUser())) {
+                result.add(new UserContact(user, contact));
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -34,7 +53,7 @@ class ContactsAsyncLoader extends AbstractAsyncLoader<User, ContactListItem> {
 
     @NotNull
     @Override
-    protected ContactListItem createListItem(@NotNull User contact) {
-        return new ContactListItem(getUser(), contact);
+    protected ContactListItem createListItem(@NotNull UserContact userContact) {
+        return new ContactListItem(userContact.getUser(), userContact.getContact());
     }
 }

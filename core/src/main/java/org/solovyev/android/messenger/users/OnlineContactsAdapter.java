@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.users;
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.list.ListItem;
 
 /**
  * User: serso
@@ -12,8 +11,8 @@ import org.solovyev.android.list.ListItem;
  */
 public class OnlineContactsAdapter extends AbstractContactsAdapter {
 
-    public OnlineContactsAdapter(@NotNull Context context, @NotNull User user) {
-        super(context, user);
+    public OnlineContactsAdapter(@NotNull Context context) {
+        super(context);
     }
 
     @Override

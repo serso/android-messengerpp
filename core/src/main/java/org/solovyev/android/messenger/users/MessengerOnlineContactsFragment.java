@@ -16,10 +16,11 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
  * Time: 5:14 PM
  */
 public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFragment {
+
     @NotNull
     @Override
-    protected AbstractAsyncLoader<User, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
-        return new OnlineContactsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
+    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
+        return new OnlineContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 
     @Override
@@ -44,6 +45,6 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
 
     @NotNull
     protected AbstractContactsAdapter createAdapter() {
-        return new OnlineContactsAdapter(getActivity(), getUser());
+        return new OnlineContactsAdapter(getActivity());
     }
 }

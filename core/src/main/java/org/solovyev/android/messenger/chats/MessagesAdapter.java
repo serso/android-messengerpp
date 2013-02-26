@@ -25,6 +25,9 @@ import java.util.*;
 public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageListItem> implements ChatEventListener, UserEventListener {
 
     @NotNull
+    private final User user;
+
+    @NotNull
     private Chat chat;
 
     // map of list items saying that someone start typing message
@@ -33,7 +36,8 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
     private final Map<RealmEntity, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<RealmEntity, MessageListItem>());
 
     public MessagesAdapter(@NotNull Context context, @NotNull User user, @NotNull Chat chat) {
-        super(context, new ArrayList<MessageListItem>(), user);
+        super(context, new ArrayList<MessageListItem>());
+        this.user = user;
         this.chat = chat;
     }
 
@@ -129,7 +133,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
 
     @NotNull
     private MessageListItem createListItem(@NotNull ChatMessage message) {
-        return new MessageListItem(getUser(), chat, message);
+        return new MessageListItem(user, chat, message);
     }
 
     private void addMessageListItem(@NotNull ChatMessage message) {

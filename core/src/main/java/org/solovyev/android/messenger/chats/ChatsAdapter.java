@@ -24,8 +24,8 @@ import java.util.List;
  */
 public class ChatsAdapter extends AbstractMessengerListItemAdapter<ChatListItem> implements ChatEventListener, UserEventListener {
 
-    public ChatsAdapter(@NotNull Context context, @NotNull User user) {
-        super(context, new ArrayList<ChatListItem>(), user);
+    public ChatsAdapter(@NotNull Context context) {
+        super(context, new ArrayList<ChatListItem>());
     }
 
     @Override
@@ -58,6 +58,11 @@ public class ChatsAdapter extends AbstractMessengerListItemAdapter<ChatListItem>
                 }));
             }
         }
+    }
+
+    private User getUser() {
+        // todo serso: continue
+        throw new UnsupportedOperationException();
     }
 
     protected void removeListItem(@NotNull User user, @NotNull String chatId) {

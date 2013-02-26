@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ContactsAdapter extends AbstractContactsAdapter {
 
-    public ContactsAdapter(@NotNull Context context, @NotNull User user) {
-        super(context, user);
+    public ContactsAdapter(@NotNull Context context) {
+        super(context);
     }
 
     @Override

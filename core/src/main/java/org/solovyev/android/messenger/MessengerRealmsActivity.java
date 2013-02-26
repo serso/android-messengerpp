@@ -18,7 +18,7 @@ import java.util.List;
 public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
     public MessengerRealmsActivity() {
-        super(R.layout.msg_main);
+        super(R.layout.msg_main, false, true);
     }
 
     public static void startActivity(@NotNull Activity activity) {
@@ -68,7 +68,7 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
             for (Realm realm : realmService.getRealms()) {
                 listItems.add(new ConfiguredRealmListItem(realm));
             }
-            return new MessengerConfiguredRealmListItemAdapter(getActivity(), listItems, getUser());
+            return new MessengerConfiguredRealmListItemAdapter(getActivity(), listItems);
         }
 
         @Nullable

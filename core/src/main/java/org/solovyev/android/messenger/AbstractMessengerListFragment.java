@@ -12,7 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -24,8 +31,8 @@ import org.solovyev.android.AThreads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
-import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
@@ -67,6 +74,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     **********************************************************************
     */
 
+
+    @Inject
+    @NotNull
+    private RealmService realmService;
+
     @Inject
     @NotNull
     private UserService userService;
@@ -94,9 +106,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Nullable
     private UserEventListener userEventListener;
 
-    @NotNull
-    private User user;
-
     private AbstractMessengerListItemAdapter<LI> adapter;
 
     @Nullable
@@ -119,12 +128,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(tag, "onCreate: " + this);
-
-        try {
-            this.user = this.authServiceFacade.getUser(getActivity());
-        } catch (UserIsNotLoggedInException e) {
-            MessengerLoginActivity.startActivity(getActivity());
-        }
     }
 
     @NotNull
@@ -147,6 +150,10 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         return chatService;
     }
 
+    @NotNull
+    protected RealmService getRealmService() {
+        return realmService;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -466,42 +473,14 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             position = -1;
         }
 
-        listLoader = createAsyncLoader(adapter, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // change adapter state
-                    adapter.setInitialized(true);
+        final PostListLoadingRunnable onPostExecute = new PostListLoadingRunnable(position, lv);
 
-                    // change UI state
-                    setListShown(true);
+        listLoader = createAsyncLoader(adapter, onPostExecute);
 
-                    // apply filter if any
-                    if (filterInput != null) {
-                        filterTextChanged(filterInput.getText());
-                    } else {
-                        filterTextChanged("");
-                    }
-
-                    if (position >= 0 && position < adapter.getCount()) {
-                        adapter.getSelectedItemListener().onItemClick(getListView(), null, position, 0);
-
-                        if (AbstractMessengerApplication.getMultiPaneManager().isDualPane(getActivity())) {
-                            final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
-                            if (onClickAction != null) {
-                                onClickAction.onClick(getActivity(), adapter, lv);
-                            }
-                        }
-                    }
-
-                } catch (IllegalStateException e) {
-                    // todo serso: find the reason of the exception
-                    Log.e(tag, e.getMessage(), e);
-                }
-            }
-        });
         if (listLoader != null) {
             listLoader.execute();
+        } else {
+            onPostExecute.run();
         }
     }
 
@@ -542,12 +521,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
                 this.adapter.filter(searchText);
             }
         }
-    }
-
-
-    @NotNull
-    protected User getUser() {
-        return this.user;
     }
 
     @NotNull
@@ -628,6 +601,52 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
                     AbstractMessengerListFragment.this.adapter.onUserEvent(eventUser, userEventType, data);
                 }
             });
+        }
+    }
+
+    private class PostListLoadingRunnable implements Runnable {
+
+        private final int position;
+
+        @NotNull
+        private final ListView listView;
+
+        public PostListLoadingRunnable(int position, @NotNull ListView lv) {
+            this.position = position;
+            listView = lv;
+        }
+
+        @Override
+        public void run() {
+            try {
+                // change adapter state
+                adapter.setInitialized(true);
+
+                // change UI state
+                setListShown(true);
+
+                // apply filter if any
+                if (filterInput != null) {
+                    filterTextChanged(filterInput.getText());
+                } else {
+                    filterTextChanged("");
+                }
+
+                if (position >= 0 && position < adapter.getCount()) {
+                    adapter.getSelectedItemListener().onItemClick(getListView(), null, position, 0);
+
+                    if (AbstractMessengerApplication.getMultiPaneManager().isDualPane(getActivity())) {
+                        final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
+                        if (onClickAction != null) {
+                            onClickAction.onClick(getActivity(), adapter, listView);
+                        }
+                    }
+                }
+
+            } catch (IllegalStateException e) {
+                // todo serso: find the reason of the exception
+                Log.e(tag, e.getMessage(), e);
+            }
         }
     }
 }

@@ -56,8 +56,8 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
     }
 
     @NotNull
-    protected AbstractAsyncLoader<User, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
-        return new ContactsAsyncLoader(getUser(), getActivity(), adapter, onPostExecute);
+    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
+        return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
 
     @NotNull
     protected AbstractContactsAdapter createAdapter() {
-        return new ContactsAdapter(getActivity(), getUser());
+        return new ContactsAdapter(getActivity());
     }
 
     @Override

@@ -32,7 +32,10 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.MessageListItem;
 import org.solovyev.android.messenger.chats.MessagesAdapter;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
@@ -65,6 +68,10 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @NotNull
     private ImageLoader imageLoader;
 
+    @Inject
+    @NotNull
+    private RealmService realmService;
+
     /*
     **********************************************************************
     *
@@ -81,6 +88,8 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     private static final String CHAT = "chat";
 
     private Chat chat;
+
+    private Realm realm;
 
     @Nullable
     private ChatEventListener chatEventListener;
@@ -177,6 +186,11 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         }
     }
 
+    @NotNull
+    private User getUser() {
+        return realm.getUser();
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // first - restore state
@@ -189,6 +203,8 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             if (chat == null) {
                 Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
                 getActivity().finish();
+            } else {
+                realm = realmService.getRealmById(chat.getRealmChat().getRealmId());
             }
         }
 
@@ -304,45 +320,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @NotNull
     @Override
     protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<MessageListItem> adapter, @NotNull Runnable onPostExecute) {
-        return new AbstractAsyncLoader<ChatMessage, MessageListItem>(getUser(), getActivity(), adapter, onPostExecute) {
-
-            @NotNull
-            @Override
-            protected List<ChatMessage> getElements(@NotNull Context context) {
-                return AbstractMessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmChat(), getActivity());
-            }
-
-            @Override
-            protected Comparator<? super MessageListItem> getComparator() {
-                return MessageListItem.Comparator.getInstance();
-            }
-
-            @NotNull
-            @Override
-            protected MessageListItem createListItem(@NotNull ChatMessage message) {
-                return new MessageListItem(getUser(), chat, message);
-            }
-
-            @Override
-            protected void onSuccessPostExecute(@Nullable List<ChatMessage> elements) {
-                super.onSuccessPostExecute(elements);
-
-                scrollToTheEnd(200);
-
-                // load new messages for chat
-                final FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    new SyncChatMessagesForChatAsyncTask(null, activity) {
-                        @Override
-                        protected void onSuccessPostExecute(@NotNull Input result) {
-                            super.onSuccessPostExecute(result);
-                            // let's wait 0.5 sec while sorting & filtering
-                            scrollToTheEnd(500);
-                        }
-                    }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmUser(), chat.getRealmChat(), false));
-                }
-            }
-        };
+        return new MessagesAsyncLoader(adapter, onPostExecute);
     }
 
     private void scrollToTheEnd(long delayMillis) {
@@ -420,4 +398,47 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         }
     }
 
+    private class MessagesAsyncLoader extends AbstractAsyncLoader<ChatMessage, MessageListItem> {
+
+        public MessagesAsyncLoader(AbstractMessengerListItemAdapter<MessageListItem> adapter, Runnable onPostExecute) {
+            super(MessengerMessagesFragment.this.getActivity(), adapter, onPostExecute);
+        }
+
+        @NotNull
+        @Override
+        protected List<ChatMessage> getElements(@NotNull Context context) {
+            return AbstractMessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmChat(), getActivity());
+        }
+
+        @Override
+        protected Comparator<? super MessageListItem> getComparator() {
+            return MessageListItem.Comparator.getInstance();
+        }
+
+        @NotNull
+        @Override
+        protected MessageListItem createListItem(@NotNull ChatMessage message) {
+            return new MessageListItem(getUser(), chat, message);
+        }
+
+        @Override
+        protected void onSuccessPostExecute(@Nullable List<ChatMessage> elements) {
+            super.onSuccessPostExecute(elements);
+
+            scrollToTheEnd(200);
+
+            // load new messages for chat
+            final FragmentActivity activity = getActivity();
+            if (activity != null) {
+                new SyncChatMessagesForChatAsyncTask(null, activity) {
+                    @Override
+                    protected void onSuccessPostExecute(@NotNull Input result) {
+                        super.onSuccessPostExecute(result);
+                        // let's wait 0.5 sec while sorting & filtering
+                        scrollToTheEnd(500);
+                    }
+                }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmUser(), chat.getRealmChat(), false));
+            }
+        }
+    }
 }

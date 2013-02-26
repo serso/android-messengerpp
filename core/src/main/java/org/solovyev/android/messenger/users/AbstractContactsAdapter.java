@@ -28,8 +28,9 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
     @NotNull
     private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
 
-    public AbstractContactsAdapter(@NotNull Context context, @NotNull User user) {
-        super(context, new ArrayList<ContactListItem>(), user);
+
+    public AbstractContactsAdapter(@NotNull Context context) {
+        super(context, new ArrayList<ContactListItem>());
     }
 
     @Override
@@ -87,6 +88,12 @@ public abstract class AbstractContactsAdapter extends AbstractMessengerListItemA
             }
         }
     }
+
+    protected User getUser() {
+        // todo serso: continue
+        throw new UnsupportedOperationException();
+    }
+
 
     @Nullable
     protected ContactListItem findInAllElements(@NotNull User user, @NotNull User contact) {
