@@ -26,9 +26,6 @@ import java.util.Map;
 public class UserImpl extends JObject implements User {
 
     @NotNull
-    private String id;
-
-    @NotNull
     private String login;
 
     @NotNull
@@ -61,9 +58,8 @@ public class UserImpl extends JObject implements User {
                                    @NotNull List<AProperty> properties) {
         final UserImpl result = new UserImpl();
 
-        result.id = realmEntity.getEntityId();
         result.realmEntity = realmEntity;
-        result.login = result.id;
+        result.login = realmEntity.getRealmEntityId();
         result.userSyncData = userSyncData;
         result.properties.addAll(properties);
 
@@ -75,14 +71,13 @@ public class UserImpl extends JObject implements User {
     }
 
     @NotNull
-    public static User newFakeInstance(@NotNull String userId) {
-        return newInstance(RealmEntityImpl.newInstance(RealmDef.FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
+    public static User newFakeInstance(@NotNull RealmEntity realmUser) {
+        return newInstance(realmUser, UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
     }
 
-    @Override
     @NotNull
-    public String getId() {
-        return this.id;
+    public static User newFakeInstance(@NotNull String userId) {
+        return newInstance(RealmEntityImpl.newInstance(RealmDef.FAKE_REALM_ID, userId), UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
     }
 
     @NotNull
@@ -180,7 +175,7 @@ public class UserImpl extends JObject implements User {
 
         final UserImpl that = (UserImpl) o;
 
-        if (!id.equals(that.id)) return false;
+        if (!realmEntity.equals(that.realmEntity)) return false;
 
         return true;
     }
@@ -188,13 +183,13 @@ public class UserImpl extends JObject implements User {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return realmEntity.hashCode();
     }
 
     @Override
     public String toString() {
         return "UserImpl{" +
-                "id=" + id +
+                "id=" + realmEntity.getEntityId() +
                 '}';
     }
 

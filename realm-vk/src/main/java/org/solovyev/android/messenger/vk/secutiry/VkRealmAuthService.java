@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.security.RealmAuthService;
@@ -18,6 +19,13 @@ import java.io.IOException;
 * Time: 1:17 PM
 */
 public class VkRealmAuthService implements RealmAuthService {
+
+    @NotNull
+    private final Realm realm;
+
+    public VkRealmAuthService(@NotNull Realm realm) {
+        this.realm = realm;
+    }
 
     @NotNull
     @Override

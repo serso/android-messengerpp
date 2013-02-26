@@ -24,7 +24,7 @@ class ContactsAsyncLoader extends AbstractAsyncLoader<User, ContactListItem> {
 
     @NotNull
     protected List<User> getElements(@NotNull Context context) {
-        return AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(getUser().getId(), context);
+        return AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(getUser().getRealmUser());
     }
 
     @Override

@@ -15,10 +15,10 @@ import java.util.List;
 public interface RealmUserService {
 
     @Nullable
-    User getUserById(@NotNull String userId);
+    User getUserById(@NotNull String realmUserId);
 
     @NotNull
-    List<User> getUserContacts(@NotNull String userId);
+    List<User> getUserContacts(@NotNull String realmUserId);
 
     @NotNull
     List<User> checkOnlineUsers(@NotNull List<User> users);

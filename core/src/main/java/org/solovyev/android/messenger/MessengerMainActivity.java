@@ -111,7 +111,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                             @NotNull
                             @Override
                             public Fragment build() {
-                                return new MessengerContactFragment(chat.getSecondUserId());
+                                return new MessengerContactFragment(chat.getSecondUser());
                             }
                         });
                     } else {
@@ -122,7 +122,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                                 final List<User> participants = new ArrayList<User>();
                                 for (Realm realm : getRealmService().getRealms()) {
                                     final User user = realm.getUser();
-                                    participants.addAll(getChatService().getParticipantsExcept(chat.getId(), user.getId()));
+                                    participants.addAll(getChatService().getParticipantsExcept(chat.getRealmChat(), user.getRealmUser()));
 
                                 }
                                 return new MessengerContactsInfoFragment(participants);
@@ -201,7 +201,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                 protected Chat doInBackground(Void... params) {
                     try {
                         final User user = getRealmService().getRealmById(contact.getRealmUser().getRealmId()).getUser();
-                        return AbstractMessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getId(), contact.getId(), MessengerMainActivity.this);
+                        return AbstractMessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getRealmUser(), contact.getRealmUser());
                     } catch (UnsupportedRealmException e) {
                         throw new AssertionError(e);
                     }

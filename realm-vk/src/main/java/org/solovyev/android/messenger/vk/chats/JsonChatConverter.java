@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.vk.chats;
 
-import android.content.Context;
 import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
@@ -15,11 +14,10 @@ import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.vk.VkRealmDef;
 import org.solovyev.android.messenger.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.vk.messages.JsonMessages;
@@ -52,18 +50,18 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
     private final UserService userService;
 
     @NotNull
-    private final Context context;
+    private final Realm realm;
 
     public JsonChatConverter(@NotNull User user,
                              @Nullable String explicitChatId,
                              @Nullable String explicitUserId,
                              @NotNull UserService userService,
-                             @NotNull Context context) {
+                             @NotNull Realm realm) {
         this.user = user;
         this.explicitChatId = explicitChatId;
         this.explicitUserId = explicitUserId;
         this.userService = userService;
-        this.context = context;
+        this.realm = realm;
     }
 
     @NotNull
@@ -89,7 +87,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
             if (!Collections.isEmpty(jsonMessages)) {
                 for (JsonMessage jsonMessage : jsonMessages) {
-                    final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, userService, context);
+                    final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, userService, realm);
 
                     final Integer apiChatId = jsonMessage.getChat_id();
                     if (apiChatId == null && explicitChatId == null) {
@@ -100,16 +98,16 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         if (secondUser != null) {
                             final RealmEntity realmUser = user.getRealmUser();
                             final RealmEntity secondRealmUser = secondUser.getRealmUser();
-                            final String chatId = AbstractMessengerApplication.getServiceLocator().getChatService().createPrivateChatId(realmUser, secondRealmUser);
+                            final RealmEntity realmChat = AbstractMessengerApplication.getServiceLocator().getChatService().createPrivateChatId(realmUser, secondRealmUser);
 
-                            ApiChatImpl chat = fakeChats.get(chatId);
+                            ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
                             if (chat == null) {
-                                chat = ApiChatImpl.newInstance(RealmEntityImpl.fromEntityId(chatId), jsonMessagesResult.getCount(), true);
+                                chat = ApiChatImpl.newInstance(realmChat, jsonMessagesResult.getCount(), true);
 
                                 chat.addParticipant(user);
                                 chat.addParticipant(secondUser);
 
-                                fakeChats.put(chatId, chat);
+                                fakeChats.put(realmChat.getEntityId(), chat);
                             }
 
                             chat.addMessage(message);
@@ -119,23 +117,23 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
                     } else {
                         // real chat
-                        final String chatId = apiChatId == null ? explicitChatId : String.valueOf(apiChatId);
+                        final String realmChatId = apiChatId == null ? explicitChatId : String.valueOf(apiChatId);
 
-                        ApiChatImpl chat = chats.get(chatId);
+                        ApiChatImpl chat = chats.get(realmChatId);
                         if (chat == null) {
                             // create new chat object
-                            chat = ApiChatImpl.newInstance(RealmEntityImpl.newInstance(VkRealmDef.REALM_ID, chatId), jsonMessagesResult.getCount(), false);
+                            chat = ApiChatImpl.newInstance(realm.newRealmEntity(realmChatId), jsonMessagesResult.getCount(), false);
 
                             final String participantsStr = jsonMessage.getChat_active();
                             if (!Strings.isEmpty(participantsStr)) {
                                 for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
-                                    chat.addParticipant(userService.getUserById(String.valueOf(participantId), context));
+                                    chat.addParticipant(userService.getUserById(realm.newRealmEntity(String.valueOf(participantId))));
                                 }
                             }
 
                             chat.addParticipant(user);
 
-                            chats.put(chatId, chat);
+                            chats.put(realmChatId, chat);
                         }
 
                         chat.addMessage(message);

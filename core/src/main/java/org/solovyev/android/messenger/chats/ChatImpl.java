@@ -9,8 +9,6 @@ import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
-import org.solovyev.common.VersionedEntity;
-import org.solovyev.common.VersionedEntityImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,9 +28,6 @@ public class ChatImpl extends JObject implements Chat {
     *
     **********************************************************************
     */
-
-    @NotNull
-    private VersionedEntity<String> versionedEntity;
 
     private boolean privateChat;
 
@@ -60,7 +55,6 @@ public class ChatImpl extends JObject implements Chat {
                      @NotNull Integer messagesCount,
                      @NotNull List<AProperty> properties,
                      @Nullable DateTime lastMessageSyncDate) {
-        this.versionedEntity = new VersionedEntityImpl<String>(realmEntity.getEntityId());
         this.realmEntity = realmEntity;
         this.messagesCount = messagesCount;
         this.lastMessageSyncDate = lastMessageSyncDate;
@@ -79,7 +73,6 @@ public class ChatImpl extends JObject implements Chat {
     private ChatImpl(@NotNull RealmEntity realmEntity,
                      @NotNull Integer messagesCount,
                      boolean privateChat) {
-        this.versionedEntity = new VersionedEntityImpl<String>(realmEntity.getEntityId());
         this.realmEntity = realmEntity;
         this.messagesCount = messagesCount;
         this.privateChat = privateChat;
@@ -165,27 +158,15 @@ public class ChatImpl extends JObject implements Chat {
 
     @NotNull
     @Override
-    public String getSecondUserId() {
+    public RealmEntity getSecondUser() {
         assert isPrivate();
 
-        return AbstractMessengerApplication.getServiceLocator().getChatService().getSecondUserId(this);
+        return AbstractMessengerApplication.getServiceLocator().getChatService().getSecondUser(this);
     }
 
     @Override
     public DateTime getLastMessagesSyncDate() {
         return this.lastMessageSyncDate;
-    }
-
-    @Override
-    @NotNull
-    public String getId() {
-        return this.versionedEntity.getId();
-    }
-
-    @NotNull
-    @Override
-    public Integer getVersion() {
-        return this.versionedEntity.getVersion();
     }
 
     @Override
@@ -195,25 +176,20 @@ public class ChatImpl extends JObject implements Chat {
 
         ChatImpl that = (ChatImpl) o;
 
-        if (!this.versionedEntity.equals(that.versionedEntity)) return false;
+        if (!this.realmEntity.equals(that.realmEntity)) return false;
 
         return true;
     }
 
     @Override
-    public boolean equalsVersion(Object that) {
-        return this.equals(that) && this.versionedEntity.equalsVersion(((ChatImpl) that).versionedEntity);
-    }
-
-    @Override
     public int hashCode() {
-        return this.versionedEntity.hashCode();
+        return this.realmEntity.hashCode();
     }
 
     @Override
     public String toString() {
         return "ChatImpl{" +
-                "versionedEntity=" + versionedEntity +
+                "id=" + realmEntity.getEntityId() +
                 ", privateChat=" + privateChat +
                 '}';
     }

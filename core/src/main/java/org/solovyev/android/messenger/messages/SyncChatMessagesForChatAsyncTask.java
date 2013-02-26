@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 
 import java.util.List;
@@ -34,9 +35,9 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
         final Context context = getContext();
         if (context != null) {
             if (!input.older) {
-                AbstractMessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.chatId, input.userId);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat, input.realmUser);
             } else {
-                AbstractMessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.chatId, input.userId);
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
             }
         }
 
@@ -66,16 +67,18 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
     public static class Input {
 
         @NotNull
-        private String userId;
+        private RealmEntity realmUser;
 
         @NotNull
-        private String chatId;
+        private RealmEntity realmChat;
 
         private boolean older;
 
-        public Input(@NotNull String userId, @NotNull String chatId, boolean older) {
-            this.userId = userId;
-            this.chatId = chatId;
+        public Input(@NotNull RealmEntity realmUser,
+                     @NotNull RealmEntity realmChat,
+                     boolean older) {
+            this.realmUser = realmUser;
+            this.realmChat = realmChat;
             this.older = older;
         }
     }

@@ -24,7 +24,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<User, Contact
 
     @NotNull
     protected List<User> getElements(@NotNull Context context) {
-        return AbstractMessengerApplication.getServiceLocator().getUserService().getOnlineUserContacts(getUser().getId(), context);
+        return AbstractMessengerApplication.getServiceLocator().getUserService().getOnlineUserContacts(getUser().getRealmUser());
     }
 
     @Override

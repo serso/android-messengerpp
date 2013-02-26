@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 
@@ -27,9 +28,9 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
     private Chat chat;
 
     // map of list items saying that someone start typing message
-    // key: user id
+    // key: realm user id
     @NotNull
-    private final Map<String, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<String, MessageListItem>());
+    private final Map<RealmEntity, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<RealmEntity, MessageListItem>());
 
     public MessagesAdapter(@NotNull Context context, @NotNull User user, @NotNull Chat chat) {
         super(context, new ArrayList<MessageListItem>(), user);
@@ -42,6 +43,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
         if (chatEventType == ChatEventType.message_removed) {
             if (eventChat.equals(chat)) {
                 final String messageId = (String) data;
+                assert messageId != null;
                 removeMessageListItem(messageId);
             }
         }
@@ -49,6 +51,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
         if (chatEventType == ChatEventType.message_added) {
             if (eventChat.equals(chat)) {
                 final ChatMessage message = (ChatMessage) data;
+                assert message != null;
                 addMessageListItem(message);
             }
         }
@@ -56,6 +59,8 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
         if (chatEventType == ChatEventType.message_added_batch) {
             if (eventChat.equals(chat)) {
                 final List<ChatMessage> messages = (List<ChatMessage>) data;
+                assert messages != null;
+
                 addListItems(Lists.transform(messages, new Function<ChatMessage, MessageListItem>() {
                     @Override
                     public MessageListItem apply(@javax.annotation.Nullable ChatMessage input) {
@@ -65,7 +70,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
                 }));
 
                 for (ChatMessage message : messages) {
-                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getId());
+                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getRealmUser());
                     if ( listItem != null ) {
                         removeListItem(listItem);
                     }
@@ -86,26 +91,26 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
         }
 
         if (chatEventType.isEvent(ChatEventType.user_start_typing, eventChat, chat)) {
-            final String userId = (String) data;
+            final RealmEntity realmUser = (RealmEntity) data;
 
-            if (!userTypingListItems.containsKey(userId)) {
-                final Context context = getContext();
+            if (!userTypingListItems.containsKey(realmUser)) {
+                assert realmUser != null;
 
-                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("typing" + userId);
+                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("typing" + realmUser.getEntityId());
                 liteChatMessage.setSendDate(DateTime.now());
-                liteChatMessage.setAuthor(AbstractMessengerApplication.getServiceLocator().getUserService().getUserById(userId, context));
+                liteChatMessage.setAuthor(AbstractMessengerApplication.getServiceLocator().getUserService().getUserById(realmUser));
                 liteChatMessage.setBody("User start typing...");
 
                 final MessageListItem listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));
                 addListItem(listItem);
-                userTypingListItems.put(userId, listItem);
+                userTypingListItems.put(realmUser, listItem);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         removeListItem(listItem);
-                        userTypingListItems.remove(userId);
+                        userTypingListItems.remove(realmUser);
                     }
                 }, 3000);
             }
@@ -129,7 +134,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
 
     private void addMessageListItem(@NotNull ChatMessage message) {
         // remove typing message
-        userTypingListItems.remove(message.getAuthor().getId());
+        userTypingListItems.remove(message.getAuthor().getRealmUser());
 
         addListItem(createListItem(message));
     }

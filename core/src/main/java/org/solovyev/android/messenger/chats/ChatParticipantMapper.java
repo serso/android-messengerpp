@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
-import android.content.Context;
 import android.database.Cursor;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
@@ -17,18 +17,14 @@ public class ChatParticipantMapper implements Converter<Cursor, User> {
     @NotNull
     private final UserService userService;
 
-    @NotNull
-    private final Context context;
-
-    public ChatParticipantMapper(@NotNull UserService userService, @NotNull Context context) {
+    public ChatParticipantMapper(@NotNull UserService userService) {
         this.userService = userService;
-        this.context = context;
     }
 
     @NotNull
     @Override
     public User convert(@NotNull Cursor cursor) {
         final String userId = cursor.getString(0);
-        return userService.getUserById(userId, context);
+        return userService.getUserById(RealmEntityImpl.fromEntityId(userId));
     }
 }

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.vk.http.AbstractVkHttpTransaction;
 
@@ -32,28 +33,28 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
     @NotNull
     private final Context context;
 
-    private VkMessagesGetDialogsHttpTransaction(@NotNull Integer count, @NotNull User user, @NotNull Context context) {
-        super("messages.getDialogs");
+    private VkMessagesGetDialogsHttpTransaction(@NotNull Realm realm, @NotNull Integer count, @NotNull User user, @NotNull Context context) {
+        super(realm, "messages.getDialogs");
         this.count = count;
         this.user = user;
         this.context = context;
     }
 
     @NotNull
-    public static VkMessagesGetDialogsHttpTransaction newInstance(@NotNull User user, @NotNull Context context) {
-        return new VkMessagesGetDialogsHttpTransaction(MAX_COUNT, user, context);
+    public static VkMessagesGetDialogsHttpTransaction newInstance(@NotNull Realm realm, @NotNull User user, @NotNull Context context) {
+        return new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user, context);
     }
 
     @NotNull
-    public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@NotNull Integer count, @NotNull User user, @NotNull Context context) {
+    public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@NotNull Realm realm, @NotNull Integer count, @NotNull User user, @NotNull Context context) {
         final List<VkMessagesGetDialogsHttpTransaction> result = new ArrayList<VkMessagesGetDialogsHttpTransaction>();
 
         for (int i = 0; i < count / MAX_COUNT; i++) {
-            result.add(new VkMessagesGetDialogsHttpTransaction(MAX_COUNT, user, context));
+            result.add(new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user, context));
         }
 
         if (count % MAX_COUNT != 0) {
-            result.add(new VkMessagesGetDialogsHttpTransaction(count % MAX_COUNT, user, context));
+            result.add(new VkMessagesGetDialogsHttpTransaction(realm, count % MAX_COUNT, user, context));
         }
 
         return result;
@@ -71,6 +72,6 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
 
     @Override
     protected List<ApiChat> getResponseFromJson(@NotNull String json) throws IllegalJsonException {
-        return new JsonChatConverter(user, null, null, AbstractMessengerApplication.getServiceLocator().getUserService(), context).convert(json);
+        return new JsonChatConverter(user, null, null, AbstractMessengerApplication.getServiceLocator().getUserService(), getRealm()).convert(json);
     }
 }

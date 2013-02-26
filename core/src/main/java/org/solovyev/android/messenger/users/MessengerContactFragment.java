@@ -12,9 +12,10 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
-import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 import java.util.List;
@@ -32,13 +33,14 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
     @Inject
     @NotNull
-    private RealmDef realm;
+    private RealmService realmService;
 
     @NotNull
-    private static final String CONTACT_ID = "contact_id";
+    private static final String CONTACT = "contact";
 
     private User contact;
-    private String contactId;
+
+    private RealmEntity realmContact;
 
     public MessengerContactFragment() {
     }
@@ -47,8 +49,8 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         this.contact = contact;
     }
 
-    public MessengerContactFragment(@NotNull String contactId) {
-        this.contactId = contactId;
+    public MessengerContactFragment(@NotNull RealmEntity realmContact) {
+        this.realmContact = realmContact;
     }
 
     @Override
@@ -68,13 +70,13 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
         // restore state
         if (contact == null) {
-            String contactId = this.contactId;
-            if ( contactId == null ) {
-                contactId = savedInstanceState.getString(CONTACT_ID);
+            RealmEntity realmContact = this.realmContact;
+            if ( realmContact == null ) {
+                realmContact = (RealmEntity) savedInstanceState.getParcelable(CONTACT);
             }
 
-            if (contactId != null) {
-                contact = this.userService.getUserById(contactId, getActivity());
+            if (realmContact != null) {
+                contact = this.userService.getUserById(realmContact);
             }
 
             if (contact == null) {
@@ -89,9 +91,9 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         contactName.setText(contact.getDisplayName());
 
         final ImageView contactIcon = (ImageView) root.findViewById(R.id.contact_icon);
-        AbstractMessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact, getActivity());
+        AbstractMessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
-        final List<AProperty> contactProperties = realm.getRealmUserService().getUserProperties(contact, this.getActivity());
+        final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmUser().getRealmId()).getRealmUserService().getUserProperties(contact, this.getActivity());
         for (AProperty contactProperty : contactProperties) {
             final View contactPropertyView = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact_property).build(this.getActivity());
 
@@ -109,6 +111,6 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(CONTACT_ID, contact.getId());
+        outState.putParcelable(CONTACT, contact.getRealmUser());
     }
 }

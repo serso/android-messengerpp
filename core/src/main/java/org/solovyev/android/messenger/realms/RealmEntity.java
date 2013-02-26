@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
+import android.os.Parcelable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -7,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 2/24/13
  * Time: 4:10 PM
  */
-public interface RealmEntity {
+public interface RealmEntity extends Parcelable {
 
     /**
      * @return unique ID of user in application
@@ -35,4 +36,8 @@ public interface RealmEntity {
 
     @NotNull
     RealmEntity clone();
+
+    int hashCode();
+
+    boolean equals(Object o);
 }

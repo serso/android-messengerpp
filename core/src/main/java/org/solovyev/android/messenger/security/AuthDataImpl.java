@@ -18,11 +18,11 @@ public class AuthDataImpl implements AuthData {
 
     @Element
     @NotNull
-    private String userId;
+    private String realmUserId;
 
     @Element
     @NotNull
-    private String userLogin;
+    private String realmUserLogin;
 
     public AuthDataImpl() {
     }
@@ -31,12 +31,12 @@ public class AuthDataImpl implements AuthData {
         this.accessToken = accessToken;
     }
 
-    public void setUserId(@NotNull String userId) {
-        this.userId = userId;
+    public void setRealmUserId(@NotNull String realmUserId) {
+        this.realmUserId = realmUserId;
     }
 
-    public void setUserLogin(@NotNull String userLogin) {
-        this.userLogin = userLogin;
+    public void setRealmUserLogin(@NotNull String realmUserLogin) {
+        this.realmUserLogin = realmUserLogin;
     }
 
     @Override
@@ -48,13 +48,13 @@ public class AuthDataImpl implements AuthData {
 
     @Override
     @NotNull
-    public String getUserId() {
-        return userId;
+    public String getRealmUserId() {
+        return realmUserId;
     }
 
     @NotNull
     @Override
-    public String getUserLogin() {
-        return this.userLogin;
+    public String getRealmUserLogin() {
+        return this.realmUserLogin;
     }
 }

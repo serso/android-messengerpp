@@ -25,7 +25,7 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<Chat, ChatListItem> {
     @NotNull
     @Override
     protected List<Chat> getElements(@NotNull Context context) {
-        return AbstractMessengerApplication.getServiceLocator().getUserService().getUserChats(getUser().getId(), context);
+        return AbstractMessengerApplication.getServiceLocator().getUserService().getUserChats(getUser().getRealmUser());
     }
 
     @Override

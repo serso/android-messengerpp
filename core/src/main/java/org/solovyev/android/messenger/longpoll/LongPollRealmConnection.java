@@ -5,7 +5,7 @@ import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 
@@ -20,7 +20,7 @@ public class LongPollRealmConnection extends AbstractRealmConnection {
     @NotNull
     private final RealmLongPollService realmLongPollService;
 
-    public LongPollRealmConnection(@NotNull RealmDef realm,
+    public LongPollRealmConnection(@NotNull Realm realm,
                                    @NotNull Context context,
                                    @NotNull RealmLongPollService realmLongPollService) {
         super(realm, context);
@@ -40,11 +40,11 @@ public class LongPollRealmConnection extends AbstractRealmConnection {
                 while (!isStopped()) {
                     Log.i(TAG, "Long polling started!");
 
-                    final User user = AbstractMessengerApplication.getServiceLocator().getAuthService().getUser(getRealm().getId(), getContext());
+                    final User user = AbstractMessengerApplication.getServiceLocator().getAuthService().getUser(getRealm().getId());
                     final LongPollResult longPollResult = realmLongPollService.waitForResult(longPollingData);
                     if (longPollResult != null) {
                         longPollingData = longPollResult.updateLongPollServerData(longPollingData);
-                        longPollResult.doUpdates(user, getContext());
+                        longPollResult.doUpdates(user, getRealm());
                     }
 
                     Log.i(TAG, "Long polling ended!");

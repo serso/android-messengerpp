@@ -4,6 +4,7 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
@@ -24,10 +25,17 @@ import java.util.List;
 */
 public class VkRealmUserService implements RealmUserService {
 
+    @NotNull
+    private final Realm realm;
+
+    public VkRealmUserService(@NotNull Realm realm) {
+        this.realm = realm;
+    }
+
     @Override
-    public User getUserById(@NotNull String userId) {
+    public User getUserById(@NotNull String realmUserId) {
         try {
-            final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(userId, null));
+            final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(realm, realmUserId, null));
             return Collections.getFirstListElement(users);
         } catch (IOException e) {
             throw new HttpRuntimeIoException(e);
@@ -36,9 +44,9 @@ public class VkRealmUserService implements RealmUserService {
 
     @NotNull
     @Override
-    public List<User> getUserContacts(@NotNull String userId) {
+    public List<User> getUserContacts(@NotNull String realmUserId) {
         try {
-            return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(userId));
+            return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(realm, realmUserId));
         } catch (IOException e) {
             throw new HttpRuntimeIoException(e);
         }
@@ -51,7 +59,7 @@ public class VkRealmUserService implements RealmUserService {
         final List<User> result = new ArrayList<User>(users.size());
 
         try {
-            for (VkUsersGetHttpTransaction vkUsersGetHttpTransaction : VkUsersGetHttpTransaction.newInstancesForUsers(users, Arrays.asList(ApiUserField.online))) {
+            for (VkUsersGetHttpTransaction vkUsersGetHttpTransaction : VkUsersGetHttpTransaction.newInstancesForUsers(realm, users, Arrays.asList(ApiUserField.online))) {
                 result.addAll(HttpTransactions.execute(vkUsersGetHttpTransaction));
             }
         } catch (IOException e) {

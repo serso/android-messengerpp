@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.common.VersionedEntity;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
  * Date: 6/11/12
  * Time: 7:38 PM
  */
-public interface Chat extends VersionedEntity<String> {
+public interface Chat {
 
     @NotNull
     RealmEntity getRealmChat();
@@ -23,7 +22,7 @@ public interface Chat extends VersionedEntity<String> {
 
     // must be called only after isPrivate() check
     @NotNull
-    String getSecondUserId();
+    RealmEntity getSecondUser();
 
     @NotNull
     Integer getMessagesCount();

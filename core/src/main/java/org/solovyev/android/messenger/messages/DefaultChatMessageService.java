@@ -11,6 +11,7 @@ import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.text.Strings;
@@ -44,8 +45,8 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @NotNull
     @Override
-    public List<ChatMessage> getChatMessages(@NotNull String chatId, @NotNull Context context) {
-        return getChatMessageDao(context).loadChatMessages(chatId);
+    public List<ChatMessage> getChatMessages(@NotNull RealmEntity realmChat, @NotNull Context context) {
+        return getChatMessageDao(context).loadChatMessages(realmChat.getEntityId());
     }
 
     @Override

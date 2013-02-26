@@ -32,6 +32,7 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.MessageListItem;
 import org.solovyev.android.messenger.chats.MessagesAdapter;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
@@ -77,7 +78,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     private static final String TAG = "MessagesFragment";
 
     @NotNull
-    private static final String CHAT_ID = "chat_id";
+    private static final String CHAT = "chat";
 
     private Chat chat;
 
@@ -180,13 +181,13 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     public void onActivityCreated(Bundle savedInstanceState) {
         // first - restore state
         if (chat == null) {
-            final String chatId = savedInstanceState.getString(CHAT_ID);
-            if (chatId != null) {
-                chat = this.chatService.getChatById(chatId);
+            final RealmEntity realmChat = savedInstanceState.getParcelable(CHAT);
+            if (realmChat != null) {
+                chat = this.chatService.getChatById(realmChat);
             }
 
             if (chat == null) {
-                Log.e(TAG, "Chat is null: unable to find chat with id: " + chatId);
+                Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
                 getActivity().finish();
             }
         }
@@ -212,7 +213,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onSaveInstanceState(outState);
 
         if (chat != null) {
-            outState.putString(CHAT_ID, chat.getId());
+            outState.putParcelable(CHAT, chat.getRealmChat());
         }
     }
 
@@ -237,7 +238,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         return new AbstractOnRefreshListener() {
             @Override
             public void onRefresh() {
-                new SyncChatMessagesForChatAsyncTask(this, getActivity()).execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getId(), chat.getId(), false));
+                new SyncChatMessagesForChatAsyncTask(this, getActivity()).execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmUser(), chat.getRealmChat(), false));
             }
         };
     }
@@ -285,7 +286,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
                     }
                 }
-            }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getId(), chat.getId(), true));
+            }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmUser(), chat.getRealmChat(), true));
         }
     }
 
@@ -308,7 +309,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             @NotNull
             @Override
             protected List<ChatMessage> getElements(@NotNull Context context) {
-                return AbstractMessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getId(), getActivity());
+                return AbstractMessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmChat(), getActivity());
             }
 
             @Override
@@ -338,7 +339,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
                             // let's wait 0.5 sec while sorting & filtering
                             scrollToTheEnd(500);
                         }
-                    }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getId(), chat.getId(), false));
+                    }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmUser(), chat.getRealmChat(), false));
                 }
             }
         };

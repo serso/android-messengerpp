@@ -23,31 +23,31 @@ public interface ChatService extends ChatEventContainer {
     Chat updateChat(@NotNull Chat chat);
 
     @NotNull
-    List<Chat> loadUserChats(@NotNull String userId);
+    List<Chat> loadUserChats(@NotNull RealmEntity user);
 
     @NotNull
     MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> chats);
 
     @Nullable
-    Chat getChatById(@NotNull String chatId);
+    Chat getChatById(@NotNull RealmEntity realmChat);
 
     @NotNull
-    List<User> getParticipants(@NotNull String chatId);
+    List<User> getParticipants(@NotNull RealmEntity realmChat);
 
     @NotNull
-    List<User> getParticipantsExcept(@NotNull String chatId, @NotNull String userId);
+    List<User> getParticipantsExcept(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
 
     @Nullable
-    ChatMessage getLastMessage(@NotNull String chatId);
+    ChatMessage getLastMessage(@NotNull RealmEntity realmChat);
 
     @NotNull
-    Chat createPrivateChat(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser);
+    Chat createPrivateChat(@NotNull RealmEntity user, @NotNull RealmEntity secondRealmUser);
 
     @NotNull
-    String createPrivateChatId(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser);
+    RealmEntity createPrivateChatId(@NotNull RealmEntity user, @NotNull RealmEntity secondRealmUser);
 
     @NotNull
-    ChatMessage sendChatMessage(@NotNull String userId, @NotNull Chat chat, @NotNull ChatMessage chatMessage);
+    ChatMessage sendChatMessage(@NotNull RealmEntity user, @NotNull Chat chat, @NotNull ChatMessage chatMessage);
 
     /*
     **********************************************************************
@@ -58,18 +58,18 @@ public interface ChatService extends ChatEventContainer {
     */
 
     @NotNull
-    List<ChatMessage> syncChatMessages(@NotNull String userId);
+    List<ChatMessage> syncChatMessages(@NotNull RealmEntity user);
 
     @NotNull
-    List<ChatMessage> syncNewerChatMessagesForChat(@NotNull String chatId, @NotNull String userId);
+    List<ChatMessage> syncNewerChatMessagesForChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
 
     @NotNull
-    List<ChatMessage> syncOlderChatMessagesForChat(@NotNull String chatId, @NotNull String userId);
+    List<ChatMessage> syncOlderChatMessagesForChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
 
-    void syncChat(@NotNull String chatId, @NotNull String userId);
+    void syncChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
 
     @Nullable
-    String getSecondUserId(@NotNull Chat chat);
+    RealmEntity getSecondUser(@NotNull Chat chat);
 
     void setChatIcon(@NotNull ImageView imageView, @NotNull Chat chat, @NotNull User user);
 }

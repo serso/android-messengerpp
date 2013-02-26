@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
+import android.os.Parcel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.common.JCloneable;
@@ -8,8 +9,36 @@ import org.solovyev.common.text.Strings;
 
 public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityImpl>, RealmEntity {
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
     private static final String DELIMITER = "_";
     private static final String DELIMITER_REALM = "~";
+
+    public static final Creator <RealmEntity> CREATOR = new Creator<RealmEntity>() {
+        @Override
+        public RealmEntity createFromParcel(@NotNull Parcel in) {
+            return null;
+        }
+
+        @Override
+        public RealmEntity[] newArray(int size) {
+            return new RealmEntity[size];
+        }
+    };
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
 
     @NotNull
     private String realmId;
@@ -23,10 +52,28 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     @NotNull
     private String entityId;
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTRUCTORS
+    *
+    **********************************************************************
+    */
+
     private RealmEntityImpl(@NotNull String realmId, @NotNull String realmEntityId) {
         this.realmId = realmId;
         this.realmEntityId = realmEntityId;
         this.entityId = realmId + DELIMITER + realmEntityId;
+    }
+
+    private RealmEntityImpl(@NotNull String realmId,
+                            @Nullable String realmDefId,
+                            @NotNull String realmEntityId,
+                            @NotNull String entityId) {
+        this.realmId = realmId;
+        this.realmDefId = realmDefId;
+        this.realmEntityId = realmEntityId;
+        this.entityId = entityId;
     }
 
     @NotNull
@@ -52,6 +99,11 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
         } else {
             throw new IllegalArgumentException("No realm is stored in entityId!");
         }
+    }
+
+    @NotNull
+    private static RealmEntity fromParcel(@NotNull Parcel in) {
+        return new RealmEntityImpl(in.readString(), in.readString(), in.readString(), in.readString());
     }
 
     @NotNull
@@ -88,5 +140,35 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     @Override
     public RealmEntityImpl clone() {
         return (RealmEntityImpl) super.clone();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RealmEntityImpl)) return false;
+
+        RealmEntityImpl that = (RealmEntityImpl) o;
+
+        if (!entityId.equals(that.entityId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return entityId.hashCode();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NotNull Parcel out, int flags) {
+        out.writeString(realmId);
+        out.writeString(realmDefId);
+        out.writeString(realmEntityId);
+        out.writeString(entityId);
     }
 }

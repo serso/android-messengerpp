@@ -26,7 +26,7 @@ class XmppRealmUserService implements RealmUserService {
 
     @Nullable
     @Override
-    public User getUserById(@NotNull String userId) {
+    public User getUserById(@NotNull String realmUserId) {
         final Connection connection = xmppConnection.getConnection();
         //ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(this.xmppConnection);
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -34,7 +34,7 @@ class XmppRealmUserService implements RealmUserService {
 
     @NotNull
     @Override
-    public List<User> getUserContacts(@NotNull String userId) {
+    public List<User> getUserContacts(@NotNull String realmUserId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

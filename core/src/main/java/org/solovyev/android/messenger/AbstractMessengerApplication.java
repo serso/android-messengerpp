@@ -2,17 +2,11 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.jetbrains.annotations.NotNull;
@@ -186,7 +180,7 @@ public abstract class AbstractMessengerApplication extends Application implement
         this.chatService.init();
 
         // load persistence data
-        this.authService.load(this);
+        this.authService.load();
 
         this.networkStateService.startListening(this);
 

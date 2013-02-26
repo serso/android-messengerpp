@@ -43,7 +43,7 @@ public class ListUserEventListeners implements UserEventListeners {
         final Collection<UserEventListener> listeners = this.listeners.getListeners();
 
         for (UserEvent userEvent : userEvents) {
-            Log.d(TAG, "Event: " + userEvent.getUserEventType() + " for user: " + userEvent.getUser().getId() + " with data: " + userEvent.getData());
+            Log.d(TAG, "Event: " + userEvent.getUserEventType() + " for user: " + userEvent.getUser().getRealmUser().getEntityId() + " with data: " + userEvent.getData());
             for (UserEventListener listener : listeners) {
                 listener.onUserEvent(userEvent.getUser(), userEvent.getUserEventType(), userEvent.getData());
             }

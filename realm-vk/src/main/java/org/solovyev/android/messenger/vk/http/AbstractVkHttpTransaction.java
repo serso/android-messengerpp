@@ -12,6 +12,7 @@ import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 
 import java.io.IOException;
@@ -27,12 +28,21 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
 
     private static final String URI = "https://api.vkontakte.ru/method/";
 
-    protected AbstractVkHttpTransaction(@NotNull String method) {
-        this(method, HttpMethod.GET);
+    @NotNull
+    private final Realm realm;
+
+    protected AbstractVkHttpTransaction(@NotNull Realm realm, @NotNull String method) {
+        this(realm, method, HttpMethod.GET);
     }
 
-    protected AbstractVkHttpTransaction(@NotNull String method, @NotNull HttpMethod httpMethod) {
+    protected AbstractVkHttpTransaction(@NotNull Realm realm, @NotNull String method, @NotNull HttpMethod httpMethod) {
         super(URI + method, httpMethod);
+        this.realm = realm;
+    }
+
+    @NotNull
+    protected Realm getRealm() {
+        return realm;
     }
 
     @NotNull

@@ -13,8 +13,8 @@ public interface AuthData {
     String getAccessToken();
 
     @NotNull
-    String getUserId();
+    String getRealmUserId();
 
     @NotNull
-    String getUserLogin();
+    String getRealmUserLogin();
 }

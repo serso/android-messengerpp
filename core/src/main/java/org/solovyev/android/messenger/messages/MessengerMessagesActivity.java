@@ -13,6 +13,7 @@ import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatListItem;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
@@ -32,12 +33,12 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     private ImageLoader imageLoader;
 
     @NotNull
-    private static final String CHAT_ID = "chat_id";
+    private static final String CHAT = "chat";
 
     public static void startActivity(@NotNull Activity activity, @NotNull Chat chat) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerMessagesActivity.class);
-        result.putExtra(CHAT_ID, chat.getId());
+        result.putExtra(CHAT, chat.getRealmChat());
         activity.startActivity(result);
     }
 
@@ -60,9 +61,9 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
         final Intent intent = this.getIntent();
         if (intent != null) {
-            final String chatId = intent.getExtras().getString(CHAT_ID);
-            if (chatId != null) {
-                final Chat chatFromService = getChatService().getChatById(chatId);
+            final RealmEntity realmChat = intent.getExtras().getParcelable(CHAT);
+            if (realmChat != null) {
+                final Chat chatFromService = getChatService().getChatById(realmChat);
                 if (chatFromService != null) {
                     this.chat = chatFromService;
                 } else {
@@ -77,7 +78,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
         getUserService().addListener(this);
 
-        final List<User> participants = getChatService().getParticipantsExcept(chat.getId(), getUser().getId());
+        final List<User> participants = getChatService().getParticipantsExcept(chat.getRealmChat(), getUser().getRealmUser());
         if (chat.isPrivate()) {
             if (!participants.isEmpty()) {
                 contact = participants.get(0);
@@ -93,7 +94,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         if ( contact != null ) {
             return contact.getDisplayName();
         } else {
-            return ChatListItem.getDisplayName(chat, getChatService().getLastMessage(chat.getId()), getUser());
+            return ChatListItem.getDisplayName(chat, getChatService().getLastMessage(chat.getRealmChat()), getUser());
         }
     }
 
@@ -151,7 +152,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     public User getUser() {
         if ( user == null ) {
             try {
-                user = AbstractMessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmChat().getRealmId(), this);
+                user = AbstractMessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmChat().getRealmId());
             } catch (UserIsNotLoggedInException e) {
                 // todo serso: continue
             }

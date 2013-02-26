@@ -1,12 +1,16 @@
 package org.solovyev.android.messenger.vk.messages;
 
-import android.content.Context;
 import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatMessageImpl;
+import org.solovyev.android.messenger.chats.LiteChatMessage;
+import org.solovyev.android.messenger.chats.LiteChatMessageImpl;
+import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.text.Strings;
@@ -130,7 +134,7 @@ public class JsonMessage {
     public LiteChatMessage toLiteChatMessage(@NotNull User user,
                                              @Nullable String explicitUserId,
                                              @NotNull UserService userService,
-                                             @NotNull Context context) throws IllegalJsonException {
+                                             @NotNull Realm realm) throws IllegalJsonException {
         if (mid == null || uid == null || date == null) {
             throw new IllegalJsonException();
         }
@@ -140,14 +144,14 @@ public class JsonMessage {
         final MessageDirection messageDirection = getMessageDirection();
         if (messageDirection == MessageDirection.out) {
             result.setAuthor(user);
-            result.setRecipient(userService.getUserById(explicitUserId == null ? uid : explicitUserId, context));
+            result.setRecipient(userService.getUserById(realm.newRealmEntity(explicitUserId == null ? uid : explicitUserId)));
         } else if ( messageDirection == MessageDirection.in ) {
-            result.setAuthor(userService.getUserById(explicitUserId == null ? uid : explicitUserId, context));
+            result.setAuthor(userService.getUserById(realm.newRealmEntity(explicitUserId == null ? uid : explicitUserId)));
             result.setRecipient(user);
         } else {
-            result.setAuthor(userService.getUserById(uid, context));
+            result.setAuthor(userService.getUserById(realm.newRealmEntity(uid)));
             if ( explicitUserId != null ) {
-                result.setRecipient(userService.getUserById(explicitUserId, context));
+                result.setRecipient(userService.getUserById(realm.newRealmEntity(explicitUserId)));
             }
         }
 
@@ -166,15 +170,15 @@ public class JsonMessage {
     }
 
     @NotNull
-    public ChatMessage toChatMessage(@NotNull User user, @Nullable String explicitUserId, @NotNull UserService userService, @NotNull Context context) throws IllegalJsonException {
+    public ChatMessage toChatMessage(@NotNull User user, @Nullable String explicitUserId, @NotNull UserService userService, @NotNull Realm realm) throws IllegalJsonException {
         if (read_state == null || out == null) {
             throw new IllegalJsonException();
         }
 
-        final ChatMessageImpl result = new ChatMessageImpl(toLiteChatMessage(user, explicitUserId, userService, context));
+        final ChatMessageImpl result = new ChatMessageImpl(toLiteChatMessage(user, explicitUserId, userService, realm));
         result.setRead(isRead());
         result.setDirection(getNotNullMessageDirection());
-        for (LiteChatMessage fwdMessage : getFwdMessages(user, userService, context)) {
+        for (LiteChatMessage fwdMessage : getFwdMessages(user, userService, realm)) {
             result.addFwdMessage(fwdMessage);
         }
 
@@ -182,7 +186,7 @@ public class JsonMessage {
     }
 
     @NotNull
-    private List<LiteChatMessage> getFwdMessages(@NotNull User user, @NotNull UserService userService, @NotNull Context context) throws IllegalJsonException {
+    private List<LiteChatMessage> getFwdMessages(@NotNull User user, @NotNull UserService userService, @NotNull Realm realm) throws IllegalJsonException {
         if (fwd_messages == null) {
             return Collections.emptyList();
         } else {
@@ -190,7 +194,7 @@ public class JsonMessage {
 
             for (JsonMessage fwd_message : fwd_messages) {
                 // todo serso: think about explicit user id
-                result.add(fwd_message.toLiteChatMessage(user, null, userService, context));
+                result.add(fwd_message.toLiteChatMessage(user, null, userService, realm));
             }
 
             return result;

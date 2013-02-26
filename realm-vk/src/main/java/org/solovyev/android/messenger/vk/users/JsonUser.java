@@ -4,11 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserImpl;
 import org.solovyev.android.messenger.users.UserSyncDataImpl;
-import org.solovyev.android.messenger.vk.VkRealmDef;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 
@@ -65,7 +65,7 @@ class JsonUser {
     private String photo_rec;
 
     @NotNull
-    public User toUser() throws IllegalJsonException {
+    public User toUser(@NotNull Realm realm) throws IllegalJsonException {
         if (uid == null) {
             throw new IllegalJsonException();
         }
@@ -93,7 +93,7 @@ class JsonUser {
         properties.add(APropertyImpl.newInstance("photoBig", photo_big));
         properties.add(APropertyImpl.newInstance("photoRec", photo_rec));
 
-        return UserImpl.newInstance(VkRealmDef.REALM_ID, uid, UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
+        return UserImpl.newInstance(realm.newRealmEntity(uid), UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
     }
 
     @Nullable

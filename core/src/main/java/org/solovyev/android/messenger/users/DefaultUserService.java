@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import android.content.Context;
+import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.google.common.base.Function;
@@ -16,10 +16,15 @@ import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEventContainer;
+import org.solovyev.android.messenger.chats.ChatEventListener;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
@@ -46,7 +51,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     */
     @Inject
     @NotNull
-    private RealmDef realm;
+    private RealmService realmService;
 
     @Inject
     @NotNull
@@ -59,6 +64,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @Inject
     @NotNull
     private ImageLoader imageLoader;
+
+    @Inject
+    @NotNull
+    private Application context;
 
     /*
     **********************************************************************
@@ -74,17 +83,17 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @NotNull
     private final UserEventListeners listeners = new ListUserEventListeners();
 
-    // key: user id, value: list of user contacts
+    // key: realm user, value: list of user contacts
     @NotNull
-    private final Map<String, List<User>> userContactsCache = new HashMap<String, List<User>>();
+    private final Map<RealmEntity, List<User>> userContactsCache = new HashMap<RealmEntity, List<User>>();
 
-    // key: user id, value: list of user chats
+    // key: realm user, value: list of user chats
     @NotNull
-    private final Map<String, List<Chat>> userChatsCache = new HashMap<String, List<Chat>>();
+    private final Map<RealmEntity, List<Chat>> userChatsCache = new HashMap<RealmEntity, List<Chat>>();
 
-    // key: user id, value: user object
+    // key: realm user, value: user object
     @NotNull
-    private final Map<String, User> usersCache = new HashMap<String, User>();
+    private final Map<RealmEntity, User> usersCache = new HashMap<RealmEntity, User>();
 
     public DefaultUserService() {
         listeners.addListener(this);
@@ -97,50 +106,56 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public User getUserById(@NotNull String userId, @NotNull Context context) {
+    public User getUserById(@NotNull RealmEntity realmUser) {
         boolean saved = true;
 
         User result;
 
         synchronized (usersCache) {
-            result = usersCache.get(userId);
+            result = usersCache.get(realmUser);
         }
 
         if (result == null) {
-            result = getUserDao(context).loadUserById(userId);
+            result = getUserDao().loadUserById(realmUser.getEntityId());
             if (result == null) {
                 saved = false;
             }
 
             if (result == null) {
-                result = realm.getRealmUserService().getUserById(userId);
+                final Realm realm = getRealmByUser(realmUser);
+                result = realm.getRealmUserService().getUserById(realmUser.getRealmEntityId());
             }
 
             if (result == null) {
-                result = UserImpl.newFakeInstance(userId);
+                result = UserImpl.newFakeInstance(realmUser);
             } else {
                 // user was loaded either from dao or from API => cache
                 synchronized (usersCache) {
-                    usersCache.put(userId, result);
+                    usersCache.put(realmUser, result);
                 }
             }
 
             if (!saved) {
-                insertUser(context, result);
+                insertUser(result);
             }
         }
 
         return result;
     }
 
-    private void insertUser(@NotNull Context context, @NotNull User user) {
+    @NotNull
+    private Realm getRealmByUser(@NotNull RealmEntity realmUser) {
+        return realmService.getRealmById(realmUser.getRealmId());
+    }
+
+    private void insertUser(@NotNull User user) {
         boolean inserted = false;
 
         synchronized (lock) {
-            final User userFromDb = getUserDao(context).loadUserById(user.getId());
+            final User userFromDb = getUserDao().loadUserById(user.getRealmUser().getEntityId());
             if (userFromDb == null) {
                 inserted = true;
-                getUserDao(context).insertUser(user);
+                getUserDao().insertUser(user);
             }
         }
 
@@ -151,15 +166,15 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public List<User> getUserContacts(@NotNull String userId, @NotNull Context context) {
+    public List<User> getUserContacts(@NotNull RealmEntity realmUser) {
         List<User> result;
 
         synchronized (userContactsCache) {
-            result = userContactsCache.get(userId);
+            result = userContactsCache.get(realmUser);
             if (result == null) {
-                result = getUserDao(context).loadUserContacts(userId);
+                result = getUserDao().loadUserContacts(realmUser.getEntityId());
                 if (!Collections.isEmpty(result)) {
-                    userContactsCache.put(userId, result);
+                    userContactsCache.put(realmUser, result);
                 }
             }
 
@@ -170,15 +185,15 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public List<Chat> getUserChats(@NotNull String userId, @NotNull Context context) {
+    public List<Chat> getUserChats(@NotNull RealmEntity realmUser) {
         List<Chat> result;
 
         synchronized (userChatsCache) {
-            result = userChatsCache.get(userId);
+            result = userChatsCache.get(realmUser);
             if (result == null) {
-                result = getChatService().loadUserChats(userId);
+                result = getChatService().loadUserChats(realmUser);
                 if (!Collections.isEmpty(result)) {
-                    userChatsCache.put(userId, result);
+                    userChatsCache.put(realmUser, result);
                 }
             }
         }
@@ -189,13 +204,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public Chat getPrivateChat(@NotNull String userId, @NotNull final String secondUserId, @NotNull final Context context) {
-        final RealmEntity realmUser = RealmEntityImpl.fromEntityId(userId);
-        final RealmEntity secondRealmUser = RealmEntityImpl.fromEntityId(secondUserId);
+    public Chat getPrivateChat(@NotNull RealmEntity realmUser, @NotNull final RealmEntity secondRealmUser) {
+        final RealmEntity realmChat = getChatService().createPrivateChatId(realmUser, secondRealmUser);
 
-        final String chatId = getChatService().createPrivateChatId(realmUser, secondRealmUser);
-
-        Chat result = getChatService().getChatById(chatId);
+        Chat result = getChatService().getChatById(realmChat);
         if (result == null) {
             result = getChatService().createPrivateChat(realmUser, secondRealmUser);
         }
@@ -205,8 +217,8 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public List<User> getOnlineUserContacts(@NotNull String userId, @NotNull Context context) {
-        return Lists.newArrayList(Iterables.filter(getUserContacts(userId, context), new Predicate<User>() {
+    public List<User> getOnlineUserContacts(@NotNull RealmEntity realmUser) {
+        return Lists.newArrayList(Iterables.filter(getUserContacts(realmUser), new Predicate<User>() {
             @Override
             public boolean apply(@javax.annotation.Nullable User contact) {
                 return contact != null && contact.isOnline();
@@ -215,9 +227,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void updateUser(@NotNull User user, @NotNull Context context) {
+    public void updateUser(@NotNull User user) {
         synchronized (lock) {
-            getUserDao(context).updateUser(user);
+            getUserDao().updateUser(user);
         }
 
         listeners.fireUserEvent(user, UserEventType.changed, null);
@@ -232,11 +244,11 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     */
 
     @Override
-    public void syncUserProperties(@NotNull String userId, @NotNull Context context) {
-        final User user = realm.getRealmUserService().getUserById(userId);
+    public void syncUserProperties(@NotNull RealmEntity realmUser) {
+        final User user = getRealmByUser(realmUser).getRealmUserService().getUserById(realmUser.getRealmEntityId());
         if (user != null) {
             synchronized (lock) {
-                getUserDao(context).updateUser(user);
+                getUserDao().updateUser(user);
             }
             listeners.fireUserEvent(user, UserEventType.changed, null);
         }
@@ -244,20 +256,20 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     @NotNull
-    public List<User> syncUserContacts(@NotNull String userId, @NotNull Context context) {
-        final List<User> contacts = realm.getRealmUserService().getUserContacts(userId);
+    public List<User> syncUserContacts(@NotNull RealmEntity realmUser) {
+        final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().getUserContacts(realmUser.getRealmEntityId());
         synchronized (userContactsCache) {
-            userContactsCache.put(userId, contacts);
+            userContactsCache.put(realmUser, contacts);
         }
 
-        User user = getUserById(userId, context);
+        User user = getUserById(realmUser);
         final MergeDaoResult<User, String> result;
         synchronized (lock) {
-            result = getUserDao(context).mergeUserContacts(userId, contacts);
+            result = getUserDao().mergeUserContacts(realmUser.getEntityId(), contacts);
 
             // update sync data
             user = user.updateContactsSyncDate();
-            updateUser(user, context);
+            updateUser(user);
         }
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
@@ -287,8 +299,8 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     @Override
-    public List<Chat> syncUserChats(@NotNull String userId, @NotNull Context context) {
-        final List<ApiChat> apiChats = realm.getRealmChatService().getUserChats(userId, context);
+    public List<Chat> syncUserChats(@NotNull RealmEntity realmUser) {
+        final List<ApiChat> apiChats = getRealmByUser(realmUser).getRealmChatService().getUserChats(realmUser.getRealmEntityId(), context);
 
         final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
             @Override
@@ -299,25 +311,25 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }));
 
         synchronized (userChatsCache) {
-            userChatsCache.put(userId, chats);
+            userChatsCache.put(realmUser, chats);
         }
 
-        mergeUserChats(userId, apiChats, context);
+        mergeUserChats(realmUser, apiChats);
 
         return java.util.Collections.unmodifiableList(chats);
     }
 
     @Override
-    public void mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> apiChats, @NotNull Context context) {
-        User user = this.getUserById(userId, context);
+    public void mergeUserChats(@NotNull RealmEntity realmUser, @NotNull List<? extends ApiChat> apiChats) {
+        User user = this.getUserById(realmUser);
 
         final MergeDaoResult<ApiChat, String> result;
         synchronized (lock) {
-            result = getChatService().mergeUserChats(userId, apiChats);
+            result = getChatService().mergeUserChats(realmUser.getEntityId(), apiChats);
 
             // update sync data
             user = user.updateChatsSyncDate();
-            updateUser(user, context);
+            updateUser(user);
         }
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(apiChats.size());
@@ -367,10 +379,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void checkOnlineUserContacts(@NotNull String userId, @NotNull Context context) {
-        final List<User> contacts = realm.getRealmUserService().checkOnlineUsers(getUserContacts(userId, context));
+    public void checkOnlineUserContacts(@NotNull RealmEntity realmUser) {
+        final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().checkOnlineUsers(getUserContacts(realmUser));
 
-        final User user = getUserById(userId, context);
+        final User user = getUserById(realmUser);
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
@@ -383,20 +395,20 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void fetchUserIcons(@NotNull User user, @NotNull Context context) {
-        this.fetchUserIcon(user, context);
-        this.fetchContactsIcons(user, context);
+    public void fetchUserIcons(@NotNull User user) {
+        this.fetchUserIcon(user);
+        this.fetchContactsIcons(user);
 
         // update sync data
         user = user.updateContactsSyncDate();
-        updateUser(user, context);
+        updateUser(user);
     }
 
     @Override
-    public void setUserIcon(@NotNull User user, @NotNull Context context, @NotNull ImageView imageView) {
-        final Drawable defaultUserIcon = getDefaultUserIcon(context);
+    public void setUserIcon(@NotNull User user, @NotNull ImageView imageView) {
+        final Drawable defaultUserIcon = getDefaultUserIcon();
 
-        final String userIconUri = getUserIconUri(user, context);
+        final String userIconUri = getUserIconUri(user);
         if (!Strings.isEmpty(userIconUri)) {
             this.imageLoader.loadImage(userIconUri, imageView, R.drawable.empty_icon);
         } else {
@@ -406,13 +418,13 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     @NotNull
-    public Drawable getDefaultUserIcon(@NotNull Context context) {
+    public Drawable getDefaultUserIcon() {
         return context.getResources().getDrawable(R.drawable.empty_icon);
     }
 
     @Override
-    public void setUserIcon(@NotNull User user, @NotNull Context context, @NotNull OnImageLoadedListener imageLoadedListener) {
-        final String userIconUri = getUserIconUri(user, context);
+    public void setUserIcon(@NotNull User user, @NotNull OnImageLoadedListener imageLoadedListener) {
+        final String userIconUri = getUserIconUri(user);
         if (!Strings.isEmpty(userIconUri)) {
             this.imageLoader.loadImage(userIconUri, imageLoadedListener);
         } else {
@@ -421,10 +433,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void setUserPhoto(@NotNull ImageView imageView, @NotNull User user, @NotNull Context context) {
-        final Drawable defaultUserIcon = getDefaultUserIcon(context);
+    public void setUserPhoto(@NotNull ImageView imageView, @NotNull User user) {
+        final Drawable defaultUserIcon = getDefaultUserIcon();
 
-        final String userPhotoUri = getUserPhotoUri(user, context);
+        final String userPhotoUri = getUserPhotoUri(user);
         if (!Strings.isEmpty(userPhotoUri)) {
             this.imageLoader.loadImage(userPhotoUri, imageView, R.drawable.empty_icon);
         } else {
@@ -432,27 +444,27 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
     }
 
-    public void fetchUserIcon(@NotNull User user, @NotNull Context context) {
-        final String userIconUri = getUserIconUri(user, context);
+    public void fetchUserIcon(@NotNull User user) {
+        final String userIconUri = getUserIconUri(user);
         if (!Strings.isEmpty(userIconUri)) {
             assert userIconUri != null;
             this.imageLoader.loadImage(userIconUri);
         }
     }
 
-    public void fetchContactsIcons(@NotNull User user, @NotNull Context context) {
-        for (User contact : getUserContacts(user.getId(), context)) {
-            fetchUserIcon(contact, context);
+    public void fetchContactsIcons(@NotNull User user) {
+        for (User contact : getUserContacts(user.getRealmUser())) {
+            fetchUserIcon(contact);
         }
     }
 
     @Nullable
-    private String getUserIconUri(@NotNull User user, @NotNull Context context) {
+    private String getUserIconUri(@NotNull User user) {
         return user.getPropertyValueByName("photo");
     }
 
     @Nullable
-    private String getUserPhotoUri(@NotNull User user, @NotNull Context context) {
+    private String getUserPhotoUri(@NotNull User user) {
         String result = user.getPropertyValueByName("photoRec");
         if ( result == null ) {
             result = user.getPropertyValueByName("photoBig");
@@ -461,7 +473,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @NotNull
-    private UserDao getUserDao(@NotNull Context context) {
+    private UserDao getUserDao() {
         return RoboGuiceUtils.getInContextScope(context, userDaoProvider);
     }
 
@@ -513,7 +525,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.contact_added) {
                 // contact added => need to add to list of cached contacts
                 final User contact = ((User) data);
-                final List<User> contacts = userContactsCache.get(eventUser.getId());
+                final List<User> contacts = userContactsCache.get(eventUser.getRealmUser());
                 if (contacts != null) {
                     // check if not contains as can be added in parallel
                     if (!Iterables.contains(contacts, contact)) {
@@ -525,7 +537,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.contact_added_batch) {
                 // contacts added => need to add to list of cached contacts
                 final List<User> contacts = (List<User>) data;
-                final List<User> contactsFromCache = userContactsCache.get(eventUser.getId());
+                final List<User> contactsFromCache = userContactsCache.get(eventUser.getRealmUser());
                 if (contactsFromCache != null) {
                     for (User contact : contacts) {
                         // check if not contains as can be added in parallel
@@ -539,12 +551,12 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.contact_removed) {
                 // contact removed => try to remove from cached contacts
                 final String removedContactId = ((String) data);
-                final List<User> contacts = userContactsCache.get(eventUser.getId());
+                final List<User> contacts = userContactsCache.get(eventUser.getRealmUser());
                 if (contacts != null) {
                     Iterables.removeIf(contacts, new Predicate<User>() {
                         @Override
                         public boolean apply(@javax.annotation.Nullable User contact) {
-                            return contact != null && contact.getId().equals(removedContactId);
+                            return contact != null && contact.getRealmUser().getEntityId().equals(removedContactId);
                         }
                     });
                 }
@@ -555,7 +567,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.chat_added) {
                 if (data instanceof Chat) {
                     final Chat chat = ((Chat) data);
-                    final List<Chat> chats = userChatsCache.get(eventUser.getId());
+                    final List<Chat> chats = userChatsCache.get(eventUser.getRealmUser());
                     if (chats != null) {
                         if (!Iterables.contains(chats, chat)) {
                             chats.add(chat);
@@ -566,7 +578,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
             if (userEventType == UserEventType.chat_added_batch) {
                 final List<Chat> chats = (List<Chat>) data;
-                final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getId());
+                final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getRealmUser());
                 if (chatsFromCache != null) {
                     for (Chat chat : chats) {
                         if (!Iterables.contains(chatsFromCache, chat)) {
@@ -578,7 +590,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
             if (userEventType == UserEventType.chat_removed) {
                 final Chat chat = ((Chat) data);
-                final List<Chat> chats = userChatsCache.get(eventUser.getId());
+                final List<Chat> chats = userChatsCache.get(eventUser.getRealmUser());
                 if (chats != null) {
                     chats.remove(chat);
                 }
@@ -587,7 +599,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         synchronized (usersCache) {
             if (userEventType == UserEventType.changed) {
-                usersCache.put(eventUser.getId(), eventUser);
+                usersCache.put(eventUser.getRealmUser(), eventUser);
             }
         }
     }

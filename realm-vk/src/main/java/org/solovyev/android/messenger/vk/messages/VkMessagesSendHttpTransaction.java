@@ -11,6 +11,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.LiteChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.common.text.Strings;
 
@@ -31,8 +32,8 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
     @NotNull
     private final Chat chat;
 
-    public VkMessagesSendHttpTransaction(@NotNull ChatMessage chatMessage, @NotNull Chat chat) {
-        super("messages.send");
+    public VkMessagesSendHttpTransaction(@NotNull Realm realm, @NotNull ChatMessage chatMessage, @NotNull Chat chat) {
+        super(realm, "messages.send");
         this.chatMessage = chatMessage;
         this.chat = chat;
     }
@@ -45,11 +46,11 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
         try {
 
             if (chat.isPrivate()) {
-                result.add(new BasicNameValuePair("uid", String.valueOf(chat.getSecondUserId())));
+                result.add(new BasicNameValuePair("uid", chat.getSecondUser().getRealmEntityId()));
             }
 
             if (!chat.isPrivate()) {
-                result.add(new BasicNameValuePair("chat_id", chat.getId()));
+                result.add(new BasicNameValuePair("chat_id", chat.getRealmChat().getRealmEntityId()));
             }
 
             result.add(new BasicNameValuePair("message", URLEncoder.encode(chatMessage.getBody(), "utf-8")));

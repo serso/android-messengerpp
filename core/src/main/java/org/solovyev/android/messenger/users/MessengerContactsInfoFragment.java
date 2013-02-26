@@ -17,6 +17,7 @@ import org.solovyev.android.Views;
 import org.solovyev.android.messenger.AbstractMessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
             if ( contactIds != null ) {
                 contacts = new ArrayList<User>();
                 for (String contactId : contactIds) {
-                    contacts.add(userService.getUserById(contactId, this.getActivity()));
+                    contacts.add(userService.getUserById(RealmEntityImpl.fromEntityId(contactId)));
                 }
             }
 
@@ -118,7 +119,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
             contactName.setText(contact.getDisplayName());
 
             final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.contact_icon);
-            AbstractMessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact, getActivity());
+            AbstractMessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
         }
     }
@@ -129,7 +130,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
         final StringBuilder sb = new StringBuilder();
         for (User contact : contacts) {
-            sb.append(contact.getId()).append(";");
+            sb.append(contact.getRealmUser().getEntityId()).append(";");
         }
         outState.putString(CONTACT_IDS, sb.toString());
     }

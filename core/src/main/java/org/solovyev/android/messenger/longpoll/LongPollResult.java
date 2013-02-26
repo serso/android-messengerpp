@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.longpoll;
 
-import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 
 /**
@@ -15,5 +15,5 @@ public interface LongPollResult {
     @Nullable
     Object updateLongPollServerData(@Nullable Object longPollServerData);
 
-    void doUpdates(@NotNull User user, @NotNull Context context);
+    void doUpdates(@NotNull User user, @NotNull Realm realm);
 }

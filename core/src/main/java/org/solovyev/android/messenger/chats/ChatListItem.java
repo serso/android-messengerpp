@@ -50,7 +50,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         this.chat = chat;
         if (context != null) {
             // todo serso: calling on the main thread
-            this.lastChatMessage = getChatService().getLastMessage(chat.getId());
+            this.lastChatMessage = getChatService().getLastMessage(chat.getRealmChat());
         }
     }
 
@@ -106,7 +106,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
 
     @NotNull
     private String createTag() {
-        return TAG_PREFIX + chat.getId();
+        return TAG_PREFIX + chat.getRealmChat().getEntityId();
     }
 
     private void fillView(@NotNull final ViewGroup view, @NotNull Context context) {

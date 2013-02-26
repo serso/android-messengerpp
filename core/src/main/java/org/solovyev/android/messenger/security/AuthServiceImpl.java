@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.security;
 
-import android.content.Context;
+import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.google.inject.Inject;
@@ -12,9 +12,8 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.solovyev.android.captcha.ResolvedCaptcha;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -49,15 +48,18 @@ public class AuthServiceImpl implements AuthService {
     @NotNull
     private UserService userService;
 
+    @Inject
+    @NotNull
+    private Application context;
+
     @NotNull
     @Override
     public AuthData loginUser(@NotNull String realm,
                               @NotNull String login,
                               @NotNull String password,
-                              @Nullable ResolvedCaptcha resolvedCaptcha,
-                              @NotNull Context context) throws InvalidCredentialsException {
+                              @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
 
-        final RealmAuthService realmAuthService = getRealmService(realm).getRealmAuthService();
+        final RealmAuthService realmAuthService = getRealmById(realm).getRealmAuthService();
 
         final AuthData result;
         synchronized (lock) {
@@ -74,25 +76,21 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-        save(context);
+        save();
 
         return result;
     }
 
     @NotNull
-    private RealmDef getRealmService(@NotNull String realm) {
-        try {
-            return realmService.getRealmDefById(realm);
-        } catch (UnsupportedRealmException e) {
-            throw new RuntimeException(e);
-        }
+    private Realm getRealmById(@NotNull String realm) {
+        return realmService.getRealmById(realm);
     }
 
 
     @NotNull
     @Override
-    public User getUser(@NotNull String realm, @NotNull Context context) throws UserIsNotLoggedInException {
-        return getUserById(context, getAuthData(realm));
+    public User getUser(@NotNull String realm) throws UserIsNotLoggedInException {
+        return getUserById(getAuthData(realm));
     }
 
     @NotNull
@@ -112,8 +110,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @NotNull
-    private User getUserById(@NotNull Context context, @NotNull AuthData authData) {
-        return this.userService.getUserById(authData.getUserId(), context);
+    private User getUserById(@NotNull AuthData authData) {
+        // todo serso: continue
+        throw new UnsupportedOperationException();
+        //return this.userService.getUserById(RealmEntityImpl.fromEntityId(authData.getRealmUserId()));
     }
 
     @Override
@@ -124,13 +124,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logoutUser(@NotNull String realm, @NotNull Context context) {
+    public void logoutUser(@NotNull String realm) {
         synchronized (lock) {
             if (isUserLoggedIn(realm)) {
-                final RealmAuthService realmAuthService = getRealmService(realm).getRealmAuthService();
+                final RealmAuthService realmAuthService = getRealmById(realm).getRealmAuthService();
 
                 try {
-                    realmAuthService.logoutUser(getUser(realm, context));
+                    realmAuthService.logoutUser(getUser(realm));
                 } catch (UserIsNotLoggedInException e) {
                     // unavailable
                     throw new AssertionError(e);
@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-        save(context);
+        save();
     }
 
     /*
@@ -152,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
     */
 
     @Override
-    public void save(@NotNull Context context) {
+    public void save() {
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = preferences.edit();
@@ -171,7 +171,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void load(@NotNull Context context) {
+    public void load() {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         final String value = preferences.getString(AUTH_XML, null);

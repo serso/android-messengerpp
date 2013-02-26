@@ -26,6 +26,7 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatMessageMapper;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
@@ -95,7 +96,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     public MergeDaoResult<ChatMessage, String> mergeChatMessages(@NotNull String chatId, @NotNull List<ChatMessage> messages, boolean allowDelete, @NotNull Context context) {
         final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>(messages);
 
-        final Chat chat = getChatService().getChatById(chatId);
+        final Chat chat = getChatService().getChatById(RealmEntityImpl.fromEntityId(chatId));
 
         final List<String> messageIdsFromDb = loadChatMessageIds(chatId);
         for (final String chatMessageIdFromDb : messageIdsFromDb) {
@@ -199,18 +200,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         public void exec(@NotNull SQLiteDatabase db) {
             final ChatMessage chatMessage = getNotNullObject();
 
-            final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-
-            final ContentValues values = new ContentValues();
-
-            values.put("id", chatMessage.getId());
-            values.put("chat_id", chat.getId());
-            values.put("author_id", chatMessage.getAuthor().getId());
-            final User recipient = chatMessage.getRecipient();
-            values.put("recipient_id", recipient == null ? null : recipient.getId());
-            values.put("send_date", dateTimeFormatter.print(chatMessage.getSendDate()));
-            values.put("title", chatMessage.getTitle());
-            values.put("body", chatMessage.getBody());
+            final ContentValues values = toContentValues(chat, chatMessage);
 
             db.insert("messages", null, values);
         }
@@ -230,18 +220,8 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         public void exec(@NotNull SQLiteDatabase db) {
             final ChatMessage chatMessage = getNotNullObject();
 
-            final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
-            final ContentValues values = new ContentValues();
-
-            values.put("id", chatMessage.getId());
-            values.put("chat_id", chat.getId());
-            values.put("author_id", chatMessage.getAuthor().getId());
-            final User recipient = chatMessage.getRecipient();
-            values.put("recipient_id", recipient == null ? null : recipient.getId());
-            values.put("send_date", dateTimeFormatter.print(chatMessage.getSendDate()));
-            values.put("title", chatMessage.getTitle());
-            values.put("body", chatMessage.getBody());
+            final ContentValues values = toContentValues(chat, chatMessage);
 
             db.update("messages", values, "id = ?", new String[]{String.valueOf(chatMessage.getId())});
         }
@@ -300,7 +280,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @NotNull
         @Override
         public List<ChatMessage> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService, getContext())).convert(cursor);
+            return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService)).convert(cursor);
         }
     }
 
@@ -330,7 +310,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @NotNull
         @Override
         public List<ChatMessage> retrieveData(@NotNull Cursor cursor) {
-            return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService, getContext())).convert(cursor);
+            return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService)).convert(cursor);
         }
     }
 
@@ -386,5 +366,22 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
                 return 0;
             }
         }
+    }
+
+    @NotNull
+    private static ContentValues toContentValues(@NotNull Chat chat, @NotNull ChatMessage chatMessage) {
+        final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
+
+        final ContentValues values = new ContentValues();
+
+        values.put("id", chatMessage.getId());
+        values.put("chat_id", chat.getRealmChat().getEntityId());
+        values.put("author_id", chatMessage.getAuthor().getRealmUser().getEntityId());
+        final User recipient = chatMessage.getRecipient();
+        values.put("recipient_id", recipient == null ? null : recipient.getRealmUser().getEntityId());
+        values.put("send_date", dateTimeFormatter.print(chatMessage.getSendDate()));
+        values.put("title", chatMessage.getTitle());
+        values.put("body", chatMessage.getBody());
+        return values;
     }
 }

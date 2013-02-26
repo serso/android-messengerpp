@@ -10,7 +10,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.AuthDataImpl;
@@ -34,7 +34,7 @@ public class XmppRealmConnection extends AbstractRealmConnection implements Real
     private Connection connection;
 
 
-    public XmppRealmConnection(@NotNull RealmDef realm, @NotNull Context context, @NotNull ConnectionConfiguration configuration) {
+    public XmppRealmConnection(@NotNull Realm realm, @NotNull Context context, @NotNull ConnectionConfiguration configuration) {
         super(realm, context);
         this.configuration = configuration;
     }
@@ -71,8 +71,8 @@ public class XmppRealmConnection extends AbstractRealmConnection implements Real
 
             final AuthDataImpl result = new AuthDataImpl();
 
-            result.setUserId(login);
-            result.setUserLogin(login);
+            result.setRealmUserId(login);
+            result.setRealmUserLogin(login);
             result.setAccessToken("");
 
             connection.getChatManager().addChatListener(new XmppChatListener());

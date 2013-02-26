@@ -33,13 +33,13 @@ public class AuthServiceFacadeImpl implements AuthServiceFacade {
     @Override
     @NotNull
     public AuthData loginUser(@NotNull String login, @NotNull String password, @Nullable ResolvedCaptcha resolvedCaptcha, @NotNull Context context) throws InvalidCredentialsException {
-        return authService.loginUser(realm, login, password, resolvedCaptcha, context);
+        return authService.loginUser(realm, login, password, resolvedCaptcha);
     }
 
     @Override
     @NotNull
     public User getUser(@NotNull Context context) throws UserIsNotLoggedInException {
-        return authService.getUser(realm, context);
+        return authService.getUser(realm);
     }
 
     @Override
@@ -55,6 +55,6 @@ public class AuthServiceFacadeImpl implements AuthServiceFacade {
 
     @Override
     public void logoutUser(@NotNull Context context) {
-        authService.logoutUser(realm, context);
+        authService.logoutUser(realm);
     }
 }

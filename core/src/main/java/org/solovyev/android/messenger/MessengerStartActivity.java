@@ -51,7 +51,7 @@ public class MessengerStartActivity extends RoboActivity {
 
             for (Realm realm : realms) {
                 try {
-                    final User user = authService.getUser(realm.getRealmDef().getId(), this);
+                    final User user = authService.getUser(realm.getRealmDef().getId());
 
                     if (!user.getUserSyncData().isFirstSyncDone()) {
                         if (!syncDone) {
@@ -99,8 +99,8 @@ public class MessengerStartActivity extends RoboActivity {
             Context context = getContext();
             if (context != null) {
                 for (User user : users) {
-                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getId(), context);
-                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserChats(user.getId(), context);
+                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getRealmUser());
+                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmUser());
                 }
             }
 

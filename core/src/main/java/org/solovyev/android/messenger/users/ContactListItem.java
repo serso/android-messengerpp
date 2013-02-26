@@ -80,7 +80,7 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
 
     @NotNull
     private String createTag() {
-        return TAG_PREFIX + contact.getId();
+        return TAG_PREFIX + contact.getRealmUser().getEntityId();
     }
 
     private void fillView(@NotNull final ViewGroup view, @NotNull final Context context) {
@@ -93,7 +93,7 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
             view.setTag(tag);
 
             final ImageView contactIcon = (ImageView) view.findViewById(R.id.contact_icon);
-            AbstractMessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, context, contactIcon);
+            AbstractMessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
 
             final TextView contactName = (TextView) view.findViewById(R.id.contact_name);
             contactName.setText(contact.getDisplayName());

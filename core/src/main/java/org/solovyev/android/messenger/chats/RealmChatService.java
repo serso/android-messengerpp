@@ -13,16 +13,16 @@ import java.util.List;
 public interface RealmChatService {
 
     @NotNull
-    List<ChatMessage> getChatMessages(@NotNull String userId, @NotNull Context context);
+    List<ChatMessage> getChatMessages(@NotNull String realmUserId, @NotNull Context context);
 
     @NotNull
-    List<ChatMessage> getNewerChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Context context);
+    List<ChatMessage> getNewerChatMessagesForChat(@NotNull String realmChatId, @NotNull String realmUserId, @NotNull Context context);
 
     @NotNull
-    List<ChatMessage> getOlderChatMessagesForChat(@NotNull String chatId, @NotNull String userId, @NotNull Integer offset, @NotNull Context context);
+    List<ChatMessage> getOlderChatMessagesForChat(@NotNull String realmChatId, @NotNull String realmUserId, @NotNull Integer offset, @NotNull Context context);
 
     @NotNull
-    List<ApiChat> getUserChats(@NotNull String userId, @NotNull Context context);
+    List<ApiChat> getUserChats(@NotNull String realmUserId, @NotNull Context context);
 
     // return: message id
     @NotNull

@@ -50,7 +50,7 @@ public class SqliteUserDaoTest extends AndroidTestCase {
         Assert.assertEquals(expected, actual);
         Assert.assertEquals(TEST_REALM, actual.getRealmUser().getRealmId());
         Assert.assertEquals("test_01", actual.getRealmUser().getRealmEntityId());
-        Assert.assertEquals(TEST_REALM + "_test_01", actual.getId());
+        Assert.assertEquals(TEST_REALM + "_test_01", actual.getRealmUser().getEntityId());
         Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getProperties(), new ListEqualizer<AProperty>(false, null)));
         Assert.assertEquals("prop_1_value", actual.getPropertyValueByName("prop_1"));
 

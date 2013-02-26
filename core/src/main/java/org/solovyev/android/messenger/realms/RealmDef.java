@@ -26,21 +26,14 @@ public interface RealmDef {
     int getIconResId();
 
     @NotNull
-    RealmConnection createRealmConnection(@NotNull Context context);
-
-    /*
-    **********************************************************************
-    *
-    *                           Realm Services
-    *
-    **********************************************************************
-    */
-    @NotNull
-    RealmUserService getRealmUserService();
+    RealmUserService newRealmUserService(@NotNull Realm realm);
 
     @NotNull
-    RealmChatService getRealmChatService();
+    RealmChatService newRealmChatService(@NotNull Realm realm);
 
     @NotNull
-    RealmAuthService getRealmAuthService();
+    RealmAuthService newRealmAuthService(@NotNull Realm realm);
+
+    @NotNull
+    RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context);
 }

@@ -100,8 +100,8 @@ public class VkAuthenticationHttpTransaction
             final AuthDataImpl result = new AuthDataImpl();
 
             result.setAccessToken(jsonResult.access_token);
-            result.setUserId(jsonResult.user_id);
-            result.setUserLogin(login);
+            result.setRealmUserId(jsonResult.user_id);
+            result.setRealmUserLogin(login);
 
             return result;
         }

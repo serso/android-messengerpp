@@ -3,7 +3,7 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.util.Log;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,7 +19,7 @@ public abstract class AbstractRealmConnection implements RealmConnection {
     private static final String TAG = "RealmConnection";
 
     @NotNull
-    private final RealmDef realm;
+    private final Realm realm;
 
     @NotNull
     private final WeakReference<Context> contextRef;
@@ -27,13 +27,13 @@ public abstract class AbstractRealmConnection implements RealmConnection {
     @NotNull
     private final AtomicBoolean stopPolling = new AtomicBoolean(false);
 
-    protected AbstractRealmConnection(@NotNull RealmDef realm, @NotNull Context context) {
+    protected AbstractRealmConnection(@NotNull Realm realm, @NotNull Context context) {
         this.realm = realm;
         this.contextRef = new WeakReference<Context>(context);
     }
 
     @NotNull
-    protected RealmDef getRealm() {
+    protected Realm getRealm() {
         return realm;
     }
 

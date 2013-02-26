@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -20,9 +19,9 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -58,7 +57,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @Inject
     @NotNull
-    private RealmDef realm;
+    private RealmService realmService;
 
     @Inject
     @NotNull
@@ -99,20 +98,20 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     // key: chat id, value: list of participants
     @NotNull
-    private final Map<String, List<User>> chatParticipantsCache = new HashMap<String, List<User>>();
+    private final Map<RealmEntity, List<User>> chatParticipantsCache = new HashMap<RealmEntity, List<User>>();
 
     // key: chat id, value: last message
     @NotNull
-    private final Map<String, ChatMessage> lastMessagesCache = new HashMap<String, ChatMessage>();
+    private final Map<RealmEntity, ChatMessage> lastMessagesCache = new HashMap<RealmEntity, ChatMessage>();
 
     // key: chat id, value: chat
     @NotNull
-    private final Map<String, Chat> chatsById = new HashMap<String, Chat>();
+    private final Map<RealmEntity, Chat> chatsById = new HashMap<RealmEntity, Chat>();
 
     @NotNull
     private final Object lock = new Object();
 
-    public DefaultChatService {
+    public DefaultChatService() {
         listeners.addListener(this);
     }
 
@@ -135,18 +134,18 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public Chat createPrivateChat(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser) {
+    public Chat createPrivateChat(@NotNull RealmEntity user, @NotNull RealmEntity secondRealmUser) {
         Chat result;
 
-        final String chatId = createPrivateChatId(realmUser, secondRealmUser);
+        final RealmEntity realmChat = createPrivateChatId(user, secondRealmUser);
         synchronized (lock) {
-            result = getChatById(chatId);
+            result = getChatById(realmChat);
             if ( result == null ) {
-                final ApiChatImpl apiChat = ApiChatImpl.newInstance(RealmEntityImpl.fromEntityId(chatId), 0, true);
-                apiChat.addParticipant(getUserService().getUserById(realmUser.getEntityId(), context));
-                apiChat.addParticipant(getUserService().getUserById(secondRealmUser.getEntityId(), context));
+                final ApiChatImpl apiChat = ApiChatImpl.newInstance(realmChat, 0, true);
+                apiChat.addParticipant(getUserService().getUserById(user));
+                apiChat.addParticipant(getUserService().getUserById(secondRealmUser));
 
-                getUserService().mergeUserChats(realmUser.getEntityId(), Arrays.asList(apiChat), context);
+                getUserService().mergeUserChats(user, Arrays.asList(apiChat));
 
                 result = apiChat.getChat();
             }
@@ -157,8 +156,8 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<Chat> loadUserChats(@NotNull String userId) {
-        return getChatDao(context).loadUserChats(userId);
+    public List<Chat> loadUserChats(@NotNull RealmEntity user) {
+        return getChatDao(context).loadUserChats(user.getEntityId());
     }
 
     @NotNull
@@ -170,21 +169,21 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     }
 
     @Override
-    public Chat getChatById(@NotNull String chatId) {
+    public Chat getChatById(@NotNull RealmEntity realmChat) {
         Chat result;
 
         synchronized (chatsById) {
-            result = chatsById.get(chatId);
+            result = chatsById.get(realmChat);
         }
 
         if (result == null) {
             synchronized (lock) {
-                result = getChatDao(context).loadChatById(chatId);
+                result = getChatDao(context).loadChatById(realmChat.getEntityId());
             }
 
             if ( result != null ) {
                 synchronized (chatsById) {
-                    chatsById.put(result.getId(), result);
+                    chatsById.put(result.getRealmChat(), result);
                 }
             }
         }
@@ -192,10 +191,16 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         return result;
     }
 
+
+    @NotNull
+    private Realm getRealmByUser(@NotNull RealmEntity realmUser) {
+        return realmService.getRealmById(realmUser.getRealmId());
+    }
+
     @NotNull
     @Override
-    public List<ChatMessage> syncChatMessages(@NotNull String userId) {
-        final List<ChatMessage> chatMessages = realm.getRealmChatService().getChatMessages(userId, context);
+    public List<ChatMessage> syncChatMessages(@NotNull RealmEntity user) {
+        final List<ChatMessage> chatMessages = getRealmByUser(user).getRealmChatService().getChatMessages(user.getRealmEntityId(), context);
 
 /*        synchronized (userChatsCache) {
             userChatsCache.put(userId, chats);
@@ -239,22 +244,22 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<ChatMessage> syncNewerChatMessagesForChat(@NotNull String chatId, @NotNull String userId) {
-        final List<ChatMessage> messages = realm.getRealmChatService().getNewerChatMessagesForChat(chatId, userId, context);
+    public List<ChatMessage> syncNewerChatMessagesForChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser) {
+        final List<ChatMessage> messages = getRealmByUser(realmUser).getRealmChatService().getNewerChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), context);
 
-        syncChatMessagesForChat(chatId, context, messages);
+        syncChatMessagesForChat(realmChat, context, messages);
 
         return java.util.Collections.unmodifiableList(messages);
 
     }
 
-    private void syncChatMessagesForChat(@NotNull String chatId, @NotNull Context context, @NotNull List<ChatMessage> messages) {
-        Chat chat = this.getChatById(chatId);
+    private void syncChatMessagesForChat(@NotNull RealmEntity realmChat, @NotNull Context context, @NotNull List<ChatMessage> messages) {
+        Chat chat = this.getChatById(realmChat);
 
         if (chat != null) {
             final MergeDaoResult<ChatMessage, String> result;
             synchronized (lock) {
-                result = getChatMessageDao(context).mergeChatMessages(chatId, messages, false, context);
+                result = getChatMessageDao(context).mergeChatMessages(realmChat.getEntityId(), messages, false, context);
 
                 // update sync data
                 chat = chat.updateMessagesSyncDate();
@@ -276,7 +281,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
             fireChatEvents(chatEvents);
         } else {
-            Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + chatId);
+            Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + realmChat.getEntityId());
         }
     }
 
@@ -287,41 +292,43 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<ChatMessage> syncOlderChatMessagesForChat(@NotNull String chatId, @NotNull String userId) {
-        final Integer offset = getChatMessageService().getChatMessages(chatId, context).size();
+    public List<ChatMessage> syncOlderChatMessagesForChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser) {
+        final Integer offset = getChatMessageService().getChatMessages(realmChat, context).size();
 
-        final Chat chat = this.getChatById(chatId);
+        final Chat chat = this.getChatById(realmChat);
 
         final List<ChatMessage> messages;
 
         if (chat != null) {
-            messages = realm.getRealmChatService().getOlderChatMessagesForChat(chatId, userId, offset, context);
-            syncChatMessagesForChat(chatId, context, messages);
+            messages = getRealmByUser(realmUser).getRealmChatService().getOlderChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), offset, context);
+            syncChatMessagesForChat(realmChat, context, messages);
         } else {
             messages = java.util.Collections.emptyList();
-            Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + chatId);
+            Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + realmChat.getEntityId());
         }
 
         return java.util.Collections.unmodifiableList(messages);
     }
 
     @Override
-    public void syncChat(@NotNull String chatId, @NotNull String userId) {
+    public void syncChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser) {
         // todo serso: check if OK
-        syncNewerChatMessagesForChat(chatId, userId);
+        syncNewerChatMessagesForChat(realmChat, realmUser);
     }
 
     @Nullable
     @Override
-    public String getSecondUserId(@NotNull Chat chat) {
+    public RealmEntity getSecondUser(@NotNull Chat chat) {
         boolean first = true;
-        for (String userId : Splitter.on('_').split(chat.getId())) {
+
+        // todo serso: continue
+/*        for (String userId : Splitter.on('_').split(chat.getId())) {
             if ( first ) {
                 first = false;
             } else {
                 return userId;
             }
-        }
+        }*/
 
         return null;
     }
@@ -330,7 +337,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     public void setChatIcon(@NotNull ImageView imageView, @NotNull Chat chat, @NotNull User user) {
         final Drawable defaultChatIcon = context.getResources().getDrawable(R.drawable.empty_icon);
 
-        final List<User> otherParticipants = this.getParticipantsExcept(chat.getId(), user.getId());
+        final List<User> otherParticipants = this.getParticipantsExcept(chat.getRealmChat(), user.getRealmUser());
 
         final String imageUri;
         if (!otherParticipants.isEmpty()) {
@@ -349,21 +356,21 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public String createPrivateChatId(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser) {
-        return RealmEntityImpl.newInstance(realmUser.getRealmId(), realmUser.getRealmEntityId() + "_" + secondRealmUser.getRealmEntityId()).getEntityId();
+    public RealmEntity createPrivateChatId(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser) {
+        return getRealmByUser(realmUser).newRealmEntity(realmUser.getRealmEntityId() + "_" + secondRealmUser.getRealmEntityId());
     }
 
     @NotNull
     @Override
-    public ChatMessage sendChatMessage(@NotNull String userId, @NotNull Chat chat, @NotNull ChatMessage chatMessage) {
-        final String chatMessageId = realm.getRealmChatService().sendChatMessage(chat, chatMessage, context);
+    public ChatMessage sendChatMessage(@NotNull RealmEntity user, @NotNull Chat chat, @NotNull ChatMessage chatMessage) {
+        final String chatMessageId = getRealmByUser(user).getRealmChatService().sendChatMessage(chat, chatMessage, context);
 
         final LiteChatMessageImpl msgResult = LiteChatMessageImpl.newInstance(chatMessageId);
 
-        msgResult.setAuthor(getUserService().getUserById(userId, context));
-        if ( chat.isPrivate() ) {
-            final String secondUserId = chat.getSecondUserId();
-            msgResult.setRecipient(getUserService().getUserById(secondUserId, context));
+        msgResult.setAuthor(getUserService().getUserById(user));
+        if (chat.isPrivate()) {
+            final RealmEntity secondUser = chat.getSecondUser();
+            msgResult.setRecipient(getUserService().getUserById(secondUser));
         }
         msgResult.setBody(chatMessage.getBody());
         msgResult.setTitle(chatMessage.getTitle());
@@ -387,15 +394,15 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<User> getParticipants(@NotNull String chatId) {
+    public List<User> getParticipants(@NotNull RealmEntity realmChat) {
         List<User> result;
 
         synchronized (chatParticipantsCache) {
-            result = chatParticipantsCache.get(chatId);
+            result = chatParticipantsCache.get(realmChat);
             if (result == null) {
-                result = getChatDao(context).loadChatParticipants(chatId);
+                result = getChatDao(context).loadChatParticipants(realmChat.getEntityId());
                 if (!Collections.isEmpty(result)) {
-                    chatParticipantsCache.put(chatId, result);
+                    chatParticipantsCache.put(realmChat, result);
                 }
             }
         }
@@ -406,27 +413,27 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @NotNull
     @Override
-    public List<User> getParticipantsExcept(@NotNull String chatId, @NotNull final String userId) {
-        final List<User> participants = getParticipants(chatId);
+    public List<User> getParticipantsExcept(@NotNull RealmEntity realmChat, @NotNull final RealmEntity realmUser) {
+        final List<User> participants = getParticipants(realmChat);
         return Lists.newArrayList(Iterables.filter(participants, new Predicate<User>() {
             @Override
             public boolean apply(@javax.annotation.Nullable User input) {
-                return input != null && !input.getId().equals(userId);
+                return input != null && !input.getRealmUser().equals(realmUser);
             }
         }));
     }
 
     @Nullable
     @Override
-    public ChatMessage getLastMessage(@NotNull String chatId) {
+    public ChatMessage getLastMessage(@NotNull RealmEntity realmChat) {
         ChatMessage result;
 
         synchronized (lastMessagesCache) {
-            result = lastMessagesCache.get(chatId);
+            result = lastMessagesCache.get(realmChat);
             if (result == null) {
-                result = getChatMessageDao(context).loadLastChatMessage(chatId);
+                result = getChatMessageDao(context).loadLastChatMessage(realmChat.getEntityId());
                 if (result != null) {
-                    lastMessagesCache.put(chatId, result);
+                    lastMessagesCache.put(realmChat, result);
                 }
             }
         }
@@ -463,7 +470,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     public void fireChatEvents(@NotNull List<ChatEvent> chatEvents) {
         final Collection<ChatEventListener> listeners = this.listeners.getListeners();
         for (ChatEvent chatEvent : chatEvents) {
-            Log.d(EVENT_TAG, "Event: " + chatEvent.getChatEventType() + " for chat: " + chatEvent.getChat().getId() + " with data: " + chatEvent.getData());
+            Log.d(EVENT_TAG, "Event: " + chatEvent.getChatEventType() + " for chat: " + chatEvent.getChat().getRealmChat().getEntityId() + " with data: " + chatEvent.getData());
             for (ChatEventListener listener : listeners) {
                 listener.onChatEvent(chatEvent.getChat(), chatEvent.getChatEventType(), chatEvent.getData());
             }
@@ -478,7 +485,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
                 // participant added => need to add to list of cached participants
                 if (data instanceof User) {
                     final User participant = ((User) data);
-                    final List<User> participants = chatParticipantsCache.get(eventChat.getId());
+                    final List<User> participants = chatParticipantsCache.get(eventChat.getRealmChat());
                     if (participants != null) {
                         // check if not contains as can be added in parallel
                         if (!Iterables.contains(participants, participant)) {
@@ -492,7 +499,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
                 // participant removed => try to remove from cached participants
                 if (data instanceof User) {
                     final User participant = ((User) data);
-                    final List<User> participants = chatParticipantsCache.get(eventChat.getId());
+                    final List<User> participants = chatParticipantsCache.get(eventChat.getRealmChat());
                     if (participants != null) {
                         participants.remove(participant);
                     }
@@ -502,7 +509,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
         synchronized (chatsById) {
             if ( chatEventType == ChatEventType.changed || chatEventType == ChatEventType.added || chatEventType == ChatEventType.last_message_changed ) {
-                chatsById.put(eventChat.getId(), eventChat);
+                chatsById.put(eventChat.getRealmChat(), eventChat);
             }
         }
 
@@ -513,9 +520,9 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
             if (chatEventType == ChatEventType.message_added) {
                 if (data instanceof ChatMessage) {
                     final ChatMessage message = (ChatMessage) data;
-                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getId());
+                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmChat());
                     if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate()) ) {
-                        lastMessagesCache.put(eventChat.getId(), message);
+                        lastMessagesCache.put(eventChat.getRealmChat(), message);
                         changesLastMessages.put(eventChat, message);
                     }
                 }
@@ -534,9 +541,9 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
                         }
                     }
 
-                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getId());
+                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmChat());
                     if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
-                        lastMessagesCache.put(eventChat.getId(), newestMessage);
+                        lastMessagesCache.put(eventChat.getRealmChat(), newestMessage);
                         changesLastMessages.put(eventChat, newestMessage);
                     }
                 }
@@ -546,9 +553,9 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
             if (chatEventType == ChatEventType.message_changed) {
                 if (data instanceof ChatMessage) {
                     final ChatMessage message = (ChatMessage) data;
-                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getId());
+                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmChat());
                     if (messageFromCache == null || messageFromCache.equals(message)) {
-                        lastMessagesCache.put(eventChat.getId(), message);
+                        lastMessagesCache.put(eventChat.getRealmChat(), message);
                         changesLastMessages.put(eventChat, message);
                     }
                 }

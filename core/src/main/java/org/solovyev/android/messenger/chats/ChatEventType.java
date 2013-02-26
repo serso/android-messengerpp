@@ -26,7 +26,7 @@ public enum ChatEventType {
     // data == new last message for chat
     last_message_changed,
 
-    // data == id of user which start typing in chat
+    // data == realm user which start typing in chat
     user_start_typing;
 
     public boolean isEvent (@NotNull ChatEventType chatEventType, @NotNull Chat eventChat, @NotNull Chat chat) {

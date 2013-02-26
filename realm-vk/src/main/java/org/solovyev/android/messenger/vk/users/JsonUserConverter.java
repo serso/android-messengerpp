@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
@@ -19,14 +20,10 @@ import java.util.List;
 public class JsonUserConverter implements Converter<String, List<User>> {
 
     @NotNull
-    private static final JsonUserConverter instance = new JsonUserConverter();
+    private final Realm realm;
 
-    private JsonUserConverter() {
-    }
-
-    @NotNull
-    public static JsonUserConverter getInstance() {
-        return instance;
+    private JsonUserConverter(@NotNull Realm realm) {
+        this.realm = realm;
     }
 
     @NotNull
@@ -42,7 +39,7 @@ public class JsonUserConverter implements Converter<String, List<User>> {
         try {
             if (!Collections.isEmpty(jsonUsers)) {
                 for (JsonUser jsonUser : jsonUsers) {
-                    result.add(jsonUser.toUser());
+                    result.add(jsonUser.toUser(realm));
                 }
             }
         } catch (IllegalJsonException e) {
@@ -50,5 +47,10 @@ public class JsonUserConverter implements Converter<String, List<User>> {
         }
 
         return result;
+    }
+
+    @NotNull
+    public static Converter<String, List<User>> newInstance(@NotNull Realm realm) {
+        return new JsonUserConverter(realm);
     }
 }

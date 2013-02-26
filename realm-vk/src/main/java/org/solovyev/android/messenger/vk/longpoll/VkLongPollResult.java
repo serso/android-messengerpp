@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.vk.longpoll;
 
-import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 
 import java.util.List;
@@ -38,9 +38,9 @@ public class VkLongPollResult implements LongPollResult {
     }
 
     @Override
-    public void doUpdates(@NotNull User user, @NotNull Context context) {
+    public void doUpdates(@NotNull User user, @NotNull Realm realm) {
         for (LongPollUpdate update : updates) {
-            update.doUpdate(user, context);
+            update.doUpdate(user, realm);
         }
     }
 }

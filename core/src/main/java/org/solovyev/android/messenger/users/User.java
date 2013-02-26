@@ -35,9 +35,6 @@ public interface User extends MutableUserSyncData {
     */
 
     @NotNull
-    String getId();
-
-    @NotNull
     String getLogin();
 
     @NotNull

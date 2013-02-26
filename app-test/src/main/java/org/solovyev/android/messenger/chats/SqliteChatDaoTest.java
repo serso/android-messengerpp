@@ -32,7 +32,7 @@ public class SqliteChatDaoTest extends AndroidTestCase {
 
         Chat chat = chatDao.loadChatById(TestRealmDef.newEntity("test_04").getEntityId());
         Assert.assertNotNull(chat);
-        Assert.assertEquals(TestRealmDef.newEntity("test_04").getEntityId(), chat.getId());
+        Assert.assertEquals(TestRealmDef.newEntity("test_04").getEntityId(), chat.getRealmChat().getEntityId());
 
 
     }

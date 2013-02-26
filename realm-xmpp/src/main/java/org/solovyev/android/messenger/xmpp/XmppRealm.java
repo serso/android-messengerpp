@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.RealmUserService;
@@ -20,14 +21,14 @@ public class XmppRealm implements RealmDef {
     static final String REALM_ID = "xmpp";
 
     @NotNull
-    private XmppRealmConnection xmppRealmConnection;
+    private final ConnectionConfiguration configuration;
 
     @NotNull
     private final String id;
 
     public XmppRealm(@NotNull ConnectionConfiguration configuration, @NotNull String subRealm, @NotNull Context context) {
-        id = REALM_ID + "-" + subRealm;
-        xmppRealmConnection = new XmppRealmConnection(this, context, configuration);
+        this.configuration = configuration;
+        this.id = REALM_ID + "-" + subRealm;
     }
 
     @NotNull
@@ -36,27 +37,37 @@ public class XmppRealm implements RealmDef {
         return this.id;
     }
 
-    @NotNull
     @Override
-    public RealmConnection createRealmConnection(@NotNull Context context) {
-        return xmppRealmConnection;
+    public int getNameResId() {
+        return R.string.mpp_xmpp_name;
+    }
+
+    @Override
+    public int getIconResId() {
+        return R.drawable.mpp_xmpp_icon;
     }
 
     @NotNull
     @Override
-    public RealmUserService getRealmUserService() {
-        return new XmppRealmUserService(xmppRealmConnection);
-    }
-
-    @NotNull
-    @Override
-    public RealmChatService getRealmChatService() {
+    public RealmUserService newRealmUserService(@NotNull Realm realm) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @NotNull
     @Override
-    public RealmAuthService getRealmAuthService() {
+    public RealmChatService newRealmChatService(@NotNull Realm realm) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public RealmAuthService newRealmAuthService(@NotNull Realm realm) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

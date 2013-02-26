@@ -21,7 +21,7 @@ public enum SyncTask {
             boolean result = false;
 
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
                 final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
                 if (lastPropertiesSyncDate == null || lastPropertiesSyncDate.plusHours(1).isBefore(DateTime.now())) {
                     result = true;
@@ -36,8 +36,8 @@ public enum SyncTask {
         @Override
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
+                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getRealmUser());
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -50,7 +50,7 @@ public enum SyncTask {
             boolean result = false;
 
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
                 final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
                 if (lastContactsSyncDate == null || lastContactsSyncDate.plusHours(1).isBefore(DateTime.now())) {
                     result = true;
@@ -65,8 +65,8 @@ public enum SyncTask {
         @Override
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
+                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getRealmUser());
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -80,7 +80,7 @@ public enum SyncTask {
             boolean result = false;
 
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
                 final DateTime lastUserIconsSyncDate = user.getUserSyncData().getLastUserIconsSyncData();
                 if (lastUserIconsSyncDate == null || lastUserIconsSyncDate.plusDays(1).isBefore(DateTime.now())) {
                     result = true;
@@ -95,9 +95,9 @@ public enum SyncTask {
         @Override
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
 
-                AbstractMessengerApplication.getServiceLocator().getUserService().fetchUserIcons(user, context);
+                AbstractMessengerApplication.getServiceLocator().getUserService().fetchUserIcons(user);
 
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
@@ -114,8 +114,8 @@ public enum SyncTask {
         @Override
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                AbstractMessengerApplication.getServiceLocator().getUserService().checkOnlineUserContacts(user.getId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
+                AbstractMessengerApplication.getServiceLocator().getUserService().checkOnlineUserContacts(user.getRealmUser());
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -128,7 +128,7 @@ public enum SyncTask {
             boolean result = false;
 
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
                 final DateTime lastChatsSyncDate = user.getUserSyncData().getLastChatsSyncDate();
                 if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(24).isBefore(DateTime.now())) {
                     result = true;
@@ -143,8 +143,8 @@ public enum SyncTask {
         @Override
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getId(), context);
+                final User user = getAuthService().getUser(syncData.getRealmId());
+                AbstractMessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getRealmUser());
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
@@ -160,8 +160,8 @@ public enum SyncTask {
         @Override
         public void doTask(@NotNull SyncData syncData, @NotNull Context context) {
             try {
-                final User user = getAuthService().getUser(syncData.getRealmId(), context);
-                AbstractMessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getId());
+                final User user = getAuthService().getUser(syncData.getRealmId());
+                AbstractMessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getRealmUser());
             } catch (UserIsNotLoggedInException e) {
                 // ok, user is not logged in
             }
