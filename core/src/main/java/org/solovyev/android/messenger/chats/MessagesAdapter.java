@@ -9,8 +9,8 @@ import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
@@ -22,7 +22,7 @@ import java.util.*;
  * Date: 6/10/12
  * Time: 11:27 PM
  */
-public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageListItem> implements ChatEventListener, UserEventListener {
+public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> implements ChatEventListener, UserEventListener {
 
     @NotNull
     private final User user;
@@ -102,7 +102,7 @@ public class MessagesAdapter extends AbstractMessengerListItemAdapter<MessageLis
 
                 final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("typing" + realmUser.getEntityId());
                 liteChatMessage.setSendDate(DateTime.now());
-                liteChatMessage.setAuthor(AbstractMessengerApplication.getServiceLocator().getUserService().getUserById(realmUser));
+                liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(realmUser));
                 liteChatMessage.setBody("User start typing...");
 
                 final MessageListItem listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));

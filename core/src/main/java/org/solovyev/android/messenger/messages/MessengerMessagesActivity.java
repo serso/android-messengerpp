@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.chats.Chat;
@@ -152,7 +152,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     public User getUser() {
         if ( user == null ) {
             try {
-                user = AbstractMessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmChat().getRealmId());
+                user = MessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmChat().getRealmId());
             } catch (UserIsNotLoggedInException e) {
                 // todo serso: continue
             }

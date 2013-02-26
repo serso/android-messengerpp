@@ -201,7 +201,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                 protected Chat doInBackground(Void... params) {
                     try {
                         final User user = getRealmService().getRealmById(contact.getRealmUser().getRealmId()).getUser();
-                        return AbstractMessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getRealmUser(), contact.getRealmUser());
+                        return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getRealmUser(), contact.getRealmUser());
                     } catch (UnsupportedRealmException e) {
                         throw new AssertionError(e);
                     }

@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 
@@ -38,7 +38,7 @@ class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListIt
 
         for (Realm realm : realmService.getRealms()) {
             final User user = realm.getUser();
-            for (User contact : AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getRealmUser())) {
+            for (User contact : MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getRealmUser())) {
                 result.add(new UserContact(user, contact));
             }
         }
@@ -48,7 +48,7 @@ class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListIt
 
     @Override
     protected Comparator<? super ContactListItem> getComparator() {
-        return AbstractMessengerListItemAdapter.ListItemComparator.getInstance();
+        return MessengerListItemAdapter.ListItemComparator.getInstance();
     }
 
     @NotNull

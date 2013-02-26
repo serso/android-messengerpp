@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.realms.MessengerRealmsActivity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
@@ -99,8 +100,8 @@ public class MessengerStartActivity extends RoboActivity {
             Context context = getContext();
             if (context != null) {
                 for (User user : users) {
-                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getRealmUser());
-                    AbstractMessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmUser());
+                    MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getRealmUser());
+                    MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmUser());
                 }
             }
 

@@ -47,5 +47,6 @@
     <string name="c_appearance_preferences">Appearance settings</string>
     <string name="c_settings">Settings</string>
     <string name="configured_realm_icon">Realm</string>
+    <string name="mpp_realm_add">Add account</string>
 
 </resources>

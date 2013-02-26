@@ -3,8 +3,8 @@ package org.solovyev.android.messenger.users;
 import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.view.AbstractOnRefreshListener;
@@ -19,7 +19,7 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
 
     @NotNull
     @Override
-    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull MessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
         return new OnlineContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 
@@ -29,7 +29,7 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
             @Override
             public void onRefresh() {
                 try {
-                    AbstractMessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, getActivity(), new Runnable() {
+                    MessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, getActivity(), new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

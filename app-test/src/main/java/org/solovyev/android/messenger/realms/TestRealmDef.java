@@ -14,7 +14,7 @@ public class TestRealmDef extends AbstractRealmDef {
     private static final String REALM_ID = "test";
 
     private TestRealmDef() {
-        super(REALM_ID, R.string.mpp_test_realm_name, R.drawable.mpp_test_icon);
+        super(REALM_ID, R.string.mpp_test_realm_name, R.drawable.mpp_test_icon, null);
     }
 
     @NotNull

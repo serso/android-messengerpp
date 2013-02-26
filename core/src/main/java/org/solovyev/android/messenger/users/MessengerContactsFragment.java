@@ -11,7 +11,7 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.sync.SyncTask;
@@ -56,7 +56,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
     }
 
     @NotNull
-    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull MessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
         return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 

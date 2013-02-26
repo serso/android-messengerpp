@@ -20,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
@@ -136,7 +136,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         final ViewGroup messagesParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.R.id.messages_list);
         messagesParent.addView(superResult);
 
-        AbstractMessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
 
         return result;
     }
@@ -319,7 +319,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     @NotNull
     @Override
-    protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<MessageListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@NotNull MessengerListItemAdapter<MessageListItem> adapter, @NotNull Runnable onPostExecute) {
         return new MessagesAsyncLoader(adapter, onPostExecute);
     }
 
@@ -400,14 +400,14 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     private class MessagesAsyncLoader extends AbstractAsyncLoader<ChatMessage, MessageListItem> {
 
-        public MessagesAsyncLoader(AbstractMessengerListItemAdapter<MessageListItem> adapter, Runnable onPostExecute) {
+        public MessagesAsyncLoader(MessengerListItemAdapter<MessageListItem> adapter, Runnable onPostExecute) {
             super(MessengerMessagesFragment.this.getActivity(), adapter, onPostExecute);
         }
 
         @NotNull
         @Override
         protected List<ChatMessage> getElements(@NotNull Context context) {
-            return AbstractMessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmChat(), getActivity());
+            return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmChat(), getActivity());
         }
 
         @Override

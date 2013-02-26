@@ -111,7 +111,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<UserCh
 
     @NotNull
     @Override
-    protected MessengerAsyncTask<Void, Void, List<UserChat>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<ChatListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected MessengerAsyncTask<Void, Void, List<UserChat>> createAsyncLoader(@NotNull MessengerListItemAdapter<ChatListItem> adapter, @NotNull Runnable onPostExecute) {
         return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 

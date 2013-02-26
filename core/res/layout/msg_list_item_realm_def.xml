@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+              a:layout_width="match_parent"
+              a:layout_height="match_parent"
+              style="@style/list_item_item">
+
+    <ImageView a:id="@+id/mpp_realm_icon_imageview"
+               style="@style/list_item_item"
+               a:padding="0dp"
+               a:layout_width="50dp"
+               a:layout_height="50dp"
+               a:contentDescription="@string/configured_realm_icon"/>
+
+    <TextView
+            a:id="@+id/mpp_realm_name_textview"
+            style="@style/list_item_item"
+            a:layout_width="match_parent"
+            a:layout_height="match_parent"
+            a:singleLine="true"
+            a:ellipsize="end"/>
+
+</LinearLayout>

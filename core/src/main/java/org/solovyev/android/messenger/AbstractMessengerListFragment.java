@@ -106,7 +106,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Nullable
     private UserEventListener userEventListener;
 
-    private AbstractMessengerListItemAdapter<LI> adapter;
+    private MessengerListItemAdapter<LI> adapter;
 
     @Nullable
     private MessengerAsyncTask<Void, Void, List<T>> listLoader;
@@ -192,7 +192,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         params.gravity = Gravity.CENTER_VERTICAL;
         root.addView(listViewParent, params);
 
-        final MessengerMultiPaneManager mpm = AbstractMessengerApplication.getMultiPaneManager();
+        final MessengerMultiPaneManager mpm = MessengerApplication.getMultiPaneManager();
         mpm.fillContentPane(this.getActivity(), container, root);
 
         return root;
@@ -268,7 +268,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     }
 
     @NotNull
-    protected AbstractMessengerListItemAdapter getAdapter() {
+    protected MessengerListItemAdapter getAdapter() {
         return adapter;
     }
 
@@ -408,7 +408,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
     private void prepareLoadingView(@NotNull Resources resources, @Nullable LoadingLayout loadingView, @Nullable ViewGroup paneParent) {
         if (loadingView != null) {
-            AbstractMessengerApplication.getMultiPaneManager().fillLoadingLayout(this.getActivity(), paneParent, resources, loadingView);
+            MessengerApplication.getMultiPaneManager().fillLoadingLayout(this.getActivity(), paneParent, resources, loadingView);
         }
     }
 
@@ -436,13 +436,21 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(final AdapterView<?> parent,
                                     final View view,
-                                    final int position,
+                                    final int index,
                                     final long id) {
+                final int position;
+
+                if ( isFilterEnabled() ) {
+                    position = index - 1;
+                } else {
+                    position = index;
+                }
+
                 final ListItem listItem = (ListItem) parent.getItemAtPosition(position);
 
                 // notify adapter
-                // todo serso: understand why here position starts from 1
-                adapter.getSelectedItemListener().onItemClick(parent, view, position - 1, id);
+
+                adapter.getSelectedItemListener().onItemClick(parent, view, position, id);
 
                 final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
                 if (onClickAction != null) {
@@ -524,10 +532,10 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     }
 
     @NotNull
-    protected abstract AbstractMessengerListItemAdapter<LI> createAdapter();
+    protected abstract MessengerListItemAdapter<LI> createAdapter();
 
     @Nullable
-    protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@NotNull AbstractMessengerListItemAdapter<LI> adapter, @NotNull Runnable onPostExecute);
+    protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@NotNull MessengerListItemAdapter<LI> adapter, @NotNull Runnable onPostExecute);
 
     @Override
     public final void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -635,7 +643,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
                 if (position >= 0 && position < adapter.getCount()) {
                     adapter.getSelectedItemListener().onItemClick(getListView(), null, position, 0);
 
-                    if (AbstractMessengerApplication.getMultiPaneManager().isDualPane(getActivity())) {
+                    if (MessengerApplication.getMultiPaneManager().isDualPane(getActivity())) {
                         final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
                         if (onClickAction != null) {
                             onClickAction.onClick(getActivity(), adapter, listView);

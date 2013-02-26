@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.chats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
@@ -161,7 +161,7 @@ public class ChatImpl extends JObject implements Chat {
     public RealmEntity getSecondUser() {
         assert isPrivate();
 
-        return AbstractMessengerApplication.getServiceLocator().getChatService().getSecondUser(this);
+        return MessengerApplication.getServiceLocator().getChatService().getSecondUser(this);
     }
 
     @Override

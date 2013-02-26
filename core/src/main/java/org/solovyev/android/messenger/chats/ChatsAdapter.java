@@ -7,8 +7,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -22,7 +22,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:48 PM
  */
-public class ChatsAdapter extends AbstractMessengerListItemAdapter<ChatListItem> implements ChatEventListener, UserEventListener {
+public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> implements ChatEventListener, UserEventListener {
 
     public ChatsAdapter(@NotNull Context context) {
         super(context, new ArrayList<ChatListItem>());
@@ -91,7 +91,7 @@ public class ChatsAdapter extends AbstractMessengerListItemAdapter<ChatListItem>
 
     @NotNull
     private ChatService getChatService() {
-        return AbstractMessengerApplication.getServiceLocator().getChatService();
+        return MessengerApplication.getServiceLocator().getChatService();
     }
 
     @Override

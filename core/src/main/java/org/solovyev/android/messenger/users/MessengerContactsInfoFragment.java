@@ -14,7 +14,7 @@ import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.Views;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
@@ -59,7 +59,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View result = ViewFromLayoutBuilder.newInstance(R.layout.msg_contacts).build(this.getActivity());
 
-        AbstractMessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
 
         result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -119,7 +119,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
             contactName.setText(contact.getDisplayName());
 
             final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.contact_icon);
-            AbstractMessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
+            MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
         }
     }

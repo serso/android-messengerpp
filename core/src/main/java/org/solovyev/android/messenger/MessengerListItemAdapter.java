@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:58 PM
  */
-public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListItemArrayAdapter<LI> implements UserEventListener {
+public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArrayAdapter<LI> implements UserEventListener {
 
     private boolean initialized = false;
 
@@ -35,7 +35,7 @@ public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListI
     @NotNull
     private final AdapterView.OnItemClickListener selectedItemListener = new SelectedItemListener();
 
-    public AbstractMessengerListItemAdapter(@NotNull Context context, @NotNull List<? extends LI> listItems) {
+    public MessengerListItemAdapter(@NotNull Context context, @NotNull List<? extends LI> listItems) {
         super(context, listItems);
     }
 
@@ -126,12 +126,12 @@ public class AbstractMessengerListItemAdapter<LI extends ListItem> extends ListI
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             final ListItem selectedItem = getItem(position);
-            if (AbstractMessengerListItemAdapter.this.selectedItem != selectedItem) {
+            if (MessengerListItemAdapter.this.selectedItem != selectedItem) {
                 selectItem(selectedItem, true);
-                selectItem(AbstractMessengerListItemAdapter.this.selectedItem, false);
+                selectItem(MessengerListItemAdapter.this.selectedItem, false);
 
-                AbstractMessengerListItemAdapter.this.selectedItem = selectedItem;
-                AbstractMessengerListItemAdapter.this.selectedItemPosition = position;
+                MessengerListItemAdapter.this.selectedItem = selectedItem;
+                MessengerListItemAdapter.this.selectedItemPosition = position;
 
                 notifyDataSetChanged();
             }

@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
+import android.app.Activity;
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.RealmConnection;
@@ -36,4 +37,7 @@ public interface RealmDef {
 
     @NotNull
     RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context);
+
+    @NotNull
+    Class<? extends Activity> getConfigurationActivityClass();
 }

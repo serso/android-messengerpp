@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.vk.VkConfigurationImpl;
  * Date: 5/24/12
  * Time: 9:48 PM
  */
-public class MessengerApplication extends AbstractMessengerApplication {
+public class DefaultMessengerApplication extends MessengerApplication {
 
     @NotNull
     public static final String CLIENT_ID = "2970921";

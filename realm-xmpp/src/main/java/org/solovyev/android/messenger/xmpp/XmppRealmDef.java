@@ -2,11 +2,10 @@ package org.solovyev.android.messenger.xmpp;
 
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
-import org.jivesoftware.smack.ConnectionConfiguration;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.realms.AbstractRealmDef;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.RealmUserService;
 
@@ -15,36 +14,13 @@ import org.solovyev.android.messenger.users.RealmUserService;
  * Date: 2/24/13
  * Time: 8:09 PM
  */
-public class XmppRealm implements RealmDef {
+public class XmppRealmDef extends AbstractRealmDef {
 
     @NotNull
     static final String REALM_ID = "xmpp";
 
-    @NotNull
-    private final ConnectionConfiguration configuration;
-
-    @NotNull
-    private final String id;
-
-    public XmppRealm(@NotNull ConnectionConfiguration configuration, @NotNull String subRealm, @NotNull Context context) {
-        this.configuration = configuration;
-        this.id = REALM_ID + "-" + subRealm;
-    }
-
-    @NotNull
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public int getNameResId() {
-        return R.string.mpp_xmpp_name;
-    }
-
-    @Override
-    public int getIconResId() {
-        return R.drawable.mpp_xmpp_icon;
+    public XmppRealmDef() {
+        super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationActivity.class);
     }
 
     @NotNull

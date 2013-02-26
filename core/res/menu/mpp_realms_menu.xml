@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:a="http://schemas.android.com/apk/res/android">
+
+    <item a:id="@+id/mpp_realm_add"
+          a:title="@string/mpp_realm_add"
+          a:icon="@drawable/item_add"
+          a:showAsAction="always"/>
+</menu>

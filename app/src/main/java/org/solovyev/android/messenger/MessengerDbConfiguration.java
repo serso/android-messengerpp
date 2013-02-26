@@ -16,7 +16,7 @@ public class MessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
     @NotNull
     @Override
     public String getName() {
-        return MessengerApplication.DB_NAME;
+        return DefaultMessengerApplication.DB_NAME;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class MessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
 
     @Override
     public int getVersion() {
-        return MessengerApplication.DB_VERSION;
+        return DefaultMessengerApplication.DB_VERSION;
     }
 }

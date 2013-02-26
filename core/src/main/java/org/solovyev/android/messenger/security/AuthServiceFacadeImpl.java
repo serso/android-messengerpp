@@ -18,7 +18,7 @@ import org.solovyev.android.messenger.users.User;
 public class AuthServiceFacadeImpl implements AuthServiceFacade {
 
     @NotNull
-    private final String realm;
+    private final String realm = "";
 
     @NotNull
     private final AuthService authService;
@@ -26,7 +26,7 @@ public class AuthServiceFacadeImpl implements AuthServiceFacade {
     @Inject
     public AuthServiceFacadeImpl(@NotNull MessengerConfiguration configuration,
                                  @NotNull AuthService authService) {
-        this.realm = configuration.getRealm().getId();
+        //this.realm = configuration.getRealmDefs().getId();
         this.authService = authService;
     }
 

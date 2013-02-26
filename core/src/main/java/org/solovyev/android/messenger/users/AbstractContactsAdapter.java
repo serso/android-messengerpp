@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
-import org.solovyev.android.messenger.AbstractMessengerListItemAdapter;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.text.Strings;
 
@@ -23,7 +23,7 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 5:55 PM
  */
-public abstract class AbstractContactsAdapter extends AbstractMessengerListItemAdapter<ContactListItem> implements UserEventListener {
+public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> implements UserEventListener {
 
     @NotNull
     private MessengerContactsMode mode = MessengerContactsMode.all_contacts;

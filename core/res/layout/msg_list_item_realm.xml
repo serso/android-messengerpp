@@ -5,7 +5,7 @@
               a:layout_height="match_parent"
               style="@style/list_item_item">
 
-    <ImageView a:id="@+id/mpp_configured_realm_icon_imageview"
+    <ImageView a:id="@+id/mpp_realm_icon_imageview"
                style="@style/list_item_item"
                a:padding="0dp"
                a:layout_width="50dp"
@@ -13,7 +13,7 @@
                a:contentDescription="@string/configured_realm_icon"/>
 
     <TextView
-            a:id="@+id/mpp_configured_realm_name_textview"
+            a:id="@+id/mpp_realm_name_textview"
             style="@style/list_item_item"
             a:layout_width="match_parent"
             a:layout_height="match_parent"

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
@@ -36,7 +36,7 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem
 
         for (Realm realm : realmService.getRealms()) {
             final User user = realm.getUser();
-            for (Chat chat : AbstractMessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmUser())) {
+            for (Chat chat : MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmUser())) {
                 result.add(new UserChat(user, chat));
             }
         }

@@ -25,7 +25,7 @@ public class VkRealmDef extends AbstractRealmDef {
     private static final String REALM_ID = "vk";
 
     public VkRealmDef() {
-        super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon);
+        super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkRealmConfigurationActivity.class);
     }
 
     @NotNull

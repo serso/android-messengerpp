@@ -23,10 +23,10 @@ public class DefaultRealmService implements RealmService {
 
     @Inject
     public DefaultRealmService(@NotNull MessengerConfiguration configuration) {
-        this(Arrays.asList(configuration.getRealm()));
+        this(configuration.getRealmDefs());
     }
 
-    public DefaultRealmService(@NotNull List<? extends RealmDef> realmDefs) {
+    public DefaultRealmService(@NotNull Collection<? extends RealmDef> realmDefs) {
         for (RealmDef realmDef : realmDefs) {
             this.realmDefs.put(realmDef.getId(), realmDef);
         }

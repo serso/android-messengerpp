@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatMessage;
@@ -98,7 +98,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         if (secondUser != null) {
                             final RealmEntity realmUser = user.getRealmUser();
                             final RealmEntity secondRealmUser = secondUser.getRealmUser();
-                            final RealmEntity realmChat = AbstractMessengerApplication.getServiceLocator().getChatService().createPrivateChatId(realmUser, secondRealmUser);
+                            final RealmEntity realmChat = MessengerApplication.getServiceLocator().getChatService().createPrivateChatId(realmUser, secondRealmUser);
 
                             ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
                             if (chat == null) {

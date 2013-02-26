@@ -4,7 +4,7 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
-import org.solovyev.android.messenger.AbstractMessengerApplication;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 
@@ -33,7 +33,7 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
         final Context context = getContext();
         if (context != null) {
             try {
-                AbstractMessengerApplication.getServiceLocator().getAuthService().loginUser(realmId, input.login, input.password, input.resolvedCaptcha);
+                MessengerApplication.getServiceLocator().getAuthService().loginUser(realmId, input.login, input.password, input.resolvedCaptcha);
             } catch (InvalidCredentialsException e) {
                 throwException(e);
             }
@@ -47,7 +47,7 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
         final Context context = getContext();
         if (context != null) {
             try {
-                AbstractMessengerApplication.getServiceLocator().getSyncService().syncAll(context);
+                MessengerApplication.getServiceLocator().getSyncService().syncAll(context);
             } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
                 // do not care
             }

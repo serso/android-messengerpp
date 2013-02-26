@@ -9,7 +9,7 @@
 
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="13"/>
 
-    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/icon" android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerApplication" android:theme="@style/Theme.Messenger">
+    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/icon" android:label="@string/mpp_app_name" android:name=".DefaultMessengerApplication" android:theme="@style/Theme.Messenger">
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerStartActivity" android:windowSoftInputMode="adjustPan">
 
@@ -20,8 +20,13 @@
 
         </activity>
 
-        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRealmsActivity"/>
+        <activity android:label="@string/mpp_app_name" android:name=".realms.MessengerRealmsActivity"/>
+        <activity android:label="@string/mpp_app_name" android:name=".realms.MessengerRealmDefsActivity"/>
+
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerLoginActivity"/>
+
+        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.xmpp.XmppRealmConfigurationActivity"/>
+        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.vk.VkRealmConfigurationActivity"/>
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRegistrationActivity"/>
 

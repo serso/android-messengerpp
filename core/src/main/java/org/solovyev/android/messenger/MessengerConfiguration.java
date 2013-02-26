@@ -3,6 +3,8 @@ package org.solovyev.android.messenger;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.realms.RealmDef;
 
+import java.util.Collection;
+
 /**
  * User: serso
  * Date: 5/24/12
@@ -11,6 +13,6 @@ import org.solovyev.android.messenger.realms.RealmDef;
 public interface MessengerConfiguration {
 
     @NotNull
-    RealmDef getRealm();
+    Collection<RealmDef> getRealmDefs();
 
 }
