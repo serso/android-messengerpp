@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 
-public interface Realm {
+public interface Realm<C extends RealmConfiguration> {
 
     @NotNull
     String getId();
@@ -20,10 +20,15 @@ public interface Realm {
     User getUser();
 
     @NotNull
+    C getConfiguration();
+
+    @NotNull
     RealmEntity newRealmEntity(@NotNull String realmEntityId);
 
     @NotNull
     RealmConnection createRealmConnection(@NotNull Context context);
+
+    boolean same(@NotNull Realm that);
 
     /*
     **********************************************************************

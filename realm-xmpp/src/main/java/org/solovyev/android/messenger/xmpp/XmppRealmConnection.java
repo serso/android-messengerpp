@@ -10,7 +10,6 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.AuthDataImpl;
@@ -23,7 +22,7 @@ import org.solovyev.android.messenger.users.User;
  * Date: 2/24/13
  * Time: 8:13 PM
  */
-public class XmppRealmConnection extends AbstractRealmConnection implements RealmAuthService {
+public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> implements RealmAuthService {
 
     private static final String TAG = XmppRealmConnection.class.getSimpleName();
 
@@ -33,8 +32,7 @@ public class XmppRealmConnection extends AbstractRealmConnection implements Real
     @Nullable
     private Connection connection;
 
-
-    public XmppRealmConnection(@NotNull Realm realm, @NotNull Context context, @NotNull ConnectionConfiguration configuration) {
+    public XmppRealmConnection(@NotNull XmppRealm realm, @NotNull Context context, @NotNull ConnectionConfiguration configuration) {
         super(realm, context);
         this.configuration = configuration;
     }
@@ -61,18 +59,19 @@ public class XmppRealmConnection extends AbstractRealmConnection implements Real
 
     @NotNull
     @Override
-    public AuthData loginUser(@NotNull String login, @NotNull String password, @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
+    public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
        assert this.connection == null;
 
        final Connection connection = new XMPPConnection(configuration);
 
         try {
-            connection.login(login, password);
+            final XmppRealmConfiguration configuration = getRealm().getConfiguration();
+            connection.login(configuration.getLogin(), configuration.getPassword());
 
             final AuthDataImpl result = new AuthDataImpl();
 
-            result.setRealmUserId(login);
-            result.setRealmUserLogin(login);
+            result.setRealmUserId(configuration.getLogin());
+            result.setRealmUserLogin(configuration.getLogin());
             result.setAccessToken("");
 
             connection.getChatManager().addChatListener(new XmppChatListener());

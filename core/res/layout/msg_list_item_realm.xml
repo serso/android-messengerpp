@@ -10,7 +10,7 @@
                a:padding="0dp"
                a:layout_width="50dp"
                a:layout_height="50dp"
-               a:contentDescription="@string/configured_realm_icon"/>
+               a:contentDescription="@string/mpp_realm_icon"/>
 
     <TextView
             a:id="@+id/mpp_realm_name_textview"

@@ -8,17 +8,28 @@ import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 
-public class RealmImpl implements Realm {
+public abstract class AbstractRealm<C extends RealmConfiguration> implements Realm<C> {
 
     @NotNull
-    private final String id;
+    private String id;
 
     @NotNull
-    private final RealmDef realmDef;
+    private RealmDef realmDef;
 
-    public RealmImpl(@NotNull String id, @NotNull RealmDef realmDef) {
+    @NotNull
+    private User user;
+
+    @NotNull
+    private C configuration;
+
+    public AbstractRealm(@NotNull String id,
+                         @NotNull RealmDef realmDef,
+                         @NotNull User user,
+                         @NotNull C configuration) {
         this.id = id;
         this.realmDef = realmDef;
+        this.user = user;
+        this.configuration = configuration;
     }
 
     @NotNull
@@ -36,13 +47,19 @@ public class RealmImpl implements Realm {
     @NotNull
     @Override
     public User getUser() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.user;
+    }
+
+    @NotNull
+    @Override
+    public C getConfiguration() {
+        return this.configuration;
     }
 
     @NotNull
     @Override
     public RealmEntity newRealmEntity(@NotNull String realmEntityId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return RealmEntityImpl.newInstance(getId(), realmEntityId);
     }
 
     @NotNull
@@ -73,5 +90,15 @@ public class RealmImpl implements Realm {
     @Override
     public RealmConnection newRealmConnection(@NotNull Context context) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean same(@NotNull Realm r) {
+        if (r instanceof AbstractRealm) {
+            final AbstractRealm that = (AbstractRealm) r;
+            return this.configuration.equals(that.configuration);
+        } else {
+            return false;
+        }
     }
 }

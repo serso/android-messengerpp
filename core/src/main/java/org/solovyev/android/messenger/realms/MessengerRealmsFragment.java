@@ -17,6 +17,8 @@ import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,9 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 
     private ActivityMenu<Menu, MenuItem> menu;
 
+    @Nullable
+    private JEventListener<RealmEvent> realmEventListener;
+
     public MessengerRealmsFragment() {
         super("Realms");
     }
@@ -38,6 +43,22 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        realmEventListener = new RealmAddedEventListener();
+        realmService.addListener(realmEventListener);
+    }
+
+    @Override
+    public void onDestroyView() {
+        if ( realmEventListener != null ) {
+            realmService.removeListener(realmEventListener);
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -64,7 +85,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         for (Realm realm : realmService.getRealms()) {
             listItems.add(new RealmListItem(realm));
         }
-        return new MessengerListItemAdapter<RealmListItem>(getActivity(), listItems);
+        return new RealmsAdapter(getActivity(), listItems);
     }
 
     @Nullable
@@ -118,6 +139,28 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         @Override
         public Integer getItemId() {
             return this.menuItemId;
+        }
+    }
+
+    @NotNull
+    @Override
+    protected RealmsAdapter getAdapter() {
+        return (RealmsAdapter)super.getAdapter();
+    }
+
+    private class RealmAddedEventListener extends AbstractJEventListener<RealmEvent> {
+
+        public RealmAddedEventListener() {
+            super(RealmEvent.class);
+        }
+
+        @Override
+        public void onEvent(@NotNull RealmEvent e) {
+            if ( e instanceof RealmAddedEvent ) {
+                final RealmAddedEvent event = (RealmAddedEvent) e;
+                final Realm newRealm = event.getRealm();
+                getListAdapter().
+            }
         }
     }
 }

@@ -57,6 +57,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.pivotallabs</groupId>
+            <artifactId>robolectric</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

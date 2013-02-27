@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.common.listeners.JEventListener;
 
 import java.util.Collection;
 
@@ -10,6 +12,9 @@ import java.util.Collection;
  * Time: 12:57 AM
  */
 public interface RealmService {
+
+    @NotNull
+    static String TAG = "RealmService";
 
     /**
      * @return collection of all configured realms in application
@@ -31,4 +36,20 @@ public interface RealmService {
 
     @NotNull
     Realm getRealmById(@NotNull String realmId) throws UnsupportedRealmException;
+
+    void addRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+
+    void load();
+
+    /*
+    **********************************************************************
+    *
+    *                           LISTENERS
+    *
+    **********************************************************************
+    */
+
+    void addListener(@NotNull JEventListener<? extends RealmEvent> listener);
+
+    void removeListener(@NotNull JEventListener<? extends RealmEvent> listener);
 }

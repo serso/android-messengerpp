@@ -10,9 +10,6 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.RealmDefListItem;
-import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import java.util.ArrayList;

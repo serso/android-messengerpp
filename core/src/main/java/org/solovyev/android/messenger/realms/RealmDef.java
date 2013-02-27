@@ -5,8 +5,8 @@ import android.content.Context;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
-import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso
@@ -33,11 +33,14 @@ public interface RealmDef {
     RealmChatService newRealmChatService(@NotNull Realm realm);
 
     @NotNull
-    RealmAuthService newRealmAuthService(@NotNull Realm realm);
-
-    @NotNull
     RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context);
 
     @NotNull
     Class<? extends Activity> getConfigurationActivityClass();
+
+    @NotNull
+    Realm newRealm(@NotNull String realmId, @NotNull User user, @NotNull RealmConfiguration configuration);
+
+    @NotNull
+    Class<? extends RealmConfiguration> getConfigurationClass();
 }

@@ -20,14 +20,19 @@ public abstract class AbstractRealmDef implements RealmDef {
     @NotNull
     private final Class<? extends Activity> configurationActivityClass;
 
+    @NotNull
+    private final Class<? extends RealmConfiguration> configurationClass;
+
     protected AbstractRealmDef(@NotNull String id,
                                int nameResId,
                                int iconResId,
-                               @NotNull Class<? extends Activity> configurationActivityClass) {
+                               @NotNull Class<? extends Activity> configurationActivityClass,
+                               @NotNull Class<? extends RealmConfiguration> configurationClass) {
         this.id = id;
         this.nameResId = nameResId;
         this.iconResId = iconResId;
         this.configurationActivityClass = configurationActivityClass;
+        this.configurationClass = configurationClass;
     }
 
     @NotNull
@@ -44,6 +49,12 @@ public abstract class AbstractRealmDef implements RealmDef {
     @Override
     public int getIconResId() {
         return this.iconResId;
+    }
+
+    @Override
+    @NotNull
+    public Class<? extends RealmConfiguration> getConfigurationClass() {
+        return configurationClass;
     }
 
     @NotNull

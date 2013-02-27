@@ -13,13 +13,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 7/25/12
  * Time: 6:10 PM
  */
-public abstract class AbstractRealmConnection implements RealmConnection {
+public abstract class AbstractRealmConnection<R extends Realm> implements RealmConnection {
 
     @NotNull
     private static final String TAG = "RealmConnection";
 
     @NotNull
-    private final Realm realm;
+    private final R realm;
 
     @NotNull
     private final WeakReference<Context> contextRef;
@@ -27,13 +27,13 @@ public abstract class AbstractRealmConnection implements RealmConnection {
     @NotNull
     private final AtomicBoolean stopPolling = new AtomicBoolean(false);
 
-    protected AbstractRealmConnection(@NotNull Realm realm, @NotNull Context context) {
+    protected AbstractRealmConnection(@NotNull R realm, @NotNull Context context) {
         this.realm = realm;
         this.contextRef = new WeakReference<Context>(context);
     }
 
     @NotNull
-    protected Realm getRealm() {
+    protected R getRealm() {
         return realm;
     }
 

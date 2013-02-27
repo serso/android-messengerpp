@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
         final AuthData result;
         synchronized (lock) {
             if (!isUserLoggedIn(realm)) {
-                result = realmAuthService.loginUser(login, password, resolvedCaptcha);
+                result = realmAuthService.loginUser(resolvedCaptcha);
                 authDataMap.put(realm, result);
             } else {
                 try {

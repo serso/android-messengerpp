@@ -180,6 +180,7 @@ public abstract class MessengerApplication extends Application implements Messen
         this.chatService.init();
 
         // load persistence data
+        this.realmService.load();
         this.authService.load();
 
         this.networkStateService.startListening(this);
