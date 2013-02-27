@@ -43,4 +43,7 @@ public interface RealmDef {
 
     @NotNull
     Class<? extends RealmConfiguration> getConfigurationClass();
+
+    @NotNull
+    RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration);
 }

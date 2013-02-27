@@ -27,6 +27,10 @@ public class XmppRealmConfiguration implements RealmConfiguration {
     @NotNull
     private Integer port = DEFAULT_PORT;
 
+    // for gson
+    public XmppRealmConfiguration() {
+    }
+
     public XmppRealmConfiguration(@NotNull String server, @NotNull String login, @NotNull String password) {
         this.server = server;
         this.login = login;

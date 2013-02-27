@@ -171,4 +171,17 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
         out.writeString(realmEntityId);
         out.writeString(entityId);
     }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
+
+    @NotNull
+    public static String getRealmId(@NotNull String realmDefId, @NotNull int index) {
+        return realmDefId + DELIMITER_REALM + index;
+    }
 }

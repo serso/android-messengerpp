@@ -8,6 +8,7 @@ import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.longpoll.LongPollRealmConnection;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
@@ -40,6 +41,12 @@ public class VkRealmDef extends AbstractRealmDef {
     @Override
     public Realm newRealm(@NotNull String realmId, @NotNull User user, @NotNull RealmConfiguration configuration) {
         return new VkRealm(realmId, this, user, (VkRealmConfiguration) configuration);
+    }
+
+    @NotNull
+    @Override
+    public RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @NotNull

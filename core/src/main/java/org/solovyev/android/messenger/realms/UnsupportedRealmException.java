@@ -10,6 +10,6 @@ import org.jetbrains.annotations.NotNull;
 public class UnsupportedRealmException extends RuntimeException {
 
     public UnsupportedRealmException(@NotNull String realm) {
-        super("Realm " + realm + "is not supported!");
+        super("Realm " + realm + " is not supported!");
     }
 }

@@ -1,36 +1,64 @@
 package org.solovyev.android.messenger.realms;
 
-import android.app.Application;
 import com.google.inject.Inject;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.solovyev.android.messenger.MessengerDbConfiguration;
-import org.solovyev.android.messenger.TestMessengerModule;
-import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
+import junit.framework.Assert;
+import org.solovyev.android.messenger.AbstractMessengerTestCase;
+import org.solovyev.android.messenger.users.UserImpl;
+import org.solovyev.common.collections.Collections;
 
-@RunWith(RobolectricTestRunner.class)
-public class SqliteRealmDaoTest {
+import java.util.Collection;
+
+public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
 
     @Inject
-    private Application application;
+    private RealmDao realmDao;
 
-    @Before
+    @Inject
+    private TestRealmDef testRealmDef;
+
     public void setUp() throws Exception {
-        final TestMessengerModule module = new TestMessengerModule();
-
-        TestMessengerModule.setUp(this, module);
+        super.setUp();
+        realmDao.deleteRealms();
     }
 
-    @Test
     public void testRealmOperations() throws Exception {
-        final RealmDao realmDao = new SqliteRealmDao(application, new MessengerSQLiteOpenHelper(application, new MessengerDbConfiguration()));
+        Collection<Realm> realms = realmDao.loadRealms();
+        Assert.assertTrue(realms.isEmpty());
+
+        TestRealmConfiguration expectedConfig1 = new TestRealmConfiguration("test_config_field", 42);
+        final Realm expected1 = testRealmDef.newRealm("test01", UserImpl.newFakeInstance(RealmEntityImpl.newInstance("test01", "user01")), expectedConfig1);
+        realmDao.insertRealm(expected1);
+
+        realms = realmDao.loadRealms();
+        Assert.assertTrue(realms.size() == 1);
+        Realm<TestRealmConfiguration> actual1 = Collections.getFirstCollectionElement(realms);
+        Assert.assertNotNull(actual1);
+        Assert.assertTrue(expected1.same(actual1));
+        Assert.assertTrue(actual1.getConfiguration().equals(expectedConfig1));
+        Assert.assertEquals("test_config_field", actual1.getConfiguration().getTestStringField());
+        Assert.assertEquals(42, actual1.getConfiguration().getTestIntField());
+
+        realmDao.deleteRealm(expected1);
+
+        realms = realmDao.loadRealms();
+        Assert.assertTrue(realms.isEmpty());
     }
 
-    @After
-    public void tearDown() {
-        TestMessengerModule.tearDown();
+    public void testConcreteRealms() throws Exception {
+        int index = 0;
+        for (RealmDef realmDef : getRealmService().getRealmDefs()) {
+            final RealmConfiguration realmConfiguration = realmDef.getConfigurationClass().newInstance();
+            final String realmId = RealmEntityImpl.getRealmId(realmDef.getId(), index);
+            Realm expected = realmDef.newRealm(realmId, UserImpl.newFakeInstance(RealmEntityImpl.newInstance(realmId, String.valueOf(index))), realmConfiguration);
+            realmDao.insertRealm(expected);
+        }
+
+        Collection<Realm> realms = realmDao.loadRealms();
+        Assert.assertTrue(realms.size() == 3);
+    }
+
+    public void tearDown() throws Exception {
+        realmDao.deleteRealms();
+        super.tearDown();
     }
 }

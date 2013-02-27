@@ -159,7 +159,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
             if ( e instanceof RealmAddedEvent ) {
                 final RealmAddedEvent event = (RealmAddedEvent) e;
                 final Realm newRealm = event.getRealm();
-                getListAdapter().
+                // todo serso: continue
             }
         }
     }

@@ -6,9 +6,12 @@ import java.util.Collection;
 
 public interface RealmDao {
 
-    @NotNull
-    Realm insertRealm(@NotNull Realm realm);
+    void insertRealm(@NotNull Realm realm);
+
+    void deleteRealm(@NotNull Realm realm);
 
     @NotNull
     Collection<Realm> loadRealms();
+
+    void deleteRealms();
 }

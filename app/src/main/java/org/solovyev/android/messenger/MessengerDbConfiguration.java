@@ -14,9 +14,13 @@ import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 public class MessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
 
     @NotNull
+    public static final String DB_NAME = "mpp";
+    public static final int DB_VERSION = 1;
+
+    @NotNull
     @Override
     public String getName() {
-        return DefaultMessengerApplication.DB_NAME;
+        return DB_NAME;
     }
 
     @Override
@@ -26,6 +30,6 @@ public class MessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
 
     @Override
     public int getVersion() {
-        return DefaultMessengerApplication.DB_VERSION;
+        return DB_VERSION;
     }
 }

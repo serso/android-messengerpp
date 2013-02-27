@@ -52,8 +52,9 @@ public class XmppRealmDef extends AbstractRealmDef {
         return new XmppRealm(realmId, this, user, (XmppRealmConfiguration) configuration);
     }
 
+    @Override
     @NotNull
-    public RealmBuilder newRealmBuilder(@NotNull XmppRealmConfiguration configuration) {
-        return new XmppRealmBuilder(this, configuration);
+    public RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration) {
+        return new XmppRealmBuilder(this, (XmppRealmConfiguration) configuration);
     }
 }

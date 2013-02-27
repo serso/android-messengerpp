@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.users;
 import android.test.AndroidTestCase;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.DefaultMessengerApplication;
 import org.solovyev.android.messenger.MessengerDbConfiguration;
 import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
 import org.solovyev.android.messenger.realms.TestRealmDef;
@@ -26,7 +25,7 @@ public class SqliteUserDaoTest extends AndroidTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        getContext().deleteDatabase(DefaultMessengerApplication.DB_NAME);
+        getContext().deleteDatabase(MessengerDbConfiguration.DB_NAME);
     }
 
     public void testUserOperation() throws Exception {

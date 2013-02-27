@@ -29,7 +29,8 @@ public class RealmMapper implements Converter<Cursor, Realm> {
         final String configuration = cursor.getString(3);
 
         final RealmDef realmDef = realmService.getRealmDefById(realmDefId);
-        final User user = userService.getUserById(RealmEntityImpl.fromEntityId(userId));
+        // realm is not loaded => no way we can find user in realm services
+        final User user = userService.getUserById(RealmEntityImpl.fromEntityId(userId), false);
         return realmDef.newRealm(realmId, user, new Gson().fromJson(configuration, realmDef.getConfigurationClass()));
     }
 }

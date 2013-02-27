@@ -1,26 +1,88 @@
 package org.solovyev.android.messenger;
 
 import android.app.Application;
+import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
+import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
-import com.xtremelabs.robolectric.Robolectric;
+import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
+import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.chats.ChatDao;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.DefaultChatService;
+import org.solovyev.android.messenger.chats.SqliteChatDao;
+import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
+import org.solovyev.android.messenger.http.MessengerCachingImageLoader;
+import org.solovyev.android.messenger.messages.ChatMessageDao;
+import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.DefaultChatMessageService;
+import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
+import org.solovyev.android.messenger.realms.DefaultRealmService;
+import org.solovyev.android.messenger.realms.RealmDao;
+import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.SqliteRealmDao;
+import org.solovyev.android.messenger.registration.RegistrationService;
+import org.solovyev.android.messenger.security.AuthService;
+import org.solovyev.android.messenger.security.AuthServiceFacade;
+import org.solovyev.android.messenger.security.AuthServiceFacadeImpl;
+import org.solovyev.android.messenger.security.AuthServiceImpl;
+import org.solovyev.android.messenger.sync.DefaultSyncService;
+import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.messenger.users.DefaultUserService;
+import org.solovyev.android.messenger.users.SqliteUserDao;
+import org.solovyev.android.messenger.users.UserDao;
+import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.vk.registration.DummyRegistrationService;
+import org.solovyev.android.network.MessengerNetworkStateService;
+import org.solovyev.android.network.NetworkStateService;
 import roboguice.RoboGuice;
-import roboguice.config.DefaultRoboModule;
 import roboguice.inject.RoboInjector;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class TestMessengerModule extends MessengerModule {
+public class TestMessengerModule extends AbstractModule {
 
     private final Map<Class<?>, Object> bindings = new HashMap<Class<?>, Object>();
 
+    @NotNull
+    private final Application application;
+
+    public TestMessengerModule(@NotNull Application application) {
+        this.application = application;
+    }
+
     @Override
     protected void configure() {
-        super.configure();
+        bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
+        bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 
-        //bind(Activity.class).toProvider(Provider.class).in(ContextSingleton.class);
+        bind(RealmService.class).to(DefaultRealmService.class);
+        bind(RealmDao.class).to(SqliteRealmDao.class);
+
+        bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
+        bind(AuthService.class).to(AuthServiceImpl.class);
+        bind(AuthServiceFacade.class).to(AuthServiceFacadeImpl.class);
+        bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
+        bind(NetworkStateService.class).to(MessengerNetworkStateService.class);
+
+        bind(UserDao.class).to(SqliteUserDao.class);
+        bind(UserService.class).to(DefaultUserService.class);
+
+        bind(ChatDao.class).to(SqliteChatDao.class);
+        bind(ChatService.class).to(DefaultChatService.class);
+
+        bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
+        bind(ChatMessageService.class).to(DefaultChatMessageService.class);
+
+        bind(SyncService.class).to(DefaultSyncService.class);
+        bind(RegistrationService.class).to(DummyRegistrationService.class);
+
+        bind(Context.class).toInstance(application);
+
         Set<Map.Entry<Class<?>, Object>> entries = bindings.entrySet();
         for (Map.Entry<Class<?>, Object> entry : entries) {
             bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
@@ -31,18 +93,16 @@ public class TestMessengerModule extends MessengerModule {
         bindings.put(type, object);
     }
 
-    public static void setUp(Object testObject, TestMessengerModule module) {
-        Module roboGuiceModule = RoboGuice.newDefaultRoboModule(Robolectric.application);
+    public void setUp(@NotNull Object testObject,
+                      @NotNull TestMessengerModule module) {
+        Module roboGuiceModule = RoboGuice.newDefaultRoboModule(application);
         Module testModule = Modules.override(roboGuiceModule).with(module);
-        RoboGuice.setBaseApplicationInjector(Robolectric.application, RoboGuice.DEFAULT_STAGE, testModule);
-        RoboInjector injector = RoboGuice.getInjector(Robolectric.application);
+        RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE, testModule);
+        RoboInjector injector = RoboGuice.getInjector(application);
         injector.injectMembers(testObject);
     }
 
-    public static void tearDown() {
+    public void tearDown() {
         RoboGuice.util.reset();
-        Application app = Robolectric.application;
-        DefaultRoboModule defaultModule = RoboGuice.newDefaultRoboModule(app);
-        RoboGuice.setBaseApplicationInjector(app, RoboGuice.DEFAULT_STAGE, defaultModule);
     }
 }

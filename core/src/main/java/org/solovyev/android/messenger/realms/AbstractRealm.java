@@ -26,6 +26,10 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
                          @NotNull RealmDef realmDef,
                          @NotNull User user,
                          @NotNull C configuration) {
+        if (!user.getRealmUser().getRealmId().equals(id)) {
+            throw new IllegalArgumentException("User must belong to realm!");
+        }
+
         this.id = id;
         this.realmDef = realmDef;
         this.user = user;

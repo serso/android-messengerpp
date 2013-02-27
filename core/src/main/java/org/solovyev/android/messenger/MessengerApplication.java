@@ -32,7 +32,7 @@ import roboguice.RoboGuice;
  * Date: 5/25/12
  * Time: 8:16 PM
  */
-public abstract class MessengerApplication extends Application implements MessengerServiceLocator, MessengerMultiPaneManager {
+public class MessengerApplication extends Application implements MessengerServiceLocator, MessengerMultiPaneManager {
 
     /*
     **********************************************************************
@@ -73,6 +73,12 @@ public abstract class MessengerApplication extends Application implements Messen
     @Inject
     @NotNull
     private NetworkStateService networkStateService;
+
+    // for tests only!
+    @NotNull
+    public static MessengerApplication getInstance() {
+        return instance;
+    }
 
     @Override
     @NotNull

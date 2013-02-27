@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.chats;
 
 import android.test.AndroidTestCase;
 import junit.framework.Assert;
-import org.solovyev.android.messenger.DefaultMessengerApplication;
 import org.solovyev.android.messenger.MessengerDbConfiguration;
 import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
 import org.solovyev.android.messenger.realms.TestRealmDef;
@@ -13,7 +12,7 @@ public class SqliteChatDaoTest extends AndroidTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        getContext().deleteDatabase(DefaultMessengerApplication.DB_NAME);
+        getContext().deleteDatabase(MessengerDbConfiguration.DB_NAME);
     }
 
     public void testChatOperation() throws Exception {

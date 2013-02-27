@@ -125,7 +125,7 @@ public class DefaultRealmService implements RealmService {
 
     @NotNull
     private String generateRealmId(@NotNull RealmDef realmDef) {
-        return realmDef.getId() + realmCounter.getAndIncrement();
+        return RealmEntityImpl.getRealmId(realmDef.getId(), realmCounter.getAndIncrement());
     }
 
     @Override

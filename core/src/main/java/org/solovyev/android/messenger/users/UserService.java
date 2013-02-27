@@ -25,6 +25,9 @@ public interface UserService extends UserEventListeners {
     User getUserById(@NotNull RealmEntity realmUser);
 
     @NotNull
+    User getUserById(@NotNull RealmEntity realmUser, boolean tryFindInRealm);
+
+    @NotNull
     List<User> getUserContacts(@NotNull RealmEntity realmUser);
 
     @NotNull

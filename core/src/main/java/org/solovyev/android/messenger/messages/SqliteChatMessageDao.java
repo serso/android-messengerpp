@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.messages;
 
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,12 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.AbstractDbQuery;
-import org.solovyev.android.db.AbstractObjectDbExec;
-import org.solovyev.android.db.AbstractSQLiteHelper;
-import org.solovyev.android.db.AndroidDbUtils;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.chats.Chat;
@@ -30,8 +26,8 @@ import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
-import roboguice.inject.ContextSingleton;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -41,7 +37,7 @@ import java.util.NoSuchElementException;
  * Date: 6/11/12
  * Time: 7:41 PM
  */
-@ContextSingleton
+@Singleton
 public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMessageDao {
 
     /*
@@ -61,7 +57,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     private UserService userService;
 
     @Inject
-    public SqliteChatMessageDao(@NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+    public SqliteChatMessageDao(@NotNull Application context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
         super(context, sqliteOpenHelper);
     }
 

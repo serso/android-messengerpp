@@ -107,6 +107,12 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @NotNull
     @Override
     public User getUserById(@NotNull RealmEntity realmUser) {
+        return getUserById(realmUser, true);
+    }
+
+    @NotNull
+    @Override
+    public User getUserById(@NotNull RealmEntity realmUser, boolean tryFindInRealm) {
         boolean saved = true;
 
         User result;
@@ -122,8 +128,10 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             }
 
             if (result == null) {
-                final Realm realm = getRealmByUser(realmUser);
-                result = realm.getRealmUserService().getUserById(realmUser.getRealmEntityId());
+                if (tryFindInRealm) {
+                    final Realm realm = getRealmByUser(realmUser);
+                    result = realm.getRealmUserService().getUserById(realmUser.getRealmEntityId());
+                }
             }
 
             if (result == null) {

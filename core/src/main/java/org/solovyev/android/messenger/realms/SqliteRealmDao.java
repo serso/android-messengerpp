@@ -41,17 +41,25 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         super(context, sqliteOpenHelper);
     }
 
-    @NotNull
     @Override
-    public Realm insertRealm(@NotNull Realm realm) {
+    public void insertRealm(@NotNull Realm realm) {
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(realm)));
-        return realm;
+    }
+
+    @Override
+    public void deleteRealm(@NotNull Realm realm) {
+        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealm(realm)));
     }
 
     @NotNull
     @Override
     public Collection<Realm> loadRealms() {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), getSqliteOpenHelper()));
+    }
+
+    @Override
+    public void deleteRealms() {
+        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealms()));
     }
 
     /*
@@ -106,6 +114,28 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         @Override
         public Collection<Realm> retrieveData(@NotNull Cursor cursor) {
             return new ListMapper<Realm>(new RealmMapper(realmService, userService)).convert(cursor);
+        }
+    }
+
+    private static class DeleteRealm extends AbstractObjectDbExec<Realm> {
+
+        public DeleteRealm(@NotNull Realm realm) {
+            super(realm);
+        }
+
+        @Override
+        public void exec(@NotNull SQLiteDatabase db) {
+            final Realm realm = getNotNullObject();
+
+            db.delete("realms", "id = ?", new String[]{realm.getId()});
+        }
+    }
+
+    private static class DeleteRealms implements DbExec {
+
+        @Override
+        public void exec(@NotNull SQLiteDatabase db) {
+            db.delete("realms", null, null);
         }
     }
 }
