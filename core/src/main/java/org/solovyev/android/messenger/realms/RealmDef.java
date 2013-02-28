@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
-import android.app.Activity;
 import android.content.Context;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.users.RealmUserService;
@@ -36,7 +36,7 @@ public interface RealmDef {
     RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context);
 
     @NotNull
-    Class<? extends Activity> getConfigurationActivityClass();
+    Class<? extends AbstractRealmConfigurationFragment> getConfigurationFragmentClass();
 
     @NotNull
     Realm newRealm(@NotNull String realmId, @NotNull User user, @NotNull RealmConfiguration configuration);
@@ -45,5 +45,5 @@ public interface RealmDef {
     Class<? extends RealmConfiguration> getConfigurationClass();
 
     @NotNull
-    RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration);
+    RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration, @Nullable Realm editedRealm);
 }

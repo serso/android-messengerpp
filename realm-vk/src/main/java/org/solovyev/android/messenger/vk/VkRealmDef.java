@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.vk;
 import android.content.Context;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.longpoll.LongPollRealmConnection;
@@ -28,7 +29,7 @@ public class VkRealmDef extends AbstractRealmDef {
     private static final String REALM_ID = "vk";
 
     public VkRealmDef() {
-        super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkRealmConfigurationActivity.class, VkRealmConfiguration.class);
+        super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkRealmConfigurationFragment.class, VkRealmConfiguration.class);
     }
 
     @NotNull
@@ -45,9 +46,10 @@ public class VkRealmDef extends AbstractRealmDef {
 
     @NotNull
     @Override
-    public RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration) {
+    public RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration, @Nullable Realm editedRealm) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
 
     @NotNull
     @Override

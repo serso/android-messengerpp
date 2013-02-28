@@ -1,9 +1,6 @@
 package org.solovyev.android.messenger.xmpp;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,22 +8,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.RealmAlreadyExistsException;
+import org.solovyev.android.messenger.realms.AbstractRealmConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
 
-import java.util.List;
-
-public class XmppRealmConfigurationFragment extends RoboSherlockFragment {
+public class XmppRealmConfigurationFragment extends AbstractRealmConfigurationFragment<XmppRealm> {
 
     @Inject
     @NotNull
@@ -74,6 +66,16 @@ public class XmppRealmConfigurationFragment extends RoboSherlockFragment {
         passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
         resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
 
+        if ( !isNewRealm() ) {
+            final XmppRealm realm = getEditedRealm();
+            final XmppRealmConfiguration configuration = realm.getConfiguration();
+
+            serverEditText.setText(configuration.getServer());
+            loginEditText.setText(configuration.getLogin());
+            passwordEditText.setText(configuration.getPassword());
+            resourceEditText.setText(configuration.getResource());
+        }
+
         backButton = (Button) root.findViewById(R.id.mpp_xmpp_back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +101,8 @@ public class XmppRealmConfigurationFragment extends RoboSherlockFragment {
 
         final XmppRealmConfiguration configuration = validateData(server, login, password, resource);
         if (configuration != null) {
-            final RealmBuilder realmBuilder = realmDef.newRealmBuilder(configuration);
-            new AsynRealmSaver(this.getActivity(), realmService).execute(realmBuilder);
+            final RealmBuilder realmBuilder = realmDef.newRealmBuilder(configuration, getEditedRealm());
+            saveRealm(realmBuilder, null);
         }
     }
 
@@ -132,54 +134,5 @@ public class XmppRealmConfigurationFragment extends RoboSherlockFragment {
         } else {
             return null;
         }
-    }
-
-    private static class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, Void> {
-
-        @NotNull
-        private final RealmService realmService;
-
-        private AsynRealmSaver(@NotNull Activity context, @NotNull RealmService realmService) {
-            super(context, true);
-            this.realmService = realmService;
-        }
-
-        @Override
-        protected Void doWork(@NotNull List<RealmBuilder> realmBuilders) {
-            for (RealmBuilder realmBuilder : realmBuilders) {
-                try {
-                    realmService.addRealm(realmBuilder);
-                } catch (InvalidCredentialsException e) {
-                    throwException(e);
-                } catch (RealmAlreadyExistsException e) {
-                    throwException(e);
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onSuccessPostExecute(@Nullable Void result) {
-            final Context context = getContext();
-            if (context instanceof Activity) {
-                ((Activity) context).finish();
-            }
-        }
-
-        @Override
-        protected void onFailurePostExecute(@NotNull Exception e) {
-            if (e instanceof InvalidCredentialsException) {
-                Toast.makeText(getContext(), "Invalid credentials!", Toast.LENGTH_SHORT).show();
-                Log.e("XmppRealm", e.getMessage(), e);
-            } else if (e instanceof RealmAlreadyExistsException) {
-                Toast.makeText(getContext(), "Same account alraedy configured!", Toast.LENGTH_SHORT).show();
-                Log.e("XmppRealm", e.getMessage(), e);
-            } else {
-                super.onFailurePostExecute(e);
-            }
-        }
-
-
     }
 }

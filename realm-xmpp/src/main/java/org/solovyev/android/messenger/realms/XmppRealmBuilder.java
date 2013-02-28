@@ -29,8 +29,9 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
     private Connection connection;
 
     public XmppRealmBuilder(@NotNull RealmDef realmDef,
+                            @Nullable Realm editedRealm,
                             @NotNull XmppRealmConfiguration configuration) {
-        super(realmDef);
+        super(realmDef, editedRealm);
         this.configuration = configuration;
     }
 
@@ -102,5 +103,11 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
 
         return result;
 
+    }
+
+    @NotNull
+    @Override
+    public RealmConfiguration getConfiguration() {
+        return configuration;
     }
 }

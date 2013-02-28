@@ -61,6 +61,16 @@ public class XmppRealmConfiguration implements RealmConfiguration {
     }
 
     @NotNull
+    public String getResource() {
+        return resource;
+    }
+
+    @NotNull
+    public Integer getPort() {
+        return port;
+    }
+
+    @NotNull
     public ConnectionConfiguration toXmppConfiguration() {
         final ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(this.server, this.port, this.resource);
 

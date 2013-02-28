@@ -32,9 +32,9 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     @Nullable
     private Connection connection;
 
-    public XmppRealmConnection(@NotNull XmppRealm realm, @NotNull Context context, @NotNull ConnectionConfiguration configuration) {
+    public XmppRealmConnection(@NotNull XmppRealm realm, @NotNull Context context) {
         super(realm, context);
-        this.configuration = configuration;
+        configuration = realm.getConfiguration().toXmppConfiguration();
     }
 
     @Override

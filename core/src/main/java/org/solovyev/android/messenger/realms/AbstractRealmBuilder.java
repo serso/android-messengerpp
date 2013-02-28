@@ -10,8 +10,12 @@ public abstract class AbstractRealmBuilder implements RealmBuilder {
     @NotNull
     private RealmDef realmDef;
 
-    protected AbstractRealmBuilder(@NotNull RealmDef realmDef) {
+    @Nullable
+    private Realm editedRealm;
+
+    protected AbstractRealmBuilder(@NotNull RealmDef realmDef, @Nullable Realm editedRealm) {
         this.realmDef = realmDef;
+        this.editedRealm = editedRealm;
     }
 
     @NotNull
@@ -33,6 +37,12 @@ public abstract class AbstractRealmBuilder implements RealmBuilder {
     @NotNull
     public RealmDef getRealmDef() {
         return realmDef;
+    }
+
+    @Nullable
+    @Override
+    public Realm getEditedRealm() {
+        return this.editedRealm;
     }
 
     @NotNull

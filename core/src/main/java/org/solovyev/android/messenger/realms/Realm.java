@@ -30,6 +30,9 @@ public interface Realm<C extends RealmConfiguration> {
 
     boolean same(@NotNull Realm that);
 
+    @NotNull
+    String getDisplayName(@NotNull Context context);
+
     /*
     **********************************************************************
     *

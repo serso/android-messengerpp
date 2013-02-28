@@ -93,7 +93,7 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     @NotNull
     @Override
     public RealmConnection newRealmConnection(@NotNull Context context) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getRealmDef().newRealmConnection(this, context);
     }
 
     @Override
@@ -104,5 +104,22 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractRealm)) return false;
+
+        final AbstractRealm that = (AbstractRealm) o;
+
+        if (!id.equals(that.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

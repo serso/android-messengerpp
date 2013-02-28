@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.xmpp;
 import android.content.Context;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
@@ -25,7 +26,7 @@ public class XmppRealmDef extends AbstractRealmDef {
     static final String REALM_ID = "xmpp";
 
     public XmppRealmDef() {
-        super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationActivity.class, XmppRealmConfiguration.class);
+        super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationFragment.class, XmppRealmConfiguration.class);
     }
 
     @NotNull
@@ -43,7 +44,7 @@ public class XmppRealmDef extends AbstractRealmDef {
     @NotNull
     @Override
     public RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new XmppRealmConnection((XmppRealm) realm, context);
     }
 
     @NotNull
@@ -54,7 +55,7 @@ public class XmppRealmDef extends AbstractRealmDef {
 
     @Override
     @NotNull
-    public RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration) {
-        return new XmppRealmBuilder(this, (XmppRealmConfiguration) configuration);
+    public RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration, @Nullable Realm editedRealm) {
+        return new XmppRealmBuilder(this, editedRealm, (XmppRealmConfiguration) configuration);
     }
 }

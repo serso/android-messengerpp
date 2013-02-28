@@ -90,26 +90,48 @@ public class DefaultRealmService implements RealmService {
     }
 
     @Override
-    public void addRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
+    public void saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
         try {
-            realmBuilder.connect();
+            final RealmConfiguration configuration = realmBuilder.getConfiguration();
+            final Realm editedRealm = realmBuilder.getEditedRealm();
+            if ( editedRealm != null && editedRealm.getConfiguration().equals(configuration) ) {
+                // new realm configuration is exactly the same => can omit saving the realm
+            } else {
+                // saving realm (realm either new or changed)
 
-            final AuthData authData = realmBuilder.loginUser(null);
+                realmBuilder.connect();
 
-            final Realm newRealm = realmBuilder.build(new RealmBuilder.Data(authData, generateRealmId(realmBuilder.getRealmDef())));
-            synchronized (realms) {
-                final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Realm>() {
-                    @Override
-                    public boolean apply(@Nullable Realm realm) {
-                        return realm != null && newRealm.same(realm);
-                    }
-                });
+                final AuthData authData = realmBuilder.loginUser(null);
 
-                if (alreadyExists) {
-                    throw new RealmAlreadyExistsException();
+                final String newRealmId;
+                if ( editedRealm != null ) {
+                    newRealmId = editedRealm.getId();
                 } else {
-                    realmDao.insertRealm(newRealm);
-                    realms.put(newRealm.getId(), newRealm);
+                    newRealmId = generateRealmId(realmBuilder.getRealmDef());
+                }
+                final Realm newRealm = realmBuilder.build(new RealmBuilder.Data(authData, newRealmId));
+
+                synchronized (realms) {
+                    final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Realm>() {
+                        @Override
+                        public boolean apply(@Nullable Realm realm) {
+                            return realm != null && newRealm.same(realm);
+                        }
+                    });
+
+                    if (alreadyExists) {
+                        throw new RealmAlreadyExistsException();
+                    } else {
+                        if ( editedRealm != null ) {
+                            realms.put(editedRealm.getId(), editedRealm);
+                            realmDao.updateRealm(newRealm);
+                            listeners.fireEvent(new RealmChangedEvent(newRealm));
+                        } else {
+                            realmDao.insertRealm(newRealm);
+                            realms.put(newRealm.getId(), newRealm);
+                            listeners.fireEvent(new RealmAddedEvent(newRealm));
+                        }
+                    }
                 }
             }
         } catch (RealmBuilder.ConnectionException e) {
@@ -139,7 +161,8 @@ public class DefaultRealmService implements RealmService {
                 final String realmId = realm.getId();
                 realms.put(realmId, realm);
 
-                String realmIndexString = realmId.substring(0, realm.getRealmDef().getId().length());
+                // +1 for '~' symbol between realm and index
+                String realmIndexString = realmId.substring(realm.getRealmDef().getId().length() + 1);
                 try {
                     maxRealmIndex = Math.max(Integer.valueOf(realmIndexString), maxRealmIndex);
                 } catch (NumberFormatException e) {

@@ -179,6 +179,14 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         fragmentTransaction.commit();
     }
 
+    protected void setFragment(int fragmentContainerViewId, @NotNull Class<? extends Fragment> fragmentClass, @Nullable Bundle args) {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.add(fragmentContainerViewId, Fragment.instantiate(this, fragmentClass.getName(), args));
+        fragmentTransaction.commit();
+    }
+
     @NotNull
     protected RealmService getRealmService() {
         return realmService;

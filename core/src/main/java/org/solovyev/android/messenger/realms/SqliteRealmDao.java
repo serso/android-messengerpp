@@ -63,6 +63,11 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(DeleteAllRowsDbExec.newInstance("realms")));
     }
 
+    @Override
+    public void updateRealm(@NotNull Realm realm) {
+        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(realm)));
+    }
+
     /*
     **********************************************************************
     *
@@ -84,6 +89,22 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
             final ContentValues values = toContentValues(realm);
 
             db.insert("realms", null, values);
+        }
+    }
+
+    private static class UpdateRealm extends AbstractObjectDbExec<Realm> {
+
+        public UpdateRealm(@NotNull Realm realm) {
+            super(realm);
+        }
+
+        @Override
+        public void exec(@NotNull SQLiteDatabase db) {
+            final Realm realm = getNotNullObject();
+
+            final ContentValues values = toContentValues(realm);
+
+            db.update("realms", values, "id = ?", new String[]{realm.getId()});
         }
     }
 

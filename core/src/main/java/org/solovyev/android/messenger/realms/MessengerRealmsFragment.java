@@ -8,6 +8,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.AThreads;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
@@ -49,7 +50,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        realmEventListener = new RealmAddedEventListener();
+        realmEventListener = new UiRealmEventListener();
         realmService.addListener(realmEventListener);
     }
 
@@ -148,19 +149,20 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         return (RealmsAdapter)super.getAdapter();
     }
 
-    private class RealmAddedEventListener extends AbstractJEventListener<RealmEvent> {
+    private class UiRealmEventListener extends AbstractJEventListener<RealmEvent> {
 
-        public RealmAddedEventListener() {
+        public UiRealmEventListener() {
             super(RealmEvent.class);
         }
 
         @Override
-        public void onEvent(@NotNull RealmEvent e) {
-            if ( e instanceof RealmAddedEvent ) {
-                final RealmAddedEvent event = (RealmAddedEvent) e;
-                final Realm newRealm = event.getRealm();
-                // todo serso: continue
-            }
+        public void onEvent(@NotNull final RealmEvent e) {
+            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
+                @Override
+                public void run() {
+                    getAdapter().onEvent(e);
+                }
+            });
         }
     }
 }

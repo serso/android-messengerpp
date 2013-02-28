@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
+import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
@@ -17,5 +18,11 @@ public class TestRealm extends AbstractRealm<TestRealmConfiguration> {
 
     public TestRealm(@NotNull String id, @NotNull RealmDef realmDef, @NotNull User user, @NotNull TestRealmConfiguration configuration) {
         super(id, realmDef, user, configuration);
+    }
+
+    @NotNull
+    @Override
+    public String getDisplayName(@NotNull Context context) {
+        return context.getString(getRealmDef().getNameResId());
     }
 }

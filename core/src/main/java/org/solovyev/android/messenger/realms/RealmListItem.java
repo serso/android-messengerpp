@@ -5,11 +5,14 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.RealmConfigurationActivity;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 public class RealmListItem implements ListItem {
@@ -27,7 +30,12 @@ public class RealmListItem implements ListItem {
     @Nullable
     @Override
     public OnClickAction getOnClickAction() {
-        return null;
+        return new OnClickAction() {
+            @Override
+            public void onClick(@NotNull Context context, @NotNull ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
+                RealmConfigurationActivity.startForEditRealm(context, realm);
+            }
+        };
     }
 
     @Nullable
@@ -71,7 +79,13 @@ public class RealmListItem implements ListItem {
             realmIconImageView.setImageDrawable(realmIcon);
 
             final TextView realmNameTextView = (TextView) view.findViewById(R.id.mpp_realm_name_textview);
-            realmNameTextView.setText(realm.getRealmDef().getNameResId());
+            realmNameTextView.setText(realm.getDisplayName(context));
+        }
+    }
+
+    public void onRealmChangedEvent(@NotNull RealmChangedEvent event) {
+        if ( event.getRealm().equals(realm)) {
+            this.realm = event.getRealm();
         }
     }
 }

@@ -12,12 +12,18 @@ public interface RealmBuilder extends BuilderWithData<Realm, RealmBuilder.Data> 
     @NotNull
     RealmDef getRealmDef();
 
+    @Nullable
+    Realm getEditedRealm();
+
     void connect() throws ConnectionException;
 
     void disconnect()throws ConnectionException;
 
     @NotNull
     AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
+
+    @NotNull
+    RealmConfiguration getConfiguration();
 
     public static final class Data {
 

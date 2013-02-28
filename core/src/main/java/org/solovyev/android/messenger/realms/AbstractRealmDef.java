@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.realms;
 
-import android.app.Activity;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +17,7 @@ public abstract class AbstractRealmDef implements RealmDef {
     private final int iconResId;
 
     @NotNull
-    private final Class<? extends Activity> configurationActivityClass;
+    private final Class<? extends AbstractRealmConfigurationFragment> configurationActivityClass;
 
     @NotNull
     private final Class<? extends RealmConfiguration> configurationClass;
@@ -26,7 +25,7 @@ public abstract class AbstractRealmDef implements RealmDef {
     protected AbstractRealmDef(@NotNull String id,
                                int nameResId,
                                int iconResId,
-                               @NotNull Class<? extends Activity> configurationActivityClass,
+                               @NotNull Class<? extends AbstractRealmConfigurationFragment> configurationActivityClass,
                                @NotNull Class<? extends RealmConfiguration> configurationClass) {
         this.id = id;
         this.nameResId = nameResId;
@@ -59,7 +58,7 @@ public abstract class AbstractRealmDef implements RealmDef {
 
     @NotNull
     @Override
-    public Class<? extends Activity> getConfigurationActivityClass() {
+    public Class<? extends AbstractRealmConfigurationFragment> getConfigurationFragmentClass() {
         return this.configurationActivityClass;
     }
 }
