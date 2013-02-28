@@ -79,6 +79,8 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
     @Override
     public void deleteAllChats() {
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chat_properties"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chats"));
     }
 
@@ -258,7 +260,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         @NotNull
         @Override
         public Cursor createCursor(@NotNull SQLiteDatabase db) {
-            return db.query("users", null, null, null, null, null, null);
+            return db.query("chats", new String[]{"id"}, null, null, null, null, null);
         }
 
         @NotNull
@@ -348,14 +350,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         public void exec(@NotNull SQLiteDatabase db) {
             final Chat chat = getNotNullObject();
 
-            final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-
-            final DateTime lastMessagesSyncDate = chat.getLastMessagesSyncDate();
-
-            final ContentValues values = new ContentValues();
-            values.put("id", chat.getRealmChat().getEntityId());
-            values.put("messages_count", chat.getMessagesCount());
-            values.put("last_messages_sync_date", lastMessagesSyncDate == null ? null : dateTimeFormatter.print(lastMessagesSyncDate));
+            final ContentValues values = toContentValues(chat);
 
             db.update("chats", values, "id = ?", new String[]{String.valueOf(chat.getRealmChat().getEntityId())});
         }
@@ -371,18 +366,27 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         public void exec(@NotNull SQLiteDatabase db) {
             final Chat chat = getNotNullObject();
 
-            final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-
-            final DateTime lastMessagesSyncDate = chat.getLastMessagesSyncDate();
-
-            final ContentValues values = new ContentValues();
-
-            values.put("id", chat.getRealmChat().getEntityId());
-            values.put("messages_count", chat.getMessagesCount());
-            values.put("last_messages_sync_date", lastMessagesSyncDate == null ? null : dateTimeFormatter.print(lastMessagesSyncDate));
+            final ContentValues values = toContentValues(chat);
 
             db.insert("chats", null, values);
         }
+    }
+
+    @NotNull
+    private static ContentValues toContentValues(@NotNull Chat chat) {
+        final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
+
+        final DateTime lastMessagesSyncDate = chat.getLastMessagesSyncDate();
+
+        final ContentValues values = new ContentValues();
+
+        values.put("id", chat.getRealmChat().getEntityId());
+        values.put("realm_id", chat.getRealmChat().getRealmId());
+        values.put("realm_chat_id", chat.getRealmChat().getRealmEntityId());
+        values.put("messages_count", chat.getMessagesCount());
+        values.put("last_messages_sync_date", lastMessagesSyncDate == null ? null : dateTimeFormatter.print(lastMessagesSyncDate));
+
+        return values;
     }
 
     private static final class DeleteChatProperties extends AbstractObjectDbExec<Chat> {

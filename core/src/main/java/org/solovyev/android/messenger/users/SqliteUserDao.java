@@ -79,6 +79,8 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     @Override
     public void deleteAllUsers() {
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_contacts"));
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_properties"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("users"));
     }
 

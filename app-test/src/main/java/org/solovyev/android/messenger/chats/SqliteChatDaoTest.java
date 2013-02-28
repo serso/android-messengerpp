@@ -6,10 +6,15 @@ import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.realms.TestRealmDef;
+import org.solovyev.android.messenger.users.UserDao;
+import org.solovyev.android.messenger.users.UserImpl;
 
 import java.util.ArrayList;
 
 public class SqliteChatDaoTest extends AbstractMessengerTestCase {
+
+    @Inject
+    private UserDao userDao;
 
     @Inject
     private ChatDao chatDao;
@@ -25,11 +30,15 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
         chatDao.deleteAllChats();
     }
 
-    public void testChatOperation() throws Exception {
+    public void testChatOperations() throws Exception {
 
         final ArrayList<ApiChat> chats = new ArrayList<ApiChat>();
+
         final RealmEntity realmUser = testRealm.newRealmEntity("01");
         final String userId = realmUser.getEntityId();
+
+        userDao.insertUser(UserImpl.newFakeInstance(realmUser));
+
         chatDao.mergeUserChats(userId, chats);
 
         Assert.assertTrue(chatDao.loadUserChats(userId).isEmpty());
