@@ -42,6 +42,11 @@
                 a:text="@string/mpp_back"
                 style="@style/mpp_form_button"/>
 
+        <Button a:id="@+id/mpp_xmpp_remove_button"
+            a:visibility="gone"
+            a:text="@string/mpp_remove"
+            style="@style/mpp_form_button"/>
+
         <Button a:id="@+id/mpp_xmpp_save_button"
                 a:text="@string/mpp_save"
                 style="@style/mpp_form_button"/>

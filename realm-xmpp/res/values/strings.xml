@@ -6,4 +6,5 @@
     <string name="mpp_xmpp_password">Password</string>
     <string name="mpp_save">Save</string>
     <string name="mpp_xmpp_resource">Resource</string>
+    <string name="mpp_remove">Remove</string>
 </resources>

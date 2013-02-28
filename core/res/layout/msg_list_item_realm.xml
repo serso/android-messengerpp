@@ -14,10 +14,8 @@
 
     <TextView
             a:id="@+id/mpp_realm_name_textview"
-            style="@style/list_item_item"
-            a:layout_width="match_parent"
-            a:layout_height="match_parent"
-            a:singleLine="true"
-            a:ellipsize="end"/>
+            style="@style/mpp_list_item_realm_name"
+            a:layout_width="wrap_content"
+            a:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -160,7 +160,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
-                    getAdapter().onEvent(e);
+                    getAdapter().onRealmEvent(e);
                 }
             });
         }

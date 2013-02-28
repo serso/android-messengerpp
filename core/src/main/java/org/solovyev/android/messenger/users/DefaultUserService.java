@@ -6,9 +6,9 @@ import android.widget.ImageView;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,16 +16,11 @@ import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEventContainer;
-import org.solovyev.android.messenger.chats.ChatEventListener;
-import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
@@ -59,7 +54,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Inject
     @NotNull
-    private Provider<UserDao> userDaoProvider;
+    private UserDao userDao;
 
     @Inject
     @NotNull
@@ -241,6 +236,17 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
 
         listeners.fireUserEvent(user, UserEventType.changed, null);
+    }
+
+    @Override
+    public void removeUsersInRealm(@NotNull final String realmId) {
+        synchronized (lock) {
+            Iterators.removeIf(this.userChatsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+            Iterators.removeIf(this.userContactsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+            Iterators.removeIf(this.usersCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+
+            this.userDao.deleteAllUsersInRealm(realmId);
+        }
     }
 
     /*
@@ -482,7 +488,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @NotNull
     private UserDao getUserDao() {
-        return RoboGuiceUtils.getInContextScope(context, userDaoProvider);
+        return userDao;
     }
 
     /*
@@ -629,4 +635,5 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         }
     }
+
 }

@@ -46,6 +46,9 @@ public class XmppRealmConfigurationFragment extends AbstractRealmConfigurationFr
     @NotNull
     private Button saveButton;
 
+    @NotNull
+    private Button removeButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_realm_conf_xmpp).build(this.getActivity());
@@ -66,7 +69,7 @@ public class XmppRealmConfigurationFragment extends AbstractRealmConfigurationFr
         passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
         resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
 
-        if ( !isNewRealm() ) {
+        if (!isNewRealm()) {
             final XmppRealm realm = getEditedRealm();
             final XmppRealmConfiguration configuration = realm.getConfiguration();
 
@@ -74,6 +77,19 @@ public class XmppRealmConfigurationFragment extends AbstractRealmConfigurationFr
             loginEditText.setText(configuration.getLogin());
             passwordEditText.setText(configuration.getPassword());
             resourceEditText.setText(configuration.getResource());
+        }
+
+        removeButton = (Button) root.findViewById(R.id.mpp_xmpp_remove_button);
+        if (isNewRealm()) {
+            removeButton.setVisibility(View.GONE);
+        } else {
+            removeButton.setVisibility(View.VISIBLE);
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeRealm(getEditedRealm());
+                }
+            });
         }
 
         backButton = (Button) root.findViewById(R.id.mpp_xmpp_back_button);

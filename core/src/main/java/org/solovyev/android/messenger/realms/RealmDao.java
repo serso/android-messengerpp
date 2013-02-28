@@ -8,7 +8,7 @@ public interface RealmDao {
 
     void insertRealm(@NotNull Realm realm);
 
-    void deleteRealm(@NotNull Realm realm);
+    void deleteRealm(@NotNull String realmId);
 
     @NotNull
     Collection<Realm> loadRealms();

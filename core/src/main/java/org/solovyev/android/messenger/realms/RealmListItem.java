@@ -23,6 +23,21 @@ public class RealmListItem implements ListItem {
     @NotNull
     private Realm realm;
 
+    /*
+    **********************************************************************
+    *
+    *                           VIEWS
+    *
+    **********************************************************************
+    */
+
+    @NotNull
+    private ImageView realmIconImageView;
+
+    @NotNull
+    private TextView realmNameTextView;
+
+
     public RealmListItem(@NotNull Realm realm) {
         this.realm = realm;
     }
@@ -68,24 +83,50 @@ public class RealmListItem implements ListItem {
         return TAG_PREFIX + realm.getId();
     }
 
-    private void fillView(@NotNull final ViewGroup view, @NotNull final Context context) {
+    private void fillView(@NotNull final ViewGroup root, @NotNull final Context context) {
         final String tag = createTag();
 
-        if (!tag.equals(view.getTag())) {
-            view.setTag(tag);
+        if (!tag.equals(root.getTag())) {
+            root.setTag(tag);
 
-            final ImageView realmIconImageView = (ImageView) view.findViewById(R.id.mpp_realm_icon_imageview);
-            final Drawable realmIcon = context.getResources().getDrawable(realm.getRealmDef().getIconResId());
-            realmIconImageView.setImageDrawable(realmIcon);
+            realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
+            realmNameTextView = (TextView) root.findViewById(R.id.mpp_realm_name_textview);
 
-            final TextView realmNameTextView = (TextView) view.findViewById(R.id.mpp_realm_name_textview);
-            realmNameTextView.setText(realm.getDisplayName(context));
+            fillRealmDefValues(context);
+            fillRealmValues(context);
         }
     }
 
-    public void onRealmChangedEvent(@NotNull RealmChangedEvent event) {
+    private void fillRealmDefValues(@NotNull Context context) {
+        final Drawable realmIcon = context.getResources().getDrawable(realm.getRealmDef().getIconResId());
+        realmIconImageView.setImageDrawable(realmIcon);
+    }
+
+    private void fillRealmValues(@NotNull Context context) {
+        realmNameTextView.setText(realm.getDisplayName(context));
+    }
+
+    public void onRealmChangedEvent(@NotNull RealmChangedEvent event, @NotNull Context context) {
         if ( event.getRealm().equals(realm)) {
             this.realm = event.getRealm();
+            fillRealmValues(context);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RealmListItem)) return false;
+
+        RealmListItem that = (RealmListItem) o;
+
+        if (!realm.equals(that.realm)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return realm.hashCode();
     }
 }

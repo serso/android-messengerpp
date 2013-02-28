@@ -38,6 +38,8 @@ public interface UserDao {
 
     void deleteAllUsers();
 
+    void deleteAllUsersInRealm(@NotNull String realmId);
+
     /*
     **********************************************************************
     *
@@ -54,5 +56,4 @@ public interface UserDao {
 
     @NotNull
     MergeDaoResult<User, String> mergeUserContacts(@NotNull String userId, @NotNull List<User> contacts);
-
 }

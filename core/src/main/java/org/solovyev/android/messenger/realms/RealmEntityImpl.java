@@ -17,8 +17,8 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     **********************************************************************
     */
 
-    private static final String DELIMITER = "_";
-    private static final String DELIMITER_REALM = "~";
+    public static final String DELIMITER = "_";
+    public static final String DELIMITER_REALM = "~";
 
     public static final Creator <RealmEntity> CREATOR = new Creator<RealmEntity>() {
         @Override

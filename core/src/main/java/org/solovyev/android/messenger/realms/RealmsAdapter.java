@@ -6,11 +6,10 @@ import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.common.listeners.JEventListener;
 
 import java.util.List;
 
-public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> implements JEventListener<RealmEvent> {
+public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem>  {
 
     public RealmsAdapter(@NotNull Context context, @NotNull List<? extends RealmListItem> listItems) {
         super(context, listItems);
@@ -24,14 +23,7 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> imple
     **********************************************************************
     */
 
-    @NotNull
-    @Override
-    public Class<RealmEvent> getEventType() {
-        return RealmEvent.class;
-    }
-
-    @Override
-    public void onEvent(@NotNull RealmEvent e) {
+    public void onRealmEvent(@NotNull RealmEvent e) {
         if ( e instanceof RealmAddedEvent ) {
             final RealmAddedEvent event = (RealmAddedEvent) e;
             final Realm newRealm = event.getRealm();
@@ -43,8 +35,13 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> imple
 
             final RealmListItem listItem = findInAllElements(changedRealm);
             if (listItem != null) {
-                listItem.onRealmChangedEvent(event);
+                listItem.onRealmChangedEvent(event, getContext());
             }
+        } else if ( e instanceof RealmRemovedEvent ) {
+            final RealmRemovedEvent event = (RealmRemovedEvent) e;
+            final Realm removedRealm = event.getRealm();
+
+            removeListItem(createListItem(removedRealm));
         }
     }
 

@@ -48,8 +48,8 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     }
 
     @Override
-    public void deleteRealm(@NotNull Realm realm) {
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealm(realm)));
+    public void deleteRealm(@NotNull String realmId) {
+        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealm(realmId)));
     }
 
     @NotNull
@@ -139,17 +139,17 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         }
     }
 
-    private static class DeleteRealm extends AbstractObjectDbExec<Realm> {
+    private static class DeleteRealm extends AbstractObjectDbExec<String> {
 
-        public DeleteRealm(@NotNull Realm realm) {
-            super(realm);
+        public DeleteRealm(@NotNull String realmId) {
+            super(realmId);
         }
 
         @Override
         public void exec(@NotNull SQLiteDatabase db) {
-            final Realm realm = getNotNullObject();
+            final String realmId = getNotNullObject();
 
-            db.delete("realms", "id = ?", new String[]{realm.getId()});
+            db.delete("realms", "id = ?", new String[]{realmId});
         }
     }
 

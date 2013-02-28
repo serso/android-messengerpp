@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
@@ -31,6 +32,10 @@ public class DefaultRealmService implements RealmService {
     @Inject
     @NotNull
     private RealmDao realmDao;
+
+    @Inject
+    @NotNull
+    private UserService userService;
 
     @NotNull
     private final Map<String, RealmDef> realmDefs = new HashMap<String, RealmDef>();
@@ -93,8 +98,8 @@ public class DefaultRealmService implements RealmService {
     public void saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
         try {
             final RealmConfiguration configuration = realmBuilder.getConfiguration();
-            final Realm editedRealm = realmBuilder.getEditedRealm();
-            if ( editedRealm != null && editedRealm.getConfiguration().equals(configuration) ) {
+            final Realm oldRealm = realmBuilder.getEditedRealm();
+            if ( oldRealm != null && oldRealm.getConfiguration().equals(configuration) ) {
                 // new realm configuration is exactly the same => can omit saving the realm
             } else {
                 // saving realm (realm either new or changed)
@@ -104,8 +109,8 @@ public class DefaultRealmService implements RealmService {
                 final AuthData authData = realmBuilder.loginUser(null);
 
                 final String newRealmId;
-                if ( editedRealm != null ) {
-                    newRealmId = editedRealm.getId();
+                if ( oldRealm != null ) {
+                    newRealmId = oldRealm.getId();
                 } else {
                     newRealmId = generateRealmId(realmBuilder.getRealmDef());
                 }
@@ -122,9 +127,9 @@ public class DefaultRealmService implements RealmService {
                     if (alreadyExists) {
                         throw new RealmAlreadyExistsException();
                     } else {
-                        if ( editedRealm != null ) {
-                            realms.put(editedRealm.getId(), editedRealm);
+                        if (oldRealm != null) {
                             realmDao.updateRealm(newRealm);
+                            realms.put(newRealm.getId(), newRealm);
                             listeners.fireEvent(new RealmChangedEvent(newRealm));
                         } else {
                             realmDao.insertRealm(newRealm);
@@ -141,6 +146,20 @@ public class DefaultRealmService implements RealmService {
                 realmBuilder.disconnect();
             } catch (RealmBuilder.ConnectionException e) {
                 Log.e(TAG, e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public void removeRealm(@NotNull String realmId) {
+        synchronized (realms) {
+            final Realm realm = this.realms.get(realmId);
+                if (realm != null) {
+                this.userService.removeUsersInRealm(realmId);
+                this.realmDao.deleteRealm(realmId);
+                this.realms.remove(realmId);
+
+                listeners.fireEvent(new RealmRemovedEvent(realm));
             }
         }
     }

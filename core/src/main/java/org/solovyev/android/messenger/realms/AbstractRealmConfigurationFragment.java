@@ -46,6 +46,10 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
         return editedRealm == null;
     }
 
+    protected void removeRealm(@NotNull Realm realm) {
+        new AsynRealmRemover(this.getActivity(), realmService).execute(realm);
+    }
+
     protected void saveRealm(@NotNull RealmBuilder realmBuilder, @Nullable RealmSaveHandler realmSaveHandler) {
         new AsynRealmSaver(this.getActivity(), realmService, realmSaveHandler).execute(realmBuilder);
     }
@@ -106,10 +110,38 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
         }
     }
 
+    private static class AsynRealmRemover extends MessengerAsyncTask<Realm, Integer, Void> {
+
+        @NotNull
+        private final RealmService realmService;
+
+        private AsynRealmRemover(@NotNull Activity context,
+                                 @NotNull RealmService realmService) {
+            super(context, true);
+            this.realmService = realmService;
+        }
+
+        @Override
+        protected Void doWork(@NotNull List<Realm> realms) {
+            for (Realm realm : realms) {
+                realmService.removeRealm(realm.getId());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onSuccessPostExecute(@Nullable Void result) {
+            final Context context = getContext();
+            if (context instanceof Activity) {
+                ((Activity) context).finish();
+            }
+        }
+    }
+
     public static interface RealmSaveHandler {
 
         /**
-         *
          * @param e exception during saving the realm
          * @return true if exception was consumed and no further action is required
          */

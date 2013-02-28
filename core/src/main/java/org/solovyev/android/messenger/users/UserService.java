@@ -41,6 +41,8 @@ public interface UserService extends UserEventListeners {
 
     void updateUser(@NotNull User user);
 
+    void removeUsersInRealm(@NotNull String realmId);
+
 
     /*
     **********************************************************************
