@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import org.solovyev.android.messenger.MessengerApplication;
+import com.google.inject.Inject;
+import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.MessengerMultiPaneManager;
 
 /**
  * User: serso
@@ -15,13 +17,17 @@ import org.solovyev.android.messenger.MessengerApplication;
  */
 public class MessengerEmptyFragment extends RoboSherlockFragment {
 
+    @Inject
+    @NotNull
+    private MessengerMultiPaneManager multiPaneManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final LinearLayout root = new LinearLayout(this.getActivity());
 
         root.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
-        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, root);
+        multiPaneManager.fillContentPane(this.getActivity(), container, root);
 
         return root;
     }

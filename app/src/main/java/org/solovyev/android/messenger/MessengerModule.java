@@ -65,5 +65,7 @@ public class MessengerModule extends AbstractModule {
 
         bind(SyncService.class).to(DefaultSyncService.class);
         bind(RegistrationService.class).to(DummyRegistrationService.class);
+
+        bind(MessengerMultiPaneManager.class).to(MessengerMultiPaneManagerImpl.class);
     }
 }

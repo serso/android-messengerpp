@@ -165,4 +165,27 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
             });
         }
     }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
+
+    public static class RealmClickedEvent {
+
+        @NotNull
+        private final Realm realm;
+
+        public RealmClickedEvent(@NotNull Realm realm) {
+            this.realm = realm;
+        }
+
+        @NotNull
+        public Realm getRealm() {
+            return realm;
+        }
+    }
 }

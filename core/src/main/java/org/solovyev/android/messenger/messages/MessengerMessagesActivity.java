@@ -85,7 +85,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
             }
         }
 
-        setFragment(R.id.content_first_pane, new MessengerMessagesFragment(chat));
+        setFragment(R.id.content_first_pane, new MessengerMessagesFragment(chat), null);
 
         setTitle(createTitle());
     }

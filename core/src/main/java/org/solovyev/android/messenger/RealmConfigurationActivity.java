@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.AbstractRealmConfigurationFragment;
+import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -53,7 +53,7 @@ public class RealmConfigurationActivity extends MessengerFragmentActivity {
 
     private void prepareUiForEdit(@NotNull Realm realm) {
         final Bundle fragmentArgs = new Bundle();
-        fragmentArgs.putString(AbstractRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
+        fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
         setFragment(R.id.content_first_pane, realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs);
     }
 

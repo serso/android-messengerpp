@@ -1,24 +1,19 @@
 package org.solovyev.android.messenger.xmpp;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.AbstractRealmConfigurationFragment;
+import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
 
-public class XmppRealmConfigurationFragment extends AbstractRealmConfigurationFragment<XmppRealm> {
+public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragment<XmppRealm> {
 
     @Inject
     @NotNull
@@ -49,15 +44,8 @@ public class XmppRealmConfigurationFragment extends AbstractRealmConfigurationFr
     @NotNull
     private Button removeButton;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_realm_conf_xmpp).build(this.getActivity());
-
-        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
-
-        result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        return result;
+    public XmppRealmConfigurationFragment() {
+        super(R.layout.mpp_realm_conf_xmpp);
     }
 
     @Override
@@ -96,7 +84,7 @@ public class XmppRealmConfigurationFragment extends AbstractRealmConfigurationFr
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                backButtonPressed();
             }
         });
 

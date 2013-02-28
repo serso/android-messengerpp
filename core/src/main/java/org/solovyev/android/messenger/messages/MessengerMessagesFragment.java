@@ -19,11 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventListener;
@@ -71,6 +67,11 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Inject
     @NotNull
     private RealmService realmService;
+
+    @Inject
+    @NotNull
+    private MessengerMultiPaneManager multiPaneManager;
+
 
     /*
     **********************************************************************
@@ -136,7 +137,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         final ViewGroup messagesParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.R.id.messages_list);
         messagesParent.addView(superResult);
 
-        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+        multiPaneManager.fillContentPane(this.getActivity(), container, result);
 
         return result;
     }

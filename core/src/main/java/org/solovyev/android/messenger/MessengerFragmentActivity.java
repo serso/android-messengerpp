@@ -171,11 +171,11 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         this.activity.onRestart(this);
     }
 
-    protected void setFragment(int fragmentContainerViewId, @NotNull Fragment fragment) {
+    protected void setFragment(int fragmentContainerViewId, @NotNull Fragment fragment, @Nullable String tag) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.add(fragmentContainerViewId, fragment);
+        fragmentTransaction.add(fragmentContainerViewId, fragment, tag);
         fragmentTransaction.commit();
     }
 

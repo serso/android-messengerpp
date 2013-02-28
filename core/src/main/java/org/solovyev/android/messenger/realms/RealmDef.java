@@ -36,7 +36,7 @@ public interface RealmDef {
     RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context);
 
     @NotNull
-    Class<? extends AbstractRealmConfigurationFragment> getConfigurationFragmentClass();
+    Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
 
     @NotNull
     Realm newRealm(@NotNull String realmId, @NotNull User user, @NotNull RealmConfiguration configuration);

@@ -4,17 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
 import java.util.List;
 
-public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends RoboSherlockFragment {
+public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSherlockFragment {
 
     @NotNull
     public static final String EXTRA_REALM_ID = "realm_id";
@@ -23,7 +31,17 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
     @NotNull
     private RealmService realmService;
 
+    @Inject
+    @NotNull
+    private MessengerMultiPaneManager multiPaneManager;
+
     private R editedRealm;
+
+    private int layoutResId;
+
+    protected BaseRealmConfigurationFragment(int layoutResId) {
+        this.layoutResId = layoutResId;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +54,17 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
                 editedRealm = (R) realmService.getRealmById(realmId);
             }
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(this.getActivity());
+
+        getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+
+        result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        return result;
     }
 
     public R getEditedRealm() {
@@ -53,6 +82,24 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
     protected void saveRealm(@NotNull RealmBuilder realmBuilder, @Nullable RealmSaveHandler realmSaveHandler) {
         new AsynRealmSaver(this.getActivity(), realmService, realmSaveHandler).execute(realmBuilder);
     }
+
+    protected void backButtonPressed() {
+        final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
+        eventManager.fire(new FinishedEvent());
+    }
+
+    @NotNull
+    protected MessengerMultiPaneManager getMultiPaneManager() {
+        return multiPaneManager;
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
 
     private static class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, Void> {
 
@@ -88,8 +135,9 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
         @Override
         protected void onSuccessPostExecute(@Nullable Void result) {
             final Context context = getContext();
-            if (context instanceof Activity) {
-                ((Activity) context).finish();
+            if (context != null) {
+                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+                eventManager.fire(new FinishedEvent());
             }
         }
 
@@ -133,8 +181,9 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
         @Override
         protected void onSuccessPostExecute(@Nullable Void result) {
             final Context context = getContext();
-            if (context instanceof Activity) {
-                ((Activity) context).finish();
+            if (context != null) {
+                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+                eventManager.fire(new FinishedEvent());
             }
         }
     }
@@ -146,6 +195,10 @@ public class AbstractRealmConfigurationFragment<R extends Realm<?>> extends Robo
          * @return true if exception was consumed and no further action is required
          */
         boolean onFailure(@NotNull Exception e);
+
+    }
+
+    public static final class FinishedEvent {
 
     }
 }

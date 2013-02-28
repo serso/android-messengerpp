@@ -12,8 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.messenger.RealmConfigurationActivity;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
 public class RealmListItem implements ListItem {
 
@@ -48,7 +49,8 @@ public class RealmListItem implements ListItem {
         return new OnClickAction() {
             @Override
             public void onClick(@NotNull Context context, @NotNull ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
-                RealmConfigurationActivity.startForEditRealm(context, realm);
+                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+                eventManager.fire(new MessengerRealmsFragment.RealmClickedEvent(realm));
             }
         };
     }

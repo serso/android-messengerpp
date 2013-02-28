@@ -23,7 +23,7 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setFragment(R.id.content_first_pane, new MessengerRealmDefsFragment());
+        setFragment(R.id.content_first_pane, new MessengerRealmDefsFragment(), null);
     }
 
 }

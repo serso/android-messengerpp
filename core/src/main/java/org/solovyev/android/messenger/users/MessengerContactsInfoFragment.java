@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.R;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
@@ -33,6 +34,10 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
     @Inject
     @NotNull
     private UserService userService;
+
+    @Inject
+    @NotNull
+    private MessengerMultiPaneManager multiPaneManager;
 
     @Inject
     @NotNull
@@ -59,7 +64,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View result = ViewFromLayoutBuilder.newInstance(R.layout.msg_contacts).build(this.getActivity());
 
-        MessengerApplication.getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+        multiPaneManager.fillContentPane(this.getActivity(), container, result);
 
         result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
