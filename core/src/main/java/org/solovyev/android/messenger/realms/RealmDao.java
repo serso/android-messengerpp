@@ -13,5 +13,5 @@ public interface RealmDao {
     @NotNull
     Collection<Realm> loadRealms();
 
-    void deleteRealms();
+    void deleteAllRealms();
 }

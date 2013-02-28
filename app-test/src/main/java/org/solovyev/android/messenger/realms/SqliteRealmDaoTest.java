@@ -18,7 +18,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        realmDao.deleteRealms();
+        realmDao.deleteAllRealms();
     }
 
     public void testRealmOperations() throws Exception {
@@ -26,7 +26,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
         Assert.assertTrue(realms.isEmpty());
 
         TestRealmConfiguration expectedConfig1 = new TestRealmConfiguration("test_config_field", 42);
-        final Realm expected1 = testRealmDef.newRealm("test01", UserImpl.newFakeInstance(RealmEntityImpl.newInstance("test01", "user01")), expectedConfig1);
+        final Realm expected1 = testRealmDef.newRealm("test~01", UserImpl.newFakeInstance(RealmEntityImpl.newInstance("test~01", "user01")), expectedConfig1);
         realmDao.insertRealm(expected1);
 
         realms = realmDao.loadRealms();
@@ -58,7 +58,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
     }
 
     public void tearDown() throws Exception {
-        realmDao.deleteRealms();
+        realmDao.deleteAllRealms();
         super.tearDown();
     }
 }

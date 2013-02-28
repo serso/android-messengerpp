@@ -14,7 +14,13 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.*;
+import org.solovyev.android.db.AbstractDbQuery;
+import org.solovyev.android.db.AbstractObjectDbExec;
+import org.solovyev.android.db.AbstractSQLiteHelper;
+import org.solovyev.android.db.AndroidDbUtils;
+import org.solovyev.android.db.DbExec;
+import org.solovyev.android.db.DeleteAllRowsDbExec;
+import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
@@ -69,6 +75,11 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
     @Override
     public void updateChat(@NotNull Chat chat) {
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateChat(chat), new DeleteChatProperties(chat), new InsertChatProperties(chat)));
+    }
+
+    @Override
+    public void deleteAllChats() {
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chats"));
     }
 
     @NotNull

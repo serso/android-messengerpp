@@ -9,6 +9,7 @@ public class TestRealmConfiguration implements RealmConfiguration {
 
     private int testIntField;
 
+    // for json
     public TestRealmConfiguration() {
     }
 

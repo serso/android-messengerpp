@@ -1,10 +1,9 @@
 package org.solovyev.android.messenger.users;
 
-import android.test.AndroidTestCase;
+import com.google.inject.Inject;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerDbConfiguration;
-import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
+import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
@@ -20,17 +19,21 @@ import java.util.List;
  * Date: 2/24/13
  * Time: 4:50 PM
  */
-public class SqliteUserDaoTest extends AndroidTestCase {
+public class SqliteUserDaoTest extends AbstractMessengerTestCase {
+
+    @Inject
+    private UserDao userDao;
+
+    @Inject
+    private TestRealmDef testRealmDef;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        getContext().deleteDatabase(MessengerDbConfiguration.DB_NAME);
+        userDao.deleteAllUsers();
     }
 
     public void testUserOperation() throws Exception {
-        final UserDao userDao = new SqliteUserDao(getContext(), new MessengerSQLiteOpenHelper(getContext(), new MessengerDbConfiguration()));
-
         // INSERT
 
         List<AProperty> expectedProperties = new ArrayList<AProperty>();
@@ -81,5 +84,11 @@ public class SqliteUserDaoTest extends AndroidTestCase {
 
         expected = UserImpl.newInstance(TestRealmDef.REALM_ID, "test_01dsfsdfsf", UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.updateUser(expected);
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        userDao.deleteAllUsers();
+        super.tearDown();
     }
 }

@@ -36,6 +36,8 @@ public interface UserDao {
     @NotNull
     List<String> loadUserIds();
 
+    void deleteAllUsers();
+
     /*
     **********************************************************************
     *

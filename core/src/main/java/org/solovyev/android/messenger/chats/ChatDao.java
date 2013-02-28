@@ -37,4 +37,6 @@ public interface ChatDao {
     Chat loadChatById(@NotNull String chatId);
 
     void updateChat(@NotNull Chat chat);
+
+    void deleteAllChats();
 }

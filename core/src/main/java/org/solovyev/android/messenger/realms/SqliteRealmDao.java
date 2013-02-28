@@ -14,6 +14,7 @@ import org.solovyev.android.db.AbstractObjectDbExec;
 import org.solovyev.android.db.AbstractSQLiteHelper;
 import org.solovyev.android.db.AndroidDbUtils;
 import org.solovyev.android.db.DbExec;
+import org.solovyev.android.db.DeleteAllRowsDbExec;
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -58,8 +59,8 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     }
 
     @Override
-    public void deleteRealms() {
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealms()));
+    public void deleteAllRealms() {
+        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(DeleteAllRowsDbExec.newInstance("realms")));
     }
 
     /*
@@ -131,11 +132,4 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         }
     }
 
-    private static class DeleteRealms implements DbExec {
-
-        @Override
-        public void exec(@NotNull SQLiteDatabase db) {
-            db.delete("realms", null, null);
-        }
-    }
 }
