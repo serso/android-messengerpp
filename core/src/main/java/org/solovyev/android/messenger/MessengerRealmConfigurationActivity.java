@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.*;
 import roboguice.event.EventListener;
 
-public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity implements EventListener<BaseRealmConfigurationFragment.FinishedEvent> {
+public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity implements EventListener<RealmFragmentFinishedEvent> {
 
     @NotNull
     private static final String REALM_CONFIGURATION_FRAGMENT_TAG = "realm-configuration";
@@ -49,7 +46,7 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
             }
         }
 
-         getEventManager().registerObserver(BaseRealmConfigurationFragment.FinishedEvent.class, this);
+         getEventManager().registerObserver(RealmFragmentFinishedEvent.class, this);
     }
 
     private void prepareUiForCreate(@NotNull RealmDef realmDef) {
@@ -65,14 +62,14 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
 
     @Override
     protected void onDestroy() {
-        getEventManager().unregisterObserver(BaseRealmConfigurationFragment.FinishedEvent.class, this);
+        getEventManager().unregisterObserver(RealmFragmentFinishedEvent.class, this);
 
         super.onDestroy();
     }
 
 
     @Override
-    public void onEvent(@NotNull BaseRealmConfigurationFragment.FinishedEvent event) {
+    public void onEvent(@NotNull RealmFragmentFinishedEvent event) {
         finish();
     }
 

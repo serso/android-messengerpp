@@ -94,13 +94,17 @@ public class DefaultRealmService implements RealmService {
         return realm;
     }
 
+    @NotNull
     @Override
-    public void saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
+    public Realm saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
+        Realm result;
+
         try {
             final RealmConfiguration configuration = realmBuilder.getConfiguration();
             final Realm oldRealm = realmBuilder.getEditedRealm();
             if ( oldRealm != null && oldRealm.getConfiguration().equals(configuration) ) {
                 // new realm configuration is exactly the same => can omit saving the realm
+                result = oldRealm;
             } else {
                 // saving realm (realm either new or changed)
 
@@ -135,9 +139,12 @@ public class DefaultRealmService implements RealmService {
                             realmDao.insertRealm(newRealm);
                             realms.put(newRealm.getId(), newRealm);
                             listeners.fireEvent(new RealmAddedEvent(newRealm));
+
                         }
                     }
                 }
+
+                result = newRealm;
             }
         } catch (RealmBuilder.ConnectionException e) {
             throw new InvalidCredentialsException(e);
@@ -148,6 +155,8 @@ public class DefaultRealmService implements RealmService {
                 Log.e(TAG, e.getMessage(), e);
             }
         }
+
+        return result;
     }
 
     @Override

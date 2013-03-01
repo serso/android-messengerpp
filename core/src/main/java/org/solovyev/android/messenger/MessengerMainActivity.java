@@ -30,12 +30,6 @@ import java.util.List;
  */
 public class MessengerMainActivity extends MessengerFragmentActivity implements EventListener {
 
-    @NotNull
-    private static final String MESSAGES_PANE_TAG = "messages_pane";
-
-    @NotNull
-    private static final String CONTACT_PANE_TAG = "contact_pane";
-
     public MessengerMainActivity() {
         super(R.layout.msg_main);
     }
@@ -54,11 +48,11 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
         getEventManager().registerObserver(ChatGuiEvent.class, this);
 
         if (isDualPane()) {
-            createPaneFragment(MESSAGES_PANE_TAG, R.id.content_second_pane);
+            createPaneFragment(SECOND_FRAGMENT_TAG, R.id.content_second_pane);
         }
 
         if (isTriplePane()) {
-            createPaneFragment(CONTACT_PANE_TAG, R.id.content_third_pane);
+            createPaneFragment(THIRD_FRAGMENT_TAG, R.id.content_third_pane);
         }
     }
 
@@ -97,7 +91,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
 
         if (type == ChatGuiEventType.chat_clicked) {
             if (isDualPane()) {
-                replaceFragment(MESSAGES_PANE_TAG, R.id.content_second_pane, new Builder<Fragment>() {
+                replaceFragment(SECOND_FRAGMENT_TAG, R.id.content_second_pane, new Builder<Fragment>() {
                     @NotNull
                     @Override
                     public Fragment build() {
@@ -107,7 +101,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
 
                 if ( isTriplePane() ) {
                     if (chat.isPrivate()) {
-                        replaceFragment(CONTACT_PANE_TAG, R.id.content_third_pane, new Builder<Fragment>() {
+                        replaceFragment(THIRD_FRAGMENT_TAG, R.id.content_third_pane, new Builder<Fragment>() {
                             @NotNull
                             @Override
                             public Fragment build() {
@@ -115,7 +109,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                             }
                         });
                     } else {
-                        replaceFragment(CONTACT_PANE_TAG, R.id.content_third_pane, new Builder<Fragment>() {
+                        replaceFragment(THIRD_FRAGMENT_TAG, R.id.content_third_pane, new Builder<Fragment>() {
                             @NotNull
                             @Override
                             public Fragment build() {
@@ -217,7 +211,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
             }.execute(null, null);
 
             if ( isTriplePane() ) {
-                replaceFragment(CONTACT_PANE_TAG, R.id.content_third_pane, new Builder<Fragment>() {
+                replaceFragment(THIRD_FRAGMENT_TAG, R.id.content_third_pane, new Builder<Fragment>() {
                     @NotNull
                     @Override
                     public Fragment build() {

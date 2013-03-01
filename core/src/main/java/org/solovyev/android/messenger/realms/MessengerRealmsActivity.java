@@ -10,28 +10,12 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.MessengerRealmConfigurationActivity;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 import roboguice.event.EventManager;
 
 public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
-    /*
-    **********************************************************************
-    *
-    *                           CONSTANTS
-    *
-    **********************************************************************
-    */
-    @NotNull
-    private static final String REALM_CONFIGURATION_FRAGMENT_TAG = "realm-configuration";
-
-    @NotNull
-    private static final String REALM_LIST_FRAGMENT_TAG = "realm-list";
-
-    @NotNull
-    private static final String EMPTY_FRAGMENT_TAG = "empty-fragment";
 
     /*
     **********************************************************************
@@ -50,6 +34,9 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
     @Nullable
     private RealmConfigurationEventListener realmConfigurationEventListener;
+
+    @Nullable
+    private EditRealmEventListener editRealmEventListener;
 
 
     public MessengerRealmsActivity() {
@@ -70,11 +57,18 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
         eventManager.registerObserver(MessengerRealmsFragment.RealmClickedEvent.class, realmClickedEventListener);
 
         realmConfigurationEventListener = new RealmConfigurationEventListener();
-        eventManager.registerObserver(BaseRealmConfigurationFragment.FinishedEvent.class, realmConfigurationEventListener);
+        eventManager.registerObserver(RealmFragmentFinishedEvent.class, realmConfigurationEventListener);
 
-        setFragment(R.id.content_first_pane, MessengerRealmsFragment.class, REALM_LIST_FRAGMENT_TAG, null);
-        if ( isDualPane() ) {
-            setFragment(R.id.content_second_pane, MessengerEmptyFragment.class, EMPTY_FRAGMENT_TAG, null);
+        editRealmEventListener = new EditRealmEventListener();
+        eventManager.registerObserver(MessengerRealmFragment.EditRealmEvent.class, editRealmEventListener);
+
+        setFirstFragment(MessengerRealmsFragment.class, null, null);
+        if (isDualPane()) {
+            emptifySecondFragment();
+        }
+
+        if (isTriplePane()) {
+            emptifyThirdFragment();
         }
     }
 
@@ -85,20 +79,45 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
         }
 
         if ( realmConfigurationEventListener != null ) {
-            eventManager.unregisterObserver(BaseRealmConfigurationFragment.FinishedEvent.class, realmConfigurationEventListener);
+            eventManager.unregisterObserver(RealmFragmentFinishedEvent.class, realmConfigurationEventListener);
+        }
+
+        if ( editRealmEventListener != null ) {
+            eventManager.unregisterObserver(MessengerRealmFragment.EditRealmEvent.class, editRealmEventListener);
         }
 
         super.onDestroy();
     }
 
-    private class RealmConfigurationEventListener implements EventListener<BaseRealmConfigurationFragment.FinishedEvent> {
+    private class RealmConfigurationEventListener implements EventListener<RealmFragmentFinishedEvent> {
 
         @Override
-        public void onEvent(@NotNull BaseRealmConfigurationFragment.FinishedEvent event) {
+        public void onEvent(@NotNull RealmFragmentFinishedEvent event) {
             if (isDualPane()) {
-                getSupportFragmentManager().popBackStack();
+                if (event.isRemoved()) {
+                    emptifySecondFragment();
+                } else {
+                    final Bundle fragmentArgs = new Bundle();
+                    fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, event.getRealm().getId());
+                    setSecondFragment(MessengerRealmFragment.class, fragmentArgs, new RealmFragmentReuseCondition(event.getRealm()));
+                }
             } else {
                 finish();
+            }
+        }
+    }
+
+    private class EditRealmEventListener implements EventListener<MessengerRealmFragment.EditRealmEvent> {
+        @Override
+        public void onEvent(@NotNull MessengerRealmFragment.EditRealmEvent event) {
+            final Realm realm = event.getRealm();
+
+            if (isDualPane()) {
+                final Bundle fragmentArgs = new Bundle();
+                fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
+                setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null);
+            } else {
+                MessengerRealmConfigurationActivity.startForEditRealm(MessengerRealmsActivity.this, realm);
             }
         }
     }
@@ -109,27 +128,36 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
             final Realm realm = event.getRealm();
 
             if (isDualPane()) {
-
                 final Bundle fragmentArgs = new Bundle();
-                fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
-                trySetFragment(R.id.content_second_pane, realm.getRealmDef().getConfigurationFragmentClass(), REALM_CONFIGURATION_FRAGMENT_TAG, fragmentArgs, new JPredicate<Fragment>() {
-                    @Override
-                    public boolean apply(@Nullable Fragment fragment) {
-                        if (fragment instanceof BaseRealmConfigurationFragment) {
-                            final BaseRealmConfigurationFragment oldRealmFragment = ((BaseRealmConfigurationFragment) fragment);
-                            if (realm.equals(oldRealmFragment.getEditedRealm())) {
-                                // do nothing - configuration fragment for this item is already opened
-                                return true;
-                            }
-                        }
-
-                        return false;
-                    }
-                }, true, EMPTY_FRAGMENT_TAG);
-
+                fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, realm.getId());
+                setSecondFragment(MessengerRealmFragment.class, fragmentArgs, new RealmFragmentReuseCondition(realm));
             } else {
                 MessengerRealmConfigurationActivity.startForEditRealm(MessengerRealmsActivity.this, realm);
             }
         }
+    }
+
+    private static class RealmFragmentReuseCondition implements JPredicate<Fragment> {
+
+        @NotNull
+        private final Realm realm;
+
+        public RealmFragmentReuseCondition(@NotNull Realm realm) {
+            this.realm = realm;
+        }
+
+        @Override
+        public boolean apply(@Nullable Fragment fragment) {
+            if (fragment instanceof MessengerRealmFragment) {
+                final MessengerRealmFragment oldRealmFragment = ((MessengerRealmFragment) fragment);
+                if (realm.equals(oldRealmFragment.getRealm())) {
+                    // do nothing - configuration fragment for this item is already opened
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     }
 }

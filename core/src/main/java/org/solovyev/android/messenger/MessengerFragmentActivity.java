@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.JPredicate;
@@ -26,6 +27,16 @@ import roboguice.event.EventManager;
  * Time: 7:28 PM
  */
 public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActivity {
+
+    @NotNull
+    protected static final String FIRST_FRAGMENT_TAG = "first-fragment";
+
+    @NotNull
+    protected static final String SECOND_FRAGMENT_TAG = "second-fragment";
+
+    @NotNull
+    protected static final String THIRD_FRAGMENT_TAG = "third-fragment";
+
 
     /*
     **********************************************************************
@@ -89,6 +100,12 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @NotNull
     protected EventManager getEventManager() {
         return eventManager;
+    }
+
+
+    @NotNull
+    protected RealmService getRealmService() {
+        return realmService;
     }
 
     @Override
@@ -172,6 +189,14 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         this.activity.onRestart(this);
     }
 
+    /*
+    **********************************************************************
+    *
+    *                           FRAGMENTS
+    *
+    **********************************************************************
+    */
+
     protected void setFragment(int fragmentContainerViewId, @NotNull Fragment fragment, @Nullable String tag) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -197,8 +222,39 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         fragmentTransaction.commit();
     }
 
+    protected void setFirstFragment(@NotNull Class<? extends Fragment> fragmentClass,
+                                    @Nullable Bundle fragmentArgs,
+                                    @Nullable JPredicate<Fragment> reuseCondition) {
+        setFragment(R.id.content_first_pane, fragmentClass, FIRST_FRAGMENT_TAG, fragmentArgs, reuseCondition);
+    }
+
+
+    protected void emptifyFirstFragment() {
+        setFirstFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
+    }
+
+    protected void setSecondFragment(@NotNull Class<? extends Fragment> fragmentClass,
+                                     @Nullable Bundle fragmentArgs,
+                                     @Nullable JPredicate<Fragment> reuseCondition) {
+        setFragment(R.id.content_second_pane, fragmentClass, SECOND_FRAGMENT_TAG, fragmentArgs, reuseCondition);
+    }
+
+    protected void emptifySecondFragment() {
+        setSecondFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
+    }
+
+    protected void setThirdFragment(@NotNull Class<? extends Fragment> fragmentClass,
+                                    @Nullable Bundle fragmentArgs,
+                                    @Nullable JPredicate<Fragment> reuseCondition) {
+        setFragment(R.id.content_third_pane, fragmentClass, THIRD_FRAGMENT_TAG, fragmentArgs, reuseCondition);
+    }
+
+    protected void emptifyThirdFragment() {
+        setThirdFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
+    }
+
     protected void setFragment(int fragmentViewId, @NotNull Class<? extends Fragment> fragmentClass, @NotNull String fragmentTag, @Nullable Bundle fragmentArgs) {
-        trySetFragment(fragmentViewId, fragmentClass, fragmentTag, fragmentArgs, null, false, null);
+        setFragment(fragmentViewId, fragmentClass, fragmentTag, fragmentArgs, null);
     }
 
     /**
@@ -208,27 +264,20 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
      * @param fragmentArgs
      * @param reuseCondition true if fragment can be reused
      */
-    protected void trySetFragment(int fragmentViewId,
-                                  @NotNull Class<? extends Fragment> fragmentClass,
-                                  @NotNull String fragmentTag,
-                                  @Nullable Bundle fragmentArgs,
-                                  @Nullable JPredicate<Fragment> reuseCondition,
-                                  boolean addToBackStack,
-                                  @Nullable String emptyFragmentTag) {
+    private void setFragment(int fragmentViewId,
+                             @NotNull Class<? extends Fragment> fragmentClass,
+                             @NotNull String fragmentTag,
+                             @Nullable Bundle fragmentArgs,
+                             @Nullable JPredicate<Fragment> reuseCondition) {
         final FragmentManager fm = getSupportFragmentManager();
-
-        final Fragment oldEmptyFragment = fm.findFragmentByTag(emptyFragmentTag);
 
         final FragmentTransaction ft = fm.beginTransaction();
 
         final Fragment oldFragment = fm.findFragmentByTag(fragmentTag);
         if (oldFragment != null) {
-            if (reuseCondition == null || reuseCondition.apply(oldFragment)) {
+            if (reuseCondition != null && reuseCondition.apply(oldFragment)) {
                 if (!oldFragment.isAdded()) {
                     ft.add(fragmentViewId, oldFragment, fragmentTag);
-                    if ( addToBackStack ) {
-                        ft.addToBackStack(null);
-                    }
                 }
             } else {
                 if (oldFragment.isAdded()) {
@@ -236,26 +285,31 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
                 }
 
                 ft.add(fragmentViewId, Fragment.instantiate(this, fragmentClass.getName(), fragmentArgs), fragmentTag);
-                if ( addToBackStack ) {
-                    ft.addToBackStack(null);
-                }
             }
 
         } else {
-            if (oldEmptyFragment != null && oldEmptyFragment.isAdded()) {
-                ft.remove(oldEmptyFragment);
-            }
             ft.add(fragmentViewId, Fragment.instantiate(this, fragmentClass.getName(), fragmentArgs), fragmentTag);
-            if ( addToBackStack ) {
-                ft.addToBackStack(null);
-            }
         }
 
         ft.commit();
     }
 
-    @NotNull
-    protected RealmService getRealmService() {
-        return realmService;
+    private static final class EmptyFragmentReuseCondition implements JPredicate<Fragment> {
+
+        @NotNull
+        private static final EmptyFragmentReuseCondition instance = new EmptyFragmentReuseCondition();
+
+        private EmptyFragmentReuseCondition() {
+        }
+
+        @NotNull
+        public static EmptyFragmentReuseCondition getInstance() {
+            return instance;
+        }
+
+        @Override
+        public boolean apply(@Nullable Fragment fragment) {
+            return fragment instanceof MessengerEmptyFragment;
+        }
     }
 }

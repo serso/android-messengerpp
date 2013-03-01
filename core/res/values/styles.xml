@@ -248,6 +248,12 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="mpp_form_textview">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="mpp_form_edittext" parent="mpp_form_label">
     </style>
 

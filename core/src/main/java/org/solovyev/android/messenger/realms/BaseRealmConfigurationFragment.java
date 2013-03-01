@@ -1,26 +1,17 @@
 package org.solovyev.android.messenger.realms;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import roboguice.RoboGuice;
 import roboguice.event.EventManager;
-
-import java.util.List;
 
 public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSherlockFragment {
 
@@ -34,6 +25,10 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
     @Inject
     @NotNull
     private MessengerMultiPaneManager multiPaneManager;
+
+    @Inject
+    @NotNull
+    private EventManager eventManager;
 
     private R editedRealm;
 
@@ -84,8 +79,10 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
     }
 
     protected void backButtonPressed() {
-        final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
-        eventManager.fire(new FinishedEvent());
+        R editedRealm = getEditedRealm();
+        if (editedRealm != null) {
+            eventManager.fire(new RealmFragmentFinishedEvent(editedRealm, false));
+        }
     }
 
     @NotNull
@@ -101,93 +98,6 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
     **********************************************************************
     */
 
-    private static class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, Void> {
-
-        @NotNull
-        private final RealmService realmService;
-
-        @Nullable
-        private final RealmSaveHandler realmSaveHandler;
-
-        private AsynRealmSaver(@NotNull Activity context,
-                               @NotNull RealmService realmService,
-                               @Nullable RealmSaveHandler realmSaveHandler) {
-            super(context, true);
-            this.realmService = realmService;
-            this.realmSaveHandler = realmSaveHandler;
-        }
-
-        @Override
-        protected Void doWork(@NotNull List<RealmBuilder> realmBuilders) {
-            for (RealmBuilder realmBuilder : realmBuilders) {
-                try {
-                    realmService.saveRealm(realmBuilder);
-                } catch (InvalidCredentialsException e) {
-                    throwException(e);
-                } catch (RealmAlreadyExistsException e) {
-                    throwException(e);
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onSuccessPostExecute(@Nullable Void result) {
-            final Context context = getContext();
-            if (context != null) {
-                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(new FinishedEvent());
-            }
-        }
-
-        @Override
-        protected void onFailurePostExecute(@NotNull Exception e) {
-            boolean consumed = realmSaveHandler != null && realmSaveHandler.onFailure(e);
-            if (!consumed) {
-                if (e instanceof InvalidCredentialsException) {
-                    Toast.makeText(getContext(), "Invalid credentials!", Toast.LENGTH_SHORT).show();
-                    Log.e("XmppRealm", e.getMessage(), e);
-                } else if (e instanceof RealmAlreadyExistsException) {
-                    Toast.makeText(getContext(), "Same account alraedy configured!", Toast.LENGTH_SHORT).show();
-                    Log.e("XmppRealm", e.getMessage(), e);
-                } else {
-                    super.onFailurePostExecute(e);
-                }
-            }
-        }
-    }
-
-    private static class AsynRealmRemover extends MessengerAsyncTask<Realm, Integer, Void> {
-
-        @NotNull
-        private final RealmService realmService;
-
-        private AsynRealmRemover(@NotNull Activity context,
-                                 @NotNull RealmService realmService) {
-            super(context, true);
-            this.realmService = realmService;
-        }
-
-        @Override
-        protected Void doWork(@NotNull List<Realm> realms) {
-            for (Realm realm : realms) {
-                realmService.removeRealm(realm.getId());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onSuccessPostExecute(@Nullable Void result) {
-            final Context context = getContext();
-            if (context != null) {
-                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(new FinishedEvent());
-            }
-        }
-    }
-
     public static interface RealmSaveHandler {
 
         /**
@@ -198,7 +108,4 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
 
     }
 
-    public static final class FinishedEvent {
-
-    }
 }

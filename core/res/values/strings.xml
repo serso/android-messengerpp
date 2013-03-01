@@ -50,6 +50,9 @@
     <string name="mpp_realm_icon">Account icon</string>
     <string name="mpp_realm_add">Add account</string>
     <string name="mpp_back">Back</string>
-
+    <string name="mpp_save">Save</string>
+    <string name="mpp_remove">Remove</string>
+    <string name="mpp_edit">Edit</string>
+    <string name="mpp_realm_name">Account service</string>
 
 </resources>

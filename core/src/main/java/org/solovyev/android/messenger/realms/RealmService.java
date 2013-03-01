@@ -37,7 +37,8 @@ public interface RealmService {
     @NotNull
     Realm getRealmById(@NotNull String realmId) throws UnsupportedRealmException;
 
-    void saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+    @NotNull
+    Realm saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
     void removeRealm(@NotNull String realmId);
 
