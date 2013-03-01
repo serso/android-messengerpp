@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.MessengerRealmConfigurationActivity;
 import org.solovyev.android.messenger.R;
-import org.solovyev.android.messenger.RealmConfigurationActivity;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 public class RealmDefListItem implements ListItem {
@@ -33,7 +33,7 @@ public class RealmDefListItem implements ListItem {
         return new OnClickAction() {
             @Override
             public void onClick(@NotNull Context context, @NotNull ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
-                RealmConfigurationActivity.startForNewRealm(context, realmDef);
+                MessengerRealmConfigurationActivity.startForNewRealm(context, realmDef);
             }
         };
     }

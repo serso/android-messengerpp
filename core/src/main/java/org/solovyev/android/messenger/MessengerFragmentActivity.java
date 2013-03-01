@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.JPredicate;
 import roboguice.event.EventManager;
 
 /**
@@ -50,12 +51,6 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @NotNull
     private EventManager eventManager;
 
-    @Nullable
-    private ViewGroup secondPane;
-
-    @Nullable
-    private ViewGroup thirdPane;
-
 
     /*
     **********************************************************************
@@ -64,6 +59,12 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     *
     **********************************************************************
     */
+    @Nullable
+    private ViewGroup secondPane;
+
+    @Nullable
+    private ViewGroup thirdPane;
+
     @NotNull
     private final MessengerCommonActivity activity;
 
@@ -175,16 +176,82 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.add(fragmentContainerViewId, fragment, tag);
+        boolean oldFragmentUsed = false;
+        if (tag != null) {
+            final Fragment oldFragment = fragmentManager.findFragmentByTag(tag);
+            if ( oldFragment != null ) {
+                if ( oldFragment.isDetached() ) {
+                    fragmentTransaction.attach(oldFragment);
+                    oldFragmentUsed = true;
+                } else if ( !oldFragment.isAdded() ) {
+                    fragmentTransaction.add(fragmentContainerViewId, oldFragment, tag);
+                    oldFragmentUsed = true;
+                }
+            }
+        }
+
+        if (!oldFragmentUsed) {
+            fragmentTransaction.add(fragmentContainerViewId, fragment, tag);
+        }
+
         fragmentTransaction.commit();
     }
 
-    protected void setFragment(int fragmentContainerViewId, @NotNull Class<? extends Fragment> fragmentClass, @Nullable Bundle args) {
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    protected void setFragment(int fragmentViewId, @NotNull Class<? extends Fragment> fragmentClass, @NotNull String fragmentTag, @Nullable Bundle fragmentArgs) {
+        trySetFragment(fragmentViewId, fragmentClass, fragmentTag, fragmentArgs, null, false, null);
+    }
 
-        fragmentTransaction.add(fragmentContainerViewId, Fragment.instantiate(this, fragmentClass.getName(), args));
-        fragmentTransaction.commit();
+    /**
+     * @param fragmentViewId
+     * @param fragmentClass
+     * @param fragmentTag
+     * @param fragmentArgs
+     * @param reuseCondition true if fragment can be reused
+     */
+    protected void trySetFragment(int fragmentViewId,
+                                  @NotNull Class<? extends Fragment> fragmentClass,
+                                  @NotNull String fragmentTag,
+                                  @Nullable Bundle fragmentArgs,
+                                  @Nullable JPredicate<Fragment> reuseCondition,
+                                  boolean addToBackStack,
+                                  @Nullable String emptyFragmentTag) {
+        final FragmentManager fm = getSupportFragmentManager();
+
+        final Fragment oldEmptyFragment = fm.findFragmentByTag(emptyFragmentTag);
+
+        final FragmentTransaction ft = fm.beginTransaction();
+
+        final Fragment oldFragment = fm.findFragmentByTag(fragmentTag);
+        if (oldFragment != null) {
+            if (reuseCondition == null || reuseCondition.apply(oldFragment)) {
+                if (!oldFragment.isAdded()) {
+                    ft.add(fragmentViewId, oldFragment, fragmentTag);
+                    if ( addToBackStack ) {
+                        ft.addToBackStack(null);
+                    }
+                }
+            } else {
+                if (oldFragment.isAdded()) {
+                    ft.remove(oldFragment);
+                }
+
+                ft.add(fragmentViewId, Fragment.instantiate(this, fragmentClass.getName(), fragmentArgs), fragmentTag);
+                if ( addToBackStack ) {
+                    ft.addToBackStack(null);
+                }
+            }
+
+        } else {
+            if (oldEmptyFragment != null && oldEmptyFragment.isAdded()) {
+                ft.remove(oldEmptyFragment);
+            }
+            ft.add(fragmentViewId, Fragment.instantiate(this, fragmentClass.getName(), fragmentArgs), fragmentTag);
+            if ( addToBackStack ) {
+                ft.addToBackStack(null);
+            }
+        }
+
+        ft.commit();
     }
 
     @NotNull

@@ -25,9 +25,10 @@
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerLoginActivity"/>
 
-        <activity android:label="@string/mpp_app_name" android:name=".RealmConfigurationActivity"/>
-
-        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRegistrationActivity"/>
+        <activity android:label="@string/mpp_app_name"
+                  android:name=".MessengerRealmConfigurationActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait"/>
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRegistrationActivity"/>
 

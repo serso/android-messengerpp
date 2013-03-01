@@ -3,6 +3,7 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -491,7 +492,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         if (listLoader != null) {
             listLoader.execute();
         } else {
-            onPostExecute.run();
+            // we need to schedule onPostExecute in order to be after all pending transaction in fragment manager
+            new Handler().post(onPostExecute);
         }
     }
 
