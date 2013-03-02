@@ -4,6 +4,7 @@ import android.content.Context;
 import com.actionbarsherlock.view.MenuItem;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.menu.IdentifiableMenuItem;
+import org.solovyev.android.messenger.core.R;
 
 import java.lang.ref.WeakReference;
 

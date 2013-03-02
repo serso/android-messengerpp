@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;

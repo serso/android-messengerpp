@@ -38,7 +38,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
         Assert.assertEquals("test_config_field", actual1.getConfiguration().getTestStringField());
         Assert.assertEquals(42, actual1.getConfiguration().getTestIntField());
 
-        realmDao.deleteRealm(expected1);
+        realmDao.deleteRealm(expected1.getId());
 
         realms = realmDao.loadRealms();
         Assert.assertTrue(realms.isEmpty());

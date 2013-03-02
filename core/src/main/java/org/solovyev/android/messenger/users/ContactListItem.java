@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;

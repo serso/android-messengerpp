@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatListItem;
 import org.solovyev.android.messenger.realms.RealmEntity;

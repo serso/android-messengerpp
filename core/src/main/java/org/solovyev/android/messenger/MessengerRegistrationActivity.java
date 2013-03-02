@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;

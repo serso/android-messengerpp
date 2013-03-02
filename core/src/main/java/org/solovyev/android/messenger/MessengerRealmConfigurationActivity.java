@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.*;
 import roboguice.event.EventListener;
 

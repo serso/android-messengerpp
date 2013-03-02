@@ -10,7 +10,7 @@ import android.support.v4.view.ViewPager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

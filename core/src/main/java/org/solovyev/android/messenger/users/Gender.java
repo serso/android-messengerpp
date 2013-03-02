@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import org.solovyev.android.Labeled;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;

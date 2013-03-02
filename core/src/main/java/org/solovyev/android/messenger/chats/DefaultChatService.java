@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.Realm;

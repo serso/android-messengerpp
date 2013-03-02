@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.widget.Button;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

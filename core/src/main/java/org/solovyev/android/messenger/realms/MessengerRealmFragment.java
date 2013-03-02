@@ -12,7 +12,7 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 

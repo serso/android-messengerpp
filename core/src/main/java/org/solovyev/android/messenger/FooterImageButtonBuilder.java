@@ -3,6 +3,7 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.widget.ImageButton;
 import org.jetbrains.annotations.NotNull;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 

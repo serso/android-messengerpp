@@ -8,7 +8,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.realms.RealmEntity;

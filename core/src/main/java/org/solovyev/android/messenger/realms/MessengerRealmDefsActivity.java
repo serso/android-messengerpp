@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 
 public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
 

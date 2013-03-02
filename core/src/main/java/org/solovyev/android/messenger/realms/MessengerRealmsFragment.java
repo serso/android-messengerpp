@@ -14,7 +14,7 @@ import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
+import org.solovyev.android.core.R;
 import org.solovyev.android.messenger.api.ApiError;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
 import org.solovyev.android.messenger.realms.RealmDef;

@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
 import roboguice.inject.InjectPreference;

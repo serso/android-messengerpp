@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.sync;
 import android.content.Context;
 import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

@@ -16,7 +16,7 @@ import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 

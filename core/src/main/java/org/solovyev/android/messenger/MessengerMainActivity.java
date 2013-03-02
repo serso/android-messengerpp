@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEvent;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;

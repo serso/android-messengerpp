@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
 import org.solovyev.android.sherlock.tabs.ActionBarFragmentTabListener;

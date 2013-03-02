@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.view.ViewFromLayoutBuilder;

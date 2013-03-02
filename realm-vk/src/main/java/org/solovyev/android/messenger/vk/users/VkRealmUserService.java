@@ -79,7 +79,7 @@ public class VkRealmUserService implements RealmUserService {
             if ( name.equals("nickName") ) {
                 result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_nickname), property.getValue()));
             } else if ( name.equals("sex") ) {
-                result.add(APropertyImpl.newInstance(context.getString(org.solovyev.android.messenger.R.string.sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
+                result.add(APropertyImpl.newInstance(context.getString(org.solovyev.android.messenger.core.R.string.sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
             } else if ( name.equals("bdate") ) {
                 result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_birth_date), property.getValue()));
             } else if ( name.equals("countryId") ) {

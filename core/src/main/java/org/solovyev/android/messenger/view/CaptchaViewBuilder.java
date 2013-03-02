@@ -12,7 +12,7 @@ import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.DownloadFileAsyncTask;
 import org.solovyev.android.http.HttpMethod;
-import org.solovyev.android.messenger.R;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.DrawableFromIsConverter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.Builder;

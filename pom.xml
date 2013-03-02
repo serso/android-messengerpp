@@ -176,7 +176,7 @@
             <dependency>
                 <groupId>com.actionbarsherlock</groupId>
                 <artifactId>library</artifactId>
-                <version>4.1.0</version>
+                <version>4.2.0</version>
                 <type>apklib</type>
             </dependency>
 
@@ -260,7 +260,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.5.1</version>
                     <configuration>
 
                         <sourceDirectories>
@@ -272,8 +272,8 @@
                         </sdk>
 
                         <emulator>
-                            <avd>23</avd>
-                            <wait>10000</wait>
+                            <avd>Default</avd>
+                            <wait>30000</wait>
                             <!--<options>-no-skin</options>-->
                         </emulator>
 
@@ -306,8 +306,8 @@
     <profiles>
 
         <profile>
-            <!-- the standard profile runs the instrumentation tests -->
-            <id>standard</id>
+            <!-- profile which runs the instrumentation tests -->
+            <id>with-tests</id>
 
         </profile>
 

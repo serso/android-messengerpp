@@ -12,6 +12,7 @@ import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.Views;
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso
