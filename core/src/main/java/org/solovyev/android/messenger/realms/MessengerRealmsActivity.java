@@ -62,7 +62,12 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
         editRealmEventListener = new EditRealmEventListener();
         eventManager.registerObserver(MessengerRealmFragment.EditRealmEvent.class, editRealmEventListener);
 
-        setFirstFragment(MessengerRealmsFragment.class, null, null);
+        setFirstFragment(MessengerRealmsFragment.class, null, new JPredicate<Fragment>() {
+            @Override
+            public boolean apply(@Nullable Fragment fragment) {
+                return fragment instanceof MessengerRealmsFragment;
+            }
+        });
         if (isDualPane()) {
             emptifySecondFragment();
         }
