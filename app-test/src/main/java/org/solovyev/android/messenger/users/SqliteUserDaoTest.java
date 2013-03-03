@@ -60,7 +60,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
         Assert.assertEquals(realmUser.getRealmId(), actual.getRealmUser().getRealmId());
         Assert.assertEquals("2", actual.getRealmUser().getRealmEntityId());
         Assert.assertEquals("test~1_2", actual.getRealmUser().getEntityId());
-        Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getProperties(), new ListEqualizer<AProperty>(false, null)));
+        Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getProperties(), ListEqualizer.<AProperty>newWithNaturalEquals(false)));
         Assert.assertEquals("prop_1_value", actual.getPropertyValueByName("prop_1"));
 
         User actual2 = userDao.loadUserById("test~1_2");
@@ -69,13 +69,13 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
         User actual3 = userDao.loadUserById("test_01");
         Assert.assertNull(actual3);
 
-        Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2"), new ListEqualizer<String>(false, null)));
+        Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
         final RealmEntity realmUser2 = testRealm.newRealmEntity("3");
 
         expected = UserImpl.newInstance(realmUser2, UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.insertUser(expected);
-        Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2", "test~1_3"), new ListEqualizer<String>(false, null)));
+        Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2", "test~1_3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
         // UPDATE
         expectedProperties = new ArrayList<AProperty>(expectedProperties);
@@ -88,9 +88,9 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         Assert.assertNotNull(actual);
         Assert.assertEquals(expected, actual);
-        Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getProperties(), new ListEqualizer<AProperty>(false, null)));
+        Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getProperties(), ListEqualizer.<AProperty>newWithNaturalEquals(false)));
 
-        Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2", "test~1_3"), new ListEqualizer<String>(false, null)));
+        Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2", "test~1_3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
         expected = UserImpl.newInstance(TestRealmDef.REALM_ID, "test_01dsfsdfsf", UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.updateUser(expected);
