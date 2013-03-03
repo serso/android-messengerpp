@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.vk.longpoll;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,32 +9,32 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LongPollServerData {
 
-    @NotNull
+    @Nonnull
     private String key;
 
-    @NotNull
+    @Nonnull
     private String serverUri;
 
-    @NotNull
+    @Nonnull
     private Long timeStamp;
 
-    public LongPollServerData(@NotNull String key, @NotNull String serverUri, @NotNull Long timeStamp) {
+    public LongPollServerData(@Nonnull String key, @Nonnull String serverUri, @Nonnull Long timeStamp) {
         this.key = key;
         this.serverUri = serverUri;
         this.timeStamp = timeStamp;
     }
 
-    @NotNull
+    @Nonnull
     public String getKey() {
         return key;
     }
 
-    @NotNull
+    @Nonnull
     public String getServerUri() {
         return serverUri;
     }
 
-    @NotNull
+    @Nonnull
     public Long getTimeStamp() {
         return timeStamp;
     }

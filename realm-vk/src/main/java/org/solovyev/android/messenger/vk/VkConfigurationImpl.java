@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.vk;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,41 +9,41 @@ import org.jetbrains.annotations.NotNull;
  */
 public class VkConfigurationImpl implements VkConfiguration {
 
-    @NotNull
+    @Nonnull
     private String clientId;
 
-    @NotNull
+    @Nonnull
     private String clientSecret;
 
-    @NotNull
+    @Nonnull
     private static final VkConfigurationImpl instance = new VkConfigurationImpl();
 
     private VkConfigurationImpl() {
     }
 
-    @NotNull
+    @Nonnull
     public static VkConfigurationImpl getInstance() {
         return instance;
     }
 
 
-    @NotNull
+    @Nonnull
     @Override
     public String getClientId() {
         return this.clientId;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getClientSecret() {
         return this.clientSecret;
     }
 
-    public void setClientId(@NotNull String clientId) {
+    public void setClientId(@Nonnull String clientId) {
         this.clientId = clientId;
     }
 
-    public void setClientSecret(@NotNull String clientSecret) {
+    public void setClientSecret(@Nonnull String clientSecret) {
         this.clientSecret = clientSecret;
     }
 }

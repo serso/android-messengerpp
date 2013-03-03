@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.security;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.users.User;
 
@@ -13,19 +13,19 @@ import org.solovyev.android.messenger.users.User;
  */
 public interface AuthServiceFacade {
 
-    @NotNull
-    AuthData loginUser(@NotNull String login,
-                       @NotNull String password,
+    @Nonnull
+    AuthData loginUser(@Nonnull String login,
+                       @Nonnull String password,
                        @Nullable ResolvedCaptcha resolvedCaptcha,
-                       @NotNull Context context) throws InvalidCredentialsException;
+                       @Nonnull Context context) throws InvalidCredentialsException;
 
-    @NotNull
-    User getUser(@NotNull Context context) throws UserIsNotLoggedInException;
+    @Nonnull
+    User getUser(@Nonnull Context context) throws UserIsNotLoggedInException;
 
     boolean isUserLoggedIn();
 
-    void logoutUser(@NotNull Context context);
+    void logoutUser(@Nonnull Context context);
 
-    @NotNull
+    @Nonnull
     AuthData getAuthData() throws UserIsNotLoggedInException;
 }

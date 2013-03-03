@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,24 +9,24 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ChatGuiEvent {
 
-    @NotNull
+    @Nonnull
     private final ChatGuiEventType type;
 
-    @NotNull
+    @Nonnull
     private final Chat chat;
 
-    public ChatGuiEvent(@NotNull ChatGuiEventType type,
-                        @NotNull Chat chat) {
+    public ChatGuiEvent(@Nonnull ChatGuiEventType type,
+                        @Nonnull Chat chat) {
         this.chat = chat;
         this.type = type;
     }
 
-    @NotNull
+    @Nonnull
     public ChatGuiEventType getType() {
         return type;
     }
 
-    @NotNull
+    @Nonnull
     public Chat getChat() {
         return chat;
     }

@@ -4,8 +4,8 @@ import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -18,7 +18,7 @@ import java.util.List;
 public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<RealmDef, RealmDefListItem> {
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     private ActivityMenu<Menu, MenuItem> menu;
@@ -49,7 +49,7 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected MessengerListItemAdapter<RealmDefListItem> createAdapter() {
         final List<RealmDefListItem> listItems = new ArrayList<RealmDefListItem>();
@@ -61,7 +61,7 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
 
     @Nullable
     @Override
-    protected MessengerAsyncTask<Void, Void, List<RealmDef>> createAsyncLoader(@NotNull MessengerListItemAdapter<RealmDefListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected MessengerAsyncTask<Void, Void, List<RealmDef>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmDefListItem> adapter, @Nonnull Runnable onPostExecute) {
         return null;
     }
 }

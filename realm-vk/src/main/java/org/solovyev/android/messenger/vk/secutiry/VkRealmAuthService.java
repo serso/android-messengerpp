@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.vk.secutiry;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
@@ -19,18 +19,18 @@ import java.io.IOException;
 */
 public class VkRealmAuthService implements RealmAuthService {
 
-    @NotNull
+    @Nonnull
     private String login;
 
-    @NotNull
+    @Nonnull
     private String password;
 
-    public VkRealmAuthService(@NotNull String login, @NotNull String password) {
+    public VkRealmAuthService(@Nonnull String login, @Nonnull String password) {
         this.login = login;
         this.password = password;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
         try {
@@ -41,7 +41,7 @@ public class VkRealmAuthService implements RealmAuthService {
     }
 
     @Override
-    public void logoutUser(@NotNull User user) {
+    public void logoutUser(@Nonnull User user) {
         // do nothing
     }
 }

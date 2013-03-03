@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.MessengerRealmConfigurationActivity;
 import org.solovyev.android.messenger.core.R;
@@ -26,7 +26,7 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private EventManager eventManager;
 
     @Nullable
@@ -43,7 +43,7 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
         super(R.layout.msg_main, false, true);
     }
 
-    public static void startActivity(@NotNull Activity activity) {
+    public static void startActivity(@Nonnull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerRealmsActivity.class);
         activity.startActivity(result);
@@ -97,7 +97,7 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
     private class RealmConfigurationEventListener implements EventListener<RealmFragmentFinishedEvent> {
 
         @Override
-        public void onEvent(@NotNull RealmFragmentFinishedEvent event) {
+        public void onEvent(@Nonnull RealmFragmentFinishedEvent event) {
             if (isDualPane()) {
                 if (event.isRemoved()) {
                     emptifySecondFragment();
@@ -114,7 +114,7 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
     private class EditRealmEventListener implements EventListener<MessengerRealmFragment.EditRealmEvent> {
         @Override
-        public void onEvent(@NotNull MessengerRealmFragment.EditRealmEvent event) {
+        public void onEvent(@Nonnull MessengerRealmFragment.EditRealmEvent event) {
             final Realm realm = event.getRealm();
 
             if (isDualPane()) {
@@ -129,7 +129,7 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
     private class RealmClickedEventListener implements EventListener<MessengerRealmsFragment.RealmClickedEvent> {
         @Override
-        public void onEvent(@NotNull MessengerRealmsFragment.RealmClickedEvent event) {
+        public void onEvent(@Nonnull MessengerRealmsFragment.RealmClickedEvent event) {
             final Realm realm = event.getRealm();
 
             if (isDualPane()) {
@@ -144,10 +144,10 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
     private static class RealmFragmentReuseCondition implements JPredicate<Fragment> {
 
-        @NotNull
+        @Nonnull
         private final Realm realm;
 
-        public RealmFragmentReuseCondition(@NotNull Realm realm) {
+        public RealmFragmentReuseCondition(@Nonnull Realm realm) {
             this.realm = realm;
         }
 

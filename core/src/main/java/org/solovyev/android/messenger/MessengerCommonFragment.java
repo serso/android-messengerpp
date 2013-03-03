@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.widget.Button;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface MessengerCommonFragment {
 
-    @NotNull
-    Button createFooterButton(int captionResId, @NotNull Activity activity);
+    @Nonnull
+    Button createFooterButton(int captionResId, @Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getFooter(@NotNull Fragment fragment);
+    @Nonnull
+    ViewGroup getFooter(@Nonnull Fragment fragment);
 }

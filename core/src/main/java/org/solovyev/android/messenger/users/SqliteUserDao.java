@@ -10,8 +10,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -39,40 +39,40 @@ import java.util.NoSuchElementException;
 public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     @Inject
-    public SqliteUserDao(@NotNull Application context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+    public SqliteUserDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
         super(context, sqliteOpenHelper);
     }
 
-    SqliteUserDao(@NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+    SqliteUserDao(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
         super(context, sqliteOpenHelper);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public User insertUser(@NotNull User user) {
+    public User insertUser(@Nonnull User user) {
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertUser(user), new InsertUserProperties(user)));
         return user;
     }
 
     @Nullable
     @Override
-    public User loadUserById(@NotNull String userId) {
+    public User loadUserById(@Nonnull String userId) {
         final List<User> users = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadByUserId(getContext(), userId, getSqliteOpenHelper(), this));
         return Collections.getFirstListElement(users);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<AProperty> loadUserPropertiesById(@NotNull String userId) {
+    public List<AProperty> loadUserPropertiesById(@Nonnull String userId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadUserPropertiesDbQuery(userId, getContext(), getSqliteOpenHelper()));
     }
 
     @Override
-    public void updateUser(@NotNull User user) {
+    public void updateUser(@Nonnull User user) {
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateUser(user), new DeleteUserProperties(user), new InsertUserProperties(user)));
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<String> loadUserIds() {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadUserIds(getContext(), getSqliteOpenHelper()));
@@ -86,27 +86,27 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
     }
 
     @Override
-    public void deleteAllUsersInRealm(@NotNull String realmId) {
+    public void deleteAllUsersInRealm(@Nonnull String realmId) {
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_contacts", "user_id", realmId));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_properties", "user_id", realmId));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newInstance("users", "realm_id", realmId));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<String> loadUserContactIds(@NotNull String userId) {
+    public List<String> loadUserContactIds(@Nonnull String userId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadContactIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<User> loadUserContacts(@NotNull String userId) {
+    public List<User> loadUserContacts(@Nonnull String userId) {
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadContactsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public MergeDaoResult<User, String> mergeUserContacts(@NotNull String userId, @NotNull List<User> contacts) {
+    public MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts) {
         final MergeDaoResultImpl<User, String> result = new MergeDaoResultImpl<User, String>(contacts);
 
         final List<String> contactIdsFromDb = loadUserContactIds(userId);
@@ -179,19 +179,19 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     private static final class InsertContact implements DbExec {
 
-        @NotNull
+        @Nonnull
         private String userId;
 
-        @NotNull
+        @Nonnull
         private String contactId;
 
-        private InsertContact(@NotNull String userId, @NotNull String contactId) {
+        private InsertContact(@Nonnull String userId, @Nonnull String contactId) {
             this.userId = userId;
             this.contactId = contactId;
         }
 
         @Override
-        public void exec(@NotNull SQLiteDatabase db) {
+        public void exec(@Nonnull SQLiteDatabase db) {
             final ContentValues values = new ContentValues();
             values.put("user_id", userId);
             values.put("contact_id", contactId);
@@ -201,19 +201,19 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     private static final class RemoveContacts implements DbExec {
 
-        @NotNull
+        @Nonnull
         private String userId;
 
-        @NotNull
+        @Nonnull
         private List<String> contactIds;
 
-        private RemoveContacts(@NotNull String userId, @NotNull List<String> contactIds) {
+        private RemoveContacts(@Nonnull String userId, @Nonnull List<String> contactIds) {
             this.userId = userId;
             this.contactIds = contactIds;
         }
 
-        @NotNull
-        private static List<RemoveContacts> newInstances(@NotNull String userId, @NotNull List<String> contactIds) {
+        @Nonnull
+        private static List<RemoveContacts> newInstances(@Nonnull String userId, @Nonnull List<String> contactIds) {
             final List<RemoveContacts> result = new ArrayList<RemoveContacts>();
 
             for (List<String> contactIdsChunk : Collections.split(contactIds, MAX_IN_COUNT)) {
@@ -224,125 +224,125 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
 
         @Override
-        public void exec(@NotNull SQLiteDatabase db) {
+        public void exec(@Nonnull SQLiteDatabase db) {
             db.delete("user_contacts", "user_id = ? and contact_id in " + AndroidDbUtils.inClause(contactIds), AndroidDbUtils.inClauseValues(contactIds, userId));
         }
     }
 
     private static final class LoadContactIdsByUserId extends AbstractDbQuery<List<String>> {
 
-        @NotNull
+        @Nonnull
         private final String userId;
 
-        private LoadContactIdsByUserId(@NotNull Context context, @NotNull String userId, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        private LoadContactIdsByUserId(@Nonnull Context context, @Nonnull String userId, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public Cursor createCursor(@NotNull SQLiteDatabase db) {
+        public Cursor createCursor(@Nonnull SQLiteDatabase db) {
             return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? ) ", new String[]{userId}, null, null, null);
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public List<String> retrieveData(@NotNull Cursor cursor) {
+        public List<String> retrieveData(@Nonnull Cursor cursor) {
             return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
         }
     }
 
     private static final class LoadUserIds extends AbstractDbQuery<List<String>> {
 
-        private LoadUserIds(@NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        private LoadUserIds(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public Cursor createCursor(@NotNull SQLiteDatabase db) {
+        public Cursor createCursor(@Nonnull SQLiteDatabase db) {
             return db.query("users", new String[]{"id"}, null, null, null, null, null);
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public List<String> retrieveData(@NotNull Cursor cursor) {
+        public List<String> retrieveData(@Nonnull Cursor cursor) {
             return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
         }
     }
 
     private static final class LoadContactsByUserId extends AbstractDbQuery<List<User>> {
 
-        @NotNull
+        @Nonnull
         private final String userId;
 
-        @NotNull
+        @Nonnull
         private final UserDao userDao;
 
-        private LoadContactsByUserId(@NotNull Context context, @NotNull String userId, @NotNull SQLiteOpenHelper sqliteOpenHelper, @NotNull UserDao userDao) {
+        private LoadContactsByUserId(@Nonnull Context context, @Nonnull String userId, @Nonnull SQLiteOpenHelper sqliteOpenHelper, @Nonnull UserDao userDao) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
             this.userDao = userDao;
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public Cursor createCursor(@NotNull SQLiteDatabase db) {
+        public Cursor createCursor(@Nonnull SQLiteDatabase db) {
             return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? ) ", new String[]{userId}, null, null, null);
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public List<User> retrieveData(@NotNull Cursor cursor) {
+        public List<User> retrieveData(@Nonnull Cursor cursor) {
             return new ListMapper<User>(new UserMapper(userDao)).convert(cursor);
         }
     }
 
     private static final class LoadByUserId extends AbstractDbQuery<List<User>> {
 
-        @NotNull
+        @Nonnull
         private final String userId;
 
-        @NotNull
+        @Nonnull
         private final UserDao userDao;
 
-        private LoadByUserId(@NotNull Context context,
-                             @NotNull String userId,
-                             @NotNull SQLiteOpenHelper sqliteOpenHelper,
-                             @NotNull UserDao userDao) {
+        private LoadByUserId(@Nonnull Context context,
+                             @Nonnull String userId,
+                             @Nonnull SQLiteOpenHelper sqliteOpenHelper,
+                             @Nonnull UserDao userDao) {
             super(context, sqliteOpenHelper);
             this.userId = userId;
             this.userDao = userDao;
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public Cursor createCursor(@NotNull SQLiteDatabase db) {
+        public Cursor createCursor(@Nonnull SQLiteDatabase db) {
             return db.query("users", null, "id = ? ", new String[]{userId}, null, null, null);
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public List<User> retrieveData(@NotNull Cursor cursor) {
+        public List<User> retrieveData(@Nonnull Cursor cursor) {
             return new ListMapper<User>(new UserMapper(userDao)).convert(cursor);
         }
     }
 
     public static final class LoadUserPropertiesDbQuery extends PropertyByIdDbQuery {
 
-        public LoadUserPropertiesDbQuery(@NotNull String userId, @NotNull Context context, @NotNull SQLiteOpenHelper sqliteOpenHelper) {
+        public LoadUserPropertiesDbQuery(@Nonnull String userId, @Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper, "user_properties", "user_id", userId);
         }
     }
 
     private static final class InsertUser extends AbstractObjectDbExec<User> {
 
-        private InsertUser(@NotNull User user) {
+        private InsertUser(@Nonnull User user) {
             super(user);
         }
 
         @Override
-        public void exec(@NotNull SQLiteDatabase db) {
+        public void exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
             final ContentValues values = toContentValues(user);
@@ -354,12 +354,12 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     private static final class UpdateUser extends AbstractObjectDbExec<User> {
 
-        private UpdateUser(@NotNull User user) {
+        private UpdateUser(@Nonnull User user) {
             super(user);
         }
 
         @Override
-        public void exec(@NotNull SQLiteDatabase db) {
+        public void exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
             final ContentValues values = toContentValues(user);
@@ -370,12 +370,12 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     private static final class DeleteUserProperties extends AbstractObjectDbExec<User> {
 
-        private DeleteUserProperties(@NotNull User user) {
+        private DeleteUserProperties(@Nonnull User user) {
             super(user);
         }
 
         @Override
-        public void exec(@NotNull SQLiteDatabase db) {
+        public void exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
             db.delete("user_properties", "user_id = ?", new String[]{String.valueOf(user.getRealmUser().getEntityId())});
@@ -384,12 +384,12 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     private static final class InsertUserProperties extends AbstractObjectDbExec<User> {
 
-        private InsertUserProperties(@NotNull User user) {
+        private InsertUserProperties(@Nonnull User user) {
             super(user);
         }
 
         @Override
-        public void exec(@NotNull SQLiteDatabase db) {
+        public void exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
             for (AProperty property : user.getProperties()) {
@@ -407,10 +407,10 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     private static class UserByIdFinder implements Predicate<User> {
 
-        @NotNull
+        @Nonnull
         private final String userId;
 
-        public UserByIdFinder(@NotNull String userId) {
+        public UserByIdFinder(@Nonnull String userId) {
             this.userId = userId;
         }
 
@@ -420,8 +420,8 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
     }
 
-    @NotNull
-    private static ContentValues toContentValues(@NotNull User user) {
+    @Nonnull
+    private static ContentValues toContentValues(@Nonnull User user) {
         final ContentValues values = new ContentValues();
 
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();

@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
@@ -30,10 +30,10 @@ import java.util.List;
  */
 public class MessengerContactsFragment extends AbstractMessengerContactsFragment {
 
-    @NotNull
+    @Nonnull
     private static final String MODE = "mode";
 
-    @NotNull
+    @Nonnull
     private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
 
     @Override
@@ -55,8 +55,8 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
         }
     }
 
-    @NotNull
-    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull MessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
+    @Nonnull
+    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
         return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 
@@ -80,7 +80,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
         };
     }
 
-    @NotNull
+    @Nonnull
     protected AbstractContactsAdapter createAdapter() {
         return new ContactsAdapter(getActivity());
     }
@@ -91,7 +91,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
         outState.putSerializable(MODE, mode);
     }
 
-    private void changeMode(@NotNull MessengerContactsMode newMode) {
+    private void changeMode(@Nonnull MessengerContactsMode newMode) {
         mode = newMode;
         ((AbstractContactsAdapter) getAdapter()).setMode(newMode);
     }
@@ -129,14 +129,14 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
 
     private class ToggleContactsMenuItem implements IdentifiableMenuItem<MenuItem> {
 
-        @NotNull
+        @Nonnull
         @Override
         public Integer getItemId() {
             return R.id.toggle_contacts;
         }
 
         @Override
-        public void onClick(@NotNull MenuItem data, @NotNull Context context) {
+        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
             changeMode(mode == MessengerContactsMode.only_online_contacts ? MessengerContactsMode.all_contacts : MessengerContactsMode.only_online_contacts);
         }
     }

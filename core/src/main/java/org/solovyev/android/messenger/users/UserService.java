@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.users;
 
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
@@ -21,27 +21,27 @@ public interface UserService extends UserEventListeners {
     void init();
 
     // NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
-    @NotNull
-    User getUserById(@NotNull RealmEntity realmUser);
+    @Nonnull
+    User getUserById(@Nonnull RealmEntity realmUser);
 
-    @NotNull
-    User getUserById(@NotNull RealmEntity realmUser, boolean tryFindInRealm);
+    @Nonnull
+    User getUserById(@Nonnull RealmEntity realmUser, boolean tryFindInRealm);
 
-    @NotNull
-    List<User> getUserContacts(@NotNull RealmEntity realmUser);
+    @Nonnull
+    List<User> getUserContacts(@Nonnull RealmEntity realmUser);
 
-    @NotNull
-    List<Chat> getUserChats(@NotNull RealmEntity realmUser);
+    @Nonnull
+    List<Chat> getUserChats(@Nonnull RealmEntity realmUser);
 
-    @NotNull
-    Chat getPrivateChat(@NotNull RealmEntity realmUser, @NotNull RealmEntity secondRealmUser);
+    @Nonnull
+    Chat getPrivateChat(@Nonnull RealmEntity realmUser, @Nonnull RealmEntity secondRealmUser);
 
-    @NotNull
-    List<User> getOnlineUserContacts(@NotNull RealmEntity realmUser);
+    @Nonnull
+    List<User> getOnlineUserContacts(@Nonnull RealmEntity realmUser);
 
-    void updateUser(@NotNull User user);
+    void updateUser(@Nonnull User user);
 
-    void removeUsersInRealm(@NotNull String realmId);
+    void removeUsersInRealm(@Nonnull String realmId);
 
 
     /*
@@ -51,14 +51,14 @@ public interface UserService extends UserEventListeners {
     *
     **********************************************************************
     */
-    @NotNull
+    @Nonnull
     Drawable getDefaultUserIcon();
 
-    void setUserIcon(@NotNull User user, @NotNull ImageView imageView);
+    void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);
 
-    void setUserIcon(@NotNull User user, @NotNull OnImageLoadedListener imageLoadedListener);
+    void setUserIcon(@Nonnull User user, @Nonnull OnImageLoadedListener imageLoadedListener);
 
-    void setUserPhoto(@NotNull ImageView imageView, @NotNull User user);
+    void setUserPhoto(@Nonnull ImageView imageView, @Nonnull User user);
 
     /*
     **********************************************************************
@@ -68,17 +68,17 @@ public interface UserService extends UserEventListeners {
     **********************************************************************
     */
 
-    void syncUserProperties(@NotNull RealmEntity realmUser);
+    void syncUserProperties(@Nonnull RealmEntity realmUser);
 
-    @NotNull
-    List<User> syncUserContacts(@NotNull RealmEntity realmUser);
+    @Nonnull
+    List<User> syncUserContacts(@Nonnull RealmEntity realmUser);
 
-    @NotNull
-    List<Chat> syncUserChats(@NotNull RealmEntity realmUser);
+    @Nonnull
+    List<Chat> syncUserChats(@Nonnull RealmEntity realmUser);
 
-    void mergeUserChats(@NotNull RealmEntity realmUser, @NotNull List<? extends ApiChat> apiChats);
+    void mergeUserChats(@Nonnull RealmEntity realmUser, @Nonnull List<? extends ApiChat> apiChats);
 
-    void checkOnlineUserContacts(@NotNull RealmEntity realmUser);
+    void checkOnlineUserContacts(@Nonnull RealmEntity realmUser);
 
-    void fetchUserIcons(@NotNull User user);
+    void fetchUserIcons(@Nonnull User user);
 }

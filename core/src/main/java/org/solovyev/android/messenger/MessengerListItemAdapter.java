@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Checkable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.users.User;
@@ -32,10 +32,10 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
     private ListItem selectedItem = null;
     private int selectedItemPosition = -1;
 
-    @NotNull
+    @Nonnull
     private final AdapterView.OnItemClickListener selectedItemListener = new SelectedItemListener();
 
-    public MessengerListItemAdapter(@NotNull Context context, @NotNull List<? extends LI> listItems) {
+    public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
         super(context, listItems);
     }
 
@@ -48,10 +48,10 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
     }
 
     @Override
-    public void onUserEvent(@NotNull User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
     }
 
-    protected void addListItem(@NotNull LI listItem) {
+    protected void addListItem(@Nonnull LI listItem) {
         this.add(listItem);
 
         final Comparator<? super LI> comparator = getComparator();
@@ -62,7 +62,7 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
         filter(filterText);
     }
 
-    protected void removeListItem(@NotNull LI listItem) {
+    protected void removeListItem(@Nonnull LI listItem) {
         this.remove(listItem);
 
         final Comparator<? super LI> comparator = getComparator();
@@ -73,7 +73,7 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
         filter(filterText);
     }
 
-    protected void addListItems(@NotNull List<LI> listItems) {
+    protected void addListItems(@Nonnull List<LI> listItems) {
         this.addAll(listItems);
 
         final Comparator<? super LI> comparator = getComparator();
@@ -101,10 +101,10 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
 
     public static final class ListItemComparator implements Comparator<ListItem> {
 
-        @NotNull
+        @Nonnull
         private static final ListItemComparator instance = new ListItemComparator();
 
-        @NotNull
+        @Nonnull
         public static ListItemComparator getInstance() {
             return instance;
         }
@@ -115,7 +115,7 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
         }
     }
 
-    @NotNull
+    @Nonnull
     public AdapterView.OnItemClickListener getSelectedItemListener() {
         return selectedItemListener;
     }

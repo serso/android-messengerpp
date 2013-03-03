@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.vk;
 
 import android.content.Context;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.longpoll.LongPollRealmConnection;
@@ -25,47 +25,47 @@ import org.solovyev.android.messenger.vk.users.VkRealmUserService;
 @Singleton
 public class VkRealmDef extends AbstractRealmDef {
 
-    @NotNull
+    @Nonnull
     private static final String REALM_ID = "vk";
 
     public VkRealmDef() {
         super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkRealmConfigurationFragment.class, VkRealmConfiguration.class);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context) {
+    public RealmConnection newRealmConnection(@Nonnull Realm realm, @Nonnull Context context) {
         return new LongPollRealmConnection(realm, context, new VkRealmLongPollService(realm));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Realm newRealm(@NotNull String realmId, @NotNull User user, @NotNull RealmConfiguration configuration) {
+    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration) {
         return new VkRealm(realmId, this, user, (VkRealmConfiguration) configuration);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration, @Nullable Realm editedRealm) {
+    public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmUserService newRealmUserService(@NotNull Realm realm) {
+    public RealmUserService newRealmUserService(@Nonnull Realm realm) {
         return new VkRealmUserService(realm);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmChatService newRealmChatService(@NotNull Realm realm) {
+    public RealmChatService newRealmChatService(@Nonnull Realm realm) {
         return new VkRealmChatService(realm);
     }
 /*
-    @NotNull
+    @Nonnull
     @Override
-    public RealmAuthService newRealmAuthService(@NotNull Realm realm) {
+    public RealmAuthService newRealmAuthService(@Nonnull Realm realm) {
         return new VkRealmAuthService(login, password);
     }*/
 }

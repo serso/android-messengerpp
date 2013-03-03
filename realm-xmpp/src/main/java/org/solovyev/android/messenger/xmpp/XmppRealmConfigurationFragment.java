@@ -6,8 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -16,32 +16,32 @@ import org.solovyev.common.text.Strings;
 public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragment<XmppRealm> {
 
     @Inject
-    @NotNull
+    @Nonnull
     private XmppRealmDef realmDef;
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
-    @NotNull
+    @Nonnull
     private EditText serverEditText;
 
-    @NotNull
+    @Nonnull
     private EditText loginEditText;
 
-    @NotNull
+    @Nonnull
     private EditText passwordEditText;
 
-    @NotNull
+    @Nonnull
     private EditText resourceEditText;
 
-    @NotNull
+    @Nonnull
     private Button backButton;
 
-    @NotNull
+    @Nonnull
     private Button saveButton;
 
-    @NotNull
+    @Nonnull
     private Button removeButton;
 
     public XmppRealmConfigurationFragment() {

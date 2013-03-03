@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.users;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
@@ -20,37 +20,37 @@ import java.util.*;
  */
 public class UserImpl extends JObject implements User {
 
-    @NotNull
+    @Nonnull
     private String login;
 
-    @NotNull
+    @Nonnull
     private RealmEntity realmEntity;
 
-    @NotNull
+    @Nonnull
     private UserSyncData userSyncData;
 
-    @NotNull
+    @Nonnull
     private List<AProperty> properties = new ArrayList<AProperty>();
 
-    @NotNull
+    @Nonnull
     private Map<String, String> propertiesMap = new HashMap<String, String>();
 
     private UserImpl() {
     }
 
-    @NotNull
-    public static User newInstance(@NotNull String reamId,
-                                   @NotNull String realmUserId,
-                                   @NotNull UserSyncData userSyncData,
-                                   @NotNull List<AProperty> properties) {
+    @Nonnull
+    public static User newInstance(@Nonnull String reamId,
+                                   @Nonnull String realmUserId,
+                                   @Nonnull UserSyncData userSyncData,
+                                   @Nonnull List<AProperty> properties) {
         final RealmEntity realmEntity = RealmEntityImpl.newInstance(reamId, realmUserId);
         return newInstance(realmEntity, userSyncData, properties);
     }
 
-    @NotNull
-    public static User newInstance(@NotNull RealmEntity realmEntity,
-                                   @NotNull UserSyncData userSyncData,
-                                   @NotNull List<AProperty> properties) {
+    @Nonnull
+    public static User newInstance(@Nonnull RealmEntity realmEntity,
+                                   @Nonnull UserSyncData userSyncData,
+                                   @Nonnull List<AProperty> properties) {
         final UserImpl result = new UserImpl();
 
         result.realmEntity = realmEntity;
@@ -65,22 +65,22 @@ public class UserImpl extends JObject implements User {
         return result;
     }
 
-    @NotNull
-    public static User newFakeInstance(@NotNull RealmEntity realmUser) {
+    @Nonnull
+    public static User newFakeInstance(@Nonnull RealmEntity realmUser) {
         return newInstance(realmUser, UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
     }
 
-    @NotNull
-    public static User newFakeInstance(@NotNull String userId) {
+    @Nonnull
+    public static User newFakeInstance(@Nonnull String userId) {
         return newFakeInstance(RealmEntityImpl.fromEntityId(userId));
     }
 
-    @NotNull
+    @Nonnull
     public String getLogin() {
         return login;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getDisplayName() {
         final StringBuilder result = new StringBuilder();
@@ -109,12 +109,12 @@ public class UserImpl extends JObject implements User {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public UserSyncData getUserSyncData() {
         return userSyncData;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public User updateChatsSyncDate() {
         final UserImpl clone = this.clone();
@@ -122,7 +122,7 @@ public class UserImpl extends JObject implements User {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public User updatePropertiesSyncDate() {
         final UserImpl clone = this.clone();
@@ -130,7 +130,7 @@ public class UserImpl extends JObject implements User {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public User updateContactsSyncDate() {
         final UserImpl clone = this.clone();
@@ -138,7 +138,7 @@ public class UserImpl extends JObject implements User {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public User updateUserIconsSyncDate() {
         final UserImpl clone = this.clone();
@@ -147,19 +147,19 @@ public class UserImpl extends JObject implements User {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public List<AProperty> getProperties() {
         return Collections.unmodifiableList(properties);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmEntity getRealmUser() {
         return this.realmEntity;
     }
 
     @Override
-    public String getPropertyValueByName(@NotNull String name) {
+    public String getPropertyValueByName(@Nonnull String name) {
         return this.propertiesMap.get(name);
     }
 
@@ -188,7 +188,7 @@ public class UserImpl extends JObject implements User {
                 '}';
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserImpl clone() {
         final UserImpl clone = (UserImpl) super.clone();
@@ -198,7 +198,7 @@ public class UserImpl extends JObject implements User {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public User cloneWithNewStatus(boolean online) {
         final UserImpl clone = clone();

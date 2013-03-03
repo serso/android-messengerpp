@@ -1,19 +1,19 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface RealmDao {
 
-    void insertRealm(@NotNull Realm realm);
+    void insertRealm(@Nonnull Realm realm);
 
-    void deleteRealm(@NotNull String realmId);
+    void deleteRealm(@Nonnull String realmId);
 
-    @NotNull
+    @Nonnull
     Collection<Realm> loadRealms();
 
     void deleteAllRealms();
 
-    void updateRealm(@NotNull Realm realm);
+    void updateRealm(@Nonnull Realm realm);
 }

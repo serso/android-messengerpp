@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.api;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.async.CommonAsyncTask;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
 
@@ -12,16 +12,16 @@ import org.solovyev.android.messenger.MessengerCommonActivityImpl;
  */
 public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsyncTask<Param, Progress, R> {
 
-    protected MessengerAsyncTask(@NotNull Context context) {
+    protected MessengerAsyncTask(@Nonnull Context context) {
         super(context);
     }
 
-    protected MessengerAsyncTask(@NotNull Context context, boolean mask) {
+    protected MessengerAsyncTask(@Nonnull Context context, boolean mask) {
         super(context, mask);
     }
 
     @Override
-    protected void onFailurePostExecute(@NotNull Exception e) {
+    protected void onFailurePostExecute(@Nonnull Exception e) {
         final Context context = getContext();
         if (context != null) {
             MessengerCommonActivityImpl.handleExceptionStatic(context, e);

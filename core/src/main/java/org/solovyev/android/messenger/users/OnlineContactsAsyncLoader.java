@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -21,19 +21,19 @@ import java.util.List;
  */
 public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListItem> {
 
-    @NotNull
+    @Nonnull
     private final RealmService realmService;
 
-    OnlineContactsAsyncLoader(@NotNull Context context,
-                              @NotNull ListItemArrayAdapter<ContactListItem> adapter,
+    OnlineContactsAsyncLoader(@Nonnull Context context,
+                              @Nonnull ListItemArrayAdapter<ContactListItem> adapter,
                               @Nullable Runnable onPostExecute,
-                              @NotNull RealmService realmService) {
+                              @Nonnull RealmService realmService) {
         super(context, adapter, onPostExecute);
         this.realmService = realmService;
     }
 
-    @NotNull
-    protected List<UserContact> getElements(@NotNull Context context) {
+    @Nonnull
+    protected List<UserContact> getElements(@Nonnull Context context) {
         final List<UserContact> result = new ArrayList<UserContact>();
 
         for (Realm realm : realmService.getRealms()) {
@@ -51,9 +51,9 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UserContact, 
         return MessengerListItemAdapter.ListItemComparator.getInstance();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected ContactListItem createListItem(@NotNull UserContact userContact) {
+    protected ContactListItem createListItem(@Nonnull UserContact userContact) {
         return new ContactListItem(userContact.getUser(), userContact.getContact());
     }
 }

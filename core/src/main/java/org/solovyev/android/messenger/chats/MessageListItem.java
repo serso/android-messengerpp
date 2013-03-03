@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
@@ -29,30 +29,30 @@ import java.util.Arrays;
  */
 public class MessageListItem implements ListItem, ChatEventListener {
 
-    @NotNull
+    @Nonnull
     private static final String LEFT_VIEW_TAG = "left";
 
-    @NotNull
+    @Nonnull
     private static final String RIGHT_VIEW_TAG = "right";
 
-    @NotNull
+    @Nonnull
     private User user;
 
-    @NotNull
+    @Nonnull
     private Chat chat;
 
-    @NotNull
+    @Nonnull
     private ChatMessage message;
 
-    @NotNull
+    @Nonnull
     private final String leftTag;
 
-    @NotNull
+    @Nonnull
     private final String rightTag;
 
     // todo serso: add listener interfaces
 
-    public MessageListItem(@NotNull User user, @NotNull Chat chat, @NotNull ChatMessage message) {
+    public MessageListItem(@Nonnull User user, @Nonnull Chat chat, @Nonnull ChatMessage message) {
         this.user = user;
         this.chat = chat;
         this.message = message;
@@ -70,9 +70,9 @@ public class MessageListItem implements ListItem, ChatEventListener {
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View updateView(@NotNull Context context, @NotNull View view) {
+    public View updateView(@Nonnull Context context, @Nonnull View view) {
 
         final String viewTag = view.getTag() == null ? null : String.valueOf(view.getTag());
 
@@ -103,9 +103,9 @@ public class MessageListItem implements ListItem, ChatEventListener {
         return build(context);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View build(@NotNull Context context) {
+    public View build(@Nonnull Context context) {
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -124,17 +124,17 @@ public class MessageListItem implements ListItem, ChatEventListener {
         return root;
     }
 
-    @NotNull
+    @Nonnull
     private String getLeftTag() {
         return leftTag;
     }
 
-    @NotNull
+    @Nonnull
     private String getRightTag() {
         return rightTag;
     }
 
-    private boolean isUserMessagesToTheRight(@NotNull SharedPreferences preferences) {
+    private boolean isUserMessagesToTheRight(@Nonnull SharedPreferences preferences) {
         return MessengerApplication.Preferences.Gui.Chat.userMessagesPosition.getPreference(preferences) == MessengerApplication.Preferences.Gui.Chat.UserIconPosition.right;
     }
 
@@ -142,7 +142,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
         return user.equals(message.getAuthor());
     }
 
-    private void fillView(@NotNull Context context, @NotNull View root, @NotNull SharedPreferences preferences, boolean userMessage) {
+    private void fillView(@Nonnull Context context, @Nonnull View root, @Nonnull SharedPreferences preferences, boolean userMessage) {
         final TextView messageText = (TextView) root.findViewById(R.id.message_body);
         messageText.setText(Html.fromHtml(message.getBody()));
 
@@ -161,7 +161,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
         }
     }
 
-    private void fillMessageIcon(@NotNull Context context, @NotNull ImageView messageIcon, @NotNull Boolean show) {
+    private void fillMessageIcon(@Nonnull Context context, @Nonnull ImageView messageIcon, @Nonnull Boolean show) {
         if (show) {
             messageIcon.setVisibility(View.VISIBLE);
             MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(messageIcon, message, chat, user, context);
@@ -189,7 +189,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
     }
 
     @Override
-    public void onChatEvent(@NotNull Chat eventChat, @NotNull ChatEventType chatEventType, @Nullable Object data) {
+    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
         if (ChatEventType.message_changed.isEvent(chatEventType, eventChat, chat)) {
             if (message.equals(data)) {
                 message = (ChatMessage) data;
@@ -199,19 +199,19 @@ public class MessageListItem implements ListItem, ChatEventListener {
 
     public static final class Comparator implements java.util.Comparator<MessageListItem> {
 
-        @NotNull
+        @Nonnull
         private static final Comparator instance = new Comparator();
 
         private Comparator() {
         }
 
-        @NotNull
+        @Nonnull
         public static Comparator getInstance() {
             return instance;
         }
 
         @Override
-        public int compare(@NotNull MessageListItem lhs, @NotNull MessageListItem rhs) {
+        public int compare(@Nonnull MessageListItem lhs, @Nonnull MessageListItem rhs) {
                return lhs.message.getSendDate().compareTo(rhs.message.getSendDate());
         }
     }
@@ -220,7 +220,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
 
         copy(R.string.c_copy) {
             @Override
-            public void onClick(@NotNull ListItemOnClickData<MessageListItem> data, @NotNull Context context) {
+            public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
                 final android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
 
                 final MessageListItem messageListItem = data.getDataObject();
@@ -236,9 +236,9 @@ public class MessageListItem implements ListItem, ChatEventListener {
             this.captionResId = captionResId;
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        public String getCaption(@NotNull Context context) {
+        public String getCaption(@Nonnull Context context) {
             return context.getString(captionResId);
         }
     }

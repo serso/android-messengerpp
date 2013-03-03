@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -12,19 +12,19 @@ import java.util.List;
  */
 public interface RealmChatService {
 
-    @NotNull
-    List<ChatMessage> getChatMessages(@NotNull String realmUserId, @NotNull Context context);
+    @Nonnull
+    List<ChatMessage> getChatMessages(@Nonnull String realmUserId, @Nonnull Context context);
 
-    @NotNull
-    List<ChatMessage> getNewerChatMessagesForChat(@NotNull String realmChatId, @NotNull String realmUserId, @NotNull Context context);
+    @Nonnull
+    List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Context context);
 
-    @NotNull
-    List<ChatMessage> getOlderChatMessagesForChat(@NotNull String realmChatId, @NotNull String realmUserId, @NotNull Integer offset, @NotNull Context context);
+    @Nonnull
+    List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset, @Nonnull Context context);
 
-    @NotNull
-    List<ApiChat> getUserChats(@NotNull String realmUserId, @NotNull Context context);
+    @Nonnull
+    List<ApiChat> getUserChats(@Nonnull String realmUserId, @Nonnull Context context);
 
     // return: message id
-    @NotNull
-    String sendChatMessage(@NotNull Chat chat, @NotNull ChatMessage chatMessage, @NotNull Context context);
+    @Nonnull
+    String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage, @Nonnull Context context);
 }

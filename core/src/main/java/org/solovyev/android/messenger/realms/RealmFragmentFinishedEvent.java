@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
 * User: serso
@@ -9,17 +9,17 @@ import org.jetbrains.annotations.NotNull;
 */
 public final class RealmFragmentFinishedEvent {
 
-    @NotNull
+    @Nonnull
     private Realm realm;
 
     private boolean removed = false;
 
-    public RealmFragmentFinishedEvent(@NotNull Realm realm, boolean removed) {
+    public RealmFragmentFinishedEvent(@Nonnull Realm realm, boolean removed) {
         this.realm = realm;
         this.removed = removed;
     }
 
-    @NotNull
+    @Nonnull
     public Realm getRealm() {
         return realm;
     }

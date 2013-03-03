@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -20,16 +20,16 @@ import java.util.List;
  */
 public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTask.Input, Void, List<ChatMessage>> {
 
-    @NotNull
+    @Nonnull
     private final Chat chat;
 
-    public SendMessageAsyncTask(@NotNull Context context, @NotNull Chat chat) {
+    public SendMessageAsyncTask(@Nonnull Context context, @Nonnull Chat chat) {
         super(context);
         this.chat = chat;
     }
 
     @Override
-    protected List<ChatMessage> doWork(@NotNull List<Input> inputs) {
+    protected List<ChatMessage> doWork(@Nonnull List<Input> inputs) {
         final List<ChatMessage> result = new ArrayList<ChatMessage>(inputs.size());
 
         for (Input input : inputs) {
@@ -51,37 +51,37 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
         }
     }
 
-    @NotNull
+    @Nonnull
     private static ChatService getChatService() {
         return MessengerApplication.getServiceLocator().getChatService();
     }
 
-    @NotNull
+    @Nonnull
     private static UserService getUserService() {
         return MessengerApplication.getServiceLocator().getUserService();
     }
 
     public static class Input {
 
-        @NotNull
+        @Nonnull
         private final User author;
 
-        @NotNull
+        @Nonnull
         private String message;
 
         @Nullable
         private String title;
 
-        @NotNull
+        @Nonnull
         private final List<Object> attachments = new ArrayList<Object>();
 
-        @NotNull
+        @Nonnull
         private final List<LiteChatMessage> fwdMessages = new ArrayList<LiteChatMessage>();
 
-        @NotNull
+        @Nonnull
         private final Chat chat;
 
-        public Input(@NotNull User author, @NotNull String message, @NotNull Chat chat) {
+        public Input(@Nonnull User author, @Nonnull String message, @Nonnull Chat chat) {
             this.author = author;
             this.message = message;
             this.chat = chat;
@@ -95,12 +95,12 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
             return attachments.add(attachment);
         }
 
-        public boolean addFwdMessage(@NotNull LiteChatMessage fwdMessage) {
+        public boolean addFwdMessage(@Nonnull LiteChatMessage fwdMessage) {
             return fwdMessages.add(fwdMessage);
         }
 
-        @NotNull
-        public ChatMessage sendChatMessage(@NotNull Context context) {
+        @Nonnull
+        public ChatMessage sendChatMessage(@Nonnull Context context) {
             final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("");
             liteChatMessage.setAuthor(author);
             liteChatMessage.setBody(message);

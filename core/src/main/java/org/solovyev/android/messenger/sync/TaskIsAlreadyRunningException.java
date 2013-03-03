@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.widget.Toast;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
 
 /**
@@ -12,19 +12,19 @@ import org.solovyev.android.messenger.core.R;
  */
 public class TaskIsAlreadyRunningException extends Exception {
 
-    @NotNull
+    @Nonnull
     private SyncTask syncTask;
 
-    public TaskIsAlreadyRunningException(@NotNull SyncTask syncTask) {
+    public TaskIsAlreadyRunningException(@Nonnull SyncTask syncTask) {
         this.syncTask = syncTask;
     }
 
-    @NotNull
+    @Nonnull
     public SyncTask getSyncTask() {
         return syncTask;
     }
 
-    public void showMessage(@NotNull Context c) {
+    public void showMessage(@Nonnull Context c) {
         Toast.makeText(c, R.string.c_task_is_already_running, Toast.LENGTH_SHORT).show();
     }
 }

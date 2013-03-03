@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
@@ -30,33 +30,33 @@ import java.util.Map;
 @Root
 public class AuthServiceImpl implements AuthService {
 
-    @NotNull
+    @Nonnull
     private static final String AUTH_XML = "auth_xml";
 
     @ElementMap(keyType = String.class, valueType = AuthDataImpl.class)
-    @NotNull
+    @Nonnull
     private Map<String, AuthData> authDataMap = new HashMap<String, AuthData>();
 
-    @NotNull
+    @Nonnull
     private final Object lock = new Object();
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private UserService userService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private Application context;
 
-    @NotNull
+    @Nonnull
     @Override
-    public AuthData loginUser(@NotNull String realm,
-                              @NotNull String login,
-                              @NotNull String password,
+    public AuthData loginUser(@Nonnull String realm,
+                              @Nonnull String login,
+                              @Nonnull String password,
                               @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
 
         final RealmAuthService realmAuthService = getRealmById(realm).getRealmAuthService();
@@ -81,21 +81,21 @@ public class AuthServiceImpl implements AuthService {
         return result;
     }
 
-    @NotNull
-    private Realm getRealmById(@NotNull String realm) {
+    @Nonnull
+    private Realm getRealmById(@Nonnull String realm) {
         return realmService.getRealmById(realm);
     }
 
 
-    @NotNull
+    @Nonnull
     @Override
-    public User getUser(@NotNull String realm) throws UserIsNotLoggedInException {
+    public User getUser(@Nonnull String realm) throws UserIsNotLoggedInException {
         return getUserById(getAuthData(realm));
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public AuthData getAuthData(@NotNull String realm) throws UserIsNotLoggedInException {
+    public AuthData getAuthData(@Nonnull String realm) throws UserIsNotLoggedInException {
         final AuthData authData;
 
         synchronized (lock) {
@@ -109,22 +109,22 @@ public class AuthServiceImpl implements AuthService {
         return authData;
     }
 
-    @NotNull
-    private User getUserById(@NotNull AuthData authData) {
+    @Nonnull
+    private User getUserById(@Nonnull AuthData authData) {
         // todo serso: continue
         throw new UnsupportedOperationException();
         //return this.userService.getUserById(RealmEntityImpl.fromEntityId(authData.getRealmUserId()));
     }
 
     @Override
-    public boolean isUserLoggedIn(@NotNull String realm) {
+    public boolean isUserLoggedIn(@Nonnull String realm) {
         synchronized (lock) {
             return authDataMap.get(realm) != null;
         }
     }
 
     @Override
-    public void logoutUser(@NotNull String realm) {
+    public void logoutUser(@Nonnull String realm) {
         synchronized (lock) {
             if (isUserLoggedIn(realm)) {
                 final RealmAuthService realmAuthService = getRealmById(realm).getRealmAuthService();

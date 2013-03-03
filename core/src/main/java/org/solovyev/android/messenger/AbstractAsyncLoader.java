@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -18,14 +18,14 @@ import java.util.List;
  */
 public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends MessengerAsyncTask<Void, Void, List<R>> {
 
-    @NotNull
+    @Nonnull
     private ListItemArrayAdapter<LI> adapter;
 
     @Nullable
     private Runnable onPostExecute;
 
-    public AbstractAsyncLoader(@NotNull Context context,
-                               @NotNull ListItemArrayAdapter<LI> adapter,
+    public AbstractAsyncLoader(@Nonnull Context context,
+                               @Nonnull ListItemArrayAdapter<LI> adapter,
                                @Nullable Runnable onPostExecute) {
         super(context);
         this.adapter = adapter;
@@ -34,7 +34,7 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 
 
     @Override
-    protected List<R> doWork(@NotNull List<Void> voids) {
+    protected List<R> doWork(@Nonnull List<Void> voids) {
         final Context context = getContext();
         if (context != null) {
             return getElements(context);
@@ -43,8 +43,8 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
         return Collections.emptyList();
     }
 
-    @NotNull
-    protected abstract List<R> getElements(@NotNull Context context);
+    @Nonnull
+    protected abstract List<R> getElements(@Nonnull Context context);
 
     @Override
     protected void onSuccessPostExecute(@Nullable final List<R> elements) {
@@ -73,6 +73,6 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
     @Nullable
     protected abstract Comparator<? super LI> getComparator();
 
-    @NotNull
-    protected abstract LI createListItem(@NotNull R element);
+    @Nonnull
+    protected abstract LI createListItem(@Nonnull R element);
 }

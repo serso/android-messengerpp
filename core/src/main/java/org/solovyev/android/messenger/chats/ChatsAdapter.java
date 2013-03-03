@@ -5,8 +5,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.users.User;
@@ -24,12 +24,12 @@ import java.util.List;
  */
 public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> implements ChatEventListener, UserEventListener {
 
-    public ChatsAdapter(@NotNull Context context) {
+    public ChatsAdapter(@Nonnull Context context) {
         super(context, new ArrayList<ChatListItem>());
     }
 
     @Override
-    public void onUserEvent(@NotNull final User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void onUserEvent(@Nonnull final User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
         super.onUserEvent(eventUser, userEventType, data);
 
         if (userEventType == UserEventType.chat_removed) {
@@ -65,22 +65,22 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> impleme
         throw new UnsupportedOperationException();
     }
 
-    protected void removeListItem(@NotNull User user, @NotNull String chatId) {
+    protected void removeListItem(@Nonnull User user, @Nonnull String chatId) {
         // todo serso: not good solution => better way is to load full user object for chat (but it can take long time)
         final Chat chat = ChatImpl.newFakeChat(chatId);
         removeListItem(user, chat);
     }
 
-    protected void removeListItem(@NotNull User user, @NotNull Chat chat) {
+    protected void removeListItem(@Nonnull User user, @Nonnull Chat chat) {
         remove(createListItem(user, chat));
     }
 
-    protected void addListItem(@NotNull User user, @NotNull Chat chat) {
+    protected void addListItem(@Nonnull User user, @Nonnull Chat chat) {
         addListItem(createListItem(user, chat));
     }
 
-    @NotNull
-    private ChatListItem createListItem(@NotNull User user, @NotNull Chat chat) {
+    @Nonnull
+    private ChatListItem createListItem(@Nonnull User user, @Nonnull Chat chat) {
         return new ChatListItem(user, chat, getContext());
     }
 
@@ -89,13 +89,13 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> impleme
         return ChatListItem.Comparator.getInstance();
     }
 
-    @NotNull
+    @Nonnull
     private ChatService getChatService() {
         return MessengerApplication.getServiceLocator().getChatService();
     }
 
     @Override
-    public void onChatEvent(@NotNull Chat eventChat, @NotNull ChatEventType chatEventType, @Nullable Object data) {
+    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
 
         if (chatEventType == ChatEventType.changed || chatEventType == ChatEventType.last_message_changed) {
             final ChatListItem chatListItem = findInAllElements(getUser(), eventChat);
@@ -106,7 +106,7 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> impleme
     }
 
     @Nullable
-    protected ChatListItem findInAllElements(@NotNull User user, @NotNull Chat chat) {
+    protected ChatListItem findInAllElements(@Nonnull User user, @Nonnull Chat chat) {
         return Iterables.find(getAllElements(), Predicates.<ChatListItem>equalTo(createListItem(user, chat)), null);
     }
 

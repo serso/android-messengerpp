@@ -10,8 +10,8 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
@@ -45,23 +45,23 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     **********************************************************************
     */
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private ChatService chatService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private UserDao userDao;
 
     @Inject
-    @NotNull
+    @Nonnull
     private ImageLoader imageLoader;
 
     @Inject
-    @NotNull
+    @Nonnull
     private Application context;
 
     /*
@@ -72,22 +72,22 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     private final Object lock = new Object();
 
-    @NotNull
+    @Nonnull
     private final UserEventListeners listeners = new ListUserEventListeners();
 
     // key: realm user, value: list of user contacts
-    @NotNull
+    @Nonnull
     private final Map<RealmEntity, List<User>> userContactsCache = new HashMap<RealmEntity, List<User>>();
 
     // key: realm user, value: list of user chats
-    @NotNull
+    @Nonnull
     private final Map<RealmEntity, List<Chat>> userChatsCache = new HashMap<RealmEntity, List<Chat>>();
 
     // key: realm user, value: user object
-    @NotNull
+    @Nonnull
     private final Map<RealmEntity, User> usersCache = new HashMap<RealmEntity, User>();
 
     public DefaultUserService() {
@@ -99,15 +99,15 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         chatService.addChatEventListener(this);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public User getUserById(@NotNull RealmEntity realmUser) {
+    public User getUserById(@Nonnull RealmEntity realmUser) {
         return getUserById(realmUser, true);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public User getUserById(@NotNull RealmEntity realmUser, boolean tryFindInRealm) {
+    public User getUserById(@Nonnull RealmEntity realmUser, boolean tryFindInRealm) {
         boolean saved = true;
 
         User result;
@@ -146,12 +146,12 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         return result;
     }
 
-    @NotNull
-    private Realm getRealmByUser(@NotNull RealmEntity realmUser) {
+    @Nonnull
+    private Realm getRealmByUser(@Nonnull RealmEntity realmUser) {
         return realmService.getRealmById(realmUser.getRealmId());
     }
 
-    private void insertUser(@NotNull User user) {
+    private void insertUser(@Nonnull User user) {
         boolean inserted = false;
 
         synchronized (lock) {
@@ -167,9 +167,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<User> getUserContacts(@NotNull RealmEntity realmUser) {
+    public List<User> getUserContacts(@Nonnull RealmEntity realmUser) {
         List<User> result;
 
         synchronized (userContactsCache) {
@@ -186,9 +186,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<Chat> getUserChats(@NotNull RealmEntity realmUser) {
+    public List<Chat> getUserChats(@Nonnull RealmEntity realmUser) {
         List<Chat> result;
 
         synchronized (userChatsCache) {
@@ -205,9 +205,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         return new ArrayList<Chat>(result);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Chat getPrivateChat(@NotNull RealmEntity realmUser, @NotNull final RealmEntity secondRealmUser) {
+    public Chat getPrivateChat(@Nonnull RealmEntity realmUser, @Nonnull final RealmEntity secondRealmUser) {
         final RealmEntity realmChat = getChatService().createPrivateChatId(realmUser, secondRealmUser);
 
         Chat result = getChatService().getChatById(realmChat);
@@ -218,9 +218,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<User> getOnlineUserContacts(@NotNull RealmEntity realmUser) {
+    public List<User> getOnlineUserContacts(@Nonnull RealmEntity realmUser) {
         return Lists.newArrayList(Iterables.filter(getUserContacts(realmUser), new Predicate<User>() {
             @Override
             public boolean apply(@javax.annotation.Nullable User contact) {
@@ -230,7 +230,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void updateUser(@NotNull User user) {
+    public void updateUser(@Nonnull User user) {
         synchronized (lock) {
             getUserDao().updateUser(user);
         }
@@ -239,7 +239,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void removeUsersInRealm(@NotNull final String realmId) {
+    public void removeUsersInRealm(@Nonnull final String realmId) {
         synchronized (lock) {
             Iterators.removeIf(this.userChatsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
             Iterators.removeIf(this.userContactsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
@@ -258,7 +258,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     */
 
     @Override
-    public void syncUserProperties(@NotNull RealmEntity realmUser) {
+    public void syncUserProperties(@Nonnull RealmEntity realmUser) {
         final User user = getRealmByUser(realmUser).getRealmUserService().getUserById(realmUser.getRealmEntityId());
         if (user != null) {
             synchronized (lock) {
@@ -269,8 +269,8 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    @NotNull
-    public List<User> syncUserContacts(@NotNull RealmEntity realmUser) {
+    @Nonnull
+    public List<User> syncUserContacts(@Nonnull RealmEntity realmUser) {
         final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().getUserContacts(realmUser.getRealmEntityId());
         synchronized (userContactsCache) {
             userContactsCache.put(realmUser, contacts);
@@ -311,9 +311,9 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         return java.util.Collections.unmodifiableList(contacts);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<Chat> syncUserChats(@NotNull RealmEntity realmUser) {
+    public List<Chat> syncUserChats(@Nonnull RealmEntity realmUser) {
         final List<ApiChat> apiChats = getRealmByUser(realmUser).getRealmChatService().getUserChats(realmUser.getRealmEntityId(), context);
 
         final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
@@ -334,7 +334,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void mergeUserChats(@NotNull RealmEntity realmUser, @NotNull List<? extends ApiChat> apiChats) {
+    public void mergeUserChats(@Nonnull RealmEntity realmUser, @Nonnull List<? extends ApiChat> apiChats) {
         User user = this.getUserById(realmUser);
 
         final MergeDaoResult<ApiChat, String> result;
@@ -387,13 +387,13 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         getChatService().fireChatEvents(chatEvents);
     }
 
-    @NotNull
+    @Nonnull
     private ChatService getChatService() {
         return this.chatService;
     }
 
     @Override
-    public void checkOnlineUserContacts(@NotNull RealmEntity realmUser) {
+    public void checkOnlineUserContacts(@Nonnull RealmEntity realmUser) {
         final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().checkOnlineUsers(getUserContacts(realmUser));
 
         final User user = getUserById(realmUser);
@@ -409,7 +409,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void fetchUserIcons(@NotNull User user) {
+    public void fetchUserIcons(@Nonnull User user) {
         this.fetchUserIcon(user);
         this.fetchContactsIcons(user);
 
@@ -419,7 +419,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void setUserIcon(@NotNull User user, @NotNull ImageView imageView) {
+    public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
         final Drawable defaultUserIcon = getDefaultUserIcon();
 
         final String userIconUri = getUserIconUri(user);
@@ -431,13 +431,13 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Drawable getDefaultUserIcon() {
         return context.getResources().getDrawable(R.drawable.empty_icon);
     }
 
     @Override
-    public void setUserIcon(@NotNull User user, @NotNull OnImageLoadedListener imageLoadedListener) {
+    public void setUserIcon(@Nonnull User user, @Nonnull OnImageLoadedListener imageLoadedListener) {
         final String userIconUri = getUserIconUri(user);
         if (!Strings.isEmpty(userIconUri)) {
             this.imageLoader.loadImage(userIconUri, imageLoadedListener);
@@ -447,7 +447,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void setUserPhoto(@NotNull ImageView imageView, @NotNull User user) {
+    public void setUserPhoto(@Nonnull ImageView imageView, @Nonnull User user) {
         final Drawable defaultUserIcon = getDefaultUserIcon();
 
         final String userPhotoUri = getUserPhotoUri(user);
@@ -458,7 +458,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
     }
 
-    public void fetchUserIcon(@NotNull User user) {
+    public void fetchUserIcon(@Nonnull User user) {
         final String userIconUri = getUserIconUri(user);
         if (!Strings.isEmpty(userIconUri)) {
             assert userIconUri != null;
@@ -466,19 +466,19 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
     }
 
-    public void fetchContactsIcons(@NotNull User user) {
+    public void fetchContactsIcons(@Nonnull User user) {
         for (User contact : getUserContacts(user.getRealmUser())) {
             fetchUserIcon(contact);
         }
     }
 
     @Nullable
-    private String getUserIconUri(@NotNull User user) {
+    private String getUserIconUri(@Nonnull User user) {
         return user.getPropertyValueByName("photo");
     }
 
     @Nullable
-    private String getUserPhotoUri(@NotNull User user) {
+    private String getUserPhotoUri(@Nonnull User user) {
         String result = user.getPropertyValueByName("photoRec");
         if ( result == null ) {
             result = user.getPropertyValueByName("photoBig");
@@ -486,7 +486,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         return result;
     }
 
-    @NotNull
+    @Nonnull
     private UserDao getUserDao() {
         return userDao;
     }
@@ -500,27 +500,27 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     */
 
     @Override
-    public boolean addListener(@NotNull UserEventListener userEventListener) {
+    public boolean addListener(@Nonnull UserEventListener userEventListener) {
         return listeners.addListener(userEventListener);
     }
 
     @Override
-    public boolean removeListener(@NotNull UserEventListener userEventListener) {
+    public boolean removeListener(@Nonnull UserEventListener userEventListener) {
         return listeners.removeListener(userEventListener);
     }
 
     @Override
-    public void fireUserEvent(@NotNull User user, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void fireUserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, @Nullable Object data) {
         listeners.fireUserEvent(user, userEventType, data);
     }
 
     @Override
-    public void fireUserEvents(@NotNull List<UserEvent> userEvents) {
+    public void fireUserEvents(@Nonnull List<UserEvent> userEvents) {
         listeners.fireUserEvents(userEvents);
     }
 
     @Override
-    public void onUserEvent(@NotNull User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
 
         synchronized (userContactsCache) {
 
@@ -619,7 +619,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     @Override
-    public void onChatEvent(@NotNull Chat eventChat, @NotNull ChatEventType chatEventType, @Nullable Object data) {
+    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
         synchronized (userChatsCache) {
 
             if (chatEventType == ChatEventType.changed) {

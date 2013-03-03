@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
@@ -32,18 +32,18 @@ import java.util.List;
 public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
     @Inject
-    @NotNull
+    @Nonnull
     private UserService userService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmDef realm;
 
-    @NotNull
+    @Nonnull
     private static final String CONTACT_IDS = "contact_ids";
 
     private List<User> contacts;
@@ -52,11 +52,11 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
     public MessengerContactsInfoFragment() {
     }
 
-    public MessengerContactsInfoFragment(@NotNull Iterable<String> contactIds) {
+    public MessengerContactsInfoFragment(@Nonnull Iterable<String> contactIds) {
         this.contactIds = contactIds;
     }
 
-    public MessengerContactsInfoFragment(@NotNull List<User> contacts) {
+    public MessengerContactsInfoFragment(@Nonnull List<User> contacts) {
         this.contacts = contacts;
     }
 

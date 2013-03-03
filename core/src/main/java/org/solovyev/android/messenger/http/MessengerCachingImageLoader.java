@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.http;
 import android.app.Application;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.http.CachingImageLoader;
 
 /**
@@ -15,7 +15,7 @@ import org.solovyev.android.http.CachingImageLoader;
 public class MessengerCachingImageLoader extends CachingImageLoader {
 
     @Inject
-    public MessengerCachingImageLoader(@NotNull Application context) {
+    public MessengerCachingImageLoader(@Nonnull Application context) {
         super(context, "messenger");
     }
 }

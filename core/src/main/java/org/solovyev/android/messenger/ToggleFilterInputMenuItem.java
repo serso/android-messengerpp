@@ -2,7 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import com.actionbarsherlock.view.MenuItem;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.messenger.core.R;
 
@@ -15,21 +15,21 @@ import java.lang.ref.WeakReference;
  */
 public class ToggleFilterInputMenuItem implements IdentifiableMenuItem<MenuItem> {
 
-    @NotNull
+    @Nonnull
     private final WeakReference<AbstractMessengerListFragment<?, ?>> fragmentRef;
 
-    public ToggleFilterInputMenuItem(@NotNull AbstractMessengerListFragment<?, ?> fragment) {
+    public ToggleFilterInputMenuItem(@Nonnull AbstractMessengerListFragment<?, ?> fragment) {
         this.fragmentRef = new WeakReference<AbstractMessengerListFragment<?, ?>>(fragment);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Integer getItemId() {
         return R.id.toggle_filter_box;
     }
 
     @Override
-    public void onClick(@NotNull MenuItem data, @NotNull Context context) {
+    public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
         final AbstractMessengerListFragment<?, ?> fragment =  fragmentRef.get();
         if ( fragment != null ) {
             fragment.toggleFilterBox();

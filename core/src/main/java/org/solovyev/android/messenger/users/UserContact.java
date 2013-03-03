@@ -1,31 +1,31 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 final class UserContact {
 
-    @NotNull
+    @Nonnull
     private final User user;
 
-    @NotNull
+    @Nonnull
     private final User contact;
 
-    UserContact(@NotNull User user, @NotNull User contact) {
+    UserContact(@Nonnull User user, @Nonnull User contact) {
         this.user = user;
         this.contact = contact;
     }
 
-    @NotNull
-    static UserContact newInstance(@NotNull User user, @NotNull User contact) {
+    @Nonnull
+    static UserContact newInstance(@Nonnull User user, @Nonnull User contact) {
         return new UserContact(user, contact);
     }
 
-    @NotNull
+    @Nonnull
     public User getUser() {
         return user;
     }
 
-    @NotNull
+    @Nonnull
     public User getContact() {
         return contact;
     }

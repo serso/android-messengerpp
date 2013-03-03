@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.security;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
 import org.solovyev.android.messenger.vk.VkConfigurationImpl;
@@ -12,10 +12,10 @@ import org.solovyev.android.messenger.vk.VkConfigurationImpl;
  */
 public class VkAuthenticationHttpTransactionTest {
 
-    @NotNull
+    @Nonnull
     private static final String CLIENT_ID = "2970921";
 
-    @NotNull
+    @Nonnull
     private static final String CLIENT_SECRET = "Scm7M1vxOdDjpeVj81jw";
 
     @Before

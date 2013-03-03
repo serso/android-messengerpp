@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -24,7 +24,7 @@ import roboguice.event.EventManager;
 public class MessengerRealmFragment extends RoboSherlockFragment {
 
 
-    @NotNull
+    @Nonnull
     public static final String EXTRA_REALM_ID = "realm_id";
 
     /*
@@ -36,15 +36,15 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
     @Inject
-    @NotNull
+    @Nonnull
     private EventManager eventManager;
 
     /*
@@ -55,7 +55,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     private Realm realm;
 
     @Override
@@ -89,7 +89,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     }
 
     @Override
-    public void onViewCreated(@NotNull View root, Bundle savedInstanceState) {
+    public void onViewCreated(@Nonnull View root, Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
 
         final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
@@ -119,7 +119,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
         eventManager.fire(new EditRealmEvent(realm));
     }
 
-    @NotNull
+    @Nonnull
     public Realm getRealm() {
         return realm;
     }
@@ -131,14 +131,14 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
     public static class EditRealmEvent {
 
-        @NotNull
+        @Nonnull
         private Realm realm;
 
-        private EditRealmEvent(@NotNull Realm realm) {
+        private EditRealmEvent(@Nonnull Realm realm) {
             this.realm = realm;
         }
 
-        @NotNull
+        @Nonnull
         public Realm getRealm() {
             return realm;
         }

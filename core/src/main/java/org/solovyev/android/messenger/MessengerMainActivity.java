@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEvent;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
@@ -35,7 +35,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
         super(R.layout.msg_main);
     }
 
-    public static void startActivity(@NotNull Activity activity) {
+    public static void startActivity(@Nonnull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerMainActivity.class);
         activity.startActivity(result);
@@ -57,7 +57,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
         }
     }
 
-    private void createPaneFragment(@NotNull String tag, int parentViewId) {
+    private void createPaneFragment(@Nonnull String tag, int parentViewId) {
         final FragmentManager fm = getSupportFragmentManager();
 
         Fragment messagesFragment = fm.findFragmentByTag(tag);
@@ -86,14 +86,14 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
         }
     }
 
-    private void handleChatGuiEvent(@NotNull ChatGuiEvent event) {
+    private void handleChatGuiEvent(@Nonnull ChatGuiEvent event) {
         final Chat chat = event.getChat();
         final ChatGuiEventType type = event.getType();
 
         if (type == ChatGuiEventType.chat_clicked) {
             if (isDualPane()) {
                 replaceFragment(SECOND_FRAGMENT_TAG, R.id.content_second_pane, new Builder<Fragment>() {
-                    @NotNull
+                    @Nonnull
                     @Override
                     public Fragment build() {
                         return new MessengerMessagesFragment(chat);
@@ -103,7 +103,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                 if ( isTriplePane() ) {
                     if (chat.isPrivate()) {
                         replaceFragment(THIRD_FRAGMENT_TAG, R.id.content_third_pane, new Builder<Fragment>() {
-                            @NotNull
+                            @Nonnull
                             @Override
                             public Fragment build() {
                                 return new MessengerContactFragment(chat.getSecondUser());
@@ -111,7 +111,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                         });
                     } else {
                         replaceFragment(THIRD_FRAGMENT_TAG, R.id.content_third_pane, new Builder<Fragment>() {
-                            @NotNull
+                            @Nonnull
                             @Override
                             public Fragment build() {
                                 final List<User> participants = new ArrayList<User>();
@@ -132,9 +132,9 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
         }
     }
 
-    private void replaceFragment(@NotNull String tag,
+    private void replaceFragment(@Nonnull String tag,
                                  int parentViewId,
-                                 @NotNull Builder<Fragment> builder) {
+                                 @Nonnull Builder<Fragment> builder) {
         final FragmentManager fm = getSupportFragmentManager();
 
         final Fragment oldFragment = fm.findFragmentByTag(tag);
@@ -184,7 +184,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
         }
     }
 
-    private void handleContactGuiEvent(@NotNull ContactGuiEvent event) {
+    private void handleContactGuiEvent(@Nonnull ContactGuiEvent event) {
         final User contact = event.getContact();
         final ContactGuiEventType type = event.getType();
 
@@ -203,7 +203,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
                 }
 
                 @Override
-                protected void onPostExecute(@NotNull Chat chat) {
+                protected void onPostExecute(@Nonnull Chat chat) {
                     super.onPostExecute(chat);
 
                     getEventManager().fire(ChatGuiEventType.newChatClicked(chat));
@@ -213,7 +213,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity implements 
 
             if ( isTriplePane() ) {
                 replaceFragment(THIRD_FRAGMENT_TAG, R.id.content_third_pane, new Builder<Fragment>() {
-                    @NotNull
+                    @Nonnull
                     @Override
                     public Fragment build() {
                         return new MessengerContactFragment(contact);

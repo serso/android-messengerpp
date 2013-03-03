@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,16 +9,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface MutableUserSyncData {
 
-    @NotNull
+    @Nonnull
     MutableUserSyncData updateChatsSyncDate();
 
-    @NotNull
+    @Nonnull
     MutableUserSyncData updatePropertiesSyncDate();
 
-    @NotNull
+    @Nonnull
     MutableUserSyncData updateContactsSyncDate();
 
-    @NotNull
+    @Nonnull
     MutableUserSyncData updateUserIconsSyncDate();
 
 }

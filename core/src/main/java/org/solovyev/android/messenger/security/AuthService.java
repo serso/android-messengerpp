@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.security;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.users.User;
 
@@ -24,10 +24,10 @@ public interface AuthService {
      *
      * @throws InvalidCredentialsException is user login/password are incorrect
      */
-    @NotNull
-    AuthData loginUser(@NotNull String realm,
-                       @NotNull String login,
-                       @NotNull String password,
+    @Nonnull
+    AuthData loginUser(@Nonnull String realm,
+                       @Nonnull String login,
+                       @Nonnull String password,
                        @Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
 
     /**
@@ -37,14 +37,14 @@ public interface AuthService {
      *
      * @throws IllegalStateException if no successful login has been done
      */
-    @NotNull
-    User getUser(@NotNull String realm) throws UserIsNotLoggedInException;
+    @Nonnull
+    User getUser(@Nonnull String realm) throws UserIsNotLoggedInException;
 
     /**
      * @param realm user's realm
      * @return true if user has been logged in
      */
-    boolean isUserLoggedIn(@NotNull String realm);
+    boolean isUserLoggedIn(@Nonnull String realm);
 
     /**
      * Method logs out user
@@ -52,7 +52,7 @@ public interface AuthService {
      * @param realm   user's realm
      *
      */
-    void logoutUser(@NotNull String realm);
+    void logoutUser(@Nonnull String realm);
 
 
     /**
@@ -63,8 +63,8 @@ public interface AuthService {
      *
      * @throws UserIsNotLoggedInException if user hasn't been logged in
      */
-    @NotNull
-    AuthData getAuthData(@NotNull String realm) throws UserIsNotLoggedInException;
+    @Nonnull
+    AuthData getAuthData(@Nonnull String realm) throws UserIsNotLoggedInException;
 
     /*
     **********************************************************************

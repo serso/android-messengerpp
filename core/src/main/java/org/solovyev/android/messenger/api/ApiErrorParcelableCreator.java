@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.api;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class ApiErrorParcelableCreator implements Parcelable.Creator<ApiError> {
 
     @Override
-    public ApiError createFromParcel(@NotNull Parcel in) {
+    public ApiError createFromParcel(@Nonnull Parcel in) {
         return CommonApiError.fromParcel(in);
     }
 

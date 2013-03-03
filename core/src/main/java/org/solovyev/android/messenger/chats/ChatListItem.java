@@ -8,8 +8,8 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -31,13 +31,13 @@ import roboguice.event.EventManager;
  */
 public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEventListener, Checkable {
 
-    @NotNull
+    @Nonnull
     private static final String TAG_PREFIX = "chat_list_item_view_";
 
-    @NotNull
+    @Nonnull
     private User user;
 
-    @NotNull
+    @Nonnull
     private Chat chat;
 
     @Nullable
@@ -45,7 +45,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
 
     private boolean checked = false;
 
-    public ChatListItem(@NotNull User user, @NotNull Chat chat, @Nullable Context context) {
+    public ChatListItem(@Nonnull User user, @Nonnull Chat chat, @Nullable Context context) {
         this.user = user;
         this.chat = chat;
         if (context != null) {
@@ -58,7 +58,7 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
     public OnClickAction getOnClickAction() {
         return new OnClickAction() {
             @Override
-            public void onClick(@NotNull Context context, @NotNull ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
+            public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
                 eventManager.fire(ChatGuiEventType.newChatClicked(chat));
             }
@@ -70,12 +70,12 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         return null;
     }
 
-    @NotNull
+    @Nonnull
     public User getUser() {
         return user;
     }
 
-    @NotNull
+    @Nonnull
     public Chat getChat() {
         return chat;
     }
@@ -85,9 +85,9 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         return this.lastChatMessage;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View updateView(@NotNull Context context, @NotNull View view) {
+    public View updateView(@Nonnull Context context, @Nonnull View view) {
         if (String.valueOf(view.getTag()).startsWith(TAG_PREFIX)) {
             fillView((ViewGroup) view, context);
             return view;
@@ -96,20 +96,20 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View build(@NotNull Context context) {
+    public View build(@Nonnull Context context) {
         final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_chat).build(context);
         fillView(view, context);
         return view;
     }
 
-    @NotNull
+    @Nonnull
     private String createTag() {
         return TAG_PREFIX + chat.getRealmChat().getEntityId();
     }
 
-    private void fillView(@NotNull final ViewGroup view, @NotNull Context context) {
+    private void fillView(@Nonnull final ViewGroup view, @Nonnull Context context) {
         final String tag = createTag();
 
         ContactListItem.toggleSelected(view, checked);
@@ -138,8 +138,8 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         }
     }
 
-    @NotNull
-    public static CharSequence getMessageTime(@NotNull ChatMessage message) {
+    @Nonnull
+    public static CharSequence getMessageTime(@Nonnull ChatMessage message) {
         final LocalDate sendDate = message.getSendDate().toLocalDate();
         final LocalDate today = DateTime.now().toLocalDate();
         final LocalDate yesterday = today.minusDays(1);
@@ -158,13 +158,13 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         }
     }
 
-    @NotNull
+    @Nonnull
     private ChatService getChatService() {
         return MessengerApplication.getServiceLocator().getChatService();
     }
 
-    @NotNull
-    private CharSequence getMessageTitle(@NotNull Chat chat, @NotNull ChatMessage message, @NotNull User user) {
+    @Nonnull
+    private CharSequence getMessageTitle(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull User user) {
         final String authorName = getMessageAuthorDisplayName(chat, message, user);
         if (Strings.isEmpty(authorName)) {
             return Html.fromHtml(message.getBody());
@@ -173,8 +173,8 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         }
     }
 
-    @NotNull
-    private String getMessageAuthorDisplayName(@NotNull Chat chat, @NotNull ChatMessage message, @NotNull User user) {
+    @Nonnull
+    private String getMessageAuthorDisplayName(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull User user) {
         final User author = message.getAuthor();
         if (user.equals(author)) {
             return "Me";
@@ -213,8 +213,8 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         return getDisplayName(chat, getLastMessage(), user);
     }
 
-    @NotNull
-    public static String getDisplayName(@NotNull Chat chat, @Nullable ChatMessage lastMessage, @NotNull User user) {
+    @Nonnull
+    public static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage lastMessage, @Nonnull User user) {
         if (lastMessage == null) {
             return "";
         } else {
@@ -222,8 +222,8 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
         }
     }
 
-    @NotNull
-    private static String getChatTitle(@NotNull Chat chat, @NotNull ChatMessage message, @NotNull User user) {
+    @Nonnull
+    private static String getChatTitle(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull User user) {
         final String title = message.getTitle();
         if (Strings.isEmpty(title) || title.equals(" ... ")) {
 
@@ -243,12 +243,12 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
     }
 
     @Override
-    public int compareTo(@NotNull ChatListItem another) {
+    public int compareTo(@Nonnull ChatListItem another) {
         return this.toString().compareTo(another.toString());
     }
 
     @Override
-    public void onChatEvent(@NotNull Chat eventChat, @NotNull ChatEventType chatEventType, @Nullable Object data) {
+    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
         if (chatEventType == ChatEventType.changed) {
             if (eventChat.equals(chat)) {
                 chat = eventChat;
@@ -279,19 +279,19 @@ public class ChatListItem implements ListItem, Comparable<ChatListItem>, ChatEve
 
     public static final class Comparator implements java.util.Comparator<ChatListItem> {
 
-        @NotNull
+        @Nonnull
         private static final Comparator instance = new Comparator();
 
         private Comparator() {
         }
 
-        @NotNull
+        @Nonnull
         public static Comparator getInstance() {
             return instance;
         }
 
         @Override
-        public int compare(@NotNull ChatListItem lhs, @NotNull ChatListItem rhs) {
+        public int compare(@Nonnull ChatListItem lhs, @Nonnull ChatListItem rhs) {
             final ChatMessage llm = lhs.getLastMessage();
             final ChatMessage rlm = rhs.getLastMessage();
             if (llm != null && rlm != null) {

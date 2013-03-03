@@ -3,7 +3,7 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.content.Intent;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.joda.time.DateTimeZone;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
@@ -35,87 +35,87 @@ public class MessengerApplication extends Application implements MessengerServic
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private AuthService authService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private AuthServiceFacade authServiceFacade;
 
     @Inject
-    @NotNull
+    @Nonnull
     private ChatMessageService chatMessageService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private UserService userService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private ChatService chatService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private SyncService syncService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private NetworkStateService networkStateService;
 
     // for tests only!
-    @NotNull
+    @Nonnull
     public static MessengerApplication getInstance() {
         return instance;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ChatMessageService getChatMessageService() {
         return chatMessageService;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public UserService getUserService() {
         return userService;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public ChatService getChatService() {
         return chatService;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public AuthService getAuthService() {
         return authService;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public SyncService getSyncService() {
         return syncService;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public RealmService getRealmService() {
         return realmService;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public AuthServiceFacade getAuthServiceFacade() {
         return authServiceFacade;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public NetworkStateService getNetworkStateService() {
         return networkStateService;
     }
@@ -128,14 +128,14 @@ public class MessengerApplication extends Application implements MessengerServic
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     private static MessengerApplication instance;
 
     public MessengerApplication() {
         instance = this;
     }
 
-    @NotNull
+    @Nonnull
     public static MessengerServiceLocator getServiceLocator() {
         return instance;
     }

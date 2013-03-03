@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import com.google.common.base.Predicate;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -12,15 +12,15 @@ import java.util.Map;
 */
 public class RealmMapEntryMatcher implements Predicate<Map.Entry<RealmEntity, ?>> {
 
-    @NotNull
+    @Nonnull
     private final String realmId;
 
-    private RealmMapEntryMatcher(@NotNull String realmId) {
+    private RealmMapEntryMatcher(@Nonnull String realmId) {
         this.realmId = realmId;
     }
 
-    @NotNull
-    public static RealmMapEntryMatcher forRealm(@NotNull String realmId) {
+    @Nonnull
+    public static RealmMapEntryMatcher forRealm(@Nonnull String realmId) {
         return new RealmMapEntryMatcher(realmId);
     }
 

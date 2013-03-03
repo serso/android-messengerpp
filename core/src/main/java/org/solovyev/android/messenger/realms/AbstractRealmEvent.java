@@ -1,17 +1,17 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class AbstractRealmEvent implements RealmEvent {
 
-    @NotNull
+    @Nonnull
     private final Realm realm;
 
-    protected AbstractRealmEvent(@NotNull Realm realm) {
+    protected AbstractRealmEvent(@Nonnull Realm realm) {
         this.realm = realm;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Realm getRealm() {
         return realm;

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.database.Cursor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -19,16 +19,16 @@ import java.util.List;
  */
 public class ChatMapper implements Converter<Cursor, Chat> {
 
-    @NotNull
+    @Nonnull
     private final ChatDao chatDao;
 
-    public ChatMapper(@NotNull ChatDao chatDao) {
+    public ChatMapper(@Nonnull ChatDao chatDao) {
         this.chatDao = chatDao;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Chat convert(@NotNull Cursor c) {
+    public Chat convert(@Nonnull Cursor c) {
         final String chatId = c.getString(0);
         final RealmEntity realmEntity = RealmEntityMapper.newInstanceFor(1).convert(c);
 

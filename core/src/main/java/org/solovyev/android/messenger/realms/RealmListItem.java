@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.core.R;
@@ -18,10 +18,10 @@ import roboguice.event.EventManager;
 
 public class RealmListItem implements ListItem {
 
-    @NotNull
+    @Nonnull
     private static final String TAG_PREFIX = "realm_list_item_view_";
 
-    @NotNull
+    @Nonnull
     private Realm realm;
 
     /*
@@ -32,14 +32,14 @@ public class RealmListItem implements ListItem {
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     private ImageView realmIconImageView;
 
-    @NotNull
+    @Nonnull
     private TextView realmNameTextView;
 
 
-    public RealmListItem(@NotNull Realm realm) {
+    public RealmListItem(@Nonnull Realm realm) {
         this.realm = realm;
     }
 
@@ -48,7 +48,7 @@ public class RealmListItem implements ListItem {
     public OnClickAction getOnClickAction() {
         return new OnClickAction() {
             @Override
-            public void onClick(@NotNull Context context, @NotNull ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
+            public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
                 eventManager.fire(new MessengerRealmsFragment.RealmClickedEvent(realm));
             }
@@ -61,9 +61,9 @@ public class RealmListItem implements ListItem {
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View updateView(@NotNull Context context, @NotNull View view) {
+    public View updateView(@Nonnull Context context, @Nonnull View view) {
         if (String.valueOf(view.getTag()).startsWith(TAG_PREFIX)) {
             fillView((ViewGroup) view, context);
             return view;
@@ -72,20 +72,20 @@ public class RealmListItem implements ListItem {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View build(@NotNull Context context) {
+    public View build(@Nonnull Context context) {
         final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_realm).build(context);
         fillView(view, context);
         return view;
     }
 
-    @NotNull
+    @Nonnull
     private String createTag() {
         return TAG_PREFIX + realm.getId();
     }
 
-    private void fillView(@NotNull final ViewGroup root, @NotNull final Context context) {
+    private void fillView(@Nonnull final ViewGroup root, @Nonnull final Context context) {
         final String tag = createTag();
 
         if (!tag.equals(root.getTag())) {
@@ -99,16 +99,16 @@ public class RealmListItem implements ListItem {
         }
     }
 
-    private void fillRealmDefValues(@NotNull Context context) {
+    private void fillRealmDefValues(@Nonnull Context context) {
         final Drawable realmIcon = context.getResources().getDrawable(realm.getRealmDef().getIconResId());
         realmIconImageView.setImageDrawable(realmIcon);
     }
 
-    private void fillRealmValues(@NotNull Context context) {
+    private void fillRealmValues(@Nonnull Context context) {
         realmNameTextView.setText(realm.getDisplayName(context));
     }
 
-    public void onRealmChangedEvent(@NotNull RealmChangedEvent event, @NotNull Context context) {
+    public void onRealmChangedEvent(@Nonnull RealmChangedEvent event, @Nonnull Context context) {
         if ( event.getRealm().equals(realm)) {
             this.realm = event.getRealm();
             fillRealmValues(context);

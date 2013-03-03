@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -11,8 +11,8 @@ public enum ContactGuiEventType {
 
     contact_clicked;
 
-    @NotNull
-    public static ContactGuiEvent newContactClicked(@NotNull User contact) {
+    @Nonnull
+    public static ContactGuiEvent newContactClicked(@Nonnull User contact) {
         return new ContactGuiEvent(contact_clicked, contact);
     }
 }

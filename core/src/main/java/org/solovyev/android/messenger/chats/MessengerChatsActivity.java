@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.core.R;
 
@@ -19,7 +19,7 @@ import org.solovyev.android.messenger.core.R;
  */
 public class MessengerChatsActivity extends MessengerFragmentActivity implements ViewPager.OnPageChangeListener {
 
-    public static void startActivity(@NotNull Activity activity) {
+    public static void startActivity(@Nonnull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerChatsActivity.class);
         activity.startActivity(result);
@@ -64,10 +64,10 @@ public class MessengerChatsActivity extends MessengerFragmentActivity implements
 
     public static class ChatsFragmentPagerAdapter extends FragmentPagerAdapter {
 
-        @NotNull
+        @Nonnull
         private String chatsTitle;
 
-        public ChatsFragmentPagerAdapter(@NotNull FragmentManager fm, @NotNull String chatsTitle) {
+        public ChatsFragmentPagerAdapter(@Nonnull FragmentManager fm, @Nonnull String chatsTitle) {
             super(fm);
             this.chatsTitle = chatsTitle;
         }

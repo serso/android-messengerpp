@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,24 +14,24 @@ import java.util.List;
 public class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
 
     // ids of objects which were removed on the remote server
-    @NotNull
+    @Nonnull
     private final List<ID> removedObjectIds;
 
     // objects which were added on the remote server
-    @NotNull
+    @Nonnull
     private final List<T> addedObjectLinks;
 
-    @NotNull
+    @Nonnull
     private final List<T> addedObjects;
 
     // nothing changed => just update objects' properties
-    @NotNull
+    @Nonnull
     private final List<T> updatedObjects;
 
-    @NotNull
+    @Nonnull
     private final List<? extends T> objects;
 
-    public MergeDaoResultImpl(@NotNull List<? extends T> objects) {
+    public MergeDaoResultImpl(@Nonnull List<? extends T> objects) {
         this.objects = objects;
         removedObjectIds = new ArrayList<ID>(objects.size());
         addedObjectLinks = new ArrayList<T>(objects.size());
@@ -39,39 +39,39 @@ public class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
         updatedObjects = new ArrayList<T>(objects.size());
     }
 
-    @NotNull
+    @Nonnull
     public List<ID> getRemovedObjectIds() {
         return Collections.unmodifiableList(removedObjectIds);
     }
 
-    @NotNull
+    @Nonnull
     public List<T> getAddedObjectLinks() {
         return Collections.unmodifiableList(addedObjectLinks);
     }
 
-    @NotNull
+    @Nonnull
     public List<T> getAddedObjects() {
         return Collections.unmodifiableList(addedObjects);
     }
 
-    @NotNull
+    @Nonnull
     public List<T> getUpdatedObjects() {
         return Collections.unmodifiableList(updatedObjects);
     }
 
-    public boolean addRemovedObjectId(@NotNull ID removedObjectId) {
+    public boolean addRemovedObjectId(@Nonnull ID removedObjectId) {
         return removedObjectIds.add(removedObjectId);
     }
 
-    public boolean addAddedObjectLink(@NotNull T addedLink) {
+    public boolean addAddedObjectLink(@Nonnull T addedLink) {
         return addedObjectLinks.add(addedLink);
     }
 
-    public boolean addAddedObject(@NotNull T addedObject) {
+    public boolean addAddedObject(@Nonnull T addedObject) {
         return addedObjects.add(addedObject);
     }
 
-    public boolean addUpdatedObject(@NotNull T updatedObject) {
+    public boolean addUpdatedObject(@Nonnull T updatedObject) {
         return updatedObjects.add(updatedObject);
     }
 }

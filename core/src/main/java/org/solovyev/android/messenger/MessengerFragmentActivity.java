@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
@@ -29,13 +29,13 @@ import roboguice.event.EventManager;
  */
 public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActivity {
 
-    @NotNull
+    @Nonnull
     protected static final String FIRST_FRAGMENT_TAG = "first-fragment";
 
-    @NotNull
+    @Nonnull
     protected static final String SECOND_FRAGMENT_TAG = "second-fragment";
 
-    @NotNull
+    @Nonnull
     protected static final String THIRD_FRAGMENT_TAG = "third-fragment";
 
 
@@ -48,19 +48,19 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private UserService userService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private ChatService chatService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private EventManager eventManager;
 
 
@@ -77,7 +77,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Nullable
     private ViewGroup thirdPane;
 
-    @NotNull
+    @Nonnull
     private final MessengerCommonActivity activity;
 
     protected MessengerFragmentActivity(int layoutId) {
@@ -88,23 +88,23 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         activity = new MessengerCommonActivityImpl(layoutId, showActionBarTabs, homeIcon);
     }
 
-    @NotNull
+    @Nonnull
     protected UserService getUserService() {
         return userService;
     }
 
-    @NotNull
+    @Nonnull
     protected ChatService getChatService() {
         return chatService;
     }
 
-    @NotNull
+    @Nonnull
     protected EventManager getEventManager() {
         return eventManager;
     }
 
 
-    @NotNull
+    @Nonnull
     protected RealmService getRealmService() {
         return realmService;
     }
@@ -127,53 +127,53 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         return this.thirdPane != null;
     }
 
-    @NotNull
+    @Nonnull
     public ViewGroup getFooterCenter() {
         return activity.getFooterCenter(this);
     }
 
-    @NotNull
+    @Nonnull
     public ViewGroup getFooterRight() {
         return activity.getFooterRight(this);
     }
 
-    @NotNull
+    @Nonnull
     public ViewGroup getFooterLeft() {
         return activity.getFooterLeft(this);
     }
 
-    @NotNull
+    @Nonnull
     public ViewGroup getHeaderLeft() {
         return this.activity.getHeaderLeft(this);
     }
 
-    @NotNull
+    @Nonnull
     public ViewGroup getHeaderCenter() {
         return this.activity.getHeaderCenter(this);
     }
 
-    @NotNull
+    @Nonnull
     public ViewGroup getHeaderRight() {
         return this.activity.getHeaderRight(this);
     }
 
-    @NotNull
-    public ViewGroup getCenter(@NotNull Activity activity) {
+    @Nonnull
+    public ViewGroup getCenter(@Nonnull Activity activity) {
         return this.activity.getCenter(activity);
     }
 
-    @NotNull
+    @Nonnull
     public ImageButton createFooterImageButton(int imageResId, int contentDescriptionResId) {
         return activity.createFooterImageButton(imageResId, contentDescriptionResId, this);
     }
 
-    @NotNull
+    @Nonnull
     public Button createFooterButton(int captionResId) {
         return this.activity.createFooterButton(captionResId, this);
     }
 
-    @NotNull
-    public ViewPager initTitleForViewPager(@NotNull Activity activity, @NotNull ViewPager.OnPageChangeListener listener, @NotNull PagerAdapter adapter) {
+    @Nonnull
+    public ViewPager initTitleForViewPager(@Nonnull Activity activity, @Nonnull ViewPager.OnPageChangeListener listener, @Nonnull PagerAdapter adapter) {
         return this.activity.initTitleForViewPager(activity, listener, adapter);
     }
 
@@ -198,7 +198,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    protected void setFragment(int fragmentContainerViewId, @NotNull Fragment fragment, @Nullable String tag) {
+    protected void setFragment(int fragmentContainerViewId, @Nonnull Fragment fragment, @Nullable String tag) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -223,7 +223,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         fragmentTransaction.commit();
     }
 
-    protected void setFirstFragment(@NotNull Class<? extends Fragment> fragmentClass,
+    protected void setFirstFragment(@Nonnull Class<? extends Fragment> fragmentClass,
                                     @Nullable Bundle fragmentArgs,
                                     @Nullable JPredicate<Fragment> reuseCondition) {
         setFragment(R.id.content_first_pane, fragmentClass, FIRST_FRAGMENT_TAG, fragmentArgs, reuseCondition);
@@ -234,7 +234,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         setFirstFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
     }
 
-    protected void setSecondFragment(@NotNull Class<? extends Fragment> fragmentClass,
+    protected void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,
                                      @Nullable Bundle fragmentArgs,
                                      @Nullable JPredicate<Fragment> reuseCondition) {
         setFragment(R.id.content_second_pane, fragmentClass, SECOND_FRAGMENT_TAG, fragmentArgs, reuseCondition);
@@ -244,7 +244,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         setSecondFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
     }
 
-    protected void setThirdFragment(@NotNull Class<? extends Fragment> fragmentClass,
+    protected void setThirdFragment(@Nonnull Class<? extends Fragment> fragmentClass,
                                     @Nullable Bundle fragmentArgs,
                                     @Nullable JPredicate<Fragment> reuseCondition) {
         setFragment(R.id.content_third_pane, fragmentClass, THIRD_FRAGMENT_TAG, fragmentArgs, reuseCondition);
@@ -254,7 +254,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         setThirdFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
     }
 
-    protected void setFragment(int fragmentViewId, @NotNull Class<? extends Fragment> fragmentClass, @NotNull String fragmentTag, @Nullable Bundle fragmentArgs) {
+    protected void setFragment(int fragmentViewId, @Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, @Nullable Bundle fragmentArgs) {
         setFragment(fragmentViewId, fragmentClass, fragmentTag, fragmentArgs, null);
     }
 
@@ -266,8 +266,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
      * @param reuseCondition true if fragment can be reused
      */
     private void setFragment(int fragmentViewId,
-                             @NotNull Class<? extends Fragment> fragmentClass,
-                             @NotNull String fragmentTag,
+                             @Nonnull Class<? extends Fragment> fragmentClass,
+                             @Nonnull String fragmentTag,
                              @Nullable Bundle fragmentArgs,
                              @Nullable JPredicate<Fragment> reuseCondition) {
         final FragmentManager fm = getSupportFragmentManager();
@@ -297,13 +297,13 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     private static final class EmptyFragmentReuseCondition implements JPredicate<Fragment> {
 
-        @NotNull
+        @Nonnull
         private static final EmptyFragmentReuseCondition instance = new EmptyFragmentReuseCondition();
 
         private EmptyFragmentReuseCondition() {
         }
 
-        @NotNull
+        @Nonnull
         public static EmptyFragmentReuseCondition getInstance() {
             return instance;
         }

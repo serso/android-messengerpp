@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.database.Cursor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
@@ -15,16 +15,16 @@ import org.solovyev.common.Converter;
  */
 public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
 
-    @NotNull
+    @Nonnull
     private final UserService userService;
 
-    public ChatMessageMapper(@NotNull UserService userService) {
+    public ChatMessageMapper(@Nonnull UserService userService) {
         this.userService = userService;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ChatMessage convert(@NotNull Cursor c) {
+    public ChatMessage convert(@Nonnull Cursor c) {
         final String messageId = c.getString(0);
         final String chatId = c.getString(1);
 

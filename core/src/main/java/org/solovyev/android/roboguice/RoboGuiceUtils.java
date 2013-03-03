@@ -2,7 +2,7 @@ package org.solovyev.android.roboguice;
 
 import android.content.Context;
 import com.google.inject.Provider;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import roboguice.RoboGuice;
 import roboguice.inject.ContextScope;
 
@@ -17,7 +17,7 @@ public final class RoboGuiceUtils {
         throw new AssertionError("Not intended for instantiation!");
     }
 
-    public static void runInContextScope(@NotNull Context context, @NotNull Runnable runnable) {
+    public static void runInContextScope(@Nonnull Context context, @Nonnull Runnable runnable) {
         ContextScope contextScope = null;
         try {
             contextScope = RoboGuice.getInjector(context).getInstance(ContextScope.class);
@@ -30,8 +30,8 @@ public final class RoboGuiceUtils {
         }
     }
 
-    @NotNull
-    public static <T> T getInContextScope(@NotNull Context context, @NotNull Provider<T> provider) {
+    @Nonnull
+    public static <T> T getInContextScope(@Nonnull Context context, @Nonnull Provider<T> provider) {
         ContextScope contextScope = null;
         try {
             contextScope = RoboGuice.getInjector(context).getInstance(ContextScope.class);

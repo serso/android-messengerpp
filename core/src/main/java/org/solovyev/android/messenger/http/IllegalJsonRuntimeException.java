@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.http;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,15 +9,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class IllegalJsonRuntimeException extends RuntimeException {
 
-    @NotNull
+    @Nonnull
     private final IllegalJsonException illegalJsonException;
 
-    public IllegalJsonRuntimeException(@NotNull IllegalJsonException e) {
+    public IllegalJsonRuntimeException(@Nonnull IllegalJsonException e) {
         super(e);
         illegalJsonException = e;
     }
 
-    @NotNull
+    @Nonnull
     public IllegalJsonException getIllegalJsonException() {
         return illegalJsonException;
     }

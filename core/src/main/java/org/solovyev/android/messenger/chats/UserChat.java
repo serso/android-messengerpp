@@ -1,31 +1,31 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.users.User;
 
 final class UserChat {
 
-    @NotNull
+    @Nonnull
     private final User user;
 
-    @NotNull
+    @Nonnull
     private final Chat chat;
 
-    UserChat(@NotNull User user, @NotNull Chat chat) {
+    UserChat(@Nonnull User user, @Nonnull Chat chat) {
         this.user = user;
         this.chat = chat;
     }
 
-    static UserChat newInstance(@NotNull User user, @NotNull Chat chat) {
+    static UserChat newInstance(@Nonnull User user, @Nonnull Chat chat) {
         return new UserChat(user, chat);
     }
 
-    @NotNull
+    @Nonnull
     public User getUser() {
         return user;
     }
 
-    @NotNull
+    @Nonnull
     public Chat getChat() {
         return chat;
     }

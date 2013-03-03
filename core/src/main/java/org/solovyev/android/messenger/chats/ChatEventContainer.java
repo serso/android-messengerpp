@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -12,37 +12,37 @@ import java.util.List;
  */
 public interface ChatEventContainer {
 
-    void addChatEventListener(@NotNull ChatEventListener chatEventListener);
+    void addChatEventListener(@Nonnull ChatEventListener chatEventListener);
 
-    void removeChatEventListener(@NotNull ChatEventListener chatEventListener);
+    void removeChatEventListener(@Nonnull ChatEventListener chatEventListener);
 
-    void fireChatEvent(@NotNull Chat chat, @NotNull ChatEventType chatEventType, @Nullable Object data);
+    void fireChatEvent(@Nonnull Chat chat, @Nonnull ChatEventType chatEventType, @Nullable Object data);
 
-    void fireChatEvents(@NotNull List<ChatEvent> chatEvents);
+    void fireChatEvents(@Nonnull List<ChatEvent> chatEvents);
 
     public static class ChatEvent {
 
-        @NotNull
+        @Nonnull
         private Chat chat;
 
-        @NotNull
+        @Nonnull
         private ChatEventType chatEventType;
 
         @Nullable
         private Object data;
 
-        public ChatEvent(@NotNull Chat chat, @NotNull ChatEventType chatEventType, Object data) {
+        public ChatEvent(@Nonnull Chat chat, @Nonnull ChatEventType chatEventType, Object data) {
             this.chat = chat;
             this.chatEventType = chatEventType;
             this.data = data;
         }
 
-        @NotNull
+        @Nonnull
         public Chat getChat() {
             return chat;
         }
 
-        @NotNull
+        @Nonnull
         public ChatEventType getChatEventType() {
             return chatEventType;
         }

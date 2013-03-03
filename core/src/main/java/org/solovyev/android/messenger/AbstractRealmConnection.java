@@ -2,7 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.Realm;
 
 import java.lang.ref.WeakReference;
@@ -15,29 +15,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class AbstractRealmConnection<R extends Realm> implements RealmConnection {
 
-    @NotNull
+    @Nonnull
     private static final String TAG = "RealmConnection";
 
-    @NotNull
+    @Nonnull
     private final R realm;
 
-    @NotNull
+    @Nonnull
     private final WeakReference<Context> contextRef;
 
-    @NotNull
+    @Nonnull
     private final AtomicBoolean stopPolling = new AtomicBoolean(false);
 
-    protected AbstractRealmConnection(@NotNull R realm, @NotNull Context context) {
+    protected AbstractRealmConnection(@Nonnull R realm, @Nonnull Context context) {
         this.realm = realm;
         this.contextRef = new WeakReference<Context>(context);
     }
 
-    @NotNull
+    @Nonnull
     protected R getRealm() {
         return realm;
     }
 
-    @NotNull
+    @Nonnull
     protected Context getContext() throws ContextIsNotActiveException {
         final Context result = contextRef.get();
         if (result != null) {

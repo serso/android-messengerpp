@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.api;
 
 import android.os.Parcel;
 import com.google.gson.Gson;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 
@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
  */
 public class CommonApiError implements ApiError {
 
-    @NotNull
+    @Nonnull
     private String errorId;
 
     @Nullable
@@ -23,8 +23,8 @@ public class CommonApiError implements ApiError {
     @Nullable
     private Captcha captcha;
 
-    @NotNull
-    public static CommonApiError newInstance(@NotNull String errorId, @Nullable String errorDescription) {
+    @Nonnull
+    public static CommonApiError newInstance(@Nonnull String errorId, @Nullable String errorDescription) {
         final CommonApiError result = new CommonApiError();
 
         result.errorId = errorId;
@@ -33,8 +33,8 @@ public class CommonApiError implements ApiError {
         return result;
     }
 
-    @NotNull
-    public static CommonApiError fromJson(@NotNull String json) throws IllegalJsonException {
+    @Nonnull
+    public static CommonApiError fromJson(@Nonnull String json) throws IllegalJsonException {
         final Gson gson = new Gson();
         final CommonErrorJson commonJsonError = gson.fromJson(json, CommonErrorJson.class);
         if (commonJsonError.error == null) {
@@ -43,8 +43,8 @@ public class CommonApiError implements ApiError {
         return fromJson(commonJsonError);
     }
 
-    @NotNull
-    private static CommonApiError fromJson(@NotNull CommonErrorJson json) throws IllegalJsonException {
+    @Nonnull
+    private static CommonApiError fromJson(@Nonnull CommonErrorJson json) throws IllegalJsonException {
         final CommonApiError result = new CommonApiError();
 
         result.errorId = json.error;
@@ -59,8 +59,8 @@ public class CommonApiError implements ApiError {
         return result;
     }
 
-    @NotNull
-    public static CommonApiError fromParcel(@NotNull Parcel in) {
+    @Nonnull
+    public static CommonApiError fromParcel(@Nonnull Parcel in) {
         final CommonApiError result = new CommonApiError();
 
         result.errorId = in.readString();
@@ -100,7 +100,7 @@ public class CommonApiError implements ApiError {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getErrorId() {
         return errorId;
     }

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.vk.longpoll;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 
 /**
@@ -19,7 +19,7 @@ public class JsonLongPollResponse {
         return response;
     }
 
-    @NotNull
+    @Nonnull
     public LongPollServerData toLongPollServerData() throws IllegalJsonException {
         if ( response == null ) {
             throw new IllegalJsonException();

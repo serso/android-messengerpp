@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.core.R;
@@ -42,7 +42,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private AuthService authService;
 
 
@@ -54,17 +54,17 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     private static String REALM = "realm";
 
-    public static void startActivity(@NotNull Activity activity) {
+    public static void startActivity(@Nonnull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerLoginActivity.class);
         result.putExtra(REALM, RoboGuice.getInjector(activity).getInstance(RealmDef.class).getId());
         activity.startActivity(result);
     }
 
-    @NotNull
+    @Nonnull
     private String realm;
 
     @Override
@@ -122,7 +122,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
             }
 
             @Override
-            protected void onFailurePostExecute(@NotNull Exception e) {
+            protected void onFailurePostExecute(@Nonnull Exception e) {
                 if (e instanceof ApiResponseErrorException) {
                     final ApiError apiError = ((ApiResponseErrorException) e).getApiError();
                     final Captcha captcha = apiError.getCaptcha();
@@ -153,7 +153,7 @@ public class MessengerLoginActivity extends RoboActivity implements CaptchaViewB
     }
 
     @Override
-    public void onCaptchaEntered(@NotNull ResolvedCaptcha resolvedCaptcha) {
+    public void onCaptchaEntered(@Nonnull ResolvedCaptcha resolvedCaptcha) {
         tryToLogin(resolvedCaptcha);
     }
 }

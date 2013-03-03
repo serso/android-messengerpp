@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.vk.messages;
 
 import com.google.gson.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class JsonMessages {
         }
     }
 
-    @NotNull
+    @Nonnull
     public Integer getCount() {
         return count == null ? 0 : count;
     }

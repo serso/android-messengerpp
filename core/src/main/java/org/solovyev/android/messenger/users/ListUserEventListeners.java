@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.users;
 
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.common.listeners.JListeners;
 import org.solovyev.common.listeners.Listeners;
 
@@ -17,29 +17,29 @@ import java.util.List;
  */
 public class ListUserEventListeners implements UserEventListeners {
 
-    @NotNull
+    @Nonnull
     private static final String TAG = "UserEvent";
 
-    @NotNull
+    @Nonnull
     private final JListeners<UserEventListener> listeners = Listeners.newWeakRefListeners();
 
     @Override
-    public boolean addListener(@NotNull UserEventListener userEventListener) {
+    public boolean addListener(@Nonnull UserEventListener userEventListener) {
         return this.listeners.addListener(userEventListener);
     }
 
     @Override
-    public boolean removeListener(@NotNull UserEventListener userEventListener) {
+    public boolean removeListener(@Nonnull UserEventListener userEventListener) {
         return this.listeners.removeListener(userEventListener);
     }
 
     @Override
-    public void fireUserEvent(@NotNull User user, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void fireUserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, @Nullable Object data) {
         fireUserEvents(Arrays.asList(new UserEvent(user, userEventType, data)));
     }
 
     @Override
-    public void fireUserEvents(@NotNull List<UserEvent> userEvents) {
+    public void fireUserEvents(@Nonnull List<UserEvent> userEvents) {
         final Collection<UserEventListener> listeners = this.listeners.getListeners();
 
         for (UserEvent userEvent : userEvents) {

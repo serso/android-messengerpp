@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import roboguice.RoboGuice;
@@ -21,14 +21,14 @@ import java.util.List;
 */
 class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Realm>> {
 
-    @NotNull
+    @Nonnull
     private final RealmService realmService;
 
     @Nullable
     private final BaseRealmConfigurationFragment.RealmSaveHandler realmSaveHandler;
 
-    AsynRealmSaver(@NotNull Activity context,
-                   @NotNull RealmService realmService,
+    AsynRealmSaver(@Nonnull Activity context,
+                   @Nonnull RealmService realmService,
                    @Nullable BaseRealmConfigurationFragment.RealmSaveHandler realmSaveHandler) {
         super(context, true);
         this.realmService = realmService;
@@ -36,7 +36,7 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
     }
 
     @Override
-    protected List<Realm> doWork(@NotNull List<RealmBuilder> realmBuilders) {
+    protected List<Realm> doWork(@Nonnull List<RealmBuilder> realmBuilders) {
         final List<Realm> result = new ArrayList<Realm>(realmBuilders.size());
         for (RealmBuilder realmBuilder : realmBuilders) {
             try {
@@ -63,7 +63,7 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
     }
 
     @Override
-    protected void onFailurePostExecute(@NotNull Exception e) {
+    protected void onFailurePostExecute(@Nonnull Exception e) {
         boolean consumed = realmSaveHandler != null && realmSaveHandler.onFailure(e);
         if (!consumed) {
             if (e instanceof InvalidCredentialsException) {

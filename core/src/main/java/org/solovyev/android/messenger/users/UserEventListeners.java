@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -12,37 +12,37 @@ import java.util.List;
  */
 public interface UserEventListeners {
 
-    boolean addListener(@NotNull UserEventListener listener);
+    boolean addListener(@Nonnull UserEventListener listener);
 
-    boolean removeListener(@NotNull UserEventListener listener);
+    boolean removeListener(@Nonnull UserEventListener listener);
 
-    void fireUserEvent(@NotNull User user, @NotNull UserEventType userEventType, @Nullable Object data);
+    void fireUserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, @Nullable Object data);
 
-    void fireUserEvents(@NotNull List<UserEvent> userEvents);
+    void fireUserEvents(@Nonnull List<UserEvent> userEvents);
 
     public static class UserEvent {
 
-        @NotNull
+        @Nonnull
         private User user;
 
-        @NotNull
+        @Nonnull
         private UserEventType userEventType;
 
         @Nullable
         private Object data;
 
-        public UserEvent(@NotNull User user, @NotNull UserEventType userEventType, Object data) {
+        public UserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, Object data) {
             this.user = user;
             this.userEventType = userEventType;
             this.data = data;
         }
 
-        @NotNull
+        @Nonnull
         public User getUser() {
             return user;
         }
 
-        @NotNull
+        @Nonnull
         public UserEventType getUserEventType() {
             return userEventType;
         }

@@ -3,7 +3,7 @@ package org.solovyev.android.messenger;
 import android.content.Intent;
 import android.os.IBinder;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.network.NetworkData;
@@ -31,11 +31,11 @@ public class MessengerService extends RoboService implements NetworkStateListene
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private NetworkStateService networkStateService;
 
     /*
@@ -45,7 +45,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
     *
     **********************************************************************
     */
-    @NotNull
+    @Nonnull
     private final List<RealmConnection> realmConnections = new ArrayList<RealmConnection>();
 
     @Override
@@ -96,7 +96,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
     }
 
     @Override
-    public void onNetworkEvent(@NotNull NetworkData networkData) {
+    public void onNetworkEvent(@Nonnull NetworkData networkData) {
         synchronized (this.realmConnections) {
             for (final RealmConnection realmConnection : realmConnections) {
                 synchronized (realmConnection) {
@@ -119,7 +119,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
         }
     }
 
-    private void startRealmConnection(@NotNull final RealmConnection realmConnection) {
+    private void startRealmConnection(@Nonnull final RealmConnection realmConnection) {
         new Thread(new Runnable() {
             @Override
             public void run() {

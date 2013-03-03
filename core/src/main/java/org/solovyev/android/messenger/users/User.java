@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
 
@@ -22,7 +22,7 @@ public interface User extends MutableUserSyncData {
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     public static final String PROPERTY_ONLINE = "online";
 
 
@@ -34,10 +34,10 @@ public interface User extends MutableUserSyncData {
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     String getLogin();
 
-    @NotNull
+    @Nonnull
     String getDisplayName();
 
     @Nullable
@@ -45,22 +45,22 @@ public interface User extends MutableUserSyncData {
 
     boolean isOnline();
 
-    @NotNull
+    @Nonnull
     List<AProperty> getProperties();
 
-    @NotNull
+    @Nonnull
     RealmEntity getRealmUser();
 
     @Nullable
-    String getPropertyValueByName(@NotNull String name);
+    String getPropertyValueByName(@Nonnull String name);
 
-    @NotNull
+    @Nonnull
     UserSyncData getUserSyncData();
 
-    @NotNull
+    @Nonnull
     User clone();
 
-    @NotNull
+    @Nonnull
     User cloneWithNewStatus(boolean online);
 
     /*
@@ -71,15 +71,15 @@ public interface User extends MutableUserSyncData {
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     User updateChatsSyncDate();
 
-    @NotNull
+    @Nonnull
     User updatePropertiesSyncDate();
 
-    @NotNull
+    @Nonnull
     User updateContactsSyncDate();
 
-    @NotNull
+    @Nonnull
     User updateUserIconsSyncDate();
 }

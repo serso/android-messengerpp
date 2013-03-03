@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import roboguice.RoboGuice;
@@ -17,10 +17,10 @@ import java.util.TimerTask;
  */
 public class SyncTimerTask extends TimerTask {
 
-    @NotNull
+    @Nonnull
     private final WeakReference<Context> contextRef;
 
-    public SyncTimerTask(@NotNull Context context) {
+    public SyncTimerTask(@Nonnull Context context) {
         this.contextRef = new WeakReference<Context>(context);
     }
 

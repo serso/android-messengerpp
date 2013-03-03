@@ -7,8 +7,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -25,16 +25,16 @@ import java.util.List;
  */
 public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> implements UserEventListener {
 
-    @NotNull
+    @Nonnull
     private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
 
 
-    public AbstractContactsAdapter(@NotNull Context context) {
+    public AbstractContactsAdapter(@Nonnull Context context) {
         super(context, new ArrayList<ContactListItem>());
     }
 
     @Override
-    public void onUserEvent(@NotNull final User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void onUserEvent(@Nonnull final User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
         super.onUserEvent(eventUser, userEventType, data);
 
         if (userEventType == UserEventType.contact_removed) {
@@ -96,35 +96,35 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 
     @Nullable
-    protected ContactListItem findInAllElements(@NotNull User user, @NotNull User contact) {
+    protected ContactListItem findInAllElements(@Nonnull User user, @Nonnull User contact) {
         return Iterables.find(getAllElements(), Predicates.<ContactListItem>equalTo(createListItem(user, contact)), null);
     }
 
 
-    protected void removeListItem(@NotNull User user, @NotNull String contactId) {
+    protected void removeListItem(@Nonnull User user, @Nonnull String contactId) {
         // todo serso: not good solution => better way is to load full user object for contact (but it can take long time)
         final User contact = UserImpl.newFakeInstance(contactId);
         removeListItem(user, contact);
     }
 
-    protected void removeListItem(@NotNull User user, @NotNull User contact) {
+    protected void removeListItem(@Nonnull User user, @Nonnull User contact) {
         remove(createListItem(user, contact));
     }
 
-    protected void addListItem(@NotNull User user, @NotNull User contact) {
+    protected void addListItem(@Nonnull User user, @Nonnull User contact) {
         addListItem(createListItem(user, contact));
     }
 
-    @NotNull
-    private ContactListItem createListItem(@NotNull User user, @NotNull User contact) {
+    @Nonnull
+    private ContactListItem createListItem(@Nonnull User user, @Nonnull User contact) {
         return new ContactListItem(user, contact);
     }
 
-    protected abstract void onListItemChanged(@NotNull User user, @NotNull User contact);
+    protected abstract void onListItemChanged(@Nonnull User user, @Nonnull User contact);
 
-    protected abstract boolean canAddContact(@NotNull User contact);
+    protected abstract boolean canAddContact(@Nonnull User contact);
 
-    public void setMode(@NotNull MessengerContactsMode newMode) {
+    public void setMode(@Nonnull MessengerContactsMode newMode) {
         boolean refilter = this.mode != newMode;
         this.mode = newMode;
         if ( refilter ) {
@@ -132,7 +132,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected Filter createFilter() {
         return new ContactsFilter(new AdapterHelper());
@@ -140,10 +140,10 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
     private class ContactsFilter extends AdapterFilter<ContactListItem> {
 
-        @NotNull
+        @Nonnull
         private ContactFilter emptyPrefixFilter = new ContactFilter(null);
 
-        private ContactsFilter(@NotNull Helper<ContactListItem> helper) {
+        private ContactsFilter(@Nonnull Helper<ContactListItem> helper) {
             super(helper);
         }
 

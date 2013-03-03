@@ -2,7 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.widget.ImageButton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -21,7 +21,7 @@ public class FooterImageButtonBuilder implements ViewBuilder<ImageButton> {
     private FooterImageButtonBuilder() {
     }
 
-    @NotNull
+    @Nonnull
     public static ViewBuilder<ImageButton> newInstance(int imageResId, int contentDescriptionResId) {
         final FooterImageButtonBuilder result = new FooterImageButtonBuilder();
 
@@ -31,9 +31,9 @@ public class FooterImageButtonBuilder implements ViewBuilder<ImageButton> {
         return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ImageButton build(@NotNull Context context) {
+    public ImageButton build(@Nonnull Context context) {
         final ImageButton result = ViewFromLayoutBuilder.<ImageButton>newInstance(R.layout.footer_image_button).build(context);
 
         result.setImageDrawable(context.getResources().getDrawable(imageResId));

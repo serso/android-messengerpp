@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.sync;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,6 +9,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface SyncData {
 
-    @NotNull
+    @Nonnull
     String getRealmId();
 }

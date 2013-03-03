@@ -5,8 +5,8 @@ import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -15,9 +15,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface MessengerMultiPaneManager {
 
-    boolean isDualPane(@NotNull Activity activity);
+    boolean isDualPane(@Nonnull Activity activity);
 
-    boolean isTriplePane(@NotNull Activity activity);
+    boolean isTriplePane(@Nonnull Activity activity);
 
     boolean isFirstPane(@Nullable View parent);
 
@@ -25,16 +25,16 @@ public interface MessengerMultiPaneManager {
 
     boolean isThirdPane(@Nullable View parent);
 
-    @NotNull
-    ViewGroup getFirstPane(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getFirstPane(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getSecondPane(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getSecondPane(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getThirdPane(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getThirdPane(@Nonnull Activity activity);
 
-    void fillContentPane(@NotNull Activity activity, @Nullable View paneParent, @NotNull View pane);
+    void fillContentPane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane);
 
-    void fillLoadingLayout(@NotNull Activity activity, @Nullable View paneParent, @NotNull Resources resources, @NotNull LoadingLayout loadingView);
+    void fillLoadingLayout(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView);
 }

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -39,12 +39,12 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         this.lastUserIconsSyncDate = lastUserIconsSyncDate;
     }
 
-    @NotNull
+    @Nonnull
     public static UserSyncDataImpl newNeverSyncedInstance() {
         return new UserSyncDataImpl(null, null, null, null);
     }
 
-    @NotNull
+    @Nonnull
     public static UserSyncDataImpl newInstance(@Nullable DateTime lastPropertiesSyncDate,
                                                @Nullable DateTime lastContactsSyncDate,
                                                @Nullable DateTime lastChatsSyncDate,
@@ -52,12 +52,12 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         return new UserSyncDataImpl(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
     }
 
-    @NotNull
-    public static UserSyncDataImpl copyOf(@NotNull UserSyncData userSyncData) {
+    @Nonnull
+    public static UserSyncDataImpl copyOf(@Nonnull UserSyncData userSyncData) {
         return new UserSyncDataImpl(userSyncData.getLastPropertiesSyncDate(), userSyncData.getLastContactsSyncDate(), userSyncData.getLastChatsSyncDate(), userSyncData.getLastUserIconsSyncData());
     }
 
-    @NotNull
+    @Nonnull
     public static UserSyncDataImpl newInstanceFromStrings(@Nullable String lastPropertiesSyncDateString,
                                                           @Nullable String lastContactsSyncDateString,
                                                           @Nullable String lastChatsSyncDateString,
@@ -88,7 +88,7 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         return lastUserIconsSyncDate;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserSyncData updateChatsSyncDate() {
         final UserSyncDataImpl clone = this.clone();
@@ -96,7 +96,7 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserSyncData updatePropertiesSyncDate() {
         final UserSyncDataImpl clone = this.clone();
@@ -104,7 +104,7 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserSyncData updateContactsSyncDate() {
         final UserSyncDataImpl clone = this.clone();
@@ -112,7 +112,7 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserSyncData updateUserIconsSyncDate() {
         final UserSyncDataImpl clone = this.clone();
@@ -130,7 +130,7 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
         return lastPropertiesSyncDate;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserSyncDataImpl clone() {
         // dates are immutable => can leave links as is

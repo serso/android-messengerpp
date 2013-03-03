@@ -5,8 +5,8 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
@@ -26,7 +26,7 @@ import java.lang.reflect.Type;
  */
 public interface LongPollUpdate {
 
-    void doUpdate(@NotNull User user, @NotNull Realm realm);
+    void doUpdate(@Nonnull User user, @Nonnull Realm realm);
 
     public static class Adapter implements JsonDeserializer<LongPollUpdate> {
 
@@ -93,19 +93,19 @@ public interface LongPollUpdate {
 
     static class UserStartTypingInChat implements LongPollUpdate {
 
-        @NotNull
+        @Nonnull
         private final String realmUserId;
 
-        @NotNull
+        @Nonnull
         private final String realmChatId;
 
-        public UserStartTypingInChat(@NotNull String realmUserId, @NotNull String realmChatId) {
+        public UserStartTypingInChat(@Nonnull String realmUserId, @Nonnull String realmChatId) {
             this.realmUserId = realmUserId;
             this.realmChatId = realmChatId;
         }
 
         @Override
-        public void doUpdate(@NotNull User user, @NotNull Realm realm) {
+        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             // not self
             if (!user.getRealmUser().getRealmEntityId().equals(realmUserId)) {
                 Chat chat = getChatService().getChatById(realm.newRealmEntity(realmChatId));
@@ -116,7 +116,7 @@ public interface LongPollUpdate {
         }
 
 
-        @NotNull
+        @Nonnull
         private static ChatService getChatService() {
             return MessengerApplication.getServiceLocator().getChatService();
         }
@@ -124,15 +124,15 @@ public interface LongPollUpdate {
 
     static class UserStartTypingInPrivateChat implements LongPollUpdate {
 
-        @NotNull
+        @Nonnull
         private String realmUserId;
 
-        public UserStartTypingInPrivateChat(@NotNull String realmUserId) {
+        public UserStartTypingInPrivateChat(@Nonnull String realmUserId) {
             this.realmUserId = realmUserId;
         }
 
         @Override
-        public void doUpdate(@NotNull User user, @NotNull Realm realm) {
+        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             // not self
             if (!user.getRealmUser().getRealmEntityId().equals(realmUserId)) {
                 final RealmEntity secondRealmUser = realm.newRealmEntity(realmUserId);
@@ -146,7 +146,7 @@ public interface LongPollUpdate {
         }
 
 
-        @NotNull
+        @Nonnull
         private static ChatService getChatService() {
             return MessengerApplication.getServiceLocator().getChatService();
         }
@@ -154,20 +154,20 @@ public interface LongPollUpdate {
 
     static class ChatChanged implements LongPollUpdate {
 
-        @NotNull
+        @Nonnull
         private final String realmChatId;
 
-        public ChatChanged(@NotNull String realmChatId) {
+        public ChatChanged(@Nonnull String realmChatId) {
             this.realmChatId = realmChatId;
         }
 
         @Override
-        public void doUpdate(@NotNull User user, @NotNull Realm realm) {
+        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             getChatService().syncChat(realm.newRealmEntity(realmChatId), user.getRealmUser());
         }
 
 
-        @NotNull
+        @Nonnull
         private ChatService getChatService() {
             return MessengerApplication.getServiceLocator().getChatService();
         }
@@ -176,7 +176,7 @@ public interface LongPollUpdate {
     static class EmptyLongPollUpdate implements LongPollUpdate {
 
         @Override
-        public void doUpdate(@NotNull User user, @NotNull Realm realm) {
+        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             // do nothing
         }
 
@@ -194,7 +194,7 @@ public interface LongPollUpdate {
         private MessageAdded() {
         }
 
-        public static MessageAdded forChat(@NotNull String realmChatId) {
+        public static MessageAdded forChat(@Nonnull String realmChatId) {
             final MessageAdded result = new MessageAdded();
 
             result.realmFriendId = null;
@@ -203,7 +203,7 @@ public interface LongPollUpdate {
             return result;
         }
 
-        public static MessageAdded forFriend(@NotNull String realmFriendId) {
+        public static MessageAdded forFriend(@Nonnull String realmFriendId) {
             final MessageAdded result = new MessageAdded();
 
             result.realmFriendId = realmFriendId;
@@ -213,7 +213,7 @@ public interface LongPollUpdate {
         }
 
         @Override
-        public void doUpdate(@NotNull User user, @NotNull Realm realm) {
+        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             final RealmEntity realmChat;
             if (this.realmChatId != null) {
                 realmChat = realm.newRealmEntity(this.realmChatId);
@@ -225,7 +225,7 @@ public interface LongPollUpdate {
             getChatService().syncNewerChatMessagesForChat(realmChat, user.getRealmUser());
         }
 
-        @NotNull
+        @Nonnull
         private ChatService getChatService() {
             return MessengerApplication.getServiceLocator().getChatService();
         }
@@ -233,18 +233,18 @@ public interface LongPollUpdate {
 
     static class FriendOnline implements LongPollUpdate {
 
-        @NotNull
+        @Nonnull
         private final String realmFriendId;
 
         private final boolean online;
 
-        public FriendOnline(@NotNull String realmFriendId, boolean online) {
+        public FriendOnline(@Nonnull String realmFriendId, boolean online) {
             this.realmFriendId = realmFriendId;
             this.online = online;
         }
 
         @Override
-        public void doUpdate(@NotNull User user, @NotNull Realm realm) {
+        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             final User friend = getUserService().getUserById(realm.newRealmEntity(realmFriendId)).cloneWithNewStatus(online);
             if (online) {
                 getUserService().fireUserEvent(user, UserEventType.contact_online, friend);
@@ -260,15 +260,15 @@ public interface LongPollUpdate {
 
     static class RemoveMessage implements LongPollUpdate {
 
-        @NotNull
+        @Nonnull
         private final Integer messageId;
 
-        public RemoveMessage(@NotNull Integer messageId) {
+        public RemoveMessage(@Nonnull Integer messageId) {
             this.messageId = messageId;
         }
 
         @Override
-        public void doUpdate(@NotNull User user, @NotNull Realm realm) {
+        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             // todo serso: implement
         }
     }

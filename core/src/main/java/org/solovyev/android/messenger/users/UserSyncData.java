@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.common.JCloneable;
 
@@ -34,19 +34,19 @@ public interface UserSyncData extends MutableUserSyncData, JCloneable<UserSyncDa
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     @Override
     UserSyncData updateChatsSyncDate();
 
-    @NotNull
+    @Nonnull
     @Override
     UserSyncData updatePropertiesSyncDate();
 
-    @NotNull
+    @Nonnull
     @Override
     UserSyncData updateContactsSyncDate();
 
-    @NotNull
+    @Nonnull
     @Override
     UserSyncData updateUserIconsSyncDate();
 }

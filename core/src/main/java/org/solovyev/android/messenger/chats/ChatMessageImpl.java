@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
@@ -17,23 +17,23 @@ import java.util.List;
  */
 public class ChatMessageImpl extends JObject implements ChatMessage {
 
-    @NotNull
+    @Nonnull
     private LiteChatMessage liteChatMessage;
 
     private boolean read = false;
 
-    @NotNull
+    @Nonnull
     private List<LiteChatMessage> fwdMessages = new ArrayList<LiteChatMessage>();
 
-    @NotNull
+    @Nonnull
     private MessageDirection direction = MessageDirection.in;
 
-    public ChatMessageImpl(@NotNull LiteChatMessage liteChatMessage) {
+    public ChatMessageImpl(@Nonnull LiteChatMessage liteChatMessage) {
         this.liteChatMessage = liteChatMessage;
     }
 
-    @NotNull
-    public static ChatMessageImpl newInstance(@NotNull LiteChatMessage liteChatMessage) {
+    @Nonnull
+    public static ChatMessageImpl newInstance(@Nonnull LiteChatMessage liteChatMessage) {
         return new ChatMessageImpl(liteChatMessage);
     }
 
@@ -45,19 +45,19 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
         this.read = read;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public MessageDirection getDirection() {
         return this.direction;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<LiteChatMessage> getFwdMessages() {
         return Collections.unmodifiableList(fwdMessages);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ChatMessageImpl clone() {
         final ChatMessageImpl clone = (ChatMessageImpl) super.clone();
@@ -71,16 +71,16 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
         return clone;
     }
 
-    public boolean addFwdMessage(@NotNull LiteChatMessage fwdMessage) {
+    public boolean addFwdMessage(@Nonnull LiteChatMessage fwdMessage) {
         return fwdMessages.add(fwdMessage);
     }
 
-    public void setDirection(@NotNull MessageDirection direction) {
+    public void setDirection(@Nonnull MessageDirection direction) {
         this.direction = direction;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public User getAuthor() {
         return liteChatMessage.getAuthor();
     }
@@ -92,38 +92,38 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public DateTime getSendDate() {
         return liteChatMessage.getSendDate();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getTitle() {
         return liteChatMessage.getTitle();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getBody() {
         return liteChatMessage.getBody();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getId() {
         return liteChatMessage.getId();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return liteChatMessage.getVersion();
     }
 
     @Override
     @Nullable
-    public User getSecondUser(@NotNull User user) {
+    public User getSecondUser(@Nonnull User user) {
         return liteChatMessage.getSecondUser(user);
     }
 

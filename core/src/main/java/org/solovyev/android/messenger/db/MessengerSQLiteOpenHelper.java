@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.db.CommonSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
@@ -17,13 +17,13 @@ import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 public class MessengerSQLiteOpenHelper extends CommonSQLiteOpenHelper {
 
     @Inject
-    public MessengerSQLiteOpenHelper(@NotNull Application context,
-                                     @NotNull SQLiteOpenHelperConfiguration configuration) {
+    public MessengerSQLiteOpenHelper(@Nonnull Application context,
+                                     @Nonnull SQLiteOpenHelperConfiguration configuration) {
         super(context, configuration);
     }
 
-    public MessengerSQLiteOpenHelper(@NotNull Context context,
-                                     @NotNull SQLiteOpenHelperConfiguration configuration) {
+    public MessengerSQLiteOpenHelper(@Nonnull Context context,
+                                     @Nonnull SQLiteOpenHelperConfiguration configuration) {
         super(context, configuration);
     }
 }

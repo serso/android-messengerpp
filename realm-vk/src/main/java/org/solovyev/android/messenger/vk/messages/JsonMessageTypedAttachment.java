@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.vk.messages;
 
 import com.google.gson.*;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.lang.reflect.Type;
 

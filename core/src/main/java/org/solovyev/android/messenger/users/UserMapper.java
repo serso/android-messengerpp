@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.users;
 
 import android.database.Cursor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityMapper;
 import org.solovyev.android.properties.AProperty;
@@ -25,9 +25,9 @@ public class UserMapper implements Converter<Cursor, User> {
         this.userDao = userDao;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public User convert(@NotNull Cursor c) {
+    public User convert(@Nonnull Cursor c) {
         final RealmEntity realmEntity = RealmEntityMapper.newInstanceFor(1).convert(c);
 
         final UserSyncData userSyncData = UserSyncDataImpl.newInstanceFromStrings(c.getString(3), c.getString(4), c.getString(5), c.getString(6));

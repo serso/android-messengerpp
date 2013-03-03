@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ public interface ChatMessage extends LiteChatMessage {
 
     boolean isRead();
 
-    @NotNull
+    @Nonnull
     MessageDirection getDirection();
 
-    @NotNull
+    @Nonnull
     List<LiteChatMessage> getFwdMessages();
 
-    @NotNull
+    @Nonnull
     ChatMessage clone();
 }

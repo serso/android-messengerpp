@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -13,16 +13,16 @@ import java.util.Collection;
  */
 public interface RealmService {
 
-    @NotNull
+    @Nonnull
     static String TAG = "RealmService";
 
     /**
      * @return collection of all configured realms in application
      */
-    @NotNull
+    @Nonnull
     Collection<RealmDef> getRealmDefs();
 
-    @NotNull
+    @Nonnull
     Collection<Realm> getRealms();
 
     /**
@@ -31,16 +31,16 @@ public interface RealmService {
      * @return realm
      * @throws UnsupportedRealmException if realm hasn't been registered in this service
      */
-    @NotNull
-    RealmDef getRealmDefById(@NotNull String realmDefId) throws UnsupportedRealmException;
+    @Nonnull
+    RealmDef getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
 
-    @NotNull
-    Realm getRealmById(@NotNull String realmId) throws UnsupportedRealmException;
+    @Nonnull
+    Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
 
-    @NotNull
-    Realm saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+    @Nonnull
+    Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
-    void removeRealm(@NotNull String realmId);
+    void removeRealm(@Nonnull String realmId);
 
     void load();
 
@@ -52,7 +52,7 @@ public interface RealmService {
     **********************************************************************
     */
 
-    void addListener(@NotNull JEventListener<? extends RealmEvent> listener);
+    void addListener(@Nonnull JEventListener<? extends RealmEvent> listener);
 
-    void removeListener(@NotNull JEventListener<? extends RealmEvent> listener);
+    void removeListener(@Nonnull JEventListener<? extends RealmEvent> listener);
 }

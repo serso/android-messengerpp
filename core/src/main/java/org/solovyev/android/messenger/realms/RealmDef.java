@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.users.RealmUserService;
@@ -15,35 +15,35 @@ import org.solovyev.android.messenger.users.User;
  */
 public interface RealmDef {
 
-    @NotNull
+    @Nonnull
     String FAKE_REALM_ID = "fake";
 
     // realm's identifier. Must be unique for all existed realms
-    @NotNull
+    @Nonnull
     String getId();
 
     int getNameResId();
 
     int getIconResId();
 
-    @NotNull
-    RealmUserService newRealmUserService(@NotNull Realm realm);
+    @Nonnull
+    RealmUserService newRealmUserService(@Nonnull Realm realm);
 
-    @NotNull
-    RealmChatService newRealmChatService(@NotNull Realm realm);
+    @Nonnull
+    RealmChatService newRealmChatService(@Nonnull Realm realm);
 
-    @NotNull
-    RealmConnection newRealmConnection(@NotNull Realm realm, @NotNull Context context);
+    @Nonnull
+    RealmConnection newRealmConnection(@Nonnull Realm realm, @Nonnull Context context);
 
-    @NotNull
+    @Nonnull
     Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
 
-    @NotNull
-    Realm newRealm(@NotNull String realmId, @NotNull User user, @NotNull RealmConfiguration configuration);
+    @Nonnull
+    Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration);
 
-    @NotNull
+    @Nonnull
     Class<? extends RealmConfiguration> getConfigurationClass();
 
-    @NotNull
-    RealmBuilder newRealmBuilder(@NotNull RealmConfiguration configuration, @Nullable Realm editedRealm);
+    @Nonnull
+    RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm);
 }

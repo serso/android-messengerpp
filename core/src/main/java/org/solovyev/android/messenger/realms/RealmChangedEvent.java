@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RealmChangedEvent extends AbstractRealmEvent {
 
-    public RealmChangedEvent(@NotNull Realm realm) {
+    public RealmChangedEvent(@Nonnull Realm realm) {
         super(realm);
     }
 }

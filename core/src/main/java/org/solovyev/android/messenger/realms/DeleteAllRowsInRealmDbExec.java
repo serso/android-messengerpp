@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
 import android.database.sqlite.SQLiteDatabase;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.db.DbExec;
 
 /**
@@ -12,7 +12,7 @@ import org.solovyev.android.db.DbExec;
  */
 public class DeleteAllRowsInRealmDbExec implements DbExec {
 
-    @NotNull
+    @Nonnull
     private final String tableName;
 
     @Nullable
@@ -21,32 +21,32 @@ public class DeleteAllRowsInRealmDbExec implements DbExec {
     @Nullable
     private final String foreignKeyColumnName;
 
-    @NotNull
+    @Nonnull
     private final String realmId;
 
-    private DeleteAllRowsInRealmDbExec(@NotNull String tableName,
+    private DeleteAllRowsInRealmDbExec(@Nonnull String tableName,
                                        @Nullable String realmColumnName,
                                        @Nullable String foreignKeyColumnName,
-                                       @NotNull String realmId) {
+                                       @Nonnull String realmId) {
         this.tableName = tableName;
         this.realmColumnName = realmColumnName;
         this.foreignKeyColumnName = foreignKeyColumnName;
         this.realmId = realmId;
     }
 
-    @NotNull
-    public static DeleteAllRowsInRealmDbExec newInstance(@NotNull String tableName, @NotNull String realmColumnName, @NotNull String realmId) {
+    @Nonnull
+    public static DeleteAllRowsInRealmDbExec newInstance(@Nonnull String tableName, @Nonnull String realmColumnName, @Nonnull String realmId) {
         return new DeleteAllRowsInRealmDbExec(tableName, realmColumnName, null, realmId);
     }
 
-    @NotNull
-    public static DeleteAllRowsInRealmDbExec newStartsWith(@NotNull String tableName, @NotNull String foreignKeyColumnName, @NotNull String realmId) {
+    @Nonnull
+    public static DeleteAllRowsInRealmDbExec newStartsWith(@Nonnull String tableName, @Nonnull String foreignKeyColumnName, @Nonnull String realmId) {
         return new DeleteAllRowsInRealmDbExec(tableName, null, foreignKeyColumnName, realmId);
     }
 
 
     @Override
-    public void exec(@NotNull SQLiteDatabase db) {
+    public void exec(@Nonnull SQLiteDatabase db) {
         if (realmColumnName != null) {
             db.delete(tableName, realmColumnName + " = ?", new String[]{realmId});
         } else if (foreignKeyColumnName != null) {

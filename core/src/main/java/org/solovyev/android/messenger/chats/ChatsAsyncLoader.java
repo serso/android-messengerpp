@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -21,17 +21,17 @@ import java.util.List;
  */
 public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem> {
 
-    @NotNull
+    @Nonnull
     private final RealmService realmService;
 
-    ChatsAsyncLoader(@NotNull Context context, @NotNull ListItemArrayAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute, @NotNull RealmService realmService) {
+    ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemArrayAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute, @Nonnull RealmService realmService) {
         super(context, adapter, onPostExecute);
         this.realmService = realmService;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected List<UserChat> getElements(@NotNull Context context) {
+    protected List<UserChat> getElements(@Nonnull Context context) {
         final List<UserChat> result = new ArrayList<UserChat>();
 
         for (Realm realm : realmService.getRealms()) {
@@ -49,9 +49,9 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem
         return ChatListItem.Comparator.getInstance();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected ChatListItem createListItem(@NotNull UserChat userChat) {
+    protected ChatListItem createListItem(@Nonnull UserChat userChat) {
         return new ChatListItem(userChat.getUser(), userChat.getChat(), getContext());
     }
 

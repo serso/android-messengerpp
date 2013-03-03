@@ -7,8 +7,8 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -24,18 +24,18 @@ import roboguice.event.EventManager;
  */
 public class ContactListItem implements ListItem, UserEventListener, Comparable<ContactListItem>, Checkable {
 
-    @NotNull
+    @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_view_";
 
-    @NotNull
+    @Nonnull
     private User user;
 
-    @NotNull
+    @Nonnull
     private User contact;
 
     private boolean checked;
 
-    public ContactListItem(@NotNull User user, @NotNull User contact) {
+    public ContactListItem(@Nonnull User user, @Nonnull User contact) {
         this.user = user;
         this.contact = contact;
     }
@@ -44,7 +44,7 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
     public OnClickAction getOnClickAction() {
         return new OnClickAction() {
             @Override
-            public void onClick(@NotNull final Context context, @NotNull final ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
+            public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
 
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
                 eventManager.fire(ContactGuiEventType.newContactClicked(contact));
@@ -59,9 +59,9 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
     }
 
 
-    @NotNull
+    @Nonnull
     @Override
-    public View updateView(@NotNull Context context, @NotNull View view) {
+    public View updateView(@Nonnull Context context, @Nonnull View view) {
         if (String.valueOf(view.getTag()).startsWith(TAG_PREFIX)) {
             fillView((ViewGroup) view, context);
             return view;
@@ -70,20 +70,20 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View build(@NotNull Context context) {
+    public View build(@Nonnull Context context) {
         final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_contact).build(context);
         fillView(view, context);
         return view;
     }
 
-    @NotNull
+    @Nonnull
     private String createTag() {
         return TAG_PREFIX + contact.getRealmUser().getEntityId();
     }
 
-    private void fillView(@NotNull final ViewGroup view, @NotNull final Context context) {
+    private void fillView(@Nonnull final ViewGroup view, @Nonnull final Context context) {
         final String tag = createTag();
 
         // todo serso: view.setSelected() doesn't work
@@ -107,7 +107,7 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
         }
     }
 
-    public static void toggleSelected(@NotNull ViewGroup view, boolean checked) {
+    public static void toggleSelected(@Nonnull ViewGroup view, boolean checked) {
         if (checked) {
             view.setBackgroundResource(R.drawable.item_states_selected);
         } else {
@@ -116,7 +116,7 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
     }
 
     @Override
-    public void onUserEvent(@NotNull User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
         if (userEventType == UserEventType.changed) {
             if (eventUser.equals(user)) {
                 user = eventUser;
@@ -161,16 +161,16 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
     }
 
     @Override
-    public int compareTo(@NotNull ContactListItem another) {
+    public int compareTo(@Nonnull ContactListItem another) {
         return this.toString().compareTo(another.toString());
     }
 
-    @NotNull
+    @Nonnull
     public User getContact() {
         return contact;
     }
 
-    @NotNull
+    @Nonnull
     public User getUser() {
         return user;
     }

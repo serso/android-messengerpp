@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.vk.users;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.List;
 

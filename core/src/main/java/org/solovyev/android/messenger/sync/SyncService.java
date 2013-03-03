@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface SyncService {
 
-    void syncAll(@NotNull Context context) throws SyncAllTaskIsAlreadyRunning;
+    void syncAll(@Nonnull Context context) throws SyncAllTaskIsAlreadyRunning;
 
-    void sync(@NotNull SyncTask syncTask, @NotNull Context context, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException;
+    void sync(@Nonnull SyncTask syncTask, @Nonnull Context context, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException;
 }

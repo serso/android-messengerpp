@@ -2,7 +2,7 @@ package org.solovyev.android.messenger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.messenger.vk.VkRealmDef;
@@ -20,18 +20,18 @@ import java.util.Collection;
 public class TestMessengerConfiguration implements MessengerConfiguration {
 
     @Inject
-    @NotNull
+    @Nonnull
     private TestRealmDef testRealmDef;
 
     @Inject
-    @NotNull
+    @Nonnull
     private VkRealmDef vkRealmDef;
 
     @Inject
-    @NotNull
+    @Nonnull
     private XmppRealmDef xmppRealmDef;
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<RealmDef> getRealmDefs() {
         return Arrays.<RealmDef>asList(testRealmDef, vkRealmDef, xmppRealmDef);

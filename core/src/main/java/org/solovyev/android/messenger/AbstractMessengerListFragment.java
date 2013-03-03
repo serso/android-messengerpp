@@ -19,8 +19,8 @@ import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -55,10 +55,10 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     *
     **********************************************************************
     */
-    @NotNull
+    @Nonnull
     private static final String FILTER = "filter";
 
-    @NotNull
+    @Nonnull
     private static final String POSITION = "position";
 
     /*
@@ -71,27 +71,27 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private UserService userService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private ChatService chatService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private AuthServiceFacade authServiceFacade;
 
     @Inject
-    @NotNull
+    @Nonnull
     private SyncService syncService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
     /*
@@ -113,13 +113,13 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Nullable
     private EditText filterInput;
 
-    @NotNull
+    @Nonnull
     private final String tag;
 
     @Nullable
     private PullToRefreshListView2 pullLv;
 
-    public AbstractMessengerListFragment(@NotNull String tag) {
+    public AbstractMessengerListFragment(@Nonnull String tag) {
         this.tag = tag;
     }
 
@@ -129,27 +129,27 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         Log.d(tag, "onCreate: " + this);
     }
 
-    @NotNull
+    @Nonnull
     protected UserService getUserService() {
         return userService;
     }
 
-    @NotNull
+    @Nonnull
     protected AuthServiceFacade getAuthServiceFacade() {
         return authServiceFacade;
     }
 
-    @NotNull
+    @Nonnull
     protected SyncService getSyncService() {
         return syncService;
     }
 
-    @NotNull
+    @Nonnull
     protected ChatService getChatService() {
         return chatService;
     }
 
-    @NotNull
+    @Nonnull
     protected RealmService getRealmService() {
         return realmService;
     }
@@ -215,8 +215,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         }
     }
 
-    @NotNull
-    protected ListView getListView(@NotNull View root) {
+    @Nonnull
+    protected ListView getListView(@Nonnull View root) {
         return (ListView) root.findViewById(android.R.id.list);
     }
 
@@ -257,7 +257,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         }
     }
 
-    private void setFilterBoxVisible(boolean visible, @NotNull ViewGroup filterBox) {
+    private void setFilterBoxVisible(boolean visible, @Nonnull ViewGroup filterBox) {
         if (visible) {
             filterBox.setVisibility(View.VISIBLE);
         } else {
@@ -265,7 +265,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         }
     }
 
-    @NotNull
+    @Nonnull
     protected MessengerListItemAdapter getAdapter() {
         return adapter;
     }
@@ -298,7 +298,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     private static final int INTERNAL_PROGRESS_CONTAINER_ID = 0x00ff0002;
     private static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
 
-    private View createListView(@NotNull LayoutInflater inflater, ViewGroup container) {
+    private View createListView(@Nonnull LayoutInflater inflater, ViewGroup container) {
         final Context context = getActivity();
 
         final FrameLayout root = new FrameLayout(context);
@@ -395,7 +395,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         return pullLv;
     }
 
-    protected void fillListView(@NotNull ListView lv, @NotNull Context context) {
+    protected void fillListView(@Nonnull ListView lv, @Nonnull Context context) {
         final Resources resources = context.getResources();
 
         lv.setScrollbarFadingEnabled(true);
@@ -404,7 +404,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         lv.setDividerHeight(1);
     }
 
-    private void prepareLoadingView(@NotNull Resources resources, @Nullable LoadingLayout loadingView, @Nullable ViewGroup paneParent) {
+    private void prepareLoadingView(@Nonnull Resources resources, @Nullable LoadingLayout loadingView, @Nullable ViewGroup paneParent) {
         if (loadingView != null) {
             multiPaneManager.fillLoadingLayout(this.getActivity(), paneParent, resources, loadingView);
         }
@@ -522,7 +522,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         super.onDestroy();
     }
 
-    private void filterTextChanged(@NotNull CharSequence searchText) {
+    private void filterTextChanged(@Nonnull CharSequence searchText) {
         if (this.adapter != null) {
             if (this.adapter.isInitialized()) {
                 this.adapter.filter(searchText);
@@ -530,18 +530,18 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         }
     }
 
-    @NotNull
+    @Nonnull
     protected abstract MessengerListItemAdapter<LI> createAdapter();
 
     @Nullable
-    protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@NotNull MessengerListItemAdapter<LI> adapter, @NotNull Runnable onPostExecute);
+    protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull MessengerListItemAdapter<LI> adapter, @Nonnull Runnable onPostExecute);
 
     @Override
     public final void onScrollStateChanged(AbsListView view, int scrollState) {
         // do nothing
     }
 
-    @NotNull
+    @Nonnull
     private final AtomicInteger firstVisibleItem = new AtomicInteger(-1);
 
     @Override
@@ -601,7 +601,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     private class UiThreadUserEventListener implements UserEventListener {
 
         @Override
-        public void onUserEvent(@NotNull final User eventUser, @NotNull final UserEventType userEventType, final @Nullable Object data) {
+        public void onUserEvent(@Nonnull final User eventUser, @Nonnull final UserEventType userEventType, final @Nullable Object data) {
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
@@ -615,10 +615,10 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
         private final int position;
 
-        @NotNull
+        @Nonnull
         private final ListView listView;
 
-        public PostListLoadingRunnable(int position, @NotNull ListView lv) {
+        public PostListLoadingRunnable(int position, @Nonnull ListView lv) {
             this.position = position;
             listView = lv;
         }

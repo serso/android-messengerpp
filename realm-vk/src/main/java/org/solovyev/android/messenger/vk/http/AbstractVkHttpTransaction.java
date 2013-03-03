@@ -6,7 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
@@ -28,24 +28,24 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
 
     private static final String URI = "https://api.vkontakte.ru/method/";
 
-    @NotNull
+    @Nonnull
     private final Realm realm;
 
-    protected AbstractVkHttpTransaction(@NotNull Realm realm, @NotNull String method) {
+    protected AbstractVkHttpTransaction(@Nonnull Realm realm, @Nonnull String method) {
         this(realm, method, HttpMethod.GET);
     }
 
-    protected AbstractVkHttpTransaction(@NotNull Realm realm, @NotNull String method, @NotNull HttpMethod httpMethod) {
+    protected AbstractVkHttpTransaction(@Nonnull Realm realm, @Nonnull String method, @Nonnull HttpMethod httpMethod) {
         super(URI + method, httpMethod);
         this.realm = realm;
     }
 
-    @NotNull
+    @Nonnull
     protected Realm getRealm() {
         return realm;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<NameValuePair> getRequestParameters() {
         final ArrayList<NameValuePair> result = new ArrayList<NameValuePair>();
@@ -58,7 +58,7 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
     }
 
     @Override
-    public R getResponse(@NotNull HttpResponse response) {
+    public R getResponse(@Nonnull HttpResponse response) {
         try {
             final HttpEntity httpEntity = response.getEntity();
             final String json = EntityUtils.toString(httpEntity);
@@ -75,5 +75,5 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
         }
     }
 
-    protected abstract R getResponseFromJson(@NotNull String json) throws IllegalJsonException;
+    protected abstract R getResponseFromJson(@Nonnull String json) throws IllegalJsonException;
 }

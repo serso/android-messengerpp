@@ -5,8 +5,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.LiteChatMessage;
@@ -26,19 +26,19 @@ import java.util.List;
  */
 public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<String> {
 
-    @NotNull
+    @Nonnull
     private final ChatMessage chatMessage;
 
-    @NotNull
+    @Nonnull
     private final Chat chat;
 
-    public VkMessagesSendHttpTransaction(@NotNull Realm realm, @NotNull ChatMessage chatMessage, @NotNull Chat chat) {
+    public VkMessagesSendHttpTransaction(@Nonnull Realm realm, @Nonnull ChatMessage chatMessage, @Nonnull Chat chat) {
         super(realm, "messages.send");
         this.chatMessage = chatMessage;
         this.chat = chat;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<NameValuePair> getRequestParameters() {
         final List<NameValuePair> result = super.getRequestParameters();
@@ -79,7 +79,7 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
     }
 
     @Override
-    protected String getResponseFromJson(@NotNull String json) throws IllegalJsonException {
+    protected String getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
         return new Gson().fromJson(json, JsonResult.class).response;
     }
 

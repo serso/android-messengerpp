@@ -5,7 +5,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -30,31 +30,31 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DefaultRealmService implements RealmService {
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmDao realmDao;
 
     @Inject
-    @NotNull
+    @Nonnull
     private UserService userService;
 
-    @NotNull
+    @Nonnull
     private final Map<String, RealmDef> realmDefs = new HashMap<String, RealmDef>();
 
-    @NotNull
+    @Nonnull
     private final Map<String, Realm> realms = new HashMap<String, Realm>();
 
-    @NotNull
+    @Nonnull
     private AtomicInteger realmCounter = new AtomicInteger(0);
 
-    @NotNull
+    @Nonnull
     private final JEventListeners<JEventListener<? extends RealmEvent>, RealmEvent> listeners;
 
     @Inject
-    public DefaultRealmService(@NotNull MessengerConfiguration configuration) {
+    public DefaultRealmService(@Nonnull MessengerConfiguration configuration) {
         this(configuration.getRealmDefs());
     }
 
-    public DefaultRealmService(@NotNull Collection<? extends RealmDef> realmDefs) {
+    public DefaultRealmService(@Nonnull Collection<? extends RealmDef> realmDefs) {
         for (RealmDef realmDef : realmDefs) {
             this.realmDefs.put(realmDef.getId(), realmDef);
         }
@@ -62,21 +62,21 @@ public class DefaultRealmService implements RealmService {
         listeners = Listeners.newEventListenersBuilderFor(RealmEvent.class).withHardReferences().onBackgroundThread().create();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<RealmDef> getRealmDefs() {
         return Collections.unmodifiableCollection(this.realmDefs.values());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Collection<Realm> getRealms() {
         return Collections.unmodifiableCollection(this.realms.values());
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmDef getRealmDefById(@NotNull String realmDefId) throws UnsupportedRealmException {
+    public RealmDef getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException {
         final RealmDef realm = this.realmDefs.get(realmDefId);
         if ( realm == null ) {
             throw new UnsupportedRealmException(realmDefId);
@@ -84,9 +84,9 @@ public class DefaultRealmService implements RealmService {
         return realm;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Realm getRealmById(@NotNull String realmId) throws UnsupportedRealmException {
+    public Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException {
         final Realm realm = this.realms.get(realmId);
         if ( realm == null ) {
             throw new UnsupportedRealmException(realmId);
@@ -94,9 +94,9 @@ public class DefaultRealmService implements RealmService {
         return realm;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Realm saveRealm(@NotNull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
+    public Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
         Realm result;
 
         try {
@@ -160,7 +160,7 @@ public class DefaultRealmService implements RealmService {
     }
 
     @Override
-    public void removeRealm(@NotNull String realmId) {
+    public void removeRealm(@Nonnull String realmId) {
         synchronized (realms) {
             final Realm realm = this.realms.get(realmId);
                 if (realm != null) {
@@ -173,8 +173,8 @@ public class DefaultRealmService implements RealmService {
         }
     }
 
-    @NotNull
-    private String generateRealmId(@NotNull RealmDef realmDef) {
+    @Nonnull
+    private String generateRealmId(@Nonnull RealmDef realmDef) {
         return RealmEntityImpl.getRealmId(realmDef.getId(), realmCounter.getAndIncrement());
     }
 
@@ -203,12 +203,12 @@ public class DefaultRealmService implements RealmService {
     }
 
     @Override
-    public void addListener(@NotNull JEventListener<? extends RealmEvent> listener) {
+    public void addListener(@Nonnull JEventListener<? extends RealmEvent> listener) {
         listeners.addListener(listener);
     }
 
     @Override
-    public void removeListener(@NotNull JEventListener<? extends RealmEvent> listener) {
+    public void removeListener(@Nonnull JEventListener<? extends RealmEvent> listener) {
         listeners.removeListener(listener);
     }
 }

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.security.RealmAuthService;
@@ -10,28 +10,28 @@ import org.solovyev.android.messenger.users.User;
 
 public interface Realm<C extends RealmConfiguration> {
 
-    @NotNull
+    @Nonnull
     String getId();
 
-    @NotNull
+    @Nonnull
     RealmDef getRealmDef();
 
-    @NotNull
+    @Nonnull
     User getUser();
 
-    @NotNull
+    @Nonnull
     C getConfiguration();
 
-    @NotNull
-    RealmEntity newRealmEntity(@NotNull String realmEntityId);
+    @Nonnull
+    RealmEntity newRealmEntity(@Nonnull String realmEntityId);
 
-    @NotNull
-    RealmConnection createRealmConnection(@NotNull Context context);
+    @Nonnull
+    RealmConnection createRealmConnection(@Nonnull Context context);
 
-    boolean same(@NotNull Realm that);
+    boolean same(@Nonnull Realm that);
 
-    @NotNull
-    String getDisplayName(@NotNull Context context);
+    @Nonnull
+    String getDisplayName(@Nonnull Context context);
 
     /*
     **********************************************************************
@@ -40,15 +40,15 @@ public interface Realm<C extends RealmConfiguration> {
     *
     **********************************************************************
     */
-    @NotNull
+    @Nonnull
     RealmUserService getRealmUserService();
 
-    @NotNull
+    @Nonnull
     RealmChatService getRealmChatService();
 
-    @NotNull
+    @Nonnull
     RealmAuthService getRealmAuthService();
 
-    @NotNull
-    RealmConnection newRealmConnection(@NotNull Context context);
+    @Nonnull
+    RealmConnection newRealmConnection(@Nonnull Context context);
 }

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.users.User;
 
 /**
@@ -18,43 +18,43 @@ import org.solovyev.android.messenger.users.User;
  */
 public interface MessengerCommonActivity {
 
-    void onCreate(@NotNull SherlockFragmentActivity activity, Bundle savedInstanceState);
+    void onCreate(@Nonnull SherlockFragmentActivity activity, Bundle savedInstanceState);
 
-    void onRestart(@NotNull Activity activity);
+    void onRestart(@Nonnull Activity activity);
 
-    @NotNull
-    ImageButton createFooterImageButton(int imageResId, int contentDescriptionResId, @NotNull Activity activity);
+    @Nonnull
+    ImageButton createFooterImageButton(int imageResId, int contentDescriptionResId, @Nonnull Activity activity);
 
-    @NotNull
-    Button createFooterButton(int captionResId, @NotNull Activity activity);
+    @Nonnull
+    Button createFooterButton(int captionResId, @Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getFooterLeft(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getFooterLeft(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getFooterCenter(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getFooterCenter(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getFooterRight(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getFooterRight(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getHeaderLeft(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getHeaderLeft(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getHeaderCenter(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getHeaderCenter(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getHeaderRight(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getHeaderRight(@Nonnull Activity activity);
 
-    @NotNull
-    ViewGroup getCenter(@NotNull Activity activity);
+    @Nonnull
+    ViewGroup getCenter(@Nonnull Activity activity);
 
-    void handleException(@NotNull Activity activity, @NotNull Exception e);
+    void handleException(@Nonnull Activity activity, @Nonnull Exception e);
 
-    @NotNull
-    ViewPager initTitleForViewPager(@NotNull Activity activity,
-                               @NotNull ViewPager.OnPageChangeListener listener,
-                               @NotNull PagerAdapter adapter);
+    @Nonnull
+    ViewPager initTitleForViewPager(@Nonnull Activity activity,
+                               @Nonnull ViewPager.OnPageChangeListener listener,
+                               @Nonnull PagerAdapter adapter);
 
-    void onSaveInstanceState(@NotNull SherlockFragmentActivity activity, @NotNull Bundle outState);
+    void onSaveInstanceState(@Nonnull SherlockFragmentActivity activity, @Nonnull Bundle outState);
 }

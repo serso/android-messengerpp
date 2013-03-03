@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmEntity;
@@ -31,16 +31,16 @@ public class ChatImpl extends JObject implements Chat {
 
     private boolean privateChat;
 
-    @NotNull
+    @Nonnull
     private Integer messagesCount = 0;
 
-    @NotNull
+    @Nonnull
     private List<AProperty> properties;
 
     @Nullable
     private DateTime lastMessageSyncDate;
 
-    @NotNull
+    @Nonnull
     private RealmEntity realmEntity;
 
     /*
@@ -51,9 +51,9 @@ public class ChatImpl extends JObject implements Chat {
     **********************************************************************
     */
 
-    private ChatImpl(@NotNull RealmEntity realmEntity,
-                     @NotNull Integer messagesCount,
-                     @NotNull List<AProperty> properties,
+    private ChatImpl(@Nonnull RealmEntity realmEntity,
+                     @Nonnull Integer messagesCount,
+                     @Nonnull List<AProperty> properties,
                      @Nullable DateTime lastMessageSyncDate) {
         this.realmEntity = realmEntity;
         this.messagesCount = messagesCount;
@@ -70,8 +70,8 @@ public class ChatImpl extends JObject implements Chat {
         }
     }
 
-    private ChatImpl(@NotNull RealmEntity realmEntity,
-                     @NotNull Integer messagesCount,
+    private ChatImpl(@Nonnull RealmEntity realmEntity,
+                     @Nonnull Integer messagesCount,
                      boolean privateChat) {
         this.realmEntity = realmEntity;
         this.messagesCount = messagesCount;
@@ -82,15 +82,15 @@ public class ChatImpl extends JObject implements Chat {
 
 
 
-    @NotNull
-    public static Chat newFakeChat(@NotNull String chatId) {
+    @Nonnull
+    public static Chat newFakeChat(@Nonnull String chatId) {
         return new ChatImpl(RealmEntityImpl.fromEntityId(chatId), 0, false);
     }
 
-    @NotNull
-    public static Chat newInstance(@NotNull RealmEntity realmEntity,
-                                   @NotNull Integer messagesCount,
-                                   @NotNull List<AProperty> properties,
+    @Nonnull
+    public static Chat newInstance(@Nonnull RealmEntity realmEntity,
+                                   @Nonnull Integer messagesCount,
+                                   @Nonnull List<AProperty> properties,
                                    @Nullable DateTime lastMessageSyncDate) {
         return new ChatImpl(realmEntity, messagesCount, properties, lastMessageSyncDate);
     }
@@ -103,17 +103,17 @@ public class ChatImpl extends JObject implements Chat {
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     public List<AProperty> getProperties() {
         return Collections.unmodifiableList(properties);
     }
 
-    @NotNull
+    @Nonnull
     public Integer getMessagesCount() {
         return messagesCount;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ChatImpl updateMessagesSyncDate() {
         final ChatImpl clone = clone();
@@ -123,7 +123,7 @@ public class ChatImpl extends JObject implements Chat {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public ChatImpl clone() {
         final ChatImpl clone = (ChatImpl) super.clone();
@@ -145,7 +145,7 @@ public class ChatImpl extends JObject implements Chat {
         return clone;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmEntity getRealmChat() {
         return this.realmEntity;
@@ -156,7 +156,7 @@ public class ChatImpl extends JObject implements Chat {
         return privateChat;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmEntity getSecondUser() {
         assert isPrivate();

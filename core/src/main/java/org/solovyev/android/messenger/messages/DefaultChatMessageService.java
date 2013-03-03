@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.chats.Chat;
@@ -35,22 +35,22 @@ public class DefaultChatMessageService implements ChatMessageService {
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private ImageLoader imageLoader;
 
     @Inject
-    @NotNull
+    @Nonnull
     private Provider<ChatMessageDao> chatMessageDaoProvider;
 
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<ChatMessage> getChatMessages(@NotNull RealmEntity realmChat, @NotNull Context context) {
+    public List<ChatMessage> getChatMessages(@Nonnull RealmEntity realmChat, @Nonnull Context context) {
         return getChatMessageDao(context).loadChatMessages(realmChat.getEntityId());
     }
 
     @Override
-    public void setMessageIcon(@NotNull ImageView imageView, @NotNull ChatMessage message, @NotNull Chat chat, @NotNull User user, @NotNull Context context) {
+    public void setMessageIcon(@Nonnull ImageView imageView, @Nonnull ChatMessage message, @Nonnull Chat chat, @Nonnull User user, @Nonnull Context context) {
         final Drawable defaultChatIcon = context.getResources().getDrawable(R.drawable.empty_icon);
 
         final User author = message.getAuthor();
@@ -62,8 +62,8 @@ public class DefaultChatMessageService implements ChatMessageService {
         }
     }
 
-    @NotNull
-    private ChatMessageDao getChatMessageDao(@NotNull Context context) {
+    @Nonnull
+    private ChatMessageDao getChatMessageDao(@Nonnull Context context) {
         return RoboGuiceUtils.getInContextScope(context, chatMessageDaoProvider);
     }
 }

@@ -3,8 +3,9 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.test.InstrumentationTestCase;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.messenger.realms.RealmService;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -13,15 +14,15 @@ import org.solovyev.android.messenger.realms.RealmService;
  */
 public abstract class AbstractMessengerTestCase extends InstrumentationTestCase {
 
-    @NotNull
+    @Nonnull
     @Inject
     private Application application;
 
-    @NotNull
+    @Nonnull
     @Inject
     private RealmService realmService;
 
-    @NotNull
+    @Nonnull
     private TestMessengerModule module;
 
     public void setUp() throws Exception {
@@ -38,12 +39,12 @@ public abstract class AbstractMessengerTestCase extends InstrumentationTestCase 
         module.tearDown();
     }
 
-/*    @NotNull
+/*    @Nonnull
     public Application getApplication() {
         return application;
     }*/
 
-    @NotNull
+    @Nonnull
     public RealmService getRealmService() {
         return realmService;
     }

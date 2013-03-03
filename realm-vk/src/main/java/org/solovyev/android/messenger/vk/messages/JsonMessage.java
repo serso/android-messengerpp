@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.vk.messages;
 
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatMessageImpl;
@@ -130,11 +130,11 @@ public class JsonMessage {
         return admin_id;
     }
 
-    @NotNull
-    public LiteChatMessage toLiteChatMessage(@NotNull User user,
+    @Nonnull
+    public LiteChatMessage toLiteChatMessage(@Nonnull User user,
                                              @Nullable String explicitUserId,
-                                             @NotNull UserService userService,
-                                             @NotNull Realm realm) throws IllegalJsonException {
+                                             @Nonnull UserService userService,
+                                             @Nonnull Realm realm) throws IllegalJsonException {
         if (mid == null || uid == null || date == null) {
             throw new IllegalJsonException();
         }
@@ -169,8 +169,8 @@ public class JsonMessage {
         return result;
     }
 
-    @NotNull
-    public ChatMessage toChatMessage(@NotNull User user, @Nullable String explicitUserId, @NotNull UserService userService, @NotNull Realm realm) throws IllegalJsonException {
+    @Nonnull
+    public ChatMessage toChatMessage(@Nonnull User user, @Nullable String explicitUserId, @Nonnull UserService userService, @Nonnull Realm realm) throws IllegalJsonException {
         if (read_state == null || out == null) {
             throw new IllegalJsonException();
         }
@@ -185,8 +185,8 @@ public class JsonMessage {
         return result;
     }
 
-    @NotNull
-    private List<LiteChatMessage> getFwdMessages(@NotNull User user, @NotNull UserService userService, @NotNull Realm realm) throws IllegalJsonException {
+    @Nonnull
+    private List<LiteChatMessage> getFwdMessages(@Nonnull User user, @Nonnull UserService userService, @Nonnull Realm realm) throws IllegalJsonException {
         if (fwd_messages == null) {
             return Collections.emptyList();
         } else {
@@ -201,7 +201,7 @@ public class JsonMessage {
         }
     }
 
-    @NotNull
+    @Nonnull
     private MessageDirection getNotNullMessageDirection() {
         if (Integer.valueOf(1).equals(out)) {
             return MessageDirection.out;

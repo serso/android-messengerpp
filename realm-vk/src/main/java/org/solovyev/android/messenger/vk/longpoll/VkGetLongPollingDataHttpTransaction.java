@@ -9,7 +9,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
@@ -28,16 +28,16 @@ import java.util.List;
  */
 public class VkGetLongPollingDataHttpTransaction extends AbstractHttpTransaction<LongPollResult> {
 
-    @NotNull
+    @Nonnull
     private final LongPollServerData longPollServerData;
 
-    VkGetLongPollingDataHttpTransaction(@NotNull LongPollServerData longPollServerData) {
+    VkGetLongPollingDataHttpTransaction(@Nonnull LongPollServerData longPollServerData) {
         super("http://" + longPollServerData.getServerUri(), HttpMethod.GET);
         this.longPollServerData = longPollServerData;
     }
 
     @Override
-    public LongPollResult getResponse(@NotNull HttpResponse response) {
+    public LongPollResult getResponse(@Nonnull HttpResponse response) {
         try {
             final HttpEntity httpEntity = response.getEntity();
             final String json = EntityUtils.toString(httpEntity);
@@ -57,7 +57,7 @@ public class VkGetLongPollingDataHttpTransaction extends AbstractHttpTransaction
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<NameValuePair> getRequestParameters() {
         final List<NameValuePair> result = new ArrayList<NameValuePair>();

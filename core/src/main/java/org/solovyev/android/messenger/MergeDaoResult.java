@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -11,15 +11,15 @@ import java.util.List;
 */
 public interface MergeDaoResult<T, ID> {
 
-    @NotNull
+    @Nonnull
     List<ID> getRemovedObjectIds();
 
-    @NotNull
+    @Nonnull
     List<T> getAddedObjectLinks();
 
-    @NotNull
+    @Nonnull
     List<T> getAddedObjects();
 
-    @NotNull
+    @Nonnull
     List<T> getUpdatedObjects();
 }

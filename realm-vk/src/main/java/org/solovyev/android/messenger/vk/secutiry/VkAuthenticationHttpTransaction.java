@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
@@ -29,27 +29,27 @@ import java.util.List;
 public class VkAuthenticationHttpTransaction
         extends AbstractHttpTransaction<AuthData> {
 
-    @NotNull
+    @Nonnull
     private final String login;
 
-    @NotNull
+    @Nonnull
     private final String password;
 
     @Nullable
     private final ResolvedCaptcha captcha;
 
-    public VkAuthenticationHttpTransaction(@NotNull String login, @NotNull String password) {
+    public VkAuthenticationHttpTransaction(@Nonnull String login, @Nonnull String password) {
         this(login, password, null);
     }
 
-    public VkAuthenticationHttpTransaction(@NotNull String login, @NotNull String password, @Nullable ResolvedCaptcha captcha) {
+    public VkAuthenticationHttpTransaction(@Nonnull String login, @Nonnull String password, @Nullable ResolvedCaptcha captcha) {
         super("https://api.vk.com/oauth/token", HttpMethod.GET);
         this.login = login;
         this.password = password;
         this.captcha = captcha;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<NameValuePair> getRequestParameters() {
         final List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -68,9 +68,9 @@ public class VkAuthenticationHttpTransaction
         return params;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public AuthData getResponse(@NotNull HttpResponse response) {
+    public AuthData getResponse(@Nonnull HttpResponse response) {
 
         try {
             final String json = Strings.convertStream(response.getEntity().getContent());
@@ -95,8 +95,8 @@ public class VkAuthenticationHttpTransaction
         @Nullable
         private String user_id;
 
-        @NotNull
-        private static AuthData toAuthResult(@NotNull JsonResult jsonResult, @NotNull String login) {
+        @Nonnull
+        private static AuthData toAuthResult(@Nonnull JsonResult jsonResult, @Nonnull String login) {
             final AuthDataImpl result = new AuthDataImpl();
 
             result.setAccessToken(jsonResult.access_token);
@@ -106,8 +106,8 @@ public class VkAuthenticationHttpTransaction
             return result;
         }
 
-        @NotNull
-        public static AuthData toAuthResult(@NotNull String json, @NotNull String login) throws IllegalJsonException {
+        @Nonnull
+        public static AuthData toAuthResult(@Nonnull String json, @Nonnull String login) throws IllegalJsonException {
             final Gson gson = new Gson();
 
             final JsonResult jsonResult = gson.fromJson(json, JsonResult.class);

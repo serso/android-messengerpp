@@ -6,8 +6,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -24,25 +24,25 @@ import java.util.*;
  */
 public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> implements ChatEventListener, UserEventListener {
 
-    @NotNull
+    @Nonnull
     private final User user;
 
-    @NotNull
+    @Nonnull
     private Chat chat;
 
     // map of list items saying that someone start typing message
     // key: realm user id
-    @NotNull
+    @Nonnull
     private final Map<RealmEntity, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<RealmEntity, MessageListItem>());
 
-    public MessagesAdapter(@NotNull Context context, @NotNull User user, @NotNull Chat chat) {
+    public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat) {
         super(context, new ArrayList<MessageListItem>());
         this.user = user;
         this.chat = chat;
     }
 
     @Override
-    public void onChatEvent(@NotNull Chat eventChat, @NotNull ChatEventType chatEventType, @Nullable Object data) {
+    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
 
         if (chatEventType == ChatEventType.message_removed) {
             if (eventChat.equals(chat)) {
@@ -127,27 +127,27 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> i
     }
 
     @Nullable
-    private MessageListItem findInAllElements(@NotNull ChatMessage message) {
+    private MessageListItem findInAllElements(@Nonnull ChatMessage message) {
         return Iterables.find(getAllElements(), Predicates.<MessageListItem>equalTo(createListItem(message)), null);
     }
 
-    @NotNull
-    private MessageListItem createListItem(@NotNull ChatMessage message) {
+    @Nonnull
+    private MessageListItem createListItem(@Nonnull ChatMessage message) {
         return new MessageListItem(user, chat, message);
     }
 
-    private void addMessageListItem(@NotNull ChatMessage message) {
+    private void addMessageListItem(@Nonnull ChatMessage message) {
         // remove typing message
         userTypingListItems.remove(message.getAuthor().getRealmUser());
 
         addListItem(createListItem(message));
     }
 
-    protected void removeListItem(@NotNull ChatMessage message) {
+    protected void removeListItem(@Nonnull ChatMessage message) {
         remove(createListItem(message));
     }
 
-    private void removeMessageListItem(@NotNull String messageId) {
+    private void removeMessageListItem(@Nonnull String messageId) {
         // todo serso: not good solution => better way is to load full message object (but it can take long time)
         final ChatMessage message = ChatMessageImpl.newInstance(LiteChatMessageImpl.newInstance(messageId));
         removeListItem(message);

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.realms.MessengerRealmsActivity;
 import org.solovyev.android.messenger.realms.Realm;
@@ -28,15 +28,15 @@ import java.util.List;
 public class MessengerStartActivity extends RoboActivity {
 
     @Inject
-    @NotNull
+    @Nonnull
     private AuthService authService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private SyncService syncService;
 
 
@@ -91,12 +91,12 @@ public class MessengerStartActivity extends RoboActivity {
 
     private static final class PreloadCachedData extends MessengerAsyncTask<User, Void, Void> {
 
-        private PreloadCachedData(@NotNull Context context) {
+        private PreloadCachedData(@Nonnull Context context) {
             super(context);
         }
 
         @Override
-        protected Void doWork(@NotNull List<User> users) {
+        protected Void doWork(@Nonnull List<User> users) {
             Context context = getContext();
             if (context != null) {
                 for (User user : users) {

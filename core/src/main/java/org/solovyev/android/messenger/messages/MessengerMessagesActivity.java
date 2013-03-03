@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
@@ -29,20 +29,20 @@ import java.util.List;
 public class MessengerMessagesActivity extends MessengerFragmentActivity implements UserEventListener {
 
     @Inject
-    @NotNull
+    @Nonnull
     private ImageLoader imageLoader;
 
-    @NotNull
+    @Nonnull
     private static final String CHAT = "chat";
 
-    public static void startActivity(@NotNull Activity activity, @NotNull Chat chat) {
+    public static void startActivity(@Nonnull Activity activity, @Nonnull Chat chat) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerMessagesActivity.class);
         result.putExtra(CHAT, chat.getRealmChat());
         activity.startActivity(result);
     }
 
-    @NotNull
+    @Nonnull
     private Chat chat;
 
     @Nullable
@@ -106,7 +106,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     }
 
     @Override
-    public void onUserEvent(@NotNull final User eventUser, @NotNull final UserEventType userEventType, @Nullable final Object data) {
+    public void onUserEvent(@Nonnull final User eventUser, @Nonnull final UserEventType userEventType, @Nullable final Object data) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -148,7 +148,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         return false;
     }
 
-    @NotNull
+    @Nonnull
     public User getUser() {
         if ( user == null ) {
             try {

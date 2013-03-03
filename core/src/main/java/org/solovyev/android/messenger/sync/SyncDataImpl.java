@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.sync;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,14 +9,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SyncDataImpl implements SyncData {
 
-    @NotNull
+    @Nonnull
     private final String realmId;
 
-    public SyncDataImpl(@NotNull String realmId) {
+    public SyncDataImpl(@Nonnull String realmId) {
         this.realmId = realmId;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getRealmId() {
         return this.realmId;

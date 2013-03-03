@@ -1,24 +1,24 @@
 package org.solovyev.android.db;
 
 import android.database.sqlite.SQLiteDatabase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DeleteAllRowsDbExec implements DbExec {
 
-    @NotNull
+    @Nonnull
     private String tableName;
 
-    private DeleteAllRowsDbExec(@NotNull String tableName) {
+    private DeleteAllRowsDbExec(@Nonnull String tableName) {
         this.tableName = tableName;
     }
 
-    @NotNull
-    public static DbExec newInstance(@NotNull String tableName) {
+    @Nonnull
+    public static DbExec newInstance(@Nonnull String tableName) {
         return new DeleteAllRowsDbExec(tableName);
     }
 
     @Override
-    public void exec(@NotNull SQLiteDatabase db) {
+    public void exec(@Nonnull SQLiteDatabase db) {
         db.delete(tableName, null, null);
     }
 }

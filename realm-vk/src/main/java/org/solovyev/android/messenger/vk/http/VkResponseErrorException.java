@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.vk.http;
 
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
 import org.solovyev.android.messenger.api.CommonApiError;
@@ -15,8 +15,8 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
  */
 public class VkResponseErrorException extends ApiResponseErrorException {
 
-/*    @NotNull
-    public static VkResponseErrorException newInstance(@NotNull HttpResponse response) {
+/*    @Nonnull
+    public static VkResponseErrorException newInstance(@Nonnull HttpResponse response) {
         try {
             throw newInstance(Strings.convertStream(response.getEntity().getContent()), null);
         } catch (IOException e) {
@@ -24,8 +24,8 @@ public class VkResponseErrorException extends ApiResponseErrorException {
         }
     }*/
 
-    @NotNull
-    public static VkResponseErrorException newInstance(@NotNull String json, @Nullable HttpTransaction<?> httpTransaction) {
+    @Nonnull
+    public static VkResponseErrorException newInstance(@Nonnull String json, @Nullable HttpTransaction<?> httpTransaction) {
         VkResponseErrorException result;
         try {
             result = new VkResponseErrorException(CommonApiError.fromJson(json), httpTransaction);
@@ -37,10 +37,10 @@ public class VkResponseErrorException extends ApiResponseErrorException {
         return result;
     }
 
-    @NotNull
-    private static VkResponseErrorException handleException(@NotNull String json,
-                                                            @NotNull HttpTransaction<?> httpTransaction,
-                                                            @NotNull Exception e) {
+    @Nonnull
+    private static VkResponseErrorException handleException(@Nonnull String json,
+                                                            @Nonnull HttpTransaction<?> httpTransaction,
+                                                            @Nonnull Exception e) {
         VkResponseErrorException result;
         Log.e(VkResponseErrorException.class.getSimpleName(), json);
         Log.e(VkResponseErrorException.class.getSimpleName(), e.getMessage());
@@ -48,12 +48,12 @@ public class VkResponseErrorException extends ApiResponseErrorException {
         return result;
     }
 
-    public VkResponseErrorException(@NotNull CommonApiError vkError, @Nullable HttpTransaction<?> httpTransaction) {
+    public VkResponseErrorException(@Nonnull CommonApiError vkError, @Nullable HttpTransaction<?> httpTransaction) {
         super(vkError, httpTransaction);
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public CommonApiError getApiError() {
         return (CommonApiError)super.getApiError();
     }

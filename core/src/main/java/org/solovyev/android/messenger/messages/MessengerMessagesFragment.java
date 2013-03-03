@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.*;
@@ -47,19 +47,19 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private ChatService chatService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private ImageLoader imageLoader;
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
 
@@ -72,10 +72,10 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     */
 
 
-    @NotNull
+    @Nonnull
     private static final String TAG = "MessagesFragment";
 
-    @NotNull
+    @Nonnull
     private static final String CHAT = "chat";
 
     private Chat chat;
@@ -89,7 +89,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super(TAG);
     }
 
-    public MessengerMessagesFragment(@NotNull Chat chat) {
+    public MessengerMessagesFragment(@Nonnull Chat chat) {
         super(TAG);
         this.chat = chat;
     }
@@ -99,7 +99,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         return false;
     }
 
-    @NotNull
+    @Nonnull
     public Chat getChat() {
         return chat;
     }
@@ -177,7 +177,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         }
     }
 
-    @NotNull
+    @Nonnull
     private User getUser() {
         return realm.getUser();
     }
@@ -225,7 +225,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     }
 
     @Override
-    protected void fillListView(@NotNull ListView lv, @NotNull Context context) {
+    protected void fillListView(@Nonnull ListView lv, @Nonnull Context context) {
         super.fillListView(lv, context);
         lv.setDividerHeight(0);
     }
@@ -272,7 +272,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
             new SyncChatMessagesForChatAsyncTask(this, getActivity()) {
                 @Override
-                protected void onSuccessPostExecute(@NotNull Input result) {
+                protected void onSuccessPostExecute(@Nonnull Input result) {
                     try {
                         super.onSuccessPostExecute(result);
                     } finally {
@@ -283,7 +283,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
                 }
 
                 @Override
-                protected void onFailurePostExecute(@NotNull Exception e) {
+                protected void onFailurePostExecute(@Nonnull Exception e) {
                     try {
                         super.onFailurePostExecute(e);
                     } finally {
@@ -297,7 +297,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected MessagesAdapter createAdapter() {
         return new MessagesAdapter(getActivity(), getUser(), chat);
@@ -308,9 +308,9 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onDestroy();
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@NotNull MessengerListItemAdapter<MessageListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@Nonnull MessengerListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
         return new MessagesAsyncLoader(adapter, onPostExecute);
     }
 
@@ -337,7 +337,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected MessagesAdapter getAdapter() {
         return (MessagesAdapter) super.getAdapter();
@@ -350,15 +350,15 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     private static class ListViewPostActions implements Runnable {
 
-        @NotNull
+        @Nonnull
         private final ListView lv;
 
-        @NotNull
+        @Nonnull
         private final Integer transcriptMode;
 
         private final int count;
 
-        public ListViewPostActions(@NotNull ListView lv, @NotNull Integer transcriptMode, int count) {
+        public ListViewPostActions(@Nonnull ListView lv, @Nonnull Integer transcriptMode, int count) {
             this.lv = lv;
             this.transcriptMode = transcriptMode;
             this.count = count;
@@ -379,7 +379,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     private class UiThreadUserChatListener implements ChatEventListener {
 
         @Override
-        public void onChatEvent(@NotNull final Chat eventChat, @NotNull final ChatEventType chatEventType, @Nullable final Object data) {
+        public void onChatEvent(@Nonnull final Chat eventChat, @Nonnull final ChatEventType chatEventType, @Nullable final Object data) {
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
@@ -395,9 +395,9 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             super(MessengerMessagesFragment.this.getActivity(), adapter, onPostExecute);
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        protected List<ChatMessage> getElements(@NotNull Context context) {
+        protected List<ChatMessage> getElements(@Nonnull Context context) {
             return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmChat(), getActivity());
         }
 
@@ -406,9 +406,9 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             return MessageListItem.Comparator.getInstance();
         }
 
-        @NotNull
+        @Nonnull
         @Override
-        protected MessageListItem createListItem(@NotNull ChatMessage message) {
+        protected MessageListItem createListItem(@Nonnull ChatMessage message) {
             return new MessageListItem(getUser(), chat, message);
         }
 
@@ -423,7 +423,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             if (activity != null) {
                 new SyncChatMessagesForChatAsyncTask(null, activity) {
                     @Override
-                    protected void onSuccessPostExecute(@NotNull Input result) {
+                    protected void onSuccessPostExecute(@Nonnull Input result) {
                         super.onSuccessPostExecute(result);
                         // let's wait 0.5 sec while sorting & filtering
                         scrollToTheEnd(500);

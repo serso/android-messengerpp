@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -29,7 +29,7 @@ public enum ChatEventType {
     // data == realm user which start typing in chat
     user_start_typing;
 
-    public boolean isEvent (@NotNull ChatEventType chatEventType, @NotNull Chat eventChat, @NotNull Chat chat) {
+    public boolean isEvent (@Nonnull ChatEventType chatEventType, @Nonnull Chat eventChat, @Nonnull Chat chat) {
         return this == chatEventType && eventChat.equals(chat);
     }
 

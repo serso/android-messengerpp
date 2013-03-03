@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 
 /**
@@ -18,7 +18,7 @@ import org.solovyev.android.messenger.MessengerMultiPaneManager;
 public class MessengerEmptyFragment extends RoboSherlockFragment {
 
     @Inject
-    @NotNull
+    @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
     @Override

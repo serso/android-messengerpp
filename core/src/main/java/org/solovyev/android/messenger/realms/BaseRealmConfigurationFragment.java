@@ -7,27 +7,27 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 
 public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSherlockFragment {
 
-    @NotNull
+    @Nonnull
     public static final String EXTRA_REALM_ID = "realm_id";
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     @Inject
-    @NotNull
+    @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
     @Inject
-    @NotNull
+    @Nonnull
     private EventManager eventManager;
 
     private R editedRealm;
@@ -70,11 +70,11 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
         return editedRealm == null;
     }
 
-    protected void removeRealm(@NotNull Realm realm) {
+    protected void removeRealm(@Nonnull Realm realm) {
         new AsynRealmRemover(this.getActivity(), realmService).execute(realm);
     }
 
-    protected void saveRealm(@NotNull RealmBuilder realmBuilder, @Nullable RealmSaveHandler realmSaveHandler) {
+    protected void saveRealm(@Nonnull RealmBuilder realmBuilder, @Nullable RealmSaveHandler realmSaveHandler) {
         new AsynRealmSaver(this.getActivity(), realmService, realmSaveHandler).execute(realmBuilder);
     }
 
@@ -85,7 +85,7 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
         }
     }
 
-    @NotNull
+    @Nonnull
     protected MessengerMultiPaneManager getMultiPaneManager() {
         return multiPaneManager;
     }
@@ -104,7 +104,7 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
          * @param e exception during saving the realm
          * @return true if exception was consumed and no further action is required
          */
-        boolean onFailure(@NotNull Exception e);
+        boolean onFailure(@Nonnull Exception e);
 
     }
 

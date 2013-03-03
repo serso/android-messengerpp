@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.vk.users;
 
 import com.google.gson.Gson;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.realms.Realm;
@@ -19,16 +19,16 @@ import java.util.List;
  */
 public class JsonUserConverter implements Converter<String, List<User>> {
 
-    @NotNull
+    @Nonnull
     private final Realm realm;
 
-    private JsonUserConverter(@NotNull Realm realm) {
+    private JsonUserConverter(@Nonnull Realm realm) {
         this.realm = realm;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<User> convert(@NotNull String json) {
+    public List<User> convert(@Nonnull String json) {
         final Gson gson = new Gson();
 
         final JsonUsers jsonUsersResult = gson.fromJson(json, JsonUsers.class);
@@ -49,8 +49,8 @@ public class JsonUserConverter implements Converter<String, List<User>> {
         return result;
     }
 
-    @NotNull
-    public static Converter<String, List<User>> newInstance(@NotNull Realm realm) {
+    @Nonnull
+    public static Converter<String, List<User>> newInstance(@Nonnull Realm realm) {
         return new JsonUserConverter(realm);
     }
 }

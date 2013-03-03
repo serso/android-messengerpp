@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.widget.Toast;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -17,9 +17,9 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
  */
 public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFragment {
 
-    @NotNull
+    @Nonnull
     @Override
-    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@NotNull MessengerListItemAdapter<ContactListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
         return new OnlineContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 
@@ -43,7 +43,7 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
         };
     }
 
-    @NotNull
+    @Nonnull
     protected AbstractContactsAdapter createAdapter() {
         return new OnlineContactsAdapter(getActivity());
     }

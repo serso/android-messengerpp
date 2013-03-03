@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
 import android.widget.ImageView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
@@ -19,35 +19,35 @@ public interface ChatService extends ChatEventContainer {
     // initial initialization: will be called once on application start
     void init();
 
-    @NotNull
-    Chat updateChat(@NotNull Chat chat);
+    @Nonnull
+    Chat updateChat(@Nonnull Chat chat);
 
-    @NotNull
-    List<Chat> loadUserChats(@NotNull RealmEntity user);
+    @Nonnull
+    List<Chat> loadUserChats(@Nonnull RealmEntity user);
 
-    @NotNull
-    MergeDaoResult<ApiChat, String> mergeUserChats(@NotNull String userId, @NotNull List<? extends ApiChat> chats);
-
-    @Nullable
-    Chat getChatById(@NotNull RealmEntity realmChat);
-
-    @NotNull
-    List<User> getParticipants(@NotNull RealmEntity realmChat);
-
-    @NotNull
-    List<User> getParticipantsExcept(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
+    @Nonnull
+    MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
 
     @Nullable
-    ChatMessage getLastMessage(@NotNull RealmEntity realmChat);
+    Chat getChatById(@Nonnull RealmEntity realmChat);
 
-    @NotNull
-    Chat createPrivateChat(@NotNull RealmEntity user, @NotNull RealmEntity secondRealmUser);
+    @Nonnull
+    List<User> getParticipants(@Nonnull RealmEntity realmChat);
 
-    @NotNull
-    RealmEntity createPrivateChatId(@NotNull RealmEntity user, @NotNull RealmEntity secondRealmUser);
+    @Nonnull
+    List<User> getParticipantsExcept(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
 
-    @NotNull
-    ChatMessage sendChatMessage(@NotNull RealmEntity user, @NotNull Chat chat, @NotNull ChatMessage chatMessage);
+    @Nullable
+    ChatMessage getLastMessage(@Nonnull RealmEntity realmChat);
+
+    @Nonnull
+    Chat createPrivateChat(@Nonnull RealmEntity user, @Nonnull RealmEntity secondRealmUser);
+
+    @Nonnull
+    RealmEntity createPrivateChatId(@Nonnull RealmEntity user, @Nonnull RealmEntity secondRealmUser);
+
+    @Nonnull
+    ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage);
 
     /*
     **********************************************************************
@@ -57,19 +57,19 @@ public interface ChatService extends ChatEventContainer {
     **********************************************************************
     */
 
-    @NotNull
-    List<ChatMessage> syncChatMessages(@NotNull RealmEntity user);
+    @Nonnull
+    List<ChatMessage> syncChatMessages(@Nonnull RealmEntity user);
 
-    @NotNull
-    List<ChatMessage> syncNewerChatMessagesForChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
+    @Nonnull
+    List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
 
-    @NotNull
-    List<ChatMessage> syncOlderChatMessagesForChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
+    @Nonnull
+    List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
 
-    void syncChat(@NotNull RealmEntity realmChat, @NotNull RealmEntity realmUser);
+    void syncChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
 
     @Nullable
-    RealmEntity getSecondUser(@NotNull Chat chat);
+    RealmEntity getSecondUser(@Nonnull Chat chat);
 
-    void setChatIcon(@NotNull ImageView imageView, @NotNull Chat chat, @NotNull User user);
+    void setChatIcon(@Nonnull ImageView imageView, @Nonnull Chat chat, @Nonnull User user);
 }

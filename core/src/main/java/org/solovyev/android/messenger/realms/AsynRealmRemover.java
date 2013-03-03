@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.realms;
 
 import android.app.Activity;
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
@@ -17,17 +17,17 @@ import java.util.List;
 */
 class AsynRealmRemover extends MessengerAsyncTask<Realm, Integer, List<Realm>> {
 
-    @NotNull
+    @Nonnull
     private final RealmService realmService;
 
-    AsynRealmRemover(@NotNull Activity context,
-                     @NotNull RealmService realmService) {
+    AsynRealmRemover(@Nonnull Activity context,
+                     @Nonnull RealmService realmService) {
         super(context, true);
         this.realmService = realmService;
     }
 
     @Override
-    protected List<Realm> doWork(@NotNull List<Realm> realms) {
+    protected List<Realm> doWork(@Nonnull List<Realm> realms) {
         for (Realm realm : realms) {
             realmService.removeRealm(realm.getId());
         }

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -9,7 +9,7 @@ import org.solovyev.common.BuilderWithData;
 
 public interface RealmBuilder extends BuilderWithData<Realm, RealmBuilder.Data> {
 
-    @NotNull
+    @Nonnull
     RealmDef getRealmDef();
 
     @Nullable
@@ -19,31 +19,31 @@ public interface RealmBuilder extends BuilderWithData<Realm, RealmBuilder.Data> 
 
     void disconnect()throws ConnectionException;
 
-    @NotNull
+    @Nonnull
     AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
 
-    @NotNull
+    @Nonnull
     RealmConfiguration getConfiguration();
 
     public static final class Data {
 
-        @NotNull
+        @Nonnull
         private final AuthData authData;
 
-        @NotNull
+        @Nonnull
         private final String realmId;
 
-        public Data(@NotNull AuthData authData, @NotNull String realmId) {
+        public Data(@Nonnull AuthData authData, @Nonnull String realmId) {
             this.authData = authData;
             this.realmId = realmId;
         }
 
-        @NotNull
+        @Nonnull
         public AuthData getAuthData() {
             return authData;
         }
 
-        @NotNull
+        @Nonnull
         public String getRealmId() {
             return realmId;
         }

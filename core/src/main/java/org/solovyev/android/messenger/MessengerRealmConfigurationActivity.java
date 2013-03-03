@@ -4,24 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.*;
 import roboguice.event.EventListener;
 
 public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity implements EventListener<RealmFragmentFinishedEvent> {
 
-    @NotNull
+    @Nonnull
     private static final String REALM_CONFIGURATION_FRAGMENT_TAG = "realm-configuration";
 
-    @NotNull
+    @Nonnull
     private static final String EXTRA_REALM_DEF_ID = "realm_def_id";
 
-    @NotNull
+    @Nonnull
     private static final String EXTRA_REALM_ID = "realm_id";
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     public MessengerRealmConfigurationActivity() {
@@ -50,12 +50,12 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
          getEventManager().registerObserver(RealmFragmentFinishedEvent.class, this);
     }
 
-    private void prepareUiForCreate(@NotNull RealmDef realmDef) {
+    private void prepareUiForCreate(@Nonnull RealmDef realmDef) {
         setFragment(R.id.content_first_pane, realmDef.getConfigurationFragmentClass(), REALM_CONFIGURATION_FRAGMENT_TAG, null);
 
     }
 
-    private void prepareUiForEdit(@NotNull Realm realm) {
+    private void prepareUiForEdit(@Nonnull Realm realm) {
         final Bundle fragmentArgs = new Bundle();
         fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
         setFragment(R.id.content_first_pane, realm.getRealmDef().getConfigurationFragmentClass(), REALM_CONFIGURATION_FRAGMENT_TAG, fragmentArgs);
@@ -70,7 +70,7 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
 
 
     @Override
-    public void onEvent(@NotNull RealmFragmentFinishedEvent event) {
+    public void onEvent(@Nonnull RealmFragmentFinishedEvent event) {
         finish();
     }
 
@@ -82,14 +82,14 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
     **********************************************************************
     */
 
-    public static void startForNewRealm(@NotNull Context context, @NotNull RealmDef realmDef) {
+    public static void startForNewRealm(@Nonnull Context context, @Nonnull RealmDef realmDef) {
         final Intent intent = new Intent();
         intent.setClass(context.getApplicationContext(), MessengerRealmConfigurationActivity.class);
         intent.putExtra(EXTRA_REALM_DEF_ID, realmDef.getId());
         context.startActivity(intent);
     }
 
-    public static void startForEditRealm(@NotNull Context context, @NotNull Realm realm) {
+    public static void startForEditRealm(@Nonnull Context context, @Nonnull Realm realm) {
         final Intent intent = new Intent();
         intent.setClass(context.getApplicationContext(), MessengerRealmConfigurationActivity.class);
         intent.putExtra(EXTRA_REALM_ID, realm.getId());

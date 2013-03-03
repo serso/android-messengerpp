@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -11,8 +11,8 @@ public enum ChatGuiEventType {
 
     chat_clicked;
 
-    @NotNull
-    public static ChatGuiEvent newChatClicked(@NotNull Chat chat) {
+    @Nonnull
+    public static ChatGuiEvent newChatClicked(@Nonnull Chat chat) {
         return new ChatGuiEvent(chat_clicked, chat);
     }
 }

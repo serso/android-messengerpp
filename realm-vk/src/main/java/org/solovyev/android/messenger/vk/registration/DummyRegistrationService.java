@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.vk.registration;
 
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.registration.RegistrationService;
 
 /**
@@ -14,12 +14,12 @@ import org.solovyev.android.messenger.registration.RegistrationService;
 public class DummyRegistrationService implements RegistrationService {
 
     @Override
-    public void requestVerificationCode(@NotNull String phoneNumber, @NotNull String firstName, @NotNull String lastName) {
+    public void requestVerificationCode(@Nonnull String phoneNumber, @Nonnull String firstName, @Nonnull String lastName) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public boolean checkVerificationCode(@NotNull String verificationCode) {
+    public boolean checkVerificationCode(@Nonnull String verificationCode) {
         return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

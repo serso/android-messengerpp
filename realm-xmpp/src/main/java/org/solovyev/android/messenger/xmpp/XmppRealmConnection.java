@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.xmpp;
 
 import android.content.Context;
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
@@ -26,13 +26,13 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     private static final String TAG = XmppRealmConnection.class.getSimpleName();
 
-    @NotNull
+    @Nonnull
     private ConnectionConfiguration configuration;
 
     @Nullable
     private Connection connection;
 
-    public XmppRealmConnection(@NotNull XmppRealm realm, @NotNull Context context) {
+    public XmppRealmConnection(@Nonnull XmppRealm realm, @Nonnull Context context) {
         super(realm, context);
         configuration = realm.getConfiguration().toXmppConfiguration();
     }
@@ -57,7 +57,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
        assert this.connection == null;
@@ -85,14 +85,14 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     }
 
     @Override
-    public void logoutUser(@NotNull User user) {
+    public void logoutUser(@Nonnull User user) {
         if ( connection != null ) {
             connection.disconnect();
             connection = null;
         }
     }
 
-    @NotNull
+    @Nonnull
     public Connection getConnection() {
         if (connection != null) {
             return connection;

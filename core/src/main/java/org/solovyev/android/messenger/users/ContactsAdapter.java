@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -10,16 +10,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ContactsAdapter extends AbstractContactsAdapter {
 
-    public ContactsAdapter(@NotNull Context context) {
+    public ContactsAdapter(@Nonnull Context context) {
         super(context);
     }
 
     @Override
-    protected void onListItemChanged(@NotNull User user, @NotNull User contact) {
+    protected void onListItemChanged(@Nonnull User user, @Nonnull User contact) {
     }
 
     @Override
-    protected boolean canAddContact(@NotNull User contact) {
+    protected boolean canAddContact(@Nonnull User contact) {
         return true;
     }
 }

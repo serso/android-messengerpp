@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.messenger.MergeDaoResult;
 
@@ -22,23 +22,23 @@ public interface UserDao {
     **********************************************************************
     */
 
-    @NotNull
-    User insertUser(@NotNull User user);
+    @Nonnull
+    User insertUser(@Nonnull User user);
 
     @Nullable
-    User loadUserById(@NotNull String userId);
+    User loadUserById(@Nonnull String userId);
 
-    @NotNull
-    List<AProperty> loadUserPropertiesById(@NotNull String userId);
+    @Nonnull
+    List<AProperty> loadUserPropertiesById(@Nonnull String userId);
 
-    void updateUser(@NotNull User user);
+    void updateUser(@Nonnull User user);
 
-    @NotNull
+    @Nonnull
     List<String> loadUserIds();
 
     void deleteAllUsers();
 
-    void deleteAllUsersInRealm(@NotNull String realmId);
+    void deleteAllUsersInRealm(@Nonnull String realmId);
 
     /*
     **********************************************************************
@@ -48,12 +48,12 @@ public interface UserDao {
     **********************************************************************
     */
 
-    @NotNull
-    List<String> loadUserContactIds(@NotNull String userId);
+    @Nonnull
+    List<String> loadUserContactIds(@Nonnull String userId);
 
-    @NotNull
-    List<User> loadUserContacts(@NotNull String userId);
+    @Nonnull
+    List<User> loadUserContacts(@Nonnull String userId);
 
-    @NotNull
-    MergeDaoResult<User, String> mergeUserContacts(@NotNull String userId, @NotNull List<User> contacts);
+    @Nonnull
+    MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts);
 }

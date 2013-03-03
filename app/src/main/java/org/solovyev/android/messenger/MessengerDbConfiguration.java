@@ -2,7 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteDatabase;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
 /**
@@ -13,11 +13,11 @@ import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 @Singleton
 public class MessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
 
-    @NotNull
+    @Nonnull
     public static final String DB_NAME = "mpp";
     public static final int DB_VERSION = 1;
 
-    @NotNull
+    @Nonnull
     @Override
     public String getName() {
         return DB_NAME;

@@ -2,7 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.widget.Button;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -19,7 +19,7 @@ public class FooterButtonBuilder implements ViewBuilder<Button> {
     private FooterButtonBuilder() {
     }
 
-    @NotNull
+    @Nonnull
     public static ViewBuilder<Button> newInstance(int captionResId) {
         final FooterButtonBuilder result = new FooterButtonBuilder();
 
@@ -28,9 +28,9 @@ public class FooterButtonBuilder implements ViewBuilder<Button> {
         return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Button build(@NotNull Context context) {
+    public Button build(@Nonnull Context context) {
         final Button result = ViewFromLayoutBuilder.<Button>newInstance(R.layout.footer_button).build(context);
 
         result.setText(context.getText(captionResId));

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.widget.Button;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
 
 /**
@@ -13,15 +13,15 @@ import org.solovyev.android.messenger.core.R;
  * Time: 2:11 PM
  */
 public class MessengerCommonFragmentImpl implements MessengerCommonFragment {
-    @NotNull
+    @Nonnull
     @Override
-    public Button createFooterButton(int captionResId, @NotNull Activity activity) {
+    public Button createFooterButton(int captionResId, @Nonnull Activity activity) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getFooter(@NotNull Fragment fragment) {
+    public ViewGroup getFooter(@Nonnull Fragment fragment) {
         return (ViewGroup) fragment.getView().findViewById(R.id.footer);
     }
 }

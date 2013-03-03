@@ -1,7 +1,7 @@
 package org.solovyev.android.view;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -10,14 +10,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class OnRefreshListener2Adapter implements PullToRefreshBase.OnRefreshListener2 {
 
-    @NotNull
+    @Nonnull
     private PullToRefreshBase.OnRefreshListener onPullDownToRefresh;
 
-    @NotNull
+    @Nonnull
     private PullToRefreshBase.OnRefreshListener onPullUpToRefresh;
 
-    public OnRefreshListener2Adapter(@NotNull PullToRefreshBase.OnRefreshListener onPullDownToRefresh,
-                                     @NotNull PullToRefreshBase.OnRefreshListener onPullUpToRefresh) {
+    public OnRefreshListener2Adapter(@Nonnull PullToRefreshBase.OnRefreshListener onPullDownToRefresh,
+                                     @Nonnull PullToRefreshBase.OnRefreshListener onPullUpToRefresh) {
         this.onPullDownToRefresh = onPullDownToRefresh;
         this.onPullUpToRefresh = onPullUpToRefresh;
     }

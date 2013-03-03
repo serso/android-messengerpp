@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -11,12 +11,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class OnlineContactsAdapter extends AbstractContactsAdapter {
 
-    public OnlineContactsAdapter(@NotNull Context context) {
+    public OnlineContactsAdapter(@Nonnull Context context) {
         super(context);
     }
 
     @Override
-    public void onUserEvent(@NotNull User eventUser, @NotNull UserEventType userEventType, @Nullable Object data) {
+    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
         super.onUserEvent(eventUser, userEventType, data);
 
         if ( userEventType == UserEventType.contact_offline) {
@@ -38,14 +38,14 @@ public class OnlineContactsAdapter extends AbstractContactsAdapter {
     }
 
     @Override
-    protected void onListItemChanged(@NotNull User user, @NotNull User contact) {
+    protected void onListItemChanged(@Nonnull User user, @Nonnull User contact) {
         if ( !contact.isOnline() ) {
             removeListItem(user, contact);
         }
     }
 
     @Override
-    protected boolean canAddContact(@NotNull User contact) {
+    protected boolean canAddContact(@Nonnull User contact) {
         return contact.isOnline();
     }
 }

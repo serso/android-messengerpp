@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,24 +9,24 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ContactGuiEvent {
 
-    @NotNull
+    @Nonnull
     private final ContactGuiEventType type;
 
-    @NotNull
+    @Nonnull
     private final User contact;
 
-    public ContactGuiEvent(@NotNull ContactGuiEventType type,
-                           @NotNull User contact) {
+    public ContactGuiEvent(@Nonnull ContactGuiEventType type,
+                           @Nonnull User contact) {
         this.contact = contact;
         this.type = type;
     }
 
-    @NotNull
+    @Nonnull
     public ContactGuiEventType getType() {
         return type;
     }
 
-    @NotNull
+    @Nonnull
     public User getContact() {
         return contact;
     }

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.security.RealmAuthService;
@@ -10,22 +10,22 @@ import org.solovyev.android.messenger.users.User;
 
 public abstract class AbstractRealm<C extends RealmConfiguration> implements Realm<C> {
 
-    @NotNull
+    @Nonnull
     private String id;
 
-    @NotNull
+    @Nonnull
     private RealmDef realmDef;
 
-    @NotNull
+    @Nonnull
     private User user;
 
-    @NotNull
+    @Nonnull
     private C configuration;
 
-    public AbstractRealm(@NotNull String id,
-                         @NotNull RealmDef realmDef,
-                         @NotNull User user,
-                         @NotNull C configuration) {
+    public AbstractRealm(@Nonnull String id,
+                         @Nonnull RealmDef realmDef,
+                         @Nonnull User user,
+                         @Nonnull C configuration) {
         if (!user.getRealmUser().getRealmId().equals(id)) {
             throw new IllegalArgumentException("User must belong to realm!");
         }
@@ -36,68 +36,68 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
         this.configuration = configuration;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getId() {
         return this.id;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmDef getRealmDef() {
         return realmDef;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public User getUser() {
         return this.user;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public C getConfiguration() {
         return this.configuration;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmEntity newRealmEntity(@NotNull String realmEntityId) {
+    public RealmEntity newRealmEntity(@Nonnull String realmEntityId) {
         return RealmEntityImpl.newInstance(getId(), realmEntityId);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmConnection createRealmConnection(@NotNull Context context) {
+    public RealmConnection createRealmConnection(@Nonnull Context context) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmUserService getRealmUserService() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmChatService getRealmChatService() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmAuthService getRealmAuthService() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public RealmConnection newRealmConnection(@NotNull Context context) {
+    public RealmConnection newRealmConnection(@Nonnull Context context) {
         return getRealmDef().newRealmConnection(this, context);
     }
 
     @Override
-    public boolean same(@NotNull Realm r) {
+    public boolean same(@Nonnull Realm r) {
         if (r instanceof AbstractRealm) {
             final AbstractRealm that = (AbstractRealm) r;
             return this.configuration.equals(that.configuration);

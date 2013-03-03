@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.messages;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.joda.time.DateTime;
 import org.solovyev.common.VersionedEntity;
 
@@ -11,9 +11,9 @@ import org.solovyev.common.VersionedEntity;
  */
 public interface Message extends VersionedEntity {
 
-    @NotNull
+    @Nonnull
     DateTime getCreationDate();
 
-    @NotNull
+    @Nonnull
     Integer getCreator();
 }

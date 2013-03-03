@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TestRealmConfiguration implements RealmConfiguration {
 
-    @NotNull
+    @Nonnull
     private String testStringField;
 
     private int testIntField;
@@ -13,12 +13,12 @@ public class TestRealmConfiguration implements RealmConfiguration {
     public TestRealmConfiguration() {
     }
 
-    public TestRealmConfiguration(@NotNull String testStringField, int testIntField) {
+    public TestRealmConfiguration(@Nonnull String testStringField, int testIntField) {
         this.testStringField = testStringField;
         this.testIntField = testIntField;
     }
 
-    @NotNull
+    @Nonnull
     public String getTestStringField() {
         return testStringField;
     }

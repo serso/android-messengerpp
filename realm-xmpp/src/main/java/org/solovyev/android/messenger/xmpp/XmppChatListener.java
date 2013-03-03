@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.xmpp;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -18,7 +18,7 @@ public class XmppChatListener implements ChatManagerListener {
         }
     }
 
-    @NotNull
+    @Nonnull
     private ChatService getChatService() {
         return MessengerApplication.getServiceLocator().getChatService();
     }

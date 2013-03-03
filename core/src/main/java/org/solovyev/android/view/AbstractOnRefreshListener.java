@@ -1,8 +1,8 @@
 package org.solovyev.android.view;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 
@@ -17,7 +17,7 @@ public abstract class AbstractOnRefreshListener implements ListViewAwareOnRefres
     private WeakReference<PullToRefreshListView> listViewRef;
 
     @Override
-    public void setListView(@NotNull PullToRefreshListView listView) {
+    public void setListView(@Nonnull PullToRefreshListView listView) {
         listViewRef = new WeakReference<PullToRefreshListView>(listView);
     }
 

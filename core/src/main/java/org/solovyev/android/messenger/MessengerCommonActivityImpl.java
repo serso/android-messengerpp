@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TitlePageIndicator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
@@ -53,7 +53,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     @Override
-    public void onCreate(@NotNull final SherlockFragmentActivity activity, Bundle savedInstanceState) {
+    public void onCreate(@Nonnull final SherlockFragmentActivity activity, Bundle savedInstanceState) {
         //activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         activity.setContentView(layoutId);
@@ -103,13 +103,13 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull SherlockFragmentActivity activity, @NotNull Bundle outState) {
+    public void onSaveInstanceState(@Nonnull SherlockFragmentActivity activity, @Nonnull Bundle outState) {
         outState.putInt(SELECTED_NAV, activity.getSupportActionBar().getSelectedNavigationIndex());
     }
 
-    private void addTab(@NotNull SherlockFragmentActivity activity,
-                        @NotNull String tag,
-                        @NotNull Class<? extends Fragment> fragmentClass,
+    private void addTab(@Nonnull SherlockFragmentActivity activity,
+                        @Nonnull String tag,
+                        @Nonnull Class<? extends Fragment> fragmentClass,
                         @Nullable Bundle fragmentArgs,
                         int captionResId,
                         int iconResId) {
@@ -123,73 +123,73 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     @Override
-    public void onRestart(@NotNull Activity activity) {
+    public void onRestart(@Nonnull Activity activity) {
     }
 
     @Override
-    @NotNull
-    public ImageButton createFooterImageButton(int imageResId, int contentDescriptionResId, @NotNull Activity activity) {
+    @Nonnull
+    public ImageButton createFooterImageButton(int imageResId, int contentDescriptionResId, @Nonnull Activity activity) {
         final ImageButton result = FooterImageButtonBuilder.newInstance(imageResId, contentDescriptionResId).build(activity);
         result.setScaleType(ImageView.ScaleType.FIT_XY);
         return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Button createFooterButton(int captionResId, @NotNull Activity activity) {
+    public Button createFooterButton(int captionResId, @Nonnull Activity activity) {
         return FooterButtonBuilder.newInstance(captionResId).build(activity);
     }
 
     @Override
-    @NotNull
-    public ViewGroup getFooterLeft(@NotNull Activity activity) {
+    @Nonnull
+    public ViewGroup getFooterLeft(@Nonnull Activity activity) {
         throw new UnsupportedOperationException();
         //return (ViewGroup) activity.findViewById(R.id.footer_left);
     }
 
     @Override
-    @NotNull
-    public ViewGroup getFooterCenter(@NotNull Activity activity) {
+    @Nonnull
+    public ViewGroup getFooterCenter(@Nonnull Activity activity) {
         throw new UnsupportedOperationException();
         //return (ViewGroup) activity.findViewById(R.id.footer_center);
     }
 
     @Override
-    @NotNull
-    public ViewGroup getFooterRight(@NotNull Activity activity) {
+    @Nonnull
+    public ViewGroup getFooterRight(@Nonnull Activity activity) {
         throw new UnsupportedOperationException();
         //return (ViewGroup) activity.findViewById(R.id.footer_right);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getHeaderLeft(@NotNull Activity activity) {
+    public ViewGroup getHeaderLeft(@Nonnull Activity activity) {
         return (ViewGroup) activity.findViewById(R.id.header_left);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getHeaderCenter(@NotNull Activity activity) {
+    public ViewGroup getHeaderCenter(@Nonnull Activity activity) {
         return (ViewGroup) activity.findViewById(R.id.header_center);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getHeaderRight(@NotNull Activity activity) {
+    public ViewGroup getHeaderRight(@Nonnull Activity activity) {
         return (ViewGroup) activity.findViewById(R.id.header_right);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getCenter(@NotNull Activity activity) {
+    public ViewGroup getCenter(@Nonnull Activity activity) {
         return (ViewGroup) activity.findViewById(R.id.center);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewPager initTitleForViewPager(@NotNull Activity activity,
-                                           @NotNull ViewPager.OnPageChangeListener listener,
-                                           @NotNull PagerAdapter adapter) {
+    public ViewPager initTitleForViewPager(@Nonnull Activity activity,
+                                           @Nonnull ViewPager.OnPageChangeListener listener,
+                                           @Nonnull PagerAdapter adapter) {
         final ViewPager pager = (ViewPager) activity.findViewById(R.id.viewpager);
         pager.setAdapter(adapter);
 
@@ -208,11 +208,11 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     @Override
-    public void handleException(@NotNull Activity activity, @NotNull Exception e) {
+    public void handleException(@Nonnull Activity activity, @Nonnull Exception e) {
         handleExceptionStatic(activity, e);
     }
 
-    public static void handleExceptionStatic(@NotNull Context context, @NotNull Exception e) {
+    public static void handleExceptionStatic(@Nonnull Context context, @Nonnull Exception e) {
         if (e instanceof HttpRuntimeIoException) {
             if (AThreads.isUiThread()) {
                 Toast.makeText(context, "No internet connection available: connect to the network and try again!", Toast.LENGTH_LONG).show();

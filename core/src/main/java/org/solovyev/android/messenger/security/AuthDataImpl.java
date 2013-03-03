@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.security;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
@@ -13,46 +13,46 @@ import org.simpleframework.xml.Root;
 public class AuthDataImpl implements AuthData {
 
     @Element
-    @NotNull
+    @Nonnull
     private String accessToken;
 
     @Element
-    @NotNull
+    @Nonnull
     private String realmUserId;
 
     @Element
-    @NotNull
+    @Nonnull
     private String realmUserLogin;
 
     public AuthDataImpl() {
     }
 
-    public void setAccessToken(@NotNull String accessToken) {
+    public void setAccessToken(@Nonnull String accessToken) {
         this.accessToken = accessToken;
     }
 
-    public void setRealmUserId(@NotNull String realmUserId) {
+    public void setRealmUserId(@Nonnull String realmUserId) {
         this.realmUserId = realmUserId;
     }
 
-    public void setRealmUserLogin(@NotNull String realmUserLogin) {
+    public void setRealmUserLogin(@Nonnull String realmUserLogin) {
         this.realmUserLogin = realmUserLogin;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getAccessToken() {
         return accessToken;
     }
 
 
     @Override
-    @NotNull
+    @Nonnull
     public String getRealmUserId() {
         return realmUserId;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getRealmUserLogin() {
         return this.realmUserLogin;

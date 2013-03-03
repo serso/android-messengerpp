@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -31,10 +31,10 @@ public class MessengerRegistrationActivity extends RoboActivity {
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private RegistrationService registrationService;
 
-    public static void startActivity(@NotNull Activity activity) {
+    public static void startActivity(@Nonnull Activity activity) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerRegistrationActivity.class);
         activity.startActivity(result);

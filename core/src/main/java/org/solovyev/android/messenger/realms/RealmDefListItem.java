@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerRealmConfigurationActivity;
@@ -17,13 +17,13 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 public class RealmDefListItem implements ListItem {
 
-    @NotNull
+    @Nonnull
     private static final String TAG_PREFIX = "realm_def_list_item_view_";
 
-    @NotNull
+    @Nonnull
     private RealmDef realmDef;
 
-    public RealmDefListItem(@NotNull RealmDef realmDef) {
+    public RealmDefListItem(@Nonnull RealmDef realmDef) {
         this.realmDef = realmDef;
     }
 
@@ -32,7 +32,7 @@ public class RealmDefListItem implements ListItem {
     public OnClickAction getOnClickAction() {
         return new OnClickAction() {
             @Override
-            public void onClick(@NotNull Context context, @NotNull ListAdapter<? extends ListItem> adapter, @NotNull ListView listView) {
+            public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 MessengerRealmConfigurationActivity.startForNewRealm(context, realmDef);
             }
         };
@@ -44,9 +44,9 @@ public class RealmDefListItem implements ListItem {
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View updateView(@NotNull Context context, @NotNull View view) {
+    public View updateView(@Nonnull Context context, @Nonnull View view) {
         if (String.valueOf(view.getTag()).startsWith(TAG_PREFIX)) {
             fillView((ViewGroup) view, context);
             return view;
@@ -55,20 +55,20 @@ public class RealmDefListItem implements ListItem {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public View build(@NotNull Context context) {
+    public View build(@Nonnull Context context) {
         final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_realm).build(context);
         fillView(view, context);
         return view;
     }
 
-    @NotNull
+    @Nonnull
     private String createTag() {
         return TAG_PREFIX + realmDef.getId();
     }
 
-    private void fillView(@NotNull final ViewGroup view, @NotNull final Context context) {
+    private void fillView(@Nonnull final ViewGroup view, @Nonnull final Context context) {
         final String tag = createTag();
 
         if (!tag.equals(view.getTag())) {

@@ -1,20 +1,20 @@
 package org.solovyev.android.messenger.vk;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.users.User;
 
 public class VkRealm extends AbstractRealm<VkRealmConfiguration> {
 
-    public VkRealm(@NotNull String id, @NotNull RealmDef realmDef, @NotNull User user, @NotNull VkRealmConfiguration configuration) {
+    public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration) {
         super(id, realmDef, user, configuration);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public String getDisplayName(@NotNull Context context) {
+    public String getDisplayName(@Nonnull Context context) {
         final StringBuilder sb = new StringBuilder();
 
         sb.append(context.getText(getRealmDef().getNameResId()));

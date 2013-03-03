@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.chats;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
@@ -24,20 +24,20 @@ import static com.google.common.base.Predicates.not;
  */
 public class ApiChatImpl implements ApiChat {
 
-    @NotNull
+    @Nonnull
     private Chat chat;
 
-    @NotNull
+    @Nonnull
     private List<ChatMessage> messages;
 
-    @NotNull
+    @Nonnull
     private List<User> participants;
 
-    private ApiChatImpl(@NotNull RealmEntity realmEntity,
-                        @NotNull Integer messagesCount,
-                        @NotNull List<AProperty> properties,
-                        @NotNull List<ChatMessage> chatMessages,
-                        @NotNull List<User> chatParticipants,
+    private ApiChatImpl(@Nonnull RealmEntity realmEntity,
+                        @Nonnull Integer messagesCount,
+                        @Nonnull List<AProperty> properties,
+                        @Nonnull List<ChatMessage> chatMessages,
+                        @Nonnull List<User> chatParticipants,
                         @Nullable DateTime lastMessageSyncDate) {
         this.chat = ChatImpl.newInstance(realmEntity, messagesCount, properties, lastMessageSyncDate);
         this.messages = chatMessages;
@@ -45,8 +45,8 @@ public class ApiChatImpl implements ApiChat {
         this.participants = chatParticipants;
     }
 
-    private ApiChatImpl(@NotNull RealmEntity realmEntity,
-                        @NotNull Integer messagesCount,
+    private ApiChatImpl(@Nonnull RealmEntity realmEntity,
+                        @Nonnull Integer messagesCount,
                         boolean privateChat) {
         final List<AProperty> properties = new ArrayList<AProperty>();
         properties.add(APropertyImpl.newInstance("private", Boolean.toString(privateChat)));
@@ -56,24 +56,24 @@ public class ApiChatImpl implements ApiChat {
         this.participants = new ArrayList<User>(3);
     }
 
-    @NotNull
-    public static ApiChatImpl newInstance(@NotNull RealmEntity realmEntity,
-                                          @NotNull Integer messagesCount,
+    @Nonnull
+    public static ApiChatImpl newInstance(@Nonnull RealmEntity realmEntity,
+                                          @Nonnull Integer messagesCount,
                                           boolean privateChat) {
         return new ApiChatImpl(realmEntity, messagesCount, privateChat);
     }
 
-    @NotNull
-    public static ApiChatImpl newInstance(@NotNull RealmEntity realmEntity,
-                                          @NotNull Integer messagesCount,
-                                          @NotNull List<AProperty> properties,
-                                          @NotNull List<ChatMessage> chatMessages,
-                                          @NotNull List<User> chatParticipants,
+    @Nonnull
+    public static ApiChatImpl newInstance(@Nonnull RealmEntity realmEntity,
+                                          @Nonnull Integer messagesCount,
+                                          @Nonnull List<AProperty> properties,
+                                          @Nonnull List<ChatMessage> chatMessages,
+                                          @Nonnull List<User> chatParticipants,
                                           @Nullable DateTime lastMessageSyncDate) {
         return new ApiChatImpl(realmEntity, messagesCount, properties, chatMessages, chatParticipants, lastMessageSyncDate);
     }
 
-    @NotNull
+    @Nonnull
     public List<ChatMessage> getMessages() {
         return Collections.unmodifiableList(messages);
     }
@@ -83,22 +83,22 @@ public class ApiChatImpl implements ApiChat {
         return messages.isEmpty() ? null : messages.get(messages.size() - 1);
     }
 
-    public void addMessage(@NotNull ChatMessage message) {
+    public void addMessage(@Nonnull ChatMessage message) {
         this.messages.add(message);
     }
 
-    @NotNull
+    @Nonnull
     public List<User> getParticipants() {
         return Collections.unmodifiableList(participants);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<User> getParticipantsExcept(@NotNull User user) {
+    public List<User> getParticipantsExcept(@Nonnull User user) {
         return Lists.newArrayList(Iterables.filter(participants, not(equalTo(user))));
     }
 
-    public boolean addParticipant(@NotNull User participant) {
+    public boolean addParticipant(@Nonnull User participant) {
         if (!participants.contains(participant)) {
             if (this.chat.isPrivate()) {
                 if (participants.size() == 2) {
@@ -112,7 +112,7 @@ public class ApiChatImpl implements ApiChat {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Chat getChat() {
         return chat;
     }

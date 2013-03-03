@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.vk.users;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.realms.Realm;
@@ -25,15 +25,15 @@ import java.util.List;
 */
 public class VkRealmUserService implements RealmUserService {
 
-    @NotNull
+    @Nonnull
     private final Realm realm;
 
-    public VkRealmUserService(@NotNull Realm realm) {
+    public VkRealmUserService(@Nonnull Realm realm) {
         this.realm = realm;
     }
 
     @Override
-    public User getUserById(@NotNull String realmUserId) {
+    public User getUserById(@Nonnull String realmUserId) {
         try {
             final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(realm, realmUserId, null));
             return Collections.getFirstListElement(users);
@@ -42,9 +42,9 @@ public class VkRealmUserService implements RealmUserService {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<User> getUserContacts(@NotNull String realmUserId) {
+    public List<User> getUserContacts(@Nonnull String realmUserId) {
         try {
             return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(realm, realmUserId));
         } catch (IOException e) {
@@ -53,9 +53,9 @@ public class VkRealmUserService implements RealmUserService {
     }
 
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<User> checkOnlineUsers(@NotNull List<User> users) {
+    public List<User> checkOnlineUsers(@Nonnull List<User> users) {
         final List<User> result = new ArrayList<User>(users.size());
 
         try {
@@ -69,9 +69,9 @@ public class VkRealmUserService implements RealmUserService {
         return result;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<AProperty> getUserProperties(@NotNull User user, @NotNull Context context) {
+    public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
         final List<AProperty> result = new ArrayList<AProperty>(user.getProperties().size());
 
         for (AProperty property : user.getProperties()) {

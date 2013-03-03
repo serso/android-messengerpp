@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.realms.Realm;
@@ -25,16 +25,16 @@ import java.util.List;
  */
 public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<User>> {
 
-    @NotNull
+    @Nonnull
     private static final Integer MAX_CHUNK = 1000;
 
-    @NotNull
+    @Nonnull
     private final List<String> userIds;
 
-    @org.jetbrains.annotations.Nullable
+    @javax.annotation.Nullable
     private final List<ApiUserField> apiUserFields;
 
-    private VkUsersGetHttpTransaction(@NotNull Realm realm, @NotNull List<String> userIds, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
+    private VkUsersGetHttpTransaction(@Nonnull Realm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
         super(realm, "users.get");
         this.apiUserFields = apiUserFields;
         assert !userIds.isEmpty();
@@ -42,8 +42,8 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
         this.userIds = userIds;
     }
 
-    @NotNull
-    public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@NotNull Realm realm, @NotNull List<String> userIds, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
+    @Nonnull
+    public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@Nonnull Realm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
         final List<VkUsersGetHttpTransaction> result = new ArrayList<VkUsersGetHttpTransaction>();
 
         for (List<String> userIdsChunk : Collections.split(userIds, MAX_CHUNK)) {
@@ -53,8 +53,8 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
         return result;
     }
 
-    @NotNull
-    public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@NotNull Realm realm, @NotNull List<User> users, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
+    @Nonnull
+    public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull Realm realm, @Nonnull List<User> users, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
         return newInstancesForUserIds(realm, Lists.transform(users, new Function<User, String>() {
             @Override
             public String apply(@Nullable User user) {
@@ -64,12 +64,12 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
         }), apiUserFields);
     }
 
-    @NotNull
-    public static VkUsersGetHttpTransaction newInstance(@NotNull Realm realm, @NotNull String userId, @org.jetbrains.annotations.Nullable List<ApiUserField> apiUserFields) {
+    @Nonnull
+    public static VkUsersGetHttpTransaction newInstance(@Nonnull Realm realm, @Nonnull String userId, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
         return new VkUsersGetHttpTransaction(realm, Arrays.asList(userId), apiUserFields);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<NameValuePair> getRequestParameters() {
         final List<NameValuePair> result = new ArrayList<NameValuePair>();
@@ -85,7 +85,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
     }
 
     @Override
-    protected List<User> getResponseFromJson(@NotNull String json) throws IllegalJsonException {
+    protected List<User> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
         try {
             return JsonUserConverter.newInstance(getRealm()).convert(json);
         } catch (IllegalJsonRuntimeException e) {

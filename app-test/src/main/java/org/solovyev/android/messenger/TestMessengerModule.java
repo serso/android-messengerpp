@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.ChatDao;
@@ -48,10 +48,10 @@ public class TestMessengerModule extends AbstractModule {
 
     private final Map<Class<?>, Object> bindings = new HashMap<Class<?>, Object>();
 
-    @NotNull
+    @Nonnull
     private final Application application;
 
-    public TestMessengerModule(@NotNull Application application) {
+    public TestMessengerModule(@Nonnull Application application) {
         this.application = application;
     }
 
@@ -93,8 +93,8 @@ public class TestMessengerModule extends AbstractModule {
         bindings.put(type, object);
     }
 
-    public void setUp(@NotNull Object testObject,
-                      @NotNull TestMessengerModule module) {
+    public void setUp(@Nonnull Object testObject,
+                      @Nonnull TestMessengerModule module) {
         Module roboGuiceModule = RoboGuice.newDefaultRoboModule(application);
         Module testModule = Modules.override(roboGuiceModule).with(module);
         RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE, testModule);

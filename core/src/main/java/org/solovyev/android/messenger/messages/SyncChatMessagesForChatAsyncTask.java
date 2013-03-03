@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.realms.RealmEntity;
@@ -22,13 +22,13 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
     private PullToRefreshListViewProvider listViewProvider;
 
     public SyncChatMessagesForChatAsyncTask(@Nullable PullToRefreshListViewProvider listViewProvider,
-                                            @NotNull Context context) {
+                                            @Nonnull Context context) {
         super(context);
         this.listViewProvider = listViewProvider;
     }
 
     @Override
-    protected Input doWork(@NotNull List<Input> inputs) {
+    protected Input doWork(@Nonnull List<Input> inputs) {
         assert inputs.size() == 1;
         final Input input = inputs.get(0);
 
@@ -45,12 +45,12 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
     }
 
     @Override
-    protected void onSuccessPostExecute(@NotNull Input result) {
+    protected void onSuccessPostExecute(@Nonnull Input result) {
         completeRefreshForListView();
     }
 
     @Override
-    protected void onFailurePostExecute(@NotNull Exception e) {
+    protected void onFailurePostExecute(@Nonnull Exception e) {
         completeRefreshForListView();
         super.onFailurePostExecute(e);
     }
@@ -66,16 +66,16 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
 
     public static class Input {
 
-        @NotNull
+        @Nonnull
         private RealmEntity realmUser;
 
-        @NotNull
+        @Nonnull
         private RealmEntity realmChat;
 
         private boolean older;
 
-        public Input(@NotNull RealmEntity realmUser,
-                     @NotNull RealmEntity realmChat,
+        public Input(@Nonnull RealmEntity realmUser,
+                     @Nonnull RealmEntity realmChat,
                      boolean older) {
             this.realmUser = realmUser;
             this.realmChat = realmChat;

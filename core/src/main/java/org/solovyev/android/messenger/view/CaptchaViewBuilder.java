@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.DownloadFileAsyncTask;
@@ -27,22 +27,22 @@ import java.util.List;
  */
 public class CaptchaViewBuilder implements Builder<AlertDialog> {
 
-    @NotNull
+    @Nonnull
     private Context context;
 
-    @NotNull
+    @Nonnull
     private Captcha captcha;
 
-    @NotNull
+    @Nonnull
     private CaptchaEnteredListener captchaEnteredListener;
 
-    public CaptchaViewBuilder(@NotNull Context context, @NotNull Captcha captcha, @NotNull CaptchaEnteredListener captchaEnteredListener) {
+    public CaptchaViewBuilder(@Nonnull Context context, @Nonnull Captcha captcha, @Nonnull CaptchaEnteredListener captchaEnteredListener) {
         this.context = context;
         this.captcha = captcha;
         this.captchaEnteredListener = captchaEnteredListener;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AlertDialog build() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -68,7 +68,7 @@ public class CaptchaViewBuilder implements Builder<AlertDialog> {
         // at the end schedule captcha download
         new DownloadFileAsyncTask(context, new DownloadFileAsyncTask.OnPostExecute<List<Object>>() {
             @Override
-            public void onPostExecute(@NotNull final List<Object> result) {
+            public void onPostExecute(@Nonnull final List<Object> result) {
                 if (!Collections.isEmpty(result)) {
                     captchaImage.setImageDrawable((Drawable) result.get(0));
                 }
@@ -79,6 +79,6 @@ public class CaptchaViewBuilder implements Builder<AlertDialog> {
     }
 
     public static interface CaptchaEnteredListener {
-        void onCaptchaEntered(@NotNull ResolvedCaptcha resolvedCaptcha);
+        void onCaptchaEntered(@Nonnull ResolvedCaptcha resolvedCaptcha);
     }
 }

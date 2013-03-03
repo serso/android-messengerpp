@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
@@ -15,24 +15,24 @@ import java.util.List;
  */
 public interface Chat {
 
-    @NotNull
+    @Nonnull
     RealmEntity getRealmChat();
 
     boolean isPrivate();
 
     // must be called only after isPrivate() check
-    @NotNull
+    @Nonnull
     RealmEntity getSecondUser();
 
-    @NotNull
+    @Nonnull
     Integer getMessagesCount();
 
     @Nullable
     DateTime getLastMessagesSyncDate();
 
-    @NotNull
+    @Nonnull
     List<AProperty> getProperties();
 
-    @NotNull
+    @Nonnull
     Chat updateMessagesSyncDate();
 }

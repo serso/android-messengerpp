@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.vk.users;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.Realm;
@@ -64,8 +64,8 @@ class JsonUser {
     @Nullable
     private String photo_rec;
 
-    @NotNull
-    public User toUser(@NotNull Realm realm) throws IllegalJsonException {
+    @Nonnull
+    public User toUser(@Nonnull Realm realm) throws IllegalJsonException {
         if (uid == null) {
             throw new IllegalJsonException();
         }

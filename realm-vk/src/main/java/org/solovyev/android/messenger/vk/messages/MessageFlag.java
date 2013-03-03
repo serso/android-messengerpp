@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.vk.messages;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,7 @@ public enum MessageFlag {
         return (mask & flags) == mask;
     }
 
-    @NotNull
+    @Nonnull
     public static List<MessageFlag> getMessageFlags(int flags) {
         if (flags != 0) {
             final MessageFlag[] values = values();

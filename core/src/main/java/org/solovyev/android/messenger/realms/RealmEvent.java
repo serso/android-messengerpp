@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.common.listeners.JEvent;
 
 public interface RealmEvent extends JEvent {
 
-    @NotNull
+    @Nonnull
     Realm getRealm();
 }

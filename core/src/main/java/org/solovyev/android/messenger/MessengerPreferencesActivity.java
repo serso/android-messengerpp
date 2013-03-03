@@ -6,8 +6,8 @@ import android.preference.Preference;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
@@ -24,11 +24,11 @@ import java.util.List;
 public class MessengerPreferencesActivity extends SherlockPreferenceActivity {
 
     @InjectPreference("reload_data")
-    @NotNull
+    @Nonnull
     private Preference reloadData;
 
     @Inject
-    @NotNull
+    @Nonnull
     private SyncService syncService;
 
 
@@ -47,7 +47,7 @@ public class MessengerPreferencesActivity extends SherlockPreferenceActivity {
                 new MessengerAsyncTask<Void, Void, Void>(MessengerPreferencesActivity.this) {
 
                     @Override
-                    protected Void doWork(@NotNull List<Void> voids) {
+                    protected Void doWork(@Nonnull List<Void> voids) {
                         Context context = getContext();
                         if (context != null) {
                             try {
@@ -64,7 +64,7 @@ public class MessengerPreferencesActivity extends SherlockPreferenceActivity {
                     }
 
                     @Override
-                    protected void onFailurePostExecute(@NotNull Exception e) {
+                    protected void onFailurePostExecute(@Nonnull Exception e) {
                         if (e instanceof SyncAllTaskIsAlreadyRunning) {
                             final Context context = getContext();
                             if (context != null) {

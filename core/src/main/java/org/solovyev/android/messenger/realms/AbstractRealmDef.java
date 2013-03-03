@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,24 +9,24 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class AbstractRealmDef implements RealmDef {
 
-    @NotNull
+    @Nonnull
     private final String id;
 
     private final int nameResId;
 
     private final int iconResId;
 
-    @NotNull
+    @Nonnull
     private final Class<? extends BaseRealmConfigurationFragment> configurationActivityClass;
 
-    @NotNull
+    @Nonnull
     private final Class<? extends RealmConfiguration> configurationClass;
 
-    protected AbstractRealmDef(@NotNull String id,
+    protected AbstractRealmDef(@Nonnull String id,
                                int nameResId,
                                int iconResId,
-                               @NotNull Class<? extends BaseRealmConfigurationFragment> configurationActivityClass,
-                               @NotNull Class<? extends RealmConfiguration> configurationClass) {
+                               @Nonnull Class<? extends BaseRealmConfigurationFragment> configurationActivityClass,
+                               @Nonnull Class<? extends RealmConfiguration> configurationClass) {
         this.id = id;
         this.nameResId = nameResId;
         this.iconResId = iconResId;
@@ -34,7 +34,7 @@ public abstract class AbstractRealmDef implements RealmDef {
         this.configurationClass = configurationClass;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String getId() {
         return this.id;
@@ -51,12 +51,12 @@ public abstract class AbstractRealmDef implements RealmDef {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Class<? extends RealmConfiguration> getConfigurationClass() {
         return configurationClass;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass() {
         return this.configurationActivityClass;

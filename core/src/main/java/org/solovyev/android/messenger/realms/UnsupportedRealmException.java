@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class UnsupportedRealmException extends RuntimeException {
 
-    public UnsupportedRealmException(@NotNull String realm) {
+    public UnsupportedRealmException(@Nonnull String realm) {
         super("Realm " + realm + " is not supported!");
     }
 }

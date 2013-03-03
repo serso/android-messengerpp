@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.core.R;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -22,16 +23,16 @@ import org.solovyev.android.messenger.core.R;
 @Singleton
 public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager {
 
-    @NotNull
+    @Nonnull
     private final Application context;
 
     @Inject
-    public MessengerMultiPaneManagerImpl(@NotNull Application context) {
+    public MessengerMultiPaneManagerImpl(@Nonnull Application context) {
         this.context = context;
     }
 
     @Override
-    public boolean isDualPane(@NotNull Activity activity) {
+    public boolean isDualPane(@Nonnull Activity activity) {
         if (activity.findViewById(R.id.content_second_pane) != null) {
             return true;
         } else {
@@ -40,7 +41,7 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
     }
 
     @Override
-    public boolean isTriplePane(@NotNull Activity activity) {
+    public boolean isTriplePane(@Nonnull Activity activity) {
         if (activity.findViewById(R.id.content_third_pane) != null) {
             return true;
         } else {
@@ -48,21 +49,21 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getFirstPane(@NotNull Activity activity) {
+    public ViewGroup getFirstPane(@Nonnull Activity activity) {
         return (ViewGroup) activity.findViewById(R.id.content_first_pane);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getSecondPane(@NotNull Activity activity) {
+    public ViewGroup getSecondPane(@Nonnull Activity activity) {
         return (ViewGroup) activity.findViewById(R.id.content_second_pane);
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public ViewGroup getThirdPane(@NotNull Activity activity) {
+    public ViewGroup getThirdPane(@Nonnull Activity activity) {
         return (ViewGroup) activity.findViewById(R.id.content_third_pane);
     }
 
@@ -82,7 +83,7 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
     }
 
     @Override
-    public void fillContentPane(@NotNull Activity activity, @Nullable View paneParent, @NotNull View pane) {
+    public void fillContentPane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane) {
         if (this.isDualPane(activity)) {
             if (this.isFirstPane(paneParent)) {
                 pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.right_border));
@@ -102,7 +103,7 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
     }
 
     @Override
-    public void fillLoadingLayout(@NotNull Activity activity, @Nullable View paneParent, @NotNull Resources resources, @NotNull LoadingLayout loadingView) {
+    public void fillLoadingLayout(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView) {
         loadingView.setTextColor(resources.getColor(R.color.text));
         if (this.isDualPane(activity)) {
             if (this.isFirstPane(paneParent)) {

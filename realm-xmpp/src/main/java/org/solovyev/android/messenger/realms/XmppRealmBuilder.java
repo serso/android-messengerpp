@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
@@ -22,22 +22,22 @@ import java.util.ArrayList;
 
 public class XmppRealmBuilder extends AbstractRealmBuilder {
 
-    @NotNull
+    @Nonnull
     private XmppRealmConfiguration configuration;
 
     @Nullable
     private Connection connection;
 
-    public XmppRealmBuilder(@NotNull RealmDef realmDef,
+    public XmppRealmBuilder(@Nonnull RealmDef realmDef,
                             @Nullable Realm editedRealm,
-                            @NotNull XmppRealmConfiguration configuration) {
+                            @Nonnull XmppRealmConfiguration configuration) {
         super(realmDef, editedRealm);
         this.configuration = configuration;
     }
 
     @Nullable
     @Override
-    protected User getUserById(@NotNull String realmId, @NotNull String realmUserId) {
+    protected User getUserById(@Nonnull String realmId, @Nonnull String realmUserId) {
         User user;
 
         if ( connection != null ) {
@@ -58,9 +58,9 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
         return user;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    protected Realm newRealm(@NotNull String id, @NotNull User user) {
+    protected Realm newRealm(@Nonnull String id, @Nonnull User user) {
         return new XmppRealm(id, getRealmDef(), user, configuration);
     }
 
@@ -89,7 +89,7 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
         // already logged in
@@ -105,7 +105,7 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
 
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public RealmConfiguration getConfiguration() {
         return configuration;

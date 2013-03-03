@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.security;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface AuthData {
 
-    @NotNull
+    @Nonnull
     String getAccessToken();
 
-    @NotNull
+    @Nonnull
     String getRealmUserId();
 
-    @NotNull
+    @Nonnull
     String getRealmUserLogin();
 }

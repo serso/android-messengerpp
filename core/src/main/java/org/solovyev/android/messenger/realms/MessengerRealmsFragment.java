@@ -6,8 +6,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -27,7 +27,7 @@ import java.util.List;
 public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm, RealmListItem> {
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
     private ActivityMenu<Menu, MenuItem> menu;
@@ -79,7 +79,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected MessengerListItemAdapter<RealmListItem> createAdapter() {
         final List<RealmListItem> listItems = new ArrayList<RealmListItem>();
@@ -91,7 +91,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 
     @Nullable
     @Override
-    protected MessengerAsyncTask<Void, Void, List<Realm>> createAsyncLoader(@NotNull MessengerListItemAdapter<RealmListItem> adapter, @NotNull Runnable onPostExecute) {
+    protected MessengerAsyncTask<Void, Void, List<Realm>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmListItem> adapter, @Nonnull Runnable onPostExecute) {
         return null;
     }
 
@@ -125,7 +125,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
     private static enum RealmsMenu implements IdentifiableMenuItem<MenuItem> {
         realm_add(R.id.mpp_realm_add) {
             @Override
-            public void onClick(@NotNull MenuItem data, @NotNull Context context) {
+            public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
                 MessengerRealmDefsActivity.startActivity(context);
             }
         };
@@ -136,14 +136,14 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
             this.menuItemId = menuItemId;
         }
 
-        @NotNull
+        @Nonnull
         @Override
         public Integer getItemId() {
             return this.menuItemId;
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     protected RealmsAdapter getAdapter() {
         return (RealmsAdapter)super.getAdapter();
@@ -156,7 +156,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         }
 
         @Override
-        public void onEvent(@NotNull final RealmEvent e) {
+        public void onEvent(@Nonnull final RealmEvent e) {
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
@@ -176,14 +176,14 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 
     public static class RealmClickedEvent {
 
-        @NotNull
+        @Nonnull
         private final Realm realm;
 
-        public RealmClickedEvent(@NotNull Realm realm) {
+        public RealmClickedEvent(@Nonnull Realm realm) {
             this.realm = realm;
         }
 
-        @NotNull
+        @Nonnull
         public Realm getRealm() {
             return realm;
         }

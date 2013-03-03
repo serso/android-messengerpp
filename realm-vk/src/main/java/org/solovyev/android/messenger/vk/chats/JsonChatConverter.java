@@ -6,8 +6,8 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
-    @NotNull
+    @Nonnull
     private final User user;
 
     @Nullable
@@ -46,17 +46,17 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
     @Nullable
     private final String explicitUserId;
     
-    @NotNull
+    @Nonnull
     private final UserService userService;
 
-    @NotNull
+    @Nonnull
     private final Realm realm;
 
-    public JsonChatConverter(@NotNull User user,
+    public JsonChatConverter(@Nonnull User user,
                              @Nullable String explicitChatId,
                              @Nullable String explicitUserId,
-                             @NotNull UserService userService,
-                             @NotNull Realm realm) {
+                             @Nonnull UserService userService,
+                             @Nonnull Realm realm) {
         this.user = user;
         this.explicitChatId = explicitChatId;
         this.explicitUserId = explicitUserId;
@@ -64,9 +64,9 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
         this.realm = realm;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public List<ApiChat> convert(@NotNull String json) {
+    public List<ApiChat> convert(@Nonnull String json) {
         final Gson gson = new GsonBuilder()
                 .registerTypeAdapter(JsonMessages.class, new JsonMessages.Adapter())
                 .registerTypeAdapter(JsonMessageTypedAttachment.class, new JsonMessageTypedAttachment.Adapter())
@@ -152,13 +152,13 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
     private static class ToIntFunction implements Function<String, Integer> {
 
-        @NotNull
+        @Nonnull
         private static final ToIntFunction instance = new ToIntFunction();
 
         private ToIntFunction() {
         }
 
-        @NotNull
+        @Nonnull
         public static ToIntFunction getInstance() {
             return instance;
         }

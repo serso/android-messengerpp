@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
@@ -15,66 +15,66 @@ import org.solovyev.common.VersionedEntityImpl;
  */
 public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
 
-    @NotNull
+    @Nonnull
     private VersionedEntity<String> versionedEntity;
 
-    @NotNull
+    @Nonnull
     private User author;
 
     @Nullable
     private User recipient;
 
-    @NotNull
+    @Nonnull
     private DateTime sendDate;
 
-    @NotNull
+    @Nonnull
     private String title = "";
 
-    @NotNull
+    @Nonnull
     private String body = "";
 
-    private LiteChatMessageImpl(@NotNull VersionedEntity<String> versionedEntity) {
+    private LiteChatMessageImpl(@Nonnull VersionedEntity<String> versionedEntity) {
         this.versionedEntity = versionedEntity;
     }
 
-    @NotNull
-    public static LiteChatMessageImpl newInstance(@NotNull String id) {
+    @Nonnull
+    public static LiteChatMessageImpl newInstance(@Nonnull String id) {
         return new LiteChatMessageImpl(new VersionedEntityImpl<String>(id));
     }
 
-    @NotNull
+    @Nonnull
     public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(@NotNull User author) {
+    public void setAuthor(@Nonnull User author) {
         this.author = author;
     }
 
-    @NotNull
+    @Nonnull
     public DateTime getSendDate() {
         return sendDate;
     }
 
-    public void setSendDate(@NotNull DateTime sendDate) {
+    public void setSendDate(@Nonnull DateTime sendDate) {
         this.sendDate = sendDate;
     }
 
-    @NotNull
+    @Nonnull
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(@NotNull String title) {
+    public void setTitle(@Nonnull String title) {
         this.title = title;
     }
 
-    @NotNull
+    @Nonnull
     public String getBody() {
         return body;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public LiteChatMessageImpl clone() {
         final LiteChatMessageImpl clone = (LiteChatMessageImpl) super.clone();
@@ -90,18 +90,18 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
         return clone;
     }
 
-    public void setBody(@NotNull String body) {
+    public void setBody(@Nonnull String body) {
         this.body = body;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getId() {
         return versionedEntity.getId();
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return versionedEntity.getVersion();
     }
@@ -117,7 +117,7 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
     }
 
     @Override
-    public User getSecondUser(@NotNull User user) {
+    public User getSecondUser(@Nonnull User user) {
         if (author.equals(user)) {
             return recipient;
         } else if (user.equals(recipient)) {

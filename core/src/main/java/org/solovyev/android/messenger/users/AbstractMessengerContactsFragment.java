@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
@@ -11,7 +11,7 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
  */
 public abstract class AbstractMessengerContactsFragment extends AbstractMessengerListFragment<UserContact, ContactListItem> {
 
-    @NotNull
+    @Nonnull
     private static String TAG = "ContactsFragment";
 
     public AbstractMessengerContactsFragment() {

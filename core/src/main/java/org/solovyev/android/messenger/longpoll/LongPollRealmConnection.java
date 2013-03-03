@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.longpoll;
 
 import android.content.Context;
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.Realm;
@@ -17,12 +17,12 @@ import org.solovyev.android.messenger.users.User;
 public class LongPollRealmConnection extends AbstractRealmConnection {
 
     public static final String TAG = "LongPolling";
-    @NotNull
+    @Nonnull
     private final RealmLongPollService realmLongPollService;
 
-    public LongPollRealmConnection(@NotNull Realm realm,
-                                   @NotNull Context context,
-                                   @NotNull RealmLongPollService realmLongPollService) {
+    public LongPollRealmConnection(@Nonnull Realm realm,
+                                   @Nonnull Context context,
+                                   @Nonnull RealmLongPollService realmLongPollService) {
         super(realm, context);
         this.realmLongPollService = realmLongPollService;
     }

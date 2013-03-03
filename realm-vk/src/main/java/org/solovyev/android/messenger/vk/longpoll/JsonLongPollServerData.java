@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.vk.longpoll;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * User: serso

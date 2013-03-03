@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.security;
 
 import android.content.Context;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -17,16 +17,16 @@ import java.util.List;
  */
 public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsyncTask.Input, Void, Void> {
 
-    @NotNull
+    @Nonnull
     private String realmId;
 
-    public LoginUserAsyncTask(@NotNull Context context, @NotNull String realmId) {
+    public LoginUserAsyncTask(@Nonnull Context context, @Nonnull String realmId) {
         super(context, true);
         this.realmId = realmId;
     }
 
     @Override
-    protected Void doWork(@NotNull List<Input> params) {
+    protected Void doWork(@Nonnull List<Input> params) {
         assert params.size() == 1;
         final Input input = params.get(0);
 
@@ -56,16 +56,16 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
 
     public static class Input {
 
-        @NotNull
+        @Nonnull
         private String login;
 
-        @NotNull
+        @Nonnull
         private String password;
 
         @Nullable
         private ResolvedCaptcha resolvedCaptcha;
 
-        public Input(@NotNull String login, @NotNull String password, @Nullable ResolvedCaptcha resolvedCaptcha) {
+        public Input(@Nonnull String login, @Nonnull String password, @Nullable ResolvedCaptcha resolvedCaptcha) {
             this.login = login;
             this.password = password;
             this.resolvedCaptcha = resolvedCaptcha;

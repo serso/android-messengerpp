@@ -3,8 +3,8 @@ package org.solovyev.android.messenger.sync;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -33,7 +33,7 @@ public class DefaultSyncService implements SyncService {
     */
 
     @Inject
-    @NotNull
+    @Nonnull
     private RealmService realmService;
 
 
@@ -45,17 +45,17 @@ public class DefaultSyncService implements SyncService {
     **********************************************************************
     */
 
-    @NotNull
+    @Nonnull
     private final Set<SyncTask> runningTasks = EnumSet.noneOf(SyncTask.class);
 
-    @NotNull
+    @Nonnull
     private final AtomicBoolean syncAllTaskRunning = new AtomicBoolean(false);
 
-    @NotNull
+    @Nonnull
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     @Override
-    public void syncAll(@NotNull final Context context) throws SyncAllTaskIsAlreadyRunning {
+    public void syncAll(@Nonnull final Context context) throws SyncAllTaskIsAlreadyRunning {
 
         synchronized (syncAllTaskRunning) {
             if ( syncAllTaskRunning.get() ) {
@@ -102,7 +102,7 @@ public class DefaultSyncService implements SyncService {
     }
 
     @Override
-    public void sync(@NotNull SyncTask syncTask, @NotNull Context context, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException {
+    public void sync(@Nonnull SyncTask syncTask, @Nonnull Context context, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException {
         checkRunningTask(syncTask);
 
         new ServiceSyncAsyncTask(context, syncTask, afterSyncCallback).execute();
@@ -119,13 +119,13 @@ public class DefaultSyncService implements SyncService {
 
     private class ServiceSyncAsyncTask extends SyncAsyncTask {
 
-        @NotNull
+        @Nonnull
         private final SyncTask syncTask;
 
         @Nullable
         private final Runnable afterSyncCallback;
 
-        public ServiceSyncAsyncTask(@NotNull Context context, @NotNull SyncTask syncTask, @Nullable Runnable afterSyncCallback) {
+        public ServiceSyncAsyncTask(@Nonnull Context context, @Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) {
             super(context, Arrays.asList(syncTask));
             this.syncTask = syncTask;
             this.afterSyncCallback = afterSyncCallback;
@@ -149,13 +149,13 @@ public class DefaultSyncService implements SyncService {
         }
 
         @Override
-        protected void onFailurePostExecute(@NotNull Exception e) {
+        protected void onFailurePostExecute(@Nonnull Exception e) {
             releaseRunningTask(syncTask);
             super.onFailurePostExecute(e);
         }
     }
 
-    private void releaseRunningTask(@NotNull SyncTask syncTask) {
+    private void releaseRunningTask(@Nonnull SyncTask syncTask) {
         synchronized (runningTasks) {
             runningTasks.remove(syncTask);
         }

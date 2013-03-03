@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.EventListener;
 
@@ -11,5 +11,5 @@ import java.util.EventListener;
 * Time: 1:27 AM
 */
 public interface UserEventListener extends EventListener {
-    void onUserEvent(@NotNull User eventUser, @NotNull UserEventType userEventType, @Nullable Object data);
+    void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data);
 }

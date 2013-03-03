@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.registration;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface RegistrationService {
 
-    void requestVerificationCode(@NotNull String phoneNumber, @NotNull String firstName, @NotNull String lastName);
+    void requestVerificationCode(@Nonnull String phoneNumber, @Nonnull String firstName, @Nonnull String lastName);
 
-    boolean checkVerificationCode(@NotNull String verificationCode);
+    boolean checkVerificationCode(@Nonnull String verificationCode);
 }

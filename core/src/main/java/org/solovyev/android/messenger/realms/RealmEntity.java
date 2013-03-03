@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.os.Parcelable;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -13,28 +13,28 @@ public interface RealmEntity extends Parcelable {
     /**
      * @return unique ID of user in application
      */
-    @NotNull
+    @Nonnull
     String getEntityId();
 
     /**
      * @return realm to which user is belonged to
      */
-    @NotNull
+    @Nonnull
     String getRealmId();
 
     /**
      * @return realm def id to which user is belonged to
      */
-    @NotNull
+    @Nonnull
     String getRealmDefId();
 
     /**
      * @return user id in realm
      */
-    @NotNull
+    @Nonnull
     String getRealmEntityId();
 
-    @NotNull
+    @Nonnull
     RealmEntity clone();
 
     int hashCode();

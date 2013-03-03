@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -17,27 +17,27 @@ import org.solovyev.android.network.NetworkStateService;
  */
 public interface MessengerServiceLocator {
 
-    @NotNull
+    @Nonnull
     ChatMessageService getChatMessageService();
 
-    @NotNull
+    @Nonnull
     UserService getUserService();
 
-    @NotNull
+    @Nonnull
     ChatService getChatService();
 
-    @NotNull
+    @Nonnull
     AuthService getAuthService();
 
-    @NotNull
+    @Nonnull
     SyncService getSyncService();
 
-    @NotNull
+    @Nonnull
     RealmService getRealmService();
 
-    @NotNull
+    @Nonnull
     AuthServiceFacade getAuthServiceFacade();
 
-    @NotNull
+    @Nonnull
     NetworkStateService getNetworkStateService();
 }
