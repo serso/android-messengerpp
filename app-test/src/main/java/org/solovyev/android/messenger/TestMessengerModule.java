@@ -34,7 +34,7 @@ import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.vk.registration.DummyRegistrationService;
+import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
 import org.solovyev.android.network.MessengerNetworkStateService;
 import org.solovyev.android.network.NetworkStateService;
 import roboguice.RoboGuice;

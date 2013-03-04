@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.vk.VkRealmDef;
-import org.solovyev.android.messenger.xmpp.XmppRealmDef;
+import org.solovyev.android.messenger.realms.vk.VkRealmDef;
+import org.solovyev.android.messenger.realms.xmpp.XmppRealmDef;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.security;
 import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
-import org.solovyev.android.messenger.vk.VkConfigurationImpl;
+import org.solovyev.android.messenger.realms.vk.VkConfigurationImpl;
 
 /**
  * User: serso
