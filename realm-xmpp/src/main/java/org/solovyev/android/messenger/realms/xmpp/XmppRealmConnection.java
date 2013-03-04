@@ -2,9 +2,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
 import android.util.Log;
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
@@ -30,7 +28,10 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     private Connection connection;
 
     @Nonnull
-    private final XmppChatListener chatListener = new XmppChatListener();
+    private final ChatManagerListener chatListener = new XmppChatListener();
+
+    @Nonnull
+    private final RosterListener rosterListener = new XmppRosterListener();
 
     public XmppRealmConnection(@Nonnull XmppRealm realm, @Nonnull Context context) {
         super(realm, context);
@@ -39,7 +40,9 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     @Override
     protected void doWork() throws ContextIsNotActiveException {
         connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
+
         connection.getChatManager().addChatListener(chatListener);
+        connection.getRoster().addRosterListener(rosterListener);
 
         // loop guarantees that if something gone wrong we will initiate new XMPP connection
         while (!isStopped()) {
@@ -48,6 +51,10 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
                 // connect to the server
                 try {
                     connection.connect();
+                    if (!connection.isAuthenticated()) {
+                        final XmppRealmConfiguration configuration = getRealm().getConfiguration();
+                        connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
+                    }
 
                 } catch (XMPPException e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -88,6 +95,8 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     @Override
     public void logoutUser(@Nonnull User user) {
         if ( connection != null ) {
+            connection.getRoster().removeRosterListener(rosterListener);
+            connection.getChatManager().removeChatListener(chatListener);
             connection.disconnect();
             connection = null;
         }

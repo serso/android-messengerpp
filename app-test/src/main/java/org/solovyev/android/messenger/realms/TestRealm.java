@@ -26,7 +26,7 @@ public class TestRealm extends AbstractRealm<TestRealmConfiguration> {
     @Nonnull
     @Override
     public RealmConnection createRealmConnection(@Nonnull Context context) {
-        return new TestRealmConnection(this);
+        return new TestRealmConnection(this, context);
     }
 
     @Nonnull

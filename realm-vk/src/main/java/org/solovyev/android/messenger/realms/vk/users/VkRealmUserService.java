@@ -1,18 +1,18 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.vk.R;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.realms.vk.R;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.collections.Collections;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,9 +76,9 @@ public class VkRealmUserService implements RealmUserService {
 
         for (AProperty property : user.getProperties()) {
             final String name = property.getName();
-            if ( name.equals("nickName") ) {
+            if ( name.equals(User.PROPERTY_NICKNAME) ) {
                 result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_nickname), property.getValue()));
-            } else if ( name.equals("sex") ) {
+            } else if ( name.equals(User.PROPERTY_SEX) ) {
                 result.add(APropertyImpl.newInstance(context.getString(org.solovyev.android.messenger.core.R.string.sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
             } else if ( name.equals("bdate") ) {
                 result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_birth_date), property.getValue()));

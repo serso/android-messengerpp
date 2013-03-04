@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
-import org.solovyev.android.messenger.RealmConnection;
+import android.content.Context;
+import org.solovyev.android.messenger.AbstractRealmConnection;
 
 import javax.annotation.Nonnull;
 
@@ -9,33 +10,14 @@ import javax.annotation.Nonnull;
  * Date: 3/4/13
  * Time: 5:05 PM
  */
-public class TestRealmConnection implements RealmConnection {
+public class TestRealmConnection extends AbstractRealmConnection<TestRealm> {
 
-    @Nonnull
-    private final TestRealm realm;
-
-    public TestRealmConnection(@Nonnull TestRealm realm) {
-        this.realm = realm;
-    }
-
-    @Nonnull
-    @Override
-    public Realm getRealm() {
-        return this.realm;
+    public TestRealmConnection(@Nonnull TestRealm realm, @Nonnull Context context) {
+        super(realm, context);
     }
 
     @Override
-    public void start() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    protected void doWork() throws ContextIsNotActiveException {
 
-    @Override
-    public void stop() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean isStopped() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.users;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
@@ -10,6 +9,7 @@ import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -85,8 +85,8 @@ public class UserImpl extends JObject implements User {
     public String getDisplayName() {
         final StringBuilder result = new StringBuilder();
 
-        final String firstName = getPropertyValueByName("firstName");
-        final String lastName = getPropertyValueByName("lastName");
+        final String firstName = getPropertyValueByName(User.PROPERTY_FIRST_NAME);
+        final String lastName = getPropertyValueByName(User.PROPERTY_LAST_NAME);
 
         result.append(firstName);
         if (!Strings.isEmpty(firstName) && !Strings.isEmpty(lastName)) {
@@ -99,7 +99,7 @@ public class UserImpl extends JObject implements User {
 
     @Override
     public Gender getGender() {
-        final String result = getPropertyValueByName("sex");
+        final String result = getPropertyValueByName(User.PROPERTY_SEX);
         return result == null ? null : Gender.valueOf(result);
     }
 

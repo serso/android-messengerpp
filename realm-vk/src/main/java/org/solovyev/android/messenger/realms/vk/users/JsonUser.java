@@ -1,7 +1,5 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.Realm;
@@ -12,6 +10,8 @@ import org.solovyev.android.messenger.users.UserSyncDataImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,13 +72,13 @@ class JsonUser {
 
         final List<AProperty> properties = new ArrayList<AProperty>();
 
-        properties.add(APropertyImpl.newInstance("firstName", first_name));
-        properties.add(APropertyImpl.newInstance("lastName", last_name));
-        properties.add(APropertyImpl.newInstance("nickName", nickname));
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, first_name));
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, last_name));
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_NICKNAME, nickname));
 
         final String gender = getGender();
         if (gender != null) {
-            properties.add(APropertyImpl.newInstance("sex", gender));
+            properties.add(APropertyImpl.newInstance(User.PROPERTY_SEX, gender));
         }
 
         final String onlineProperty = getOnline();

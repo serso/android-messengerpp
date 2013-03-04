@@ -1,16 +1,11 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 import org.solovyev.android.messenger.users.RealmUserService;
@@ -28,10 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* User: serso
-* Date: 2/24/13
-* Time: 8:45 PM
-*/
+ * User: serso
+ * Date: 2/24/13
+ * Time: 8:45 PM
+ */
 class XmppRealmUserService implements RealmUserService {
 
     @Nonnull
@@ -66,19 +61,7 @@ class XmppRealmUserService implements RealmUserService {
     @Nonnull
     @Override
     public List<User> getUserContacts(@Nonnull final String realmUserId) {
-        return doOnConnection(new ConnectedCallable<List<User>>() {
-            @Override
-            public List<User> call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
-
-                final Collection<RosterEntry> entries = connection.getRoster().getEntries();
-                return Lists.newArrayList(Collections2.transform(entries, new Function<RosterEntry, User>() {
-                    @Override
-                    public User apply(@Nullable RosterEntry entry) {
-                        return entry != null ? toUser(entry, realm, false) : null;
-                    }
-                }));
-            }
-        });
+        return doOnConnection(new UserContactsLoader(realm, realmUserId));
     }
 
     @Nonnull
@@ -91,18 +74,29 @@ class XmppRealmUserService implements RealmUserService {
 
                 final Roster roster = connection.getRoster();
                 final Collection<RosterEntry> entries = roster.getEntries();
-                for (final RosterEntry entry : entries) {
-                    final User user = Iterables.find(users, new Predicate<User>() {
-                        @Override
-                        public boolean apply(@Nullable User input) {
-                            return input != null && input.getRealmUser().getRealmId().equals(entry.getName());
-                        }
-                    }, null);
+                for (final User user : users) {
 
-                    if (user != null) {
-                        final Presence presence = roster.getPresence(entry.getUser());
-                        result.add(toUser(entry, realm, presence.isAvailable()));
+                    final boolean online;
+                    if (realm.getUser().equals(user)) {
+                        // realm user => always online
+                        online = true;
+                    } else {
+                        final RosterEntry entry = Iterables.find(entries, new Predicate<RosterEntry>() {
+                            @Override
+                            public boolean apply(@Nullable RosterEntry entry) {
+                                return entry != null && user.getRealmUser().getRealmEntityId().equals(entry.getUser());
+                            }
+                        }, null);
+
+                        if (entry != null) {
+                            final Presence presence = roster.getPresence(entry.getUser());
+                            online = presence.isAvailable();
+                        } else {
+                            online = false;
+                        }
                     }
+
+                    result.add(user.cloneWithNewStatus(online));
                 }
 
                 return result;
@@ -116,6 +110,14 @@ class XmppRealmUserService implements RealmUserService {
         // todo serso: user properties
         return Collections.emptyList();
     }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
 
     private static interface ConnectedCallable<R> {
 
@@ -140,24 +142,91 @@ class XmppRealmUserService implements RealmUserService {
         public User call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
             final User result;
 
-            final RosterEntry xmppUser = connection.getRoster().getEntry(realmUserId);
-            if ( xmppUser != null ) {
-                result = toUser(xmppUser, realm, false);
+            if (realm.getUser().getRealmUser().getRealmEntityId().equals(realmUserId)) {
+                // realm user cannot be found in roster ->  information should be loaded separately
+                result = toUser(realmUserId, realm, true, connection);
             } else {
-                result = null;
+                // try to find user contacts in roster
+                final RosterEntry xmppUser = connection.getRoster().getEntry(realmUserId);
+                if (xmppUser != null) {
+                    result = toUser(xmppUser.getUser(), realm, false, connection);
+                } else {
+                    result = null;
+                }
             }
 
             return result;
         }
     }
 
-    private static User toUser(@Nonnull RosterEntry entry, @Nonnull Realm realm, boolean available) {
-        User result;// todo serso: load properties
-               /* final VCard vCard = new VCard();
-                vCard.load(connection, realmUserId);*/
+    private static User toUser(@Nonnull String realmUserId, @Nonnull Realm realm, boolean available, @Nonnull Connection connection) throws XMPPException {
+
+        final VCard userCard = new VCard();
+        userCard.load(connection, realmUserId);
+
         final List<AProperty> properties = new ArrayList<AProperty>();
         properties.add(APropertyImpl.newInstance(User.PROPERTY_ONLINE, String.valueOf(available)));
-        result = UserImpl.newInstance(realm.newRealmEntity(entry.getUser()), UserSyncDataImpl.newNeverSyncedInstance(), properties);
-        return result;
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, userCard.getLastName()));
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_NICKNAME, userCard.getNickName()));
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_EMAIL, userCard.getEmailHome()));
+        properties.add(APropertyImpl.newInstance(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
+
+        // full name
+        final String fullName = userCard.getField("FN");
+        if (fullName != null) {
+            int firstSpaceSymbolIndex = fullName.indexOf(' ');
+            int lastSpaceSymbolIndex = fullName.lastIndexOf(' ');
+            if (firstSpaceSymbolIndex != -1 && firstSpaceSymbolIndex == lastSpaceSymbolIndex) {
+                // only one space in the string
+                // Proof:
+                // 1. if no spaces => both return -1
+                // 2. if more than one spaces => both return different
+                final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
+                final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
+                properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, firstName));
+                properties.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, lastName));
+            } else {
+                // just store full name in first name field
+                properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, fullName));
+            }
+        }
+
+
+        return UserImpl.newInstance(realm.newRealmEntity(realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
+    }
+
+    private static class UserContactsLoader implements ConnectedCallable<List<User>> {
+
+        @Nonnull
+        private final Realm realm;
+
+        @Nonnull
+        private final String realmUserId;
+
+        private UserContactsLoader(@Nonnull Realm realm, @Nonnull String realmUserId) {
+            this.realm = realm;
+            this.realmUserId = realmUserId;
+        }
+
+        @Override
+        public List<User> call(@Nonnull final XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
+
+            if (realm.getUser().getRealmUser().getRealmEntityId().equals(realmUserId)) {
+                // realm user => load contacts through the roster
+                final Collection<RosterEntry> entries = connection.getRoster().getEntries();
+
+                final List<User> result = new ArrayList<User>(entries.size());
+                for (RosterEntry entry : entries) {
+                    result.add(toUser(entry.getUser(), realm, false, connection));
+                }
+
+                return result;
+            } else {
+                // we cannot load contacts for contacts in xmpp
+                return Collections.emptyList();
+            }
+
+        }
     }
 }

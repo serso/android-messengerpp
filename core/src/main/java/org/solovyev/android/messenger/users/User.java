@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.users;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -22,8 +22,31 @@ public interface User extends MutableUserSyncData {
     **********************************************************************
     */
 
+
     @Nonnull
-    public static final String PROPERTY_ONLINE = "online";
+    static final String PROPERTY_ONLINE = "online";
+
+    @Nonnull
+    static final String PROPERTY_FIRST_NAME = "firstName";
+
+    @Nonnull
+    static final String PROPERTY_LAST_NAME = "lastName";
+
+    @Nonnull
+    static final String PROPERTY_NICKNAME = "nickName";
+
+
+    /**
+     * Property 'sex' must contain only string representations of enum {@link Gender}
+     */
+    @Nonnull
+    static final String PROPERTY_SEX = "sex";
+
+    @Nonnull
+    static final String PROPERTY_PHONE = "phone";
+
+    @Nonnull
+    static final String PROPERTY_EMAIL = "email";
 
 
     /*
