@@ -20,15 +20,19 @@
 
         </activity>
 
+        <!--
+            REALMS
+        -->
+
         <activity android:label="@string/mpp_app_name" android:name=".realms.MessengerRealmsActivity"/>
+        <activity android:label="@string/mpp_app_name"
+            android:name=".MessengerRealmConfigurationActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+
         <activity android:label="@string/mpp_app_name" android:name=".realms.MessengerRealmDefsActivity"/>
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerLoginActivity"/>
-
-        <activity android:label="@string/mpp_app_name"
-                  android:name=".MessengerRealmConfigurationActivity"
-                  android:configChanges="orientation"
-                  android:screenOrientation="portrait"/>
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRegistrationActivity"/>
 

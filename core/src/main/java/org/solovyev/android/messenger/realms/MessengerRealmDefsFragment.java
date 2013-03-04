@@ -4,14 +4,14 @@ import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,5 +63,28 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
     @Override
     protected MessengerAsyncTask<Void, Void, List<RealmDef>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmDefListItem> adapter, @Nonnull Runnable onPostExecute) {
         return null;
+    }
+
+        /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
+
+    public static class RealmDefClickedEvent {
+
+        @Nonnull
+        private final RealmDef realmDef;
+
+        public RealmDefClickedEvent(@Nonnull RealmDef realmDef) {
+            this.realmDef = realmDef;
+        }
+
+        @Nonnull
+        public RealmDef getRealmDef() {
+            return realmDef;
+        }
     }
 }

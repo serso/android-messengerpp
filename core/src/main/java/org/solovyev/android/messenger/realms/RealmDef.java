@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -46,4 +47,8 @@ public interface RealmDef {
 
     @Nonnull
     RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm);
+
+    boolean equals(@Nullable Object o);
+
+    int hashCode();
 }

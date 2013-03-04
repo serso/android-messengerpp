@@ -5,14 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.MessengerRealmConfigurationActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
@@ -163,6 +164,5 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
 
             return false;
         }
-
     }
 }

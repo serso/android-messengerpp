@@ -7,16 +7,33 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 
-public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSherlockFragment {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSherlockFragment {
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
 
     @Nonnull
     public static final String EXTRA_REALM_ID = "realm_id";
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
 
     @Inject
     @Nonnull
@@ -29,6 +46,14 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
     @Inject
     @Nonnull
     private EventManager eventManager;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
 
     private R editedRealm;
 
@@ -82,6 +107,8 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
         R editedRealm = getEditedRealm();
         if (editedRealm != null) {
             eventManager.fire(new RealmFragmentFinishedEvent(editedRealm, false));
+        } else {
+            eventManager.fire(new RealmDefFragmentFinishedEvent(getRealmDef()));
         }
     }
 
@@ -89,6 +116,9 @@ public class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSher
     protected MessengerMultiPaneManager getMultiPaneManager() {
         return multiPaneManager;
     }
+
+    @Nonnull
+    public abstract RealmDef getRealmDef();
 
     /*
     **********************************************************************

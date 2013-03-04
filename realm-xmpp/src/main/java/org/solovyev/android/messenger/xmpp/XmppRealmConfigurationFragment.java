@@ -6,14 +6,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmBuilder;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragment<XmppRealm> {
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
+    // todo serso: save instance state
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
 
     @Inject
     @Nonnull
@@ -22,6 +42,14 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
     @Inject
     @Nonnull
     private RealmService realmService;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
 
     @Nonnull
     private EditText serverEditText;
@@ -138,5 +166,16 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@Nonnull Bundle out) {
+        super.onSaveInstanceState(out);
+    }
+
+    @Nonnull
+    @Override
+    public RealmDef getRealmDef() {
+        return realmDef;
     }
 }

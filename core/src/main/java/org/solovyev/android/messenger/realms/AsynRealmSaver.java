@@ -4,15 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
 * User: serso
@@ -56,8 +58,15 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
         final Context context = getContext();
         if (context != null && realms != null) {
             final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+
+            final Set<RealmDef> realmDefs = new HashSet<RealmDef>();
             for (Realm realm : realms) {
+                realmDefs.add(realm.getRealmDef());
                 eventManager.fire(new RealmFragmentFinishedEvent(realm, false));
+            }
+
+            for (RealmDef realmDef : realmDefs) {
+                eventManager.fire(new RealmDefFragmentFinishedEvent(realmDef));
             }
         }
     }

@@ -61,4 +61,25 @@ public abstract class AbstractRealmDef implements RealmDef {
     public Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass() {
         return this.configurationActivityClass;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof AbstractRealmDef)) {
+            return false;
+        }
+
+        final AbstractRealmDef that = (AbstractRealmDef) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
