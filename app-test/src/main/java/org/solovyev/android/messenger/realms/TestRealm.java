@@ -3,9 +3,12 @@ package org.solovyev.android.messenger.realms;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
+import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserImpl;
+
+import javax.annotation.Nonnull;
 
 @Singleton
 public class TestRealm extends AbstractRealm<TestRealmConfiguration> {
@@ -22,7 +25,19 @@ public class TestRealm extends AbstractRealm<TestRealmConfiguration> {
 
     @Nonnull
     @Override
+    public RealmConnection createRealmConnection(@Nonnull Context context) {
+        return new TestRealmConnection(this);
+    }
+
+    @Nonnull
+    @Override
     public String getDisplayName(@Nonnull Context context) {
         return context.getString(getRealmDef().getNameResId());
+    }
+
+    @Nonnull
+    @Override
+    public RealmUserService getRealmUserService() {
+        return new TestRealmService();
     }
 }

@@ -3,7 +3,6 @@ package org.solovyev.android.messenger;
 import android.content.Intent;
 import android.os.IBinder;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.network.NetworkData;
@@ -12,6 +11,7 @@ import org.solovyev.android.network.NetworkStateListener;
 import org.solovyev.android.network.NetworkStateService;
 import roboguice.service.RoboService;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,6 +127,6 @@ public class MessengerService extends RoboService implements NetworkStateListene
                     realmConnection.start();
                 }
             }
-        }).start();
+        }, "Realm connection thread: " + realmConnection.getRealm().getId()).start();
     }
 }

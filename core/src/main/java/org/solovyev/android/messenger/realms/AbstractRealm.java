@@ -1,12 +1,12 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.security.RealmAuthService;
-import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
 
 public abstract class AbstractRealm<C extends RealmConfiguration> implements Realm<C> {
 
@@ -64,18 +64,6 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     @Override
     public RealmEntity newRealmEntity(@Nonnull String realmEntityId) {
         return RealmEntityImpl.newInstance(getId(), realmEntityId);
-    }
-
-    @Nonnull
-    @Override
-    public RealmConnection createRealmConnection(@Nonnull Context context) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Nonnull
-    @Override
-    public RealmUserService getRealmUserService() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Nonnull

@@ -40,16 +40,20 @@
         </dependency>
 
         <dependency>
+            <groupId>com.pivotallabs</groupId>
+            <artifactId>robolectric</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>annotations</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>de.freakempire.asmack</groupId>
-            <artifactId>ssmack</artifactId>
+            <groupId>asmack</groupId>
+            <artifactId>asmack</artifactId>
             <version>0.8.1.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/misc/lib/asmack-android-17-0.8.1.1.jar</systemPath>
         </dependency>
 
         <dependency>

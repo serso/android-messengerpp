@@ -2,19 +2,20 @@ package org.solovyev.android.messenger.longpoll;
 
 import android.content.Context;
 import android.util.Log;
-import javax.annotation.Nonnull;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.AbstractRealmConnection;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
  * Date: 7/25/12
  * Time: 5:53 PM
  */
-public class LongPollRealmConnection extends AbstractRealmConnection {
+public class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
 
     public static final String TAG = "LongPolling";
     @Nonnull

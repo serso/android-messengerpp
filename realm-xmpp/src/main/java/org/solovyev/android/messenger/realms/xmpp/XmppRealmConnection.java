@@ -2,10 +2,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
 import android.util.Log;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
@@ -17,6 +14,9 @@ import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * User: serso
  * Date: 2/24/13
@@ -26,22 +26,23 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     private static final String TAG = XmppRealmConnection.class.getSimpleName();
 
-    @Nonnull
-    private ConnectionConfiguration configuration;
-
     @Nullable
     private Connection connection;
 
+    @Nonnull
+    private final XmppChatListener chatListener = new XmppChatListener();
+
     public XmppRealmConnection(@Nonnull XmppRealm realm, @Nonnull Context context) {
         super(realm, context);
-        configuration = realm.getConfiguration().toXmppConfiguration();
     }
 
     @Override
     protected void doWork() throws ContextIsNotActiveException {
+        connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
+        connection.getChatManager().addChatListener(chatListener);
+
         // loop guarantees that if something gone wrong we will initiate new XMPP connection
         while (!isStopped()) {
-            final Connection connection = this.connection;
             if (connection != null) {
 
                 // connect to the server
@@ -62,7 +63,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
        assert this.connection == null;
 
-       final Connection connection = new XMPPConnection(configuration);
+       final Connection connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
 
         try {
             final XmppRealmConfiguration configuration = getRealm().getConfiguration();

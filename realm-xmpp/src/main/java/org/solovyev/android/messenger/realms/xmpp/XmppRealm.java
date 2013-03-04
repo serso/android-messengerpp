@@ -1,10 +1,13 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
+import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
 
 public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
 
@@ -13,6 +16,12 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
                      @Nonnull User user,
                      @Nonnull XmppRealmConfiguration configuration) {
         super(id, realmDef, user, configuration);
+    }
+
+    @Nonnull
+    @Override
+    public RealmConnection createRealmConnection(@Nonnull Context context) {
+        return new XmppRealmConnection(this, context);
     }
 
     @Nonnull
@@ -28,5 +37,11 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
         sb.append(")");
 
         return sb.toString();
+    }
+
+    @Nonnull
+    @Override
+    public RealmUserService getRealmUserService() {
+        return new XmppRealmUserService(this);
     }
 }

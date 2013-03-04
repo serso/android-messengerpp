@@ -2,9 +2,9 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.util.Log;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.Realm;
 
+import javax.annotation.Nonnull;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -33,7 +33,7 @@ public abstract class AbstractRealmConnection<R extends Realm> implements RealmC
     }
 
     @Nonnull
-    protected R getRealm() {
+    public final R getRealm() {
         return realm;
     }
 
