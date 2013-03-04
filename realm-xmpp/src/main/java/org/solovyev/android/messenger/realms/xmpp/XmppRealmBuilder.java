@@ -91,17 +91,23 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
     @Nonnull
     @Override
     public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
-        // already logged in
-        //connection.login(configuration.getLogin(), configuration.getPassword());
+        try {
+            if (connection != null) {
+                connection.login(configuration.getLogin(), configuration.getPassword());
 
-        final AuthDataImpl result = new AuthDataImpl();
+                final AuthDataImpl result = new AuthDataImpl();
 
-        result.setRealmUserId(configuration.getLogin());
-        result.setRealmUserLogin(configuration.getLogin());
-        result.setAccessToken("");
+                result.setRealmUserId(configuration.getLogin());
+                result.setRealmUserLogin(configuration.getLogin());
+                result.setAccessToken("");
 
-        return result;
-
+                return result;
+            } else {
+                throw new InvalidCredentialsException("Not connected!");
+            }
+        } catch (XMPPException e) {
+            throw new InvalidCredentialsException(e);
+        }
     }
 
     @Nonnull

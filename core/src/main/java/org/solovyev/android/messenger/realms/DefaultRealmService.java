@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.realms;
 
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -14,6 +15,7 @@ import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +31,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Singleton
 public class DefaultRealmService implements RealmService {
 
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
     @Inject
     @Nonnull
     private RealmDao realmDao;
@@ -36,6 +46,16 @@ public class DefaultRealmService implements RealmService {
     @Inject
     @Nonnull
     private UserService userService;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
+    @Nonnull
+    private final Context context;
 
     @Nonnull
     private final Map<String, RealmDef> realmDefs = new HashMap<String, RealmDef>();
@@ -50,16 +70,24 @@ public class DefaultRealmService implements RealmService {
     private final JEventListeners<JEventListener<? extends RealmEvent>, RealmEvent> listeners;
 
     @Inject
-    public DefaultRealmService(@Nonnull MessengerConfiguration configuration) {
-        this(configuration.getRealmDefs());
+    public DefaultRealmService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration) {
+        this(context, configuration.getRealmDefs());
     }
 
-    public DefaultRealmService(@Nonnull Collection<? extends RealmDef> realmDefs) {
+    public DefaultRealmService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs) {
         for (RealmDef realmDef : realmDefs) {
             this.realmDefs.put(realmDef.getId(), realmDef);
         }
 
-        listeners = Listeners.newEventListenersBuilderFor(RealmEvent.class).withHardReferences().onBackgroundThread().create();
+        this.context = context;
+        this.listeners = Listeners.newEventListenersBuilderFor(RealmEvent.class).withHardReferences().onBackgroundThread().create();
+    }
+
+    @Override
+    public void init() {
+        for (RealmDef realmDef : realmDefs.values()) {
+            realmDef.init(context);
+        }
     }
 
     @Nonnull

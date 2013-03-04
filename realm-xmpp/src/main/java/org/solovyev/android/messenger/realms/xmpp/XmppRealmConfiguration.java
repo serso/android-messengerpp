@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import com.google.gson.Gson;
-import javax.annotation.Nonnull;
-import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
+
+import javax.annotation.Nonnull;
 
 public class XmppRealmConfiguration implements RealmConfiguration {
 
@@ -71,8 +72,8 @@ public class XmppRealmConfiguration implements RealmConfiguration {
     }
 
     @Nonnull
-    public ConnectionConfiguration toXmppConfiguration() {
-        final ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(this.server, this.port, this.resource);
+    public AndroidConnectionConfiguration toXmppConfiguration() {
+        final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, this.resource);
 
         return connectionConfiguration;
     }

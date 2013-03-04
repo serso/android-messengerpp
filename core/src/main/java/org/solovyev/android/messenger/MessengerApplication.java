@@ -3,7 +3,6 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.content.Intent;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.joda.time.DateTimeZone;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
@@ -18,6 +17,8 @@ import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 import roboguice.RoboGuice;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -66,10 +67,33 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     private NetworkStateService networkStateService;
 
-    // for tests only!
     @Nonnull
-    public static MessengerApplication getInstance() {
+    private static MessengerApplication instance;
+
+    public MessengerApplication() {
+        instance = this;
+    }
+
+    @Nonnull
+    public static MessengerServiceLocator getServiceLocator() {
         return instance;
+    }
+
+    public static class Preferences {
+
+        public static class Gui {
+            public static class Chat {
+                public static Preference<Boolean> showUserIcon = BooleanPreference.of("gui.chat.showUserIcon", true);
+                public static Preference<Boolean> showContactIconInChat = BooleanPreference.of("gui.chat.showContactIconInChat", true);
+                public static Preference<Boolean> showContactIconInPrivateChat = BooleanPreference.of("gui.chat.showContactIconInPrivateChat", true);
+                public static Preference<UserIconPosition> userMessagesPosition = StringPreference.ofEnum("gui.chat.userMessagesPosition", UserIconPosition.left, UserIconPosition.class);
+
+                public static enum UserIconPosition {
+                    left,
+                    right
+                }
+            }
+        }
     }
 
     @Override
@@ -120,43 +144,6 @@ public class MessengerApplication extends Application implements MessengerServic
         return networkStateService;
     }
 
-    /*
-    **********************************************************************
-    *
-    *                           OWN FIELDS
-    *
-    **********************************************************************
-    */
-
-    @Nonnull
-    private static MessengerApplication instance;
-
-    public MessengerApplication() {
-        instance = this;
-    }
-
-    @Nonnull
-    public static MessengerServiceLocator getServiceLocator() {
-        return instance;
-    }
-
-    public static class Preferences {
-
-        public static class Gui {
-            public static class Chat {
-                public static Preference<Boolean> showUserIcon = BooleanPreference.of("gui.chat.showUserIcon", true);
-                public static Preference<Boolean> showContactIconInChat = BooleanPreference.of("gui.chat.showContactIconInChat", true);
-                public static Preference<Boolean> showContactIconInPrivateChat = BooleanPreference.of("gui.chat.showContactIconInPrivateChat", true);
-                public static Preference<UserIconPosition> userMessagesPosition = StringPreference.ofEnum("gui.chat.userMessagesPosition", UserIconPosition.left, UserIconPosition.class);
-
-                public static enum UserIconPosition {
-                    left,
-                    right
-                }
-            }
-        }
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -169,6 +156,7 @@ public class MessengerApplication extends Application implements MessengerServic
         RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
 
         // init services
+        this.realmService.init();
         this.userService.init();
         this.chatService.init();
 

@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.realms;
 
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.common.listeners.JEventListener;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -15,6 +15,17 @@ public interface RealmService {
 
     @Nonnull
     static String TAG = "RealmService";
+
+    /**
+     * Method initializes service, must be called once before any other operations with current service
+     */
+    void init();
+
+    /**
+     * Method restores service state (e.g. loads persistence data from database)
+     */
+    void load();
+
 
     /**
      * @return collection of all configured realms in application
@@ -41,8 +52,6 @@ public interface RealmService {
     Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
     void removeRealm(@Nonnull String realmId);
-
-    void load();
 
     /*
     **********************************************************************

@@ -27,6 +27,8 @@ public interface RealmDef {
 
     int getIconResId();
 
+    void init(@Nonnull Context context);
+
     @Nonnull
     RealmUserService newRealmUserService(@Nonnull Realm realm);
 

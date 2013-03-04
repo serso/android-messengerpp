@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
+import android.content.Context;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -81,5 +83,9 @@ public abstract class AbstractRealmDef implements RealmDef {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    @Override
+    public void init(@Nonnull Context context) {
     }
 }

@@ -2,8 +2,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jivesoftware.smack.SmackAndroid;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
@@ -12,6 +11,9 @@ import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -56,5 +58,12 @@ public class XmppRealmDef extends AbstractRealmDef {
     @Nonnull
     public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
         return new XmppRealmBuilder(this, editedRealm, (XmppRealmConfiguration) configuration);
+    }
+
+    @Override
+    public void init(@Nonnull Context context) {
+        super.init(context);
+
+        SmackAndroid.init(context);
     }
 }
