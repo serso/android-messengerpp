@@ -4,12 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.*;
 import roboguice.event.EventListener;
 
-public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity implements EventListener<RealmFragmentFinishedEvent> {
+import javax.annotation.Nonnull;
+
+/**
+ * Current activity can be used in two cases:
+ * 1. Initial configuration of new realm
+ * 2. Old realm editing
+ *
+ * List of parameters for different moded is different:
+ * 1. Realm DEF id should be passed as an extra with id {@link MessengerRealmConfigurationActivity#EXTRA_REALM_DEF_ID} in intent
+ * 2. Realm id should be passed as an extra with id {@link MessengerRealmConfigurationActivity#EXTRA_REALM_DEF_ID} in intent
+ *
+ * If no parameters are passed activity will be closed
+ *
+ *
+ */
+public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity implements EventListener<RealmGuiEvent> {
 
     @Nonnull
     private static final String REALM_CONFIGURATION_FRAGMENT_TAG = "realm-configuration";
@@ -47,7 +61,7 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
             }
         }
 
-         getEventManager().registerObserver(RealmFragmentFinishedEvent.class, this);
+         getEventManager().registerObserver(RealmGuiEvent.class, this);
     }
 
     private void prepareUiForCreate(@Nonnull RealmDef realmDef) {
@@ -63,15 +77,17 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
 
     @Override
     protected void onDestroy() {
-        getEventManager().unregisterObserver(RealmFragmentFinishedEvent.class, this);
+        getEventManager().unregisterObserver(RealmGuiEvent.class, this);
 
         super.onDestroy();
     }
 
 
     @Override
-    public void onEvent(@Nonnull RealmFragmentFinishedEvent event) {
-        finish();
+    public void onEvent(@Nonnull RealmGuiEvent event) {
+        if (event.getType() == RealmGuiEventType.realm_edit_finished) {
+            finish();
+        }
     }
 
     /*

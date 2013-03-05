@@ -62,7 +62,7 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
             final Set<RealmDef> realmDefs = new HashSet<RealmDef>();
             for (Realm realm : realms) {
                 realmDefs.add(realm.getRealmDef());
-                eventManager.fire(new RealmFragmentFinishedEvent(realm, false));
+                eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, false));
             }
 
             for (RealmDef realmDef : realmDefs) {

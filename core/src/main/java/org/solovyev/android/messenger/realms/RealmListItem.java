@@ -7,14 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RealmListItem implements ListItem {
 
@@ -50,7 +51,7 @@ public class RealmListItem implements ListItem {
             @Override
             public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(new MessengerRealmsFragment.RealmClickedEvent(realm));
+                eventManager.fire(RealmGuiEventType.newRealmClickedEvent(realm));
             }
         };
     }

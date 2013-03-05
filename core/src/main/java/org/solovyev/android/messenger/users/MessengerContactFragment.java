@@ -124,4 +124,9 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
         outState.putParcelable(CONTACT, contact.getRealmUser());
     }
+
+    @Nonnull
+    public User getContact() {
+        return contact;
+    }
 }

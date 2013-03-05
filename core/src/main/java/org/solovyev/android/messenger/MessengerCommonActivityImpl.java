@@ -18,15 +18,17 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TitlePageIndicator;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
+import org.solovyev.android.messenger.realms.MessengerRealmsFragment;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
 import org.solovyev.android.sherlock.tabs.ActionBarFragmentTabListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -67,8 +69,9 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
         if (showActionBarTabs) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-            addTab(activity, "contacts", MessengerContactsFragment.class, null, R.string.c_contacts, R.drawable.msg_footer_contacts_icon);
-            addTab(activity, "messages", MessengerChatsFragment.class, null, R.string.c_messages, R.drawable.msg_footer_messages_icon);
+            addTab(activity, "contacts", MessengerContactsFragment.class, null, R.string.mpp_tab_contacts);
+            addTab(activity, "messages", MessengerChatsFragment.class, null, R.string.mpp_tab_messages);
+            addTab(activity, "realms", MessengerRealmsFragment.class, null, R.string.mpp_tab_realms);
 
             // settings tab
             final ActionBar.Tab tab = actionBar.newTab();
@@ -111,13 +114,11 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
                         @Nonnull String tag,
                         @Nonnull Class<? extends Fragment> fragmentClass,
                         @Nullable Bundle fragmentArgs,
-                        int captionResId,
-                        int iconResId) {
+                        int captionResId) {
         final ActionBar actionBar = activity.getSupportActionBar();
         final ActionBar.Tab tab = actionBar.newTab();
         tab.setTag(tag);
         tab.setText(captionResId);
-        //tab.setIcon(iconResId);
         tab.setTabListener(new ActionBarFragmentTabListener(activity, tag, fragmentClass, fragmentArgs, R.id.content_first_pane));
         actionBar.addTab(tab);
     }

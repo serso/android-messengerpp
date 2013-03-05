@@ -106,7 +106,7 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
     protected void backButtonPressed() {
         R editedRealm = getEditedRealm();
         if (editedRealm != null) {
-            eventManager.fire(new RealmFragmentFinishedEvent(editedRealm, false));
+            eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(editedRealm, false));
         } else {
             eventManager.fire(new RealmDefFragmentFinishedEvent(getRealmDef()));
         }

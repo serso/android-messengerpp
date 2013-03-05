@@ -10,11 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -116,7 +117,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     }
 
     private void editRealm() {
-        eventManager.fire(new EditRealmEvent(realm));
+        eventManager.fire(RealmGuiEventType.newRealmEditRequestedEvent(realm));
     }
 
     @Nonnull
@@ -127,20 +128,5 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
     private void removeRealm() {
         new AsynRealmRemover(this.getActivity(), realmService).execute(realm);
-    }
-
-    public static class EditRealmEvent {
-
-        @Nonnull
-        private Realm realm;
-
-        private EditRealmEvent(@Nonnull Realm realm) {
-            this.realm = realm;
-        }
-
-        @Nonnull
-        public Realm getRealm() {
-            return realm;
-        }
     }
 }

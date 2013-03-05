@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,15 +13,17 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -28,6 +31,16 @@ import roboguice.event.EventManager;
  * Time: 7:28 PM
  */
 public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActivity {
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTATS
+    *
+    **********************************************************************
+    */
+
+    protected final String TAG = this.getClass().getSimpleName();
 
     @Nonnull
     protected static final String FIRST_FRAGMENT_TAG = "first-fragment";
@@ -94,18 +107,18 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     @Nonnull
-    protected ChatService getChatService() {
+    public ChatService getChatService() {
         return chatService;
     }
 
     @Nonnull
-    protected EventManager getEventManager() {
+    public EventManager getEventManager() {
         return eventManager;
     }
 
 
     @Nonnull
-    protected RealmService getRealmService() {
+    public RealmService getRealmService() {
         return realmService;
     }
 
@@ -119,11 +132,11 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
     }
 
-    protected boolean isDualPane() {
+    public boolean isDualPane() {
         return this.secondPane != null;
     }
 
-    protected boolean isTriplePane() {
+    public boolean isTriplePane() {
         return this.thirdPane != null;
     }
 
@@ -226,28 +239,42 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     protected void setFirstFragment(@Nonnull Class<? extends Fragment> fragmentClass,
                                     @Nullable Bundle fragmentArgs,
                                     @Nullable JPredicate<Fragment> reuseCondition) {
-        setFragment(R.id.content_first_pane, fragmentClass, FIRST_FRAGMENT_TAG, fragmentArgs, reuseCondition);
+        setFragment(R.id.content_first_pane, FIRST_FRAGMENT_TAG, ReflectionFragmentBuilder.newInstance(this, fragmentClass, fragmentArgs), reuseCondition);
     }
 
+    protected void setFirstFragment(@Nonnull Builder<Fragment> fragmentBuilder,
+                                    @Nullable JPredicate<Fragment> reuseCondition) {
+        setFragment(R.id.content_first_pane, FIRST_FRAGMENT_TAG, fragmentBuilder, reuseCondition);
+    }
 
     protected void emptifyFirstFragment() {
         setFirstFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
     }
 
-    protected void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,
-                                     @Nullable Bundle fragmentArgs,
-                                     @Nullable JPredicate<Fragment> reuseCondition) {
-        setFragment(R.id.content_second_pane, fragmentClass, SECOND_FRAGMENT_TAG, fragmentArgs, reuseCondition);
+    public void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,
+                                  @Nullable Bundle fragmentArgs,
+                                  @Nullable JPredicate<Fragment> reuseCondition) {
+        setFragment(R.id.content_second_pane, SECOND_FRAGMENT_TAG, ReflectionFragmentBuilder.newInstance(this, fragmentClass, fragmentArgs), reuseCondition);
     }
 
-    protected void emptifySecondFragment() {
+    public void setSecondFragment(@Nonnull Builder<Fragment> fragmentBuilder,
+                                  @Nullable JPredicate<Fragment> reuseCondition) {
+        setFragment(R.id.content_second_pane, SECOND_FRAGMENT_TAG, fragmentBuilder, reuseCondition);
+    }
+
+    public void emptifySecondFragment() {
         setSecondFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
     }
 
     protected void setThirdFragment(@Nonnull Class<? extends Fragment> fragmentClass,
                                     @Nullable Bundle fragmentArgs,
                                     @Nullable JPredicate<Fragment> reuseCondition) {
-        setFragment(R.id.content_third_pane, fragmentClass, THIRD_FRAGMENT_TAG, fragmentArgs, reuseCondition);
+        setFragment(R.id.content_third_pane, THIRD_FRAGMENT_TAG, ReflectionFragmentBuilder.newInstance(this, fragmentClass, fragmentArgs), reuseCondition);
+    }
+
+    public void setThirdFragment(@Nonnull Builder<Fragment> fragmentBuilder,
+                                 @Nullable JPredicate<Fragment> reuseCondition) {
+        setFragment(R.id.content_third_pane, THIRD_FRAGMENT_TAG, fragmentBuilder, reuseCondition);
     }
 
     protected void emptifyThirdFragment() {
@@ -255,20 +282,19 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     protected void setFragment(int fragmentViewId, @Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, @Nullable Bundle fragmentArgs) {
-        setFragment(fragmentViewId, fragmentClass, fragmentTag, fragmentArgs, null);
+        setFragment(fragmentViewId, fragmentTag, ReflectionFragmentBuilder.newInstance(this, fragmentClass, fragmentArgs), null);
     }
 
     /**
+     *
      * @param fragmentViewId
-     * @param fragmentClass
      * @param fragmentTag
-     * @param fragmentArgs
-     * @param reuseCondition true if fragment can be reused
+     * @param fragmentBuilder
+     * @param reuseCondition  true if fragment can be reused
      */
     private void setFragment(int fragmentViewId,
-                             @Nonnull Class<? extends Fragment> fragmentClass,
                              @Nonnull String fragmentTag,
-                             @Nullable Bundle fragmentArgs,
+                             @Nonnull Builder<Fragment> fragmentBuilder,
                              @Nullable JPredicate<Fragment> reuseCondition) {
         final FragmentManager fm = getSupportFragmentManager();
 
@@ -285,11 +311,11 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
                     ft.remove(oldFragment);
                 }
 
-                ft.add(fragmentViewId, Fragment.instantiate(this, fragmentClass.getName(), fragmentArgs), fragmentTag);
+                ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
             }
 
         } else {
-            ft.add(fragmentViewId, Fragment.instantiate(this, fragmentClass.getName(), fragmentArgs), fragmentTag);
+            ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
         }
 
         ft.commit();
@@ -311,6 +337,35 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         @Override
         public boolean apply(@Nullable Fragment fragment) {
             return fragment instanceof MessengerEmptyFragment;
+        }
+    }
+
+    private static class ReflectionFragmentBuilder<F extends Fragment> implements Builder<F> {
+
+        @Nonnull
+        private Context context;
+
+        @Nonnull
+        private Class<? extends F> fragmentClass;
+
+        @Nullable
+        private Bundle fragmentArgs;
+
+        private ReflectionFragmentBuilder(@Nonnull Context context, @Nonnull Class<? extends F> fragmentClass, @Nullable Bundle fragmentArgs) {
+            this.context = context;
+            this.fragmentClass = fragmentClass;
+            this.fragmentArgs = fragmentArgs;
+        }
+
+        @Nonnull
+        private static <F extends Fragment> ReflectionFragmentBuilder<F> newInstance(@Nonnull Context context, @Nonnull Class<? extends F> fragmentClass, @Nullable Bundle fragmentArgs) {
+            return new ReflectionFragmentBuilder<F>(context, fragmentClass, fragmentArgs);
+        }
+
+        @Nonnull
+        @Override
+        public F build() {
+            return (F) Fragment.instantiate(context, fragmentClass.getName(), fragmentArgs);
         }
     }
 }
