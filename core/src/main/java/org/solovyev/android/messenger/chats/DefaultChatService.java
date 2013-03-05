@@ -160,6 +160,11 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         return getChatDao(context).loadUserChats(user.getEntityId());
     }
 
+    @Override
+    public void saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat) {
+        mergeUserChats(realmUser.getEntityId(), Arrays.asList(chat));
+    }
+
     @Nonnull
     @Override
     public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats) {
@@ -362,31 +367,38 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         return getRealmByUser(realmUser).newRealmEntity(realmUser.getRealmEntityId() + PRIVATE_CHAT_DELIMITER + secondRealmUser.getRealmEntityId());
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
-        final String chatMessageId = getRealmByUser(user).getRealmChatService().sendChatMessage(chat, chatMessage);
+        final Realm realm = getRealmByUser(user);
+        final RealmChatService realmChatService = realm.getRealmChatService();
 
-        final LiteChatMessageImpl msgResult = LiteChatMessageImpl.newInstance(chatMessageId);
+        final String chatMessageId = realmChatService.sendChatMessage(chat, chatMessage);
 
-        msgResult.setAuthor(getUserService().getUserById(user));
-        if (chat.isPrivate()) {
-            final RealmEntity secondUser = chat.getSecondUser();
-            msgResult.setRecipient(getUserService().getUserById(secondUser));
+        if (chatMessageId != null) {
+            final LiteChatMessageImpl msgResult = LiteChatMessageImpl.newInstance(chatMessageId);
+
+            msgResult.setAuthor(getUserService().getUserById(user));
+            if (chat.isPrivate()) {
+                final RealmEntity secondUser = chat.getSecondUser();
+                msgResult.setRecipient(getUserService().getUserById(secondUser));
+            }
+            msgResult.setBody(chatMessage.getBody());
+            msgResult.setTitle(chatMessage.getTitle());
+            msgResult.setSendDate(DateTime.now());
+
+            final ChatMessageImpl result = new ChatMessageImpl(msgResult);
+            for (LiteChatMessage fwtMessage : chatMessage.getFwdMessages()) {
+                result.addFwdMessage(fwtMessage);
+            }
+
+            result.setDirection(MessageDirection.out);
+            result.setRead(true);
+
+            return result;
+        } else {
+            return null;
         }
-        msgResult.setBody(chatMessage.getBody());
-        msgResult.setTitle(chatMessage.getTitle());
-        msgResult.setSendDate(DateTime.now());
-
-        final ChatMessageImpl result = new ChatMessageImpl(msgResult);
-        for (LiteChatMessage fwtMessage : chatMessage.getFwdMessages()) {
-            result.addFwdMessage(fwtMessage);
-        }
-
-        result.setDirection(MessageDirection.out);
-        result.setRead(true);
-
-        return result;
     }
 
     @Nonnull

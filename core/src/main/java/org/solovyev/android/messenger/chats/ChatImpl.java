@@ -1,7 +1,5 @@
 package org.solovyev.android.messenger.chats;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmEntity;
@@ -10,6 +8,8 @@ import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.common.JObject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,6 +93,13 @@ public class ChatImpl extends JObject implements Chat {
                                    @Nonnull List<AProperty> properties,
                                    @Nullable DateTime lastMessageSyncDate) {
         return new ChatImpl(realmEntity, messagesCount, properties, lastMessageSyncDate);
+    }
+
+    @Nonnull
+    public static Chat newPrivate(@Nonnull RealmEntity realmEntity) {
+        final List<AProperty> properties = new ArrayList<AProperty>();
+        properties.add(APropertyImpl.newInstance("private", Boolean.toString(true)));
+        return new ChatImpl(realmEntity, 0, properties, null);
     }
 
     /*

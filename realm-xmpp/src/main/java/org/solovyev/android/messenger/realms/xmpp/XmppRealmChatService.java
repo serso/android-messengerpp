@@ -10,6 +10,7 @@ import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,10 +49,10 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         return Collections.emptyList();
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
-        return doConnected(new MessengerSender(chat, chatMessage));
+    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+        return doConnected(new MessengerSender(chat, message));
     }
 
     private static final class MessengerSender implements XmppConnectedCallable<String> {
@@ -67,7 +68,6 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
             this.message = message;
         }
 
-
         @Override
         public String call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
             final ChatManager chatManager = connection.getChatManager();
@@ -75,7 +75,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
             final org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chat.getRealmChat().getRealmEntityId());
             smackChat.sendMessage(message.getBody());
 
-            return "";
+            return null;
         }
     }
 }

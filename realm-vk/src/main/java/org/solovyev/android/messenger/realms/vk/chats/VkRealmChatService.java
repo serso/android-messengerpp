@@ -170,9 +170,9 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
+    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
         try {
-            return HttpTransactions.execute(new VkMessagesSendHttpTransaction(realm, chatMessage, chat));
+            return HttpTransactions.execute(new VkMessagesSendHttpTransaction(realm, message, chat));
         } catch (IOException e) {
             throw new HttpRuntimeIoException(e);
         }

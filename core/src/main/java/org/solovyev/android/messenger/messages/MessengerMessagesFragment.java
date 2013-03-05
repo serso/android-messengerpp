@@ -125,11 +125,11 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final RelativeLayout result = ViewFromLayoutBuilder.<RelativeLayout>newInstance(org.solovyev.android.messenger.core.R.layout.msg_messages).build(this.getActivity());
+        final RelativeLayout result = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.msg_messages).build(this.getActivity());
 
-        final View bubble = ViewFromLayoutBuilder.newInstance(org.solovyev.android.messenger.core.R.layout.msg_message_bubble).build(this.getActivity());
+        final View bubble = ViewFromLayoutBuilder.newInstance(R.layout.msg_message_bubble).build(this.getActivity());
 
-        final ViewGroup messageBubbleParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.core.R.id.message_bubble);
+        final ViewGroup messageBubbleParent = (ViewGroup)result.findViewById(R.id.message_bubble);
         messageBubbleParent.addView(bubble, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         final View superResult = super.onCreateView(inflater, container, savedInstanceState);
@@ -138,7 +138,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setStackFromBottom(true);
 
-        final ViewGroup messagesParent = (ViewGroup)result.findViewById(org.solovyev.android.messenger.core.R.id.messages_list);
+        final ViewGroup messagesParent = (ViewGroup)result.findViewById(R.id.messages_list);
         messagesParent.addView(superResult);
 
         multiPaneManager.fillContentPane(this.getActivity(), container, result);

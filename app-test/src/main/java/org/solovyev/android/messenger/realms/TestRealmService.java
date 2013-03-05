@@ -70,7 +70,7 @@ public class TestRealmService implements RealmUserService, RealmChatService {
 
     @Nonnull
     @Override
-    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
+    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
         return "test_message_id";
     }
 }

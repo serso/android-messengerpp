@@ -1,8 +1,6 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -10,6 +8,8 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +37,10 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
             if (context != null) {
                 assert chat.equals(input.chat);
 
-                result.add(input.sendChatMessage(context));
+                final ChatMessage message = input.sendChatMessage();
+                if (message != null) {
+                    result.add(message);
+                }
             }
         }
 
@@ -99,8 +102,8 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
             return fwdMessages.add(fwdMessage);
         }
 
-        @Nonnull
-        public ChatMessage sendChatMessage(@Nonnull Context context) {
+        @Nullable
+        public ChatMessage sendChatMessage() {
             final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("");
             liteChatMessage.setAuthor(author);
             liteChatMessage.setBody(message);

@@ -1,12 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
 import android.widget.ImageView;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -24,6 +24,8 @@ public interface ChatService extends ChatEventContainer {
 
     @Nonnull
     List<Chat> loadUserChats(@Nonnull RealmEntity user);
+
+    void saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat);
 
     @Nonnull
     MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
@@ -46,7 +48,7 @@ public interface ChatService extends ChatEventContainer {
     @Nonnull
     RealmEntity createPrivateChatId(@Nonnull RealmEntity user, @Nonnull RealmEntity secondRealmUser);
 
-    @Nonnull
+    @Nullable
     ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage);
 
     /*

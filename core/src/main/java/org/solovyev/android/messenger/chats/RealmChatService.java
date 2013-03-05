@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -22,7 +23,14 @@ public interface RealmChatService {
     @Nonnull
     List<ApiChat> getUserChats(@Nonnull String realmUserId);
 
-    // return: message id
-    @Nonnull
-    String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage);
+    /**
+     * Method sends message to the realm and, if possible, returns message is. If message id could not be returned
+     * (due, for example, to the asynchronous nature of realm) - null is returned (in that case realm connection must receive message id)
+     *
+     * @param chat chat in which message was created
+     * @param message message to be sent
+     * @return message id of send message if possible
+     */
+    @Nullable
+    String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message);
 }
