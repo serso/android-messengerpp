@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 public enum RealmGuiEventType {
 
     /**
-     * Fired when realm is licked in the lists of realms
+     * Fired when realm is clicked in the list of realms
      */
     realm_clicked,
 

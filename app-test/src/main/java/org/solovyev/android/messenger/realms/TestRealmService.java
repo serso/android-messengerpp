@@ -1,6 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -15,7 +19,7 @@ import java.util.List;
  * Date: 3/4/13
  * Time: 5:15 PM
  */
-public class TestRealmService implements RealmUserService {
+public class TestRealmService implements RealmUserService, RealmChatService {
     @Nullable
     @Override
     public User getUserById(@Nonnull String realmUserId) {
@@ -38,5 +42,35 @@ public class TestRealmService implements RealmUserService {
     @Override
     public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
         return Collections.emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) {
+        return Collections.emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
+        return Collections.emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) {
+        return Collections.emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public List<ApiChat> getUserChats(@Nonnull String realmUserId) {
+        return Collections.emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
+        return "test_message_id";
     }
 }

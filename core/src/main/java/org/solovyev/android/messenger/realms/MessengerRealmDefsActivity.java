@@ -39,10 +39,7 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
     private EventManager eventManager;
 
     @Nullable
-    private RealmDefClickedEventListener realmDefClickedEventListener;
-
-    @Nullable
-    private RealmConfigurationEventListener realmConfigurationEventListener;
+    private EventListener<RealmDefGuiEvent> realmDefGuiEventListener;
 
     public MessengerRealmDefsActivity() {
         super(R.layout.msg_main, false, true);
@@ -58,11 +55,8 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        realmDefClickedEventListener = new RealmDefClickedEventListener();
-        eventManager.registerObserver(MessengerRealmDefsFragment.RealmDefClickedEvent.class, realmDefClickedEventListener);
-
-        realmConfigurationEventListener = new RealmConfigurationEventListener();
-        eventManager.registerObserver(RealmDefFragmentFinishedEvent.class, realmConfigurationEventListener);
+        realmDefGuiEventListener = new RealmDefClickedEventListener();
+        eventManager.registerObserver(RealmDefGuiEvent.class, realmDefGuiEventListener);
 
         setFirstFragment(MessengerRealmDefsFragment.class, null, new JPredicate<Fragment>() {
             @Override
@@ -81,42 +75,37 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
 
     @Override
     protected void onDestroy() {
-        if ( realmDefClickedEventListener != null ) {
-            eventManager.unregisterObserver(MessengerRealmDefsFragment.RealmDefClickedEvent.class, realmDefClickedEventListener);
-        }
-
-        if ( realmConfigurationEventListener != null ) {
-            eventManager.unregisterObserver(RealmDefFragmentFinishedEvent.class, realmConfigurationEventListener);
+        if ( realmDefGuiEventListener != null ) {
+            eventManager.unregisterObserver(RealmDefGuiEvent.class, realmDefGuiEventListener);
         }
 
         super.onDestroy();
     }
 
-    private class RealmDefClickedEventListener implements EventListener<MessengerRealmDefsFragment.RealmDefClickedEvent> {
+    private class RealmDefClickedEventListener implements EventListener<RealmDefGuiEvent> {
 
         @Override
-        public void onEvent(@Nonnull MessengerRealmDefsFragment.RealmDefClickedEvent event) {
+        public void onEvent(@Nonnull RealmDefGuiEvent event) {
             final RealmDef realmDef = event.getRealmDef();
 
-            if (isDualPane()) {
-                setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef));
-            } else {
-                MessengerRealmConfigurationActivity.startForNewRealm(MessengerRealmDefsActivity.this, realmDef);
+            switch (event.getType()) {
+                case realm_def_clicked:
+                    if (isDualPane()) {
+                        setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef));
+                    } else {
+                        MessengerRealmConfigurationActivity.startForNewRealm(MessengerRealmDefsActivity.this, realmDef);
+                    }
+                    break;
+                case realm_def_edit_finished:
+                    if (isDualPane()) {
+                        emptifySecondFragment();
+                    } else {
+                        finish();
+                    }
+                    break;
             }
         }
     }
-
-    private class RealmConfigurationEventListener implements EventListener<RealmDefFragmentFinishedEvent> {
-        @Override
-        public void onEvent(@Nonnull RealmDefFragmentFinishedEvent event) {
-            if (isDualPane()) {
-                emptifySecondFragment();
-            } else {
-                finish();
-            }
-        }
-    }
-
 
     private static class RealmDefFragmentReuseCondition implements JPredicate<Fragment> {
 

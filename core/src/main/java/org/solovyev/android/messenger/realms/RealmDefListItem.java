@@ -36,7 +36,7 @@ public class RealmDefListItem implements ListItem {
             @Override
             public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(new MessengerRealmDefsFragment.RealmDefClickedEvent(realmDef));
+                eventManager.fire(RealmDefGuiEventType.newRealmDefClickedEvent(realmDef));
             }
         };
     }

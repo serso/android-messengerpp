@@ -1,18 +1,17 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
-import android.content.Context;
 import android.util.Log;
-import javax.annotation.Nonnull;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,9 +51,9 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> getChatMessages(@Nonnull String realmUserId, @Nonnull Context context) {
+    public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) {
         try {
-            return HttpTransactions.execute(new VkMessagesGetHttpTransaction(realm, getUser(realmUserId), context));
+            return HttpTransactions.execute(new VkMessagesGetHttpTransaction(realm, getUser(realmUserId)));
         } catch (IOException e) {
             throw new HttpRuntimeIoException(e);
         }
@@ -62,23 +61,23 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Context context) {
-        return getChatMessagesForChat(realmChatId, realmUserId, context, new VkHttpTransactionForMessagesForChatProvider() {
+    public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
+        return getChatMessagesForChat(realmChatId, realmUserId, new VkHttpTransactionForMessagesForChatProvider() {
             @Nonnull
             @Override
-            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId, @Nonnull Context context) {
-                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(realm, secondUserId, user, context));
+            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(realm, secondUserId, user));
             }
 
             @Nonnull
             @Override
-            public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId, @Nonnull Context context) {
-                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(realm, chatId, user, context));
+            public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId) {
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(realm, chatId, user));
             }
         });
     }
 
-    private List<ChatMessage> getChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Context context, @Nonnull VkHttpTransactionForMessagesForChatProvider p) {
+    private List<ChatMessage> getChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull VkHttpTransactionForMessagesForChatProvider p) {
         final Chat chat = getChatService().getChatById(realm.newRealmEntity(realmChatId));
 
         if (chat != null) {
@@ -89,7 +88,7 @@ public class VkRealmChatService implements RealmChatService {
 
                         final String secondUserId = realmChatId.substring(index + 1, realmChatId.length());
                         final List<ChatMessage> result = new ArrayList<ChatMessage>(100);
-                        for (List<ChatMessage> messages : HttpTransactions.execute(p.getForPrivateChat(getUser(realmUserId), secondUserId, context))) {
+                        for (List<ChatMessage> messages : HttpTransactions.execute(p.getForPrivateChat(getUser(realmUserId), secondUserId))) {
                             result.addAll(messages);
                         }
                         return result;
@@ -101,7 +100,7 @@ public class VkRealmChatService implements RealmChatService {
 
                 } else {
                     final List<ChatMessage> result = new ArrayList<ChatMessage>(100);
-                    for (List<ChatMessage> messages : HttpTransactions.execute(p.getForChat(getUser(realmUserId), realmChatId, context))) {
+                    for (List<ChatMessage> messages : HttpTransactions.execute(p.getForChat(getUser(realmUserId), realmChatId))) {
                         result.addAll(messages);
                     }
                     return result;
@@ -117,28 +116,28 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull final Integer offset, @Nonnull Context context) {
-        return getChatMessagesForChat(realmChatId, realmUserId, context, new VkHttpTransactionForMessagesForChatProvider() {
+    public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull final Integer offset) {
+        return getChatMessagesForChat(realmChatId, realmUserId, new VkHttpTransactionForMessagesForChatProvider() {
             @Nonnull
             @Override
-            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId, @Nonnull Context context) {
-                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(realm, secondUserId, user, offset, context));
+            public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(realm, secondUserId, user, offset));
             }
 
             @Nonnull
             @Override
-            public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId, @Nonnull Context context) {
-                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(realm, chatId, user, offset, context));
+            public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId) {
+                return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(realm, chatId, user, offset));
             }
         });
     }
 
     private static interface VkHttpTransactionForMessagesForChatProvider {
         @Nonnull
-        List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId, @Nonnull Context context);
+        List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId);
 
         @Nonnull
-        List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId, @Nonnull Context context);
+        List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId);
 
     }
 
@@ -160,10 +159,10 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public List<ApiChat> getUserChats(@Nonnull String realmUserId, @Nonnull Context context) {
+    public List<ApiChat> getUserChats(@Nonnull String realmUserId) {
         try {
             final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(realm.newRealmEntity(realmUserId));
-            return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(realm, user, context));
+            return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(realm, user));
         } catch (IOException e) {
             throw new HttpRuntimeIoException(e);
         }
@@ -171,7 +170,7 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage, @Nonnull Context context) {
+    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
         try {
             return HttpTransactions.execute(new VkMessagesSendHttpTransaction(realm, chatMessage, chat));
         } catch (IOException e) {

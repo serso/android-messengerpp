@@ -1,16 +1,15 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
-import android.content.Context;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
+import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,31 +29,27 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
     @Nonnull
     private final User user;
 
-    @Nonnull
-    private final Context context;
-
-    private VkMessagesGetDialogsHttpTransaction(@Nonnull Realm realm, @Nonnull Integer count, @Nonnull User user, @Nonnull Context context) {
+    private VkMessagesGetDialogsHttpTransaction(@Nonnull Realm realm, @Nonnull Integer count, @Nonnull User user) {
         super(realm, "messages.getDialogs");
         this.count = count;
         this.user = user;
-        this.context = context;
     }
 
     @Nonnull
-    public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull Realm realm, @Nonnull User user, @Nonnull Context context) {
-        return new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user, context);
+    public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull Realm realm, @Nonnull User user) {
+        return new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user);
     }
 
     @Nonnull
-    public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@Nonnull Realm realm, @Nonnull Integer count, @Nonnull User user, @Nonnull Context context) {
+    public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@Nonnull Realm realm, @Nonnull Integer count, @Nonnull User user) {
         final List<VkMessagesGetDialogsHttpTransaction> result = new ArrayList<VkMessagesGetDialogsHttpTransaction>();
 
         for (int i = 0; i < count / MAX_COUNT; i++) {
-            result.add(new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user, context));
+            result.add(new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user));
         }
 
         if (count % MAX_COUNT != 0) {
-            result.add(new VkMessagesGetDialogsHttpTransaction(realm, count % MAX_COUNT, user, context));
+            result.add(new VkMessagesGetDialogsHttpTransaction(realm, count % MAX_COUNT, user));
         }
 
         return result;

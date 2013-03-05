@@ -29,13 +29,9 @@ public class VkMessagesGetHttpTransaction extends AbstractVkHttpTransaction<List
     @Nonnull
     private User user;
 
-    @Nonnull
-    private Context context;
-
-    protected VkMessagesGetHttpTransaction(@Nonnull Realm realm, @Nonnull User user, @Nonnull Context context) {
+    protected VkMessagesGetHttpTransaction(@Nonnull Realm realm, @Nonnull User user) {
         super(realm, "messages.get");
         this.user = user;
-        this.context = context;
     }
 
     @Nonnull

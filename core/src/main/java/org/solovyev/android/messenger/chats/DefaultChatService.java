@@ -200,7 +200,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @Nonnull
     @Override
     public List<ChatMessage> syncChatMessages(@Nonnull RealmEntity user) {
-        final List<ChatMessage> chatMessages = getRealmByUser(user).getRealmChatService().getChatMessages(user.getRealmEntityId(), context);
+        final List<ChatMessage> chatMessages = getRealmByUser(user).getRealmChatService().getChatMessages(user.getRealmEntityId());
 
 /*        synchronized (userChatsCache) {
             userChatsCache.put(userId, chats);
@@ -245,7 +245,10 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @Nonnull
     @Override
     public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser) {
-        final List<ChatMessage> messages = getRealmByUser(realmUser).getRealmChatService().getNewerChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), context);
+        final Realm realm = getRealmByUser(realmUser);
+        final RealmChatService realmChatService = realm.getRealmChatService();
+
+        final List<ChatMessage> messages = realmChatService.getNewerChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId());
 
         syncChatMessagesForChat(realmChat, context, messages);
 
@@ -300,7 +303,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
         final List<ChatMessage> messages;
 
         if (chat != null) {
-            messages = getRealmByUser(realmUser).getRealmChatService().getOlderChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), offset, context);
+            messages = getRealmByUser(realmUser).getRealmChatService().getOlderChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), offset);
             syncChatMessagesForChat(realmChat, context, messages);
         } else {
             messages = java.util.Collections.emptyList();
@@ -362,7 +365,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @Nonnull
     @Override
     public ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
-        final String chatMessageId = getRealmByUser(user).getRealmChatService().sendChatMessage(chat, chatMessage, context);
+        final String chatMessageId = getRealmByUser(user).getRealmChatService().sendChatMessage(chat, chatMessage);
 
         final LiteChatMessageImpl msgResult = LiteChatMessageImpl.newInstance(chatMessageId);
 

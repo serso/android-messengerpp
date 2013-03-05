@@ -107,9 +107,9 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
         R editedRealm = getEditedRealm();
         if (editedRealm != null) {
             eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(editedRealm, false));
-        } else {
-            eventManager.fire(new RealmDefFragmentFinishedEvent(getRealmDef()));
         }
+
+        eventManager.fire(RealmDefGuiEventType.newRealmDefEditFinishedEvent(getRealmDef()));
     }
 
     @Nonnull

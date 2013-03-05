@@ -314,7 +314,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @Nonnull
     @Override
     public List<Chat> syncUserChats(@Nonnull RealmEntity realmUser) {
-        final List<ApiChat> apiChats = getRealmByUser(realmUser).getRealmChatService().getUserChats(realmUser.getRealmEntityId(), context);
+        final List<ApiChat> apiChats = getRealmByUser(realmUser).getRealmChatService().getUserChats(realmUser.getRealmEntityId());
 
         final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
             @Override

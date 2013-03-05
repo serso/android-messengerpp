@@ -21,8 +21,6 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
     @Nonnull
     private RealmService realmService;
 
-    private ActivityMenu<Menu, MenuItem> menu;
-
     public MessengerRealmDefsFragment() {
         super("RealmDefs", false);
     }
@@ -60,26 +58,4 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
         return null;
     }
 
-        /*
-    **********************************************************************
-    *
-    *                           STATIC
-    *
-    **********************************************************************
-    */
-
-    public static class RealmDefClickedEvent {
-
-        @Nonnull
-        private final RealmDef realmDef;
-
-        public RealmDefClickedEvent(@Nonnull RealmDef realmDef) {
-            this.realmDef = realmDef;
-        }
-
-        @Nonnull
-        public RealmDef getRealmDef() {
-            return realmDef;
-        }
-    }
 }

@@ -66,7 +66,7 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
             }
 
             for (RealmDef realmDef : realmDefs) {
-                eventManager.fire(new RealmDefFragmentFinishedEvent(realmDef));
+                eventManager.fire(RealmDefGuiEventType.newRealmDefEditFinishedEvent(realmDef));
             }
         }
     }

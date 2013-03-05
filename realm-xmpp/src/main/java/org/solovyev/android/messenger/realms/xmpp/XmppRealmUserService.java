@@ -24,81 +24,28 @@ import java.util.List;
  * Date: 2/24/13
  * Time: 8:45 PM
  */
-class XmppRealmUserService implements RealmUserService {
-
-    @Nonnull
-    private final XmppRealm realm;
+class XmppRealmUserService extends AbstractXmppRealmService implements RealmUserService {
 
     XmppRealmUserService(@Nonnull XmppRealm realm) {
-        this.realm = realm;
+        super(realm);
     }
 
     @Nullable
     @Override
     public User getUserById(@Nonnull final String realmUserId) {
-        return doOnConnection(new UserLoader(realmUserId, realm));
-    }
-
-    private <R> R doOnConnection(@Nonnull ConnectedCallable<R> callable) {
-        final XmppRealmConfiguration configuration = realm.getConfiguration();
-
-        final XMPPConnection connection = new XMPPConnection(configuration.toXmppConfiguration());
-        try {
-            connection.connect();
-            connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
-
-            return callable.call(connection);
-        } catch (XMPPException e) {
-            throw new RealmIsNotConnectedException(e);
-        } finally {
-            connection.disconnect();
-        }
+        return doConnected(new UserLoader(getRealm(), realmUserId));
     }
 
     @Nonnull
     @Override
     public List<User> getUserContacts(@Nonnull final String realmUserId) {
-        return doOnConnection(new UserContactsLoader(realm, realmUserId));
+        return doConnected(new UserContactsLoader(getRealm(), realmUserId));
     }
 
     @Nonnull
     @Override
     public List<User> checkOnlineUsers(@Nonnull final List<User> users) {
-        return doOnConnection(new ConnectedCallable<List<User>>() {
-            @Override
-            public List<User> call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
-                final List<User> result = new ArrayList<User>();
-
-                final Roster roster = connection.getRoster();
-                final Collection<RosterEntry> entries = roster.getEntries();
-                for (final User user : users) {
-
-                    final boolean online;
-                    if (realm.getUser().equals(user)) {
-                        // realm user => always online
-                        online = true;
-                    } else {
-                        final RosterEntry entry = Iterables.find(entries, new Predicate<RosterEntry>() {
-                            @Override
-                            public boolean apply(@Nullable RosterEntry entry) {
-                                return entry != null && user.getRealmUser().getRealmEntityId().equals(entry.getUser());
-                            }
-                        }, null);
-
-                        if (entry != null) {
-                            final Presence presence = roster.getPresence(entry.getUser());
-                            online = presence.isAvailable();
-                        } else {
-                            online = false;
-                        }
-                    }
-
-                    result.add(user.cloneWithNewStatus(online));
-                }
-
-                return result;
-            }
-        });
+        return doConnected(new OnlineUsersChecker(getRealm(), users));
     }
 
     @Nonnull
@@ -124,23 +71,17 @@ class XmppRealmUserService implements RealmUserService {
     **********************************************************************
     */
 
-    private static interface ConnectedCallable<R> {
-
-        R call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException;
-
-    }
-
-    private static class UserLoader implements ConnectedCallable<User> {
-
-        @Nonnull
-        private final String realmUserId;
+    private static class UserLoader implements XmppConnectedCallable<User> {
 
         @Nonnull
         private final Realm realm;
 
-        public UserLoader(@Nonnull String realmUserId, @Nonnull Realm realm) {
-            this.realmUserId = realmUserId;
+        @Nonnull
+        private final String realmUserId;
+
+        public UserLoader(@Nonnull Realm realm, @Nonnull String realmUserId) {
             this.realm = realm;
+            this.realmUserId = realmUserId;
         }
 
         @Override
@@ -201,7 +142,7 @@ class XmppRealmUserService implements RealmUserService {
         return UserImpl.newInstance(realm.newRealmEntity(realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
     }
 
-    private static class UserContactsLoader implements ConnectedCallable<List<User>> {
+    private static class UserContactsLoader implements XmppConnectedCallable<List<User>> {
 
         @Nonnull
         private final Realm realm;
@@ -232,6 +173,54 @@ class XmppRealmUserService implements RealmUserService {
                 return Collections.emptyList();
             }
 
+        }
+    }
+
+    private static class OnlineUsersChecker implements XmppConnectedCallable<List<User>> {
+
+        @Nonnull
+        private final Realm realm;
+
+        @Nonnull
+        private final List<User> users;
+
+        public OnlineUsersChecker(@Nonnull Realm realm, @Nonnull List<User> users) {
+            this.realm = realm;
+            this.users = users;
+        }
+
+        @Override
+        public List<User> call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
+            final List<User> result = new ArrayList<User>();
+
+            final Roster roster = connection.getRoster();
+            final Collection<RosterEntry> entries = roster.getEntries();
+            for (final User user : users) {
+
+                final boolean online;
+                if (realm.getUser().equals(user)) {
+                    // realm user => always online
+                    online = true;
+                } else {
+                    final RosterEntry entry = Iterables.find(entries, new Predicate<RosterEntry>() {
+                        @Override
+                        public boolean apply(@Nullable RosterEntry entry) {
+                            return entry != null && user.getRealmUser().getRealmEntityId().equals(entry.getUser());
+                        }
+                    }, null);
+
+                    if (entry != null) {
+                        final Presence presence = roster.getPresence(entry.getUser());
+                        online = presence.isAvailable();
+                    } else {
+                        online = false;
+                    }
+                }
+
+                result.add(user.cloneWithNewStatus(online));
+            }
+
+            return result;
         }
     }
 }
