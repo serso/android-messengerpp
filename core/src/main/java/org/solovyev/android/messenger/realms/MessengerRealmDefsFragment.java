@@ -24,17 +24,12 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
     private ActivityMenu<Menu, MenuItem> menu;
 
     public MessengerRealmDefsFragment() {
-        super("RealmDefs");
+        super("RealmDefs", false);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected boolean isFilterEnabled() {
-        return false;
     }
 
     @Nullable

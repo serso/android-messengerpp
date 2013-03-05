@@ -6,13 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
@@ -21,6 +20,7 @@ import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
@@ -32,12 +32,9 @@ import org.solovyev.common.listeners.JListeners;
 import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * User: serso
@@ -46,6 +43,9 @@ import java.util.Map;
  */
 @Singleton
 public class DefaultChatService implements ChatService, ChatEventListener, UserEventListener {
+
+    @Nonnull
+    private static final Character PRIVATE_CHAT_DELIMITER = ':';
 
     /*
     **********************************************************************
@@ -321,14 +321,13 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     public RealmEntity getSecondUser(@Nonnull Chat chat) {
         boolean first = true;
 
-        // todo serso: continue
-/*        for (String userId : Splitter.on('_').split(chat.getId())) {
+        for (String userId : Splitter.on(PRIVATE_CHAT_DELIMITER).split(chat.getRealmChat().getRealmEntityId())) {
             if ( first ) {
                 first = false;
             } else {
-                return userId;
+                return RealmEntityImpl.newInstance(chat.getRealmChat().getRealmId(), userId);
             }
-        }*/
+        }
 
         return null;
     }
@@ -357,7 +356,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     @Nonnull
     @Override
     public RealmEntity createPrivateChatId(@Nonnull RealmEntity realmUser, @Nonnull RealmEntity secondRealmUser) {
-        return getRealmByUser(realmUser).newRealmEntity(realmUser.getRealmEntityId() + "_" + secondRealmUser.getRealmEntityId());
+        return getRealmByUser(realmUser).newRealmEntity(realmUser.getRealmEntityId() + PRIVATE_CHAT_DELIMITER + secondRealmUser.getRealmEntityId());
     }
 
     @Nonnull

@@ -1,13 +1,11 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
-import org.solovyev.common.Builder;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -53,16 +51,6 @@ public class ContactGuiEventListener implements EventListener<ContactGuiEvent> {
                 }
 
             }.execute(null, null);
-
-            if ( activity.isTriplePane() ) {
-                activity.setThirdFragment(new Builder<Fragment>() {
-                    @Nonnull
-                    @Override
-                    public Fragment build() {
-                        return new MessengerContactFragment(contact);
-                    }
-                }, ContactFragmentReuseCondition.forContact(contact.getRealmUser()));
-            }
         }
     }
 }

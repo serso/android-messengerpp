@@ -1,8 +1,9 @@
 package org.solovyev.android.messenger.users;
 
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -15,7 +16,7 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
     private static String TAG = "ContactsFragment";
 
     public AbstractMessengerContactsFragment() {
-        super(TAG);
+        super(TAG, true);
     }
 
     @Override
@@ -23,8 +24,4 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
         return null;
     }
 
-    @Override
-    protected boolean isFilterEnabled() {
-        return true;
-    }
 }

@@ -29,6 +29,6 @@ public final class ContactFragmentReuseCondition extends AbstractFragmentReuseCo
 
     @Override
     protected boolean canReuseFragment(@Nonnull MessengerContactFragment fragment) {
-        return contact.equals(fragment.getContact().getRealmUser());
+        return contact.equals(fragment.getContact());
     }
 }

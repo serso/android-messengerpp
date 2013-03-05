@@ -1,11 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Checkable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.users.User;
@@ -13,6 +9,8 @@ import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.common.Objects;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
     private int selectedItemPosition = -1;
 
     @Nonnull
-    private final AdapterView.OnItemClickListener selectedItemListener = new SelectedItemListener();
+    private final SelectedItemListener selectedItemListener = new SelectedItemListener();
 
     public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
         super(context, listItems);
@@ -116,16 +114,29 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
     }
 
     @Nonnull
-    public AdapterView.OnItemClickListener getSelectedItemListener() {
+    public SelectedItemListener getSelectedItemListener() {
         return selectedItemListener;
     }
 
-    private final class SelectedItemListener implements AdapterView.OnItemClickListener {
+    public final class SelectedItemListener {
 
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onItemClick(int position) {
 
-            final ListItem selectedItem = getItem(position);
+            final LI selectedItem = getItem(position);
+            if (MessengerListItemAdapter.this.selectedItem != selectedItem) {
+                selectItem(selectedItem, true);
+                selectItem(MessengerListItemAdapter.this.selectedItem, false);
+
+                MessengerListItemAdapter.this.selectedItem = selectedItem;
+                MessengerListItemAdapter.this.selectedItemPosition = position;
+
+                notifyDataSetChanged();
+            }
+        }
+
+        public void onItemClick(@Nonnull ListItem selectedItem) {
+
+            final int position = getPosition((LI) selectedItem);
             if (MessengerListItemAdapter.this.selectedItem != selectedItem) {
                 selectItem(selectedItem, true);
                 selectItem(MessengerListItemAdapter.this.selectedItem, false);

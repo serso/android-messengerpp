@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,18 @@ import java.util.List;
  */
 public class MessengerContactFragment extends RoboSherlockFragment {
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
+    @Nonnull
+    private static final String CONTACT = "contact";
+
+
     @Inject
     @Nonnull
     private UserService userService;
@@ -40,42 +51,75 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
-
-    @Nonnull
-    private static final String CONTACT = "contact";
-
     private User contact;
 
     private RealmEntity realmContact;
 
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTRUCTORS
+    *
+    **********************************************************************
+    */
+
     public MessengerContactFragment() {
+        // will be loaded later by id from fragment arguments
+        this.contact = null;
+        this.realmContact = null;
     }
 
     public MessengerContactFragment(@Nonnull User contact) {
         this.contact = contact;
+        this.realmContact = contact.getRealmUser();
     }
 
     public MessengerContactFragment(@Nonnull RealmEntity realmContact) {
+        // will be loaded later by realmContact
+        this.contact = null;
         this.realmContact = realmContact;
+    }
+
+
+    @Nonnull
+    public static MessengerContactFragment newForContact(@Nonnull User contact) {
+        final MessengerContactFragment result = new MessengerContactFragment(contact);
+        fillArguments(contact.getRealmUser(), result);
+        return result;
+    }
+
+    @Nonnull
+    public static MessengerContactFragment newForContact(@Nonnull RealmEntity realmContact) {
+        final MessengerContactFragment result = new MessengerContactFragment(realmContact);
+        fillArguments(realmContact, result);
+        return result;
+    }
+
+    private static void fillArguments(@Nonnull RealmEntity realmUser, @Nonnull MessengerContactFragment result) {
+        final Bundle args = new Bundle();
+        args.putParcelable(CONTACT, realmUser);
+        result.setArguments(args);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // restore state
         if (contact == null) {
-            RealmEntity realmContact = this.realmContact;
-            if ( realmContact == null ) {
-                realmContact = (RealmEntity) savedInstanceState.getParcelable(CONTACT);
+            // restore state
+            final RealmEntity realmContact;
+
+            if (this.realmContact != null) {
+                realmContact = this.realmContact;
+            } else {
+                realmContact = (RealmEntity) getArguments().getParcelable(CONTACT);
             }
 
             if (realmContact != null) {
-                contact = this.userService.getUserById(realmContact);
-            }
-
-            if (contact == null) {
-                Log.e(getClass().getSimpleName(), "Contact is null and no data is stored in bundle");
+                this.contact = this.userService.getUserById(realmContact);
+                this.realmContact = realmContact;
+            } else {
                 getActivity().finish();
             }
         }
@@ -118,15 +162,8 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable(CONTACT, contact.getRealmUser());
-    }
-
     @Nonnull
-    public User getContact() {
-        return contact;
+    public RealmEntity getContact() {
+        return realmContact;
     }
 }

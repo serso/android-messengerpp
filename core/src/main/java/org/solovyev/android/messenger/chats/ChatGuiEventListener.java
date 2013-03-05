@@ -56,7 +56,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                             @Nonnull
                             @Override
                             public Fragment build() {
-                                return new MessengerContactFragment(chat.getSecondUser());
+                                return MessengerContactFragment.newForContact(chat.getSecondUser());
                             }
                         }, ContactFragmentReuseCondition.forContact(chat.getSecondUser()));
                     } else {

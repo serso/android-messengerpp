@@ -5,8 +5,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -22,6 +20,8 @@ import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<UserCh
     private ChatEventListener chatEventListener;
 
     public MessengerChatsFragment() {
-        super(TAG);
+        super(TAG, true);
     }
 
     @Override
@@ -134,11 +134,6 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<UserCh
                 }
             });
         }
-    }
-
-    @Override
-    protected boolean isFilterEnabled() {
-        return true;
     }
 
     @Nonnull

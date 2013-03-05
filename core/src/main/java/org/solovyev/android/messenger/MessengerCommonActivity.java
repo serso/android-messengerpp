@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import javax.annotation.Nullable;
+
 import javax.annotation.Nonnull;
-import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso
@@ -18,7 +19,7 @@ import org.solovyev.android.messenger.users.User;
  */
 public interface MessengerCommonActivity {
 
-    void onCreate(@Nonnull SherlockFragmentActivity activity, Bundle savedInstanceState);
+    void onCreate(@Nonnull SherlockFragmentActivity activity, @Nullable Bundle savedInstanceState);
 
     void onRestart(@Nonnull Activity activity);
 

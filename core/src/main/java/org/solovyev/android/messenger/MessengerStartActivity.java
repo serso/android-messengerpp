@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.MessengerRealmsActivity;
+import org.solovyev.android.messenger.realms.MessengerRealmDefsActivity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
@@ -42,10 +42,12 @@ public class MessengerStartActivity extends RoboActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         final Collection<Realm> realms = realmService.getRealms();
         if (!realms.isEmpty()) {
+            // todo serso: maybe move to Application or Service?
+            // prefetch data and do synchronization
 
-            boolean atLeastOneRealmLogged = false;
             boolean syncDone = true;
 
             for (Realm realm : realms) {
@@ -57,8 +59,6 @@ public class MessengerStartActivity extends RoboActivity {
                     // prefetch data
                     new PreloadCachedData(this).execute(user);
                 }
-
-                atLeastOneRealmLogged = true;
             }
 
             if (!syncDone) {
@@ -71,15 +71,12 @@ public class MessengerStartActivity extends RoboActivity {
                 }
             }
 
-
-            if (atLeastOneRealmLogged) {
-                MessengerMainActivity.startActivity(this);
-            } else {
-                MessengerRealmsActivity.startActivity(this);
-            }
+            MessengerMainActivity.startActivity(this);
         } else {
-            MessengerRealmsActivity.startActivity(this);
+            // no realms -> show realm def activity
+            MessengerRealmDefsActivity.startActivity(this);
         }
+
 
         this.finish();
     }

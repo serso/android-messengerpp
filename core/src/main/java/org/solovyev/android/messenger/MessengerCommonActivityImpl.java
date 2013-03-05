@@ -37,7 +37,24 @@ import javax.annotation.Nullable;
  */
 public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
     private static final String SELECTED_NAV = "selected_nav";
+
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
 
     private int layoutId;
 
@@ -55,7 +72,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     @Override
-    public void onCreate(@Nonnull final SherlockFragmentActivity activity, Bundle savedInstanceState) {
+    public void onCreate(@Nonnull final SherlockFragmentActivity activity, @Nullable Bundle savedInstanceState) {
         //activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         activity.setContentView(layoutId);
@@ -77,7 +94,6 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
             final ActionBar.Tab tab = actionBar.newTab();
             tab.setTag("settings");
             tab.setText(R.string.c_settings);
-            //tab.setIcon(R.drawable.msg_footer_settings_icon);
             tab.setTabListener(new ActionBar.TabListener() {
                 @Override
                 public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {

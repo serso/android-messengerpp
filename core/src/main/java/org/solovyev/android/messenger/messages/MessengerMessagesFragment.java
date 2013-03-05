@@ -20,6 +20,7 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
@@ -86,17 +87,12 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     private ChatEventListener chatEventListener;
 
     public MessengerMessagesFragment() {
-        super(TAG);
+        super(TAG, false);
     }
 
     public MessengerMessagesFragment(@Nonnull Chat chat) {
-        super(TAG);
+        super(TAG, false);
         this.chat = chat;
-    }
-
-    @Override
-    protected boolean isFilterEnabled() {
-        return false;
     }
 
     @Nonnull
@@ -266,7 +262,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             final Integer transcriptMode = lv.getTranscriptMode();
             lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
 
-            final PullToRefreshListView2 pullToRefreshListView = getPullToRefreshListView();
+            final PublicPullToRefreshListView pullToRefreshListView = getPullToRefreshListView();
             if ( pullToRefreshListView != null ) {
                 pullToRefreshListView.setRefreshingInternal(false);
             }
@@ -344,11 +340,6 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Override
     protected MessagesAdapter getAdapter() {
         return (MessagesAdapter) super.getAdapter();
-    }
-
-    @Override
-    public PullToRefreshListView2 getPullToRefreshListView() {
-        return getPullLv();
     }
 
     private static class ListViewPostActions implements Runnable {

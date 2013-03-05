@@ -36,7 +36,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
     private JEventListener<RealmEvent> realmEventListener;
 
     public MessengerRealmsFragment() {
-        super("Realms");
+        super("Realms", false);
     }
 
     @Override
@@ -60,11 +60,6 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
             realmService.removeListener(realmEventListener);
         }
         super.onDestroyView();
-    }
-
-    @Override
-    protected boolean isFilterEnabled() {
-        return false;
     }
 
     @Nullable

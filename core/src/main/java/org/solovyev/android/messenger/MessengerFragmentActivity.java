@@ -84,6 +84,10 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     *
     **********************************************************************
     */
+
+    @Nullable
+    private ViewGroup firstPane;
+
     @Nullable
     private ViewGroup secondPane;
 
@@ -128,6 +132,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
         activity.onCreate(this, savedInstanceState);
 
+        this.firstPane = (ViewGroup) findViewById(R.id.content_first_pane);
         this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
         this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
     }
@@ -266,7 +271,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         setSecondFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
     }
 
-    protected void setThirdFragment(@Nonnull Class<? extends Fragment> fragmentClass,
+    public void setThirdFragment(@Nonnull Class<? extends Fragment> fragmentClass,
                                     @Nullable Bundle fragmentArgs,
                                     @Nullable JPredicate<Fragment> reuseCondition) {
         setFragment(R.id.content_third_pane, THIRD_FRAGMENT_TAG, ReflectionFragmentBuilder.newInstance(this, fragmentClass, fragmentArgs), reuseCondition);
