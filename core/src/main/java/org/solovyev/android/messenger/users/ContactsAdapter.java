@@ -15,7 +15,7 @@ public class ContactsAdapter extends AbstractContactsAdapter {
     }
 
     @Override
-    protected void onListItemChanged(@Nonnull User user, @Nonnull User contact) {
+    protected void onListItemChanged(@Nonnull User contact) {
     }
 
     @Override

@@ -7,14 +7,14 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,96 +38,87 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
         super.onUserEvent(eventUser, userEventType, data);
 
         if (userEventType == UserEventType.contact_removed) {
-            if (eventUser.equals(getUser())) {
-                final String contactId = (String) data;
-                removeListItem(eventUser, contactId);
+            final String contactId = (String) data;
+            if (contactId != null) {
+                removeListItem(contactId);
             }
         }
 
         if (userEventType == UserEventType.contact_added) {
-            if (eventUser.equals(getUser())) {
+            if (data instanceof User) {
                 final User contact = (User) data;
                 if (canAddContact(contact)) {
-                    addListItem(eventUser, contact);
+                    addListItem(contact);
                 }
             }
         }
 
         if (userEventType == UserEventType.contact_added_batch) {
-            if (eventUser.equals(getUser())) {
+            if (data instanceof List) {
                 // first - filter contacts which can be added
                 // then - transform user objects to list items objects
-                addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter((List<User>) data, new Predicate<User>() {
+                final List<User> contacts = (List<User>) data;
+                addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
                     @Override
-                    public boolean apply(@javax.annotation.Nullable User contact) {
+                    public boolean apply(@Nullable User contact) {
                         assert contact != null;
                         return canAddContact(contact);
                     }
                 }), new Function<User, ContactListItem>() {
                     @Override
-                    public ContactListItem apply(@javax.annotation.Nullable User contact) {
-                        return createListItem(eventUser, contact);
+                    public ContactListItem apply(@Nullable User contact) {
+                        assert contact != null;
+                        return createListItem(contact);
                     }
                 })));
             }
         }
 
         if (userEventType == UserEventType.changed) {
-
-            final ContactListItem listItem = findInAllElements(getUser(), eventUser);
+            final ContactListItem listItem = findInAllElements(eventUser);
             if (listItem != null) {
                 listItem.onUserEvent(eventUser, userEventType, data);
-                onListItemChanged(getUser(), eventUser);
-            }
-            //notifyDataSetChanged();
-        }
-
-        if ( userEventType == UserEventType.contact_online || userEventType == UserEventType.contact_offline ) {
-            if (eventUser.equals(getUser())) {
-                refilter();
+                onListItemChanged(eventUser);
             }
         }
-    }
 
-    protected User getUser() {
-        // todo serso: continue
-        throw new UnsupportedOperationException();
+        if (userEventType == UserEventType.contact_online || userEventType == UserEventType.contact_offline) {
+            refilter();
+        }
     }
-
 
     @Nullable
-    protected ContactListItem findInAllElements(@Nonnull User user, @Nonnull User contact) {
-        return Iterables.find(getAllElements(), Predicates.<ContactListItem>equalTo(createListItem(user, contact)), null);
+    protected ContactListItem findInAllElements(@Nonnull User contact) {
+        return Iterables.find(getAllElements(), Predicates.<ContactListItem>equalTo(createListItem(contact)), null);
     }
 
 
-    protected void removeListItem(@Nonnull User user, @Nonnull String contactId) {
-        // todo serso: not good solution => better way is to load full user object for contact (but it can take long time)
+    protected void removeListItem(@Nonnull String contactId) {
         final User contact = UserImpl.newFakeInstance(contactId);
-        removeListItem(user, contact);
+        removeListItem(contact);
     }
 
-    protected void removeListItem(@Nonnull User user, @Nonnull User contact) {
-        remove(createListItem(user, contact));
+    protected void removeListItem(@Nonnull User contact) {
+        remove(createListItem(contact));
     }
 
-    protected void addListItem(@Nonnull User user, @Nonnull User contact) {
-        addListItem(createListItem(user, contact));
+    protected void addListItem(@Nonnull User contact) {
+        addListItem(createListItem(contact));
     }
 
     @Nonnull
-    private ContactListItem createListItem(@Nonnull User user, @Nonnull User contact) {
-        return new ContactListItem(user, contact);
+    private ContactListItem createListItem(@Nonnull User contact) {
+        return new ContactListItem(contact);
     }
 
-    protected abstract void onListItemChanged(@Nonnull User user, @Nonnull User contact);
+    protected abstract void onListItemChanged(@Nonnull User contact);
 
     protected abstract boolean canAddContact(@Nonnull User contact);
 
     public void setMode(@Nonnull MessengerContactsMode newMode) {
         boolean refilter = this.mode != newMode;
         this.mode = newMode;
-        if ( refilter ) {
+        if (refilter) {
             refilter();
         }
     }
@@ -172,18 +163,15 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
                     final User contact = listItem.getContact();
 
                     boolean shown = true;
-                    if ( mode == MessengerContactsMode.all_contacts ) {
+                    if (mode == MessengerContactsMode.all_contacts) {
                         shown = true;
-                    } else if ( mode == MessengerContactsMode.only_online_contacts ) {
-                         if ( contact.isOnline() ) {
-                             shown = true;
-                         } else {
-                             shown = false;
-                         }
+                    } else if (mode == MessengerContactsMode.only_online_contacts) {
+                        shown = contact.isOnline();
                     }
 
                     if (shown) {
                         if (!Strings.isEmpty(prefix)) {
+                            assert prefix != null;
                             shown = new PrefixFilter<ContactListItem>(prefix.toString().toLowerCase()).apply(listItem);
                         }
                     }

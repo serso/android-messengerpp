@@ -42,7 +42,7 @@
     <string name="clear">Clear</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="sex">Sex</string>
+    <string name="mpp_sex">Sex</string>
     <string name="c_search_hint">Search</string>
     <string name="c_appearance_preferences">Appearance settings</string>
     <string name="c_settings">Settings</string>
@@ -54,5 +54,10 @@
     <string name="mpp_remove">Remove</string>
     <string name="mpp_edit">Edit</string>
     <string name="mpp_realm_name">Account service</string>
+
+    <string name="mpp_nickname">Nickname</string>
+    <string name="mpp_birth_date">Birth date</string>
+    <string name="mpp_country">Country</string>
+    <string name="mpp_city">City</string>
 
 </resources>

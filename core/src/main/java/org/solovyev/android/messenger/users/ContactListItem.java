@@ -7,8 +7,6 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -16,6 +14,9 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -28,15 +29,11 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
     private static final String TAG_PREFIX = "contact_list_item_view_";
 
     @Nonnull
-    private User user;
-
-    @Nonnull
     private User contact;
 
     private boolean checked;
 
-    public ContactListItem(@Nonnull User user, @Nonnull User contact) {
-        this.user = user;
+    public ContactListItem(@Nonnull User contact) {
         this.contact = contact;
     }
 
@@ -118,17 +115,13 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
     @Override
     public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
         if (userEventType == UserEventType.changed) {
-            if (eventUser.equals(user)) {
-                user = eventUser;
-            }
-
             if (eventUser.equals(contact)) {
                 contact = eventUser;
             }
         }
 
         if (userEventType == UserEventType.contact_offline || userEventType == UserEventType.contact_online) {
-            if (eventUser.equals(user) && contact.equals(data)) {
+            if (contact.equals(data)) {
                 contact = (User) data;
             }
         }
@@ -136,22 +129,26 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ContactListItem)) return false;
+        if (this == o) {
+            return true;
+        }
 
-        ContactListItem that = (ContactListItem) o;
+        if (!(o instanceof ContactListItem)) {
+            return false;
+        }
 
-        if (!contact.equals(that.contact)) return false;
-        if (!user.equals(that.user)) return false;
+        final ContactListItem that = (ContactListItem) o;
+
+        if (!contact.equals(that.contact)) {
+            return false;
+        }
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = user.hashCode();
-        result = 31 * result + contact.hashCode();
-        return result;
+        return contact.hashCode();
     }
 
     @Override
@@ -168,11 +165,6 @@ public class ContactListItem implements ListItem, UserEventListener, Comparable<
     @Nonnull
     public User getContact() {
         return contact;
-    }
-
-    @Nonnull
-    public User getUser() {
-        return user;
     }
 
     @Override

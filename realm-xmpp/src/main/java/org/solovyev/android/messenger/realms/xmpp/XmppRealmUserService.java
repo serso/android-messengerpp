@@ -8,10 +8,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
-import org.solovyev.android.messenger.users.RealmUserService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserImpl;
-import org.solovyev.android.messenger.users.UserSyncDataImpl;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 
@@ -107,8 +104,16 @@ class XmppRealmUserService implements RealmUserService {
     @Nonnull
     @Override
     public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
-        // todo serso: user properties
-        return Collections.emptyList();
+        final List<AProperty> result = new ArrayList<AProperty>(user.getProperties().size());
+
+        for (AProperty property : user.getProperties()) {
+            final String name = property.getName();
+            if ( name.equals(User.PROPERTY_NICKNAME) ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_nickname), property.getValue()));
+            }
+        }
+
+        return result;
     }
 
     /*

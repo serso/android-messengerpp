@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.*;
@@ -28,6 +26,8 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -107,6 +107,24 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (chat != null) {
+            // chat is set => fragment was just created => we need to load realm
+            realm = realmService.getRealmById(chat.getRealmChat().getRealmId());
+        } else {
+            // first - restore state
+            final RealmEntity realmChat = savedInstanceState.getParcelable(CHAT);
+            if (realmChat != null) {
+                chat = this.chatService.getChatById(realmChat);
+            }
+
+            if (chat == null) {
+                Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
+                getActivity().finish();
+            } else {
+                realm = realmService.getRealmById(chat.getRealmChat().getRealmId());
+            }
+        }
     }
 
     @Override
@@ -130,6 +148,15 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         multiPaneManager.fillContentPane(this.getActivity(), container, result);
 
         return result;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // then call parent
+        super.onActivityCreated(savedInstanceState);
+
+        chatEventListener = new UiThreadUserChatListener();
+        this.chatService.addChatEventListener(chatEventListener);
     }
 
     @Override
@@ -180,30 +207,6 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Nonnull
     private User getUser() {
         return realm.getUser();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        // first - restore state
-        if (chat == null) {
-            final RealmEntity realmChat = savedInstanceState.getParcelable(CHAT);
-            if (realmChat != null) {
-                chat = this.chatService.getChatById(realmChat);
-            }
-
-            if (chat == null) {
-                Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
-                getActivity().finish();
-            } else {
-                realm = realmService.getRealmById(chat.getRealmChat().getRealmId());
-            }
-        }
-
-        // then call parent
-        super.onActivityCreated(savedInstanceState);
-
-        chatEventListener = new UiThreadUserChatListener();
-        this.chatService.addChatEventListener(chatEventListener);
     }
 
     @Override

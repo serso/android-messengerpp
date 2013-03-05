@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
@@ -19,6 +18,7 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -60,19 +60,8 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View result = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact).build(this.getActivity());
-
-        multiPaneManager.fillContentPane(this.getActivity(), container, result);
-
-        result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        return result;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         // restore state
         if (contact == null) {
@@ -90,6 +79,22 @@ public class MessengerContactFragment extends RoboSherlockFragment {
                 getActivity().finish();
             }
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View result = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact).build(this.getActivity());
+
+        multiPaneManager.fillContentPane(this.getActivity(), container, result);
+
+        result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        return result;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         final ViewGroup root = (ViewGroup)getView().findViewById(R.id.contact_container);
 

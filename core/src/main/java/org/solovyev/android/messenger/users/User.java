@@ -27,13 +27,13 @@ public interface User extends MutableUserSyncData {
     static final String PROPERTY_ONLINE = "online";
 
     @Nonnull
-    static final String PROPERTY_FIRST_NAME = "firstName";
+    static final String PROPERTY_FIRST_NAME = "first_name";
 
     @Nonnull
-    static final String PROPERTY_LAST_NAME = "lastName";
+    static final String PROPERTY_LAST_NAME = "last_name";
 
     @Nonnull
-    static final String PROPERTY_NICKNAME = "nickName";
+    static final String PROPERTY_NICKNAME = "nick_name";
 
 
     /**

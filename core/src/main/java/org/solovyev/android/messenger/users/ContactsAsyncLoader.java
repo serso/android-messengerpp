@@ -54,6 +54,6 @@ class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListIt
     @Nonnull
     @Override
     protected ContactListItem createListItem(@Nonnull UserContact userContact) {
-        return new ContactListItem(userContact.getUser(), userContact.getContact());
+        return new ContactListItem(userContact.getContact());
     }
 }

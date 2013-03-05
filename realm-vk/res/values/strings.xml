@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="msg_vk_nickname">Nickname</string>
-    <string name="msg_vk_birth_date">Birth date</string>
-    <string name="msg_vk_country">Country</string>
-    <string name="msg_vk_city">City</string>
     <string name="mpp_vk_realm_name">VK</string>
 </resources>

@@ -3,12 +3,12 @@ package org.solovyev.android.messenger.sync;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerCommonActivityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
@@ -71,7 +71,7 @@ public class DefaultSyncService implements SyncService {
                 try {
 
                     for (Realm realm : DefaultSyncService.this.realmService.getRealms()) {
-                        final SyncData syncData = new SyncDataImpl(realm.getRealmDef().getId());
+                        final SyncData syncData = new SyncDataImpl(realm.getId());
 
                         for (SyncTask syncTask : SyncTask.values()) {
                             try {

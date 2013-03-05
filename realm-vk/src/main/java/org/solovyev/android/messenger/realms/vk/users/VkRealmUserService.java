@@ -77,15 +77,15 @@ public class VkRealmUserService implements RealmUserService {
         for (AProperty property : user.getProperties()) {
             final String name = property.getName();
             if ( name.equals(User.PROPERTY_NICKNAME) ) {
-                result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_nickname), property.getValue()));
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_nickname), property.getValue()));
             } else if ( name.equals(User.PROPERTY_SEX) ) {
-                result.add(APropertyImpl.newInstance(context.getString(org.solovyev.android.messenger.core.R.string.sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
             } else if ( name.equals("bdate") ) {
-                result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_birth_date), property.getValue()));
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_birth_date), property.getValue()));
             } else if ( name.equals("countryId") ) {
-                result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_country), property.getValue()));
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_country), property.getValue()));
             } else if ( name.equals("cityId") ) {
-                result.add(APropertyImpl.newInstance(context.getString(R.string.msg_vk_city), property.getValue()));
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_city), property.getValue()));
             }
             
         }
