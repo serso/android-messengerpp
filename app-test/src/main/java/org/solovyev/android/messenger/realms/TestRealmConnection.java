@@ -20,4 +20,9 @@ public class TestRealmConnection extends AbstractRealmConnection<TestRealm> {
     protected void doWork() throws ContextIsNotActiveException {
 
     }
+
+    @Override
+    protected void stopWork() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

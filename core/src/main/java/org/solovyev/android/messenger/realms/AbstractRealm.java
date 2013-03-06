@@ -21,6 +21,12 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     @Nonnull
     private C configuration;
 
+    /**
+     * Last created realm connection
+     */
+    @Nonnull
+    private volatile RealmConnection realmConnection;
+
     public AbstractRealm(@Nonnull String id,
                          @Nonnull RealmDef realmDef,
                          @Nonnull User user,
@@ -73,8 +79,14 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
 
     @Nonnull
     @Override
-    public RealmConnection newRealmConnection(@Nonnull Context context) {
-        return getRealmDef().newRealmConnection(this, context);
+    public synchronized RealmConnection newRealmConnection(@Nonnull Context context) {
+        realmConnection = getRealmDef().newRealmConnection(this, context);
+        return realmConnection;
+    }
+
+    @Nonnull
+    protected synchronized RealmConnection getRealmConnection() {
+        return realmConnection;
     }
 
     @Override

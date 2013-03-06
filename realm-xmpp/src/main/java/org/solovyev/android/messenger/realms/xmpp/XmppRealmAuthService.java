@@ -20,14 +20,14 @@ import javax.annotation.Nullable;
  */
 public class XmppRealmAuthService extends AbstractXmppRealmService implements RealmAuthService {
 
-    public XmppRealmAuthService(@Nonnull XmppRealm realm) {
-        super(realm);
+    public XmppRealmAuthService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+        super(realm, connectionAware);
     }
 
     @Nonnull
     @Override
     public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
-        return doConnected(new XmppConnectedCallable<AuthData>() {
+        return doOnConnection(new XmppConnectedCallable<AuthData>() {
             @Override
             public AuthData call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
                 final XmppRealmConfiguration configuration = getRealm().getConfiguration();

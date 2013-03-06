@@ -22,12 +22,6 @@ public class VkRealm extends AbstractRealm<VkRealmConfiguration> {
 
     @Nonnull
     @Override
-    public RealmConnection createRealmConnection(@Nonnull Context context) {
-        return new LongPollRealmConnection(this, context, new VkRealmLongPollService(this));
-    }
-
-    @Nonnull
-    @Override
     public String getDisplayName(@Nonnull Context context) {
         final StringBuilder sb = new StringBuilder();
 

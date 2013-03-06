@@ -21,8 +21,8 @@ import java.util.List;
  */
 class XmppRealmChatService extends AbstractXmppRealmService implements RealmChatService {
 
-    public XmppRealmChatService(@Nonnull XmppRealm realm) {
-        super(realm);
+    public XmppRealmChatService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+        super(realm, connectionAware);
     }
 
     @Nonnull
@@ -52,7 +52,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
     @Nullable
     @Override
     public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
-        return doConnected(new MessengerSender(chat, message));
+        return doOnConnection(new MessengerSender(chat, message));
     }
 
     private static final class MessengerSender implements XmppConnectedCallable<String> {

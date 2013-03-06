@@ -30,26 +30,26 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
     @Nonnull
     private static final String TAG = "M++/" + XmppRealmUserService.class.getSimpleName();
 
-    XmppRealmUserService(@Nonnull XmppRealm realm) {
-        super(realm);
+    XmppRealmUserService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+        super(realm, connectionAware);
     }
 
     @Nullable
     @Override
     public User getUserById(@Nonnull final String realmUserId) {
-        return doConnected(new UserLoader(getRealm(), realmUserId));
+        return doOnConnection(new UserLoader(getRealm(), realmUserId));
     }
 
     @Nonnull
     @Override
     public List<User> getUserContacts(@Nonnull final String realmUserId) {
-        return doConnected(new UserContactsLoader(getRealm(), realmUserId));
+        return doOnConnection(new UserContactsLoader(getRealm(), realmUserId));
     }
 
     @Nonnull
     @Override
     public List<User> checkOnlineUsers(@Nonnull final List<User> users) {
-        return doConnected(new OnlineUsersChecker(getRealm(), users));
+        return doOnConnection(new OnlineUsersChecker(getRealm(), users));
     }
 
     @Nonnull

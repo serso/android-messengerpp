@@ -17,6 +17,8 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     private static final String TAG = XmppRealmConnection.class.getSimpleName();
 
+    public static final int CONNECTION_RETRIES = 3;
+
     @Nullable
     private volatile Connection connection;
 
@@ -33,37 +35,40 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     @Override
     protected void doWork() throws ContextIsNotActiveException {
-        // loop guarantees that if something gone wrong we will initiate new XMPP connection
-        while (!isStopped()) {
-            if (connection != null) {
+        tryToConnect(0);
+    }
 
-                // connect to the server
-                try {
-                    if (!connection.isConnected()) {
-                        connection.connect();
-                        if (!connection.isAuthenticated()) {
-                            final XmppRealmConfiguration configuration = getRealm().getConfiguration();
-                            connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
-                        }
-                    }
+    private synchronized void tryToConnect(int connectionAttempt) {
+        if (this.connection == null) {
+            final Connection connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
+            connection.getChatManager().addChatListener(chatListener);
 
-                    // sleep one minute
-                    Thread.sleep(60L * 1000L);
-                } catch (XMPPException e) {
-                    stopWork();
-                } catch (InterruptedException e) {
-                    stopWork();
+            rosterListener = new XmppRosterListener(getRealm(), this);
+            connection.getRoster().addRosterListener(rosterListener);
+
+            // connect to the server
+            try {
+                prepareConnection(connection);
+
+                this.connection = connection;
+            } catch (XMPPException e) {
+                if (connectionAttempt < CONNECTION_RETRIES) {
+                    tryToConnect(connectionAttempt + 1);
+                } else {
+                    stop();
                 }
-            } else {
-                connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
-
-                connection.getChatManager().addChatListener(chatListener);
-
-                rosterListener = new XmppRosterListener(getRealm(), this);
-                connection.getRoster().addRosterListener(rosterListener);
             }
         }
+    }
 
+    private void prepareConnection(@Nonnull Connection connection) throws XMPPException {
+        if (!connection.isConnected()) {
+            connection.connect();
+            if (!connection.isAuthenticated()) {
+                final XmppRealmConfiguration configuration = getRealm().getConfiguration();
+                connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
+            }
+        }
     }
 
     @Override
@@ -79,16 +84,25 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     }
 
     @Nonnull
-    public Connection getConnection() {
+    private Connection tryGetConnection() throws XMPPException {
         if (connection != null) {
+            prepareConnection(connection);
             return connection;
         } else {
-            throw new RealmIsNotConnectedException();
+            tryToConnect(CONNECTION_RETRIES - 1);
+            if (connection != null) {
+                return connection;
+            } else {
+                throw new RealmIsNotConnectedException();
+            }
         }
     }
 
     @Override
     public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException {
-        return callable.call(getConnection());
+        final Connection connection = tryGetConnection();
+        synchronized (connection) {
+            return callable.call(connection);
+        }
     }
 }
