@@ -34,6 +34,11 @@
             a:text="@string/mpp_edit"
             style="@style/mpp_form_button" />
 
+        <Button
+            a:id="@+id/mpp_realm_sync_button"
+            a:text="@string/mpp_sync"
+            style="@style/mpp_form_button" />
+
     </LinearLayout>
 
 </LinearLayout>

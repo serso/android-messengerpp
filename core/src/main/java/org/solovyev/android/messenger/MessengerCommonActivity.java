@@ -50,7 +50,7 @@ public interface MessengerCommonActivity {
     @Nonnull
     ViewGroup getCenter(@Nonnull Activity activity);
 
-    void handleException(@Nonnull Activity activity, @Nonnull Exception e);
+    void handleException(@Nonnull Exception e);
 
     @Nonnull
     ViewPager initTitleForViewPager(@Nonnull Activity activity,

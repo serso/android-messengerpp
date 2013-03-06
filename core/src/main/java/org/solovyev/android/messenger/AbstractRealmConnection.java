@@ -25,7 +25,7 @@ public abstract class AbstractRealmConnection<R extends Realm> implements RealmC
     private final WeakReference<Context> contextRef;
 
     @Nonnull
-    private final AtomicBoolean stopPolling = new AtomicBoolean(false);
+    private final AtomicBoolean stopped = new AtomicBoolean(false);
 
     protected AbstractRealmConnection(@Nonnull R realm, @Nonnull Context context) {
         this.realm = realm;
@@ -48,24 +48,28 @@ public abstract class AbstractRealmConnection<R extends Realm> implements RealmC
     }
 
     public boolean isStopped() {
-        return stopPolling.get();
+        return stopped.get();
     }
 
     @Override
     public final void start() {
-        stopPolling.set(false);
+        stopped.set(false);
         try {
             doWork();
         } catch (ContextIsNotActiveException e) {
+            // do nothing
+        } finally {
             stop();
         }
     }
 
     protected abstract void doWork() throws ContextIsNotActiveException;
+    protected abstract void stopWork();
 
     @Override
     public final void stop() {
-        stopPolling.set(true);
+        stopped.set(true);
+        stopWork();
     }
 
     protected final void waitForLogin() {

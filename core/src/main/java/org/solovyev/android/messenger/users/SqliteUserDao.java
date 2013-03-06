@@ -10,8 +10,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -24,6 +22,8 @@ import org.solovyev.android.messenger.realms.DeleteAllRowsInRealmDbExec;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.collections.Collections;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +106,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     @Nonnull
     @Override
-    public MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts) {
+    public MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval) {
         final MergeDaoResultImpl<User, String> result = new MergeDaoResultImpl<User, String>(contacts);
 
         final List<String> contactIdsFromDb = loadUserContactIds(userId);
@@ -115,8 +115,10 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
                 // contact exists both in db and on remote server => just update contact properties
                 result.addUpdatedObject(Iterables.find(contacts, new UserByIdFinder(contactIdFromDb)));
             } catch (NoSuchElementException e) {
-                // contact was removed on remote server => need to remove from local db
-                result.addRemovedObjectId(contactIdFromDb);
+                if (allowRemoval) {
+                    // contact was removed on remote server => need to remove from local db
+                    result.addRemovedObjectId(contactIdFromDb);
+                }
             }
         }
 

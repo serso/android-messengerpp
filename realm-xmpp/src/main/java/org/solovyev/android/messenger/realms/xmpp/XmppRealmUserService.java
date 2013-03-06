@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
+import android.util.Log;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.jivesoftware.smack.*;
@@ -25,6 +26,9 @@ import java.util.List;
  * Time: 8:45 PM
  */
 class XmppRealmUserService extends AbstractXmppRealmService implements RealmUserService {
+
+    @Nonnull
+    private static final String TAG = "M++/" + XmppRealmUserService.class.getSimpleName();
 
     XmppRealmUserService(@Nonnull XmppRealm realm) {
         super(realm);
@@ -85,7 +89,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         }
 
         @Override
-        public User call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
+        public User call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final User result;
 
             if (realm.getUser().getRealmUser().getRealmEntityId().equals(realmUserId)) {
@@ -105,41 +109,56 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         }
     }
 
+    @Nonnull
     private static User toUser(@Nonnull String realmUserId, @Nonnull Realm realm, boolean available, @Nonnull Connection connection) throws XMPPException {
+        final List<AProperty> properties = loadUserProperties(realmUserId, available, connection);
+        return UserImpl.newInstance(realm.newRealmEntity(realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
+    }
 
-        final VCard userCard = new VCard();
-        userCard.load(connection, realmUserId);
+    @Nonnull
+    private static List<AProperty> loadUserProperties(@Nonnull String realmUserId,
+                                                      boolean available,
+                                                      @Nonnull Connection connection) throws XMPPException {
+        final List<AProperty> result = new ArrayList<AProperty>();
 
-        final List<AProperty> properties = new ArrayList<AProperty>();
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_ONLINE, String.valueOf(available)));
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, userCard.getLastName()));
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_NICKNAME, userCard.getNickName()));
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_EMAIL, userCard.getEmailHome()));
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
+        try {
+            final VCard userCard = new VCard();
 
-        // full name
-        final String fullName = userCard.getField("FN");
-        if (fullName != null) {
-            int firstSpaceSymbolIndex = fullName.indexOf(' ');
-            int lastSpaceSymbolIndex = fullName.lastIndexOf(' ');
-            if (firstSpaceSymbolIndex != -1 && firstSpaceSymbolIndex == lastSpaceSymbolIndex) {
-                // only one space in the string
-                // Proof:
-                // 1. if no spaces => both return -1
-                // 2. if more than one spaces => both return different
-                final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
-                final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
-                properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, firstName));
-                properties.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, lastName));
-            } else {
-                // just store full name in first name field
-                properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, fullName));
+            userCard.load(connection, realmUserId);
+
+            result.add(APropertyImpl.newInstance(User.PROPERTY_ONLINE, String.valueOf(available)));
+            result.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
+            result.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, userCard.getLastName()));
+            result.add(APropertyImpl.newInstance(User.PROPERTY_NICKNAME, userCard.getNickName()));
+            result.add(APropertyImpl.newInstance(User.PROPERTY_EMAIL, userCard.getEmailHome()));
+            result.add(APropertyImpl.newInstance(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
+
+            // full name
+            final String fullName = userCard.getField("FN");
+            if (fullName != null) {
+                int firstSpaceSymbolIndex = fullName.indexOf(' ');
+                int lastSpaceSymbolIndex = fullName.lastIndexOf(' ');
+                if (firstSpaceSymbolIndex != -1 && firstSpaceSymbolIndex == lastSpaceSymbolIndex) {
+                    // only one space in the string
+                    // Proof:
+                    // 1. if no spaces => both return -1
+                    // 2. if more than one spaces => both return different
+                    final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
+                    final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
+                    result.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, firstName));
+                    result.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, lastName));
+                } else {
+                    // just store full name in first name field
+                    result.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, fullName));
+                }
             }
+        } catch (XMPPException e) {
+            // For some reason vcard loading may return timeout exception => investigate this behaviour
+            // NOTE: pidgin loads user information also very slow
+            Log.w(TAG, e.getMessage(), e);
         }
 
-
-        return UserImpl.newInstance(realm.newRealmEntity(realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
+        return result;
     }
 
     private static class UserContactsLoader implements XmppConnectedCallable<List<User>> {
@@ -156,7 +175,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         }
 
         @Override
-        public List<User> call(@Nonnull final XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
+        public List<User> call(@Nonnull final Connection connection) throws RealmIsNotConnectedException, XMPPException {
 
             if (realm.getUser().getRealmUser().getRealmEntityId().equals(realmUserId)) {
                 // realm user => load contacts through the roster
@@ -190,7 +209,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         }
 
         @Override
-        public List<User> call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
+        public List<User> call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final List<User> result = new ArrayList<User>();
 
             final Roster roster = connection.getRoster();

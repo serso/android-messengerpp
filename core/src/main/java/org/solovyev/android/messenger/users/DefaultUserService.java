@@ -10,13 +10,11 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
@@ -24,6 +22,8 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -276,10 +276,17 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             userContactsCache.put(realmUser, contacts);
         }
 
+        mergeUserContacts(realmUser, contacts, false);
+
+        return java.util.Collections.unmodifiableList(contacts);
+    }
+
+    @Override
+    public void mergeUserContacts(@Nonnull RealmEntity realmUser, @Nonnull List<User> contacts, boolean allowRemoval) {
         User user = getUserById(realmUser);
         final MergeDaoResult<User, String> result;
         synchronized (lock) {
-            result = getUserDao().mergeUserContacts(realmUser.getEntityId(), contacts);
+            result = getUserDao().mergeUserContacts(realmUser.getEntityId(), contacts, allowRemoval);
 
             // update sync data
             user = user.updateContactsSyncDate();
@@ -307,8 +314,6 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
 
         listeners.fireUserEvents(userEvents);
-
-        return java.util.Collections.unmodifiableList(contacts);
     }
 
     @Nonnull

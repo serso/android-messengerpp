@@ -19,6 +19,15 @@ public enum UserEventType {
     // data == id of removed chat for current user
     chat_removed,
 
+    /**
+     * Fired when contact presence is changed to available/online
+     * Data: contact (User) - contact for which presence is changed
+     */
     contact_online,
+
+    /**
+     * Fired when contact presence is changed to unavailable/offline
+     * Data: contact (User) - contact for which presence is changed
+     */
     contact_offline;
 }

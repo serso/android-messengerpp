@@ -65,7 +65,7 @@ public class MessengerStartActivity extends RoboActivity {
                 // todo serso: actually synchronization must be done only for not synced realms (NOT for all as it is now)
                 // user is logged first time => sync all data
                 try {
-                    syncService.syncAll(this);
+                    syncService.syncAll(syncDone);
                 } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
                     // do not care
                 }

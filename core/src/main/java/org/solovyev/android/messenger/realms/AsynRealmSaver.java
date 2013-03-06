@@ -32,7 +32,7 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
     AsynRealmSaver(@Nonnull Activity context,
                    @Nonnull RealmService realmService,
                    @Nullable BaseRealmConfigurationFragment.RealmSaveHandler realmSaveHandler) {
-        super(context, true);
+        super(context, MaskParams.newDefault());
         this.realmService = realmService;
         this.realmSaveHandler = realmSaveHandler;
     }

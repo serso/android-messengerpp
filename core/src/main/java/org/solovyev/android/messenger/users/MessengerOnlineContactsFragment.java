@@ -29,7 +29,7 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
             @Override
             public void onRefresh() {
                 try {
-                    MessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, getActivity(), new Runnable() {
+                    MessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.check_online_user_contacts, new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

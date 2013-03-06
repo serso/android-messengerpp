@@ -72,7 +72,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<UserCh
             @Override
             public void onRefresh() {
                 try {
-                    getSyncService().sync(SyncTask.user_chats, getActivity(), new Runnable() {
+                    getSyncService().sync(SyncTask.user_chats, new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();
@@ -92,7 +92,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<UserCh
             @Override
             public void onRefresh() {
                 try {
-                    getSyncService().sync(SyncTask.user_chats, getActivity(), new Runnable() {
+                    getSyncService().sync(SyncTask.user_chats, new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

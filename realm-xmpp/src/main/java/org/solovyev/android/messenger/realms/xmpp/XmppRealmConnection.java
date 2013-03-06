@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
-import android.util.Log;
 import org.jivesoftware.smack.*;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
@@ -14,18 +13,18 @@ import javax.annotation.Nullable;
  * Date: 2/24/13
  * Time: 8:13 PM
  */
-public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> {
+public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> implements XmppConnectionAware {
 
     private static final String TAG = XmppRealmConnection.class.getSimpleName();
 
     @Nullable
-    private Connection connection;
+    private volatile Connection connection;
 
     @Nonnull
     private final ChatManagerListener chatListener;
 
-    @Nonnull
-    private final RosterListener rosterListener = new XmppRosterListener();
+    @Nullable
+    private RosterListener rosterListener;
 
     public XmppRealmConnection(@Nonnull XmppRealm realm, @Nonnull Context context) {
         super(realm, context);
@@ -34,38 +33,49 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> {
 
     @Override
     protected void doWork() throws ContextIsNotActiveException {
-        connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
-
-        connection.getChatManager().addChatListener(chatListener);
-        connection.getRoster().addRosterListener(rosterListener);
-
         // loop guarantees that if something gone wrong we will initiate new XMPP connection
         while (!isStopped()) {
             if (connection != null) {
 
                 // connect to the server
                 try {
-                    connection.connect();
-                    if (!connection.isAuthenticated()) {
-                        final XmppRealmConfiguration configuration = getRealm().getConfiguration();
-                        connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
+                    if (!connection.isConnected()) {
+                        connection.connect();
+                        if (!connection.isAuthenticated()) {
+                            final XmppRealmConfiguration configuration = getRealm().getConfiguration();
+                            connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
+                        }
                     }
 
+                    // sleep one minute
+                    Thread.sleep(60L * 1000L);
                 } catch (XMPPException e) {
-                    Log.e(TAG, e.getMessage(), e);
+                    stopWork();
+                } catch (InterruptedException e) {
+                    stopWork();
                 }
             } else {
-                waitForLogin();
+                connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
+
+                connection.getChatManager().addChatListener(chatListener);
+
+                rosterListener = new XmppRosterListener(getRealm(), this);
+                connection.getRoster().addRosterListener(rosterListener);
             }
         }
 
-        if ( connection != null ) {
-            connection.getRoster().removeRosterListener(rosterListener);
+    }
+
+    @Override
+    protected void stopWork() {
+        if (connection != null) {
+            if (rosterListener != null) {
+                connection.getRoster().removeRosterListener(rosterListener);
+            }
             connection.getChatManager().removeChatListener(chatListener);
             connection.disconnect();
             connection = null;
         }
-
     }
 
     @Nonnull
@@ -77,4 +87,8 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> {
         }
     }
 
+    @Override
+    public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException {
+        return callable.call(getConnection());
+    }
 }

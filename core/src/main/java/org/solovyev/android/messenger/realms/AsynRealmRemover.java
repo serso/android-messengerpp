@@ -22,7 +22,7 @@ class AsynRealmRemover extends MessengerAsyncTask<Realm, Integer, List<Realm>> {
 
     AsynRealmRemover(@Nonnull Activity context,
                      @Nonnull RealmService realmService) {
-        super(context, true);
+        super(context, MaskParams.newDefault());
         this.realmService = realmService;
     }
 

@@ -12,6 +12,8 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
+import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 
@@ -42,6 +44,11 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
     @Inject
     @Nonnull
+    private SyncService syncService;
+
+
+    @Inject
+    @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
     @Inject
@@ -56,7 +63,6 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     **********************************************************************
     */
 
-    @Nonnull
     private Realm realm;
 
     @Override
@@ -112,6 +118,14 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
             @Override
             public void onClick(View v) {
                 editRealm();
+            }
+        });
+
+        final Button realmSyncButton = (Button) root.findViewById(R.id.mpp_realm_sync_button);
+        realmSyncButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessengerSyncAllAsyncTask.newForRealm(getActivity(), syncService, realm).execute((Void)null);
             }
         });
     }

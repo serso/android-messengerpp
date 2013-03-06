@@ -2,9 +2,14 @@ package org.solovyev.android.messenger;
 
 import android.app.Application;
 import android.content.Intent;
+import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 import com.google.inject.Inject;
 import org.joda.time.DateTimeZone;
+import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
@@ -25,7 +30,7 @@ import javax.annotation.Nonnull;
  * Date: 5/25/12
  * Time: 8:16 PM
  */
-public class MessengerApplication extends Application implements MessengerServiceLocator {
+public class MessengerApplication extends Application implements MessengerServiceLocator, MessengerExceptionHandler {
 
     /*
     **********************************************************************
@@ -70,6 +75,9 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     private static MessengerApplication instance;
 
+    @Nonnull
+    private final Handler uiHandler = new Handler();
+
     public MessengerApplication() {
         instance = this;
     }
@@ -77,6 +85,35 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     public static MessengerServiceLocator getServiceLocator() {
         return instance;
+    }
+
+    @Override
+    public void handleException(@Nonnull final Throwable e) {
+        if (e instanceof HttpRuntimeIoException) {
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MessengerApplication.this, "No internet connection available: connect to the network and try again!", Toast.LENGTH_LONG).show();
+                }
+            });
+            Log.d("Msg_NoInternet", e.getMessage(), e);
+        } else if (e instanceof IllegalJsonRuntimeException) {
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MessengerApplication.this, "The response from server is not valid!", Toast.LENGTH_LONG).show();
+                }
+            });
+            Log.e("Msg_InvalidJson", e.getMessage(), e);
+        } else {
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MessengerApplication.this, "Something is going wrong!", Toast.LENGTH_LONG).show();
+                }
+            });
+            Log.e("Msg_Exception", e.getMessage(), e);
+        }
     }
 
     public static class Preferences {
@@ -142,6 +179,12 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     public NetworkStateService getNetworkStateService() {
         return networkStateService;
+    }
+
+    @Nonnull
+    @Override
+    public MessengerExceptionHandler getExceptionHandler() {
+        return this;
     }
 
     @Override

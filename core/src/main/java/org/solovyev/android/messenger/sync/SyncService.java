@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.sync;
 
-import android.content.Context;
+import org.solovyev.android.messenger.realms.Realm;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -11,7 +12,21 @@ import javax.annotation.Nullable;
  */
 public interface SyncService {
 
-    void syncAll(@Nonnull Context context) throws SyncAllTaskIsAlreadyRunning;
+    /**
+     * Method runs all synchronization tasks over all realms registered in system
+     *
+     * @param force true if all data should be synchronized regardless to individual synchronization parameters (frequency, scheduling, etc)
+     * @throws SyncAllTaskIsAlreadyRunning if task for synchronization is already running
+     */
+    void syncAll(boolean force) throws SyncAllTaskIsAlreadyRunning;
 
-    void sync(@Nonnull SyncTask syncTask, @Nonnull Context context, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException;
+    /**
+     * Method runs all synchronization tasks for specified <var>realm</var>
+     *
+     * @param force true if all data should be synchronized regardless to individual synchronization parameters (frequency, scheduling, etc)
+     * @throws SyncAllTaskIsAlreadyRunning if task for synchronization is already running
+     */
+    void syncAllInRealm(@Nonnull Realm realm, boolean force) throws SyncAllTaskIsAlreadyRunning;
+
+    void sync(@Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException;
 }

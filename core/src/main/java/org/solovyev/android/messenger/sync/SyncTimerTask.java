@@ -32,9 +32,9 @@ public class SyncTimerTask extends TimerTask {
                 final SyncData syncData = new SyncDataImpl(realm.getId());
 
                 for (SyncTask syncTask : SyncTask.values()) {
-                    if (syncTask.isTime(syncData, context)) {
+                    if (syncTask.isTime(syncData)) {
                         Log.i("SyncTask", "Sync task started: " + syncTask);
-                        syncTask.doTask(syncData, context);
+                        syncTask.doTask(syncData);
                         Log.i("SyncTask", "Sync task ended: " + syncTask);
                     }
                 }

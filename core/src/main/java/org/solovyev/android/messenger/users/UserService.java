@@ -2,12 +2,12 @@ package org.solovyev.android.messenger.users;
 
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import javax.annotation.Nonnull;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.realms.RealmEntity;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -77,6 +77,8 @@ public interface UserService extends UserEventListeners {
     List<Chat> syncUserChats(@Nonnull RealmEntity realmUser);
 
     void mergeUserChats(@Nonnull RealmEntity realmUser, @Nonnull List<? extends ApiChat> apiChats);
+
+    void mergeUserContacts(@Nonnull RealmEntity realmUser, @Nonnull List<User> contacts, boolean allowRemoval);
 
     void checkOnlineUserContacts(@Nonnull RealmEntity realmUser);
 

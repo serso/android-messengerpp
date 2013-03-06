@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.sync;
 
-import android.content.Context;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -18,7 +17,7 @@ public enum SyncTask {
 
     user_properties {
         @Override
-        public boolean isTime(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public boolean isTime(@Nonnull SyncData syncData) {
             boolean result = false;
 
             try {
@@ -35,7 +34,7 @@ public enum SyncTask {
         }
 
         @Override
-        public void doTask(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
                 MessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getRealmUser());
@@ -47,7 +46,7 @@ public enum SyncTask {
 
     user_contacts {
         @Override
-        public boolean isTime(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public boolean isTime(@Nonnull SyncData syncData) {
             boolean result = false;
 
             try {
@@ -64,7 +63,7 @@ public enum SyncTask {
         }
 
         @Override
-        public void doTask(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
                 MessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getRealmUser());
@@ -77,7 +76,7 @@ public enum SyncTask {
     user_icons {
 
         @Override
-        public boolean isTime(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public boolean isTime(@Nonnull SyncData syncData) {
             boolean result = false;
 
             try {
@@ -94,7 +93,7 @@ public enum SyncTask {
         }
 
         @Override
-        public void doTask(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
 
@@ -108,12 +107,12 @@ public enum SyncTask {
 
     check_online_user_contacts {
         @Override
-        public boolean isTime(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public boolean isTime(@Nonnull SyncData syncData) {
             return true;
         }
 
         @Override
-        public void doTask(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
                 MessengerApplication.getServiceLocator().getUserService().checkOnlineUserContacts(user.getRealmUser());
@@ -125,7 +124,7 @@ public enum SyncTask {
 
     user_chats {
         @Override
-        public boolean isTime(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public boolean isTime(@Nonnull SyncData syncData) {
             boolean result = false;
 
             try {
@@ -142,7 +141,7 @@ public enum SyncTask {
         }
 
         @Override
-        public void doTask(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
                 MessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getRealmUser());
@@ -154,12 +153,12 @@ public enum SyncTask {
 
     chat_messages {
         @Override
-        public boolean isTime(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public boolean isTime(@Nonnull SyncData syncData) {
             return true;
         }
 
         @Override
-        public void doTask(@Nonnull SyncData syncData, @Nonnull Context context) {
+        public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
                 MessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getRealmUser());
@@ -174,7 +173,7 @@ public enum SyncTask {
         return MessengerApplication.getServiceLocator().getRealmService();
     }
 
-    public abstract boolean isTime(@Nonnull SyncData syncData, @Nonnull Context context);
+    public abstract boolean isTime(@Nonnull SyncData syncData);
 
-    public abstract void doTask(@Nonnull SyncData syncData, @Nonnull Context context);
+    public abstract void doTask(@Nonnull SyncData syncData);
 }

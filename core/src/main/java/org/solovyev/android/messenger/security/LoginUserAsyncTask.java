@@ -1,13 +1,13 @@
 package org.solovyev.android.messenger.security;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
     private String realmId;
 
     public LoginUserAsyncTask(@Nonnull Context context, @Nonnull String realmId) {
-        super(context, true);
+        super(context, MaskParams.newDefault());
         this.realmId = realmId;
     }
 
@@ -47,7 +47,7 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
         final Context context = getContext();
         if (context != null) {
             try {
-                MessengerApplication.getServiceLocator().getSyncService().syncAll(context);
+                MessengerApplication.getServiceLocator().getSyncService().syncAll(false);
             } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
                 // do not care
             }

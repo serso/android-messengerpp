@@ -1,12 +1,11 @@
 package org.solovyev.android.messenger.sync;
 
-import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.realms.RealmDef;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -19,8 +18,8 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
     @Nonnull
     private final List<SyncTask> syncTasks;
 
-    public SyncAsyncTask(@Nonnull Context context, @Nonnull List<SyncTask> syncTasks) {
-        super(context);
+    public SyncAsyncTask(@Nonnull List<SyncTask> syncTasks) {
+        super();
         this.syncTasks = syncTasks;
     }
 
@@ -31,10 +30,7 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
             final SyncData syncData = new SyncDataImpl(realm.getId());
 
             for (SyncTask syncTask : syncTasks) {
-                final Context context = getContext();
-                if (context != null) {
-                    syncTask.doTask(syncData, context);
-                }
+                syncTask.doTask(syncData);
             }
         }
 

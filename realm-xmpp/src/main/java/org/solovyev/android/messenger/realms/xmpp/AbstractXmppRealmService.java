@@ -16,7 +16,6 @@ public abstract class AbstractXmppRealmService {
     @Nonnull
     private final XmppRealm realm;
 
-
     protected AbstractXmppRealmService(@Nonnull XmppRealm realm) {
         this.realm = realm;
     }

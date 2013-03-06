@@ -60,4 +60,8 @@ public class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
         }
     }
 
+    @Override
+    protected void stopWork() {
+    }
+
 }

@@ -1,28 +1,22 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TitlePageIndicator;
-import org.solovyev.android.AThreads;
-import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.realms.MessengerRealmsFragment;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
 import org.solovyev.android.sherlock.tabs.ActionBarFragmentTabListener;
@@ -225,26 +219,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     @Override
-    public void handleException(@Nonnull Activity activity, @Nonnull Exception e) {
-        handleExceptionStatic(activity, e);
-    }
-
-    public static void handleExceptionStatic(@Nonnull Context context, @Nonnull Exception e) {
-        if (e instanceof HttpRuntimeIoException) {
-            if (AThreads.isUiThread()) {
-                Toast.makeText(context, "No internet connection available: connect to the network and try again!", Toast.LENGTH_LONG).show();
-            }
-            Log.d("Msg_NoInternet", e.getMessage(), e);
-        } else if (e instanceof IllegalJsonRuntimeException) {
-            if (AThreads.isUiThread()) {
-                Toast.makeText(context, "The response from server is not valid!", Toast.LENGTH_LONG).show();
-            }
-            Log.e("Msg_InvalidJson", e.getMessage(), e);
-        } else {
-            if (AThreads.isUiThread()) {
-                Toast.makeText(context, "Something is going wrong!", Toast.LENGTH_LONG).show();
-            }
-            Log.e("Msg_Exception", e.getMessage(), e);
-        }
+    public void handleException(@Nonnull Exception e) {
+        MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
     }
 }

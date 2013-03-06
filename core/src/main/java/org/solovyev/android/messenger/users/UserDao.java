@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.properties.AProperty;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.messenger.MergeDaoResult;
-
 import java.util.List;
 
 /**
@@ -55,5 +55,5 @@ public interface UserDao {
     List<User> loadUserContacts(@Nonnull String userId);
 
     @Nonnull
-    MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts);
+    MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval);
 }

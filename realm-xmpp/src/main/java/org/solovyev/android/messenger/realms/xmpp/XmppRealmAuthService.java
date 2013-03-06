@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
-import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
@@ -29,7 +29,7 @@ public class XmppRealmAuthService extends AbstractXmppRealmService implements Re
     public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
         return doConnected(new XmppConnectedCallable<AuthData>() {
             @Override
-            public AuthData call(@Nonnull XMPPConnection connection) throws RealmIsNotConnectedException, XMPPException {
+            public AuthData call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
                 final XmppRealmConfiguration configuration = getRealm().getConfiguration();
 
                 if (!connection.isAuthenticated()) {
