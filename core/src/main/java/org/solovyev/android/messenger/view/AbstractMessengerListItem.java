@@ -24,7 +24,9 @@ public abstract class AbstractMessengerListItem<D> implements ListItem, Checkabl
 
     private final int layoutResId;
 
-    @Nonnull
+    /**
+     * View tag, might be null before first list item showing on display
+     */
     private ViewAwareTag viewAwareTag;
 
     @Nonnull
@@ -111,18 +113,15 @@ public abstract class AbstractMessengerListItem<D> implements ListItem, Checkabl
     }
 
     @Nonnull
-    public ViewAwareTag getViewAwareTag() {
-        return viewAwareTag;
-    }
-
-    @Nonnull
     protected D getData() {
         return data;
     }
 
     protected void setData(@Nonnull D data) {
         this.data = data;
-        fillView(data, viewAwareTag.getView().getContext(), viewAwareTag);
+        if (viewAwareTag != null) {
+            fillView(data, viewAwareTag.getView().getContext(), viewAwareTag);
+        }
     }
 
     @Override
