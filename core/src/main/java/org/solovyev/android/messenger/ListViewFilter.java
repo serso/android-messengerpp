@@ -51,7 +51,9 @@ public class ListViewFilter {
     @Nonnull
     private final FilterableListView filterableListView;
 
-    @Nonnull
+    /**
+     * <var>filterEditText</var> might be null if view has not been created yet (i.e. {@link ListViewFilter#createView()} method has not been called )
+     */
     private EditText filterEditText;
 
     public ListViewFilter(@Nonnull ListFragment fragment, @Nonnull FilterableListView filterableListView) {
@@ -105,7 +107,7 @@ public class ListViewFilter {
         final View view = fragment.getView();
         final FragmentActivity activity = fragment.getActivity();
 
-        if (view != null && activity != null) {
+        if (view != null && activity != null && filterEditText != null) {
             final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.filter_box_parent);
             if (filterBox != null) {
                 int visibility = filterBox.getVisibility();
@@ -132,7 +134,7 @@ public class ListViewFilter {
 
     public void setFilterBoxVisible(boolean visible) {
         final View view = this.fragment.getView();
-        if (view != null) {
+        if (view != null && filterEditText != null) {
             final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.filter_box_parent);
             if (filterBox != null) {
                 setFilterBoxVisible(visible, filterBox);
@@ -151,12 +153,18 @@ public class ListViewFilter {
     }
 
     public void saveState(Bundle outState) {
-        outState.putString(FILTER, filterEditText.getText().toString());
+        if (filterEditText != null) {
+            outState.putString(FILTER, filterEditText.getText().toString());
+        }
     }
 
     @Nonnull
     public CharSequence getFilterText() {
-        return filterEditText.getText();
+        if (filterEditText != null) {
+            return filterEditText.getText();
+        } else {
+            return "";
+        }
     }
 
     /*
