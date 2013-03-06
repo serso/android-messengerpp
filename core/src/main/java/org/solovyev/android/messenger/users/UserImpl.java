@@ -88,11 +88,26 @@ public class UserImpl extends JObject implements User {
         final String firstName = getPropertyValueByName(User.PROPERTY_FIRST_NAME);
         final String lastName = getPropertyValueByName(User.PROPERTY_LAST_NAME);
 
-        result.append(firstName);
-        if (!Strings.isEmpty(firstName) && !Strings.isEmpty(lastName)) {
-            result.append(" ");
+        boolean firstNameExists = !Strings.isEmpty(firstName);
+        boolean lastNameExists = !Strings.isEmpty(lastName);
+
+        if ( !firstNameExists && !lastNameExists ) {
+            // first and last names are empty
+            result.append(this.realmEntity.getRealmEntityId());
+        } else {
+
+            if (firstNameExists) {
+                result.append(firstName);
+            }
+
+            if (firstNameExists && lastNameExists) {
+                result.append(" ");
+            }
+
+            if (lastNameExists) {
+                result.append(lastName);
+            }
         }
-        result.append(lastName);
 
         return result.toString();
     }

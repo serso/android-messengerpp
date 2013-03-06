@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.app.Application;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.google.common.base.Function;
@@ -15,10 +16,7 @@ import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.*;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
@@ -276,17 +274,17 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             userContactsCache.put(realmUser, contacts);
         }
 
-        mergeUserContacts(realmUser, contacts, false);
+        mergeUserContacts(realmUser, contacts, false, true);
 
         return java.util.Collections.unmodifiableList(contacts);
     }
 
     @Override
-    public void mergeUserContacts(@Nonnull RealmEntity realmUser, @Nonnull List<User> contacts, boolean allowRemoval) {
+    public void mergeUserContacts(@Nonnull RealmEntity realmUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
         User user = getUserById(realmUser);
         final MergeDaoResult<User, String> result;
         synchronized (lock) {
-            result = getUserDao().mergeUserContacts(realmUser.getEntityId(), contacts, allowRemoval);
+            result = getUserDao().mergeUserContacts(realmUser.getEntityId(), contacts, allowRemoval, allowUpdate);
 
             // update sync data
             user = user.updateContactsSyncDate();
@@ -425,13 +423,23 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-        final Drawable defaultUserIcon = getDefaultUserIcon();
+        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
 
-        final String userIconUri = getUserIconUri(user);
-        if (!Strings.isEmpty(userIconUri)) {
-            this.imageLoader.loadImage(userIconUri, imageView, R.drawable.empty_icon);
+        Drawable defaultUserIcon = realmDef.getDefaultUserIcon();
+        if ( defaultUserIcon == null ){
+            defaultUserIcon = getDefaultUserIcon();
+        }
+
+        final BitmapDrawable userIcon = realmDef.getUserIcon(user);
+        if (userIcon == null) {
+            final String userIconUri = realmDef.getUserIconUri(user);
+            if (!Strings.isEmpty(userIconUri)) {
+                this.imageLoader.loadImage(userIconUri, imageView, R.drawable.empty_icon);
+            } else {
+                imageView.setImageDrawable(defaultUserIcon);
+            }
         } else {
-            imageView.setImageDrawable(defaultUserIcon);
+            imageView.setImageDrawable(userIcon);
         }
     }
 
@@ -443,28 +451,45 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     public void setUserIcon(@Nonnull User user, @Nonnull OnImageLoadedListener imageLoadedListener) {
-        final String userIconUri = getUserIconUri(user);
-        if (!Strings.isEmpty(userIconUri)) {
-            this.imageLoader.loadImage(userIconUri, imageLoadedListener);
+        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
+
+        final BitmapDrawable userIcon = realmDef.getUserIcon(user);
+        if (userIcon == null) {
+            final String userIconUri = realmDef.getUserIconUri(user);
+            if (!Strings.isEmpty(userIconUri)) {
+                this.imageLoader.loadImage(userIconUri, imageLoadedListener);
+            } else {
+                imageLoadedListener.setDefaultImage();
+            }
         } else {
-            imageLoadedListener.setDefaultImage();
+            imageLoadedListener.onImageLoaded(userIcon.getBitmap());
         }
     }
 
     @Override
     public void setUserPhoto(@Nonnull ImageView imageView, @Nonnull User user) {
-        final Drawable defaultUserIcon = getDefaultUserIcon();
+        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
 
-        final String userPhotoUri = getUserPhotoUri(user);
-        if (!Strings.isEmpty(userPhotoUri)) {
-            this.imageLoader.loadImage(userPhotoUri, imageView, R.drawable.empty_icon);
+        Drawable defaultUserIcon = realmDef.getDefaultUserIcon();
+        if (defaultUserIcon == null) {
+            defaultUserIcon = getDefaultUserIcon();
+        }
+        final BitmapDrawable userIcon = realmDef.getUserIcon(user);
+        if (userIcon == null) {
+            final String userPhotoUri = getUserPhotoUri(user);
+            if (!Strings.isEmpty(userPhotoUri)) {
+                this.imageLoader.loadImage(userPhotoUri, imageView, R.drawable.empty_icon);
+            } else {
+                imageView.setImageDrawable(defaultUserIcon);
+            }
         } else {
-            imageView.setImageDrawable(defaultUserIcon);
+            imageView.setImageDrawable(userIcon);
         }
     }
 
     public void fetchUserIcon(@Nonnull User user) {
-        final String userIconUri = getUserIconUri(user);
+        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
+        final String userIconUri = realmDef.getUserIconUri(user);
         if (!Strings.isEmpty(userIconUri)) {
             assert userIconUri != null;
             this.imageLoader.loadImage(userIconUri);
@@ -475,11 +500,6 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         for (User contact : getUserContacts(user.getRealmUser())) {
             fetchUserIcon(contact);
         }
-    }
-
-    @Nullable
-    private String getUserIconUri(@Nonnull User user) {
-        return user.getPropertyValueByName("photo");
     }
 
     @Nullable

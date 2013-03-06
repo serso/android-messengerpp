@@ -167,7 +167,6 @@ public class DefaultRealmService implements RealmService {
                             realmDao.insertRealm(newRealm);
                             realms.put(newRealm.getId(), newRealm);
                             listeners.fireEvent(new RealmAddedEvent(newRealm));
-
                         }
                     }
                 }

@@ -34,21 +34,28 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     }
 
     @Override
-    protected void doWork() throws ContextIsNotActiveException {
-        tryToConnect(0);
+    protected void doWork() {
+        // 1. Try to create connection (if not exists)
+        if (this.connection == null) {
+            tryToConnect(0);
+        }
+
+        // 2. Attach listeners to connection
+        if ( this.connection != null ){
+            connection.getChatManager().addChatListener(chatListener);
+
+            rosterListener = new XmppRosterListener(getRealm(), this);
+            connection.getRoster().addRosterListener(rosterListener);
+        }
     }
 
     private synchronized void tryToConnect(int connectionAttempt) {
         if (this.connection == null) {
             final Connection connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
-            connection.getChatManager().addChatListener(chatListener);
-
-            rosterListener = new XmppRosterListener(getRealm(), this);
-            connection.getRoster().addRosterListener(rosterListener);
 
             // connect to the server
             try {
-                prepareConnection(connection);
+                prepareConnection(connection, getRealm());
 
                 this.connection = connection;
             } catch (XMPPException e) {
@@ -61,11 +68,11 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
         }
     }
 
-    private void prepareConnection(@Nonnull Connection connection) throws XMPPException {
+    public static void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
         if (!connection.isConnected()) {
             connection.connect();
             if (!connection.isAuthenticated()) {
-                final XmppRealmConfiguration configuration = getRealm().getConfiguration();
+                final XmppRealmConfiguration configuration = realm.getConfiguration();
                 connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
             }
         }
@@ -78,15 +85,20 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
                 connection.getRoster().removeRosterListener(rosterListener);
             }
             connection.getChatManager().removeChatListener(chatListener);
-            connection.disconnect();
-            connection = null;
+
+            /**
+             * we can't just close connection because some classes may use connection
+             * via {@link org.solovyev.android.messenger.realms.xmpp.XmppRealmConnection#doOnConnection(XmppConnectedCallable)}
+             */
+            //connection.disconnect();
+            //connection = null;
         }
     }
 
     @Nonnull
     private Connection tryGetConnection() throws XMPPException {
         if (connection != null) {
-            prepareConnection(connection);
+            prepareConnection(connection, getRealm());
             return connection;
         } else {
             tryToConnect(CONNECTION_RETRIES - 1);

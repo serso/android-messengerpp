@@ -17,7 +17,7 @@ public class TestRealmConnection extends AbstractRealmConnection<TestRealm> {
     }
 
     @Override
-    protected void doWork() throws ContextIsNotActiveException {
+    protected void doWork() {
 
     }
 

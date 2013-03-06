@@ -106,14 +106,17 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     @Nonnull
     @Override
-    public MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval) {
+    public MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
         final MergeDaoResultImpl<User, String> result = new MergeDaoResultImpl<User, String>(contacts);
 
         final List<String> contactIdsFromDb = loadUserContactIds(userId);
         for (final String contactIdFromDb : contactIdsFromDb) {
             try {
                 // contact exists both in db and on remote server => just update contact properties
-                result.addUpdatedObject(Iterables.find(contacts, new UserByIdFinder(contactIdFromDb)));
+                final User updatedObject = Iterables.find(contacts, new UserByIdFinder(contactIdFromDb));
+                if (allowUpdate) {
+                    result.addUpdatedObject(updatedObject);
+                }
             } catch (NoSuchElementException e) {
                 if (allowRemoval) {
                     // contact was removed on remote server => need to remove from local db

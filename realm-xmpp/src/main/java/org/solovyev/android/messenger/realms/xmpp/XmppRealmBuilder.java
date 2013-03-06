@@ -1,23 +1,21 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
-import org.jivesoftware.smack.AccountManager;
+import android.util.Log;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
-import org.solovyev.android.messenger.realms.*;
+import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmConfiguration;
+import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.AuthDataImpl;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserImpl;
-import org.solovyev.android.messenger.users.UserSyncDataImpl;
-import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 public class XmppRealmBuilder extends AbstractRealmBuilder {
 
@@ -40,16 +38,12 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
         User user;
 
         if ( connection != null ) {
-            final ArrayList<AProperty> properties = new ArrayList<AProperty>();
-
-            final AccountManager accountManager = connection.getAccountManager();
-
-            for (String attributeName : accountManager.getAccountAttributes()) {
-                final String attributeValue = accountManager.getAccountAttribute(attributeName);
-                properties.add(APropertyImpl.newInstance(attributeName, attributeValue));
+            try {
+                user = XmppRealmUserService.toUser(realmId, realmUserId, null, true, connection);
+            } catch (XMPPException e) {
+                Log.e("XmppRealmBuilder", e.getMessage(), e);
+                user = null;
             }
-
-            user = UserImpl.newInstance(RealmEntityImpl.newInstance(realmId, realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
         } else {
             user = null;
         }

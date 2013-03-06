@@ -78,7 +78,7 @@ public interface UserService extends UserEventListeners {
 
     void mergeUserChats(@Nonnull RealmEntity realmUser, @Nonnull List<? extends ApiChat> apiChats);
 
-    void mergeUserContacts(@Nonnull RealmEntity realmUser, @Nonnull List<User> contacts, boolean allowRemoval);
+    void mergeUserContacts(@Nonnull RealmEntity realmUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
 
     void checkOnlineUserContacts(@Nonnull RealmEntity realmUser);
 

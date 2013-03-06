@@ -1,13 +1,14 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.solovyev.android.messenger.RealmConnection;
-import org.solovyev.android.messenger.chats.RealmChatService;
-import org.solovyev.android.messenger.users.RealmUserService;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * User: serso
@@ -19,24 +20,30 @@ public interface RealmDef {
     @Nonnull
     String FAKE_REALM_ID = "fake";
 
-    // realm's identifier. Must be unique for all existed realms
+    /**
+     * Method returns realm definition's identifier. Must be unique for all existed realm difinitions.
+     * Realm definition id must contain only alpha-numeric symbols in lower case: [a-z][0-9]
+     * @return realm definition id in application
+     */
     @Nonnull
     String getId();
 
+    /**
+     * @return android string resource id for realm's name
+     */
     int getNameResId();
 
+    /**
+     * @return android drawable resource id for realm's icon
+     */
     int getIconResId();
 
+    /**
+     * Method does initial setup for realm definition.
+     * NOTE: this method must be called on application start, e.g. in {@link android.app.Application#onCreate()} method
+     * @param context application's context
+     */
     void init(@Nonnull Context context);
-
-    @Nonnull
-    RealmUserService newRealmUserService(@Nonnull Realm realm);
-
-    @Nonnull
-    RealmChatService newRealmChatService(@Nonnull Realm realm);
-
-    @Nonnull
-    RealmConnection newRealmConnection(@Nonnull Realm realm, @Nonnull Context context);
 
     @Nonnull
     Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
@@ -53,4 +60,23 @@ public interface RealmDef {
     boolean equals(@Nullable Object o);
 
     int hashCode();
+
+    /**
+     * Returns list of translated user properties where property name = title, property value = value
+     * @param user user which properties will be returned
+     * @return list of translated user properties
+     */
+    @Nonnull
+    List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
+
+
+    // todo serso; think about user icons
+    @Nullable
+    Drawable getDefaultUserIcon();
+
+    @Nullable
+    String getUserIconUri(@Nonnull User user);
+
+    @Nullable
+    BitmapDrawable getUserIcon(@Nonnull User user);
 }

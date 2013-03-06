@@ -1,8 +1,5 @@
 package org.solovyev.android.messenger.users;
 
-import android.content.Context;
-import org.solovyev.android.properties.AProperty;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,13 +33,5 @@ public interface RealmUserService {
      */
     @Nonnull
     List<User> checkOnlineUsers(@Nonnull List<User> users);
-
-    /**
-     * Returns list of translated user properties where property name = title, property value = value
-     * @param user user which properties will be returned
-     * @return list of translated user properties
-     */
-    @Nonnull
-    List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
 
 }

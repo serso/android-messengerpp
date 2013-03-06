@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * Date: 2/27/13
  * Time: 9:15 PM
  */
-public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragment {
+public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragment<TestRealm> {
 
     @Inject
     @Nonnull

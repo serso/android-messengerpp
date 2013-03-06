@@ -55,5 +55,8 @@ public interface UserDao {
     List<User> loadUserContacts(@Nonnull String userId);
 
     @Nonnull
-    MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval);
+    MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId,
+                                                   @Nonnull List<User> contacts,
+                                                   boolean allowRemoval,
+                                                   boolean allowUpdate);
 }

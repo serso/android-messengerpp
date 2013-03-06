@@ -3,9 +3,7 @@ package org.solovyev.android.messenger.longpoll;
 import android.content.Context;
 import android.util.Log;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -15,21 +13,21 @@ import javax.annotation.Nonnull;
  * Date: 7/25/12
  * Time: 5:53 PM
  */
-public class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
+public abstract class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
 
     public static final String TAG = "LongPolling";
     @Nonnull
     private final RealmLongPollService realmLongPollService;
 
-    public LongPollRealmConnection(@Nonnull Realm realm,
-                                   @Nonnull Context context,
-                                   @Nonnull RealmLongPollService realmLongPollService) {
+    protected LongPollRealmConnection(@Nonnull Realm realm,
+                                      @Nonnull Context context,
+                                      @Nonnull RealmLongPollService realmLongPollService) {
         super(realm, context);
         this.realmLongPollService = realmLongPollService;
     }
 
     @Override
-    public void doWork() throws ContextIsNotActiveException {
+    public void doWork() {
         // first loop guarantees that if something gone wrong we will initiate new long polling session
         while (!isStopped()) {
             try {
@@ -41,7 +39,7 @@ public class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
                 while (!isStopped()) {
                     Log.i(TAG, "Long polling started!");
 
-                    final User user = MessengerApplication.getServiceLocator().getAuthService().getUser(getRealm().getId());
+                    final User user = getRealm().getUser();
                     final LongPollResult longPollResult = realmLongPollService.waitForResult(longPollingData);
                     if (longPollResult != null) {
                         longPollingData = longPollResult.updateLongPollServerData(longPollingData);
@@ -54,8 +52,6 @@ public class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
 
             } catch (RuntimeException e) {
                 Log.e(TAG, e.getMessage(), e);
-            } catch (UserIsNotLoggedInException e) {
-                waitForLogin();
             }
         }
     }

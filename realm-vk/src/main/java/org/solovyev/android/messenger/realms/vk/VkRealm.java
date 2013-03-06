@@ -3,11 +3,9 @@ package org.solovyev.android.messenger.realms.vk;
 import android.content.Context;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
-import org.solovyev.android.messenger.longpoll.LongPollRealmConnection;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.vk.chats.VkRealmChatService;
-import org.solovyev.android.messenger.realms.vk.longpoll.VkRealmLongPollService;
 import org.solovyev.android.messenger.realms.vk.users.VkRealmUserService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
@@ -18,6 +16,12 @@ public class VkRealm extends AbstractRealm<VkRealmConfiguration> {
 
     public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration) {
         super(id, realmDef, user, configuration);
+    }
+
+    @Nonnull
+    @Override
+    protected RealmConnection newRealmConnection0(@Nonnull Context context) {
+        return new VkLongPollRealmConnection(this, context);
     }
 
     @Nonnull

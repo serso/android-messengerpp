@@ -1,13 +1,11 @@
 package org.solovyev.android.messenger.realms;
 
-import android.content.Context;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,12 +33,6 @@ public class TestRealmService implements RealmUserService, RealmChatService {
     @Nonnull
     @Override
     public List<User> checkOnlineUsers(@Nonnull List<User> users) {
-        return Collections.emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
         return Collections.emptyList();
     }
 

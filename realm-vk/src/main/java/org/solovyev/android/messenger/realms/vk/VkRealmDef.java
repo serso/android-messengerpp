@@ -2,20 +2,19 @@ package org.solovyev.android.messenger.realms.vk;
 
 import android.content.Context;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.solovyev.android.messenger.RealmConnection;
-import org.solovyev.android.messenger.chats.RealmChatService;
-import org.solovyev.android.messenger.longpoll.LongPollRealmConnection;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.realms.vk.chats.VkRealmChatService;
-import org.solovyev.android.messenger.realms.vk.longpoll.VkRealmLongPollService;
-import org.solovyev.android.messenger.realms.vk.users.VkRealmUserService;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.APropertyImpl;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * User: serso
@@ -34,12 +33,6 @@ public class VkRealmDef extends AbstractRealmDef {
 
     @Nonnull
     @Override
-    public RealmConnection newRealmConnection(@Nonnull Realm realm, @Nonnull Context context) {
-        return new LongPollRealmConnection(realm, context, new VkRealmLongPollService(realm));
-    }
-
-    @Nonnull
-    @Override
     public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration) {
         return new VkRealm(realmId, this, user, (VkRealmConfiguration) configuration);
     }
@@ -51,21 +44,41 @@ public class VkRealmDef extends AbstractRealmDef {
     }
 
 
-    @Nonnull
-    @Override
-    public RealmUserService newRealmUserService(@Nonnull Realm realm) {
-        return new VkRealmUserService(realm);
-    }
-
-    @Nonnull
-    @Override
-    public RealmChatService newRealmChatService(@Nonnull Realm realm) {
-        return new VkRealmChatService(realm);
-    }
-/*
+    /*
     @Nonnull
     @Override
     public RealmAuthService newRealmAuthService(@Nonnull Realm realm) {
         return new VkRealmAuthService(login, password);
     }*/
+
+
+    @Nonnull
+    @Override
+    public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
+        final List<AProperty> result = new ArrayList<AProperty>(user.getProperties().size());
+
+        for (AProperty property : user.getProperties()) {
+            final String name = property.getName();
+            if ( name.equals(User.PROPERTY_NICKNAME) ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_nickname), property.getValue()));
+            } else if ( name.equals(User.PROPERTY_SEX) ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
+            } else if ( name.equals("bdate") ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_birth_date), property.getValue()));
+            } else if ( name.equals("countryId") ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_country), property.getValue()));
+            } else if ( name.equals("cityId") ) {
+                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_city), property.getValue()));
+            }
+
+        }
+
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public String getUserIconUri(@Nonnull User user) {
+        return user.getPropertyValueByName("photo");
+    }
 }

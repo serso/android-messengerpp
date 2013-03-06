@@ -6,6 +6,7 @@ import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class AbstractRealm<C extends RealmConfiguration> implements Realm<C> {
 
@@ -24,7 +25,7 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     /**
      * Last created realm connection
      */
-    @Nonnull
+    @Nullable
     private volatile RealmConnection realmConnection;
 
     public AbstractRealm(@Nonnull String id,
@@ -79,12 +80,16 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
 
     @Nonnull
     @Override
-    public synchronized RealmConnection newRealmConnection(@Nonnull Context context) {
-        realmConnection = getRealmDef().newRealmConnection(this, context);
+    public final synchronized RealmConnection newRealmConnection(@Nonnull Context context) {
+        final RealmConnection realmConnection = newRealmConnection0(context);
+        this.realmConnection = realmConnection;
         return realmConnection;
     }
 
     @Nonnull
+    protected abstract RealmConnection newRealmConnection0(@Nonnull Context context);
+
+    @Nullable
     protected synchronized RealmConnection getRealmConnection() {
         return realmConnection;
     }

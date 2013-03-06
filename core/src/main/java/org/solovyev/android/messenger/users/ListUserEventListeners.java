@@ -1,11 +1,11 @@
 package org.solovyev.android.messenger.users;
 
 import android.util.Log;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.common.listeners.JListeners;
 import org.solovyev.common.listeners.Listeners;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class ListUserEventListeners implements UserEventListeners {
 
     @Nonnull
-    private static final String TAG = "UserEvent";
+    private static final String TAG = "M++/UserEvent";
 
     @Nonnull
     private final JListeners<UserEventListener> listeners = Listeners.newWeakRefListeners();
