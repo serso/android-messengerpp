@@ -8,12 +8,12 @@
               a:gravity="top|center_horizontal"
               a:orientation="vertical">
 
-    <ImageView a:id="@+id/contact_icon"
+    <ImageView a:id="@+id/mpp_contact_icon"
                a:layout_height="100dp"
                a:layout_width="100dp"
                a:contentDescription="@string/contact_icon"/>
 
-    <TextView a:id="@+id/contact_name"
+    <TextView a:id="@+id/mpp_contact_name"
               a:textColor="@color/text"
               a:layout_height="wrap_content"
               a:layout_gravity="center"

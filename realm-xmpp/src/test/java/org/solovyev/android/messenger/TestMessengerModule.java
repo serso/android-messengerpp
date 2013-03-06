@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
-import com.xtremelabs.robolectric.Robolectric;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.ChatDao;
@@ -33,8 +33,8 @@ import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.network.MessengerNetworkStateService;
 import org.solovyev.android.network.NetworkStateService;
+import org.solovyev.android.network.NetworkStateServiceImpl;
 import roboguice.RoboGuice;
 import roboguice.inject.RoboInjector;
 
@@ -66,7 +66,7 @@ public class TestMessengerModule extends AbstractModule {
         bind(AuthService.class).to(AuthServiceImpl.class);
         bind(AuthServiceFacade.class).to(AuthServiceFacadeImpl.class);
         bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
-        bind(NetworkStateService.class).to(MessengerNetworkStateService.class);
+        bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
         bind(UserDao.class).to(SqliteUserDao.class);
         bind(UserService.class).to(DefaultUserService.class);

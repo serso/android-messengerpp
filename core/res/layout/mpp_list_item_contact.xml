@@ -5,7 +5,7 @@
                 a:layout_height="fill_parent"
                 style="@style/list_item_item">
 
-    <ImageView a:id="@+id/contact_icon"
+    <ImageView a:id="@+id/mpp_contact_icon"
                style="@style/list_item_item"
                a:padding="0dp"
                a:layout_centerInParent="true"
@@ -14,7 +14,7 @@
                a:layout_alignParentLeft="true"
                a:contentDescription="@string/contact_icon"/>
 
-    <TextView a:id="@+id/contact_online"
+    <TextView a:id="@+id/mpp_contact_online"
               style="@style/contact_online"
               a:layout_centerInParent="true"
               a:layout_width="20dp"
@@ -22,11 +22,11 @@
               a:layout_alignParentRight="true"/>
 
     <TextView
-            a:id="@+id/contact_name"
+            a:id="@+id/mpp_contact_name"
             style="@style/list_item_item"
             a:layout_centerInParent="true"
-            a:layout_toRightOf="@id/contact_icon"
-            a:layout_toLeftOf="@id/contact_online"
+            a:layout_toRightOf="@id/mpp_contact_icon"
+            a:layout_toLeftOf="@id/mpp_contact_online"
             a:layout_width="fill_parent"
             a:layout_height="fill_parent"
             a:singleLine="true"

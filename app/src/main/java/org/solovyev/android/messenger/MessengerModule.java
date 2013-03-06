@@ -2,6 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.ChatDao;
@@ -18,6 +19,7 @@ import org.solovyev.android.messenger.realms.DefaultRealmService;
 import org.solovyev.android.messenger.realms.RealmDao;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.SqliteRealmDao;
+import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
@@ -29,9 +31,8 @@ import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
-import org.solovyev.android.network.MessengerNetworkStateService;
 import org.solovyev.android.network.NetworkStateService;
+import org.solovyev.android.network.NetworkStateServiceImpl;
 
 /**
  * User: serso
@@ -52,7 +53,7 @@ public class MessengerModule extends AbstractModule {
         bind(AuthService.class).to(AuthServiceImpl.class);
         bind(AuthServiceFacade.class).to(AuthServiceFacadeImpl.class);
         bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
-        bind(NetworkStateService.class).to(MessengerNetworkStateService.class);
+        bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
         bind(UserDao.class).to(SqliteUserDao.class);
         bind(UserService.class).to(DefaultUserService.class);

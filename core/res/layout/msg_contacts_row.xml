@@ -13,12 +13,12 @@
                   a:layout_weight="1"
                   a:layout_height="wrap_content">
 
-        <ImageView a:id="@+id/contact_icon"
+        <ImageView a:id="@+id/mpp_contact_icon"
                    a:layout_height="50dp"
                    a:layout_width="50dp"
                    a:contentDescription="@string/contact_icon"/>
 
-        <TextView a:id="@+id/contact_name"
+        <TextView a:id="@+id/mpp_contact_name"
                   a:textColor="@color/text"
                   a:layout_height="wrap_content"
                   a:layout_gravity="center"
@@ -32,12 +32,12 @@
                   a:layout_weight="1"
                   a:layout_height="wrap_content">
 
-        <ImageView a:id="@+id/contact_icon"
+        <ImageView a:id="@+id/mpp_contact_icon"
                    a:layout_height="50dp"
                    a:layout_width="50dp"
                    a:contentDescription="@string/contact_icon"/>
 
-        <TextView a:id="@+id/contact_name"
+        <TextView a:id="@+id/mpp_contact_name"
                   a:textColor="@color/text"
                   a:layout_height="wrap_content"
                   a:layout_gravity="center"

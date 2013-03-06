@@ -142,10 +142,10 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
         final ViewGroup root = (ViewGroup)getView().findViewById(R.id.contact_container);
 
-        final TextView contactName = (TextView) root.findViewById(R.id.contact_name);
+        final TextView contactName = (TextView) root.findViewById(R.id.mpp_contact_name);
         contactName.setText(contact.getDisplayName());
 
-        final ImageView contactIcon = (ImageView) root.findViewById(R.id.contact_icon);
+        final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon);
         MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
         final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmUser().getRealmId()).getRealmDef().getUserProperties(contact, this.getActivity());
