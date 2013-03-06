@@ -61,7 +61,7 @@ public class RealmDefListItem implements ListItem {
     @Nonnull
     @Override
     public View build(@Nonnull Context context) {
-        final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_realm).build(context);
+        final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_realm).build(context);
         fillView(view, context);
         return view;
     }

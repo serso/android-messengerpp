@@ -63,4 +63,9 @@ public final class ViewAwareTag {
     public void update(@Nonnull ViewAwareTag that ) {
         this.tag = that.tag;
     }
+
+    @Nonnull
+    public View getView() {
+        return view;
+    }
 }

@@ -41,22 +41,46 @@
         <item name="android:dividerHeight">1px</item>
     </style>
 
-    <style name="list_item">
-        <item name="android:background">@drawable/item_states</item>
+    <style name="mpp_list_item_text">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text</item>
+    </style>
+
+    <style name="mpp_list_item" parent="mpp_list_item_text">
+        <item name="android:background">@drawable/item_states</item>
         <!--NOTE: separate definition in order to override them-->
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="list_item_back" parent="list_item"></style>
-    <style name="list_item_category" parent="list_item">
+    <style name="list_item_back" parent="mpp_list_item"></style>
+    <style name="list_item_category" parent="mpp_list_item">
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="list_item_item" parent="list_item"></style>
+    <style name="list_item_item" parent="mpp_list_item"></style>
+
+    <style name="mpp_list_item_block" parent="mpp_list_item_text">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="mpp_list_item_icon" parent="mpp_list_item_block">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:contentDescription">@string/mpp_icon</item>
+    </style>
+
+    <style name="mpp_list_item_name" parent="mpp_list_item_block">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
     <style name="list_item_filter">
         <item name="android:background">@drawable/bottom_line</item>
@@ -175,7 +199,7 @@
     <style name="viewpager_title">
 
     </style>
-    <style name="list_item_message" parent="list_item">
+    <style name="list_item_message" parent="mpp_list_item">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textSize">13sp</item>
         <item name="android:padding">0dp</item>
@@ -183,7 +207,7 @@
         <item name="android:editable">false</item>
     </style>
 
-    <style name="list_item_message_date" parent="list_item">
+    <style name="list_item_message_date" parent="mpp_list_item">
         <item name="android:textSize">9sp</item>
         <item name="android:textColor">@color/text_lighter</item>
         <item name="android:background">@android:color/transparent</item>
@@ -210,7 +234,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="contact_online" parent="list_item">
+    <style name="contact_online" parent="mpp_list_item">
     </style>
 
     <style name="footer_image_label">
@@ -267,5 +291,4 @@
     <style name="mpp_list_item_realm_name" parent="list_item_item">
         <item name="android:maxLines">2</item>
     </style>
-
 </resources>
