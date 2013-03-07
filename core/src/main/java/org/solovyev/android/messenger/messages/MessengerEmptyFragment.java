@@ -19,6 +19,8 @@ import javax.annotation.Nonnull;
  */
 public class MessengerEmptyFragment extends RoboSherlockFragment implements DetachableFragment {
 
+    @Nonnull
+    public static final String FRAGMENT_TAG = "empty";
     @Inject
     @Nonnull
     private MessengerMultiPaneManager multiPaneManager;

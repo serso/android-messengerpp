@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.messages;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.solovyev.android.http.ImageLoader;
@@ -17,6 +18,7 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.Users;
+import org.solovyev.common.Builder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,7 +88,13 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
             }
         }
 
-        setFragment(R.id.content_first_pane, new MessengerMessagesFragment(chat), null);
+        getFragmentService().setFirstFragment(new Builder<Fragment>() {
+            @Nonnull
+            @Override
+            public Fragment build() {
+                return new MessengerMessagesFragment(chat);
+            }
+        }, null, MessengerMessagesFragment.FRAGMENT_TAG);
 
         setTitle(createTitle());
     }

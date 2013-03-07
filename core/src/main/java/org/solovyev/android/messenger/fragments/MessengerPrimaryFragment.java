@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.tabs;
+package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * Date: 3/7/13
  * Time: 5:04 PM
  */
-public enum MessengerTab {
+public enum MessengerPrimaryFragment {
 
     contacts(MessengerContactsFragment.class, R.string.mpp_tab_contacts),
     messages(MessengerChatsFragment.class, R.string.mpp_tab_messages),
@@ -28,7 +28,7 @@ public enum MessengerTab {
 
     private final int titleResId;
 
-    MessengerTab(@Nonnull Class<? extends Fragment> fragmentClass, int titleResId) {
+    MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, int titleResId) {
         this.fragmentClass = fragmentClass;
         this.titleResId = titleResId;
     }
@@ -36,11 +36,6 @@ public enum MessengerTab {
     @Nonnull
     public String getTag() {
         return this.name();
-    }
-
-    @Nonnull
-    public static MessengerTab getByTag(@Nonnull String tag) {
-        return valueOf(tag);
     }
 
     @Nonnull

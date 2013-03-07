@@ -51,13 +51,13 @@
                     a:layout_height="wrap_content"
                     a:layout_width="wrap_content"
                     a:layout_marginRight="2dp"
-                    style="@style/metro_button_style"/>
+                    style="@style/mpp_button"/>
 
             <Button a:id="@+id/clear_message_button"
                     a:text="@string/clear"
                     a:layout_height="wrap_content"
                     a:layout_width="wrap_content"
-                    style="@style/metro_button_style"/>
+                    style="@style/mpp_button"/>
 
         </LinearLayout>
 

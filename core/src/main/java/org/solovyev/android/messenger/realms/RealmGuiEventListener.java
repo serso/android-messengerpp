@@ -48,7 +48,7 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         if (activity.isDualPane()) {
             final Bundle fragmentArgs = new Bundle();
             fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
-            activity.setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null);
+            activity.getFragmentService().setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG);
         } else {
             MessengerRealmConfigurationActivity.startForEditRealm(activity, realm);
         }
@@ -58,9 +58,9 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         if (activity.isDualPane()) {
             final Bundle fragmentArgs = new Bundle();
             fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, realm.getId());
-            activity.setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm));
+            activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG);
             if ( activity.isTriplePane() ) {
-                activity.emptifyThirdFragment();
+                activity.getFragmentService().emptifyThirdFragment();
             }
         } else {
             MessengerRealmConfigurationActivity.startForEditRealm(activity, realm);
@@ -73,11 +73,11 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
             if (data instanceof Boolean) {
                 final Boolean removed = (Boolean) data;
                 if (removed) {
-                    activity.emptifySecondFragment();
+                    activity.getFragmentService().emptifySecondFragment();
                 } else {
                     final Bundle fragmentArgs = new Bundle();
                     fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, event.getRealm().getId());
-                    activity.setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(event.getRealm()));
+                    activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(event.getRealm()), MessengerRealmFragment.FRAGMENT_TAG);
                 }
             } else {
                 Log.e(TAG, "Data is not instance of Boolean in " + event.getType() + " event!");

@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  */
 public interface MessengerCommonActivity {
 
-    void onCreate(@Nonnull SherlockFragmentActivity activity, @Nullable Bundle savedInstanceState);
+    void onCreate(@Nonnull MessengerFragmentActivity activity, @Nullable Bundle savedInstanceState);
 
     void onRestart(@Nonnull Activity activity);
 

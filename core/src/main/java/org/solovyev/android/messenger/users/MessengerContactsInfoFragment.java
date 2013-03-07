@@ -31,6 +31,9 @@ import java.util.List;
  */
 public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
+    @Nonnull
+    public static final String FRAGMENT_TAG = "contacts-info";
+
     @Inject
     @Nonnull
     private UserService userService;

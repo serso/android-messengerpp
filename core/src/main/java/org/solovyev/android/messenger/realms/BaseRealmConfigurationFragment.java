@@ -27,6 +27,9 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
     @Nonnull
     public static final String EXTRA_REALM_ID = "realm_id";
 
+    @Nonnull
+    public static final String FRAGMENT_TAG = "realm-configuration";
+
     /*
     **********************************************************************
     *

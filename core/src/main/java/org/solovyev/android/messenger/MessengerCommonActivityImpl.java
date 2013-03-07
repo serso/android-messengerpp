@@ -16,7 +16,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.tabs.MessengerTab;
+import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.sherlock.tabs.ActionBarFragmentTabListener;
 
 import javax.annotation.Nonnull;
@@ -64,7 +64,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
     }
 
     @Override
-    public void onCreate(@Nonnull final SherlockFragmentActivity activity, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nonnull final MessengerFragmentActivity activity, @Nullable Bundle savedInstanceState) {
         //activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         activity.setContentView(layoutId);
@@ -78,9 +78,9 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
         if (showActionBarTabs) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-            addTab(activity, MessengerTab.contacts, null);
-            addTab(activity, MessengerTab.messages, null);
-            addTab(activity, MessengerTab.realms, null);
+            addTab(activity, MessengerPrimaryFragment.contacts);
+            addTab(activity, MessengerPrimaryFragment.messages);
+            addTab(activity, MessengerPrimaryFragment.realms);
 
             // settings tab
             final ActionBar.Tab tab = actionBar.newTab();
@@ -113,14 +113,28 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
         }
     }
 
-    private void addTab(@Nonnull SherlockFragmentActivity activity,
-                        @Nonnull MessengerTab messengerTab,
-                        @Nullable Bundle fragmentArgs) {
+    private void addTab(@Nonnull final MessengerFragmentActivity activity,
+                        @Nonnull final MessengerPrimaryFragment messengerPrimaryFragment) {
+        final String fragmentTag = messengerPrimaryFragment.getTag();
+
         final ActionBar actionBar = activity.getSupportActionBar();
         final ActionBar.Tab tab = actionBar.newTab();
-        tab.setTag(messengerTab.getTag());
-        tab.setText(messengerTab.getTitleResId());
-        tab.setTabListener(new ActionBarFragmentTabListener(activity, messengerTab.getTag(), messengerTab.getFragmentClass(), fragmentArgs, R.id.content_first_pane));
+        tab.setTag(fragmentTag);
+        tab.setText(messengerPrimaryFragment.getTitleResId());
+        tab.setTabListener(new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                activity.getFragmentService().setPrimaryFragment(messengerPrimaryFragment, activity.getSupportFragmentManager(), ft);
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            }
+        });
         actionBar.addTab(tab);
     }
 

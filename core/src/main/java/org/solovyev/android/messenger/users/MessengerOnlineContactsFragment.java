@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.widget.Toast;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -9,6 +8,8 @@ import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso

@@ -39,6 +39,8 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     @Nonnull
     private static final String CONTACT = "contact";
 
+    @Nonnull
+    public static final String FRAGMENT_TAG = "contact-info";
 
     @Inject
     @Nonnull

@@ -58,18 +58,19 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
         realmDefGuiEventListener = new RealmDefClickedEventListener();
         eventManager.registerObserver(RealmDefGuiEvent.class, realmDefGuiEventListener);
 
-        setFirstFragment(MessengerRealmDefsFragment.class, null, new JPredicate<Fragment>() {
+        getFragmentService().setFirstFragment(MessengerRealmDefsFragment.class, null, new JPredicate<Fragment>() {
             @Override
             public boolean apply(@Nullable Fragment fragment) {
                 return fragment instanceof MessengerRealmDefsFragment;
             }
-        });
+        }, "realm-defs");
+
         if (isDualPane()) {
-            emptifySecondFragment();
+            getFragmentService().emptifySecondFragment();
         }
 
         if (isTriplePane()) {
-            emptifyThirdFragment();
+            getFragmentService().emptifyThirdFragment();
         }
     }
 
@@ -91,14 +92,14 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
             switch (event.getType()) {
                 case realm_def_clicked:
                     if (isDualPane()) {
-                        setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef));
+                        getFragmentService().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG);
                     } else {
                         MessengerRealmConfigurationActivity.startForNewRealm(MessengerRealmDefsActivity.this, realmDef);
                     }
                     break;
                 case realm_def_edit_finished:
                     if (isDualPane()) {
-                        emptifySecondFragment();
+                        getFragmentService().emptifySecondFragment();
                     } else {
                         finish();
                     }
@@ -107,26 +108,4 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
         }
     }
 
-    private static class RealmDefFragmentReuseCondition implements JPredicate<Fragment> {
-
-        @Nonnull
-        private final RealmDef realmDef;
-
-        public RealmDefFragmentReuseCondition(@Nonnull RealmDef realmDef) {
-            this.realmDef = realmDef;
-        }
-
-        @Override
-        public boolean apply(@Nullable Fragment fragment) {
-            if (fragment instanceof BaseRealmConfigurationFragment) {
-                final BaseRealmConfigurationFragment oldRealmFragment = ((BaseRealmConfigurationFragment) fragment);
-                if (realmDef.equals(oldRealmFragment.getRealmDef())) {
-                    // do nothing - configuration fragment for this item is already opened
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
 }

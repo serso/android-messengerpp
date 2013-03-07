@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
@@ -46,13 +47,13 @@ public class MessengerRealmsActivity extends MessengerFragmentActivity {
         realmGuiEventListener = new RealmGuiEventListener(this);
         eventManager.registerObserver(RealmGuiEvent.class, realmGuiEventListener);
 
-        setFirstFragment(MessengerRealmsFragment.class, null, SimpleFragmentReuseCondition.forClass(MessengerRealmsFragment.class));
+        getFragmentService().setPrimaryFragment(MessengerPrimaryFragment.realms);
         if (isDualPane()) {
-            emptifySecondFragment();
+            getFragmentService().emptifySecondFragment();
         }
 
         if (isTriplePane()) {
-            emptifyThirdFragment();
+            getFragmentService().emptifyThirdFragment();
         }
     }
 

@@ -42,6 +42,15 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     /*
     **********************************************************************
     *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+    public static final String FRAGMENT_TAG = "messages";
+
+    /*
+    **********************************************************************
+    *
     *                           AUTO INJECTED FIELDS
     *
     **********************************************************************

@@ -14,6 +14,7 @@ import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.fragments.DetachableFragment;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
@@ -30,7 +31,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:37 PM
  */
-public class MessengerChatsFragment extends AbstractMessengerListFragment<UserChat, ChatListItem> {
+public class MessengerChatsFragment extends AbstractMessengerListFragment<UserChat, ChatListItem> implements DetachableFragment {
 
     @Nonnull
     private static final String TAG = "ChatsFragment";

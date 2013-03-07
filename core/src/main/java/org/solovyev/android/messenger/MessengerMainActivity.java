@@ -86,11 +86,11 @@ public class MessengerMainActivity extends MessengerFragmentActivity {
         getEventManager().registerObserver(FragmentGuiEvent.class, fragmentGuiEventListener);
 
         if (isDualPane()) {
-            emptifySecondFragment();
+            getFragmentService().emptifySecondFragment();
         }
 
         if (isTriplePane()) {
-            emptifyThirdFragment();
+            getFragmentService().emptifyThirdFragment();
         }
     }
 

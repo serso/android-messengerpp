@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.fragments.MessengerFragmentService;
 import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.realms.Realm;
@@ -42,25 +43,27 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
         if (type == ChatGuiEventType.chat_clicked) {
 
             if (activity.isDualPane()) {
-                activity.setSecondFragment(new Builder<Fragment>() {
+                final MessengerFragmentService fragmentService = activity.getFragmentService();
+
+                fragmentService.setSecondFragment(new Builder<Fragment>() {
                     @Nonnull
                     @Override
                     public Fragment build() {
                         return new MessengerMessagesFragment(chat);
                     }
-                }, MessagesFragmentReuseCondition.forChat(chat));
+                }, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG);
 
                 if (activity.isTriplePane()) {
                     if (chat.isPrivate()) {
-                        activity.setThirdFragment(new Builder<Fragment>() {
+                        fragmentService.setThirdFragment(new Builder<Fragment>() {
                             @Nonnull
                             @Override
                             public Fragment build() {
                                 return MessengerContactFragment.newForContact(chat.getSecondUser());
                             }
-                        }, ContactFragmentReuseCondition.forContact(chat.getSecondUser()));
+                        }, ContactFragmentReuseCondition.forContact(chat.getSecondUser()), MessengerContactFragment.FRAGMENT_TAG);
                     } else {
-                        activity.setThirdFragment(new Builder<Fragment>() {
+                        fragmentService.setThirdFragment(new Builder<Fragment>() {
                             @Nonnull
                             @Override
                             public Fragment build() {
@@ -72,7 +75,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                                 }
                                 return new MessengerContactsInfoFragment(participants);
                             }
-                        }, null);
+                        }, null, MessengerContactsInfoFragment.FRAGMENT_TAG);
                     }
                 }
 

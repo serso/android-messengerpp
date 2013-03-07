@@ -26,9 +26,6 @@ import javax.annotation.Nonnull;
 public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity implements EventListener<RealmGuiEvent> {
 
     @Nonnull
-    private static final String REALM_CONFIGURATION_FRAGMENT_TAG = "realm-configuration";
-
-    @Nonnull
     private static final String EXTRA_REALM_DEF_ID = "realm_def_id";
 
     @Nonnull
@@ -65,14 +62,14 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
     }
 
     private void prepareUiForCreate(@Nonnull RealmDef realmDef) {
-        setFragment(R.id.content_first_pane, realmDef.getConfigurationFragmentClass(), REALM_CONFIGURATION_FRAGMENT_TAG, null);
+        getFragmentService().setFirstFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG);
 
     }
 
     private void prepareUiForEdit(@Nonnull Realm realm) {
         final Bundle fragmentArgs = new Bundle();
         fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
-        setFragment(R.id.content_first_pane, realm.getRealmDef().getConfigurationFragmentClass(), REALM_CONFIGURATION_FRAGMENT_TAG, fragmentArgs);
+        getFragmentService().setFirstFragment(realm.getRealmDef().getConfigurationFragmentClass(), null, null, BaseRealmConfigurationFragment.FRAGMENT_TAG);
     }
 
     @Override
