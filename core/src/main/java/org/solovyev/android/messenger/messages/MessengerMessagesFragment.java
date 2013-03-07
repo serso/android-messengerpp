@@ -12,7 +12,10 @@ import android.widget.*;
 import com.google.inject.Inject;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.AbstractMessengerListFragment;
+import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
@@ -67,10 +70,6 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     @Inject
     @Nonnull
     private RealmService realmService;
-
-    @Inject
-    @Nonnull
-    private MessengerMultiPaneManager multiPaneManager;
 
 
     /*
@@ -134,25 +133,16 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final RelativeLayout result = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.msg_messages).build(this.getActivity());
+        final View root = super.onCreateView(inflater, container, savedInstanceState);
 
-        final View bubble = ViewFromLayoutBuilder.newInstance(R.layout.msg_message_bubble).build(this.getActivity());
-
-        final ViewGroup messageBubbleParent = (ViewGroup)result.findViewById(R.id.message_bubble);
-        messageBubbleParent.addView(bubble, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        final View superResult = super.onCreateView(inflater, container, savedInstanceState);
-
-        final ListView listView = getListView(superResult);
+        final ListView listView = getListView(root);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setStackFromBottom(true);
 
-        final ViewGroup messagesParent = (ViewGroup)result.findViewById(R.id.messages_list);
-        messagesParent.addView(superResult);
+        final View messagesFooter = ViewFromLayoutBuilder.newInstance(R.layout.mpp_messages_footer).build(this.getActivity());
+        listView.addFooterView(messagesFooter, null, false);
 
-        multiPaneManager.fillContentPane(this.getActivity(), container, result);
-
-        return result;
+        return root;
     }
 
     @Override

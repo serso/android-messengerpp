@@ -2,6 +2,11 @@ package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -17,6 +22,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.DetachableFragment;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -48,6 +54,27 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View root = super.onCreateView(inflater, container, savedInstanceState);
+
+        final View realmsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_realms_footer).build(this.getActivity());
+
+        final View addRealmButton = realmsFooter.findViewById(R.id.mpp_add_realm_button);
+        addRealmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MessengerRealmDefsActivity.startActivity(getActivity());
+            }
+        });
+
+        final ListView lv = getListView(root);
+
+        lv.addFooterView(realmsFooter, null, false);
+
+        return root;
     }
 
     @Override

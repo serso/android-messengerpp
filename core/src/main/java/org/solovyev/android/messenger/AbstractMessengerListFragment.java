@@ -102,7 +102,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Nonnull
     private EventManager eventManager;
 
-
     /*
     **********************************************************************
     *
@@ -207,6 +206,16 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     }
 
     @Nonnull
+    protected EventManager getEventManager() {
+        return eventManager;
+    }
+
+    @Nonnull
+    protected MessengerMultiPaneManager getMultiPaneManager() {
+        return multiPaneManager;
+    }
+
+    @Nonnull
     protected ListView getListView(@Nonnull View root) {
         return (ListView) root.findViewById(android.R.id.list);
     }
@@ -251,7 +260,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         params.gravity = Gravity.CENTER_VERTICAL;
         root.addView(listViewParent, params);
 
-        multiPaneManager.fillContentPane(this.getActivity(), container, root);
+
+        multiPaneManager.fillContentPane(getActivity(), container, root);
 
         return root;
     }

@@ -14,7 +14,9 @@
     <color name="text_name">#ff0e1825</color>
     <!--<color name="text_link">#ff3266a2</color>-->
     <color name="text_link">#ff363636</color>
-    <color name="selected">#ff33b5e5</color>
+    <color name="mpp_selected">#cc33b5e5</color>
+    <color name="mpp_blue">#ff33b5e5</color>
+    <color name="mpp_blue_darker">#ff247697</color>
     <color name="gray">#ffdddddd</color>
 
     <color name="image_button_unselected">#ff999999</color>

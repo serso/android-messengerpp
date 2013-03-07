@@ -9,6 +9,7 @@ package org.solovyev.android.messenger.fragments;
 /**
  * Marker interface, fragment implementing this interface will be detached (and NOT removed)
  * from fragment manager. This means that next time fragment will not be created but reused.
+ * See {@link MessengerFragmentService} for more details
  */
 public interface DetachableFragment {
 }

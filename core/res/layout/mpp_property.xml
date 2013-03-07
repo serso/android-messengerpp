@@ -6,7 +6,7 @@
               a:orientation="vertical">
 
     <TextView a:id="@+id/mpp_property_label"
-              a:textColor="@color/selected"
+              a:textColor="@color/mpp_blue"
               a:layout_width="match_parent"
               a:layout_height="wrap_content"/>
 

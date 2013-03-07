@@ -4,11 +4,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- pressed -->
     <item android:state_pressed="true"
-          android:drawable="@color/selected"/>
+          android:drawable="@color/mpp_selected"/>
 
     <!-- focused -->
     <item android:state_focused="true"
-          android:drawable="@color/selected"/>
+          android:drawable="@color/mpp_selected"/>
 
     <!-- default -->
     <item android:drawable="@android:color/transparent"/>
