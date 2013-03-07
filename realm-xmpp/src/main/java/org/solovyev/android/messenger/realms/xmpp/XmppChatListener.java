@@ -29,7 +29,7 @@ public class XmppChatListener implements ChatManagerListener {
 
             final String realmChatId = chat.getThreadID();
             if (Strings.isEmpty(realmChatId) ) {
-                realmChat = getChatService().createPrivateChatId(realm.getUser().getRealmUser(), participant);
+                realmChat = getChatService().createPrivateChatId(realm.getUser().getRealmEntity(), participant);
             } else {
                 realmChat = realm.newRealmEntity(realmChatId);
             }
@@ -37,7 +37,7 @@ public class XmppChatListener implements ChatManagerListener {
             final ApiChatImpl newChat = ApiChatImpl.newInstance(realmChat, 0, true);
             newChat.addParticipant(realm.getUser());
             newChat.addParticipant(UserImpl.newFakeInstance(participant));
-            getChatService().saveChat(realm.getUser().getRealmUser(), newChat);
+            getChatService().saveChat(realm.getUser().getRealmEntity(), newChat);
         }
     }
 

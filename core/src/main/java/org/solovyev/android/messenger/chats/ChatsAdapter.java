@@ -5,14 +5,14 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -86,7 +86,7 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> impleme
 
     @Override
     protected Comparator<? super ChatListItem> getComparator() {
-        return ChatListItem.Comparator.getInstance();
+        return ChatListItemComparator.getInstance();
     }
 
     @Nonnull

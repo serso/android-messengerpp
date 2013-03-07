@@ -9,6 +9,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutorService;
@@ -50,7 +51,7 @@ public class MessengerTestActivity extends RoboSherlockActivity {
                             if (user == null) {
                                 console.setText("null");
                             } else {
-                                console.setText(user.getDisplayName());
+                                console.setText(Users.getDisplayNameFor(user));
                             }
                         }
                     });

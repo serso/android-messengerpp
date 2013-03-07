@@ -2,12 +2,11 @@ package org.solovyev.android.messenger.users;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
-import org.solovyev.common.JObject;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,13 +17,10 @@ import java.util.*;
  * Date: 5/24/12
  * Time: 10:30 PM
  */
-public class UserImpl extends JObject implements User {
+public class UserImpl extends AbstractMessengerEntity implements User {
 
     @Nonnull
     private String login;
-
-    @Nonnull
-    private RealmEntity realmEntity;
 
     @Nonnull
     private UserSyncData userSyncData;
@@ -35,7 +31,8 @@ public class UserImpl extends JObject implements User {
     @Nonnull
     private Map<String, String> propertiesMap = new HashMap<String, String>();
 
-    private UserImpl() {
+    private UserImpl(@Nonnull RealmEntity realmEntity) {
+        super(realmEntity);
     }
 
     @Nonnull
@@ -51,9 +48,8 @@ public class UserImpl extends JObject implements User {
     public static User newInstance(@Nonnull RealmEntity realmEntity,
                                    @Nonnull UserSyncData userSyncData,
                                    @Nonnull List<AProperty> properties) {
-        final UserImpl result = new UserImpl();
+        final UserImpl result = new UserImpl(realmEntity);
 
-        result.realmEntity = realmEntity;
         result.login = realmEntity.getRealmEntityId();
         result.userSyncData = userSyncData;
         result.properties.addAll(properties);
@@ -78,38 +74,6 @@ public class UserImpl extends JObject implements User {
     @Nonnull
     public String getLogin() {
         return login;
-    }
-
-    @Nonnull
-    @Override
-    public String getDisplayName() {
-        final StringBuilder result = new StringBuilder();
-
-        final String firstName = getPropertyValueByName(User.PROPERTY_FIRST_NAME);
-        final String lastName = getPropertyValueByName(User.PROPERTY_LAST_NAME);
-
-        boolean firstNameExists = !Strings.isEmpty(firstName);
-        boolean lastNameExists = !Strings.isEmpty(lastName);
-
-        if ( !firstNameExists && !lastNameExists ) {
-            // first and last names are empty
-            result.append(this.realmEntity.getRealmEntityId());
-        } else {
-
-            if (firstNameExists) {
-                result.append(firstName);
-            }
-
-            if (firstNameExists && lastNameExists) {
-                result.append(" ");
-            }
-
-            if (lastNameExists) {
-                result.append(lastName);
-            }
-        }
-
-        return result.toString();
     }
 
     @Override
@@ -167,50 +131,22 @@ public class UserImpl extends JObject implements User {
         return Collections.unmodifiableList(properties);
     }
 
-    @Nonnull
-    @Override
-    public RealmEntity getRealmUser() {
-        return this.realmEntity;
-    }
-
     @Override
     public String getPropertyValueByName(@Nonnull String name) {
         return this.propertiesMap.get(name);
     }
 
+    @Nonnull
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserImpl)) return false;
-
-        final UserImpl that = (UserImpl) o;
-
-        if (!realmEntity.equals(that.realmEntity)) return false;
-
-        return true;
-    }
-
-
-    @Override
-    public int hashCode() {
-        return realmEntity.hashCode();
+    public UserImpl clone() {
+        return (UserImpl) super.clone();
     }
 
     @Override
     public String toString() {
         return "UserImpl{" +
-                "id=" + realmEntity.getEntityId() +
+                "id=" + getRealmEntity().getEntityId() +
                 '}';
-    }
-
-    @Nonnull
-    @Override
-    public UserImpl clone() {
-        final UserImpl clone = (UserImpl) super.clone();
-
-        clone.realmEntity = realmEntity.clone();
-
-        return clone;
     }
 
     @Nonnull

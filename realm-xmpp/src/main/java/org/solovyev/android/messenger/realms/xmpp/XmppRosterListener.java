@@ -52,7 +52,7 @@ class XmppRosterListener implements RosterListener {
         }));
         // we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed
         // we cannot allow update because we don't have fully loaded user
-        getUserService().mergeUserContacts(realm.getUser().getRealmUser(), contacts, false, false);
+        getUserService().mergeUserContacts(realm.getUser().getRealmEntity(), contacts, false, false);
     }
 
     @Override

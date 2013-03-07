@@ -34,10 +34,18 @@ public interface RealmEntity extends Parcelable {
     @Nonnull
     String getRealmEntityId();
 
-    @Nonnull
-    RealmEntity clone();
+    /*
+    **********************************************************************
+    *
+    *                           EQUALS/HASHCODE/CLONE
+    *
+    **********************************************************************
+    */
 
     int hashCode();
 
     boolean equals(Object o);
+
+    @Nonnull
+    RealmEntity clone();
 }

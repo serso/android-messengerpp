@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
 import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
@@ -15,7 +16,7 @@ import javax.annotation.Nonnull;
  * Date: 3/6/13
  * Time: 11:57 PM
  */
-public abstract class AbstractMessengerListItem<D> implements ListItem, Checkable {
+public abstract class AbstractMessengerListItem<D extends MessengerEntity> implements ListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
 
     private boolean checked;
 
@@ -28,6 +29,9 @@ public abstract class AbstractMessengerListItem<D> implements ListItem, Checkabl
      * View tag, might be null before first list item showing on display
      */
     private ViewAwareTag viewAwareTag;
+
+    @Nonnull
+    private String displayName = "";
 
     @Nonnull
     private D data;
@@ -61,11 +65,8 @@ public abstract class AbstractMessengerListItem<D> implements ListItem, Checkabl
 
     @Nonnull
     private ViewAwareTag createTag(@Nonnull ViewGroup view) {
-        return new ViewAwareTag(tagPrefix + getDataId(this.data), view);
+        return new ViewAwareTag(tagPrefix + this.data.getId(), view);
     }
-
-    @Nonnull
-    protected abstract String getDataId(@Nonnull D data);
 
     private void fillView(@Nonnull Context context, @Nonnull final ViewGroup view) {
         final ViewAwareTag tag = createTag(view);
@@ -82,10 +83,13 @@ public abstract class AbstractMessengerListItem<D> implements ListItem, Checkabl
                 view.setTag(viewTag);
             }
             viewAwareTag = viewTag;
-
+            displayName = getDisplayName(this.data, context);
             fillView(this.data, context, viewTag);
         }
     }
+
+    @Nonnull
+    protected abstract String getDisplayName(@Nonnull D data, @Nonnull Context context);
 
     protected abstract void fillView(@Nonnull D data, @Nonnull Context context, @Nonnull ViewAwareTag viewTag);
 
@@ -98,34 +102,36 @@ public abstract class AbstractMessengerListItem<D> implements ListItem, Checkabl
     }
 
     @Override
-    public void setChecked(boolean checked) {
+    public final void setChecked(boolean checked) {
         this.checked = checked;
     }
 
     @Override
-    public boolean isChecked() {
+    public final boolean isChecked() {
         return checked;
     }
 
     @Override
-    public void toggle() {
+    public final void toggle() {
         this.checked = !checked;
     }
 
     @Nonnull
-    protected D getData() {
+    protected final D getData() {
         return data;
     }
 
-    protected void setData(@Nonnull D data) {
+    protected final void setData(@Nonnull D data) {
         this.data = data;
         if (viewAwareTag != null) {
-            fillView(data, viewAwareTag.getView().getContext(), viewAwareTag);
+            final Context context = viewAwareTag.getView().getContext();
+            this.displayName = getDisplayName(this.data, context);
+            fillView(data, context, viewAwareTag);
         }
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -144,7 +150,23 @@ public abstract class AbstractMessengerListItem<D> implements ListItem, Checkabl
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return data.hashCode();
+    }
+
+    @Override
+    public final String toString() {
+        // NOTE: this code is used inside the ArrayAdapter for filtering
+        return this.displayName;
+    }
+
+    @Nonnull
+    protected final String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public final int compareTo(@Nonnull AbstractMessengerListItem<D> another) {
+        return this.toString().compareTo(another.toString());
     }
 }

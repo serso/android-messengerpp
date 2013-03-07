@@ -5,20 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatListItem;
+import org.solovyev.android.messenger.chats.Chats;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.Users;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     public static void startActivity(@Nonnull Activity activity, @Nonnull Chat chat) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerMessagesActivity.class);
-        result.putExtra(CHAT, chat.getRealmChat());
+        result.putExtra(CHAT, chat.getRealmEntity());
         activity.startActivity(result);
     }
 
@@ -78,7 +79,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
         getUserService().addListener(this);
 
-        final List<User> participants = getChatService().getParticipantsExcept(chat.getRealmChat(), getUser().getRealmUser());
+        final List<User> participants = getChatService().getParticipantsExcept(chat.getRealmEntity(), getUser().getRealmEntity());
         if (chat.isPrivate()) {
             if (!participants.isEmpty()) {
                 contact = participants.get(0);
@@ -92,9 +93,9 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
     private String createTitle() {
         if ( contact != null ) {
-            return contact.getDisplayName();
+            return Users.getDisplayNameFor(contact);
         } else {
-            return ChatListItem.getDisplayName(chat, getChatService().getLastMessage(chat.getRealmChat()), getUser());
+            return Chats.getDisplayName(chat, getChatService().getLastMessage(chat.getRealmEntity()), getUser());
         }
     }
 
@@ -152,7 +153,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     public User getUser() {
         if ( user == null ) {
             try {
-                user = MessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmChat().getRealmId());
+                user = MessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmEntity().getRealmId());
             } catch (UserIsNotLoggedInException e) {
                 // todo serso: continue
             }

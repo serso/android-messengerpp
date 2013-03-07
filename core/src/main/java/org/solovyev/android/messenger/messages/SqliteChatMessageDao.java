@@ -371,10 +371,10 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         final ContentValues values = new ContentValues();
 
         values.put("id", chatMessage.getId());
-        values.put("chat_id", chat.getRealmChat().getEntityId());
-        values.put("author_id", chatMessage.getAuthor().getRealmUser().getEntityId());
+        values.put("chat_id", chat.getRealmEntity().getEntityId());
+        values.put("author_id", chatMessage.getAuthor().getRealmEntity().getEntityId());
         final User recipient = chatMessage.getRecipient();
-        values.put("recipient_id", recipient == null ? null : recipient.getRealmUser().getEntityId());
+        values.put("recipient_id", recipient == null ? null : recipient.getRealmEntity().getEntityId());
         values.put("send_date", dateTimeFormatter.print(chatMessage.getSendDate()));
         values.put("title", chatMessage.getTitle());
         values.put("body", chatMessage.getBody());

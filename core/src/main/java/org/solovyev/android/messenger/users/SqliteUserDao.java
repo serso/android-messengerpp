@@ -129,10 +129,10 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         for (User contact : contacts) {
             try {
                 // contact exists both in db and on remote server => case already covered above
-                Iterables.find(contactIdsFromDb, Predicates.equalTo(contact.getRealmUser().getEntityId()));
+                Iterables.find(contactIdsFromDb, Predicates.equalTo(contact.getRealmEntity().getEntityId()));
             } catch (NoSuchElementException e) {
                 // contact was added on remote server => need to add to local db
-                if (userIdsFromDb.contains(contact.getRealmUser().getEntityId())) {
+                if (userIdsFromDb.contains(contact.getRealmEntity().getEntityId())) {
                     // only link must be added - user already in users table
                     result.addAddedObjectLink(contact);
                 } else {
@@ -158,14 +158,14 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
             execs.add(new UpdateUser(addedContactLink));
             execs.add(new DeleteUserProperties(addedContactLink));
             execs.add(new InsertUserProperties(addedContactLink));
-            execs.add(new InsertContact(userId, addedContactLink.getRealmUser().getEntityId()));
+            execs.add(new InsertContact(userId, addedContactLink.getRealmEntity().getEntityId()));
         }
 
 
         for (User addedContact : result.getAddedObjects()) {
             execs.add(new InsertUser(addedContact));
             execs.add(new InsertUserProperties(addedContact));
-            execs.add(new InsertContact(userId, addedContact.getRealmUser().getEntityId()));
+            execs.add(new InsertContact(userId, addedContact.getRealmEntity().getEntityId()));
         }
 
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
@@ -369,7 +369,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
             final ContentValues values = toContentValues(user);
 
-            db.update("users", values, "id = ?", new String[]{String.valueOf(user.getRealmUser().getEntityId())});
+            db.update("users", values, "id = ?", new String[]{String.valueOf(user.getRealmEntity().getEntityId())});
         }
     }
 
@@ -383,7 +383,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         public void exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
-            db.delete("user_properties", "user_id = ?", new String[]{String.valueOf(user.getRealmUser().getEntityId())});
+            db.delete("user_properties", "user_id = ?", new String[]{String.valueOf(user.getRealmEntity().getEntityId())});
         }
     }
 
@@ -401,7 +401,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
                 final ContentValues values = new ContentValues();
                 final String value = property.getValue();
                 if (value != null) {
-                    values.put("user_id", user.getRealmUser().getEntityId());
+                    values.put("user_id", user.getRealmEntity().getEntityId());
                     values.put("property_name", property.getName());
                     values.put("property_value", value);
                     db.insert("user_properties", null, values);
@@ -421,7 +421,7 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
         @Override
         public boolean apply(@javax.annotation.Nullable User user) {
-            return user != null && userId.equals(user.getRealmUser().getEntityId());
+            return user != null && userId.equals(user.getRealmEntity().getEntityId());
         }
     }
 
@@ -434,9 +434,9 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
         final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
 
-        values.put("id", user.getRealmUser().getEntityId());
-        values.put("realm_id", user.getRealmUser().getRealmId());
-        values.put("realm_user_id", user.getRealmUser().getRealmEntityId());
+        values.put("id", user.getRealmEntity().getEntityId());
+        values.put("realm_id", user.getRealmEntity().getRealmId());
+        values.put("realm_user_id", user.getRealmEntity().getRealmEntityId());
         values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
         values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
 

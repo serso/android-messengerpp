@@ -50,7 +50,7 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
             }
 
             if (!chat.isPrivate()) {
-                result.add(new BasicNameValuePair("chat_id", chat.getRealmChat().getRealmEntityId()));
+                result.add(new BasicNameValuePair("chat_id", chat.getRealmEntity().getRealmEntityId()));
             }
 
             result.add(new BasicNameValuePair("message", URLEncoder.encode(chatMessage.getBody(), "utf-8")));

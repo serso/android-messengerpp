@@ -66,8 +66,8 @@ public class RealmListItem extends AbstractMessengerListItem<Realm> {
 
     @Nonnull
     @Override
-    protected String getDataId(@Nonnull Realm realm) {
-        return realm.getId();
+    protected String getDisplayName(@Nonnull Realm realm, @Nonnull Context context) {
+        return realm.getDisplayName(context);
     }
 
     @Override
@@ -78,6 +78,6 @@ public class RealmListItem extends AbstractMessengerListItem<Realm> {
         final Drawable realmIcon = context.getResources().getDrawable(realm.getRealmDef().getIconResId());
         realmIconImageView.setImageDrawable(realmIcon);
 
-        realmNameTextView.setText(realm.getDisplayName(context));
+        realmNameTextView.setText(getDisplayName());
     }
 }

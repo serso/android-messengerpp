@@ -1,12 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
-import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 6/11/12
  * Time: 7:59 PM
  */
-public class ChatImpl extends JObject implements Chat {
+public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
     /*
     **********************************************************************
@@ -40,9 +40,6 @@ public class ChatImpl extends JObject implements Chat {
     @Nullable
     private DateTime lastMessageSyncDate;
 
-    @Nonnull
-    private RealmEntity realmEntity;
-
     /*
     **********************************************************************
     *
@@ -55,7 +52,7 @@ public class ChatImpl extends JObject implements Chat {
                      @Nonnull Integer messagesCount,
                      @Nonnull List<AProperty> properties,
                      @Nullable DateTime lastMessageSyncDate) {
-        this.realmEntity = realmEntity;
+        super(realmEntity);
         this.messagesCount = messagesCount;
         this.lastMessageSyncDate = lastMessageSyncDate;
 
@@ -73,7 +70,7 @@ public class ChatImpl extends JObject implements Chat {
     private ChatImpl(@Nonnull RealmEntity realmEntity,
                      @Nonnull Integer messagesCount,
                      boolean privateChat) {
-        this.realmEntity = realmEntity;
+        super(realmEntity);
         this.messagesCount = messagesCount;
         this.privateChat = privateChat;
         this.properties = new ArrayList<AProperty>();
@@ -147,15 +144,8 @@ public class ChatImpl extends JObject implements Chat {
 
         // properties cannot be changed themselves but some can be removed or added
         clone.properties = new ArrayList<AProperty>(this.properties);
-        clone.realmEntity = realmEntity.clone();
 
         return clone;
-    }
-
-    @Nonnull
-    @Override
-    public RealmEntity getRealmChat() {
-        return this.realmEntity;
     }
 
     @Override
@@ -177,26 +167,9 @@ public class ChatImpl extends JObject implements Chat {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ChatImpl)) return false;
-
-        ChatImpl that = (ChatImpl) o;
-
-        if (!this.realmEntity.equals(that.realmEntity)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.realmEntity.hashCode();
-    }
-
-    @Override
     public String toString() {
         return "ChatImpl{" +
-                "id=" + realmEntity.getEntityId() +
+                "id=" + getRealmEntity().getEntityId() +
                 ", privateChat=" + privateChat +
                 '}';
     }

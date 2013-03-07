@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * Date: 6/1/12
  * Time: 7:04 PM
  */
-public class ContactListItem extends AbstractMessengerListItem<User> implements UserEventListener, Comparable<ContactListItem> {
+public class ContactListItem extends AbstractMessengerListItem<User> implements UserEventListener {
 
     @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_view_";
@@ -64,17 +64,6 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
         }
     }
 
-    @Override
-    public String toString() {
-        // NOTE: this code is used inside the ArrayAdapter for filtering
-        return getContact().getDisplayName();
-    }
-
-    @Override
-    public int compareTo(@Nonnull ContactListItem another) {
-        return this.toString().compareTo(another.toString());
-    }
-
     @Nonnull
     public User getContact() {
         return getData();
@@ -82,8 +71,8 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
 
     @Nonnull
     @Override
-    protected String getDataId(@Nonnull User contact) {
-        return contact.getRealmUser().getEntityId();
+    protected String getDisplayName(@Nonnull User user, @Nonnull Context context) {
+        return Users.getDisplayNameFor(user);
     }
 
     @Override
@@ -92,7 +81,7 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
         MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
 
         final TextView contactName = viewTag.getViewById(R.id.mpp_contact_name);
-        contactName.setText(contact.getDisplayName());
+        contactName.setText(getDisplayName());
 
         final TextView contactOnline = viewTag.getViewById(R.id.mpp_contact_online);
         if (contact.isOnline()) {

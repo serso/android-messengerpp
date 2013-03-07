@@ -17,6 +17,7 @@ import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
@@ -147,7 +148,7 @@ public class MessageListItem implements ListItem, ChatEventListener {
         messageText.setText(Html.fromHtml(message.getBody()));
 
         final TextView messageDate = (TextView) root.findViewById(R.id.message_date);
-        messageDate.setText(ChatListItem.getMessageTime(message));
+        messageDate.setText(Messages.getMessageTime(message));
 
         final ImageView messageIcon = (ImageView) root.findViewById(R.id.message_icon);
         if (userMessage) {

@@ -67,7 +67,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                                 final List<User> participants = new ArrayList<User>();
                                 for (Realm realm : activity.getRealmService().getRealms()) {
                                     final User user = realm.getUser();
-                                    participants.addAll(activity.getChatService().getParticipantsExcept(chat.getRealmChat(), user.getRealmUser()));
+                                    participants.addAll(activity.getChatService().getParticipantsExcept(chat.getRealmEntity(), user.getRealmEntity()));
 
                                 }
                                 return new MessengerContactsInfoFragment(participants);

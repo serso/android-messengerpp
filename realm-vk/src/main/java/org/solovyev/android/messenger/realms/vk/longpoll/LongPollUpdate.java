@@ -107,7 +107,7 @@ public interface LongPollUpdate {
         @Override
         public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             // not self
-            if (!user.getRealmUser().getRealmEntityId().equals(realmUserId)) {
+            if (!user.getRealmEntity().getRealmEntityId().equals(realmUserId)) {
                 Chat chat = getChatService().getChatById(realm.newRealmEntity(realmChatId));
                 if (chat != null) {
                     getChatService().fireChatEvent(chat, ChatEventType.user_start_typing, realmUserId);
@@ -134,10 +134,10 @@ public interface LongPollUpdate {
         @Override
         public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             // not self
-            if (!user.getRealmUser().getRealmEntityId().equals(realmUserId)) {
+            if (!user.getRealmEntity().getRealmEntityId().equals(realmUserId)) {
                 final RealmEntity secondRealmUser = realm.newRealmEntity(realmUserId);
 
-                final RealmEntity realmChat = getChatService().createPrivateChatId(user.getRealmUser(), secondRealmUser);
+                final RealmEntity realmChat = getChatService().createPrivateChatId(user.getRealmEntity(), secondRealmUser);
                 Chat chat = getChatService().getChatById(realmChat);
                 if (chat != null) {
                     getChatService().fireChatEvent(chat, ChatEventType.user_start_typing, secondRealmUser);
@@ -163,7 +163,7 @@ public interface LongPollUpdate {
 
         @Override
         public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            getChatService().syncChat(realm.newRealmEntity(realmChatId), user.getRealmUser());
+            getChatService().syncChat(realm.newRealmEntity(realmChatId), user.getRealmEntity());
         }
 
 
@@ -219,10 +219,10 @@ public interface LongPollUpdate {
                 realmChat = realm.newRealmEntity(this.realmChatId);
             } else {
                 assert realmFriendId != null;
-                realmChat = getChatService().createPrivateChatId(user.getRealmUser(), realm.newRealmEntity(realmFriendId));
+                realmChat = getChatService().createPrivateChatId(user.getRealmEntity(), realm.newRealmEntity(realmFriendId));
             }
 
-            getChatService().syncNewerChatMessagesForChat(realmChat, user.getRealmUser());
+            getChatService().syncNewerChatMessagesForChat(realmChat, user.getRealmEntity());
         }
 
         @Nonnull

@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface User extends MutableUserSyncData {
+public interface User extends MutableUserSyncData, MessengerEntity {
 
     /*
     **********************************************************************
@@ -60,9 +61,6 @@ public interface User extends MutableUserSyncData {
     @Nonnull
     String getLogin();
 
-    @Nonnull
-    String getDisplayName();
-
     @Nullable
     Gender getGender();
 
@@ -72,7 +70,7 @@ public interface User extends MutableUserSyncData {
     List<AProperty> getProperties();
 
     @Nonnull
-    RealmEntity getRealmUser();
+    RealmEntity getRealmEntity();
 
     @Nullable
     String getPropertyValueByName(@Nonnull String name);

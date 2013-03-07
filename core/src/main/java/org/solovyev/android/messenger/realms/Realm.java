@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
+import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.security.RealmAuthService;
@@ -9,7 +10,7 @@ import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 
-public interface Realm<C extends RealmConfiguration> {
+public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
 
     @Nonnull
     String getId();

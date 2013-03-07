@@ -72,7 +72,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
     public MessengerContactFragment(@Nonnull User contact) {
         this.contact = contact;
-        this.realmContact = contact.getRealmUser();
+        this.realmContact = contact.getRealmEntity();
     }
 
     public MessengerContactFragment(@Nonnull RealmEntity realmContact) {
@@ -85,7 +85,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     @Nonnull
     public static MessengerContactFragment newForContact(@Nonnull User contact) {
         final MessengerContactFragment result = new MessengerContactFragment(contact);
-        fillArguments(contact.getRealmUser(), result);
+        fillArguments(contact.getRealmEntity(), result);
         return result;
     }
 
@@ -143,12 +143,12 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         final ViewGroup root = (ViewGroup)getView().findViewById(R.id.contact_container);
 
         final TextView contactName = (TextView) root.findViewById(R.id.mpp_contact_name);
-        contactName.setText(contact.getDisplayName());
+        contactName.setText(Users.getDisplayNameFor(contact));
 
         final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon);
         MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
-        final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmUser().getRealmId()).getRealmDef().getUserProperties(contact, this.getActivity());
+        final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmEntity().getRealmId()).getRealmDef().getUserProperties(contact, this.getActivity());
         for (AProperty contactProperty : contactProperties) {
             final View contactPropertyView = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact_property).build(this.getActivity());
 

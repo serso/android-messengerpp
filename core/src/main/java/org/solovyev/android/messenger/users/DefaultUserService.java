@@ -153,7 +153,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         boolean inserted = false;
 
         synchronized (lock) {
-            final User userFromDb = getUserDao().loadUserById(user.getRealmUser().getEntityId());
+            final User userFromDb = getUserDao().loadUserById(user.getRealmEntity().getEntityId());
             if (userFromDb == null) {
                 inserted = true;
                 getUserDao().insertUser(user);
@@ -423,7 +423,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
+        final RealmDef realmDef = getRealmByUser(user.getRealmEntity()).getRealmDef();
 
         Drawable defaultUserIcon = realmDef.getDefaultUserIcon();
         if ( defaultUserIcon == null ){
@@ -451,7 +451,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     public void setUserIcon(@Nonnull User user, @Nonnull OnImageLoadedListener imageLoadedListener) {
-        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
+        final RealmDef realmDef = getRealmByUser(user.getRealmEntity()).getRealmDef();
 
         final BitmapDrawable userIcon = realmDef.getUserIcon(user);
         if (userIcon == null) {
@@ -468,7 +468,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     public void setUserPhoto(@Nonnull ImageView imageView, @Nonnull User user) {
-        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
+        final RealmDef realmDef = getRealmByUser(user.getRealmEntity()).getRealmDef();
 
         Drawable defaultUserIcon = realmDef.getDefaultUserIcon();
         if (defaultUserIcon == null) {
@@ -488,7 +488,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     public void fetchUserIcon(@Nonnull User user) {
-        final RealmDef realmDef = getRealmByUser(user.getRealmUser()).getRealmDef();
+        final RealmDef realmDef = getRealmByUser(user.getRealmEntity()).getRealmDef();
         final String userIconUri = realmDef.getUserIconUri(user);
         if (!Strings.isEmpty(userIconUri)) {
             assert userIconUri != null;
@@ -497,7 +497,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     }
 
     public void fetchContactsIcons(@Nonnull User user) {
-        for (User contact : getUserContacts(user.getRealmUser())) {
+        for (User contact : getUserContacts(user.getRealmEntity())) {
             fetchUserIcon(contact);
         }
     }
@@ -564,7 +564,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.contact_added) {
                 // contact added => need to add to list of cached contacts
                 final User contact = ((User) data);
-                final List<User> contacts = userContactsCache.get(eventUser.getRealmUser());
+                final List<User> contacts = userContactsCache.get(eventUser.getRealmEntity());
                 if (contacts != null) {
                     // check if not contains as can be added in parallel
                     if (!Iterables.contains(contacts, contact)) {
@@ -576,7 +576,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.contact_added_batch) {
                 // contacts added => need to add to list of cached contacts
                 final List<User> contacts = (List<User>) data;
-                final List<User> contactsFromCache = userContactsCache.get(eventUser.getRealmUser());
+                final List<User> contactsFromCache = userContactsCache.get(eventUser.getRealmEntity());
                 if (contactsFromCache != null) {
                     for (User contact : contacts) {
                         // check if not contains as can be added in parallel
@@ -590,12 +590,12 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.contact_removed) {
                 // contact removed => try to remove from cached contacts
                 final String removedContactId = ((String) data);
-                final List<User> contacts = userContactsCache.get(eventUser.getRealmUser());
+                final List<User> contacts = userContactsCache.get(eventUser.getRealmEntity());
                 if (contacts != null) {
                     Iterables.removeIf(contacts, new Predicate<User>() {
                         @Override
                         public boolean apply(@javax.annotation.Nullable User contact) {
-                            return contact != null && contact.getRealmUser().getEntityId().equals(removedContactId);
+                            return contact != null && contact.getRealmEntity().getEntityId().equals(removedContactId);
                         }
                     });
                 }
@@ -606,7 +606,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             if (userEventType == UserEventType.chat_added) {
                 if (data instanceof Chat) {
                     final Chat chat = ((Chat) data);
-                    final List<Chat> chats = userChatsCache.get(eventUser.getRealmUser());
+                    final List<Chat> chats = userChatsCache.get(eventUser.getRealmEntity());
                     if (chats != null) {
                         if (!Iterables.contains(chats, chat)) {
                             chats.add(chat);
@@ -617,7 +617,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
             if (userEventType == UserEventType.chat_added_batch) {
                 final List<Chat> chats = (List<Chat>) data;
-                final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getRealmUser());
+                final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getRealmEntity());
                 if (chatsFromCache != null) {
                     for (Chat chat : chats) {
                         if (!Iterables.contains(chatsFromCache, chat)) {
@@ -629,7 +629,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
             if (userEventType == UserEventType.chat_removed) {
                 final Chat chat = ((Chat) data);
-                final List<Chat> chats = userChatsCache.get(eventUser.getRealmUser());
+                final List<Chat> chats = userChatsCache.get(eventUser.getRealmEntity());
                 if (chats != null) {
                     chats.remove(chat);
                 }
@@ -638,7 +638,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
         synchronized (usersCache) {
             if (userEventType == UserEventType.changed) {
-                usersCache.put(eventUser.getRealmUser(), eventUser);
+                usersCache.put(eventUser.getRealmEntity(), eventUser);
             }
         }
     }

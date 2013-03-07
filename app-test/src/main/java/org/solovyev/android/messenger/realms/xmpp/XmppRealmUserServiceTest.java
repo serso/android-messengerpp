@@ -58,18 +58,18 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             // wait until realm2 will be connected
             Thread.sleep(100);
 
-            final User user2 = realmUserService1.getUserById(realm2.getUser().getRealmUser().getRealmEntityId());
+            final User user2 = realmUserService1.getUserById(realm2.getUser().getRealmEntity().getRealmEntityId());
             Assert.assertNotNull(user2);
-            Assert.assertEquals(user2.getRealmUser().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN2);
-            Assert.assertEquals(user2.getRealmUser().getRealmId(), realm1.getId());
+            Assert.assertEquals(user2.getRealmEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN2);
+            Assert.assertEquals(user2.getRealmEntity().getRealmId(), realm1.getId());
             Assert.assertEquals(user2.getPropertyValueByName(User.PROPERTY_FIRST_NAME), "Sergey");
             Assert.assertEquals(user2.getPropertyValueByName(User.PROPERTY_LAST_NAME), "Solovyev");
 
             // load self
-            final User user1 = realmUserService1.getUserById(realm1.getUser().getRealmUser().getRealmEntityId());
+            final User user1 = realmUserService1.getUserById(realm1.getUser().getRealmEntity().getRealmEntityId());
             Assert.assertNotNull(user1);
-            Assert.assertEquals(user1.getRealmUser().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN);
-            Assert.assertEquals(user1.getRealmUser().getRealmId(), realm1.getId());
+            Assert.assertEquals(user1.getRealmEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN);
+            Assert.assertEquals(user1.getRealmEntity().getRealmId(), realm1.getId());
             Assert.assertEquals(user1.getPropertyValueByName(User.PROPERTY_FIRST_NAME), "Sergey");
             Assert.assertEquals(user1.getPropertyValueByName(User.PROPERTY_LAST_NAME), "Solovyev");
 
@@ -85,7 +85,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
         Assert.assertTrue(Iterables.any(contacts1, new Predicate<User>() {
             @Override
             public boolean apply(@Nullable User contact) {
-                return contact != null && contact.getRealmUser().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
+                return contact != null && contact.getRealmEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
             }
         }));
 
@@ -109,7 +109,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             Thread.sleep(100);
 
 
-            final User user2InRealm1 = UserImpl.newFakeInstance(realm1.newRealmEntity(realm2.getUser().getRealmUser().getRealmEntityId()));
+            final User user2InRealm1 = UserImpl.newFakeInstance(realm1.newRealmEntity(realm2.getUser().getRealmEntity().getRealmEntityId()));
             final List<User> users1 = realmUserService1.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
             Assert.assertNotNull(users1);
             Assert.assertTrue(!users1.isEmpty());
@@ -125,7 +125,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             Assert.assertTrue(Iterables.any(users1, new Predicate<User>() {
                 @Override
                 public boolean apply(@Nullable User contact) {
-                    return contact != null && contact.getRealmUser().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN) && contact.isOnline();
+                    return contact != null && contact.getRealmEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN) && contact.isOnline();
                 }
             }));
 

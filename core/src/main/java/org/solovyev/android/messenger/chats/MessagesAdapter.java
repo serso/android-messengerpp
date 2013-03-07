@@ -74,7 +74,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> i
                 }));
 
                 for (ChatMessage message : messages) {
-                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getRealmUser());
+                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getRealmEntity());
                     if ( listItem != null ) {
                         removeListItem(listItem);
                     }
@@ -138,7 +138,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> i
 
     private void addMessageListItem(@Nonnull ChatMessage message) {
         // remove typing message
-        userTypingListItems.remove(message.getAuthor().getRealmUser());
+        userTypingListItems.remove(message.getAuthor().getRealmEntity());
 
         addListItem(createListItem(message));
     }

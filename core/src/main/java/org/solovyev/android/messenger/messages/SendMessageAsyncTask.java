@@ -118,7 +118,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
                 chatMessage.addFwdMessage(fwdMessage);
             }
 
-            return getChatService().sendChatMessage(author.getRealmUser(), chat, chatMessage);
+            return getChatService().sendChatMessage(author.getRealmEntity(), chat, chatMessage);
         }
 
     }

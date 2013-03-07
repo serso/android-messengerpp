@@ -57,9 +57,9 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         Assert.assertNotNull(actual);
         Assert.assertEquals(expected, actual);
-        Assert.assertEquals(realmUser.getRealmId(), actual.getRealmUser().getRealmId());
-        Assert.assertEquals("2", actual.getRealmUser().getRealmEntityId());
-        Assert.assertEquals("test~1_2", actual.getRealmUser().getEntityId());
+        Assert.assertEquals(realmUser.getRealmId(), actual.getRealmEntity().getRealmId());
+        Assert.assertEquals("2", actual.getRealmEntity().getRealmEntityId());
+        Assert.assertEquals("test~1_2", actual.getRealmEntity().getEntityId());
         Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getProperties(), ListEqualizer.<AProperty>newWithNaturalEquals(false)));
         Assert.assertEquals("prop_1_value", actual.getPropertyValueByName("prop_1"));
 

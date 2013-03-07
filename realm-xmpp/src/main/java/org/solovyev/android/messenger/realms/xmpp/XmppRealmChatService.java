@@ -72,7 +72,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         public String call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final ChatManager chatManager = connection.getChatManager();
 
-            final org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chat.getRealmChat().getRealmEntityId());
+            final org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chat.getRealmEntity().getRealmEntityId());
             smackChat.sendMessage(message.getBody());
 
             return null;

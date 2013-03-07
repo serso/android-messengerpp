@@ -1,8 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -10,6 +8,8 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -36,8 +36,8 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem
 
         for (Realm realm : realmService.getRealms()) {
             final User user = realm.getUser();
-            for (Chat chat : MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmUser())) {
-                result.add(new UserChat(user, chat));
+            for (Chat chat : MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmEntity())) {
+                result.add(UserChat.newInstance(user, chat, null));
             }
         }
 
@@ -46,7 +46,7 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem
 
     @Override
     protected Comparator<? super ChatListItem> getComparator() {
-        return ChatListItem.Comparator.getInstance();
+        return ChatListItemComparator.getInstance();
     }
 
     @Nonnull

@@ -9,6 +9,7 @@ import org.solovyev.android.messenger.realms.vk.chats.VkRealmChatService;
 import org.solovyev.android.messenger.realms.vk.users.VkRealmUserService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +32,7 @@ public class VkRealm extends AbstractRealm<VkRealmConfiguration> {
 
         sb.append(context.getText(getRealmDef().getNameResId()));
         sb.append("(");
-        sb.append(getUser().getDisplayName());
+        sb.append(Users.getDisplayNameFor(getUser()));
         sb.append(")");
 
         return sb.toString();

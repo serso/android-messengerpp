@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
@@ -21,6 +20,7 @@ import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,7 +121,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
             }
 
             final TextView contactName = (TextView) contactContainer.findViewById(R.id.mpp_contact_name);
-            contactName.setText(contact.getDisplayName());
+            contactName.setText(Users.getDisplayNameFor(contact));
 
             final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon);
             MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
@@ -135,7 +135,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
         final StringBuilder sb = new StringBuilder();
         for (User contact : contacts) {
-            sb.append(contact.getRealmUser().getEntityId()).append(";");
+            sb.append(contact.getRealmEntity().getEntityId()).append(";");
         }
         outState.putString(CONTACT_IDS, sb.toString());
     }
