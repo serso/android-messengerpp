@@ -77,10 +77,10 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
 
     @Override
     protected void fillView(@Nonnull User contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final ImageView contactIcon = viewTag.getViewById(R.id.mpp_contact_icon);
+        final ImageView contactIcon = viewTag.getViewById(R.id.mpp_contact_icon_imageview);
         MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
 
-        final TextView contactName = viewTag.getViewById(R.id.mpp_contact_name);
+        final TextView contactName = viewTag.getViewById(R.id.mpp_contact_name_textview);
         contactName.setText(getDisplayName());
 
         final TextView contactOnline = viewTag.getViewById(R.id.mpp_contact_online);

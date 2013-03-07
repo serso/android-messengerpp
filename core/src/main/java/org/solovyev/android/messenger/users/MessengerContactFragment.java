@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,7 +128,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View result = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact).build(this.getActivity());
+        final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_contact_fragment).build(this.getActivity());
 
         multiPaneManager.fillContentPane(this.getActivity(), container, result);
 
@@ -137,28 +138,32 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@Nonnull View root, Bundle savedInstanceState) {
+        super.onViewCreated(root, savedInstanceState);
 
-        final ViewGroup root = (ViewGroup)getView().findViewById(R.id.contact_container);
-
-        final TextView contactName = (TextView) root.findViewById(R.id.mpp_contact_name);
+        final TextView contactName = (TextView) root.findViewById(R.id.mpp_fragment_title);
         contactName.setText(Users.getDisplayNameFor(contact));
 
-        final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon);
+        final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon_imageview);
         MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
-        final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmEntity().getRealmId()).getRealmDef().getUserProperties(contact, this.getActivity());
-        for (AProperty contactProperty : contactProperties) {
-            final View contactPropertyView = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact_property).build(this.getActivity());
+        if (root instanceof ViewGroup) {
+            final ViewGroup rootViewGroup = (ViewGroup) root;
 
-            final TextView propertyLabel = (TextView) contactPropertyView.findViewById(R.id.property_label);
-            propertyLabel.setText(contactProperty.getName());
+            final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmEntity().getRealmId()).getRealmDef().getUserProperties(contact, this.getActivity());
+            for (AProperty contactProperty : contactProperties) {
+                final View contactPropertyView = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact_property).build(this.getActivity());
 
-            final TextView propertyValue = (TextView) contactPropertyView.findViewById(R.id.property_value);
-            propertyValue.setText(contactProperty.getValue());
+                final TextView propertyLabel = (TextView) contactPropertyView.findViewById(R.id.property_label);
+                propertyLabel.setText(contactProperty.getName());
 
-            root.addView(contactPropertyView);
+                final TextView propertyValue = (TextView) contactPropertyView.findViewById(R.id.property_value);
+                propertyValue.setText(contactProperty.getValue());
+
+                rootViewGroup.addView(contactPropertyView);
+            }
+        } else {
+            Log.e("M++/ContactFragment", "Root view must be instance of ViewGroup!");
         }
     }
 

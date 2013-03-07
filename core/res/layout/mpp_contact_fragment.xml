@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    style="@style/mpp_fragment">
+
+    <TextView
+        a:id="@+id/mpp_fragment_title"
+        style="@style/mpp_fragment_title" />
+
+    <ImageView
+        a:id="@+id/mpp_contact_icon_imageview"
+        style="@style/mpp_fragment_icon" />
+
+</LinearLayout>

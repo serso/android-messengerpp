@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
                 style="@style/mpp_list_item">
 
-    <ImageView a:id="@+id/mpp_contact_icon"
+    <ImageView a:id="@+id/mpp_contact_icon_imageview"
                style="@style/mpp_list_item_icon"
                a:layout_centerInParent="true"
                a:layout_alignParentLeft="true"/>
@@ -16,10 +16,10 @@
               a:layout_alignParentRight="true"/>
 
     <TextView
-            a:id="@+id/mpp_contact_name"
+            a:id="@+id/mpp_contact_name_textview"
             style="@style/mpp_list_item_name"
             a:layout_centerInParent="true"
-            a:layout_toRightOf="@id/mpp_contact_icon"
+            a:layout_toRightOf="@id/mpp_contact_icon_imageview"
             a:layout_toLeftOf="@id/mpp_contact_online"/>
 
 </RelativeLayout>

@@ -41,9 +41,12 @@
         <item name="android:dividerHeight">1px</item>
     </style>
 
-    <style name="mpp_list_item_text">
+    <style name="mpp_text">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text</item>
+    </style>
+
+    <style name="mpp_list_item_text" parent="mpp_text">
     </style>
 
     <style name="mpp_list_item" parent="mpp_list_item_text">
@@ -290,5 +293,31 @@
 
     <style name="mpp_list_item_realm_name" parent="list_item_item">
         <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="mpp_fragment">
+        <!--NOTE: separate definition in order to override them-->
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">top|center_horizontal</item>
+    </style>
+
+    <style name="mpp_fragment_icon">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:contentDescription">@string/mpp_icon</item>
+    </style>
+
+    <style name="mpp_fragment_title" parent="mpp_text">
+        <item name="android:textSize">36sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>

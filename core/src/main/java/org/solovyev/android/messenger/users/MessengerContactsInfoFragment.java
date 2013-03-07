@@ -120,10 +120,10 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
                 contactContainer.setOrientation(LinearLayout.VERTICAL);
             }
 
-            final TextView contactName = (TextView) contactContainer.findViewById(R.id.mpp_contact_name);
+            final TextView contactName = (TextView) contactContainer.findViewById(R.id.mpp_contact_name_textview);
             contactName.setText(Users.getDisplayNameFor(contact));
 
-            final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon);
+            final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon_imageview);
             MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
         }
