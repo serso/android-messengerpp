@@ -12,10 +12,7 @@ import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
-import org.solovyev.android.messenger.users.RealmUserService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserImpl;
-import org.solovyev.android.messenger.users.UserSyncDataImpl;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 import org.solovyev.android.security.base64.ABase64StringEncoder;
@@ -105,7 +102,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
     public static User toUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, boolean available, @Nonnull Connection connection) throws XMPPException {
         // todo serso: problem loading VCards - timeout exception
         final List<AProperty> properties = loadUserProperties(true, realmUserId, available, connection, name);
-        return UserImpl.newInstance(RealmEntityImpl.newInstance(realmId, realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
+        return Users.newUser(RealmEntityImpl.newInstance(realmId, realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
     }
 
     @Nonnull

@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserImpl;
+import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -109,7 +109,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             Thread.sleep(100);
 
 
-            final User user2InRealm1 = UserImpl.newFakeInstance(realm1.newRealmEntity(realm2.getUser().getRealmEntity().getRealmEntityId()));
+            final User user2InRealm1 = Users.newEmptyUser(realm1.newRealmEntity(realm2.getUser().getRealmEntity().getRealmEntityId()));
             final List<User> users1 = realmUserService1.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
             Assert.assertNotNull(users1);
             Assert.assertTrue(!users1.isEmpty());
@@ -143,13 +143,13 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
     protected XmppRealm newRealm1() {
         final String realmId = xmppRealmDef.getId() + "~01";
         XmppRealmConfiguration instance = TestXmppConfiguration.getInstance();
-        return new XmppRealm(realmId, xmppRealmDef, UserImpl.newFakeInstance(RealmEntityImpl.newInstance(realmId, instance.getLogin())), instance);
+        return new XmppRealm(realmId, xmppRealmDef, Users.newEmptyUser(RealmEntityImpl.newInstance(realmId, instance.getLogin())), instance);
     }
 
     @Nonnull
     protected XmppRealm newRealm2() {
         final String realmId = xmppRealmDef.getId() + "~02";
         XmppRealmConfiguration instance2 = TestXmppConfiguration.getInstance2();
-        return new XmppRealm(realmId, xmppRealmDef, UserImpl.newFakeInstance(RealmEntityImpl.newInstance(realmId, instance2.getLogin())), instance2);
+        return new XmppRealm(realmId, xmppRealmDef, Users.newEmptyUser(RealmEntityImpl.newInstance(realmId, instance2.getLogin())), instance2);
     }
 }

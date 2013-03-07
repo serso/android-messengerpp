@@ -128,7 +128,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
             }
 
             if (result == null) {
-                result = UserImpl.newFakeInstance(realmUser);
+                result = Users.newEmptyUser(realmUser);
             } else {
                 // user was loaded either from dao or from API => cache
                 synchronized (usersCache) {

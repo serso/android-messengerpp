@@ -7,7 +7,7 @@ import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.messenger.users.UserDao;
-import org.solovyev.android.messenger.users.UserImpl;
+import org.solovyev.android.messenger.users.Users;
 
 import java.util.ArrayList;
 
@@ -37,7 +37,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
         final RealmEntity realmUser = testRealm.newRealmEntity("01");
         final String userId = realmUser.getEntityId();
 
-        userDao.insertUser(UserImpl.newFakeInstance(realmUser));
+        userDao.insertUser(Users.newEmptyUser(realmUser));
 
         chatDao.mergeUserChats(userId, chats);
 

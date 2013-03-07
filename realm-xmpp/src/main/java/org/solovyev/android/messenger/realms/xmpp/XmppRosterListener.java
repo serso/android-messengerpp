@@ -6,10 +6,7 @@ import com.google.common.collect.Lists;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventType;
-import org.solovyev.android.messenger.users.UserImpl;
-import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.users.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +44,7 @@ class XmppRosterListener implements RosterListener {
             @Override
             public User apply(@Nullable String contactId) {
                 assert contactId != null;
-                return UserImpl.newFakeInstance(realm.newRealmEntity(contactId));
+                return Users.newEmptyUser(realm.newRealmEntity(contactId));
             }
         }));
         // we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed

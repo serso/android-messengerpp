@@ -94,7 +94,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 
     protected void removeListItem(@Nonnull String contactId) {
-        final User contact = UserImpl.newFakeInstance(contactId);
+        final User contact = Users.newEmptyUser(contactId);
         removeListItem(contact);
     }
 

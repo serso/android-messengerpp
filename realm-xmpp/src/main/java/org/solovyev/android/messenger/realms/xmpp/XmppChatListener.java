@@ -6,7 +6,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.users.UserImpl;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ public class XmppChatListener implements ChatManagerListener {
 
             final ApiChatImpl newChat = ApiChatImpl.newInstance(realmChat, 0, true);
             newChat.addParticipant(realm.getUser());
-            newChat.addParticipant(UserImpl.newFakeInstance(participant));
+            newChat.addParticipant(Users.newEmptyUser(participant));
             getChatService().saveChat(realm.getUser().getRealmEntity(), newChat);
         }
     }

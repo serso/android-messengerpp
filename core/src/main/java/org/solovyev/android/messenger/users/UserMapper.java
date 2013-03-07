@@ -39,6 +39,6 @@ public class UserMapper implements Converter<Cursor, User> {
             properties = Collections.emptyList();
         }
 
-        return UserImpl.newInstance(realmEntity, userSyncData, properties);
+        return Users.newUser(realmEntity, userSyncData, properties);
     }
 }

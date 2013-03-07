@@ -48,7 +48,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         final RealmEntity realmUser = testRealm.newRealmEntity("2");
 
-        User expected = UserImpl.newInstance(realmUser, UserSyncDataImpl.newNeverSyncedInstance(), expectedProperties);
+        User expected = Users.newUser(realmUser, UserSyncDataImpl.newNeverSyncedInstance(), expectedProperties);
 
         userDao.insertUser(expected);
         userDao.insertUser(expected);
@@ -73,7 +73,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         final RealmEntity realmUser2 = testRealm.newRealmEntity("3");
 
-        expected = UserImpl.newInstance(realmUser2, UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+        expected = Users.newUser(realmUser2, UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.insertUser(expected);
         Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2", "test~1_3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
@@ -82,7 +82,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
         expectedProperties.remove(0);
         expectedProperties.add(APropertyImpl.newInstance("prop_4", "prop_4_value"));
 
-        expected = UserImpl.newInstance(realmUser, UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+        expected = Users.newUser(realmUser, UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.updateUser(expected);
         actual = userDao.loadUserById("test~1_2");
 
@@ -92,7 +92,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1_2", "test~1_3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
-        expected = UserImpl.newInstance(TestRealmDef.REALM_ID, "test_01dsfsdfsf", UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+        expected = Users.newUser(TestRealmDef.REALM_ID, "test_01dsfsdfsf", UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.updateUser(expected);
     }
 

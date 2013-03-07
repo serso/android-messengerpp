@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.realms;
 import com.google.inject.Inject;
 import junit.framework.Assert;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
-import org.solovyev.android.messenger.users.UserImpl;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.collections.Collections;
 
 import java.util.Collection;
@@ -26,7 +26,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
         Assert.assertTrue(realms.isEmpty());
 
         TestRealmConfiguration expectedConfig1 = new TestRealmConfiguration("test_config_field", 42);
-        final Realm expected1 = testRealmDef.newRealm("test~01", UserImpl.newFakeInstance(RealmEntityImpl.newInstance("test~01", "user01")), expectedConfig1);
+        final Realm expected1 = testRealmDef.newRealm("test~01", Users.newEmptyUser(RealmEntityImpl.newInstance("test~01", "user01")), expectedConfig1);
         realmDao.insertRealm(expected1);
 
         realms = realmDao.loadRealms();
@@ -49,7 +49,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
         for (RealmDef realmDef : getRealmService().getRealmDefs()) {
             final RealmConfiguration realmConfiguration = realmDef.getConfigurationClass().newInstance();
             final String realmId = RealmEntityImpl.getRealmId(realmDef.getId(), index);
-            Realm expected = realmDef.newRealm(realmId, UserImpl.newFakeInstance(RealmEntityImpl.newInstance(realmId, String.valueOf(index))), realmConfiguration);
+            Realm expected = realmDef.newRealm(realmId, Users.newEmptyUser(RealmEntityImpl.newInstance(realmId, String.valueOf(index))), realmConfiguration);
             realmDao.insertRealm(expected);
         }
 

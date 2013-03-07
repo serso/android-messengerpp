@@ -4,7 +4,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
 
@@ -17,7 +16,7 @@ import java.util.*;
  * Date: 5/24/12
  * Time: 10:30 PM
  */
-public class UserImpl extends AbstractMessengerEntity implements User {
+final class UserImpl extends AbstractMessengerEntity implements User {
 
     @Nonnull
     private String login;
@@ -31,21 +30,12 @@ public class UserImpl extends AbstractMessengerEntity implements User {
     @Nonnull
     private Map<String, String> propertiesMap = new HashMap<String, String>();
 
-    private UserImpl(@Nonnull RealmEntity realmEntity) {
+    UserImpl(@Nonnull RealmEntity realmEntity) {
         super(realmEntity);
     }
 
     @Nonnull
-    public static User newInstance(@Nonnull String reamId,
-                                   @Nonnull String realmUserId,
-                                   @Nonnull UserSyncData userSyncData,
-                                   @Nonnull List<AProperty> properties) {
-        final RealmEntity realmEntity = RealmEntityImpl.newInstance(reamId, realmUserId);
-        return newInstance(realmEntity, userSyncData, properties);
-    }
-
-    @Nonnull
-    public static User newInstance(@Nonnull RealmEntity realmEntity,
+    static User newInstance(@Nonnull RealmEntity realmEntity,
                                    @Nonnull UserSyncData userSyncData,
                                    @Nonnull List<AProperty> properties) {
         final UserImpl result = new UserImpl(realmEntity);
@@ -59,16 +49,6 @@ public class UserImpl extends AbstractMessengerEntity implements User {
         }
 
         return result;
-    }
-
-    @Nonnull
-    public static User newFakeInstance(@Nonnull RealmEntity realmUser) {
-        return newInstance(realmUser, UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
-    }
-
-    @Nonnull
-    public static User newFakeInstance(@Nonnull String userId) {
-        return newFakeInstance(RealmEntityImpl.fromEntityId(userId));
     }
 
     @Nonnull

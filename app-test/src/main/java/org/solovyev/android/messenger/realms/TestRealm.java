@@ -7,7 +7,7 @@ import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserImpl;
+import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +16,7 @@ public class TestRealm extends AbstractRealm<TestRealmConfiguration> {
 
     @Inject
     public TestRealm(@Nonnull TestRealmDef realmDef) {
-        super(realmDef.getId() + "~1", realmDef, UserImpl.newFakeInstance(RealmEntityImpl.newInstance(realmDef.getId() + "~1", "user01")), new TestRealmConfiguration("test_field", 42));
+        super(realmDef.getId() + "~1", realmDef, Users.newEmptyUser(RealmEntityImpl.newInstance(realmDef.getId() + "~1", "user01")), new TestRealmConfiguration("test_field", 42));
     }
 
 
