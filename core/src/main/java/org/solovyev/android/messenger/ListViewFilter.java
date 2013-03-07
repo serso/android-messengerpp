@@ -65,9 +65,9 @@ public class ListViewFilter {
     public View createView() {
         final FragmentActivity activity = fragment.getActivity();
         if (activity != null) {
-            final ViewGroup result = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.msg_list_filter).build(activity);
+            final ViewGroup result = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_list_filter).build(activity);
 
-            filterEditText = (EditText) result.findViewById(R.id.filter_box);
+            filterEditText = (EditText) result.findViewById(R.id.mpp_filter_edittext);
             filterEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -108,7 +108,7 @@ public class ListViewFilter {
         final FragmentActivity activity = fragment.getActivity();
 
         if (view != null && activity != null && filterEditText != null) {
-            final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.filter_box_parent);
+            final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.mpp_list_filter);
             if (filterBox != null) {
                 int visibility = filterBox.getVisibility();
 
@@ -135,7 +135,7 @@ public class ListViewFilter {
     public void setFilterBoxVisible(boolean visible) {
         final View view = this.fragment.getView();
         if (view != null && filterEditText != null) {
-            final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.filter_box_parent);
+            final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.mpp_list_filter);
             if (filterBox != null) {
                 setFilterBoxVisible(visible, filterBox);
             }

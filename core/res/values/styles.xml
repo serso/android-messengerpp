@@ -5,13 +5,13 @@
     <style name="header">
         <item name="android:padding">5dp</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">@color/base</item>
+        <item name="android:background">@color/mpp_base</item>
     </style>
 
     <style name="footer">
         <item name="android:padding">5dp</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">@color/base</item>
+        <item name="android:background">@color/mpp_base</item>
     </style>
 
     <style name="footer_button_style">
@@ -77,6 +77,10 @@
         <item name="android:contentDescription">@string/mpp_icon</item>
     </style>
 
+    <style name="mpp_list_filter_icon" parent="mpp_list_item_icon">
+        <item name="android:src">@drawable/mpp_search_icon</item>
+    </style>
+
     <style name="mpp_list_item_name" parent="mpp_list_item_block">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -85,20 +89,23 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="list_item_filter">
-        <item name="android:background">@drawable/bottom_line</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/text</item>
+    <style name="mpp_list_filter">
+        <item name="android:background">@drawable/mpp_list_filter_background</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="list_item_filter_box">
+    <style name="mpp_list_filter_text" parent="mpp_list_item_text">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/text</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">5dp</item>
+        <item name="android:layout_gravity">center_vertical|left</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">@string/mpp_search_hint</item>
     </style>
 
 
@@ -134,7 +141,7 @@
 
     <style name="search_button" parent="search_input">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:src">@drawable/search</item>
+        <item name="android:src">@drawable/mpp_search_icon</item>
         <item name="android:contentDescription">@string/c_search</item>
     </style>
 

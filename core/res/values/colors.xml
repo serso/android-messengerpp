@@ -2,7 +2,10 @@
 
 <resources>
     <color name="header_text">#ffffffff</color>
-    <color name="base">#ffffffff</color>
+    <color name="mpp_base">#ffffffff</color>
+
+    <!-- a little bit alpha for filter box in order to separate it from fragment next to it-->
+    <color name="mpp_filter_bg">#aaffffff</color>
     <color name="base_bg_darker">#ffc2c2c2</color>
     <color name="base_bg">#ffeeeeee</color>
     <color name="base_bg_lighter">#fffefefe</color>

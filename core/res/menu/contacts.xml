@@ -7,7 +7,7 @@
           a:showAsAction="ifRoom"/>
 
     <item a:id="@+id/toggle_filter_box"
-          a:icon="@drawable/search"
+          a:icon="@drawable/mpp_search_icon"
           a:showAsAction="ifRoom"/>
 
 

@@ -3,19 +3,13 @@
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
     style="@style/mpp_fragment">
 
+    <TextView
+        a:id="@+id/mpp_fragment_title"
+        style="@style/mpp_fragment_title" />
+
     <ImageView
         a:id="@+id/mpp_realm_icon_imageview"
-        a:layout_width="wrap_content"
-        a:layout_height="wrap_content"
-        a:layout_gravity="center" />
-
-    <TextView
-        a:text="@string/mpp_realm_name"
-        style="@style/mpp_form_label" />
-
-    <TextView
-        a:id="@+id/mpp_realm_name_textview"
-        style="@style/mpp_form_textview" />
+        style="@style/mpp_fragment_icon"/>
 
     <LinearLayout
         a:orientation="horizontal"

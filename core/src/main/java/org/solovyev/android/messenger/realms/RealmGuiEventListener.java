@@ -59,6 +59,9 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
             final Bundle fragmentArgs = new Bundle();
             fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, realm.getId());
             activity.setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm));
+            if ( activity.isTriplePane() ) {
+                activity.emptifyThirdFragment();
+            }
         } else {
             MessengerRealmConfigurationActivity.startForEditRealm(activity, realm);
         }

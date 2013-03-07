@@ -102,7 +102,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
         final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
         realmIconImageView.setImageDrawable(getResources().getDrawable(realm.getRealmDef().getIconResId()));
 
-        final TextView realmNameTextView = (TextView) root.findViewById(R.id.mpp_realm_name_textview);
+        final TextView realmNameTextView = (TextView) root.findViewById(R.id.mpp_fragment_title);
         realmNameTextView.setText(realm.getDisplayName(getActivity()));
 
         final Button realmRemoveButton = (Button) root.findViewById(R.id.mpp_realm_remove_button);

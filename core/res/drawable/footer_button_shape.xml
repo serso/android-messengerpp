@@ -7,6 +7,6 @@
   -->
 
 <shape xmlns:a="http://schemas.android.com/apk/res/android">
-	<solid a:color="@color/base"/>
+	<solid a:color="@color/mpp_base"/>
 	<corners a:radius="0dp"/>
 </shape>

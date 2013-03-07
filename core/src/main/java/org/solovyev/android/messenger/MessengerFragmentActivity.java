@@ -282,7 +282,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         setFragment(R.id.content_third_pane, THIRD_FRAGMENT_TAG, fragmentBuilder, reuseCondition);
     }
 
-    protected void emptifyThirdFragment() {
+    public void emptifyThirdFragment() {
         setThirdFragment(MessengerEmptyFragment.class, null, EmptyFragmentReuseCondition.getInstance());
     }
 

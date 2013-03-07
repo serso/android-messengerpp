@@ -4,7 +4,7 @@
               a:layout_width="fill_parent"
               a:layout_height="fill_parent">
 
-    <include layout="@layout/msg_list_filter"
+    <include layout="@layout/mpp_list_filter"
              a:layout_width="fill_parent"
              a:layout_height="wrap_content"/>
 

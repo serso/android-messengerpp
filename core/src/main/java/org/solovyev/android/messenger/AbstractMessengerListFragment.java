@@ -2,6 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -115,7 +116,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
      * Filter for list view, null if filter is disabled for current list fragment
      */
     @Nullable
-    private final ListViewFilter filterInput;
+    private final ListViewFilter listViewFilter;
 
     @Nonnull
     private final String tag;
@@ -149,9 +150,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     public AbstractMessengerListFragment(@Nonnull String tag, boolean filterEnabled) {
         this.tag = tag;
         if ( filterEnabled ) {
-            this.filterInput = new ListViewFilter(this, this);
+            this.listViewFilter = new ListViewFilter(this, this);
         } else {
-            this.filterInput = null;
+            this.listViewFilter = null;
         }
     }
 
@@ -225,12 +226,12 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         root.setOrientation(LinearLayout.VERTICAL);
         root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
-        if (filterInput != null) {
-            final View filterView = filterInput.createView();
+        if (listViewFilter != null) {
+            final View filterView = listViewFilter.createView();
             root.addView(filterView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
-        final View listViewParent = createListView(inflater, container);
+        final View listViewParent = createListView(container);
 
         final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
         params.gravity = Gravity.CENTER_VERTICAL;
@@ -245,18 +246,18 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (filterInput != null) {
-            filterInput.loadState(savedInstanceState);
+        if (listViewFilter != null) {
+            listViewFilter.loadState(savedInstanceState);
         }
     }
 
     public void toggleFilterBox() {
-        if (filterInput != null) {
-            filterInput.toggleView();
+        if (listViewFilter != null) {
+            listViewFilter.toggleView();
         }
     }
 
-    private View createListView(@Nonnull LayoutInflater inflater, ViewGroup container) {
+    private View createListView(ViewGroup container) {
         final Context context = getActivity();
 
         final FrameLayout root = new FrameLayout(context);
@@ -353,10 +354,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     }
 
     protected void fillListView(@Nonnull ListView lv, @Nonnull Context context) {
-        final Resources resources = context.getResources();
-
         lv.setScrollbarFadingEnabled(true);
-        lv.setCacheColorHint(resources.getColor(android.R.color.transparent));
+        lv.setCacheColorHint(Color.TRANSPARENT);
         lv.setOnScrollListener(this);
         lv.setDividerHeight(1);
     }
@@ -417,8 +416,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             outState.putInt(POSITION, adapter.getSelectedItemPosition());
         }
 
-        if (filterInput != null) {
-            filterInput.saveState(outState);
+        if (listViewFilter != null) {
+            listViewFilter.saveState(outState);
         }
     }
 
@@ -570,8 +569,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
                 setListShown(true);
 
                 // apply filter if any
-                if (filterInput != null) {
-                    filter(filterInput.getFilterText());
+                if (listViewFilter != null) {
+                    filter(listViewFilter.getFilterText());
                 } else {
                     filter("");
                 }
