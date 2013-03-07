@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,23 +148,18 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon_imageview);
         MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
 
-        if (root instanceof ViewGroup) {
-            final ViewGroup rootViewGroup = (ViewGroup) root;
+        final ViewGroup propertiesViewGroup = (ViewGroup)root.findViewById(R.id.mpp_contact_properties_viewgroup);
+        final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmEntity().getRealmId()).getRealmDef().getUserProperties(contact, this.getActivity());
+        for (AProperty contactProperty : contactProperties) {
+            final View propertyView = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property).build(this.getActivity());
 
-            final List<AProperty> contactProperties = realmService.getRealmById(contact.getRealmEntity().getRealmId()).getRealmDef().getUserProperties(contact, this.getActivity());
-            for (AProperty contactProperty : contactProperties) {
-                final View contactPropertyView = ViewFromLayoutBuilder.newInstance(R.layout.msg_contact_property).build(this.getActivity());
+            final TextView propertyLabel = (TextView) propertyView.findViewById(R.id.mpp_property_label);
+            propertyLabel.setText(contactProperty.getName());
 
-                final TextView propertyLabel = (TextView) contactPropertyView.findViewById(R.id.property_label);
-                propertyLabel.setText(contactProperty.getName());
+            final TextView propertyValue = (TextView) propertyView.findViewById(R.id.mpp_property_value);
+            propertyValue.setText(contactProperty.getValue());
 
-                final TextView propertyValue = (TextView) contactPropertyView.findViewById(R.id.property_value);
-                propertyValue.setText(contactProperty.getValue());
-
-                rootViewGroup.addView(contactPropertyView);
-            }
-        } else {
-            Log.e("M++/ContactFragment", "Root view must be instance of ViewGroup!");
+            propertiesViewGroup.addView(propertyView);
         }
     }
 

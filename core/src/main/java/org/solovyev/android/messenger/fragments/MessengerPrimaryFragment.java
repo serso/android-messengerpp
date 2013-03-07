@@ -15,9 +15,9 @@ import javax.annotation.Nonnull;
  */
 public enum MessengerPrimaryFragment {
 
-    contacts(MessengerContactsFragment.class, R.string.mpp_tab_contacts),
-    messages(MessengerChatsFragment.class, R.string.mpp_tab_messages),
-    realms(MessengerRealmsFragment.class, R.string.mpp_tab_realms);
+    contacts(MessengerContactsFragment.class, MessengerContactsFragment.FRAGMENT_TAG, R.string.mpp_tab_contacts),
+    messages(MessengerChatsFragment.class, MessengerChatsFragment.FRAGMENT_TAG, R.string.mpp_tab_messages),
+    realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms);
 
     // todo serso: make settings a fragment
     // special logic for settings tab as it is not just a fragment
@@ -26,16 +26,20 @@ public enum MessengerPrimaryFragment {
     @Nonnull
     private final Class<? extends Fragment> fragmentClass;
 
+    @Nonnull
+    private final String fragmentTag;
+
     private final int titleResId;
 
-    MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, int titleResId) {
+    MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId) {
         this.fragmentClass = fragmentClass;
+        this.fragmentTag = fragmentTag;
         this.titleResId = titleResId;
     }
 
     @Nonnull
-    public String getTag() {
-        return this.name();
+    public String getFragmentTag() {
+        return this.fragmentTag;
     }
 
     @Nonnull

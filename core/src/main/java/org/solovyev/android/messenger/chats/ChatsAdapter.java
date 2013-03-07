@@ -33,36 +33,25 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> impleme
         super.onUserEvent(eventUser, userEventType, data);
 
         if (userEventType == UserEventType.chat_removed) {
-            if (eventUser.equals(getUser())) {
-                final String chatId = (String) data;
-                removeListItem(eventUser, chatId);
-            }
+            final String chatId = (String) data;
+            removeListItem(eventUser, chatId);
         }
 
         if (userEventType == UserEventType.chat_added) {
-            if (eventUser.equals(getUser())) {
-                final Chat chat = (Chat) data;
-                addListItem(eventUser, chat);
-            }
+            final Chat chat = (Chat) data;
+            addListItem(eventUser, chat);
         }
 
         if (userEventType == UserEventType.chat_added_batch) {
-            if (eventUser.equals(getUser())) {
-                final List<Chat> chats = (List<Chat>) data;
-                addListItems(Lists.transform(chats, new Function<Chat, ChatListItem>() {
-                    @Override
-                    public ChatListItem apply(@javax.annotation.Nullable Chat chat) {
-                        assert chat != null;
-                        return createListItem(eventUser, chat);
-                    }
-                }));
-            }
+            final List<Chat> chats = (List<Chat>) data;
+            addListItems(Lists.transform(chats, new Function<Chat, ChatListItem>() {
+                @Override
+                public ChatListItem apply(@javax.annotation.Nullable Chat chat) {
+                    assert chat != null;
+                    return createListItem(eventUser, chat);
+                }
+            }));
         }
-    }
-
-    private User getUser() {
-        // todo serso: continue
-        throw new UnsupportedOperationException();
     }
 
     protected void removeListItem(@Nonnull User user, @Nonnull String chatId) {
@@ -98,7 +87,8 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> impleme
     public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
 
         if (chatEventType == ChatEventType.changed || chatEventType == ChatEventType.last_message_changed) {
-            final ChatListItem chatListItem = findInAllElements(getUser(), eventChat);
+            final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getRealmEntity().getRealmId()).getUser();
+            final ChatListItem chatListItem = findInAllElements(user, eventChat);
             if (chatListItem != null) {
                 chatListItem.onChatEvent(eventChat, chatEventType, data);
             }

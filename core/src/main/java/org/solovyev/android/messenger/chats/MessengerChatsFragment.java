@@ -34,6 +34,9 @@ import java.util.List;
 public class MessengerChatsFragment extends AbstractMessengerListFragment<UserChat, ChatListItem> implements DetachableFragment {
 
     @Nonnull
+    public static final String FRAGMENT_TAG = "chats";
+
+    @Nonnull
     private static final String TAG = "ChatsFragment";
 
     @Nullable

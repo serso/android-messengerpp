@@ -196,14 +196,14 @@ public class MessengerFragmentService {
         final Class<? extends Fragment> fragmentClass = primaryFragment.getFragmentClass();
         final Builder<Fragment> fragmentBuilder = ReflectionFragmentBuilder.newInstance(activity, fragmentClass, null);
         final JPredicate<Fragment> fragmentReuseCondition = SimpleFragmentReuseCondition.forClass(fragmentClass);
-        setFragment(R.id.content_first_pane, primaryFragment.getTag(), fragmentBuilder, fragmentReuseCondition, fm, ft);
+        setFragment(R.id.content_first_pane, primaryFragment.getFragmentTag(), fragmentBuilder, fragmentReuseCondition, fm, ft);
     }
 
     public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment primaryFragment) {
         final Class<? extends Fragment> fragmentClass = primaryFragment.getFragmentClass();
         final Builder<Fragment> fragmentBuilder = ReflectionFragmentBuilder.newInstance(activity, fragmentClass, null);
         final JPredicate<Fragment> fragmentReuseCondition = SimpleFragmentReuseCondition.forClass(fragmentClass);
-        setFragment(R.id.content_first_pane, primaryFragment.getTag(), fragmentBuilder, fragmentReuseCondition);
+        setFragment(R.id.content_first_pane, primaryFragment.getFragmentTag(), fragmentBuilder, fragmentReuseCondition);
     }
 
     private static final class EmptyFragmentReuseCondition implements JPredicate<Fragment> {

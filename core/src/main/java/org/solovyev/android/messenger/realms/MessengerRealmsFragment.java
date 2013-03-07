@@ -27,6 +27,9 @@ import java.util.List;
 
 public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm, RealmListItem> implements DetachableFragment {
 
+    @Nonnull
+    public static final String FRAGMENT_TAG = "realms";
+
     @Inject
     @Nonnull
     private RealmService realmService;

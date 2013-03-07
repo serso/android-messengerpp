@@ -115,7 +115,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
     private void addTab(@Nonnull final MessengerFragmentActivity activity,
                         @Nonnull final MessengerPrimaryFragment messengerPrimaryFragment) {
-        final String fragmentTag = messengerPrimaryFragment.getTag();
+        final String fragmentTag = messengerPrimaryFragment.getFragmentTag();
 
         final ActionBar actionBar = activity.getSupportActionBar();
         final ActionBar.Tab tab = actionBar.newTab();

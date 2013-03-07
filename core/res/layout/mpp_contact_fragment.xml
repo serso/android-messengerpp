@@ -11,4 +11,10 @@
         a:id="@+id/mpp_contact_icon_imageview"
         style="@style/mpp_fragment_icon" />
 
+    <LinearLayout
+        a:id="@+id/mpp_contact_properties_viewgroup"
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content"
+        a:orientation="vertical"/>
+
 </LinearLayout>

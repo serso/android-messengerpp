@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -144,6 +145,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
      */
     @Nonnull
     private final AtomicInteger firstVisibleItem = new AtomicInteger(-1);
+
+    /**
+     * If nothing selected - first list item will be shown
+     */
+    private boolean showFirstListItem = true;
 
     /*
     **********************************************************************
@@ -403,9 +409,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             position = adapter.getSelectedItemPosition();
         } else {
             if (savedInstanceState != null) {
-                position = savedInstanceState.getInt(POSITION, -1);
+                position = savedInstanceState.getInt(POSITION, showFirstListItem ? 0 : -1);
             } else {
-                position = -1;
+                position = showFirstListItem ? 0 : -1;
             }
         }
 
@@ -419,7 +425,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         if (listLoader != null) {
             listLoader.execute();
         } else {
-            onPostExecute.run();
+            // we need to schedule onPostExecute in order to be after all pending transaction in fragment manager
+            new Handler().post(onPostExecute);
         }
     }
 
@@ -583,34 +590,28 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
         @Override
         public void run() {
-            try {
-                // change adapter state
-                adapter.setInitialized(true);
+            // change adapter state
+            adapter.setInitialized(true);
 
-                // change UI state
-                setListShown(true);
+            // change UI state
+            setListShown(true);
 
-                // apply filter if any
-                if (listViewFilter != null) {
-                    filter(listViewFilter.getFilterText());
-                } else {
-                    filter("");
-                }
+            // apply filter if any
+            if (listViewFilter != null) {
+                filter(listViewFilter.getFilterText());
+            } else {
+                filter("");
+            }
 
-                if (position >= 0 && position < adapter.getCount()) {
-                    adapter.getSelectedItemListener().onItemClick(position);
+            if (position >= 0 && position < adapter.getCount()) {
+                adapter.getSelectedItemListener().onItemClick(position);
 
-                    if (multiPaneManager.isDualPane(getActivity())) {
-                        final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
-                        if (onClickAction != null) {
-                            onClickAction.onClick(getActivity(), adapter, listView);
-                        }
+                if (multiPaneManager.isDualPane(getActivity())) {
+                    final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
+                    if (onClickAction != null) {
+                        onClickAction.onClick(getActivity(), adapter, listView);
                     }
                 }
-
-            } catch (IllegalStateException e) {
-                // todo serso: find the reason of the exception
-                Log.e(tag, e.getMessage(), e);
             }
         }
     }

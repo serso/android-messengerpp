@@ -31,6 +31,9 @@ import java.util.List;
 public class MessengerContactsFragment extends AbstractMessengerContactsFragment {
 
     @Nonnull
+    public static final String FRAGMENT_TAG = "contacts";
+
+    @Nonnull
     private static final String MODE = "mode";
 
     @Nonnull
