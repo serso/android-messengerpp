@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +19,8 @@ import org.solovyev.android.AThreads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.fragments.DetachableFragment;
+import org.solovyev.android.messenger.fragments.FragmentGuiEventType;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -30,6 +31,7 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
+import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +43,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractMessengerListFragment<T, LI extends ListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener, ListViewFilter.FilterableListView {
+public abstract class AbstractMessengerListFragment<T, LI extends ListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener, ListViewFilter.FilterableListView, DetachableFragment {
 
     /*
     **********************************************************************
@@ -95,6 +97,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Inject
     @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
+
+    @Inject
+    @Nonnull
+    private EventManager eventManager;
+
 
     /*
     **********************************************************************
@@ -216,6 +223,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(tag, "onCreate: " + this);
+
+        eventManager.fire(FragmentGuiEventType.newFragmentCreatedEvent(this));
     }
 
     @Override
@@ -243,12 +252,14 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(View root, Bundle savedInstanceState) {
+        super.onViewCreated(root, savedInstanceState);
 
         if (listViewFilter != null) {
             listViewFilter.loadState(savedInstanceState);
         }
+
+        eventManager.fire(FragmentGuiEventType.newFragmentShownEvent(this));
     }
 
     public void toggleFilterBox() {
@@ -357,6 +368,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         lv.setScrollbarFadingEnabled(true);
         lv.setCacheColorHint(Color.TRANSPARENT);
         lv.setOnScrollListener(this);
+        lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
         lv.setDividerHeight(1);
     }
 
@@ -386,15 +398,20 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         lv.setOnItemClickListener(new ListViewOnItemClickListener());
         lv.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
 
+        final int position;
+        if ( adapter != null ) {
+            // adapter not null => this fragment has been created earlier (and now it just goes to the shown state)
+            position = adapter.getSelectedItemPosition();
+        } else {
+            if (savedInstanceState != null) {
+                position = savedInstanceState.getInt(POSITION, -1);
+            } else {
+                position = -1;
+            }
+        }
+
         adapter = createAdapter();
         setListAdapter(adapter);
-
-        final int position;
-        if (savedInstanceState != null) {
-            position = savedInstanceState.getInt(POSITION, -1);
-        } else {
-            position = -1;
-        }
 
         final PostListLoadingRunnable onPostExecute = new PostListLoadingRunnable(position, lv);
 
@@ -403,9 +420,15 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         if (listLoader != null) {
             listLoader.execute();
         } else {
-            // we need to schedule onPostExecute in order to be after all pending transaction in fragment manager
-            new Handler().post(onPostExecute);
+            onPostExecute.run();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        eventManager.fire(FragmentGuiEventType.newFragmentStartedEvent(this));
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -15,6 +16,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.fragments.DetachableFragment;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
@@ -303,27 +305,44 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
                              @Nullable JPredicate<Fragment> reuseCondition) {
         final FragmentManager fm = getSupportFragmentManager();
 
-        final FragmentTransaction ft = fm.beginTransaction();
+        // we must run all pending transactions to be sure that no fragments for same tags are in pending list
+        try {
+            fm.executePendingTransactions();
 
-        final Fragment oldFragment = fm.findFragmentByTag(fragmentTag);
-        if (oldFragment != null) {
-            if (reuseCondition != null && reuseCondition.apply(oldFragment)) {
-                if (!oldFragment.isAdded()) {
-                    ft.add(fragmentViewId, oldFragment, fragmentTag);
+            final FragmentTransaction ft = fm.beginTransaction();
+            ft.setCustomAnimations(R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
+
+            final Fragment oldFragment = fm.findFragmentByTag(fragmentTag);
+            if (oldFragment != null) {
+                if (reuseCondition != null && reuseCondition.apply(oldFragment)) {
+                    if (oldFragment.isDetached()) {
+                        ft.attach(oldFragment);
+                    }
+                } else {
+                    if (oldFragment instanceof DetachableFragment) {
+                        if (!oldFragment.isDetached()) {
+                            ft.detach(oldFragment);
+                        }
+                    } else {
+                        if (oldFragment.isAdded()) {
+                            ft.remove(oldFragment);
+                        }
+                    }
+
+                    ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
                 }
+
             } else {
-                if (oldFragment.isAdded()) {
-                    ft.remove(oldFragment);
-                }
-
                 ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
             }
 
-        } else {
-            ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
+            ft.commit();
+        } catch (IllegalStateException e) {
+            /**
+             * May be thrown by {@link android.support.v4.app.FragmentManager#executePendingTransactions()}.
+             */
+            Log.e(TAG, e.getMessage(), e);
         }
-
-        ft.commit();
     }
 
     private static final class EmptyFragmentReuseCondition implements JPredicate<Fragment> {

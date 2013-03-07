@@ -7,15 +7,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.fragments.DetachableFragment;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
  * Date: 8/16/12
  * Time: 2:13 AM
  */
-public class MessengerEmptyFragment extends RoboSherlockFragment {
+public class MessengerEmptyFragment extends RoboSherlockFragment implements DetachableFragment {
 
     @Inject
     @Nonnull

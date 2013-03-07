@@ -121,8 +121,11 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
     public final class SelectedItemListener {
 
         public void onItemClick(int position) {
-
             final LI selectedItem = getItem(position);
+            onItemClick(position, selectedItem);
+        }
+
+        private void onItemClick(int position, @Nonnull LI selectedItem) {
             if (MessengerListItemAdapter.this.selectedItem != selectedItem) {
                 selectItem(selectedItem, true);
                 selectItem(MessengerListItemAdapter.this.selectedItem, false);
@@ -135,17 +138,9 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
         }
 
         public void onItemClick(@Nonnull ListItem selectedItem) {
-
-            final int position = getPosition((LI) selectedItem);
-            if (MessengerListItemAdapter.this.selectedItem != selectedItem) {
-                selectItem(selectedItem, true);
-                selectItem(MessengerListItemAdapter.this.selectedItem, false);
-
-                MessengerListItemAdapter.this.selectedItem = selectedItem;
-                MessengerListItemAdapter.this.selectedItemPosition = position;
-
-                notifyDataSetChanged();
-            }
+            final LI selectedListItem = (LI) selectedItem;
+            final int position = getPosition(selectedListItem);
+            onItemClick(position, selectedListItem);
         }
 
         private void selectItem(@Nullable ListItem item, boolean selected) {

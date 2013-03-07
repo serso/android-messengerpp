@@ -6,6 +6,7 @@ import android.os.Bundle;
 import org.solovyev.android.messenger.chats.ChatGuiEvent;
 import org.solovyev.android.messenger.chats.ChatGuiEventListener;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.fragments.FragmentGuiEvent;
 import org.solovyev.android.messenger.realms.RealmGuiEvent;
 import org.solovyev.android.messenger.realms.RealmGuiEventListener;
 import org.solovyev.android.messenger.users.ContactGuiEvent;
@@ -38,6 +39,9 @@ public class MessengerMainActivity extends MessengerFragmentActivity {
 
     @Nullable
     private EventListener<ChatGuiEvent> chatGuiEventListener;
+
+    @Nullable
+    private EventListener<FragmentGuiEvent> fragmentGuiEventListener;
 
     /*
     **********************************************************************
@@ -78,6 +82,9 @@ public class MessengerMainActivity extends MessengerFragmentActivity {
         chatGuiEventListener = new ChatGuiEventListener(this);
         getEventManager().registerObserver(ChatGuiEvent.class, chatGuiEventListener);
 
+        fragmentGuiEventListener= new FragmentGuiEventListener(this);
+        getEventManager().registerObserver(FragmentGuiEvent.class, fragmentGuiEventListener);
+
         if (isDualPane()) {
             emptifySecondFragment();
         }
@@ -102,7 +109,41 @@ public class MessengerMainActivity extends MessengerFragmentActivity {
             getEventManager().unregisterObserver(ChatGuiEvent.class, chatGuiEventListener);
         }
 
+        if (fragmentGuiEventListener != null) {
+            getEventManager().unregisterObserver(FragmentGuiEvent.class, fragmentGuiEventListener);
+        }
+
         super.onDestroy();
     }
 
+    private static final class FragmentGuiEventListener implements EventListener<FragmentGuiEvent> {
+
+        @Nonnull
+        private final MessengerFragmentActivity activity;
+
+        private FragmentGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void onEvent(@Nonnull FragmentGuiEvent event) {
+            switch (event.getType()) {
+                case created:
+                    break;
+                case shown:
+                    break;
+                case started:
+                    /*if (event.getParentViewId() == R.id.content_first_pane) {
+                        // if new fragment is shown on the first pane => emptify other panes
+                        if (activity.isDualPane()) {
+                            activity.emptifySecondFragment();
+                            if ( activity.isTriplePane() ) {
+                                activity.emptifyThirdFragment();
+                            }
+                        }
+                    }*/
+                    break;
+            }
+        }
+    }
 }
