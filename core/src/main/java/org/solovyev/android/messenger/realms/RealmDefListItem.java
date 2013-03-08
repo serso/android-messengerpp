@@ -2,31 +2,27 @@ package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.ViewAwareTag;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RealmDefListItem implements ListItem {
+class RealmDefListItem extends AbstractMessengerListItem<RealmDef> {
 
     @Nonnull
-    private static final String TAG_PREFIX = "realm_def_list_item_view_";
+    private static final String TAG_PREFIX = "realm_def_list_item_";
 
-    @Nonnull
-    private RealmDef realmDef;
-
-    public RealmDefListItem(@Nonnull RealmDef realmDef) {
-        this.realmDef = realmDef;
+    RealmDefListItem(@Nonnull RealmDef realmDef) {
+        super(TAG_PREFIX, R.layout.mpp_list_item_realm_def, realmDef);
     }
 
     @Nullable
@@ -36,9 +32,14 @@ public class RealmDefListItem implements ListItem {
             @Override
             public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(RealmDefGuiEventType.newRealmDefClickedEvent(realmDef));
+                eventManager.fire(RealmDefGuiEventType.newRealmDefClickedEvent(getRealmDef()));
             }
         };
+    }
+
+    @Nonnull
+    private RealmDef getRealmDef() {
+        return getData();
     }
 
     @Nullable
@@ -49,40 +50,17 @@ public class RealmDefListItem implements ListItem {
 
     @Nonnull
     @Override
-    public View updateView(@Nonnull Context context, @Nonnull View view) {
-        if (String.valueOf(view.getTag()).startsWith(TAG_PREFIX)) {
-            fillView((ViewGroup) view, context);
-            return view;
-        } else {
-            return build(context);
-        }
+    protected String getDisplayName(@Nonnull RealmDef realmDef, @Nonnull Context context) {
+        return context.getString(realmDef.getNameResId());
     }
 
-    @Nonnull
     @Override
-    public View build(@Nonnull Context context) {
-        final ViewGroup view = (ViewGroup) ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_realm).build(context);
-        fillView(view, context);
-        return view;
-    }
+    protected void fillView(@Nonnull RealmDef realmDef, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+        final ImageView realmDefIconImageView = viewTag.getViewById(R.id.mpp_realm_def_icon_imageview);
+        final Drawable configuredRealmIcon = context.getResources().getDrawable(realmDef.getIconResId());
+        realmDefIconImageView.setImageDrawable(configuredRealmIcon);
 
-    @Nonnull
-    private String createTag() {
-        return TAG_PREFIX + realmDef.getId();
-    }
-
-    private void fillView(@Nonnull final ViewGroup view, @Nonnull final Context context) {
-        final String tag = createTag();
-
-        if (!tag.equals(view.getTag())) {
-            view.setTag(tag);
-
-            final ImageView configuredRealmIconImageView = (ImageView) view.findViewById(R.id.mpp_realm_icon_imageview);
-            final Drawable configuredRealmIcon = context.getResources().getDrawable(realmDef.getIconResId());
-            configuredRealmIconImageView.setImageDrawable(configuredRealmIcon);
-
-            final TextView configuredRealmNameTextView = (TextView) view.findViewById(R.id.mpp_realm_name_textview);
-            configuredRealmNameTextView.setText(realmDef.getNameResId());
-        }
+        final TextView realmDefNameTextView = viewTag.getViewById(R.id.mpp_realm_def_name_textview);
+        realmDefNameTextView.setText(getDisplayName());
     }
 }

@@ -29,7 +29,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     /*
     **********************************************************************
     *
-    *                           CONSTATS
+    *                           CONSTANTS
     *
     **********************************************************************
     */

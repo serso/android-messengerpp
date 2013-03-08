@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 public class ContactListItem extends AbstractMessengerListItem<User> implements UserEventListener {
 
     @Nonnull
-    private static final String TAG_PREFIX = "contact_list_item_view_";
+    private static final String TAG_PREFIX = "contact_list_item_";
 
     public ContactListItem(@Nonnull User contact) {
         super(TAG_PREFIX, R.layout.mpp_list_item_contact, contact);

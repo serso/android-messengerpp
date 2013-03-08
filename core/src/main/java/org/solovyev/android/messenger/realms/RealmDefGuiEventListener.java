@@ -26,7 +26,7 @@ class RealmDefGuiEventListener implements EventListener<RealmDefGuiEvent> {
         switch (event.getType()) {
             case realm_def_clicked:
                 if (activity.isDualPane()) {
-                    activity.getFragmentService().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG);
+                    activity.getFragmentService().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
                 } else {
                     MessengerRealmConfigurationActivity.startForNewRealm(activity, realmDef);
                 }

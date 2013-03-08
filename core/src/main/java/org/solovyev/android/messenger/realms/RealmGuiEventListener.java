@@ -31,11 +31,14 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         final Realm realm = event.getRealm();
 
         switch (event.getType()) {
-            case realm_clicked:
-                handleRealmClickedEvent(realm);
+            case realm_view_requested:
+                handleRealmViewRequestedEvent(realm);
+                break;
+            case realm_view_cancelled:
+                handleRealmViewCancelledEvent(realm);
                 break;
             case realm_edit_requested:
-                handleRealmEditRequested(realm);
+                handleRealmEditRequestedEvent(realm);
                 break;
             case realm_edit_finished:
                 handleRealmEditFinishedEvent(event);
@@ -43,26 +46,38 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         }
     }
 
-    private void handleRealmEditRequested(@Nonnull Realm realm) {
+    private void handleRealmViewCancelledEvent(@Nonnull Realm realm) {
+        activity.getSupportFragmentManager().popBackStack();
+    }
+
+    private void handleRealmEditRequestedEvent(@Nonnull Realm realm) {
         if (activity.isDualPane()) {
             final Bundle fragmentArgs = new Bundle();
             fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
-            activity.getFragmentService().setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG);
+            activity.getFragmentService().setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
         } else {
             MessengerRealmConfigurationActivity.startForEditRealm(activity, realm);
         }
     }
 
-    private void handleRealmClickedEvent(@Nonnull Realm realm) {
+    private void handleRealmViewRequestedEvent(@Nonnull Realm realm) {
         if (activity.isDualPane()) {
-            final Bundle fragmentArgs = new Bundle();
-            fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, realm.getId());
-            activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG);
+            showRealmFragment(realm, false);
             if ( activity.isTriplePane() ) {
                 activity.getFragmentService().emptifyThirdFragment();
             }
         } else {
-            MessengerRealmConfigurationActivity.startForEditRealm(activity, realm);
+            showRealmFragment(realm, true);
+        }
+    }
+
+    private void showRealmFragment(@Nonnull Realm realm, boolean firstPane) {
+        final Bundle fragmentArgs = new Bundle();
+        fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, realm.getId());
+        if (firstPane) {
+            activity.getFragmentService().setFirstFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, true);
+        } else {
+            activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, true);
         }
     }
 
@@ -74,9 +89,7 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
                 if (removed) {
                     activity.getFragmentService().emptifySecondFragment();
                 } else {
-                    final Bundle fragmentArgs = new Bundle();
-                    fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, event.getRealm().getId());
-                    activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(event.getRealm()), MessengerRealmFragment.FRAGMENT_TAG);
+                    showRealmFragment(event.getRealm(), false);
                 }
             } else {
                 Log.e(TAG, "Data is not instance of Boolean in " + event.getType() + " event!");

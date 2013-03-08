@@ -9,7 +9,7 @@
                a:layout_alignParentLeft="true"/>
 
     <TextView a:id="@+id/mpp_contact_online"
-              style="@style/contact_online"
+              style="@style/mpp_list_item_contact_online"
               a:layout_centerInParent="true"
               a:layout_width="20dp"
               a:layout_height="wrap_content"

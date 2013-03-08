@@ -109,11 +109,25 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     public void onViewCreated(@Nonnull View root, Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
 
-        final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
+        final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_def_icon_imageview);
         realmIconImageView.setImageDrawable(getResources().getDrawable(realm.getRealmDef().getIconResId()));
 
         final TextView realmNameTextView = (TextView) root.findViewById(R.id.mpp_fragment_title);
         realmNameTextView.setText(realm.getDisplayName(getActivity()));
+
+        final Button realmBackButton = (Button) root.findViewById(R.id.mpp_realm_back_button);
+        realmBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eventManager.fire(RealmGuiEventType.newRealmViewCancelledEvent(realm));
+            }
+        });
+        if (multiPaneManager.isDualPane(getActivity())) {
+            // in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
+            realmBackButton.setVisibility(View.GONE);
+        } else {
+            realmBackButton.setVisibility(View.VISIBLE);
+        }
 
         final Button realmRemoveButton = (Button) root.findViewById(R.id.mpp_realm_remove_button);
          realmRemoveButton.setOnClickListener(new View.OnClickListener() {

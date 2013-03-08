@@ -10,9 +10,14 @@ import javax.annotation.Nonnull;
 public enum RealmGuiEventType {
 
     /**
-     * Fired when realm is clicked in the list of realms
+     * Fired when realm view is (e.g. realm is clicked in the list of realms)
      */
-    realm_clicked,
+    realm_view_requested,
+
+    /**
+     * Fired when realm view is cancelled (e.g. user pressed 'Back' button)
+     */
+    realm_view_cancelled,
 
     /**
      * Fired when editing of realm is requested (e.g. 'Edit' button clicked)
@@ -26,8 +31,13 @@ public enum RealmGuiEventType {
     realm_edit_finished;
 
     @Nonnull
-    public static RealmGuiEvent newRealmClickedEvent(@Nonnull Realm realm) {
-        return new RealmGuiEvent(realm_clicked, realm, null);
+    public static RealmGuiEvent newRealmViewRequestedEvent(@Nonnull Realm realm) {
+        return new RealmGuiEvent(realm_view_requested, realm, null);
+    }
+
+    @Nonnull
+    public static RealmGuiEvent newRealmViewCancelledEvent(@Nonnull Realm realm) {
+        return new RealmGuiEvent(realm_view_cancelled, realm, null);
     }
 
     @Nonnull

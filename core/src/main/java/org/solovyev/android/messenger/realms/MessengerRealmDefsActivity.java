@@ -62,7 +62,7 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
             public boolean apply(@Nullable Fragment fragment) {
                 return fragment instanceof MessengerRealmDefsFragment;
             }
-        }, "realm-defs");
+        }, "realm-defs", false);
 
         if (isDualPane()) {
             getFragmentService().emptifySecondFragment();

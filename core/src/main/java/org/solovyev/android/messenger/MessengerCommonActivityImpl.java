@@ -133,6 +133,8 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
 
             @Override
             public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
+                activity.getFragmentService().setPrimaryFragment(messengerPrimaryFragment, activity.getSupportFragmentManager(), ft);
             }
         });
         actionBar.addTab(tab);

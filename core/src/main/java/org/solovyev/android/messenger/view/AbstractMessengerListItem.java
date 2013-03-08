@@ -70,7 +70,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     private void fillView(@Nonnull Context context, @Nonnull final ViewGroup view) {
         final ViewAwareTag tag = createTag(view);
 
-        view.setSelected(checked);
+        view.setActivated(checked);
 
         ViewAwareTag viewTag = (ViewAwareTag) view.getTag();
         if (!tag.equals(viewTag)) {

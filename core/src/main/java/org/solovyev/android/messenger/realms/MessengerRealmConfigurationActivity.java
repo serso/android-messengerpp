@@ -71,14 +71,14 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
     }
 
     private void prepareUiForCreate(@Nonnull RealmDef realmDef) {
-        getFragmentService().setFirstFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG);
+        getFragmentService().setFirstFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
 
     }
 
     private void prepareUiForEdit(@Nonnull Realm realm) {
         final Bundle fragmentArgs = new Bundle();
         fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
-        getFragmentService().setFirstFragment(realm.getRealmDef().getConfigurationFragmentClass(), null, null, BaseRealmConfigurationFragment.FRAGMENT_TAG);
+        getFragmentService().setFirstFragment(realm.getRealmDef().getConfigurationFragmentClass(), null, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
     }
 
     @Override

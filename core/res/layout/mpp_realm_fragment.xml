@@ -8,13 +8,22 @@
         style="@style/mpp_fragment_title" />
 
     <ImageView
-        a:id="@+id/mpp_realm_icon_imageview"
+        a:id="@+id/mpp_realm_def_icon_imageview"
         style="@style/mpp_fragment_icon"/>
 
     <LinearLayout
-        a:orientation="horizontal"
-        a:layout_width="match_parent"
-        a:layout_height="wrap_content">
+        style="@style/mpp_form_buttons">
+
+        <Button
+            a:id="@+id/mpp_realm_back_button"
+            a:text="@string/mpp_back"
+            a:visibility="gone"
+            style="@style/mpp_form_button" />
+
+        <Button
+            a:id="@+id/mpp_realm_sync_button"
+            a:text="@string/mpp_sync"
+            style="@style/mpp_form_button" />
 
         <Button
             a:id="@+id/mpp_realm_remove_button"
@@ -24,11 +33,6 @@
         <Button
             a:id="@+id/mpp_realm_edit_button"
             a:text="@string/mpp_edit"
-            style="@style/mpp_form_button" />
-
-        <Button
-            a:id="@+id/mpp_realm_sync_button"
-            a:text="@string/mpp_sync"
             style="@style/mpp_form_button" />
 
     </LinearLayout>

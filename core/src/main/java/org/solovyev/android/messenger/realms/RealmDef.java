@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.realms;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 12:56 AM
  */
-public interface RealmDef {
+public interface RealmDef extends MessengerEntity {
 
     @Nonnull
     String FAKE_REALM_ID = "fake";

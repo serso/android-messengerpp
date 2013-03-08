@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 public class ChatListItem extends AbstractMessengerListItem<UserChat> implements ChatEventListener {
 
     @Nonnull
-    private static final String TAG_PREFIX = "chat_list_item_view_";
+    private static final String TAG_PREFIX = "chat_list_item_";
 
     public ChatListItem(@Nonnull User user, @Nonnull Chat chat, @Nullable Context context) {
         super(TAG_PREFIX, R.layout.msg_list_item_chat, UserChat.newInstance(user, chat, loadLastChatMessage(chat, context)));

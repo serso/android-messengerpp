@@ -244,7 +244,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="contact_online" parent="mpp_list_item">
+    <style name="mpp_list_item_contact_online" parent="mpp_list_item_block">
     </style>
 
     <style name="footer_image_label">
@@ -267,6 +267,7 @@
     </style>
 
     <style name="mpp_button">
+        <item name="android:gravity">top|left</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:focusable">true</item>
         <item name="android:layout_width">wrap_content</item>
@@ -299,6 +300,13 @@
     </style>
 
 
+    <style name="mpp_form_buttons">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:baselineAligned">false</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="mpp_form_button" parent="mpp_button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
@@ -323,13 +331,13 @@
     </style>
 
     <style name="mpp_fragment_icon">
-        <item name="android:layout_width">150dp</item>
-        <item name="android:layout_height">150dp</item>
+        <item name="android:layout_width">@dimen/mpp_fragment_icon_size</item>
+        <item name="android:layout_height">@dimen/mpp_fragment_icon_size</item>
         <item name="android:contentDescription">@string/mpp_icon</item>
     </style>
 
     <style name="mpp_fragment_title" parent="mpp_text">
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">@dimen/mpp_fragment_title_text_size</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

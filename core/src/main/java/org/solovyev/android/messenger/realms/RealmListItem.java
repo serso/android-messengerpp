@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class RealmListItem extends AbstractMessengerListItem<Realm> {
 
     @Nonnull
-    private static final String TAG_PREFIX = "realm_list_item_view_";
+    private static final String TAG_PREFIX = "realm_list_item_";
 
     /*
     **********************************************************************
@@ -41,7 +41,7 @@ public class RealmListItem extends AbstractMessengerListItem<Realm> {
             @Override
             public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(RealmGuiEventType.newRealmClickedEvent(getRealm()));
+                eventManager.fire(RealmGuiEventType.newRealmViewRequestedEvent(getRealm()));
             }
         };
     }
