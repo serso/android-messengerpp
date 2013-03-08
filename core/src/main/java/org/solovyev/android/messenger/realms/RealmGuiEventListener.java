@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.MessengerRealmConfigurationActivity;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 

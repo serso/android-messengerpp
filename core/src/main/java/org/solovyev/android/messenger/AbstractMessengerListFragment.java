@@ -146,9 +146,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     private final AtomicInteger firstVisibleItem = new AtomicInteger(-1);
 
     /**
-     * If nothing selected - first list item will be shown
+     * If nothing selected - first list item will be selected
      */
-    private boolean showFirstListItem = true;
+    private boolean selectFirstItemByDefault = true;
 
     /*
     **********************************************************************
@@ -419,9 +419,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             position = adapter.getSelectedItemPosition();
         } else {
             if (savedInstanceState != null) {
-                position = savedInstanceState.getInt(POSITION, showFirstListItem ? 0 : -1);
+                position = savedInstanceState.getInt(POSITION, selectFirstItemByDefault ? 0 : -1);
             } else {
-                position = showFirstListItem ? 0 : -1;
+                position = selectFirstItemByDefault ? 0 : -1;
             }
         }
 

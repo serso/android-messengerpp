@@ -10,6 +10,14 @@
     <item android:state_focused="true"
           android:drawable="@color/mpp_selected"/>
 
-    <!-- default -->
+    <!--
+    For normal size screens selected and not selected states must be the same
+    as there is no second pane on which additional content is shown
+    -->
+    <!-- list item selected-->
+    <item android:state_activated="true"
+        android:drawable="@android:color/transparent"/>
+
+    <!-- default, list item not selected -->
     <item android:drawable="@android:color/transparent"/>
 </selector>

@@ -99,21 +99,14 @@ public class MessengerFragmentService {
                              @Nullable JPredicate<Fragment> reuseCondition) {
         final FragmentManager fm = activity.getSupportFragmentManager();
 
-        // we must run all pending transactions to be sure that no fragments for same tags are in pending list
-        try {
-            fm.executePendingTransactions();
+        final FragmentTransaction ft = fm.beginTransaction();
 
-            final FragmentTransaction ft = fm.beginTransaction();
+        setFragment(fragmentViewId, fragmentTag, fragmentBuilder, reuseCondition, fm, ft);
 
-            setFragment(fragmentViewId, fragmentTag, fragmentBuilder, reuseCondition, fm, ft);
+        ft.commit();
 
-            ft.commit();
-        } catch (IllegalStateException e) {
-            /**
-             * May be thrown by {@link android.support.v4.app.FragmentManager#executePendingTransactions()}.
-             */
-            Log.e(TAG, e.getMessage(), e);
-        }
+        // we cannot wait until android will execute pending transactions as some logic rely on added/attached transactions
+        executePendingTransactions(fm);
     }
 
     void setFragment(int fragmentViewId,
@@ -122,57 +115,83 @@ public class MessengerFragmentService {
                      @Nullable JPredicate<Fragment> reuseCondition,
                      @Nonnull FragmentManager fm,
                      @Nonnull FragmentTransaction ft) {
-        ft.setCustomAnimations(R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
+        // in some cases we cannot execute pending transactions after commit (e.g. transactions from action bar => we need to try to execute them now)
+        boolean canContinue = executePendingTransactions(fm);
 
-        /**
-         * Fragments identified by tag defines set of fragments of the same TYPE
-         */
-        final Fragment fragmentByTag = fm.findFragmentByTag(fragmentTag);
+        if (canContinue) {
+            ft.setCustomAnimations(R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
 
-        /**
-         * Fragments identified by tag defines set of fragments of the same LOCATION in view
-         */
-        final Fragment fragmentById = fm.findFragmentById(fragmentViewId);
-        if (fragmentByTag != null) {
-            // found fragment of known type - reuse?
-            if (reuseCondition != null && reuseCondition.apply(fragmentByTag)) {
-                // fragment can be reused
-                if (fragmentByTag.isDetached()) {
-                    if (fragmentById != null) {
-                        tryToPreserveFragment(ft, fragmentById);
-                    }
-                    // fragment is detached and can be simple reused
-                    ft.attach(fragmentByTag);
-                } else {
-                    // fragment is not free - it is already shown on the view
-                    // let's check that it is shown in the right place
-                    if (fragmentByTag.equals(fragmentById)) {
-                        // yes, fragment is shown under the view with same ID
-                    } else {
-                        // no, fragment is shown somewhere else, but that's bad - either fragment was not correctly detached or it has been already added
+            /**
+             * Fragments identified by tag defines set of fragments of the same TYPE
+             */
+            final Fragment fragmentByTag = fm.findFragmentByTag(fragmentTag);
+
+            /**
+             * Fragments identified by tag defines set of fragments of the same LOCATION in view
+             */
+            final Fragment fragmentById = fm.findFragmentById(fragmentViewId);
+            if (fragmentByTag != null) {
+                // found fragment of known type - reuse?
+                if (reuseCondition != null && reuseCondition.apply(fragmentByTag)) {
+                    // fragment can be reused
+                    if (fragmentByTag.isDetached()) {
                         if (fragmentById != null) {
                             tryToPreserveFragment(ft, fragmentById);
                         }
-                        // add new fragment
-                        ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
+                        // fragment is detached and can be simple reused
+                        ft.attach(fragmentByTag);
+                    } else {
+                        // fragment is not free - it is already shown on the view
+                        // let's check that it is shown in the right place
+                        if (fragmentByTag.equals(fragmentById)) {
+                            // yes, fragment is shown under the view with same ID
+                        } else {
+                            // no, fragment is shown somewhere else, but that's bad - either fragment was not correctly detached or it has been already added
+                            if (fragmentById != null) {
+                                tryToPreserveFragment(ft, fragmentById);
+                            }
+                            // add new fragment
+                            ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
+                        }
                     }
+                } else {
+                    // fragment cannot be reused
+                    tryToPreserveFragment(ft, fragmentByTag);
+                    if (fragmentById != null) {
+                        tryToPreserveFragment(ft, fragmentById);
+                    }
+                    // add new fragment
+                    ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
                 }
+
             } else {
-                // fragment cannot be reused
-                tryToPreserveFragment(ft, fragmentByTag);
                 if (fragmentById != null) {
                     tryToPreserveFragment(ft, fragmentById);
                 }
-                // add new fragment
                 ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
             }
-
-        } else {
-            if (fragmentById != null) {
-                tryToPreserveFragment(ft, fragmentById);
-            }
-            ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
         }
+    }
+
+    /**
+     * Method executes all pending transactions in {@link FragmentManager}.
+     * @param fm fragment manager
+     * @return true if pending transactions were successfully executed, false otherwise
+     */
+    private boolean executePendingTransactions(@Nonnull FragmentManager fm) {
+        boolean success;
+        // we must run all pending transactions to be sure that no fragments for same tags are in pending list
+        try {
+            fm.executePendingTransactions();
+            success = true;
+        } catch (RuntimeException e) {
+            success = false;
+            /**
+             * May be thrown by {@link android.support.v4.app.FragmentManager#executePendingTransactions()}.
+             */
+            Log.e(TAG, e.getMessage(), e);
+        }
+        return success;
     }
 
     private void tryToPreserveFragment(@Nonnull FragmentTransaction ft, @Nonnull Fragment fragment) {

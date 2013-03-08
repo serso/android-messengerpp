@@ -50,7 +50,7 @@
     </style>
 
     <style name="mpp_list_item" parent="mpp_list_item_text">
-        <item name="android:background">@drawable/item_states</item>
+        <item name="android:background">@drawable/mpp_list_item_states</item>
         <!--NOTE: separate definition in order to override them-->
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>

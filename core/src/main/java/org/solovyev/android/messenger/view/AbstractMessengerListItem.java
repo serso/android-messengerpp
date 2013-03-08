@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerEntity;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 import javax.annotation.Nonnull;
@@ -71,8 +70,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     private void fillView(@Nonnull Context context, @Nonnull final ViewGroup view) {
         final ViewAwareTag tag = createTag(view);
 
-        // todo serso: view.setSelected() doesn't work
-        toggleSelected(view, isChecked());
+        view.setSelected(checked);
 
         ViewAwareTag viewTag = (ViewAwareTag) view.getTag();
         if (!tag.equals(viewTag)) {
@@ -92,14 +90,6 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     protected abstract String getDisplayName(@Nonnull D data, @Nonnull Context context);
 
     protected abstract void fillView(@Nonnull D data, @Nonnull Context context, @Nonnull ViewAwareTag viewTag);
-
-    public static void toggleSelected(@Nonnull ViewGroup view, boolean checked) {
-        if (checked) {
-            view.setBackgroundResource(R.drawable.item_states_selected);
-        } else {
-            view.setBackgroundResource(R.drawable.item_states);
-        }
-    }
 
     @Override
     public final void setChecked(boolean checked) {

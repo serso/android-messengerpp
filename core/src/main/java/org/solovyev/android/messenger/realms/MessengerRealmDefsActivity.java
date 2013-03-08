@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.MessengerRealmConfigurationActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
@@ -55,7 +54,7 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        realmDefGuiEventListener = new RealmDefClickedEventListener();
+        realmDefGuiEventListener = new RealmDefGuiEventListener(this);
         eventManager.registerObserver(RealmDefGuiEvent.class, realmDefGuiEventListener);
 
         getFragmentService().setFirstFragment(MessengerRealmDefsFragment.class, null, new JPredicate<Fragment>() {
@@ -81,31 +80,6 @@ public class MessengerRealmDefsActivity extends MessengerFragmentActivity {
         }
 
         super.onDestroy();
-    }
-
-    private class RealmDefClickedEventListener implements EventListener<RealmDefGuiEvent> {
-
-        @Override
-        public void onEvent(@Nonnull RealmDefGuiEvent event) {
-            final RealmDef realmDef = event.getRealmDef();
-
-            switch (event.getType()) {
-                case realm_def_clicked:
-                    if (isDualPane()) {
-                        getFragmentService().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG);
-                    } else {
-                        MessengerRealmConfigurationActivity.startForNewRealm(MessengerRealmDefsActivity.this, realmDef);
-                    }
-                    break;
-                case realm_def_edit_finished:
-                    if (isDualPane()) {
-                        getFragmentService().emptifySecondFragment();
-                    } else {
-                        finish();
-                    }
-                    break;
-            }
-        }
     }
 
 }

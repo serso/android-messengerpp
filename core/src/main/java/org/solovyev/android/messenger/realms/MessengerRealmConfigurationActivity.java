@@ -1,29 +1,28 @@
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.*;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Current activity can be used in two cases:
  * 1. Initial configuration of new realm
  * 2. Old realm editing
- *
+ * <p/>
  * List of parameters for different moded is different:
  * 1. Realm DEF id should be passed as an extra with id {@link MessengerRealmConfigurationActivity#EXTRA_REALM_DEF_ID} in intent
  * 2. Realm id should be passed as an extra with id {@link MessengerRealmConfigurationActivity#EXTRA_REALM_DEF_ID} in intent
- *
+ * <p/>
  * If no parameters are passed activity will be closed
- *
- *
  */
-public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity implements EventListener<RealmGuiEvent> {
+public class MessengerRealmConfigurationActivity extends MessengerFragmentActivity {
 
     @Nonnull
     private static final String EXTRA_REALM_DEF_ID = "realm_def_id";
@@ -34,6 +33,12 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
     @Inject
     @Nonnull
     private RealmService realmService;
+
+    @Nullable
+    private EventListener<RealmGuiEvent> realmGuiEventEventListener;
+
+    @Nullable
+    private EventListener<RealmDefGuiEvent> realmDefGuiEventEventListener;
 
     public MessengerRealmConfigurationActivity() {
         super(R.layout.msg_main, false, true);
@@ -58,7 +63,11 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
             }
         }
 
-         getEventManager().registerObserver(RealmGuiEvent.class, this);
+        realmGuiEventEventListener = new RealmGuiEventListener(this);
+        getEventManager().registerObserver(RealmGuiEvent.class, realmGuiEventEventListener);
+
+        realmDefGuiEventEventListener = new RealmDefGuiEventListener(this);
+        getEventManager().registerObserver(RealmDefGuiEvent.class, realmDefGuiEventEventListener);
     }
 
     private void prepareUiForCreate(@Nonnull RealmDef realmDef) {
@@ -74,17 +83,15 @@ public class MessengerRealmConfigurationActivity extends MessengerFragmentActivi
 
     @Override
     protected void onDestroy() {
-        getEventManager().unregisterObserver(RealmGuiEvent.class, this);
+        if (realmGuiEventEventListener != null) {
+            getEventManager().unregisterObserver(RealmGuiEvent.class, realmGuiEventEventListener);
+        }
+
+        if (realmDefGuiEventEventListener != null) {
+            getEventManager().unregisterObserver(RealmDefGuiEvent.class, realmDefGuiEventEventListener);
+        }
 
         super.onDestroy();
-    }
-
-
-    @Override
-    public void onEvent(@Nonnull RealmGuiEvent event) {
-        if (event.getType() == RealmGuiEventType.realm_edit_finished) {
-            finish();
-        }
     }
 
     /*

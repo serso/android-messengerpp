@@ -26,7 +26,7 @@
 
         <activity android:label="@string/mpp_app_name" android:name=".realms.MessengerRealmsActivity"/>
         <activity android:label="@string/mpp_app_name"
-            android:name=".MessengerRealmConfigurationActivity"
+            android:name=".realms.MessengerRealmConfigurationActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
 
