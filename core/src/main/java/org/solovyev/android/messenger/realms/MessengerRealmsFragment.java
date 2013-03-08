@@ -16,6 +16,7 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
+import org.solovyev.android.messenger.GuiEventType;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
@@ -25,6 +26,8 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,7 +69,8 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         addRealmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessengerRealmDefsActivity.startActivity(getActivity());
+                final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
+                eventManager.fire(GuiEventType.newShowRealmDefsEvent());
             }
         });
 
@@ -152,7 +156,8 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
         realm_add(R.id.mpp_realm_add) {
             @Override
             public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-                MessengerRealmDefsActivity.startActivity(context);
+                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+                eventManager.fire(GuiEventType.newShowRealmDefsEvent());
             }
         };
 

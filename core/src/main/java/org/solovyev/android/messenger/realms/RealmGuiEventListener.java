@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.realms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 
@@ -51,12 +51,12 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
     }
 
     private void handleRealmEditRequestedEvent(@Nonnull Realm realm) {
+        final Bundle fragmentArgs = new Bundle();
+        fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
         if (activity.isDualPane()) {
-            final Bundle fragmentArgs = new Bundle();
-            fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
-            activity.getFragmentService().setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
+            activity.getFragmentService().setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
         } else {
-            MessengerRealmConfigurationActivity.startForEditRealm(activity, realm);
+            activity.getFragmentService().setFirstFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
         }
     }
 
@@ -77,25 +77,26 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         if (firstPane) {
             activity.getFragmentService().setFirstFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, true);
         } else {
-            activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, true);
+            activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, false);
         }
     }
 
     private void handleRealmEditFinishedEvent(@Nonnull RealmGuiEvent event) {
-        if (activity.isDualPane()) {
-            final Object data = event.getData();
-            if (data instanceof Boolean) {
-                final Boolean removed = (Boolean) data;
-                if (removed) {
+        final RealmGuiEventType.FinishedState state = (RealmGuiEventType.FinishedState) event.getData();
+        assert state != null;
+        switch (state) {
+            case back:
+                activity.getFragmentService().goBack();
+                break;
+            case removed:
+                activity.getFragmentService().goBackTillStart();
+                if ( activity.isDualPane() ) {
                     activity.getFragmentService().emptifySecondFragment();
-                } else {
-                    showRealmFragment(event.getRealm(), false);
                 }
-            } else {
-                Log.e(TAG, "Data is not instance of Boolean in " + event.getType() + " event!");
-            }
-        } else {
-            activity.finish();
+                break;
+            case saved:
+                activity.getFragmentService().goBackTillStart();
+                break;
         }
     }
 

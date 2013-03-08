@@ -41,7 +41,7 @@ class AsynRealmRemover extends MessengerAsyncTask<Realm, Integer, List<Realm>> {
         if ( context != null && realms != null ) {
             final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
             for (Realm realm : realms) {
-                eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, true));
+                eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.removed));
             }
         }
     }

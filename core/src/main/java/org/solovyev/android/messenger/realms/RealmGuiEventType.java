@@ -26,7 +26,7 @@ public enum RealmGuiEventType {
 
     /**
      * Fired when editing of realm is finished (e.g. user pressed 'Back' or 'Save' button)
-     * Data; removed (boolean) - true is realm was removed as a result of editing
+     * Data; state (FinishedState)
      */
     realm_edit_finished;
 
@@ -46,7 +46,13 @@ public enum RealmGuiEventType {
     }
 
     @Nonnull
-    public static RealmGuiEvent newRealmEditFinishedEvent(@Nonnull Realm realm, boolean removed) {
-        return new RealmGuiEvent(realm_edit_finished, realm, removed);
+    public static RealmGuiEvent newRealmEditFinishedEvent(@Nonnull Realm realm, @Nonnull FinishedState state) {
+        return new RealmGuiEvent(realm_edit_finished, realm, state);
+    }
+
+    public static enum FinishedState {
+        back,
+        removed,
+        saved;
     }
 }

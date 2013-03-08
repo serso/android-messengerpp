@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.Fragment;
 import org.solovyev.common.JPredicate;

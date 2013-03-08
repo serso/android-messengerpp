@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -603,23 +604,27 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             // change adapter state
             adapter.setInitialized(true);
 
-            // change UI state
-            setListShown(true);
+            final Activity activity = getActivity();
+            if (activity != null && !activity.isFinishing()) {
 
-            // apply filter if any
-            if (listViewFilter != null) {
-                filter(listViewFilter.getFilterText());
-            } else {
-                filter("");
-            }
+                // change UI state
+                setListShown(true);
 
-            if (position >= 0 && position < adapter.getCount()) {
-                adapter.getSelectedItemListener().onItemClick(position);
+                // apply filter if any
+                if (listViewFilter != null) {
+                    filter(listViewFilter.getFilterText());
+                } else {
+                    filter("");
+                }
 
-                if (multiPaneManager.isDualPane(getActivity())) {
-                    final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
-                    if (onClickAction != null) {
-                        onClickAction.onClick(getActivity(), adapter, listView);
+                if (position >= 0 && position < adapter.getCount()) {
+                    adapter.getSelectedItemListener().onItemClick(position);
+
+                    if (multiPaneManager.isDualPane(activity)) {
+                        final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
+                        if (onClickAction != null) {
+                            onClickAction.onClick(activity, adapter, listView);
+                        }
                     }
                 }
             }

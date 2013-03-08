@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
-import org.solovyev.android.messenger.realms.SimpleFragmentReuseCondition;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 
@@ -127,7 +126,7 @@ public class MessengerFragmentService {
             ft.setCustomAnimations(R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
 
             if (addToBackStack){
-                ft.addToBackStack(null);
+                ft.addToBackStack(fragmentTag);
             }
             /**
              * Fragments identified by tag defines set of fragments of the same TYPE
@@ -217,29 +216,42 @@ public class MessengerFragmentService {
         }
     }
 
-    public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment primaryFragment,
+    public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment pf,
                                    @Nonnull FragmentManager fm,
                                    @Nonnull FragmentTransaction ft) {
-        clearBackStackEntries(fm);
+        goBackTillStart(fm);
 
-        final Class<? extends Fragment> fragmentClass = primaryFragment.getFragmentClass();
+        final Class<? extends Fragment> fragmentClass = pf.getFragmentClass();
         final Builder<Fragment> fragmentBuilder = ReflectionFragmentBuilder.newInstance(activity, fragmentClass, null);
         final JPredicate<Fragment> fragmentReuseCondition = SimpleFragmentReuseCondition.forClass(fragmentClass);
-        setFragment(R.id.content_first_pane, primaryFragment.getFragmentTag(), fragmentBuilder, fragmentReuseCondition, fm, ft, false);
+        setFragment(R.id.content_first_pane, pf.getFragmentTag(), fragmentBuilder, fragmentReuseCondition, fm, ft, pf.isAddToBackStack());
     }
 
-    private void clearBackStackEntries(@Nonnull FragmentManager fm) {
+    public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment pf) {
+        goBackTillStart(activity.getSupportFragmentManager());
+
+        final Class<? extends Fragment> fragmentClass = pf.getFragmentClass();
+        final Builder<Fragment> fragmentBuilder = ReflectionFragmentBuilder.newInstance(activity, fragmentClass, null);
+        final JPredicate<Fragment> fragmentReuseCondition = SimpleFragmentReuseCondition.forClass(fragmentClass);
+        setFragment(R.id.content_first_pane, pf.getFragmentTag(), fragmentBuilder, fragmentReuseCondition, pf.isAddToBackStack());
+    }
+
+    private void goBackTillStart(@Nonnull FragmentManager fm) {
         int backStackEntryCount = fm.getBackStackEntryCount();
         for ( int i = 0; i < backStackEntryCount; i++) {
-           fm.popBackStack();
+            fm.popBackStack();
         }
     }
+    public void goBackTillStart() {
+        goBackTillStart(activity.getSupportFragmentManager());
+    }
 
-    public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment primaryFragment) {
-        final Class<? extends Fragment> fragmentClass = primaryFragment.getFragmentClass();
-        final Builder<Fragment> fragmentBuilder = ReflectionFragmentBuilder.newInstance(activity, fragmentClass, null);
-        final JPredicate<Fragment> fragmentReuseCondition = SimpleFragmentReuseCondition.forClass(fragmentClass);
-        setFragment(R.id.content_first_pane, primaryFragment.getFragmentTag(), fragmentBuilder, fragmentReuseCondition, false);
+    public void goBack() {
+        activity.getSupportFragmentManager().popBackStack();
+    }
+
+    public void goBack(@Nonnull String tag) {
+        activity.getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private static final class EmptyFragmentReuseCondition implements JPredicate<Fragment> {

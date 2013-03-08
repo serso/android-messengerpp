@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.support.v4.app.Fragment;
-import org.solovyev.android.messenger.realms.AbstractFragmentReuseCondition;
+import org.solovyev.android.messenger.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.common.JPredicate;
 

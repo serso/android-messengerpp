@@ -115,6 +115,13 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
                 backButtonPressed();
             }
         });
+        if (isNewRealm() && getMultiPaneManager().isDualPane(getActivity())) {
+            // in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
+            backButton.setVisibility(View.GONE);
+        } else {
+            backButton.setVisibility(View.VISIBLE);
+        }
+
 
         saveButton = (Button) root.findViewById(R.id.mpp_xmpp_save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {

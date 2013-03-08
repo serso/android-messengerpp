@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.fragments;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.MessengerRealmDefsFragment;
 import org.solovyev.android.messenger.realms.MessengerRealmsFragment;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
 
@@ -17,7 +18,8 @@ public enum MessengerPrimaryFragment {
 
     contacts(MessengerContactsFragment.class, MessengerContactsFragment.FRAGMENT_TAG, R.string.mpp_tab_contacts),
     messages(MessengerChatsFragment.class, MessengerChatsFragment.FRAGMENT_TAG, R.string.mpp_tab_messages),
-    realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms);
+    realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms),
+    realm_defs(MessengerRealmDefsFragment.class, MessengerRealmDefsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms, true);
 
     // todo serso: make settings a fragment
     // special logic for settings tab as it is not just a fragment
@@ -31,10 +33,17 @@ public enum MessengerPrimaryFragment {
 
     private final int titleResId;
 
+    private final boolean addToBackStack;
+
     MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId) {
+        this(fragmentClass, fragmentTag, titleResId, false);
+    }
+
+    private MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId, boolean addToBackStack) {
         this.fragmentClass = fragmentClass;
         this.fragmentTag = fragmentTag;
         this.titleResId = titleResId;
+        this.addToBackStack = addToBackStack;
     }
 
     @Nonnull
@@ -49,5 +58,9 @@ public enum MessengerPrimaryFragment {
 
     public int getTitleResId() {
         return titleResId;
+    }
+
+    public boolean isAddToBackStack() {
+        return addToBackStack;
     }
 }

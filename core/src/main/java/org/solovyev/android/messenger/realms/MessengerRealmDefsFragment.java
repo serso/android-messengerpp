@@ -1,10 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.os.Bundle;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -17,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<RealmDef, RealmDefListItem> implements DetachableFragment {
+
+    @Nonnull
+    public static final String FRAGMENT_TAG = "realms-defs";
 
     @Inject
     @Nonnull

@@ -7,6 +7,8 @@ import org.solovyev.android.messenger.chats.ChatGuiEvent;
 import org.solovyev.android.messenger.chats.ChatGuiEventListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.FragmentGuiEvent;
+import org.solovyev.android.messenger.realms.RealmDefGuiEvent;
+import org.solovyev.android.messenger.realms.RealmDefGuiEventListener;
 import org.solovyev.android.messenger.realms.RealmGuiEvent;
 import org.solovyev.android.messenger.realms.RealmGuiEventListener;
 import org.solovyev.android.messenger.users.ContactGuiEvent;
@@ -32,16 +34,7 @@ public class MessengerMainActivity extends MessengerFragmentActivity {
     */
 
     @Nullable
-    private EventListener<RealmGuiEvent> realmGuiEventListener;
-
-    @Nullable
-    private EventListener<ContactGuiEvent> contactGuiEventListener;
-
-    @Nullable
-    private EventListener<ChatGuiEvent> chatGuiEventListener;
-
-    @Nullable
-    private EventListener<FragmentGuiEvent> fragmentGuiEventListener;
+    private RoboListeners listeners;
 
     /*
     **********************************************************************
@@ -73,17 +66,13 @@ public class MessengerMainActivity extends MessengerFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        realmGuiEventListener = new RealmGuiEventListener(this);
-        getEventManager().registerObserver(RealmGuiEvent.class, realmGuiEventListener);
-
-        contactGuiEventListener = new ContactGuiEventListener(this);
-        getEventManager().registerObserver(ContactGuiEvent.class, contactGuiEventListener);
-
-        chatGuiEventListener = new ChatGuiEventListener(this);
-        getEventManager().registerObserver(ChatGuiEvent.class, chatGuiEventListener);
-
-        fragmentGuiEventListener= new FragmentGuiEventListener(this);
-        getEventManager().registerObserver(FragmentGuiEvent.class, fragmentGuiEventListener);
+        listeners = new RoboListeners(getEventManager());
+        listeners.add(GuiEvent.class, new GuiEventListener(this));
+        listeners.add(RealmGuiEvent.class, new RealmGuiEventListener(this));
+        listeners.add(RealmDefGuiEvent.class, new RealmDefGuiEventListener(this));
+        listeners.add(ContactGuiEvent.class, new ContactGuiEventListener(this));
+        listeners.add(ChatGuiEvent.class, new ChatGuiEventListener(this));
+        listeners.add(FragmentGuiEvent.class, new FragmentGuiEventListener(this));
 
         if (isDualPane()) {
             getFragmentService().emptifySecondFragment();
@@ -97,20 +86,8 @@ public class MessengerMainActivity extends MessengerFragmentActivity {
 
     @Override
     protected void onDestroy() {
-        if (realmGuiEventListener != null) {
-            getEventManager().unregisterObserver(RealmGuiEvent.class, realmGuiEventListener);
-        }
-
-        if (contactGuiEventListener != null) {
-            getEventManager().unregisterObserver(ContactGuiEvent.class, contactGuiEventListener);
-        }
-
-        if (chatGuiEventListener != null) {
-            getEventManager().unregisterObserver(ChatGuiEvent.class, chatGuiEventListener);
-        }
-
-        if (fragmentGuiEventListener != null) {
-            getEventManager().unregisterObserver(FragmentGuiEvent.class, fragmentGuiEventListener);
+        if ( listeners != null ) {
+            listeners.clearAll();
         }
 
         super.onDestroy();

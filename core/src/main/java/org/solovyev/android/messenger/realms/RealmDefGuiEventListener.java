@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 * Date: 3/8/13
 * Time: 11:46 AM
 */
-class RealmDefGuiEventListener implements EventListener<RealmDefGuiEvent> {
+public class RealmDefGuiEventListener implements EventListener<RealmDefGuiEvent> {
 
     @Nonnull
     private MessengerFragmentActivity activity;
@@ -28,15 +28,11 @@ class RealmDefGuiEventListener implements EventListener<RealmDefGuiEvent> {
                 if (activity.isDualPane()) {
                     activity.getFragmentService().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
                 } else {
-                    MessengerRealmConfigurationActivity.startForNewRealm(activity, realmDef);
+                    activity.getFragmentService().setFirstFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
                 }
                 break;
             case realm_def_edit_finished:
-                if (activity.isDualPane()) {
-                    activity.getFragmentService().emptifySecondFragment();
-                } else {
-                    activity.finish();
-                }
+                activity.getFragmentService().goBack();
                 break;
         }
     }

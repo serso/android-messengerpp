@@ -12,9 +12,7 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
 * User: serso
@@ -59,14 +57,8 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
         if (context != null && realms != null) {
             final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
 
-            final Set<RealmDef> realmDefs = new HashSet<RealmDef>();
             for (Realm realm : realms) {
-                realmDefs.add(realm.getRealmDef());
-                eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, false));
-            }
-
-            for (RealmDef realmDef : realmDefs) {
-                eventManager.fire(RealmDefGuiEventType.newRealmDefEditFinishedEvent(realmDef));
+                eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.saved));
             }
         }
     }
