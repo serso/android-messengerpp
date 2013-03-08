@@ -7,13 +7,11 @@ import android.support.v4.app.Fragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -160,11 +158,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     @Nonnull
     public User getUser() {
         if ( user == null ) {
-            try {
-                user = MessengerApplication.getServiceLocator().getAuthService().getUser(this.chat.getRealmEntity().getRealmId());
-            } catch (UserIsNotLoggedInException e) {
-                // todo serso: continue
-            }
+            user = getRealmService().getRealmById(chat.getRealmEntity().getRealmId()).getUser();
         }
         return user;
     }

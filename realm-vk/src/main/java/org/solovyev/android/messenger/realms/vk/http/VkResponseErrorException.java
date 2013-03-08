@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.realms.vk.http;
 
 import android.util.Log;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.messenger.api.ApiResponseErrorException;
 import org.solovyev.android.messenger.api.CommonApiError;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
