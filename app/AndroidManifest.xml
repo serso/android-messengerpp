@@ -31,34 +31,14 @@
         </activity>
 
 
-        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerLoginActivity"/>
-
-        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerRegistrationActivity"/>
-
-        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.chats.MessengerChatsActivity"/>
-
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerPreferencesActivity"/>
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerMainActivity"/>
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.messages.MessengerMessagesActivity"/>
 
-<!--        <provider android:authorities="NotesSearchSuggestions" android:name=".NotesSuggestionsProvider"/>
-
-        <activity android:label="@string/c_app_name" android:name=".NotesPreferenceActivity"/>
-
-        <activity android:label="@string/c_app_name" android:name=".NotesAboutActivity"/>
-
-        <activity android:label="@string/c_app_name" android:name=".NotesEditNoteActivity"/>
-
-        <activity android:label="@string/c_app_name" android:name=".NotesItemActivity"/>-->
-
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
 
-        <service android:name="org.solovyev.android.messenger.MessengerService">
-            <intent-filter>
-                <action android:name="org.solovyev.android.messenger.API_SERVICE"/>
-            </intent-filter>
-        </service>
+        <service android:name="org.solovyev.android.messenger.MessengerService"/>
 
         <service android:name="net.robotmedia.billing.BillingService"/>
         <receiver android:name="net.robotmedia.billing.BillingReceiver">
