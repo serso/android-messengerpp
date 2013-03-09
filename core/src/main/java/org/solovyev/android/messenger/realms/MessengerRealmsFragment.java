@@ -182,16 +182,16 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 
     private class UiRealmEventListener extends AbstractJEventListener<RealmEvent> {
 
-        public UiRealmEventListener() {
+        private UiRealmEventListener() {
             super(RealmEvent.class);
         }
 
         @Override
-        public void onEvent(@Nonnull final RealmEvent e) {
+        public void onEvent(@Nonnull final RealmEvent realmEvent) {
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
-                    getAdapter().onRealmEvent(e);
+                    getAdapter().onRealmEvent(realmEvent);
                 }
             });
         }

@@ -58,7 +58,7 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
         final User contact = getContact();
 
         if (userEventType == UserEventType.changed) {
-            if (eventUser.equals(contact)) {
+            if (contact.equals(eventUser)) {
                 setData(eventUser);
             }
         }

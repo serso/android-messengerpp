@@ -65,4 +65,10 @@ public class TestRealmService implements RealmUserService, RealmChatService {
     public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
         return "test_message_id";
     }
+
+    @Nonnull
+    @Override
+    public ApiChat newPrivateChat(@Nonnull String realmUserId, @Nonnull String secondRealmUserId) {
+        throw new UnsupportedOperationException();
+    }
 }

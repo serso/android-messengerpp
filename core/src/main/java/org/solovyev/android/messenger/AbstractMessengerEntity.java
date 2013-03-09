@@ -22,7 +22,7 @@ public abstract class AbstractMessengerEntity extends JObject implements Messeng
     @Nonnull
     @Override
     public final String getId() {
-        return realmEntity.getRealmId();
+        return realmEntity.getEntityId();
     }
 
     @Nonnull

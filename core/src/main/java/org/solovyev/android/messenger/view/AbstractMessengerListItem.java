@@ -24,11 +24,6 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
 
     private final int layoutResId;
 
-    /**
-     * View tag, might be null before first list item showing on display
-     */
-    private ViewAwareTag viewAwareTag;
-
     @Nonnull
     private String displayName = "";
 
@@ -80,7 +75,6 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
                 viewTag = tag;
                 view.setTag(viewTag);
             }
-            viewAwareTag = viewTag;
             displayName = getDisplayName(this.data, context);
             fillView(this.data, context, viewTag);
         }
@@ -113,11 +107,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
 
     protected final void setData(@Nonnull D data) {
         this.data = data;
-        if (viewAwareTag != null) {
-            final Context context = viewAwareTag.getView().getContext();
-            this.displayName = getDisplayName(this.data, context);
-            fillView(data, context, viewAwareTag);
-        }
+        // view update will be done by adapter if necessary
     }
 
     @Override

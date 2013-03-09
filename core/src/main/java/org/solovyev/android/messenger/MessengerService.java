@@ -122,12 +122,16 @@ public class MessengerService extends RoboService implements NetworkStateListene
         @Override
         public void onEvent(@Nonnull RealmEvent event) {
             final Realm realm = event.getRealm();
-            if (event instanceof RealmAddedEvent) {
-                tryStartConnectionsFor(Arrays.asList(realm));
-            } else if (event instanceof RealmRemovedEvent) {
-                realmConnections.removeConnectionFor(realm);
-            } else if (event instanceof RealmChangedEvent) {
-                realmConnections.updateRealm(realm, canStartConnection());
+            switch (event.getType()) {
+                case created:
+                    tryStartConnectionsFor(Arrays.asList(realm));
+                    break;
+                case changed:
+                    realmConnections.removeConnectionFor(realm);
+                    break;
+                case removed:
+                    realmConnections.updateRealm(realm, canStartConnection());
+                    break;
             }
         }
     }

@@ -177,4 +177,11 @@ public class VkRealmChatService implements RealmChatService {
             throw new HttpRuntimeIoException(e);
         }
     }
+
+    @Nonnull
+    @Override
+    public ApiChat newPrivateChat(@Nonnull String realmUserId, @Nonnull String secondRealmUserId) {
+        // todo serso: continue
+        throw new UnsupportedOperationException();
+    }
 }

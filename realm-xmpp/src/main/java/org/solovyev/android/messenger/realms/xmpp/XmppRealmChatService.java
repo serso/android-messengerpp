@@ -4,6 +4,7 @@ import android.util.Log;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
@@ -56,6 +57,18 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         return doOnConnection(new MessengerSender(chat, message));
     }
 
+    @Nonnull
+    @Override
+    public ApiChat newPrivateChat(@Nonnull String realmUserId, @Nonnull final String secondRealmUserId) {
+        return doOnConnection(new XmppConnectedCallable<ApiChat>() {
+            @Override
+            public ApiChat call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
+                org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(secondRealmUserId, null);
+                return XmppChatListener.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm());
+            }
+        });
+    }
+
     private static final class MessengerSender implements XmppConnectedCallable<String> {
 
         @Nonnull
@@ -73,13 +86,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         public String call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final ChatManager chatManager = connection.getChatManager();
 
-            org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chat.getRealmEntity().getRealmEntityId());
-            if (smackChat == null) {
-                /**
-                 * chat will be saved in application in {@link org.jivesoftware.smack.ChatManagerListener#chatCreated(org.jivesoftware.smack.Chat, boolean)} method call
-                 */
-                smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), null);
-            }
+            final org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chat.getRealmEntity().getRealmEntityId());
 
             if ( smackChat != null ) {
                 smackChat.sendMessage(message.getBody());

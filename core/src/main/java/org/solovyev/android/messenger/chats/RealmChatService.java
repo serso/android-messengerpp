@@ -33,4 +33,7 @@ public interface RealmChatService {
      */
     @Nullable
     String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message);
+
+    @Nonnull
+    ApiChat newPrivateChat(@Nonnull String realmUserId, @Nonnull String secondRealmUserId);
 }

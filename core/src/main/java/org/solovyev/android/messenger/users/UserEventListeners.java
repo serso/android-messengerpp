@@ -19,37 +19,4 @@ public interface UserEventListeners {
     void fireUserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, @Nullable Object data);
 
     void fireUserEvents(@Nonnull List<UserEvent> userEvents);
-
-    public static class UserEvent {
-
-        @Nonnull
-        private User user;
-
-        @Nonnull
-        private UserEventType userEventType;
-
-        @Nullable
-        private Object data;
-
-        public UserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, Object data) {
-            this.user = user;
-            this.userEventType = userEventType;
-            this.data = data;
-        }
-
-        @Nonnull
-        public User getUser() {
-            return user;
-        }
-
-        @Nonnull
-        public UserEventType getUserEventType() {
-            return userEventType;
-        }
-
-        @Nullable
-        public Object getData() {
-            return data;
-        }
-    }
 }

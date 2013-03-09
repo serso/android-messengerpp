@@ -57,10 +57,10 @@ public class RealmListItem extends AbstractMessengerListItem<Realm> {
         return null;
     }
 
-    public void onRealmChangedEvent(@Nonnull RealmChangedEvent event, @Nonnull Context context) {
+    public void onRealmChangedEvent(@Nonnull Realm eventRealm, @Nonnull Context context) {
         final Realm realm = getRealm();
-        if ( event.getRealm().equals(realm)) {
-            setData(event.getRealm());
+        if (realm.equals(eventRealm)) {
+            setData(eventRealm);
         }
     }
 

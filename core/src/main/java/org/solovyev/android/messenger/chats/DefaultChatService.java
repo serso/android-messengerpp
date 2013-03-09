@@ -134,18 +134,23 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
     @Nonnull
     @Override
-    public Chat createPrivateChat(@Nonnull RealmEntity user, @Nonnull RealmEntity secondRealmUser) {
+    public Chat createPrivateChat(@Nonnull RealmEntity realmUser, @Nonnull RealmEntity secondRealmUser) {
+        final Realm realm = getRealmByUser(realmUser);
+        final RealmChatService realmChatService = realm.getRealmChatService();
+
         Chat result;
 
-        final RealmEntity realmChat = createPrivateChatId(user, secondRealmUser);
+        final RealmEntity realmChat = createPrivateChatId(realmUser, secondRealmUser);
         synchronized (lock) {
             result = getChatById(realmChat);
             if ( result == null ) {
+                // todo serso: continue
+                // realmChatService.newPrivateChat(realmUser.getRealmEntityId(), secondRealmUser.getRealmEntityId());
                 final ApiChatImpl apiChat = ApiChatImpl.newInstance(realmChat, 0, true);
-                apiChat.addParticipant(getUserService().getUserById(user));
+                apiChat.addParticipant(getUserService().getUserById(realmUser));
                 apiChat.addParticipant(getUserService().getUserById(secondRealmUser));
 
-                getUserService().mergeUserChats(user, Arrays.asList(apiChat));
+                getUserService().mergeUserChats(realmUser, Arrays.asList(apiChat));
 
                 result = apiChat.getChat();
             }

@@ -162,11 +162,11 @@ public class DefaultRealmService implements RealmService {
                         if (oldRealm != null) {
                             realmDao.updateRealm(newRealm);
                             realms.put(newRealm.getId(), newRealm);
-                            listeners.fireEvent(new RealmChangedEvent(newRealm));
+                            listeners.fireEvent(RealmEventType.changed.newEvent(newRealm, null));
                         } else {
                             realmDao.insertRealm(newRealm);
                             realms.put(newRealm.getId(), newRealm);
-                            listeners.fireEvent(new RealmAddedEvent(newRealm));
+                            listeners.fireEvent(RealmEventType.created.newEvent(newRealm, null));
                         }
                     }
                 }
@@ -195,7 +195,7 @@ public class DefaultRealmService implements RealmService {
                 this.realmDao.deleteRealm(realmId);
                 this.realms.remove(realmId);
 
-                listeners.fireEvent(new RealmRemovedEvent(realm));
+                listeners.fireEvent(RealmEventType.removed.newEvent(realm, null));
             }
         }
     }
@@ -237,12 +237,12 @@ public class DefaultRealmService implements RealmService {
     }
 
     @Override
-    public void addListener(@Nonnull JEventListener<? extends RealmEvent> listener) {
+    public void addListener(@Nonnull JEventListener<RealmEvent> listener) {
         listeners.addListener(listener);
     }
 
     @Override
-    public void removeListener(@Nonnull JEventListener<? extends RealmEvent> listener) {
+    public void removeListener(@Nonnull JEventListener<RealmEvent> listener) {
         listeners.removeListener(listener);
     }
 }

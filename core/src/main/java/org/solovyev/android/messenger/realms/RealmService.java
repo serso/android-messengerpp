@@ -63,7 +63,7 @@ public interface RealmService {
     **********************************************************************
     */
 
-    void addListener(@Nonnull JEventListener<? extends RealmEvent> listener);
+    void addListener(@Nonnull JEventListener<RealmEvent> listener);
 
-    void removeListener(@Nonnull JEventListener<? extends RealmEvent> listener);
+    void removeListener(@Nonnull JEventListener<RealmEvent> listener);
 }
