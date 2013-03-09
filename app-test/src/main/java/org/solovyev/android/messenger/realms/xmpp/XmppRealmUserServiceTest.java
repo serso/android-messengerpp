@@ -41,7 +41,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
         super.setUp();
         realm1 = newRealm1();
         realm2 = newRealm2();
-        realmUserService1 = new XmppRealmUserService(realm1);
+        realmUserService1 = new XmppRealmUserService(realm1, TemporaryXmppConnectionAware.newInstance(realm1));
     }
 
     public void testGetUserById() throws Exception {
@@ -62,16 +62,23 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             Assert.assertNotNull(user2);
             Assert.assertEquals(user2.getRealmEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN2);
             Assert.assertEquals(user2.getRealmEntity().getRealmId(), realm1.getId());
-            Assert.assertEquals(user2.getPropertyValueByName(User.PROPERTY_FIRST_NAME), "Sergey");
-            Assert.assertEquals(user2.getPropertyValueByName(User.PROPERTY_LAST_NAME), "Solovyev");
+            Assert.assertEquals("Sergey II Solovyev", user2.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
+            Assert.assertNull(user2.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
             // load self
             final User user1 = realmUserService1.getUserById(realm1.getUser().getRealmEntity().getRealmEntityId());
             Assert.assertNotNull(user1);
             Assert.assertEquals(user1.getRealmEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN);
             Assert.assertEquals(user1.getRealmEntity().getRealmId(), realm1.getId());
-            Assert.assertEquals(user1.getPropertyValueByName(User.PROPERTY_FIRST_NAME), "Sergey");
-            Assert.assertEquals(user1.getPropertyValueByName(User.PROPERTY_LAST_NAME), "Solovyev");
+            Assert.assertEquals("Sergey I Solovyev", user1.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
+            Assert.assertNull(user1.getPropertyValueByName(User.PROPERTY_LAST_NAME));
+
+            final User serso = realmUserService1.getUserById("se.solovyev@gmail.com");
+            Assert.assertNotNull(serso);
+            Assert.assertEquals(serso.getRealmEntity().getRealmEntityId(), "se.solovyev@gmail.com");
+            Assert.assertEquals(serso.getRealmEntity().getRealmId(), realm1.getId());
+            Assert.assertEquals("Sergey", serso.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
+            Assert.assertEquals("Solovyev", serso.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
 
         } finally {
