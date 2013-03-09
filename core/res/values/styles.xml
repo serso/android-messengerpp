@@ -44,6 +44,7 @@
     <style name="mpp_text">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
 
     <style name="mpp_list_item_text" parent="mpp_text">
@@ -67,13 +68,14 @@
     <style name="list_item_item" parent="mpp_list_item"></style>
 
     <style name="mpp_list_item_block" parent="mpp_list_item_text">
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
     <style name="mpp_list_item_icon" parent="mpp_list_item_block">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">@dimen/mpp_list_item_icon_size</item>
+        <item name="android:layout_height">@dimen/mpp_list_item_icon_size</item>
         <item name="android:contentDescription">@string/mpp_icon</item>
     </style>
 
@@ -82,11 +84,13 @@
     </style>
 
     <style name="mpp_list_item_name" parent="mpp_list_item_block">
+        <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:lines">1</item>
         <item name="android:maxLines">2</item>
-        <item name="android:ellipsize">end</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:scrollHorizontally">false</item>
     </style>
 
     <style name="mpp_list_filter">
@@ -209,12 +213,12 @@
     <style name="viewpager_title">
 
     </style>
-    <style name="list_item_message" parent="mpp_list_item">
+
+    <style name="mpp_list_item_message_text" parent="mpp_list_item_text">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textSize">13sp</item>
         <item name="android:padding">0dp</item>
         <item name="android:paddingBottom">5dp</item>
-        <item name="android:editable">false</item>
     </style>
 
     <style name="list_item_message_date" parent="mpp_list_item">

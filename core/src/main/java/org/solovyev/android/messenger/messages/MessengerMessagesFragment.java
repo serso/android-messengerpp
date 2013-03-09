@@ -140,6 +140,9 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         listView.setStackFromBottom(true);
 
         final View messagesFooter = ViewFromLayoutBuilder.newInstance(R.layout.mpp_messages_footer).build(this.getActivity());
+        final ImageView bubbleUserIconImageView = (ImageView) messagesFooter.findViewById(R.id.mpp_bubble_user_icon_imageview);
+        getUserService().setUserIcon(getUser(), bubbleUserIconImageView);
+
         listView.addFooterView(messagesFooter, null, false);
 
         return root;

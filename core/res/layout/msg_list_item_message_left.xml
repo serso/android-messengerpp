@@ -8,7 +8,7 @@
               style="@style/list_item_item">
 
     <LinearLayout a:layout_height="wrap_content"
-                  a:background="@drawable/left_message_bubble"
+                  a:background="@drawable/mpp_message_bubble_left"
                   a:layout_width="wrap_content"
                   a:gravity="left"
                   a:paddingLeft="24px"
@@ -28,8 +28,8 @@
                       a:background="@android:color/transparent"
                       a:orientation="vertical">
 
-            <EditText a:id="@+id/message_body"
-                      style="@style/list_item_message"
+            <TextView a:id="@+id/message_body"
+                      style="@style/mpp_list_item_message_text"
                       a:gravity="left"
                       a:layout_width="wrap_content"
                       a:layout_height="wrap_content"/>

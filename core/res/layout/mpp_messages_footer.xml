@@ -4,21 +4,21 @@
               a:layout_width="match_parent"
               a:layout_height="match_parent"
               a:orientation="horizontal"
-              a:gravity="left|bottom"
+              a:gravity="bottom"
               style="@style/list_item_item">
 
-    <ImageView a:id="@+id/message_icon"
+    <ImageView a:id="@+id/mpp_bubble_user_icon_imageview"
         a:src="@drawable/icon"
         a:paddingRight="2dp"
-        a:layout_width="90dp"
-        a:layout_height="90dp"
+        a:layout_width="@dimen/mpp_list_item_icon_size"
+        a:layout_height="@dimen/mpp_list_item_icon_size"
         a:paddingTop="5dp"
         a:paddingBottom="5dp"
         a:contentDescription="@string/contact_icon" />
 
     <LinearLayout a:layout_height="wrap_content"
                   a:layout_width="match_parent"
-                  a:background="@drawable/left_message_bubble"
+                  a:background="@drawable/mpp_message_bubble_left"
                   a:paddingLeft="24px"
                   a:paddingRight="5dp"
                   a:paddingTop="5dp"
@@ -33,7 +33,7 @@
 
             <EditText a:id="@+id/message_body"
                       a:gravity="top|left"
-                      style="@style/list_item_message"
+                      style="@style/mpp_list_item_message_text"
                       a:lines="3"
                       a:hint="@string/type_message"
                       a:layout_width="match_parent"

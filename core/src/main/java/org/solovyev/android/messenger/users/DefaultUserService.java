@@ -434,7 +434,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         if (userIcon == null) {
             final String userIconUri = realmDef.getUserIconUri(user);
             if (!Strings.isEmpty(userIconUri)) {
-                this.imageLoader.loadImage(userIconUri, imageView, R.drawable.empty_icon);
+                this.imageLoader.loadImage(userIconUri, imageView, getDefaultUserIconResId());
             } else {
                 imageView.setImageDrawable(defaultUserIcon);
             }
@@ -446,7 +446,11 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
     @Override
     @Nonnull
     public Drawable getDefaultUserIcon() {
-        return context.getResources().getDrawable(R.drawable.empty_icon);
+        return context.getResources().getDrawable(getDefaultUserIconResId());
+    }
+
+    private int getDefaultUserIconResId() {
+        return R.drawable.mpp_empty_user_icon;
     }
 
     @Override
@@ -478,7 +482,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         if (userIcon == null) {
             final String userPhotoUri = getUserPhotoUri(user);
             if (!Strings.isEmpty(userPhotoUri)) {
-                this.imageLoader.loadImage(userPhotoUri, imageView, R.drawable.empty_icon);
+                this.imageLoader.loadImage(userPhotoUri, imageView, getDefaultUserIconResId());
             } else {
                 imageView.setImageDrawable(defaultUserIcon);
             }

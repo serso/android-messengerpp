@@ -86,13 +86,13 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
     public void fillContentPane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane) {
         if (this.isDualPane(activity)) {
             if (this.isFirstPane(paneParent)) {
-                pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.right_border));
+                pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_right));
                 pane.setPadding(0, 0, 0, 0);
             } else if (this.isSecondPane(paneParent)) {
                 pane.setBackgroundColor(context.getResources().getColor(R.color.base_bg_lighter));
             } else if (this.isTriplePane(activity) && this.isThirdPane(paneParent)) {
                 if (Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
-                    pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.left_border));
+                    pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_left));
                 } else {
                     pane.setBackgroundColor(context.getResources().getColor(R.color.base_bg_lighter));
                 }
