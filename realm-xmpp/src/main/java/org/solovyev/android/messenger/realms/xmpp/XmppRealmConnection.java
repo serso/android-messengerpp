@@ -35,17 +35,9 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     @Override
     protected void doWork() {
-        // 1. Try to create connection (if not exists)
+        // Try to create connection (if not exists)
         if (this.connection == null) {
             tryToConnect(0);
-        }
-
-        // 2. Attach listeners to connection
-        if ( this.connection != null ){
-            connection.getChatManager().addChatListener(chatListener);
-
-            rosterListener = new XmppRosterListener(getRealm(), this);
-            connection.getRoster().addRosterListener(rosterListener);
         }
     }
 
@@ -56,6 +48,14 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
             // connect to the server
             try {
                 prepareConnection(connection, getRealm());
+
+                // Attach listeners to connection
+                if ( this.connection != null ){
+                    connection.getChatManager().addChatListener(chatListener);
+
+                    rosterListener = new XmppRosterListener(getRealm(), this);
+                    connection.getRoster().addRosterListener(rosterListener);
+                }
 
                 this.connection = connection;
             } catch (XMPPException e) {
@@ -68,7 +68,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
         }
     }
 
-    public static void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
+    static void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
         if (!connection.isConnected()) {
             connection.connect();
             if (!connection.isAuthenticated()) {

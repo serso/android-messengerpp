@@ -85,7 +85,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
 
     @Nonnull
     protected AbstractContactsAdapter createAdapter() {
-        return new ContactsAdapter(getActivity());
+        return new ContactsAdapter(getActivity(), getRealmService());
     }
 
     @Override

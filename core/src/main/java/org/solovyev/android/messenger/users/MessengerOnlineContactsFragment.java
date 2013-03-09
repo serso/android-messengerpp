@@ -46,6 +46,6 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
 
     @Nonnull
     protected AbstractContactsAdapter createAdapter() {
-        return new OnlineContactsAdapter(getActivity());
+        return new OnlineContactsAdapter(getActivity(), getRealmService());
     }
 }

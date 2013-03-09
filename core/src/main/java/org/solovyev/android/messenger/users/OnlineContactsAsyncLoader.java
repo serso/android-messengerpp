@@ -1,8 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
@@ -10,6 +8,8 @@ import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -54,6 +54,6 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UserContact, 
     @Nonnull
     @Override
     protected ContactListItem createListItem(@Nonnull UserContact userContact) {
-        return new ContactListItem(userContact.getContact());
+        return new ContactListItem(userContact.getContact(), realmService);
     }
 }

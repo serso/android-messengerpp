@@ -29,10 +29,9 @@ public class XmppChatListener implements ChatManagerListener {
     @Override
     public void chatCreated(@Nonnull Chat chat, boolean createdLocally) {
         Log.i("M++/Xmpp", "Chat created!");
-        if ( !createdLocally ) {
-            final ApiChatImpl newChat = toApiChat(chat, Collections.<Message>emptyList());
-            getChatService().saveChat(realm.getUser().getRealmEntity(), newChat);
-        }
+
+        final ApiChatImpl newChat = toApiChat(chat, Collections.<Message>emptyList());
+        getChatService().saveChat(realm.getUser().getRealmEntity(), newChat);
 
         chat.addMessageListener(new XmppMessageListener());
     }

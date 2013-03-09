@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
+import android.util.Log;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
@@ -72,8 +73,20 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         public String call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final ChatManager chatManager = connection.getChatManager();
 
-            final org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chat.getRealmEntity().getRealmEntityId());
-            smackChat.sendMessage(message.getBody());
+            org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chat.getRealmEntity().getRealmEntityId());
+            if (smackChat == null) {
+                /**
+                 * chat will be saved in application in {@link org.jivesoftware.smack.ChatManagerListener#chatCreated(org.jivesoftware.smack.Chat, boolean)} method call
+                 */
+                smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), null);
+            }
+
+            if ( smackChat != null ) {
+                smackChat.sendMessage(message.getBody());
+            } else {
+                Log.e("M++/Xmpp", "Unable to send message - chat is not found and could not be created!");
+                throw new RealmIsNotConnectedException();
+            }
 
             return null;
         }

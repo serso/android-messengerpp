@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.text.Strings;
 
@@ -28,9 +29,12 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
     @Nonnull
     private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
 
+    @Nonnull
+    private final RealmService realmService;
 
-    public AbstractContactsAdapter(@Nonnull Context context) {
+    public AbstractContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
         super(context, new ArrayList<ContactListItem>());
+        this.realmService = realmService;
     }
 
     @Override
@@ -108,7 +112,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
     @Nonnull
     private ContactListItem createListItem(@Nonnull User contact) {
-        return new ContactListItem(contact);
+        return new ContactListItem(contact, realmService);
     }
 
     protected abstract void onListItemChanged(@Nonnull User contact);

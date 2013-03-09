@@ -53,6 +53,8 @@ public interface RealmService {
 
     void removeRealm(@Nonnull String realmId);
 
+    boolean isOneRealm();
+
     /*
     **********************************************************************
     *

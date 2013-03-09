@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-                style="@style/mpp_list_item">
+    style="@style/mpp_list_item">
 
-    <ImageView a:id="@+id/mpp_contact_icon_imageview"
-               style="@style/mpp_list_item_icon"
-               a:layout_centerInParent="true"
-               a:layout_alignParentLeft="true"/>
+    <ImageView
+        a:id="@+id/mpp_li_contact_icon_imageview"
+        style="@style/mpp_list_item_icon"
+        a:layout_centerInParent="true"
+        a:layout_alignParentLeft="true" />
 
-    <TextView a:id="@+id/mpp_contact_online"
-              style="@style/mpp_list_item_contact_online"
-              a:layout_centerInParent="true"
-              a:layout_width="20dp"
-              a:layout_height="wrap_content"
-              a:layout_alignParentRight="true"/>
 
     <TextView
-            a:id="@+id/mpp_contact_name_textview"
-            style="@style/mpp_list_item_name"
-            a:layout_centerInParent="true"
-            a:layout_toRightOf="@id/mpp_contact_icon_imageview"
-            a:layout_toLeftOf="@id/mpp_contact_online"/>
+        a:id="@+id/mpp_li_contact_online"
+        style="@style/mpp_list_item_contact_online"
+        a:layout_centerInParent="true"
+        a:layout_width="20dp"
+        a:layout_height="wrap_content"
+        a:layout_alignParentRight="true" />
+
+    <TextView
+        a:id="@+id/mpp_li_contact_name_textview"
+        a:layout_toRightOf="@id/mpp_li_contact_icon_imageview"
+        a:layout_toLeftOf="@id/mpp_li_contact_online"
+        style="@style/mpp_list_item_name"
+        a:layout_centerInParent="true" />
 
 </RelativeLayout>

@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import org.solovyev.android.messenger.realms.RealmService;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -10,8 +12,8 @@ import javax.annotation.Nonnull;
  */
 public class ContactsAdapter extends AbstractContactsAdapter {
 
-    public ContactsAdapter(@Nonnull Context context) {
-        super(context);
+    public ContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
+        super(context, realmService);
     }
 
     @Override

@@ -8,6 +8,8 @@ import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 import roboguice.RoboGuice;
@@ -26,8 +28,12 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
     @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_";
 
-    public ContactListItem(@Nonnull User contact) {
+    @Nonnull
+    private final RealmService realmService;
+
+    public ContactListItem(@Nonnull User contact, @Nonnull RealmService realmService) {
         super(TAG_PREFIX, R.layout.mpp_list_item_contact, contact);
+        this.realmService = realmService;
     }
 
     @Override
@@ -71,19 +77,24 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
 
     @Nonnull
     @Override
-    protected String getDisplayName(@Nonnull User user, @Nonnull Context context) {
-        return Users.getDisplayNameFor(user);
+    protected String getDisplayName(@Nonnull User contact, @Nonnull Context context) {
+        if ( realmService.isOneRealm() ) {
+            return Users.getDisplayNameFor(contact);
+        } else {
+            final Realm realm = realmService.getRealmById(getContact().getRealmEntity().getRealmId());
+            return Users.getDisplayNameFor(contact) + "\n[" + Users.getDisplayNameFor(realm.getUser()) + "]";
+        }
     }
 
     @Override
     protected void fillView(@Nonnull User contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final ImageView contactIcon = viewTag.getViewById(R.id.mpp_contact_icon_imageview);
+        final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
         MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
 
-        final TextView contactName = viewTag.getViewById(R.id.mpp_contact_name_textview);
+        final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
         contactName.setText(getDisplayName());
 
-        final TextView contactOnline = viewTag.getViewById(R.id.mpp_contact_online);
+        final TextView contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online);
         if (contact.isOnline()) {
             contactOnline.setText("·");
         } else {

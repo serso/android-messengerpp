@@ -200,6 +200,13 @@ public class DefaultRealmService implements RealmService {
         }
     }
 
+    @Override
+    public boolean isOneRealm() {
+        synchronized (realms) {
+            return realms.size() == 1;
+        }
+    }
+
     @Nonnull
     private String generateRealmId(@Nonnull RealmDef realmDef) {
         return RealmEntityImpl.getRealmId(realmDef.getId(), realmCounter.getAndIncrement());
