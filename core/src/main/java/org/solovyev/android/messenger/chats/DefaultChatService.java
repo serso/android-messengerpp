@@ -28,6 +28,8 @@ import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.Collections;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JListeners;
 import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
@@ -42,7 +44,7 @@ import java.util.*;
  * Time: 2:43 AM
  */
 @Singleton
-public class DefaultChatService implements ChatService, ChatEventListener, UserEventListener {
+public class DefaultChatService implements ChatService, UserEventListener {
 
     @Nonnull
     private static final Character PRIVATE_CHAT_DELIMITER = ':';
@@ -94,7 +96,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     private static final String EVENT_TAG = "ChatEvent";
 
     @Nonnull
-    private final JListeners<ChatEventListener> listeners = Listeners.newWeakRefListeners();
+    private final JListeners<JEventListener<ChatEvent>> listeners = Listeners.newWeakRefListeners();
 
     // key: chat id, value: list of participants
     @Nonnull
@@ -112,7 +114,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     private final Object lock = new Object();
 
     public DefaultChatService() {
-        listeners.addListener(this);
+        listeners.addListener(new ChatEventListener());
     }
 
     @Override
@@ -127,7 +129,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
             getChatDao(context).updateChat(chat);
         }
 
-        fireChatEvent(chat, ChatEventType.changed, null);
+        fireEvent(ChatEventType.changed.newEvent(chat, null));
 
         return chat;
     }
@@ -281,7 +283,7 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
 
             final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>(messages.size());
 
-            chatEvents.add(new ChatEvent(chat, ChatEventType.message_added_batch, result.getAddedObjects()));
+            chatEvents.add(ChatEventType.message_added_batch.newEvent(chat, result.getAddedObjects()));
 
             // cannot to remove as not all message can be loaded
 /*            for (Integer removedMessageId : result.getRemovedObjectIds()) {
@@ -289,10 +291,10 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
             }*/
 
             for (ChatMessage updatedMessage : result.getUpdatedObjects()) {
-                chatEvents.add(new ChatEvent(chat, ChatEventType.message_changed, updatedMessage));
+                chatEvents.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));
             }
 
-            fireChatEvents(chatEvents);
+            fireEvents(chatEvents);
         } else {
             Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + realmChat.getEntityId());
         }
@@ -471,120 +473,33 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     }
 
     @Override
-    public void addChatEventListener(@Nonnull ChatEventListener chatEventListener) {
-        this.listeners.addListener(chatEventListener);
+    public boolean addListener(@Nonnull JEventListener<ChatEvent> listener) {
+        return this.listeners.addListener(listener);
     }
 
     @Override
-    public void removeChatEventListener(@Nonnull ChatEventListener chatEventListener) {
-        this.listeners.removeListener(chatEventListener);
+    public boolean removeListener(@Nonnull JEventListener<ChatEvent> listener) {
+        return this.listeners.removeListener(listener);
     }
 
-    @Override
-    public void fireChatEvent(@Nonnull Chat chat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
-        fireChatEvents(Arrays.asList(new ChatEvent(chat, chatEventType, data)));
-    }
-
-    @Override
-    public void fireChatEvents(@Nonnull List<ChatEvent> chatEvents) {
-        final Collection<ChatEventListener> listeners = this.listeners.getListeners();
-        for (ChatEvent chatEvent : chatEvents) {
-            Log.d(EVENT_TAG, "Event: " + chatEvent.getType() + " for chat: " + chatEvent.getChat().getRealmEntity().getEntityId() + " with data: " + chatEvent.getData());
-            for (ChatEventListener listener : listeners) {
-                listener.onChatEvent(chatEvent.getChat(), chatEvent.getType(), chatEvent.getData());
+    public void fireEvents(@Nonnull List<ChatEvent> events) {
+        final Collection<JEventListener<ChatEvent>> listeners = this.listeners.getListeners();
+        for (ChatEvent event : events) {
+            Log.d(EVENT_TAG, "Event: " + event.getType() + " for chat: " + event.getChat().getRealmEntity().getEntityId() + " with data: " + event.getData());
+            for (JEventListener<ChatEvent> listener : listeners) {
+                listener.onEvent(event);
             }
         }
     }
 
     @Override
-    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
-        synchronized (chatParticipantsCache) {
+    public void fireEvent(@Nonnull ChatEvent event) {
+        fireEvents(Arrays.asList(event));
+    }
 
-            if (chatEventType == ChatEventType.participant_added) {
-                // participant added => need to add to list of cached participants
-                if (data instanceof User) {
-                    final User participant = ((User) data);
-                    final List<User> participants = chatParticipantsCache.get(eventChat.getRealmEntity());
-                    if (participants != null) {
-                        // check if not contains as can be added in parallel
-                        if (!Iterables.contains(participants, participant)) {
-                            participants.add(participant);
-                        }
-                    }
-                }
-            }
-
-            if (chatEventType == ChatEventType.participant_removed) {
-                // participant removed => try to remove from cached participants
-                if (data instanceof User) {
-                    final User participant = ((User) data);
-                    final List<User> participants = chatParticipantsCache.get(eventChat.getRealmEntity());
-                    if (participants != null) {
-                        participants.remove(participant);
-                    }
-                }
-            }
-        }
-
-        synchronized (chatsById) {
-            if ( chatEventType == ChatEventType.changed || chatEventType == ChatEventType.added || chatEventType == ChatEventType.last_message_changed ) {
-                chatsById.put(eventChat.getRealmEntity(), eventChat);
-            }
-        }
-
-
-        final Map<Chat, ChatMessage> changesLastMessages = new HashMap<Chat, ChatMessage>();
-        synchronized (lastMessagesCache) {
-
-            if (chatEventType == ChatEventType.message_added) {
-                if (data instanceof ChatMessage) {
-                    final ChatMessage message = (ChatMessage) data;
-                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
-                    if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate()) ) {
-                        lastMessagesCache.put(eventChat.getRealmEntity(), message);
-                        changesLastMessages.put(eventChat, message);
-                    }
-                }
-            }
-
-            if (chatEventType == ChatEventType.message_added_batch) {
-                if (data instanceof List) {
-                    final List<ChatMessage> messages = (List<ChatMessage>) data;
-
-                    ChatMessage newestMessage = null;
-                    for (ChatMessage message : messages) {
-                        if (newestMessage == null) {
-                            newestMessage = message;
-                        } else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
-                            newestMessage = message;
-                        }
-                    }
-
-                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
-                    if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
-                        lastMessagesCache.put(eventChat.getRealmEntity(), newestMessage);
-                        changesLastMessages.put(eventChat, newestMessage);
-                    }
-                }
-            }
-
-
-            if (chatEventType == ChatEventType.message_changed) {
-                if (data instanceof ChatMessage) {
-                    final ChatMessage message = (ChatMessage) data;
-                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
-                    if (messageFromCache == null || messageFromCache.equals(message)) {
-                        lastMessagesCache.put(eventChat.getRealmEntity(), message);
-                        changesLastMessages.put(eventChat, message);
-                    }
-                }
-            }
-
-        }
-
-        for (Map.Entry<Chat, ChatMessage> changedLastMessageEntry : changesLastMessages.entrySet()) {
-            fireChatEvent(changedLastMessageEntry.getKey(), ChatEventType.last_message_changed, changedLastMessageEntry.getValue());
-        }
+    @Override
+    public void removeListeners() {
+        this.listeners.removeListeners();
     }
 
     @Override
@@ -602,6 +517,108 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
                 }
             }
 
+        }
+    }
+
+    private final class ChatEventListener extends AbstractJEventListener<ChatEvent> {
+
+        private ChatEventListener() {
+            super(ChatEvent.class);
+        }
+
+        @Override
+        public void onEvent(@Nonnull ChatEvent event) {
+            final Chat eventChat = event.getChat();
+            final ChatEventType type = event.getType();
+            final Object data = event.getData();
+
+            synchronized (chatParticipantsCache) {
+
+                if (type == ChatEventType.participant_added) {
+                    // participant added => need to add to list of cached participants
+                    if (data instanceof User) {
+                        final User participant = ((User) data);
+                        final List<User> participants = chatParticipantsCache.get(eventChat.getRealmEntity());
+                        if (participants != null) {
+                            // check if not contains as can be added in parallel
+                            if (!Iterables.contains(participants, participant)) {
+                                participants.add(participant);
+                            }
+                        }
+                    }
+                }
+
+                if (type == ChatEventType.participant_removed) {
+                    // participant removed => try to remove from cached participants
+                    if (data instanceof User) {
+                        final User participant = ((User) data);
+                        final List<User> participants = chatParticipantsCache.get(eventChat.getRealmEntity());
+                        if (participants != null) {
+                            participants.remove(participant);
+                        }
+                    }
+                }
+            }
+
+            synchronized (chatsById) {
+                if (event.isOfType(ChatEventType.changed, ChatEventType.changed, ChatEventType.last_message_changed)) {
+                    chatsById.put(eventChat.getRealmEntity(), eventChat);
+                }
+            }
+
+
+            final Map<Chat, ChatMessage> changesLastMessages = new HashMap<Chat, ChatMessage>();
+            synchronized (lastMessagesCache) {
+
+                if (type == ChatEventType.message_added) {
+                    if (data instanceof ChatMessage) {
+                        final ChatMessage message = (ChatMessage) data;
+                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
+                        if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate()) ) {
+                            lastMessagesCache.put(eventChat.getRealmEntity(), message);
+                            changesLastMessages.put(eventChat, message);
+                        }
+                    }
+                }
+
+                if (type == ChatEventType.message_added_batch) {
+                    if (data instanceof List) {
+                        final List<ChatMessage> messages = (List<ChatMessage>) data;
+
+                        ChatMessage newestMessage = null;
+                        for (ChatMessage message : messages) {
+                            if (newestMessage == null) {
+                                newestMessage = message;
+                            } else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
+                                newestMessage = message;
+                            }
+                        }
+
+                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
+                        if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
+                            lastMessagesCache.put(eventChat.getRealmEntity(), newestMessage);
+                            changesLastMessages.put(eventChat, newestMessage);
+                        }
+                    }
+                }
+
+
+                if (type == ChatEventType.message_changed) {
+                    if (data instanceof ChatMessage) {
+                        final ChatMessage message = (ChatMessage) data;
+                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
+                        if (messageFromCache == null || messageFromCache.equals(message)) {
+                            lastMessagesCache.put(eventChat.getRealmEntity(), message);
+                            changesLastMessages.put(eventChat, message);
+                        }
+                    }
+                }
+
+            }
+
+            for (Map.Entry<Chat, ChatMessage> changedLastMessageEntry : changesLastMessages.entrySet()) {
+                ChatEventType.last_message_changed.newEvent(changedLastMessageEntry.getKey(), changedLastMessageEntry.getValue());
+            }
         }
     }
 }

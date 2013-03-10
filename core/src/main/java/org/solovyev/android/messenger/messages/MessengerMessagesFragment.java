@@ -28,6 +28,8 @@ import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -92,7 +94,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     private Realm realm;
 
     @Nullable
-    private ChatEventListener chatEventListener;
+    private JEventListener<ChatEvent> chatEventListener;
 
     public MessengerMessagesFragment() {
         super(TAG, false);
@@ -154,7 +156,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onActivityCreated(savedInstanceState);
 
         chatEventListener = new UiThreadUserChatListener();
-        this.chatService.addChatEventListener(chatEventListener);
+        this.chatService.addListener(chatEventListener);
     }
 
     @Override
@@ -212,7 +214,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onDestroyView();
 
         if (chatEventListener != null) {
-            this.chatService.removeChatEventListener(chatEventListener);
+            this.chatService.removeListener(chatEventListener);
         }
     }
 
@@ -372,14 +374,18 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         }
     }
 
-    private class UiThreadUserChatListener implements ChatEventListener {
+    private class UiThreadUserChatListener extends AbstractJEventListener<ChatEvent> {
+
+        private UiThreadUserChatListener() {
+            super(ChatEvent.class);
+        }
 
         @Override
-        public void onChatEvent(@Nonnull final Chat eventChat, @Nonnull final ChatEventType chatEventType, @Nullable final Object data) {
+        public void onEvent(@Nonnull final ChatEvent event) {
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
-                    getAdapter().onChatEvent(eventChat, chatEventType, data);
+                    getAdapter().onEvent(event);
                 }
             });
         }

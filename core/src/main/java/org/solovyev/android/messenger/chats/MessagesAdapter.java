@@ -6,8 +6,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -15,6 +13,8 @@ import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventListener;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -22,7 +22,7 @@ import java.util.*;
  * Date: 6/10/12
  * Time: 11:27 PM
  */
-public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> implements ChatEventListener, UserEventListener {
+public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> implements /*ChatEventListener,*/ UserEventListener {
 
     @Nonnull
     private final User user;
@@ -41,10 +41,13 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> i
         this.chat = chat;
     }
 
-    @Override
-    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
+    /*@Override*/
+    public void onEvent(@Nonnull ChatEvent event) {
+        final ChatEventType type = event.getType();
+        final Chat eventChat = event.getChat();
+        final Object data = event.getData();
 
-        if (chatEventType == ChatEventType.message_removed) {
+        if (type == ChatEventType.message_removed) {
             if (eventChat.equals(chat)) {
                 final String messageId = (String) data;
                 assert messageId != null;
@@ -52,7 +55,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> i
             }
         }
 
-        if (chatEventType == ChatEventType.message_added) {
+        if (type == ChatEventType.message_added) {
             if (eventChat.equals(chat)) {
                 final ChatMessage message = (ChatMessage) data;
                 assert message != null;
@@ -60,7 +63,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> i
             }
         }
 
-        if (chatEventType == ChatEventType.message_added_batch) {
+        if (type == ChatEventType.message_added_batch) {
             if (eventChat.equals(chat)) {
                 final List<ChatMessage> messages = (List<ChatMessage>) data;
                 assert messages != null;
@@ -82,19 +85,19 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> i
             }
         }
 
-        if (chatEventType == ChatEventType.message_changed) {
+        if (type == ChatEventType.message_changed) {
             if (eventChat.equals(chat)) {
                 final ChatMessage message = (ChatMessage) data;
                 final MessageListItem listItem = findInAllElements(message);
                 if (listItem != null) {
-                    listItem.onChatEvent(eventChat, chatEventType, data);
+                    listItem.onEvent(event);
                 }
             }
 
             //notifyDataSetChanged();
         }
 
-        if (chatEventType.isEvent(ChatEventType.user_start_typing, eventChat, chat)) {
+        if (type.isEvent(ChatEventType.user_start_typing, eventChat, chat)) {
             final RealmEntity realmUser = (RealmEntity) data;
 
             if (!userTypingListItems.containsKey(realmUser)) {

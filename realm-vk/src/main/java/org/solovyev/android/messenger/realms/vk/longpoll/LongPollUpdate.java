@@ -1,12 +1,6 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.gson.*;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
@@ -17,6 +11,8 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
 /**
@@ -110,7 +106,7 @@ public interface LongPollUpdate {
             if (!user.getRealmEntity().getRealmEntityId().equals(realmUserId)) {
                 Chat chat = getChatService().getChatById(realm.newRealmEntity(realmChatId));
                 if (chat != null) {
-                    getChatService().fireChatEvent(chat, ChatEventType.user_start_typing, realmUserId);
+                    getChatService().fireEvent(ChatEventType.user_start_typing.newEvent(chat, realm.newRealmEntity(realmUserId)));
                 }
             }
         }
@@ -140,7 +136,7 @@ public interface LongPollUpdate {
                 final RealmEntity realmChat = getChatService().createPrivateChatId(user.getRealmEntity(), secondRealmUser);
                 Chat chat = getChatService().getChatById(realmChat);
                 if (chat != null) {
-                    getChatService().fireChatEvent(chat, ChatEventType.user_start_typing, secondRealmUser);
+                    getChatService().fireEvent(ChatEventType.user_start_typing.newEvent(chat, secondRealmUser));
                 }
             }
         }

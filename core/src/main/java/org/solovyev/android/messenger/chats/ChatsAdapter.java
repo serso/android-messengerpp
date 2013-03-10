@@ -22,7 +22,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:48 PM
  */
-public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> implements ChatEventListener, UserEventListener {
+public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> implements /*ChatEventListener,*/ UserEventListener {
 
     public ChatsAdapter(@Nonnull Context context) {
         super(context, new ArrayList<ChatListItem>());
@@ -83,14 +83,15 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> impleme
         return MessengerApplication.getServiceLocator().getChatService();
     }
 
-    @Override
-    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
+    /*@Override*/
+    public void onEvent(@Nonnull ChatEvent event) {
+        final Chat eventChat = event.getChat();
 
-        if (chatEventType == ChatEventType.changed || chatEventType == ChatEventType.last_message_changed) {
+        if (event.isOfType(ChatEventType.changed, ChatEventType.last_message_changed)) {
             final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getRealmEntity().getRealmId()).getUser();
             final ChatListItem chatListItem = findInAllElements(user, eventChat);
             if (chatListItem != null) {
-                chatListItem.onChatEvent(eventChat, chatEventType, data);
+                chatListItem.onEvent(event);
             }
         }
     }

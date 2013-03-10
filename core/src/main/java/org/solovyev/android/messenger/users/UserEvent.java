@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.android.messenger.events.AbstractTypedJEvent;
+import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

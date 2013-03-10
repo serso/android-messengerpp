@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * Date: 6/7/12
  * Time: 6:24 PM
  */
-public class ChatListItem extends AbstractMessengerListItem<UserChat> implements ChatEventListener {
+public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implements ChatEventListener*/ {
 
     @Nonnull
     private static final String TAG_PREFIX = "chat_list_item_";
@@ -108,18 +108,20 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> implements
         return MessengerApplication.getServiceLocator().getChatService();
     }
 
-    @Override
-    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
+    /*@Override*/
+    public void onEvent(@Nonnull ChatEvent event) {
         final Chat chat = getChat();
-        if (chatEventType == ChatEventType.changed) {
+        final Chat eventChat = event.getChat();
+
+        if (event.getType() == ChatEventType.changed) {
             if (eventChat.equals(chat)) {
                 setData(getData().copyForNewChat(eventChat));
             }
         }
 
-        if (chatEventType == ChatEventType.last_message_changed) {
+        if (event.getType() == ChatEventType.last_message_changed) {
             if (eventChat.equals(chat)) {
-                setData(getData().copyForNewLastMessage((ChatMessage) data));
+                setData(getData().copyForNewLastMessage(event.getDataAsChatMessage()));
             }
         }
     }

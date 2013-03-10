@@ -1,6 +1,4 @@
-package org.solovyev.android.messenger.events;
-
-import org.solovyev.common.listeners.JEvent;
+package org.solovyev.common.listeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,5 +41,15 @@ public abstract class AbstractTypedJEvent<D, T> implements JEvent {
     @Nullable
     public final Object getData() {
         return data;
+    }
+
+    public boolean isOfType(@Nonnull T... types) {
+        for (T type : types) {
+            if ( this.type.equals(type) ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

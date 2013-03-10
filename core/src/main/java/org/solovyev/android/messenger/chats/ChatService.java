@@ -4,6 +4,8 @@ import android.widget.ImageView;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.listeners.JEventListeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,7 +16,7 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface ChatService extends ChatEventContainer {
+public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, ChatEvent> {
 
     // initial initialization: will be called once on application start
     void init();
@@ -74,4 +76,6 @@ public interface ChatService extends ChatEventContainer {
     RealmEntity getSecondUser(@Nonnull Chat chat);
 
     void setChatIcon(@Nonnull ImageView imageView, @Nonnull Chat chat, @Nonnull User user);
+
+    void fireEvents(@Nonnull List<ChatEvent> chatEvents);
 }

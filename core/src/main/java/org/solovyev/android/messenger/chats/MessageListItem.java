@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
@@ -21,6 +19,7 @@ import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
@@ -28,7 +27,7 @@ import java.util.Arrays;
  * Date: 6/10/12
  * Time: 11:25 PM
  */
-public class MessageListItem implements ListItem, ChatEventListener {
+public class MessageListItem implements ListItem/*, ChatEventListener*/ {
 
     @Nonnull
     private static final String LEFT_VIEW_TAG = "left";
@@ -189,11 +188,11 @@ public class MessageListItem implements ListItem, ChatEventListener {
         return message.hashCode();
     }
 
-    @Override
-    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
-        if (ChatEventType.message_changed.isEvent(chatEventType, eventChat, chat)) {
-            if (message.equals(data)) {
-                message = (ChatMessage) data;
+    /*@Override*/
+    public void onEvent(@Nonnull ChatEvent event) {
+        if (ChatEventType.message_changed.isEvent(event.getType(), event.getChat(), chat)) {
+            if (message.equals(event.getData())) {
+                message = event.getDataAsChatMessage();
             }
         }
     }

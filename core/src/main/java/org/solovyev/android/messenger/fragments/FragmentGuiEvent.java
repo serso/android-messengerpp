@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.Fragment;
 import android.view.View;
-import org.solovyev.android.messenger.events.AbstractTypedJEvent;
+import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 import javax.annotation.Nonnull;
 

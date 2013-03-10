@@ -18,6 +18,7 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.*;
 import org.solovyev.common.collections.Collections;
+import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -33,7 +34,7 @@ import java.util.Map;
  * Time: 10:30 PM
  */
 @Singleton
-public class DefaultUserService implements UserService, UserEventListener, ChatEventListener {
+public class DefaultUserService implements UserService, UserEventListener {
 
     /*
     **********************************************************************
@@ -94,7 +95,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
 
     @Override
     public void init() {
-        chatService.addChatEventListener(this);
+        chatService.addListener(new ChatEventListener());
     }
 
     @Nonnull
@@ -372,7 +373,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         });
 
         for (Chat addedChat : addedChats) {
-            chatEvents.add(new ChatEvent(addedChat, ChatEventType.added, null));
+            chatEvents.add(ChatEventType.added.newEvent(addedChat, null));
         }
         if (!addedChats.isEmpty()) {
             userEvents.add(new UserEvent(user, UserEventType.chat_added_batch, addedChats));
@@ -383,11 +384,11 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
 
         for (ApiChat updatedChat : result.getUpdatedObjects()) {
-            chatEvents.add(new ChatEvent(updatedChat.getChat(), ChatEventType.changed, null));
+            chatEvents.add(ChatEventType.changed.newEvent(updatedChat.getChat(), null));
         }
 
         listeners.fireUserEvents(userEvents);
-        getChatService().fireChatEvents(chatEvents);
+        getChatService().fireEvents(chatEvents);
     }
 
     @Nonnull
@@ -647,21 +648,29 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
     }
 
-    @Override
-    public void onChatEvent(@Nonnull Chat eventChat, @Nonnull ChatEventType chatEventType, @Nullable Object data) {
-        synchronized (userChatsCache) {
+    private final class ChatEventListener extends AbstractJEventListener<ChatEvent> {
 
-            if (chatEventType == ChatEventType.changed) {
-                for (List<Chat> chats : userChatsCache.values()) {
-                    for (int i = 0; i < chats.size(); i++) {
-                        final Chat chat = chats.get(i);
-                        if (chat.equals(eventChat)) {
-                            chats.set(i, eventChat);
+        private ChatEventListener() {
+            super(ChatEvent.class);
+        }
+
+        @Override
+        public void onEvent(@Nonnull ChatEvent event) {
+            synchronized (userChatsCache) {
+
+                final Chat eventChat = event.getChat();
+                if (event.getType() == ChatEventType.changed) {
+                    for (List<Chat> chats : userChatsCache.values()) {
+                        for (int i = 0; i < chats.size(); i++) {
+                            final Chat chat = chats.get(i);
+                            if (chat.equals(eventChat)) {
+                                chats.set(i, eventChat);
+                            }
                         }
                     }
                 }
-            }
 
+            }
         }
     }
 
