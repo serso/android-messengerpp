@@ -26,12 +26,8 @@ class XmppRosterListener implements RosterListener {
     @Nonnull
     private final XmppRealm realm;
 
-    @Nonnull
-    private final XmppConnectionAware connectionAware;
-
-    XmppRosterListener(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+    XmppRosterListener(@Nonnull XmppRealm realm) {
         this.realm = realm;
-        this.connectionAware = connectionAware;
     }
 
     @Override

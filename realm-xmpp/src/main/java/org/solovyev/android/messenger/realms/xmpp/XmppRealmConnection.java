@@ -25,12 +25,13 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     @Nonnull
     private final ChatManagerListener chatListener;
 
-    @Nullable
-    private RosterListener rosterListener;
+    @Nonnull
+    private final RosterListener rosterListener;
 
     public XmppRealmConnection(@Nonnull XmppRealm realm, @Nonnull Context context) {
         super(realm, context);
         chatListener = new XmppChatListener(realm);
+        rosterListener = new XmppRosterListener(realm);
     }
 
     @Override
@@ -52,8 +53,6 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
                 // Attach listeners to connection
                 if ( this.connection != null ){
                     connection.getChatManager().addChatListener(chatListener);
-
-                    rosterListener = new XmppRosterListener(getRealm(), this);
                     connection.getRoster().addRosterListener(rosterListener);
                 }
 
@@ -81,9 +80,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     @Override
     protected void stopWork() {
         if (connection != null) {
-            if (rosterListener != null) {
-                connection.getRoster().removeRosterListener(rosterListener);
-            }
+            connection.getRoster().removeRosterListener(rosterListener);
             connection.getChatManager().removeChatListener(chatListener);
 
             /**

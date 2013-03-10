@@ -4,7 +4,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmEvent;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +57,14 @@ public class DefaultSyncService implements SyncService {
     @Nonnull
     private final Executor executor = Executors.newSingleThreadExecutor();
 
+    @Nonnull
+    private final JEventListener<RealmEvent> realmEventListener = new RealmEventListener();
+
+    @Override
+    public void init() {
+        realmService.addListener(realmEventListener);
+    }
+
     @Override
     public void syncAll(final boolean force) throws SyncAllTaskIsAlreadyRunning {
         startSyncAllTask(realmService.getRealms(), force);
@@ -97,6 +108,14 @@ public class DefaultSyncService implements SyncService {
             runningTasks.add(syncTask);
         }
     }
+
+    /*
+    **********************************************************************
+    *
+    *                           INNER CLASSES
+    *
+    **********************************************************************
+    */
 
     private class ServiceSyncAsyncTask extends SyncAsyncTask {
 
@@ -184,6 +203,27 @@ public class DefaultSyncService implements SyncService {
                 synchronized (syncAllTaskRunning) {
                     syncAllTaskRunning.set(false);
                 }
+            }
+        }
+    }
+
+    private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
+
+        private RealmEventListener() {
+            super(RealmEvent.class);
+        }
+
+        @Override
+        public void onEvent(@Nonnull RealmEvent event) {
+            switch (event.getType()) {
+                case created:
+                case changed:
+                    try {
+                        syncAllInRealm(event.getRealm(), true);
+                    } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+                        // ok, do not care
+                    }
+                    break;
             }
         }
     }
