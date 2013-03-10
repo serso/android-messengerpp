@@ -45,10 +45,10 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     ChatMessage getLastMessage(@Nonnull RealmEntity realmChat);
 
     @Nonnull
-    Chat createPrivateChat(@Nonnull RealmEntity user, @Nonnull RealmEntity secondRealmUser);
+    Chat newPrivateChat(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2);
 
     @Nonnull
-    RealmEntity createPrivateChatId(@Nonnull RealmEntity user, @Nonnull RealmEntity secondRealmUser);
+    RealmEntity newPrivateChatId(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2);
 
     @Nullable
     ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage);

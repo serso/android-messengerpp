@@ -48,6 +48,14 @@ final class UserImpl extends AbstractMessengerEntity implements User {
             result.propertiesMap.put(property.getName(), property.getValue());
         }
 
+        if ( result.propertiesMap.size() != result.properties.size() ) {
+            // just in case...
+            result.properties.clear();
+            for (Map.Entry<String, String> entry : result.propertiesMap.entrySet()) {
+                result.properties.add(APropertyImpl.newInstance(entry.getKey(), entry.getValue()));
+            }
+        }
+
         return result;
     }
 

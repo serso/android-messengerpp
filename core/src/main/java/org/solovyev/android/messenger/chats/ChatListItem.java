@@ -48,7 +48,7 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
             @Override
             public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(ChatGuiEventType.newChatClicked(getChat()));
+                eventManager.fire(ChatGuiEventType.chat_clicked.newEvent(getChat()));
             }
         };
     }

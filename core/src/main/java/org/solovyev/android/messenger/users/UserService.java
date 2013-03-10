@@ -36,7 +36,7 @@ public interface UserService extends JEventListeners<JEventListener<UserEvent>, 
     List<Chat> getUserChats(@Nonnull RealmEntity realmUser);
 
     @Nonnull
-    Chat getPrivateChat(@Nonnull RealmEntity realmUser, @Nonnull RealmEntity secondRealmUser);
+    Chat getPrivateChat(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2);
 
     @Nonnull
     List<User> getOnlineUserContacts(@Nonnull RealmEntity realmUser);

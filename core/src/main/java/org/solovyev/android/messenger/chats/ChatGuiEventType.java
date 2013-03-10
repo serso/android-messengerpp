@@ -12,7 +12,7 @@ public enum ChatGuiEventType {
     chat_clicked;
 
     @Nonnull
-    public static ChatGuiEvent newChatClicked(@Nonnull Chat chat) {
-        return new ChatGuiEvent(chat, chat_clicked);
+    public ChatGuiEvent newEvent(@Nonnull Chat chat) {
+        return new ChatGuiEvent(chat, this);
     }
 }

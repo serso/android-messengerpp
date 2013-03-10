@@ -75,7 +75,7 @@ public class DefaultUserService implements UserService {
     private final Object lock = new Object();
 
     @Nonnull
-    private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners = Listeners.newEventBusFor(UserEvent.class);
+    private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().onCallerThread().create();
 
     // key: realm user, value: list of user contacts
     @Nonnull
@@ -206,12 +206,12 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public Chat getPrivateChat(@Nonnull RealmEntity realmUser, @Nonnull final RealmEntity secondRealmUser) {
-        final RealmEntity realmChat = getChatService().createPrivateChatId(realmUser, secondRealmUser);
+    public Chat getPrivateChat(@Nonnull RealmEntity realmUser1, @Nonnull final RealmEntity realmUser2) {
+        final RealmEntity realmChat = getChatService().newPrivateChatId(realmUser1, realmUser2);
 
         Chat result = getChatService().getChatById(realmChat);
         if (result == null) {
-            result = getChatService().createPrivateChat(realmUser, secondRealmUser);
+            result = getChatService().newPrivateChat(realmUser1, realmUser2);
         }
 
         return result;
@@ -361,7 +361,7 @@ public class DefaultUserService implements UserService {
                 return apiChat.getChat();
             }
         });
-        // todo serso: investigate why chat_added_batch called twice in this method
+
         if (!addedChatLinks.isEmpty()) {
             userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChatLinks));
         }

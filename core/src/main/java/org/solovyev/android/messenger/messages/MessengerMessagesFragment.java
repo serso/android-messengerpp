@@ -382,6 +382,11 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
         @Override
         public void onEvent(@Nonnull final ChatEvent event) {
+            if ( event.getType() == ChatEventType.changed ) {
+               if ( chat.equals(event.getChat()) ) {
+                   chat = event.getChat();
+               }
+            }
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {

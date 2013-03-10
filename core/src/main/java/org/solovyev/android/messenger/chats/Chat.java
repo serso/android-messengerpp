@@ -16,6 +16,8 @@ import java.util.List;
  */
 public interface Chat extends MessengerEntity {
 
+    String PROPERTY_PRIVATE = "private";
+
     @Nonnull
     RealmEntity getRealmEntity();
 
@@ -36,4 +38,16 @@ public interface Chat extends MessengerEntity {
 
     @Nonnull
     Chat updateMessagesSyncDate();
+
+    /**
+     * Method creates copy of this object with new realm id
+     *
+     * @param realmChat new chat id
+     * @return chat copy with updated properties
+     */
+    @Nonnull
+    Chat copyWithNew(@Nonnull RealmEntity realmChat);
+
+    @Nullable
+    String getPropertyValueByName(@Nonnull String name);
 }

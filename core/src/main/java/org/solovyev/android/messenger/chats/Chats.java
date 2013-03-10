@@ -1,11 +1,15 @@
 package org.solovyev.android.messenger.chats;
 
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: serso
@@ -45,5 +49,29 @@ public final class Chats {
         } else {
             return title;
         }
+    }
+
+    @Nonnull
+    public static Chat newPrivateChat(@Nonnull RealmEntity realmChat) {
+        return ChatImpl.newPrivate(realmChat);
+    }
+
+    @Nonnull
+    public static ApiChat newPrivateApiChat(@Nonnull RealmEntity realmChat,
+                                            @Nonnull Collection<User> participants,
+                                            @Nonnull Collection<ChatMessage> messages) {
+        final ApiChatImpl result = ApiChatImpl.newInstance(realmChat, messages.size(), true);
+        for (User participant : participants) {
+            result.addParticipant(participant);
+        }
+        for (ChatMessage message : messages) {
+            result.addMessage(message);
+        }
+        return result;
+    }
+
+    @Nonnull
+    public static ApiChat newEmptyApiChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
+        return ApiChatImpl.newInstance(chat, Collections.<ChatMessage>emptyList(), participants);
     }
 }

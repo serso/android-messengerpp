@@ -6,7 +6,7 @@ import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * User: serso
@@ -67,7 +67,7 @@ public interface User extends MutableUserSyncData, MessengerEntity {
     boolean isOnline();
 
     @Nonnull
-    List<AProperty> getProperties();
+    Collection<AProperty> getProperties();
 
     @Nonnull
     RealmEntity getRealmEntity();

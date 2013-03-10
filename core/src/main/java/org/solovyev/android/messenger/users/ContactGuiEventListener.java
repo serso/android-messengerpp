@@ -47,7 +47,7 @@ public class ContactGuiEventListener implements EventListener<ContactGuiEvent> {
                 protected void onPostExecute(@Nonnull Chat chat) {
                     super.onPostExecute(chat);
 
-                    activity.getEventManager().fire(ChatGuiEventType.newChatClicked(chat));
+                    activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
                 }
 
             }.execute(null, null);

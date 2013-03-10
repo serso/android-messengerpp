@@ -133,7 +133,7 @@ public interface LongPollUpdate {
             if (!user.getRealmEntity().getRealmEntityId().equals(realmUserId)) {
                 final RealmEntity secondRealmUser = realm.newRealmEntity(realmUserId);
 
-                final RealmEntity realmChat = getChatService().createPrivateChatId(user.getRealmEntity(), secondRealmUser);
+                final RealmEntity realmChat = getChatService().newPrivateChatId(user.getRealmEntity(), secondRealmUser);
                 Chat chat = getChatService().getChatById(realmChat);
                 if (chat != null) {
                     getChatService().fireEvent(ChatEventType.user_start_typing.newEvent(chat, secondRealmUser));
@@ -215,7 +215,7 @@ public interface LongPollUpdate {
                 realmChat = realm.newRealmEntity(this.realmChatId);
             } else {
                 assert realmFriendId != null;
-                realmChat = getChatService().createPrivateChatId(user.getRealmEntity(), realm.newRealmEntity(realmFriendId));
+                realmChat = getChatService().newPrivateChatId(user.getRealmEntity(), realm.newRealmEntity(realmFriendId));
             }
 
             getChatService().syncNewerChatMessagesForChat(realmChat, user.getRealmEntity());

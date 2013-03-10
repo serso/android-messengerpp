@@ -10,9 +10,7 @@ import org.solovyev.android.properties.APropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: serso
@@ -37,6 +35,9 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     @Nonnull
     private List<AProperty> properties;
 
+    @Nonnull
+    private Map<String, String> propertiesMap = new HashMap<String, String>();
+
     @Nullable
     private DateTime lastMessageSyncDate;
 
@@ -60,9 +61,9 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
         this.privateChat = true;
         for (AProperty property : properties) {
-            if (property.getName().equals("private")) {
+            this.propertiesMap.put(property.getName(), property.getValue());
+            if (property.getName().equals(PROPERTY_PRIVATE)) {
                 this.privateChat = Boolean.valueOf(property.getValue());
-                break;
             }
         }
     }
@@ -74,7 +75,9 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
         this.messagesCount = messagesCount;
         this.privateChat = privateChat;
         this.properties = new ArrayList<AProperty>();
-        properties.add(APropertyImpl.newInstance("private", Boolean.toString(privateChat)));
+        final AProperty property = APropertyImpl.newInstance(PROPERTY_PRIVATE, Boolean.toString(privateChat));
+        properties.add(property);
+        propertiesMap.put(property.getName(), property.getValue());
     }
 
 
@@ -95,7 +98,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     @Nonnull
     public static Chat newPrivate(@Nonnull RealmEntity realmEntity) {
         final List<AProperty> properties = new ArrayList<AProperty>();
-        properties.add(APropertyImpl.newInstance("private", Boolean.toString(true)));
+        properties.add(APropertyImpl.newInstance(PROPERTY_PRIVATE, Boolean.toString(true)));
         return new ChatImpl(realmEntity, 0, properties, null);
     }
 
@@ -129,6 +132,18 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
     @Nonnull
     @Override
+    public Chat copyWithNew(@Nonnull RealmEntity realmChat) {
+        return new ChatImpl(realmChat, this.messagesCount, this.properties, this.lastMessageSyncDate);
+    }
+
+    @Nullable
+    @Override
+    public String getPropertyValueByName(@Nonnull String name) {
+        return propertiesMap.get(name);
+    }
+
+    @Nonnull
+    @Override
     public ChatImpl clone() {
         final ChatImpl clone = (ChatImpl) super.clone();
 
@@ -144,6 +159,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
         // properties cannot be changed themselves but some can be removed or added
         clone.properties = new ArrayList<AProperty>(this.properties);
+        clone.propertiesMap = new HashMap<String, String>(this.propertiesMap);
 
         return clone;
     }

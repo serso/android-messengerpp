@@ -29,6 +29,9 @@ public class VkRealmChatService implements RealmChatService {
     private static final String TAG = VkRealmChatService.class.getSimpleName();
 
     @Nonnull
+    private static final String CHAT_DELIMITER = "_";
+
+    @Nonnull
     private final Realm realm;
 
     public VkRealmChatService(@Nonnull Realm realm) {
@@ -180,8 +183,7 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public ApiChat newPrivateChat(@Nonnull String realmUserId, @Nonnull String secondRealmUserId) {
-        // todo serso: continue
-        throw new UnsupportedOperationException();
+    public Chat newPrivateChat(@Nonnull String realmUserId1, @Nonnull String realmUserId2) {
+        return Chats.newPrivateChat(realm.newRealmEntity(realmUserId1 + CHAT_DELIMITER + realmUserId2));
     }
 }

@@ -68,7 +68,7 @@ public class TestRealmService implements RealmUserService, RealmChatService {
 
     @Nonnull
     @Override
-    public ApiChat newPrivateChat(@Nonnull String realmUserId, @Nonnull String secondRealmUserId) {
+    public Chat newPrivateChat(@Nonnull String realmUserId1, @Nonnull String realmUserId2) {
         throw new UnsupportedOperationException();
     }
 }

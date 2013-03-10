@@ -48,13 +48,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
             // connect to the server
             try {
-                prepareConnection(connection, getRealm());
-
-                // Attach listeners to connection
-                if ( this.connection != null ){
-                    connection.getChatManager().addChatListener(chatListener);
-                    connection.getRoster().addRosterListener(rosterListener);
-                }
+                prepareConnection2(connection, getRealm());
 
                 this.connection = connection;
             } catch (XMPPException e) {
@@ -65,6 +59,15 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
                 }
             }
         }
+    }
+
+    private void prepareConnection2(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
+        prepareConnection(connection, realm);
+
+        // todo serso: investigate why we cannot add listeners in after connection constructor
+        // Attach listeners to connection
+        connection.getChatManager().addChatListener(chatListener);
+        connection.getRoster().addRosterListener(rosterListener);
     }
 
     static void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
@@ -95,7 +98,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     @Nonnull
     private Connection tryGetConnection() throws XMPPException {
         if (connection != null) {
-            prepareConnection(connection, getRealm());
+            prepareConnection2(connection, getRealm());
             return connection;
         } else {
             tryToConnect(CONNECTION_RETRIES - 1);

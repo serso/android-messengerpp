@@ -2,14 +2,14 @@ package org.solovyev.android.messenger.chats;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.APropertyImpl;
-import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +45,12 @@ public class ApiChatImpl implements ApiChat {
         this.participants = chatParticipants;
     }
 
+    public ApiChatImpl(@Nonnull Chat chat, @Nonnull List<ChatMessage> messages, @Nonnull List<User> participants) {
+        this.chat = chat;
+        this.messages = messages;
+        this.participants = participants;
+    }
+
     private ApiChatImpl(@Nonnull RealmEntity realmEntity,
                         @Nonnull Integer messagesCount,
                         boolean privateChat) {
@@ -71,6 +77,11 @@ public class ApiChatImpl implements ApiChat {
                                           @Nonnull List<User> chatParticipants,
                                           @Nullable DateTime lastMessageSyncDate) {
         return new ApiChatImpl(realmEntity, messagesCount, properties, chatMessages, chatParticipants, lastMessageSyncDate);
+    }
+
+    @Nonnull
+    public static ApiChat newInstance(@Nonnull Chat chat, @Nonnull List<ChatMessage> messages, @Nonnull List<User> participants) {
+        return new ApiChatImpl(chat, messages, participants);
     }
 
     @Nonnull
@@ -116,4 +127,5 @@ public class ApiChatImpl implements ApiChat {
     public Chat getChat() {
         return chat;
     }
+
 }
