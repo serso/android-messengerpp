@@ -1,12 +1,11 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.widget.Checkable;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventListener;
-import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
@@ -19,7 +18,28 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:58 PM
  */
-public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArrayAdapter<LI> implements UserEventListener {
+public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArrayAdapter<LI> /*implements UserEventListener*/ {
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
+    @Nonnull
+    private static final String POSITION = "position";
+
+    private static final int NOT_SELECTED = -1;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
 
     private boolean initialized = false;
 
@@ -28,7 +48,8 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
 
     @Nullable
     private ListItem selectedItem = null;
-    private int selectedItemPosition = -1;
+
+    private int selectedItemPosition = NOT_SELECTED;
 
     @Nonnull
     private final SelectedItemListener selectedItemListener = new SelectedItemListener();
@@ -45,8 +66,8 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
         this.initialized = initialized;
     }
 
-    @Override
-    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
+    /*@Override*/
+    public void onEvent(@Nonnull UserEvent event) {
     }
 
     protected void addListItem(@Nonnull LI listItem) {
@@ -95,6 +116,17 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
 
     public void refilter() {
         this.getFilter().filter(filterText);
+    }
+
+    public void saveState(@Nonnull Bundle outState) {
+        final int selectedItemPosition = this.getSelectedItemPosition();
+        if (selectedItemPosition != NOT_SELECTED) {
+            outState.putInt(POSITION, selectedItemPosition);
+        }
+    }
+
+    public int loadState(@Nonnull Bundle savedInstanceState, int defaultPosition) {
+        return savedInstanceState.getInt(POSITION, defaultPosition);
     }
 
     public static final class ListItemComparator implements Comparator<ListItem> {

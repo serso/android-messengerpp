@@ -64,7 +64,7 @@ class XmppRosterListener implements RosterListener {
 
         final User contact = getUserService().getUserById(realm.newRealmEntity(realmUserId));
         final UserEventType userEventType = presence.isAvailable() ? UserEventType.contact_online : UserEventType.contact_offline;
-        getUserService().fireUserEvent(realm.getUser(), userEventType, contact);
+        getUserService().fireEvent(userEventType.newEvent(realm.getUser(), contact));
     }
 
     @Nonnull

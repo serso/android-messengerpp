@@ -22,15 +22,12 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventListener;
-import org.solovyev.android.messenger.users.UserEventType;
-import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.listeners.JListeners;
+import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
 
@@ -44,7 +41,7 @@ import java.util.*;
  * Time: 2:43 AM
  */
 @Singleton
-public class DefaultChatService implements ChatService, UserEventListener {
+public class DefaultChatService implements ChatService {
 
     @Nonnull
     private static final Character PRIVATE_CHAT_DELIMITER = ':';
@@ -96,7 +93,7 @@ public class DefaultChatService implements ChatService, UserEventListener {
     private static final String EVENT_TAG = "ChatEvent";
 
     @Nonnull
-    private final JListeners<JEventListener<ChatEvent>> listeners = Listeners.newWeakRefListeners();
+    private final JEventListeners<JEventListener<? extends ChatEvent>, ChatEvent> listeners = Listeners.newEventBusFor(ChatEvent.class);
 
     // key: chat id, value: list of participants
     @Nonnull
@@ -119,7 +116,7 @@ public class DefaultChatService implements ChatService, UserEventListener {
 
     @Override
     public void init() {
-        userService.addListener(this);
+        userService.addListener(new UserEventListener());
     }
 
     @Nonnull
@@ -248,7 +245,7 @@ public class DefaultChatService implements ChatService, UserEventListener {
             chatEvents.add(new ChatEventContainer.ChatEvent(updatedChat, ChatEventType.changed, null));
         }
 
-        listeners.fireUserEvents(userEvents);
+        listeners.fireEvents(userEvents);
         getChatService().fireChatEvents(chatEvents);*/
 
         return java.util.Collections.unmodifiableList(chatMessages);
@@ -482,19 +479,14 @@ public class DefaultChatService implements ChatService, UserEventListener {
         return this.listeners.removeListener(listener);
     }
 
-    public void fireEvents(@Nonnull List<ChatEvent> events) {
-        final Collection<JEventListener<ChatEvent>> listeners = this.listeners.getListeners();
-        for (ChatEvent event : events) {
-            Log.d(EVENT_TAG, "Event: " + event.getType() + " for chat: " + event.getChat().getRealmEntity().getEntityId() + " with data: " + event.getData());
-            for (JEventListener<ChatEvent> listener : listeners) {
-                listener.onEvent(event);
-            }
-        }
+    @Override
+    public void fireEvent(@Nonnull ChatEvent event) {
+        this.listeners.fireEvent(event);
     }
 
     @Override
-    public void fireEvent(@Nonnull ChatEvent event) {
-        fireEvents(Arrays.asList(event));
+    public void fireEvents(@Nonnull Collection<ChatEvent> events) {
+        this.listeners.fireEvents(events);
     }
 
     @Override
@@ -502,21 +494,29 @@ public class DefaultChatService implements ChatService, UserEventListener {
         this.listeners.removeListeners();
     }
 
-    @Override
-    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
-        synchronized (chatParticipantsCache) {
+    private final class UserEventListener extends AbstractJEventListener<UserEvent> {
 
-            if (userEventType == UserEventType.changed) {
-                for (List<User> participants : chatParticipantsCache.values()) {
-                    for (int i = 0; i < participants.size(); i++) {
-                        final User participant = participants.get(i);
-                        if (participant.equals(eventUser)) {
-                            participants.set(i, eventUser);
+        private UserEventListener() {
+            super(UserEvent.class);
+        }
+
+        @Override
+        public void onEvent(@Nonnull UserEvent event) {
+            synchronized (chatParticipantsCache) {
+                final User eventUser = event.getUser();
+
+                if (event.getType() == UserEventType.changed) {
+                    for (List<User> participants : chatParticipantsCache.values()) {
+                        for (int i = 0; i < participants.size(); i++) {
+                            final User participant = participants.get(i);
+                            if (participant.equals(eventUser)) {
+                                participants.set(i, eventUser);
+                            }
                         }
                     }
                 }
-            }
 
+            }
         }
     }
 

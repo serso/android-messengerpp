@@ -4,7 +4,6 @@ import android.content.Context;
 import org.solovyev.android.messenger.realms.RealmService;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -18,17 +17,17 @@ public class OnlineContactsAdapter extends AbstractContactsAdapter {
     }
 
     @Override
-    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
-        super.onUserEvent(eventUser, userEventType, data);
+    public void onEvent(@Nonnull UserEvent event) {
+        super.onEvent(event);
 
-        if (userEventType == UserEventType.contact_offline) {
-            final User offlineContact = (User) data;
+        if (event.isOfType(UserEventType.contact_offline)) {
+            final User offlineContact = event.getDataAsUser();
             removeListItem(offlineContact);
 
         }
 
-        if (userEventType == UserEventType.contact_online) {
-            final User onlineContact = (User) data;
+        if (event.isOfType(UserEventType.contact_online)) {
+            final User onlineContact = event.getDataAsUser();
             final ContactListItem listItem = findInAllElements(onlineContact);
             if (listItem == null) {
                 addListItem(onlineContact);

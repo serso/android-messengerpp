@@ -76,6 +76,4 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     RealmEntity getSecondUser(@Nonnull Chat chat);
 
     void setChatIcon(@Nonnull ImageView imageView, @Nonnull Chat chat, @Nonnull User user);
-
-    void fireEvents(@Nonnull List<ChatEvent> chatEvents);
 }

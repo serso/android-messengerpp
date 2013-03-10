@@ -6,6 +6,8 @@ import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.listeners.JEventListeners;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:12 PM
  */
-public interface UserService extends UserEventListeners {
+public interface UserService extends JEventListeners<JEventListener<UserEvent>, UserEvent> {
 
     // initial initialization: will be called once on application start
     void init();

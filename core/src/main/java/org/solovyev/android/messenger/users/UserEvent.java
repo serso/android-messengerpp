@@ -1,16 +1,18 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
 * User: serso
 * Date: 3/9/13
 * Time: 2:44 PM
 */
-class UserEvent extends AbstractTypedJEvent<User, UserEventType> {
+public class UserEvent extends AbstractTypedJEvent<User, UserEventType> {
 
     UserEvent(@Nonnull User user, @Nonnull UserEventType type, @Nullable Object data) {
         super(user, type, data);
@@ -19,5 +21,35 @@ class UserEvent extends AbstractTypedJEvent<User, UserEventType> {
     @Nonnull
     public User getUser() {
         return getEventObject();
+    }
+
+    @Nonnull
+    public User getDataAsUser() {
+        return (User) getData();
+    }
+
+    @Nonnull
+    public List<User> getDataAsUsers() {
+        return (List<User>) getData();
+    }
+
+    @Nonnull
+    public String getDataAsUserId() {
+        return (String)getData();
+    }
+
+    @Nonnull
+    public String getDataAsChatId() {
+        return (String)getData();
+    }
+
+    @Nonnull
+    public Chat getDataAsChat() {
+        return (Chat)getData();
+    }
+
+    @Nonnull
+    public List<Chat> getDataAsChats() {
+        return (List<Chat>)getData();
     }
 }

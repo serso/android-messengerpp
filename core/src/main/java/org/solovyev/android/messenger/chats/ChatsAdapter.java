@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventListener;
+import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserEventType;
 
 import javax.annotation.Nonnull;
@@ -22,28 +22,28 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:48 PM
  */
-public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> implements /*ChatEventListener,*/ UserEventListener {
+public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*implements ChatEventListener, UserEventListener*/ {
 
     public ChatsAdapter(@Nonnull Context context) {
         super(context, new ArrayList<ChatListItem>());
     }
 
-    @Override
-    public void onUserEvent(@Nonnull final User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
-        super.onUserEvent(eventUser, userEventType, data);
+    /*@Override*/
+    public void onEvent(@Nonnull UserEvent event) {
+        final User eventUser = event.getUser();
 
-        if (userEventType == UserEventType.chat_removed) {
-            final String chatId = (String) data;
+        if (event.isOfType(UserEventType.chat_removed)) {
+            final String chatId = event.getDataAsChatId();
             removeListItem(eventUser, chatId);
         }
 
-        if (userEventType == UserEventType.chat_added) {
-            final Chat chat = (Chat) data;
+        if (event.isOfType(UserEventType.chat_added)) {
+            final Chat chat = event.getDataAsChat();
             addListItem(eventUser, chat);
         }
 
-        if (userEventType == UserEventType.chat_added_batch) {
-            final List<Chat> chats = (List<Chat>) data;
+        if (event.isOfType(UserEventType.chat_added_batch)) {
+            final List<Chat> chats = event.getDataAsChats();
             addListItems(Lists.transform(chats, new Function<Chat, ChatListItem>() {
                 @Override
                 public ChatListItem apply(@javax.annotation.Nullable Chat chat) {

@@ -58,6 +58,11 @@ public enum ChatEventType {
     }
 
     @Nonnull
+    public final ChatEvent newEvent(@Nonnull Chat chat) {
+        return newEvent(chat, null);
+    }
+
+    @Nonnull
     public final ChatEvent newEvent(@Nonnull Chat chat, @Nullable Object data) {
         checkData(data);
         return new ChatEvent(chat, this, data);

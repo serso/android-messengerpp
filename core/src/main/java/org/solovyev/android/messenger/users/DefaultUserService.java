@@ -19,14 +19,14 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.*;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.listeners.JEventListeners;
+import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: serso
@@ -34,7 +34,7 @@ import java.util.Map;
  * Time: 10:30 PM
  */
 @Singleton
-public class DefaultUserService implements UserService, UserEventListener {
+public class DefaultUserService implements UserService {
 
     /*
     **********************************************************************
@@ -75,7 +75,7 @@ public class DefaultUserService implements UserService, UserEventListener {
     private final Object lock = new Object();
 
     @Nonnull
-    private final UserEventListeners listeners = new ListUserEventListeners();
+    private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners = Listeners.newEventBusFor(UserEvent.class);
 
     // key: realm user, value: list of user contacts
     @Nonnull
@@ -90,7 +90,7 @@ public class DefaultUserService implements UserService, UserEventListener {
     private final Map<RealmEntity, User> usersCache = new HashMap<RealmEntity, User>();
 
     public DefaultUserService() {
-        listeners.addListener(this);
+        listeners.addListener(new UserEventListener());
     }
 
     @Override
@@ -162,7 +162,7 @@ public class DefaultUserService implements UserService, UserEventListener {
         }
 
         if (inserted) {
-            listeners.fireUserEvent(user, UserEventType.added, null);
+            listeners.fireEvent(UserEventType.added.newEvent(user));
         }
     }
 
@@ -234,7 +234,7 @@ public class DefaultUserService implements UserService, UserEventListener {
             getUserDao().updateUser(user);
         }
 
-        listeners.fireUserEvent(user, UserEventType.changed, null);
+        listeners.fireEvent(UserEventType.changed.newEvent(user));
     }
 
     @Override
@@ -263,7 +263,7 @@ public class DefaultUserService implements UserService, UserEventListener {
             synchronized (lock) {
                 getUserDao().updateUser(user);
             }
-            listeners.fireUserEvent(user, UserEventType.changed, null);
+            listeners.fireEvent(UserEventType.changed.newEvent(user));
         }
     }
 
@@ -294,25 +294,26 @@ public class DefaultUserService implements UserService, UserEventListener {
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
-        userEvents.add(new UserEvent(user, UserEventType.contact_added_batch, result.getAddedObjectLinks()));
+        userEvents.add(UserEventType.contact_added_batch.newEvent(user, result.getAddedObjectLinks()));
 
         final List<User> addedContacts = result.getAddedObjects();
         for (User addedContact : addedContacts) {
-            userEvents.add(new UserEvent(addedContact, UserEventType.added, null));
+            userEvents.add(UserEventType.added.newEvent(addedContact));
         }
-        userEvents.add(new UserEvent(user, UserEventType.contact_added_batch, addedContacts));
+        userEvents.add(UserEventType.contact_added_batch.newEvent(user, addedContacts));
 
 
         for (String removedContactId : result.getRemovedObjectIds()) {
-            userEvents.add(new UserEvent(user, UserEventType.contact_removed, removedContactId));
+            userEvents.add(UserEventType.contact_removed.newEvent(user, removedContactId));
         }
 
         for (User updatedContact : result.getUpdatedObjects()) {
-            userEvents.add(new UserEvent(updatedContact, UserEventType.changed, null));
-            userEvents.add(new UserEvent(user, updatedContact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline, updatedContact));
+            userEvents.add(UserEventType.changed.newEvent(updatedContact));
+            final UserEventType type = updatedContact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline;
+            userEvents.add(type.newEvent(user, updatedContact));
         }
 
-        listeners.fireUserEvents(userEvents);
+        listeners.fireEvents(userEvents);
     }
 
     @Nonnull
@@ -360,8 +361,9 @@ public class DefaultUserService implements UserService, UserEventListener {
                 return apiChat.getChat();
             }
         });
+        // todo serso: investigate why chat_added_batch called twice in this method
         if (!addedChatLinks.isEmpty()) {
-            userEvents.add(new UserEvent(user, UserEventType.chat_added_batch, addedChatLinks));
+            userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChatLinks));
         }
 
         final List<Chat> addedChats = Lists.transform(result.getAddedObjects(), new Function<ApiChat, Chat>() {
@@ -373,21 +375,21 @@ public class DefaultUserService implements UserService, UserEventListener {
         });
 
         for (Chat addedChat : addedChats) {
-            chatEvents.add(ChatEventType.added.newEvent(addedChat, null));
+            chatEvents.add(ChatEventType.added.newEvent(addedChat));
         }
         if (!addedChats.isEmpty()) {
-            userEvents.add(new UserEvent(user, UserEventType.chat_added_batch, addedChats));
+            userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChats));
         }
 
         for (String removedChatId : result.getRemovedObjectIds()) {
-            userEvents.add(new UserEvent(user, UserEventType.chat_removed, removedChatId));
+            userEvents.add(UserEventType.chat_removed.newEvent(user, removedChatId));
         }
 
         for (ApiChat updatedChat : result.getUpdatedObjects()) {
-            chatEvents.add(ChatEventType.changed.newEvent(updatedChat.getChat(), null));
+            chatEvents.add(ChatEventType.changed.newEvent(updatedChat.getChat()));
         }
 
-        listeners.fireUserEvents(userEvents);
+        listeners.fireEvents(userEvents);
         getChatService().fireEvents(chatEvents);
     }
 
@@ -405,10 +407,11 @@ public class DefaultUserService implements UserService, UserEventListener {
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
         for (User contact : contacts) {
-            userEvents.add(new UserEvent(user, contact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline, contact));
+            final UserEventType type = contact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline;
+            userEvents.add(type.newEvent(user, contact));
         }
 
-        listeners.fireUserEvents(userEvents);
+        listeners.fireEvents(userEvents);
 
     }
 
@@ -530,87 +533,99 @@ public class DefaultUserService implements UserService, UserEventListener {
     */
 
     @Override
-    public boolean addListener(@Nonnull UserEventListener userEventListener) {
-        return listeners.addListener(userEventListener);
+    public void fireEvent(@Nonnull UserEvent event) {
+        this.listeners.fireEvent(event);
     }
 
     @Override
-    public boolean removeListener(@Nonnull UserEventListener userEventListener) {
-        return listeners.removeListener(userEventListener);
+    public void fireEvents(@Nonnull Collection<UserEvent> events) {
+        this.listeners.fireEvents(events);
     }
 
     @Override
-    public void fireUserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, @Nullable Object data) {
-        listeners.fireUserEvent(user, userEventType, data);
+    public boolean addListener(@Nonnull JEventListener<UserEvent> listener) {
+        return this.listeners.addListener(listener);
     }
 
     @Override
-    public void fireUserEvents(@Nonnull List<UserEvent> userEvents) {
-        listeners.fireUserEvents(userEvents);
+    public boolean removeListener(@Nonnull JEventListener<UserEvent> listener) {
+        return this.listeners.removeListener(listener);
     }
 
     @Override
-    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
+    public void removeListeners() {
+        this.listeners.removeListeners();
+    }
 
-        synchronized (userContactsCache) {
+    private final class UserEventListener extends AbstractJEventListener<UserEvent> {
 
-            if (userEventType == UserEventType.changed) {
-                // user changed => update it in contacts cache
-                for (List<User> contacts : userContactsCache.values()) {
-                    for (int i = 0; i < contacts.size(); i++) {
-                        final User contact = contacts.get(i);
-                        if (contact.equals(eventUser)) {
-                            contacts.set(i, eventUser);
-                        }
-                    }
-                }
-            }
-
-            if (userEventType == UserEventType.contact_added) {
-                // contact added => need to add to list of cached contacts
-                final User contact = ((User) data);
-                final List<User> contacts = userContactsCache.get(eventUser.getRealmEntity());
-                if (contacts != null) {
-                    // check if not contains as can be added in parallel
-                    if (!Iterables.contains(contacts, contact)) {
-                        contacts.add(contact);
-                    }
-                }
-            }
-
-            if (userEventType == UserEventType.contact_added_batch) {
-                // contacts added => need to add to list of cached contacts
-                final List<User> contacts = (List<User>) data;
-                final List<User> contactsFromCache = userContactsCache.get(eventUser.getRealmEntity());
-                if (contactsFromCache != null) {
-                    for (User contact : contacts) {
-                        // check if not contains as can be added in parallel
-                        if (!Iterables.contains(contactsFromCache, contact)) {
-                            contactsFromCache.add(contact);
-                        }
-                    }
-                }
-            }
-
-            if (userEventType == UserEventType.contact_removed) {
-                // contact removed => try to remove from cached contacts
-                final String removedContactId = ((String) data);
-                final List<User> contacts = userContactsCache.get(eventUser.getRealmEntity());
-                if (contacts != null) {
-                    Iterables.removeIf(contacts, new Predicate<User>() {
-                        @Override
-                        public boolean apply(@javax.annotation.Nullable User contact) {
-                            return contact != null && contact.getRealmEntity().getEntityId().equals(removedContactId);
-                        }
-                    });
-                }
-            }
+        private UserEventListener() {
+            super(UserEvent.class);
         }
 
-        synchronized (userChatsCache) {
-            if (userEventType == UserEventType.chat_added) {
-                if (data instanceof Chat) {
-                    final Chat chat = ((Chat) data);
+        @Override
+        public void onEvent(@Nonnull UserEvent event) {
+            final UserEventType type = event.getType();
+            final User eventUser = event.getUser();
+
+            synchronized (userContactsCache) {
+
+                if (type == UserEventType.changed) {
+                    // user changed => update it in contacts cache
+                    for (List<User> contacts : userContactsCache.values()) {
+                        for (int i = 0; i < contacts.size(); i++) {
+                            final User contact = contacts.get(i);
+                            if (contact.equals(eventUser)) {
+                                contacts.set(i, eventUser);
+                            }
+                        }
+                    }
+                }
+
+                if (type == UserEventType.contact_added) {
+                    // contact added => need to add to list of cached contacts
+                    final User contact = event.getDataAsUser();
+                    final List<User> contacts = userContactsCache.get(eventUser.getRealmEntity());
+                    if (contacts != null) {
+                        // check if not contains as can be added in parallel
+                        if (!Iterables.contains(contacts, contact)) {
+                            contacts.add(contact);
+                        }
+                    }
+                }
+
+                if (type == UserEventType.contact_added_batch) {
+                    // contacts added => need to add to list of cached contacts
+                    final List<User> contacts = event.getDataAsUsers();
+                    final List<User> contactsFromCache = userContactsCache.get(eventUser.getRealmEntity());
+                    if (contactsFromCache != null) {
+                        for (User contact : contacts) {
+                            // check if not contains as can be added in parallel
+                            if (!Iterables.contains(contactsFromCache, contact)) {
+                                contactsFromCache.add(contact);
+                            }
+                        }
+                    }
+                }
+
+                if (type == UserEventType.contact_removed) {
+                    // contact removed => try to remove from cached contacts
+                    final String removedContactId = event.getDataAsUserId();
+                    final List<User> contacts = userContactsCache.get(eventUser.getRealmEntity());
+                    if (contacts != null) {
+                        Iterables.removeIf(contacts, new Predicate<User>() {
+                            @Override
+                            public boolean apply(@javax.annotation.Nullable User contact) {
+                                return contact != null && contact.getRealmEntity().getEntityId().equals(removedContactId);
+                            }
+                        });
+                    }
+                }
+            }
+
+            synchronized (userChatsCache) {
+                if (type == UserEventType.chat_added) {
+                    final Chat chat = event.getDataAsChat();
                     final List<Chat> chats = userChatsCache.get(eventUser.getRealmEntity());
                     if (chats != null) {
                         if (!Iterables.contains(chats, chat)) {
@@ -618,32 +633,32 @@ public class DefaultUserService implements UserService, UserEventListener {
                         }
                     }
                 }
-            }
 
-            if (userEventType == UserEventType.chat_added_batch) {
-                final List<Chat> chats = (List<Chat>) data;
-                final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getRealmEntity());
-                if (chatsFromCache != null) {
-                    for (Chat chat : chats) {
-                        if (!Iterables.contains(chatsFromCache, chat)) {
-                            chatsFromCache.add(chat);
+                if (type == UserEventType.chat_added_batch) {
+                    final List<Chat> chats = event.getDataAsChats();
+                    final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getRealmEntity());
+                    if (chatsFromCache != null) {
+                        for (Chat chat : chats) {
+                            if (!Iterables.contains(chatsFromCache, chat)) {
+                                chatsFromCache.add(chat);
+                            }
                         }
+                    }
+                }
+
+                if (type == UserEventType.chat_removed) {
+                    final Chat chat = event.getDataAsChat();
+                    final List<Chat> chats = userChatsCache.get(eventUser.getRealmEntity());
+                    if (chats != null) {
+                        chats.remove(chat);
                     }
                 }
             }
 
-            if (userEventType == UserEventType.chat_removed) {
-                final Chat chat = ((Chat) data);
-                final List<Chat> chats = userChatsCache.get(eventUser.getRealmEntity());
-                if (chats != null) {
-                    chats.remove(chat);
+            synchronized (usersCache) {
+                if (type == UserEventType.changed) {
+                    usersCache.put(eventUser.getRealmEntity(), eventUser);
                 }
-            }
-        }
-
-        synchronized (usersCache) {
-            if (userEventType == UserEventType.changed) {
-                usersCache.put(eventUser.getRealmEntity(), eventUser);
             }
         }
     }

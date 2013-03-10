@@ -241,11 +241,11 @@ public interface LongPollUpdate {
 
         @Override
         public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            final User friend = getUserService().getUserById(realm.newRealmEntity(realmFriendId)).cloneWithNewStatus(online);
+            final User contact = getUserService().getUserById(realm.newRealmEntity(realmFriendId)).cloneWithNewStatus(online);
             if (online) {
-                getUserService().fireUserEvent(user, UserEventType.contact_online, friend);
+                getUserService().fireEvent(UserEventType.contact_online.newEvent(user, contact));
             } else {
-                getUserService().fireUserEvent(user, UserEventType.contact_offline, friend);
+                getUserService().fireEvent(UserEventType.contact_offline.newEvent(user, contact));
             }
         }
 

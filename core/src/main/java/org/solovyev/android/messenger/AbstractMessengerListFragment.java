@@ -25,13 +25,13 @@ import org.solovyev.android.messenger.fragments.FragmentGuiEventType;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventListener;
-import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
@@ -54,8 +54,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     **********************************************************************
     */
 
-    @Nonnull
-    private static final String POSITION = "position";
+    private static final int NOT_SELECTED_POSITION = -1;
 
     /**
      * Constants are copied from list fragment, see {@link android.support.v4.app.ListFragment}
@@ -112,7 +111,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     */
 
     @Nullable
-    private UserEventListener userEventListener;
+    private JEventListener<UserEvent> userEventListener;
 
     private MessengerListItemAdapter<LI> adapter;
 
@@ -414,20 +413,27 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         lv.setOnItemClickListener(new ListViewOnItemClickListener());
         lv.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
 
-        final int position;
+        Integer position = null;
         if ( adapter != null ) {
             // adapter not null => this fragment has been created earlier (and now it just goes to the shown state)
             position = adapter.getSelectedItemPosition();
-        } else {
-            if (savedInstanceState != null) {
-                position = savedInstanceState.getInt(POSITION, selectFirstItemByDefault ? 0 : -1);
-            } else {
-                position = selectFirstItemByDefault ? 0 : -1;
+            if (position == NOT_SELECTED_POSITION && selectFirstItemByDefault) {
+                // there were no elements in adapter => position == NOT_SELECTED_POSITION
+                // but we need to select first element if selectFirstItemByDefault == true => do it
+                position = 0;
             }
         }
 
         adapter = createAdapter();
         setListAdapter(adapter);
+
+        if (position == null) {
+            if (savedInstanceState != null) {
+                position = adapter.loadState(savedInstanceState, selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION);
+            } else {
+                position = selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION;
+            }
+        }
 
         final PostListLoadingRunnable onPostExecute = new PostListLoadingRunnable(position, lv);
 
@@ -453,7 +459,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         super.onSaveInstanceState(outState);
 
         if (adapter != null) {
-            outState.putInt(POSITION, adapter.getSelectedItemPosition());
+            adapter.saveState(outState);
         }
 
         if (listViewFilter != null) {
@@ -574,14 +580,18 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     **********************************************************************
     */
 
-    private class UiThreadUserEventListener implements UserEventListener {
+    private class UiThreadUserEventListener extends AbstractJEventListener<UserEvent> {
+
+        private UiThreadUserEventListener() {
+            super(UserEvent.class);
+        }
 
         @Override
-        public void onUserEvent(@Nonnull final User eventUser, @Nonnull final UserEventType userEventType, final @Nullable Object data) {
+        public void onEvent(@Nonnull final UserEvent event) {
             AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
-                    adapter.onUserEvent(eventUser, userEventType, data);
+                    adapter.onEvent(event);
                 }
             });
         }

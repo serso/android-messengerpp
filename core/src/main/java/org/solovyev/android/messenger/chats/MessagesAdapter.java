@@ -11,7 +11,6 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +21,7 @@ import java.util.*;
  * Date: 6/10/12
  * Time: 11:27 PM
  */
-public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> implements /*ChatEventListener,*/ UserEventListener {
+public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /*implements ChatEventListener, UserEventListener*/ {
 
     @Nonnull
     private final User user;

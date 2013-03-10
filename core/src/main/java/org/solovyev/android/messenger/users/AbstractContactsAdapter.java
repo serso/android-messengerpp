@@ -24,7 +24,7 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 5:55 PM
  */
-public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> implements UserEventListener {
+public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> {
 
     @Nonnull
     private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
@@ -38,55 +38,52 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
     }
 
     @Override
-    public void onUserEvent(@Nonnull final User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
-        super.onUserEvent(eventUser, userEventType, data);
+    public void onEvent(@Nonnull UserEvent event) {
+        super.onEvent(event);
 
-        if (userEventType == UserEventType.contact_removed) {
-            final String contactId = (String) data;
-            if (contactId != null) {
-                removeListItem(contactId);
+        final UserEventType type = event.getType();
+        final User eventUser = event.getUser();
+
+        if (type == UserEventType.contact_removed) {
+            final String contactId = event.getDataAsUserId();
+            removeListItem(contactId);
+        }
+
+        if (type == UserEventType.contact_added) {
+            final User contact = event.getDataAsUser();
+            if (canAddContact(contact)) {
+                addListItem(contact);
             }
         }
 
-        if (userEventType == UserEventType.contact_added) {
-            if (data instanceof User) {
-                final User contact = (User) data;
-                if (canAddContact(contact)) {
-                    addListItem(contact);
+        if (type == UserEventType.contact_added_batch) {
+            // first - filter contacts which can be added
+            // then - transform user objects to list items objects
+            final List<User> contacts = event.getDataAsUsers();
+            addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
+                @Override
+                public boolean apply(@Nullable User contact) {
+                    assert contact != null;
+                    return canAddContact(contact);
                 }
-            }
+            }), new Function<User, ContactListItem>() {
+                @Override
+                public ContactListItem apply(@Nullable User contact) {
+                    assert contact != null;
+                    return createListItem(contact);
+                }
+            })));
         }
 
-        if (userEventType == UserEventType.contact_added_batch) {
-            if (data instanceof List) {
-                // first - filter contacts which can be added
-                // then - transform user objects to list items objects
-                final List<User> contacts = (List<User>) data;
-                addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
-                    @Override
-                    public boolean apply(@Nullable User contact) {
-                        assert contact != null;
-                        return canAddContact(contact);
-                    }
-                }), new Function<User, ContactListItem>() {
-                    @Override
-                    public ContactListItem apply(@Nullable User contact) {
-                        assert contact != null;
-                        return createListItem(contact);
-                    }
-                })));
-            }
-        }
-
-        if (userEventType == UserEventType.changed) {
+        if (type == UserEventType.changed) {
             final ContactListItem listItem = findInAllElements(eventUser);
             if (listItem != null) {
-                listItem.onUserEvent(eventUser, userEventType, data);
+                listItem.onEvent(event);
                 onListItemChanged(eventUser);
             }
         }
 
-        if (userEventType == UserEventType.contact_online || userEventType == UserEventType.contact_offline) {
+        if (type == UserEventType.contact_online || type == UserEventType.contact_offline) {
             refilter();
         }
     }

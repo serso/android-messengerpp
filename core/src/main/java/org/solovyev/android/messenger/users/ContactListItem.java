@@ -16,14 +16,13 @@ import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * User: serso
  * Date: 6/1/12
  * Time: 7:04 PM
  */
-public class ContactListItem extends AbstractMessengerListItem<User> implements UserEventListener {
+public class ContactListItem extends AbstractMessengerListItem<User> /*implements UserEventListener*/ {
 
     @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_";
@@ -53,19 +52,23 @@ public class ContactListItem extends AbstractMessengerListItem<User> implements 
         return null;
     }
 
-    @Override
-    public void onUserEvent(@Nonnull User eventUser, @Nonnull UserEventType userEventType, @Nullable Object data) {
+    /*@Override*/
+    public void onEvent(@Nonnull UserEvent event) {
         final User contact = getContact();
 
-        if (userEventType == UserEventType.changed) {
+        final UserEventType type = event.getType();
+        final User eventUser = event.getUser();
+
+        if (type == UserEventType.changed) {
             if (contact.equals(eventUser)) {
                 setData(eventUser);
             }
         }
 
-        if (userEventType == UserEventType.contact_offline || userEventType == UserEventType.contact_online) {
-            if (contact.equals(data)) {
-                setData((User) data);
+        if (type == UserEventType.contact_offline || type == UserEventType.contact_online) {
+            final User eventContact = event.getDataAsUser();
+            if (contact.equals(eventContact)) {
+                setData(eventContact);
             }
         }
     }
