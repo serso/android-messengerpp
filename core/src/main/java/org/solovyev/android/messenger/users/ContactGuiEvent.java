@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.messenger.events.AbstractTypedJEvent;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -7,27 +9,14 @@ import javax.annotation.Nonnull;
  * Date: 8/16/12
  * Time: 1:07 AM
  */
-public class ContactGuiEvent {
+public class ContactGuiEvent extends AbstractTypedJEvent<User, ContactGuiEventType> {
 
-    @Nonnull
-    private final ContactGuiEventType type;
-
-    @Nonnull
-    private final User contact;
-
-    public ContactGuiEvent(@Nonnull ContactGuiEventType type,
-                           @Nonnull User contact) {
-        this.contact = contact;
-        this.type = type;
-    }
-
-    @Nonnull
-    public ContactGuiEventType getType() {
-        return type;
+    public ContactGuiEvent(@Nonnull User contact, @Nonnull ContactGuiEventType type) {
+        super(contact, type, null);
     }
 
     @Nonnull
     public User getContact() {
-        return contact;
+        return getEventObject();
     }
 }

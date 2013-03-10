@@ -239,7 +239,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         super.onCreate(savedInstanceState);
         Log.d(tag, "onCreate: " + this);
 
-        eventManager.fire(FragmentGuiEventType.newFragmentCreatedEvent(this));
+        eventManager.fire(FragmentGuiEventType.created.newEvent(this));
     }
 
     @Override
@@ -275,7 +275,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             listViewFilter.loadState(savedInstanceState);
         }
 
-        eventManager.fire(FragmentGuiEventType.newFragmentShownEvent(this));
+        eventManager.fire(FragmentGuiEventType.shown.newEvent(this));
     }
 
     public void toggleFilterBox() {
@@ -445,7 +445,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     public void onStart() {
         super.onStart();
 
-        eventManager.fire(FragmentGuiEventType.newFragmentStartedEvent(this));
+        eventManager.fire(FragmentGuiEventType.started.newEvent(this));
     }
 
     @Override

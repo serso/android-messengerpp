@@ -350,7 +350,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(apiChats.size());
-        final List<ChatEventContainer.ChatEvent> chatEvents = new ArrayList<ChatEventContainer.ChatEvent>(apiChats.size());
+        final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>(apiChats.size());
 
         final List<Chat> addedChatLinks = Lists.transform(result.getAddedObjectLinks(), new Function<ApiChat, Chat>() {
             @Override
@@ -372,7 +372,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         });
 
         for (Chat addedChat : addedChats) {
-            chatEvents.add(new ChatEventContainer.ChatEvent(addedChat, ChatEventType.added, null));
+            chatEvents.add(new ChatEvent(addedChat, ChatEventType.added, null));
         }
         if (!addedChats.isEmpty()) {
             userEvents.add(new UserEvent(user, UserEventType.chat_added_batch, addedChats));
@@ -383,7 +383,7 @@ public class DefaultUserService implements UserService, UserEventListener, ChatE
         }
 
         for (ApiChat updatedChat : result.getUpdatedObjects()) {
-            chatEvents.add(new ChatEventContainer.ChatEvent(updatedChat.getChat(), ChatEventType.changed, null));
+            chatEvents.add(new ChatEvent(updatedChat.getChat(), ChatEventType.changed, null));
         }
 
         listeners.fireUserEvents(userEvents);

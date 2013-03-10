@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.messenger.events.AbstractTypedJEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -8,35 +10,14 @@ import javax.annotation.Nullable;
 * Date: 3/9/13
 * Time: 2:44 PM
 */
-class UserEvent {
+class UserEvent extends AbstractTypedJEvent<User, UserEventType> {
 
-    @Nonnull
-    private User user;
-
-    @Nonnull
-    private UserEventType userEventType;
-
-    @Nullable
-    private Object data;
-
-    UserEvent(@Nonnull User user, @Nonnull UserEventType userEventType, @Nullable Object data) {
-        this.user = user;
-        this.userEventType = userEventType;
-        this.data = data;
+    UserEvent(@Nonnull User user, @Nonnull UserEventType type, @Nullable Object data) {
+        super(user, type, data);
     }
 
     @Nonnull
     public User getUser() {
-        return user;
-    }
-
-    @Nonnull
-    public UserEventType getUserEventType() {
-        return userEventType;
-    }
-
-    @Nullable
-    public Object getData() {
-        return data;
+        return getEventObject();
     }
 }

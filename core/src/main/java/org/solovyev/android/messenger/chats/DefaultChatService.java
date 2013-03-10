@@ -489,9 +489,9 @@ public class DefaultChatService implements ChatService, ChatEventListener, UserE
     public void fireChatEvents(@Nonnull List<ChatEvent> chatEvents) {
         final Collection<ChatEventListener> listeners = this.listeners.getListeners();
         for (ChatEvent chatEvent : chatEvents) {
-            Log.d(EVENT_TAG, "Event: " + chatEvent.getChatEventType() + " for chat: " + chatEvent.getChat().getRealmEntity().getEntityId() + " with data: " + chatEvent.getData());
+            Log.d(EVENT_TAG, "Event: " + chatEvent.getType() + " for chat: " + chatEvent.getChat().getRealmEntity().getEntityId() + " with data: " + chatEvent.getData());
             for (ChatEventListener listener : listeners) {
-                listener.onChatEvent(chatEvent.getChat(), chatEvent.getChatEventType(), chatEvent.getData());
+                listener.onChatEvent(chatEvent.getChat(), chatEvent.getType(), chatEvent.getData());
             }
         }
     }

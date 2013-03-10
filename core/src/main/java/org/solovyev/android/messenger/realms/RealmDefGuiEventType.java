@@ -22,10 +22,10 @@ public enum RealmDefGuiEventType {
 
     @Nonnull
     public static RealmDefGuiEvent newRealmDefClickedEvent(@Nonnull RealmDef realmDef) {
-        return new RealmDefGuiEvent(realm_def_clicked, realmDef, null);
+        return new RealmDefGuiEvent(realmDef, realm_def_clicked, null);
     }
 
     public static RealmDefGuiEvent newRealmDefEditFinishedEvent(@Nonnull RealmDef realmDef) {
-        return new RealmDefGuiEvent(realm_def_edit_finished, realmDef, null);
+        return new RealmDefGuiEvent(realmDef, realm_def_edit_finished, null);
     }
 }

@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger;
 
+import org.solovyev.android.messenger.events.AbstractTypedJEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -8,27 +10,9 @@ import javax.annotation.Nullable;
  * Date: 3/5/13
  * Time: 8:59 PM
  */
-public class GuiEvent {
-
-    @Nonnull
-    private final GuiEventType type;
-
-    @Nullable
-    private final Object data;
+public final class GuiEvent extends AbstractTypedJEvent<Integer, GuiEventType> {
 
     public GuiEvent(@Nonnull GuiEventType type, @Nullable Object data) {
-        this.type = type;
-        this.data = data;
-    }
-
-    @Nonnull
-    public GuiEventType getType() {
-        return type;
-    }
-
-
-    @Nullable
-    public Object getData() {
-        return data;
+        super(0, type, data);
     }
 }

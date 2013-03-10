@@ -20,36 +20,4 @@ public interface ChatEventContainer {
 
     void fireChatEvents(@Nonnull List<ChatEvent> chatEvents);
 
-    public static class ChatEvent {
-
-        @Nonnull
-        private Chat chat;
-
-        @Nonnull
-        private ChatEventType chatEventType;
-
-        @Nullable
-        private Object data;
-
-        public ChatEvent(@Nonnull Chat chat, @Nonnull ChatEventType chatEventType, Object data) {
-            this.chat = chat;
-            this.chatEventType = chatEventType;
-            this.data = data;
-        }
-
-        @Nonnull
-        public Chat getChat() {
-            return chat;
-        }
-
-        @Nonnull
-        public ChatEventType getChatEventType() {
-            return chatEventType;
-        }
-
-        @Nullable
-        public Object getData() {
-            return data;
-        }
-    }
 }

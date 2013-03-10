@@ -13,6 +13,6 @@ public enum ContactGuiEventType {
 
     @Nonnull
     public static ContactGuiEvent newContactClicked(@Nonnull User contact) {
-        return new ContactGuiEvent(contact_clicked, contact);
+        return new ContactGuiEvent(contact, contact_clicked);
     }
 }

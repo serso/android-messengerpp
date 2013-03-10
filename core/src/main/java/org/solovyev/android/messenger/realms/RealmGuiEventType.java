@@ -32,22 +32,22 @@ public enum RealmGuiEventType {
 
     @Nonnull
     public static RealmGuiEvent newRealmViewRequestedEvent(@Nonnull Realm realm) {
-        return new RealmGuiEvent(realm_view_requested, realm, null);
+        return new RealmGuiEvent(realm, realm_view_requested, null);
     }
 
     @Nonnull
     public static RealmGuiEvent newRealmViewCancelledEvent(@Nonnull Realm realm) {
-        return new RealmGuiEvent(realm_view_cancelled, realm, null);
+        return new RealmGuiEvent(realm, realm_view_cancelled, null);
     }
 
     @Nonnull
     public static RealmGuiEvent newRealmEditRequestedEvent(@Nonnull Realm realm) {
-        return new RealmGuiEvent(realm_edit_requested, realm, null);
+        return new RealmGuiEvent(realm, realm_edit_requested, null);
     }
 
     @Nonnull
     public static RealmGuiEvent newRealmEditFinishedEvent(@Nonnull Realm realm, @Nonnull FinishedState state) {
-        return new RealmGuiEvent(realm_edit_finished, realm, state);
+        return new RealmGuiEvent(realm, realm_edit_finished, state);
     }
 
     public static enum FinishedState {

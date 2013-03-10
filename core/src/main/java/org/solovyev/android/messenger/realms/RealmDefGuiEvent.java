@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
+import org.solovyev.android.messenger.events.AbstractTypedJEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -8,35 +10,15 @@ import javax.annotation.Nullable;
  * Date: 3/5/13
  * Time: 8:59 PM
  */
-public class RealmDefGuiEvent {
+public final class RealmDefGuiEvent extends AbstractTypedJEvent<RealmDef, RealmDefGuiEventType> {
 
-    @Nonnull
-    private final RealmDefGuiEventType type;
-
-    @Nonnull
-    private final RealmDef realmDef;
-
-    @Nullable
-    private final Object data;
-
-    public RealmDefGuiEvent(@Nonnull RealmDefGuiEventType type, @Nonnull RealmDef realmDef, @Nullable Object data) {
-        this.type = type;
-        this.realmDef = realmDef;
-        this.data = data;
-    }
-
-    @Nonnull
-    public RealmDefGuiEventType getType() {
-        return type;
+    public RealmDefGuiEvent(@Nonnull RealmDef realmDef, @Nonnull RealmDefGuiEventType type, @Nullable Object data) {
+        super(realmDef, type, data);
     }
 
     @Nonnull
     public RealmDef getRealmDef() {
-        return realmDef;
+        return getEventObject();
     }
 
-    @Nullable
-    public Object getData() {
-        return data;
-    }
 }

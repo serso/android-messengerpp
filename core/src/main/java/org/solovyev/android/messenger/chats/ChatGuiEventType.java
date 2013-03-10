@@ -13,6 +13,6 @@ public enum ChatGuiEventType {
 
     @Nonnull
     public static ChatGuiEvent newChatClicked(@Nonnull Chat chat) {
-        return new ChatGuiEvent(chat_clicked, chat);
+        return new ChatGuiEvent(chat, chat_clicked);
     }
 }

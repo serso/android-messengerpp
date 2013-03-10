@@ -15,24 +15,35 @@ public enum FragmentGuiEventType {
     /**
      * After {@link android.app.Fragment#onCreate(android.os.Bundle)} is called
      */
-    created,
+    created {
+        @Override
+        @Nonnull
+        public FragmentGuiEvent newEvent(@Nonnull Fragment fragment) {
+            return new FragmentGuiEvent(fragment.getClass(), this);
+        }
+    },
 
     /**
      * After {@link android.app.Fragment#onViewCreated(android.view.View, android.os.Bundle)} is called
      */
-    shown,
+    shown {
+        @Nonnull
+        @Override
+        public FragmentGuiEvent newEvent(@Nonnull Fragment fragment) {
+            return newFragmentEvent(fragment, this);
+        }
+    },
 
-    started;
+    started {
+        @Nonnull
+        @Override
+        public FragmentGuiEvent newEvent(@Nonnull Fragment fragment) {
+            return newFragmentEvent(fragment, this);
+        }
+    };
 
     @Nonnull
-    public static FragmentGuiEvent newFragmentCreatedEvent(@Nonnull Fragment fragment) {
-        return new FragmentGuiEvent(created, fragment.getClass());
-    }
-
-    @Nonnull
-    public static FragmentGuiEvent newFragmentShownEvent(@Nonnull Fragment fragment) {
-        return newFragmentEvent(fragment, shown);
-    }
+    public abstract FragmentGuiEvent newEvent(@Nonnull Fragment fragment);
 
     private static FragmentGuiEvent newFragmentEvent(@Nonnull Fragment fragment, @Nonnull FragmentGuiEventType type) {
         final View view = fragment.getView();
@@ -41,14 +52,9 @@ public enum FragmentGuiEventType {
         }
 
         if ( view.getParent() instanceof View ) {
-            return new FragmentGuiEvent(type, fragment.getClass(), ((View) view.getParent()).getId());
+            return new FragmentGuiEvent(fragment.getClass(), type, ((View) view.getParent()).getId());
         } else {
-            return new FragmentGuiEvent(type, fragment.getClass());
+            return new FragmentGuiEvent(fragment.getClass(), type);
         }
-    }
-
-    @Nonnull
-    public static FragmentGuiEvent newFragmentStartedEvent(@Nonnull Fragment fragment) {
-        return newFragmentEvent(fragment, started);
     }
 }
