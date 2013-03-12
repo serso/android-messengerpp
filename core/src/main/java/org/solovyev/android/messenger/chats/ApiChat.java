@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.chats;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -27,4 +28,7 @@ public interface ApiChat {
 
     @Nonnull
     Chat getChat();
+
+    @Nonnull
+    ApiChat copyWithNew(@Nonnull RealmEntity newRealmChat);
 }

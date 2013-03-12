@@ -4,18 +4,16 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -40,13 +38,13 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @Inject
     @Nonnull
-    private Provider<ChatMessageDao> chatMessageDaoProvider;
+    private ChatMessageDao chatMessageDao;
 
 
     @Nonnull
     @Override
-    public List<ChatMessage> getChatMessages(@Nonnull RealmEntity realmChat, @Nonnull Context context) {
-        return getChatMessageDao(context).loadChatMessages(realmChat.getEntityId());
+    public List<ChatMessage> getChatMessages(@Nonnull RealmEntity realmChat) {
+        return getChatMessageDao().loadChatMessages(realmChat.getEntityId());
     }
 
     @Override
@@ -63,7 +61,7 @@ public class DefaultChatMessageService implements ChatMessageService {
     }
 
     @Nonnull
-    private ChatMessageDao getChatMessageDao(@Nonnull Context context) {
-        return RoboGuiceUtils.getInContextScope(context, chatMessageDaoProvider);
+    private ChatMessageDao getChatMessageDao() {
+        return chatMessageDao;
     }
 }

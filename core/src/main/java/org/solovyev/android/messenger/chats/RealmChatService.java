@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
+import org.solovyev.android.messenger.realms.RealmEntity;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,5 +37,5 @@ public interface RealmChatService {
     String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message);
 
     @Nonnull
-    Chat newPrivateChat(@Nonnull String realmUserId1, @Nonnull String realmUserId2);
+    Chat newPrivateChat(@Nonnull RealmEntity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2);
 }

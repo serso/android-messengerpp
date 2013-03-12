@@ -405,7 +405,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         @Nonnull
         @Override
         protected List<ChatMessage> getElements(@Nonnull Context context) {
-            return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmEntity(), getActivity());
+            return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmEntity());
         }
 
         @Override

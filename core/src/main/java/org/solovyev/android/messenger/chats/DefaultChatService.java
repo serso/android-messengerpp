@@ -1,16 +1,15 @@
 package org.solovyev.android.messenger.chats;
 
 import android.app.Application;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
@@ -26,7 +25,6 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.roboguice.RoboGuiceUtils;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -63,11 +61,7 @@ public class DefaultChatService implements ChatService {
 
     @Inject
     @Nonnull
-    private Provider<ChatMessageDao> chatMessageDaoProvider;
-
-    @Inject
-    @Nonnull
-    private Provider<ChatDao> chatDaoProvider;
+    private ChatDao chatDao;
 
     @Inject
     @Nonnull
@@ -84,6 +78,10 @@ public class DefaultChatService implements ChatService {
     @Inject
     @Nonnull
     private Application context;
+
+    @Inject
+    @Nonnull
+    private ChatMessageDao chatMessageDao;
 
     /*
     **********************************************************************
@@ -126,7 +124,7 @@ public class DefaultChatService implements ChatService {
     @Override
     public Chat updateChat(@Nonnull Chat chat) {
         synchronized (lock) {
-            getChatDao(context).updateChat(chat);
+            getChatDao().updateChat(chat);
         }
 
         fireEvent(ChatEventType.changed.newEvent(chat, null));
@@ -146,14 +144,8 @@ public class DefaultChatService implements ChatService {
         synchronized (lock) {
             result = getChatById(realmChat);
             if ( result == null ) {
-                Chat chat = realmChatService.newPrivateChat(realmUser1.getRealmEntityId(), realmUser2.getRealmEntityId());
-                /**
-                 * chat id that was created by realm (may differ from one created in {@link ChatService#newPrivateChatId(org.solovyev.android.messenger.realms.RealmEntity, org.solovyev.android.messenger.realms.RealmEntity)) method)
-                 */
-                final String realmChatId = chat.getRealmEntity().getRealmEntityId();
-
-                // copy with new id
-                chat = chat.copyWithNew(realm.newRealmEntity(realmChatId, realmChat.getEntityId()));
+                Chat chat = realmChatService.newPrivateChat(realmChat, realmUser1.getRealmEntityId(), realmUser2.getRealmEntityId());
+                chat = preparePrivateChat(chat, realmUser1, realmUser2);
 
                 final List<User> participants = new ArrayList<User>(2);
                 participants.add(getUserService().getUserById(realmUser1));
@@ -170,9 +162,55 @@ public class DefaultChatService implements ChatService {
     }
 
     @Nonnull
+    private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2) {
+        final Realm realm = getRealmByUser(realmUser1);
+        final RealmEntity realmChat = newPrivateChatId(realmUser1, realmUser2);
+
+        if (!realmChat.getRealmEntityId().equals(chat.getRealmEntity().getRealmEntityId())) {
+            /**
+             * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.realms.RealmEntity, org.solovyev.android.messenger.realms.RealmEntity)) method)
+             */
+            final String realmChatId = chat.getRealmEntity().getRealmEntityId();
+
+            // copy with new id
+            chat = chat.copyWithNew(realm.newRealmEntity(realmChatId, realmChat.getEntityId()));
+        }
+
+        return chat;
+    }
+
+    @Nonnull
+    private ApiChat prepareChat(@Nonnull ApiChat apiChat) {
+        if (apiChat.getChat().isPrivate()) {
+            final Realm realm = realmService.getRealmById(apiChat.getChat().getRealmEntity().getRealmId());
+            final User user = realm.getUser();
+            final List<User> participants = apiChat.getParticipantsExcept(user);
+
+            if (participants.size() == 1) {
+                final RealmEntity realmUser1 = user.getRealmEntity();
+                final RealmEntity realmUser2 = participants.get(0).getRealmEntity();
+
+                final RealmEntity realmChat = newPrivateChatId(realmUser1, realmUser2);
+
+                if (!realmChat.getRealmEntityId().equals(apiChat.getChat().getRealmEntity().getRealmEntityId())) {
+                    /**
+                     * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.realms.RealmEntity, org.solovyev.android.messenger.realms.RealmEntity)) method)
+                     */
+                    final String realmChatId = apiChat.getChat().getRealmEntity().getRealmEntityId();
+
+                    // copy with new id
+                    apiChat = apiChat.copyWithNew(realm.newRealmEntity(realmChatId, realmChat.getEntityId()));
+                }
+            }
+        }
+
+        return apiChat;
+    }
+
+    @Nonnull
     @Override
     public List<Chat> loadUserChats(@Nonnull RealmEntity user) {
-        return getChatDao(context).loadUserChats(user.getEntityId());
+        return getChatDao().loadUserChats(user.getEntityId());
     }
 
     @Override
@@ -184,7 +222,14 @@ public class DefaultChatService implements ChatService {
     @Override
     public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats) {
         synchronized (lock) {
-            return getChatDao(context).mergeUserChats(userId, chats);
+            final List<ApiChat> preparedChats = Lists.transform(chats, new Function<ApiChat, ApiChat>() {
+                @Override
+                public ApiChat apply(@Nullable ApiChat chat) {
+                    assert chat != null;
+                    return prepareChat(chat);
+                }
+            });
+            return getChatDao().mergeUserChats(userId, preparedChats);
         }
     }
 
@@ -198,7 +243,7 @@ public class DefaultChatService implements ChatService {
 
         if (result == null) {
             synchronized (lock) {
-                result = getChatDao(context).loadChatById(realmChat.getEntityId());
+                result = getChatDao().loadChatById(realmChat.getEntityId());
             }
 
             if ( result != null ) {
@@ -270,19 +315,20 @@ public class DefaultChatService implements ChatService {
 
         final List<ChatMessage> messages = realmChatService.getNewerChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId());
 
-        syncChatMessagesForChat(realmChat, context, messages);
+        saveChatMessages(realmChat, messages);
 
         return java.util.Collections.unmodifiableList(messages);
 
     }
 
-    private void syncChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull Context context, @Nonnull List<ChatMessage> messages) {
+    @Override
+    public void saveChatMessages(@Nonnull RealmEntity realmChat, @Nonnull List<ChatMessage> messages) {
         Chat chat = this.getChatById(realmChat);
 
         if (chat != null) {
             final MergeDaoResult<ChatMessage, String> result;
             synchronized (lock) {
-                result = getChatMessageDao(context).mergeChatMessages(realmChat.getEntityId(), messages, false, context);
+                result = getChatMessageDao().mergeChatMessages(realmChat.getEntityId(), messages, false, context);
 
                 // update sync data
                 chat = chat.updateMessagesSyncDate();
@@ -309,14 +355,14 @@ public class DefaultChatService implements ChatService {
     }
 
     @Nonnull
-    private ChatMessageDao getChatMessageDao(@Nonnull Context context) {
-        return RoboGuiceUtils.getInContextScope(context, chatMessageDaoProvider);
+    private ChatMessageDao getChatMessageDao() {
+        return chatMessageDao;
     }
 
     @Nonnull
     @Override
     public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser) {
-        final Integer offset = getChatMessageService().getChatMessages(realmChat, context).size();
+        final Integer offset = getChatMessageService().getChatMessages(realmChat).size();
 
         final Chat chat = this.getChatById(realmChat);
 
@@ -324,7 +370,7 @@ public class DefaultChatService implements ChatService {
 
         if (chat != null) {
             messages = getRealmByUser(realmUser).getRealmChatService().getOlderChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), offset);
-            syncChatMessagesForChat(realmChat, context, messages);
+            saveChatMessages(realmChat, messages);
         } else {
             messages = java.util.Collections.emptyList();
             Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + realmChat.getEntityId());
@@ -429,7 +475,7 @@ public class DefaultChatService implements ChatService {
         synchronized (chatParticipantsCache) {
             result = chatParticipantsCache.get(realmChat);
             if (result == null) {
-                result = getChatDao(context).loadChatParticipants(realmChat.getEntityId());
+                result = getChatDao().loadChatParticipants(realmChat.getEntityId());
                 if (!Collections.isEmpty(result)) {
                     chatParticipantsCache.put(realmChat, result);
                 }
@@ -460,7 +506,7 @@ public class DefaultChatService implements ChatService {
         synchronized (lastMessagesCache) {
             result = lastMessagesCache.get(realmChat);
             if (result == null) {
-                result = getChatMessageDao(context).loadLastChatMessage(realmChat.getEntityId());
+                result = getChatMessageDao().loadLastChatMessage(realmChat.getEntityId());
                 if (result != null) {
                     lastMessagesCache.put(realmChat, result);
                 }
@@ -476,8 +522,8 @@ public class DefaultChatService implements ChatService {
     }
 
     @Nonnull
-    private ChatDao getChatDao(@Nonnull Context context) {
-        return RoboGuiceUtils.getInContextScope(context, chatDaoProvider);
+    private ChatDao getChatDao() {
+        return chatDao;
     }
 
     @Override

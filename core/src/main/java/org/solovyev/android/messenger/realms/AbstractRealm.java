@@ -80,6 +80,12 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
 
     @Nonnull
     @Override
+    public RealmEntity newUserEntity(@Nonnull String realmUserId) {
+        return RealmEntityImpl.newInstance(getId(), realmUserId);
+    }
+
+    @Nonnull
+    @Override
     public RealmAuthService getRealmAuthService() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

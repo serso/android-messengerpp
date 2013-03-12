@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.realms.xmpp;
 import android.util.Log;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.*;
@@ -22,9 +21,9 @@ import java.util.List;
 public class XmppChatListener implements ChatManagerListener {
 
     @Nonnull
-    private XmppRealm realm;
+    private Realm realm;
 
-    public XmppChatListener(@Nonnull XmppRealm realm) {
+    public XmppChatListener(@Nonnull Realm realm) {
         this.realm = realm;
     }
 
@@ -36,8 +35,6 @@ public class XmppChatListener implements ChatManagerListener {
             final ApiChat newChat = toApiChat(chat, Collections.<Message>emptyList(), realm);
             getChatService().saveChat(realm.getUser().getRealmEntity(), newChat);
         }
-
-        chat.addMessageListener(new XmppMessageListener());
     }
 
     @Nonnull
@@ -45,35 +42,31 @@ public class XmppChatListener implements ChatManagerListener {
         return MessengerApplication.getServiceLocator().getChatService();
     }
 
-    private class XmppMessageListener implements MessageListener {
-
-        @Override
-        public void processMessage(Chat chat, Message message) {
-            Log.i("M++/Xmpp", "Message created: " + message.getBody());
-            final ApiChat apiChat = toApiChat(chat, Arrays.asList(message), XmppChatListener.this.realm);
-            getChatService().saveChat(realm.getUser().getRealmEntity(), apiChat);
-        }
-    }
-
     @Nonnull
-    public static ApiChat toApiChat(@Nonnull Chat chat, @Nonnull List<Message> messages, @Nonnull XmppRealm realm) {
-        final RealmEntity participant = realm.newRealmEntity(chat.getParticipant());
+    public static ApiChat toApiChat(@Nonnull Chat chat, @Nonnull List<Message> messages, @Nonnull Realm realm) {
+        final User participant = toUser(chat.getParticipant(), realm);
 
         final RealmEntity realmChat;
 
         final String realmChatId = chat.getThreadID();
         if (Strings.isEmpty(realmChatId) ) {
-            realmChat = getChatService().newPrivateChatId(realm.getUser().getRealmEntity(), participant);
+            realmChat = getChatService().newPrivateChatId(realm.getUser().getRealmEntity(), participant.getRealmEntity());
         } else {
             realmChat = realm.newRealmEntity(realmChatId);
         }
 
+        final List<ChatMessage> chatMessages = toMessages(realm, messages);
+        final List<User> participants = Arrays.asList(realm.getUser(), participant);
+        return Chats.newPrivateApiChat(realmChat, participants, chatMessages);
+    }
+
+    @Nonnull
+    public static List<ChatMessage> toMessages(@Nonnull Realm realm, @Nonnull List<Message> messages) {
         final List<ChatMessage> chatMessages = new ArrayList<ChatMessage>(messages.size());
         for (Message message : messages) {
             chatMessages.add(toChatMessage(message, realm));
         }
-        final List<User> participants = Arrays.asList(realm.getUser(), Users.newEmptyUser(participant));
-        return Chats.newPrivateApiChat(realmChat, participants, chatMessages);
+        return chatMessages;
     }
 
     @Nonnull
@@ -87,6 +80,6 @@ public class XmppChatListener implements ChatManagerListener {
 
     @Nonnull
     private static User toUser(@Nonnull String realmUserId, @Nonnull Realm realm) {
-        return Users.newEmptyUser(realm.newRealmEntity(realmUserId));
+        return Users.newEmptyUser(realm.newUserEntity(realmUserId));
     }
 }

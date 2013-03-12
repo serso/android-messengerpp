@@ -128,4 +128,10 @@ public class ApiChatImpl implements ApiChat {
         return chat;
     }
 
+    @Nonnull
+    @Override
+    public ApiChat copyWithNew(@Nonnull RealmEntity realmChat) {
+        return new ApiChatImpl(chat.copyWithNew(realmChat), messages, participants);
+    }
+
 }
