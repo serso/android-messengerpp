@@ -38,7 +38,7 @@ class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListIt
 
         for (Realm realm : realmService.getRealms()) {
             final User user = realm.getUser();
-            for (User contact : MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getRealmEntity())) {
+            for (User contact : MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getEntity())) {
                 result.add(new UserContact(user, contact));
             }
         }

@@ -37,7 +37,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     public static void startActivity(@Nonnull Activity activity, @Nonnull Chat chat) {
         final Intent result = new Intent();
         result.setClass(activity, MessengerMessagesActivity.class);
-        result.putExtra(CHAT, chat.getRealmEntity());
+        result.putExtra(CHAT, chat.getEntity());
         activity.startActivity(result);
     }
 
@@ -77,7 +77,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
         getUserService().addListener(this);
 
-        final List<User> participants = getChatService().getParticipantsExcept(chat.getRealmEntity(), getUser().getRealmEntity());
+        final List<User> participants = getChatService().getParticipantsExcept(chat.getEntity(), getUser().getEntity());
         if (chat.isPrivate()) {
             if (!participants.isEmpty()) {
                 contact = participants.get(0);
@@ -99,7 +99,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
         if ( contact != null ) {
             return Users.getDisplayNameFor(contact);
         } else {
-            return Chats.getDisplayName(chat, getChatService().getLastMessage(chat.getRealmEntity()), getUser());
+            return Chats.getDisplayName(chat, getChatService().getLastMessage(chat.getEntity()), getUser());
         }
     }
 
@@ -163,7 +163,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
     @Nonnull
     public User getUser() {
         if ( user == null ) {
-            user = getRealmService().getRealmById(chat.getRealmEntity().getRealmId()).getUser();
+            user = getRealmService().getRealmById(chat.getEntity().getRealmId()).getUser();
         }
         return user;
     }

@@ -46,7 +46,7 @@ public class XmppRealmDef extends AbstractRealmDef {
     static final String REALM_ID = "xmpp";
 
     public XmppRealmDef() {
-        super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationFragment.class, XmppRealmConfiguration.class);
+        super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationFragment.class, XmppRealmConfiguration.class, true);
     }
 
     @Nonnull

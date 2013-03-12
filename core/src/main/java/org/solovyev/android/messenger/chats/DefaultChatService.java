@@ -11,7 +11,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.core.R;
@@ -166,11 +165,11 @@ public class DefaultChatService implements ChatService {
         final Realm realm = getRealmByUser(realmUser1);
         final RealmEntity realmChat = newPrivateChatId(realmUser1, realmUser2);
 
-        if (!realmChat.getRealmEntityId().equals(chat.getRealmEntity().getRealmEntityId())) {
+        if (!realmChat.getRealmEntityId().equals(chat.getEntity().getRealmEntityId())) {
             /**
              * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.realms.RealmEntity, org.solovyev.android.messenger.realms.RealmEntity)) method)
              */
-            final String realmChatId = chat.getRealmEntity().getRealmEntityId();
+            final String realmChatId = chat.getEntity().getRealmEntityId();
 
             // copy with new id
             chat = chat.copyWithNew(realm.newRealmEntity(realmChatId, realmChat.getEntityId()));
@@ -182,21 +181,21 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     private ApiChat prepareChat(@Nonnull ApiChat apiChat) {
         if (apiChat.getChat().isPrivate()) {
-            final Realm realm = realmService.getRealmById(apiChat.getChat().getRealmEntity().getRealmId());
+            final Realm realm = realmService.getRealmById(apiChat.getChat().getEntity().getRealmId());
             final User user = realm.getUser();
             final List<User> participants = apiChat.getParticipantsExcept(user);
 
             if (participants.size() == 1) {
-                final RealmEntity realmUser1 = user.getRealmEntity();
-                final RealmEntity realmUser2 = participants.get(0).getRealmEntity();
+                final RealmEntity realmUser1 = user.getEntity();
+                final RealmEntity realmUser2 = participants.get(0).getEntity();
 
                 final RealmEntity realmChat = newPrivateChatId(realmUser1, realmUser2);
 
-                if (!realmChat.getRealmEntityId().equals(apiChat.getChat().getRealmEntity().getRealmEntityId())) {
+                if (!realmChat.getRealmEntityId().equals(apiChat.getChat().getEntity().getRealmEntityId())) {
                     /**
                      * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.realms.RealmEntity, org.solovyev.android.messenger.realms.RealmEntity)) method)
                      */
-                    final String realmChatId = apiChat.getChat().getRealmEntity().getRealmEntityId();
+                    final String realmChatId = apiChat.getChat().getEntity().getRealmEntityId();
 
                     // copy with new id
                     apiChat = apiChat.copyWithNew(realm.newRealmEntity(realmChatId, realmChat.getEntityId()));
@@ -213,9 +212,17 @@ public class DefaultChatService implements ChatService {
         return getChatDao().loadUserChats(user.getEntityId());
     }
 
+    @Nonnull
     @Override
-    public void saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat) {
-        mergeUserChats(realmUser.getEntityId(), Arrays.asList(chat));
+    public ApiChat saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat) {
+        final MergeDaoResult<ApiChat, String> result = mergeUserChats(realmUser.getEntityId(), Arrays.asList(chat));
+        if ( result.getAddedObjects().size() > 0 ) {
+            return result.getAddedObjects().get(0);
+        } else if (result.getUpdatedObjects().size() > 0) {
+            return result.getUpdatedObjects().get(0);
+        } else {
+            return chat;
+        }
     }
 
     @Nonnull
@@ -248,7 +255,7 @@ public class DefaultChatService implements ChatService {
 
             if ( result != null ) {
                 synchronized (chatsById) {
-                    chatsById.put(result.getRealmEntity(), result);
+                    chatsById.put(result.getEntity(), result);
                 }
             }
         }
@@ -315,24 +322,26 @@ public class DefaultChatService implements ChatService {
 
         final List<ChatMessage> messages = realmChatService.getNewerChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId());
 
-        saveChatMessages(realmChat, messages);
+        saveChatMessages(realmChat, messages, true);
 
         return java.util.Collections.unmodifiableList(messages);
 
     }
 
     @Override
-    public void saveChatMessages(@Nonnull RealmEntity realmChat, @Nonnull List<ChatMessage> messages) {
+    public void saveChatMessages(@Nonnull RealmEntity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate) {
         Chat chat = this.getChatById(realmChat);
 
         if (chat != null) {
             final MergeDaoResult<ChatMessage, String> result;
             synchronized (lock) {
-                result = getChatMessageDao().mergeChatMessages(realmChat.getEntityId(), messages, false, context);
+                result = getChatMessageDao().mergeChatMessages(realmChat.getEntityId(), messages, false);
 
                 // update sync data
-                chat = chat.updateMessagesSyncDate();
-                updateChat(chat);
+                if (updateChatSyncDate) {
+                    chat = chat.updateMessagesSyncDate();
+                    updateChat(chat);
+                }
             }
 
             final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>(messages.size());
@@ -370,7 +379,7 @@ public class DefaultChatService implements ChatService {
 
         if (chat != null) {
             messages = getRealmByUser(realmUser).getRealmChatService().getOlderChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), offset);
-            saveChatMessages(realmChat, messages);
+            saveChatMessages(realmChat, messages, false);
         } else {
             messages = java.util.Collections.emptyList();
             Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + realmChat.getEntityId());
@@ -390,11 +399,11 @@ public class DefaultChatService implements ChatService {
     public RealmEntity getSecondUser(@Nonnull Chat chat) {
         boolean first = true;
 
-        for (String userId : Splitter.on(PRIVATE_CHAT_DELIMITER).split(chat.getRealmEntity().getAppRealmEntityId())) {
+        for (String userId : Splitter.on(PRIVATE_CHAT_DELIMITER).split(chat.getEntity().getAppRealmEntityId())) {
             if ( first ) {
                 first = false;
             } else {
-                return RealmEntityImpl.newInstance(chat.getRealmEntity().getRealmId(), userId);
+                return RealmEntityImpl.newInstance(chat.getEntity().getRealmId(), userId);
             }
         }
 
@@ -405,7 +414,7 @@ public class DefaultChatService implements ChatService {
     public void setChatIcon(@Nonnull ImageView imageView, @Nonnull Chat chat, @Nonnull User user) {
         final Drawable defaultChatIcon = context.getResources().getDrawable(R.drawable.empty_icon);
 
-        final List<User> otherParticipants = this.getParticipantsExcept(chat.getRealmEntity(), user.getRealmEntity());
+        final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), user.getEntity());
 
         final String imageUri;
         if (!otherParticipants.isEmpty()) {
@@ -426,40 +435,6 @@ public class DefaultChatService implements ChatService {
     @Override
     public RealmEntity newPrivateChatId(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2) {
         return getRealmByUser(realmUser1).newRealmEntity(realmUser1.getRealmEntityId() + PRIVATE_CHAT_DELIMITER + realmUser2.getRealmEntityId());
-    }
-
-    @Nullable
-    @Override
-    public ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
-        final Realm realm = getRealmByUser(user);
-        final RealmChatService realmChatService = realm.getRealmChatService();
-
-        final String chatMessageId = realmChatService.sendChatMessage(chat, chatMessage);
-
-        if (chatMessageId != null) {
-            final LiteChatMessageImpl msgResult = LiteChatMessageImpl.newInstance(chatMessageId);
-
-            msgResult.setAuthor(getUserService().getUserById(user));
-            if (chat.isPrivate()) {
-                final RealmEntity secondUser = chat.getSecondUser();
-                msgResult.setRecipient(getUserService().getUserById(secondUser));
-            }
-            msgResult.setBody(chatMessage.getBody());
-            msgResult.setTitle(chatMessage.getTitle());
-            msgResult.setSendDate(DateTime.now());
-
-            final ChatMessageImpl result = new ChatMessageImpl(msgResult);
-            for (LiteChatMessage fwtMessage : chatMessage.getFwdMessages()) {
-                result.addFwdMessage(fwtMessage);
-            }
-
-            result.setDirection(MessageDirection.out);
-            result.setRead(true);
-
-            return result;
-        } else {
-            return null;
-        }
     }
 
     @Nonnull
@@ -493,7 +468,7 @@ public class DefaultChatService implements ChatService {
         return Lists.newArrayList(Iterables.filter(participants, new Predicate<User>() {
             @Override
             public boolean apply(@javax.annotation.Nullable User input) {
-                return input != null && !input.getRealmEntity().equals(realmUser);
+                return input != null && !input.getEntity().equals(realmUser);
             }
         }));
     }
@@ -595,7 +570,7 @@ public class DefaultChatService implements ChatService {
                     // participant added => need to add to list of cached participants
                     if (data instanceof User) {
                         final User participant = ((User) data);
-                        final List<User> participants = chatParticipantsCache.get(eventChat.getRealmEntity());
+                        final List<User> participants = chatParticipantsCache.get(eventChat.getEntity());
                         if (participants != null) {
                             // check if not contains as can be added in parallel
                             if (!Iterables.contains(participants, participant)) {
@@ -609,7 +584,7 @@ public class DefaultChatService implements ChatService {
                     // participant removed => try to remove from cached participants
                     if (data instanceof User) {
                         final User participant = ((User) data);
-                        final List<User> participants = chatParticipantsCache.get(eventChat.getRealmEntity());
+                        final List<User> participants = chatParticipantsCache.get(eventChat.getEntity());
                         if (participants != null) {
                             participants.remove(participant);
                         }
@@ -619,7 +594,7 @@ public class DefaultChatService implements ChatService {
 
             synchronized (chatsById) {
                 if (event.isOfType(ChatEventType.changed, ChatEventType.changed, ChatEventType.last_message_changed)) {
-                    chatsById.put(eventChat.getRealmEntity(), eventChat);
+                    chatsById.put(eventChat.getEntity(), eventChat);
                 }
             }
 
@@ -630,9 +605,9 @@ public class DefaultChatService implements ChatService {
                 if (type == ChatEventType.message_added) {
                     if (data instanceof ChatMessage) {
                         final ChatMessage message = (ChatMessage) data;
-                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
+                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
                         if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate()) ) {
-                            lastMessagesCache.put(eventChat.getRealmEntity(), message);
+                            lastMessagesCache.put(eventChat.getEntity(), message);
                             changesLastMessages.put(eventChat, message);
                         }
                     }
@@ -651,9 +626,9 @@ public class DefaultChatService implements ChatService {
                             }
                         }
 
-                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
+                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
                         if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
-                            lastMessagesCache.put(eventChat.getRealmEntity(), newestMessage);
+                            lastMessagesCache.put(eventChat.getEntity(), newestMessage);
                             changesLastMessages.put(eventChat, newestMessage);
                         }
                     }
@@ -663,9 +638,9 @@ public class DefaultChatService implements ChatService {
                 if (type == ChatEventType.message_changed) {
                     if (data instanceof ChatMessage) {
                         final ChatMessage message = (ChatMessage) data;
-                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getRealmEntity());
+                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
                         if (messageFromCache == null || messageFromCache.equals(message)) {
-                            lastMessagesCache.put(eventChat.getRealmEntity(), message);
+                            lastMessagesCache.put(eventChat.getEntity(), message);
                             changesLastMessages.put(eventChat, message);
                         }
                     }

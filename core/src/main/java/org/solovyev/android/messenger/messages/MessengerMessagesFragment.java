@@ -97,11 +97,11 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
     private JEventListener<ChatEvent> chatEventListener;
 
     public MessengerMessagesFragment() {
-        super(TAG, false);
+        super(TAG, false, false);
     }
 
     public MessengerMessagesFragment(@Nonnull Chat chat) {
-        super(TAG, false);
+        super(TAG, false, false);
         this.chat = chat;
     }
 
@@ -116,7 +116,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
         if (chat != null) {
             // chat is set => fragment was just created => we need to load realm
-            realm = realmService.getRealmById(chat.getRealmEntity().getRealmId());
+            realm = realmService.getRealmById(chat.getEntity().getRealmId());
         } else {
             // first - restore state
             final RealmEntity realmChat = savedInstanceState.getParcelable(CHAT);
@@ -128,7 +128,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
                 Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
                 getActivity().finish();
             } else {
-                realm = realmService.getRealmById(chat.getRealmEntity().getRealmId());
+                realm = realmService.getRealmById(chat.getEntity().getRealmId());
             }
         }
     }
@@ -223,7 +223,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         super.onSaveInstanceState(outState);
 
         if (chat != null) {
-            outState.putParcelable(CHAT, chat.getRealmEntity());
+            outState.putParcelable(CHAT, chat.getEntity());
         }
     }
 
@@ -248,7 +248,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         return new AbstractOnRefreshListener() {
             @Override
             public void onRefresh() {
-                new SyncChatMessagesForChatAsyncTask(this, getActivity()).execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmEntity(), chat.getRealmEntity(), false));
+                new SyncChatMessagesForChatAsyncTask(this, getActivity()).execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
             }
         };
     }
@@ -296,7 +296,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
 
                     }
                 }
-            }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmEntity(), chat.getRealmEntity(), true));
+            }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), true));
         }
     }
 
@@ -405,7 +405,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
         @Nonnull
         @Override
         protected List<ChatMessage> getElements(@Nonnull Context context) {
-            return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getRealmEntity());
+            return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getEntity());
         }
 
         @Override
@@ -435,7 +435,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
                         // let's wait 0.5 sec while sorting & filtering
                         scrollToTheEnd(500);
                     }
-                }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getRealmEntity(), chat.getRealmEntity(), false));
+                }.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
             }
         }
     }

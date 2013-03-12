@@ -70,7 +70,7 @@ public interface User extends MutableUserSyncData, MessengerEntity {
     Collection<AProperty> getProperties();
 
     @Nonnull
-    RealmEntity getRealmEntity();
+    RealmEntity getEntity();
 
     @Nullable
     String getPropertyValueByName(@Nonnull String name);

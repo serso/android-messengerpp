@@ -58,25 +58,25 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             // wait until realm2 will be connected
             Thread.sleep(100);
 
-            final User user2 = realmUserService1.getUserById(realm2.getUser().getRealmEntity().getRealmEntityId());
+            final User user2 = realmUserService1.getUserById(realm2.getUser().getEntity().getRealmEntityId());
             Assert.assertNotNull(user2);
-            Assert.assertEquals(user2.getRealmEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN2);
-            Assert.assertEquals(user2.getRealmEntity().getRealmId(), realm1.getId());
+            Assert.assertEquals(user2.getEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN2);
+            Assert.assertEquals(user2.getEntity().getRealmId(), realm1.getId());
             Assert.assertEquals("Sergey II Solovyev", user2.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
             Assert.assertNull(user2.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
             // load self
-            final User user1 = realmUserService1.getUserById(realm1.getUser().getRealmEntity().getRealmEntityId());
+            final User user1 = realmUserService1.getUserById(realm1.getUser().getEntity().getRealmEntityId());
             Assert.assertNotNull(user1);
-            Assert.assertEquals(user1.getRealmEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN);
-            Assert.assertEquals(user1.getRealmEntity().getRealmId(), realm1.getId());
+            Assert.assertEquals(user1.getEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN);
+            Assert.assertEquals(user1.getEntity().getRealmId(), realm1.getId());
             Assert.assertEquals("Sergey I Solovyev", user1.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
             Assert.assertNull(user1.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
             final User serso = realmUserService1.getUserById("se.solovyev@gmail.com");
             Assert.assertNotNull(serso);
-            Assert.assertEquals(serso.getRealmEntity().getRealmEntityId(), "se.solovyev@gmail.com");
-            Assert.assertEquals(serso.getRealmEntity().getRealmId(), realm1.getId());
+            Assert.assertEquals(serso.getEntity().getRealmEntityId(), "se.solovyev@gmail.com");
+            Assert.assertEquals(serso.getEntity().getRealmId(), realm1.getId());
             Assert.assertEquals("Sergey", serso.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
             Assert.assertEquals("Solovyev", serso.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
@@ -92,7 +92,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
         Assert.assertTrue(Iterables.any(contacts1, new Predicate<User>() {
             @Override
             public boolean apply(@Nullable User contact) {
-                return contact != null && contact.getRealmEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
+                return contact != null && contact.getEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
             }
         }));
 
@@ -116,7 +116,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             Thread.sleep(100);
 
 
-            final User user2InRealm1 = Users.newEmptyUser(realm1.newRealmEntity(realm2.getUser().getRealmEntity().getRealmEntityId()));
+            final User user2InRealm1 = Users.newEmptyUser(realm1.newRealmEntity(realm2.getUser().getEntity().getRealmEntityId()));
             final List<User> users1 = realmUserService1.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
             Assert.assertNotNull(users1);
             Assert.assertTrue(!users1.isEmpty());
@@ -132,7 +132,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             Assert.assertTrue(Iterables.any(users1, new Predicate<User>() {
                 @Override
                 public boolean apply(@Nullable User contact) {
-                    return contact != null && contact.getRealmEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN) && contact.isOnline();
+                    return contact != null && contact.getEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN) && contact.isOnline();
                 }
             }));
 

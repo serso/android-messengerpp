@@ -10,8 +10,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
@@ -19,7 +17,6 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatMessageMapper;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
@@ -27,6 +24,8 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,52 +88,54 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
     @Nonnull
     @Override
-    public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull List<ChatMessage> messages, boolean allowDelete, @Nonnull Context context) {
+    public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull List<? extends ChatMessage> messages, boolean allowDelete) {
         final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>(messages);
 
         final Chat chat = getChatService().getChatById(RealmEntityImpl.fromEntityId(chatId));
 
-        final List<String> messageIdsFromDb = loadChatMessageIds(chatId);
-        for (final String chatMessageIdFromDb : messageIdsFromDb) {
-            try {
-                // message exists both in db and on remote server => just update message properties
-                result.addUpdatedObject(Iterables.find(messages, new ChatMessageByIdFinder(chatMessageIdFromDb)));
-            } catch (NoSuchElementException e) {
-                // message was removed on remote server => need to remove from local db
-                result.addRemovedObjectId(chatMessageIdFromDb);
-            }
-        }
-
-        for (ChatMessage message : messages) {
-            try {
-                // message exists both in db and on remote server => case already covered above
-                Iterables.find(messageIdsFromDb, Predicates.equalTo(message.getId()));
-            } catch (NoSuchElementException e) {
-                // message was added on remote server => need to add to local db
-                if (!messageIdsFromDb.contains(message.getId())) {
-                    // no message information in local db is available - full message insertion
-                    result.addAddedObject(message);
+        if (chat != null) {
+            final List<String> messageIdsFromDb = loadChatMessageIds(chatId);
+            for (final String chatMessageIdFromDb : messageIdsFromDb) {
+                try {
+                    // message exists both in db and on remote server => just update message properties
+                    result.addUpdatedObject(Iterables.find(messages, new ChatMessageByIdFinder(chatMessageIdFromDb)));
+                } catch (NoSuchElementException e) {
+                    // message was removed on remote server => need to remove from local db
+                    result.addRemovedObjectId(chatMessageIdFromDb);
                 }
             }
-        }
 
-        final List<DbExec> execs = new ArrayList<DbExec>();
-
-        if (allowDelete) {
-            if (!result.getRemovedObjectIds().isEmpty()) {
-                execs.addAll(RemoveMessages.newInstances(result.getRemovedObjectIds()));
+            for (ChatMessage message : messages) {
+                try {
+                    // message exists both in db and on remote server => case already covered above
+                    Iterables.find(messageIdsFromDb, Predicates.equalTo(message.getEntity().getEntityId()));
+                } catch (NoSuchElementException e) {
+                    // message was added on remote server => need to add to local db
+                    if (!messageIdsFromDb.contains(message.getEntity().getEntityId())) {
+                        // no message information in local db is available - full message insertion
+                        result.addAddedObject(message);
+                    }
+                }
             }
-        }
 
-        for (ChatMessage updatedMessage : result.getUpdatedObjects()) {
-            execs.add(new UpdateMessage(updatedMessage, chat));
-        }
+            final List<DbExec> execs = new ArrayList<DbExec>();
 
-        for (ChatMessage addedMessage : result.getAddedObjects()) {
-            execs.add(new InsertMessage(chat, addedMessage));
-        }
+            if (allowDelete) {
+                if (!result.getRemovedObjectIds().isEmpty()) {
+                    execs.addAll(RemoveMessages.newInstances(result.getRemovedObjectIds()));
+                }
+            }
 
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
+            for (ChatMessage updatedMessage : result.getUpdatedObjects()) {
+                execs.add(new UpdateMessage(updatedMessage, chat));
+            }
+
+            for (ChatMessage addedMessage : result.getAddedObjects()) {
+                execs.add(new InsertMessage(chat, addedMessage));
+            }
+
+            AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
+        }
 
         return result;
     }
@@ -178,7 +179,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
         @Override
         public boolean apply(@javax.annotation.Nullable ChatMessage message) {
-            return message != null && message.getId().equals(messageId);
+            return message != null && message.getEntity().getEntityId().equals(messageId);
         }
     }
 
@@ -219,7 +220,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
             final ContentValues values = toContentValues(chat, chatMessage);
 
-            db.update("messages", values, "id = ?", new String[]{String.valueOf(chatMessage.getId())});
+            db.update("messages", values, "id = ?", new String[]{String.valueOf(chatMessage.getEntity().getEntityId())});
         }
     }
 
@@ -370,11 +371,14 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
         final ContentValues values = new ContentValues();
 
-        values.put("id", chatMessage.getId());
-        values.put("chat_id", chat.getRealmEntity().getEntityId());
-        values.put("author_id", chatMessage.getAuthor().getRealmEntity().getEntityId());
+        values.put("id", chatMessage.getEntity().getEntityId());
+        values.put("realm_id", chatMessage.getEntity().getRealmId());
+        values.put("realm_message_id", chatMessage.getEntity().getRealmEntityId());
+
+        values.put("chat_id", chat.getEntity().getEntityId());
+        values.put("author_id", chatMessage.getAuthor().getEntity().getEntityId());
         final User recipient = chatMessage.getRecipient();
-        values.put("recipient_id", recipient == null ? null : recipient.getRealmEntity().getEntityId());
+        values.put("recipient_id", recipient == null ? null : recipient.getEntity().getEntityId());
         values.put("send_date", dateTimeFormatter.print(chatMessage.getSendDate()));
         values.put("title", chatMessage.getTitle());
         values.put("body", chatMessage.getBody());

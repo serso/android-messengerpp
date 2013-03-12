@@ -49,7 +49,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
     private JEventListener<RealmEvent> realmEventListener;
 
     public MessengerRealmsFragment() {
-        super("Realms", false);
+        super("Realms", false, true);
     }
 
     @Override

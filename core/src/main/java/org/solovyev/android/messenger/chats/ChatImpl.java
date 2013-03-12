@@ -185,7 +185,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     @Override
     public String toString() {
         return "ChatImpl{" +
-                "id=" + getRealmEntity().getEntityId() +
+                "id=" + getEntity().getEntityId() +
                 ", privateChat=" + privateChat +
                 '}';
     }

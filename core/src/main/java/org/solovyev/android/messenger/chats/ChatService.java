@@ -27,7 +27,8 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     @Nonnull
     List<Chat> loadUserChats(@Nonnull RealmEntity user);
 
-    void saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat);
+    @Nonnull
+    ApiChat saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat);
 
     @Nonnull
     MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
@@ -50,8 +51,6 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     @Nonnull
     RealmEntity newPrivateChatId(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2);
 
-    @Nullable
-    ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage);
 
     /*
     **********************************************************************
@@ -77,5 +76,5 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
     void setChatIcon(@Nonnull ImageView imageView, @Nonnull Chat chat, @Nonnull User user);
 
-    void saveChatMessages(@Nonnull RealmEntity realmChat, @Nonnull List<ChatMessage> messages);
+    void saveChatMessages(@Nonnull RealmEntity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate);
 }

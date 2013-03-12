@@ -1,17 +1,21 @@
-package org.solovyev.android.messenger.chats;
+package org.solovyev.android.messenger.messages;
+
+import org.joda.time.DateTime;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.joda.time.DateTime;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.VersionedEntity;
 
 /**
  * User: serso
  * Date: 6/6/12
  * Time: 1:58 PM
  */
-public interface LiteChatMessage extends VersionedEntity<String> {
+public interface LiteChatMessage /*extends MessengerEntity*/ {
+
+    @Nonnull
+    RealmEntity getEntity();
 
     @Nonnull
     User getAuthor();

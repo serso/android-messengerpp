@@ -31,7 +31,7 @@ public final class Users {
 
         if (!firstNameExists && !lastNameExists) {
             // first and last names are empty
-            result.append(user.getRealmEntity().getRealmEntityId());
+            result.append(user.getEntity().getRealmEntityId());
         } else {
 
             if (firstNameExists) {

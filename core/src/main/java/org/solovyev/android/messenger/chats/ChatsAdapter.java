@@ -88,7 +88,7 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
         final Chat eventChat = event.getChat();
 
         if (event.isOfType(ChatEventType.changed, ChatEventType.last_message_changed)) {
-            final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getRealmEntity().getRealmId()).getUser();
+            final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getEntity().getRealmId()).getUser();
             final ChatListItem chatListItem = findInAllElements(user, eventChat);
             if (chatListItem != null) {
                 chatListItem.onEvent(event);

@@ -21,6 +21,7 @@ public class MessengerEmptyFragment extends RoboSherlockFragment implements Deta
 
     @Nonnull
     public static final String FRAGMENT_TAG = "empty";
+
     @Inject
     @Nonnull
     private MessengerMultiPaneManager multiPaneManager;

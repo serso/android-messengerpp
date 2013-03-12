@@ -1,12 +1,17 @@
-package org.solovyev.android.messenger.chats;
+package org.solovyev.android.messenger.messages;
 
 import android.database.Cursor;
-import javax.annotation.Nonnull;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatMessageImpl;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.realms.RealmEntityMapper;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -25,20 +30,21 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
     @Nonnull
     @Override
     public ChatMessage convert(@Nonnull Cursor c) {
-        final String messageId = c.getString(0);
-        final String chatId = c.getString(1);
+        final RealmEntity messageEntity = RealmEntityMapper.newInstanceFor(0).convert(c);
 
-        final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageId);
-        liteChatMessage.setAuthor(userService.getUserById(RealmEntityImpl.fromEntityId(c.getString(2))));
-        if (!c.isNull(3)) {
-            final String recipientId = c.getString(3);
+        final String chatId = c.getString(3);
+
+        final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageEntity);
+        liteChatMessage.setAuthor(userService.getUserById(RealmEntityImpl.fromEntityId(c.getString(4))));
+        if (!c.isNull(5)) {
+            final String recipientId = c.getString(5);
             liteChatMessage.setRecipient(userService.getUserById(RealmEntityImpl.fromEntityId(recipientId)));
         }
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
-        liteChatMessage.setSendDate(dateTimeFormatter.parseDateTime(c.getString(4)));
-        liteChatMessage.setTitle(c.getString(5));
-        liteChatMessage.setBody(c.getString(6));
+        liteChatMessage.setSendDate(dateTimeFormatter.parseDateTime(c.getString(6)));
+        liteChatMessage.setTitle(c.getString(7));
+        liteChatMessage.setBody(c.getString(8));
 
         return ChatMessageImpl.newInstance(liteChatMessage);
     }

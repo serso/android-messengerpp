@@ -23,7 +23,7 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
     private RealmService realmService;
 
     public MessengerRealmDefsFragment() {
-        super("RealmDefs", false);
+        super("RealmDefs", false, true);
     }
 
     @Override

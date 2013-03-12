@@ -37,7 +37,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getRealmEntity());
+                MessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }
@@ -66,7 +66,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getRealmEntity());
+                MessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }
@@ -115,7 +115,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getUserService().checkOnlineUserContacts(user.getRealmEntity());
+                MessengerApplication.getServiceLocator().getUserService().checkOnlineUserContacts(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }
@@ -144,7 +144,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getRealmEntity());
+                MessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }
@@ -161,7 +161,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getRealmEntity());
+                MessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }

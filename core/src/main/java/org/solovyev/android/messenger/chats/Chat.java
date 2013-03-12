@@ -19,7 +19,7 @@ public interface Chat extends MessengerEntity {
     String PROPERTY_PRIVATE = "private";
 
     @Nonnull
-    RealmEntity getRealmEntity();
+    RealmEntity getEntity();
 
     boolean isPrivate();
 

@@ -80,4 +80,10 @@ public interface RealmDef extends MessengerEntity {
 
     @Nullable
     BitmapDrawable getUserIcon(@Nonnull User user);
+
+    /**
+     *
+     * @return true if sent message should be notified immediately, false to wait until response from remote server will come (and then it must trigger event)
+     */
+    boolean notifySentMessagesImmediately();
 }

@@ -1,20 +1,19 @@
 package org.solovyev.android.messenger.realms.vk.messages;
 
 import android.util.Log;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatMessageImpl;
-import org.solovyev.android.messenger.chats.LiteChatMessage;
-import org.solovyev.android.messenger.chats.LiteChatMessageImpl;
-import org.solovyev.android.messenger.chats.MessageDirection;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+import org.solovyev.android.messenger.messages.ChatMessages;
+import org.solovyev.android.messenger.messages.LiteChatMessage;
+import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -139,7 +138,7 @@ public class JsonMessage {
             throw new IllegalJsonException();
         }
 
-        final LiteChatMessageImpl result = LiteChatMessageImpl.newInstance(mid);
+        final LiteChatMessageImpl result = ChatMessages.newMessage(realm.newMessageEntity(mid));
 
         final MessageDirection messageDirection = getMessageDirection();
         if (messageDirection == MessageDirection.out) {

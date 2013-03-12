@@ -32,7 +32,7 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
                          @Nonnull RealmDef realmDef,
                          @Nonnull User user,
                          @Nonnull C configuration) {
-        if (!user.getRealmEntity().getRealmId().equals(id)) {
+        if (!user.getEntity().getRealmId().equals(id)) {
             throw new IllegalArgumentException("User must belong to realm!");
         }
 
@@ -81,7 +81,19 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     @Nonnull
     @Override
     public RealmEntity newUserEntity(@Nonnull String realmUserId) {
-        return RealmEntityImpl.newInstance(getId(), realmUserId);
+        return newRealmEntity(realmUserId);
+    }
+
+    @Nonnull
+    @Override
+    public RealmEntity newMessageEntity(@Nonnull String realmMessageId) {
+        return newRealmEntity(realmMessageId);
+    }
+
+    @Nonnull
+    @Override
+    public RealmEntity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId) {
+        return newRealmEntity(realmMessageId, entityId);
     }
 
     @Nonnull

@@ -1,11 +1,10 @@
 package org.solovyev.android.messenger.messages;
 
-import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.chats.ChatMessage;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -19,7 +18,7 @@ public interface ChatMessageDao {
     List<ChatMessage> loadChatMessages(@Nonnull String chatId);
 
     @Nonnull
-    MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull List<ChatMessage> messages, boolean allowDelete, @Nonnull Context context);
+    MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull List<? extends ChatMessage> messages, boolean allowDelete);
 
     @Nonnull
     List<String> loadChatMessageIds(@Nonnull String chatId);

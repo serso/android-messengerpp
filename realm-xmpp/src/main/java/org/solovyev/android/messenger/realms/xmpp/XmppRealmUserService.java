@@ -81,7 +81,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         public User call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final User result;
 
-            if (realm.getUser().getRealmEntity().getRealmEntityId().equals(realmUserId)) {
+            if (realm.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
                 // realm user cannot be found in roster ->  information should be loaded separately
                 result = toUser(realm.getId(), realmUserId, null, true, connection);
             } else {
@@ -185,7 +185,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         @Override
         public List<User> call(@Nonnull final Connection connection) throws RealmIsNotConnectedException, XMPPException {
 
-            if (realm.getUser().getRealmEntity().getRealmEntityId().equals(realmUserId)) {
+            if (realm.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
                 // realm user => load contacts through the roster
                 final Collection<RosterEntry> entries = connection.getRoster().getEntries();
 
@@ -232,7 +232,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
                     final RosterEntry entry = Iterables.find(entries, new Predicate<RosterEntry>() {
                         @Override
                         public boolean apply(@Nullable RosterEntry entry) {
-                            return entry != null && user.getRealmEntity().getRealmEntityId().equals(entry.getUser());
+                            return entry != null && user.getEntity().getRealmEntityId().equals(entry.getUser());
                         }
                     }, null);
 

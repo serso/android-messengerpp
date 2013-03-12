@@ -59,7 +59,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
             @Override
             public String apply(@Nullable User user) {
                 assert user != null;
-                return user.getRealmEntity().getEntityId();
+                return user.getEntity().getEntityId();
             }
         }), apiUserFields);
     }

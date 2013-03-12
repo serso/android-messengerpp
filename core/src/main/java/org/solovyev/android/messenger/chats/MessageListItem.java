@@ -56,8 +56,8 @@ public class MessageListItem implements ListItem/*, ChatEventListener*/ {
         this.user = user;
         this.chat = chat;
         this.message = message;
-        this.leftTag = LEFT_VIEW_TAG + "_" + message.getId();
-        this.rightTag = RIGHT_VIEW_TAG + "_" + message.getId();
+        this.leftTag = LEFT_VIEW_TAG + "_" + message.getEntity().getEntityId();
+        this.rightTag = RIGHT_VIEW_TAG + "_" + message.getEntity().getEntityId();
     }
 
     @Override

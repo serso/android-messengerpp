@@ -1,7 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
-import javax.annotation.Nonnull;
+import org.solovyev.android.messenger.messages.LiteChatMessage;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -9,7 +10,6 @@ import java.util.List;
  * Date: 6/6/12
  * Time: 12:56 PM
  */
-// todo serso: add user id or chat id to the primary key in DAO
 public interface ChatMessage extends LiteChatMessage {
 
     boolean isRead();

@@ -199,10 +199,10 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         for (ApiChat apiChat : apiChats) {
             try {
                 // chat exists both in db and on remote server => case already covered above
-                Iterables.find(chatsFromDb, Predicates.equalTo(apiChat.getChat().getRealmEntity().getEntityId()));
+                Iterables.find(chatsFromDb, Predicates.equalTo(apiChat.getChat().getEntity().getEntityId()));
             } catch (NoSuchElementException e) {
                 // chat was added on remote server => need to add to local db
-                if (chatIdsFromDb.contains(apiChat.getChat().getRealmEntity().getEntityId())) {
+                if (chatIdsFromDb.contains(apiChat.getChat().getEntity().getEntityId())) {
                     // only link must be added - chat already in chats table
                     result.addAddedObjectLink(apiChat);
                 } else {
@@ -228,20 +228,20 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
             execs.add(new UpdateChat(addedChatLink.getChat()));
             execs.add(new DeleteChatProperties(addedChatLink.getChat()));
             execs.add(new InsertChatProperties(addedChatLink.getChat()));
-            execs.add(new InsertChatLink(userId, addedChatLink.getChat().getRealmEntity().getEntityId()));
+            execs.add(new InsertChatLink(userId, addedChatLink.getChat().getEntity().getEntityId()));
         }
 
         for (ApiChat addedChat : result.getAddedObjects()) {
             execs.add(new InsertChat(addedChat.getChat()));
             execs.add(new InsertChatProperties(addedChat.getChat()));
-            execs.add(new InsertChatLink(userId, addedChat.getChat().getRealmEntity().getEntityId()));
+            execs.add(new InsertChatLink(userId, addedChat.getChat().getEntity().getEntityId()));
             for (ChatMessage chatMessage : addedChat.getMessages()) {
                 execs.add(new SqliteChatMessageDao.InsertMessage(addedChat.getChat(), chatMessage));
             }
 
             for (User participant : addedChat.getParticipants()) {
-                if (!participant.getRealmEntity().getEntityId().equals(userId)) {
-                    execs.add(new InsertChatLink(participant.getRealmEntity().getEntityId(), addedChat.getChat().getRealmEntity().getEntityId()));
+                if (!participant.getEntity().getEntityId().equals(userId)) {
+                    execs.add(new InsertChatLink(participant.getEntity().getEntityId(), addedChat.getChat().getEntity().getEntityId()));
                 }
             }
         }
@@ -305,7 +305,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
         @Override
         public boolean apply(@javax.annotation.Nullable ApiChat apiChat) {
-            return apiChat != null && chatId.equals(apiChat.getChat().getRealmEntity().getEntityId());
+            return apiChat != null && chatId.equals(apiChat.getChat().getEntity().getEntityId());
         }
     }
 
@@ -352,7 +352,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
             final ContentValues values = toContentValues(chat);
 
-            db.update("chats", values, "id = ?", new String[]{String.valueOf(chat.getRealmEntity().getEntityId())});
+            db.update("chats", values, "id = ?", new String[]{String.valueOf(chat.getEntity().getEntityId())});
         }
     }
 
@@ -380,9 +380,9 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
         final ContentValues values = new ContentValues();
 
-        values.put("id", chat.getRealmEntity().getEntityId());
-        values.put("realm_id", chat.getRealmEntity().getRealmId());
-        values.put("realm_chat_id", chat.getRealmEntity().getRealmEntityId());
+        values.put("id", chat.getEntity().getEntityId());
+        values.put("realm_id", chat.getEntity().getRealmId());
+        values.put("realm_chat_id", chat.getEntity().getRealmEntityId());
         values.put("messages_count", chat.getMessagesCount());
         values.put("last_messages_sync_date", lastMessagesSyncDate == null ? null : dateTimeFormatter.print(lastMessagesSyncDate));
 
@@ -399,7 +399,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         public void exec(@Nonnull SQLiteDatabase db) {
             final Chat chat = getNotNullObject();
 
-            db.delete("chat_properties", "chat_id = ?", new String[]{String.valueOf(chat.getRealmEntity().getEntityId())});
+            db.delete("chat_properties", "chat_id = ?", new String[]{String.valueOf(chat.getEntity().getEntityId())});
         }
     }
 
@@ -415,7 +415,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
             for (AProperty property : chat.getProperties()) {
                 final ContentValues values = new ContentValues();
-                values.put("chat_id", chat.getRealmEntity().getEntityId());
+                values.put("chat_id", chat.getEntity().getEntityId());
                 values.put("property_name", property.getName());
                 values.put("property_value", property.getValue());
                 db.insert("chat_properties", null, values);

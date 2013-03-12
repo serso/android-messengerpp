@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -50,7 +51,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
     @Override
     protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
         if (result != null) {
-            //getChatService().fireChatEvent(chat, ChatEventType.message_added_batch, result);
+            //getChatService().fireEvent(ChatEventType.message_added_batch.newEvent(chat, result)); wait remote add
         }
     }
 
@@ -60,8 +61,18 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
     }
 
     @Nonnull
+    private static ChatMessageService getChatMessageService() {
+        return MessengerApplication.getServiceLocator().getChatMessageService();
+    }
+
+    @Nonnull
     private static UserService getUserService() {
         return MessengerApplication.getServiceLocator().getUserService();
+    }
+
+    @Nonnull
+    private static RealmService getRealmService() {
+        return MessengerApplication.getServiceLocator().getRealmService();
     }
 
     public static class Input {
@@ -104,7 +115,8 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
         @Nullable
         public ChatMessage sendChatMessage() {
-            final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("");
+
+            final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
             liteChatMessage.setAuthor(author);
             liteChatMessage.setBody(message);
 
@@ -118,7 +130,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
                 chatMessage.addFwdMessage(fwdMessage);
             }
 
-            return getChatService().sendChatMessage(author.getRealmEntity(), chat, chatMessage);
+            return getChatMessageService().sendChatMessage(author.getEntity(), chat, chatMessage);
         }
 
     }

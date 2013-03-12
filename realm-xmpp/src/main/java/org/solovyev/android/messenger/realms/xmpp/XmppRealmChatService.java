@@ -4,14 +4,12 @@ import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 
 import javax.annotation.Nonnull;
@@ -66,8 +64,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         return doOnConnection(new XmppConnectedCallable<Chat>() {
             @Override
             public Chat call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
-                org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, null);
-                smackChat.addMessageListener(new XmppMessageListener(getRealm(), realmChat));
+                org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getRealm(), realmChat));
                 return XmppChatListener.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
             }
         });
@@ -94,17 +91,13 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         public String call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final ChatManager chatManager = connection.getChatManager();
 
-            final RealmEntity realmChat = chat.getRealmEntity();
+            final RealmEntity realmChat = chat.getEntity();
             org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getRealmEntityId());
             if ( smackChat == null ) {
                 // smack forget about chat ids after restart => need to create chat here
-                smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), realmChat.getRealmEntityId(), null);
-                final String threadID = smackChat.getThreadID();
-                if ( threadID != null && !realmChat.getRealmEntityId().equals(threadID) ) {
-                    // check if thread id was created and update chat if it is not the same
-                    final Chat newChat = chat.copyWithNew(RealmEntityImpl.newInstance(realmChat.getRealmId(), threadID, realmChat.getEntityId()));
-                    MessengerApplication.getServiceLocator().getChatService().updateChat(newChat);
-                }
+                smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), realmChat.getRealmEntityId(), new XmppMessageListener(realm, realmChat));
+            } else {
+                // todo serso: remove if unnecessary
                 smackChat.addMessageListener(new XmppMessageListener(realm, realmChat));
             }
 

@@ -13,25 +13,25 @@ import javax.annotation.Nonnull;
 public abstract class AbstractMessengerEntity extends JObject implements MessengerEntity {
 
     @Nonnull
-    private /*final*/ RealmEntity realmEntity;
+    private /*final*/ RealmEntity entity;
 
-    protected AbstractMessengerEntity(@Nonnull RealmEntity realmEntity) {
-        this.realmEntity = realmEntity;
+    protected AbstractMessengerEntity(@Nonnull RealmEntity entity) {
+        this.entity = entity;
     }
 
     @Nonnull
     @Override
     public final String getId() {
-        return realmEntity.getEntityId();
+        return entity.getEntityId();
     }
 
     @Nonnull
-    public RealmEntity getRealmEntity() {
-        return realmEntity;
+    public RealmEntity getEntity() {
+        return entity;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -42,7 +42,7 @@ public abstract class AbstractMessengerEntity extends JObject implements Messeng
 
         final AbstractMessengerEntity that = (AbstractMessengerEntity) o;
 
-        if (!realmEntity.equals(that.realmEntity)) {
+        if (!entity.equals(that.entity)) {
             return false;
         }
 
@@ -50,8 +50,8 @@ public abstract class AbstractMessengerEntity extends JObject implements Messeng
     }
 
     @Override
-    public int hashCode() {
-        return realmEntity.hashCode();
+    public final int hashCode() {
+        return entity.hashCode();
     }
 
     @Nonnull
@@ -59,7 +59,7 @@ public abstract class AbstractMessengerEntity extends JObject implements Messeng
     public AbstractMessengerEntity clone() {
         final AbstractMessengerEntity clone = (AbstractMessengerEntity) super.clone();
 
-        clone.realmEntity = realmEntity.clone();
+        clone.entity = entity.clone();
 
         return clone;
     }

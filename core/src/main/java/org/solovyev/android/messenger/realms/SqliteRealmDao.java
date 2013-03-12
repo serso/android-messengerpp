@@ -114,7 +114,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
         values.put("id", realm.getId());
         values.put("realm_def_id", realm.getRealmDef().getId());
-        values.put("user_id", realm.getUser().getRealmEntity().getEntityId());
+        values.put("user_id", realm.getUser().getEntity().getEntityId());
         values.put("configuration", new Gson().toJson(realm.getConfiguration()));
 
         return values;

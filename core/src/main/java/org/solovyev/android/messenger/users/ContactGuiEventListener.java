@@ -36,8 +36,8 @@ public class ContactGuiEventListener implements EventListener<ContactGuiEvent> {
                 @Override
                 protected Chat doInBackground(Void... params) {
                     try {
-                        final User user = activity.getRealmService().getRealmById(contact.getRealmEntity().getRealmId()).getUser();
-                        return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getRealmEntity(), contact.getRealmEntity());
+                        final User user = activity.getRealmService().getRealmById(contact.getEntity().getRealmId()).getUser();
+                        return MessengerApplication.getServiceLocator().getUserService().getPrivateChat(user.getEntity(), contact.getEntity());
                     } catch (UnsupportedRealmException e) {
                         throw new AssertionError(e);
                     }

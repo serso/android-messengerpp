@@ -133,7 +133,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
     @Override
     public String toString() {
         return "UserImpl{" +
-                "id=" + getRealmEntity().getEntityId() +
+                "id=" + getEntity().getEntityId() +
                 '}';
     }
 

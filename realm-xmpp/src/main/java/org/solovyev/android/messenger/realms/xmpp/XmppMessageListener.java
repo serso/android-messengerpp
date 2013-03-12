@@ -33,7 +33,7 @@ class XmppMessageListener implements MessageListener {
     @Override
     public void processMessage(Chat chat, Message message) {
         Log.i("M++/Xmpp", "Message created: " + message.getBody());
-        getChatService().saveChatMessages(realmChat, XmppChatListener.toMessages(realm, Arrays.asList(message)));
+        getChatService().saveChatMessages(realmChat, XmppChatListener.toMessages(realm, Arrays.asList(message)), false);
     }
 
     @Nonnull

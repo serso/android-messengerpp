@@ -84,7 +84,7 @@ public class ContactListItem extends AbstractMessengerListItem<User> /*implement
         if ( realmService.isOneRealm() ) {
             return Users.getDisplayNameFor(contact);
         } else {
-            final Realm realm = realmService.getRealmById(getContact().getRealmEntity().getRealmId());
+            final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
             return Users.getDisplayNameFor(contact) + "\n[" + Users.getDisplayNameFor(realm.getUser()) + "]";
         }
     }

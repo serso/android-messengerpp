@@ -138,7 +138,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
         final StringBuilder sb = new StringBuilder();
         for (User contact : contacts) {
-            sb.append(contact.getRealmEntity().getEntityId()).append(";");
+            sb.append(contact.getEntity().getEntityId()).append(";");
         }
         outState.putString(CONTACT_IDS, sb.toString());
     }

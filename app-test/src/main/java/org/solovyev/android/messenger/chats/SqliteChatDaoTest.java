@@ -52,7 +52,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
         Chat chat = chatDao.loadChatById(realmChat4.getEntityId());
         Assert.assertNotNull(chat);
-        Assert.assertEquals(realmChat4.getEntityId(), chat.getRealmEntity().getEntityId());
+        Assert.assertEquals(realmChat4.getEntityId(), chat.getEntity().getEntityId());
     }
 
     @Override

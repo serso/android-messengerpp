@@ -148,7 +148,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     /**
      * If nothing selected - first list item will be selected
      */
-    private boolean selectFirstItemByDefault = true;
+    private final boolean selectFirstItemByDefault;
 
     /*
     **********************************************************************
@@ -158,13 +158,14 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     **********************************************************************
     */
 
-    public AbstractMessengerListFragment(@Nonnull String tag, boolean filterEnabled) {
+    public AbstractMessengerListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
         this.tag = tag;
         if ( filterEnabled ) {
             this.listViewFilter = new ListViewFilter(this, this);
         } else {
             this.listViewFilter = null;
         }
+        this.selectFirstItemByDefault = selectFirstItemByDefault;
     }
 
     /*

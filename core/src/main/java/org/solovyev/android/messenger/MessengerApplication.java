@@ -202,6 +202,7 @@ public class MessengerApplication extends Application implements MessengerServic
         this.realmService.init();
         this.userService.init();
         this.chatService.init();
+        this.chatMessageService.init();
         this.syncService.init();
 
         // load persistence data

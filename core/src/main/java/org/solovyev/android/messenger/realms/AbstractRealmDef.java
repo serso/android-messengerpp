@@ -27,17 +27,20 @@ public abstract class AbstractRealmDef implements RealmDef {
 
     @Nonnull
     private final Class<? extends RealmConfiguration> configurationClass;
+    private final boolean notifySentMessagesImmediately;
 
     protected AbstractRealmDef(@Nonnull String id,
                                int nameResId,
                                int iconResId,
                                @Nonnull Class<? extends BaseRealmConfigurationFragment<?>> configurationActivityClass,
-                               @Nonnull Class<? extends RealmConfiguration> configurationClass) {
+                               @Nonnull Class<? extends RealmConfiguration> configurationClass,
+                               boolean notifySentMessagesImmediately) {
         this.id = id;
         this.nameResId = nameResId;
         this.iconResId = iconResId;
         this.configurationActivityClass = configurationActivityClass;
         this.configurationClass = configurationClass;
+        this.notifySentMessagesImmediately = notifySentMessagesImmediately;
     }
 
     @Nonnull
@@ -109,5 +112,10 @@ public abstract class AbstractRealmDef implements RealmDef {
     @Override
     public BitmapDrawable getUserIcon(@Nonnull User user) {
         return null;
+    }
+
+    @Override
+    public boolean notifySentMessagesImmediately() {
+        return notifySentMessagesImmediately;
     }
 }

@@ -4,8 +4,12 @@ import android.util.Log;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.packet.Message;
+import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.ChatMessages;
+import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
@@ -32,14 +36,20 @@ public class XmppChatListener implements ChatManagerListener {
         Log.i("M++/Xmpp", "Chat created!");
 
         if (!createdLocally) {
-            final ApiChat newChat = toApiChat(chat, Collections.<Message>emptyList(), realm);
-            getChatService().saveChat(realm.getUser().getRealmEntity(), newChat);
+            ApiChat newChat = toApiChat(chat, Collections.<Message>emptyList(), realm);
+            newChat = getChatService().saveChat(realm.getUser().getEntity(), newChat);
+            chat.addMessageListener(new XmppMessageListener(realm, newChat.getChat().getEntity()));
         }
     }
 
     @Nonnull
     private static ChatService getChatService() {
         return MessengerApplication.getServiceLocator().getChatService();
+    }
+
+    @Nonnull
+    private static ChatMessageService getChatMessageService() {
+        return MessengerApplication.getServiceLocator().getChatMessageService();
     }
 
     @Nonnull
@@ -50,7 +60,7 @@ public class XmppChatListener implements ChatManagerListener {
 
         final String realmChatId = chat.getThreadID();
         if (Strings.isEmpty(realmChatId) ) {
-            realmChat = getChatService().newPrivateChatId(realm.getUser().getRealmEntity(), participant.getRealmEntity());
+            realmChat = getChatService().newPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
         } else {
             realmChat = realm.newRealmEntity(realmChatId);
         }
@@ -71,10 +81,11 @@ public class XmppChatListener implements ChatManagerListener {
 
     @Nonnull
     private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Realm realm) {
-        LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(message.getPacketID());
+        final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(realm));
         liteChatMessage.setBody(message.getBody());
         liteChatMessage.setAuthor(toUser(message.getFrom(), realm));
         liteChatMessage.setRecipient(toUser(message.getTo(), realm));
+        liteChatMessage.setSendDate(DateTime.now());
         return ChatMessageImpl.newInstance(liteChatMessage);
     }
 

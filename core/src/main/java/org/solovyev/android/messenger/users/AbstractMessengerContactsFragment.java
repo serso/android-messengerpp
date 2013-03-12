@@ -17,7 +17,7 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
     private static String TAG = "ContactsFragment";
 
     public AbstractMessengerContactsFragment() {
-        super(TAG, true);
+        super(TAG, true, true);
     }
 
     @Override

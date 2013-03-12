@@ -1,19 +1,26 @@
 package org.solovyev.android.messenger.messages;
 
+import android.app.Application;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,8 +45,37 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @Inject
     @Nonnull
+    private RealmService realmService;
+
+    @Inject
+    @Nonnull
+    private UserService userService;
+
+    @Inject
+    @Nonnull
+    private ChatService chatService;
+
+    @Inject
+    @Nonnull
     private ChatMessageDao chatMessageDao;
 
+    @Inject
+    @Nonnull
+    private Application context;
+
+    @Override
+    public void init() {
+    }
+
+    @Nonnull
+    @Override
+    public synchronized RealmEntity generateEntity(@Nonnull Realm realm) {
+        // todo serso: create normal way of generating ids
+        final RealmEntity tmp = RealmEntityImpl.newInstance(realm.getId(), String.valueOf(System.currentTimeMillis()));
+
+        // NOTE: empty realm entity id in order to get real from realm service
+        return RealmEntityImpl.newInstance(realm.getId(), ChatMessageService.NO_REALM_MESSAGE_ID, tmp.getEntityId());
+    }
 
     @Nonnull
     @Override
@@ -63,5 +99,44 @@ public class DefaultChatMessageService implements ChatMessageService {
     @Nonnull
     private ChatMessageDao getChatMessageDao() {
         return chatMessageDao;
+    }
+
+    @Nullable
+    @Override
+    public ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
+        final Realm realm = getRealmByUser(user);
+        final RealmChatService realmChatService = realm.getRealmChatService();
+
+        final String realmMessageId = realmChatService.sendChatMessage(chat, chatMessage);
+
+        final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(realm.newMessageEntity(realmMessageId == null ? NO_REALM_MESSAGE_ID : realmMessageId, chatMessage.getEntity().getEntityId()));
+
+        message.setAuthor(userService.getUserById(user));
+        if (chat.isPrivate()) {
+            final RealmEntity secondUser = chat.getSecondUser();
+            message.setRecipient(userService.getUserById(secondUser));
+        }
+        message.setBody(chatMessage.getBody());
+        message.setTitle(chatMessage.getTitle());
+        message.setSendDate(DateTime.now());
+
+        final ChatMessageImpl result = new ChatMessageImpl(message);
+        for (LiteChatMessage fwtMessage : chatMessage.getFwdMessages()) {
+            result.addFwdMessage(fwtMessage);
+        }
+
+        result.setDirection(MessageDirection.out);
+        result.setRead(true);
+
+        if ( realm.getRealmDef().notifySentMessagesImmediately() ) {
+            chatService.saveChatMessages(chat.getEntity(), Arrays.asList(result), false);
+        }
+
+        return result;
+    }
+
+    @Nonnull
+    private Realm getRealmByUser(@Nonnull RealmEntity userEntity) {
+        return realmService.getRealmById(userEntity.getRealmId());
     }
 }

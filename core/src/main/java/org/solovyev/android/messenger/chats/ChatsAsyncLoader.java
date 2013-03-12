@@ -36,7 +36,7 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem
 
         for (Realm realm : realmService.getRealms()) {
             final User user = realm.getUser();
-            for (Chat chat : MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getRealmEntity())) {
+            for (Chat chat : MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity())) {
                 result.add(UserChat.newInstance(user, chat, null));
             }
         }

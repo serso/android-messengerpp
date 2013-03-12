@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.chats;
+package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import android.os.Handler;
@@ -9,7 +9,9 @@ import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -76,7 +78,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
                 }));
 
                 for (ChatMessage message : messages) {
-                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getRealmEntity());
+                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getEntity());
                     if ( listItem != null ) {
                         removeListItem(listItem);
                     }
@@ -97,26 +99,26 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
         }
 
         if (type.isEvent(ChatEventType.user_start_typing, eventChat, chat)) {
-            final RealmEntity realmUser = (RealmEntity) data;
+            final RealmEntity userEntity = (RealmEntity) data;
 
-            if (!userTypingListItems.containsKey(realmUser)) {
-                assert realmUser != null;
+            if (!userTypingListItems.containsKey(userEntity)) {
+                assert userEntity != null;
 
-                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance("typing" + realmUser.getEntityId());
+                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(RealmEntityImpl.fromEntityId(userEntity.getEntityId() + "_typing"));
                 liteChatMessage.setSendDate(DateTime.now());
-                liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(realmUser));
+                liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(userEntity));
                 liteChatMessage.setBody("User start typing...");
 
                 final MessageListItem listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));
                 addListItem(listItem);
-                userTypingListItems.put(realmUser, listItem);
+                userTypingListItems.put(userEntity, listItem);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         removeListItem(listItem);
-                        userTypingListItems.remove(realmUser);
+                        userTypingListItems.remove(userEntity);
                     }
                 }, 3000);
             }
@@ -140,7 +142,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
     private void addMessageListItem(@Nonnull ChatMessage message) {
         // remove typing message
-        userTypingListItems.remove(message.getAuthor().getRealmEntity());
+        userTypingListItems.remove(message.getAuthor().getEntity());
 
         addListItem(createListItem(message));
     }
@@ -150,8 +152,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
     }
 
     private void removeMessageListItem(@Nonnull String messageId) {
-        // todo serso: not good solution => better way is to load full message object (but it can take long time)
-        final ChatMessage message = ChatMessageImpl.newInstance(LiteChatMessageImpl.newInstance(messageId));
+        final ChatMessage message = ChatMessageImpl.newInstance(ChatMessages.newEmptyMessage(messageId));
         removeListItem(message);
     }
 }

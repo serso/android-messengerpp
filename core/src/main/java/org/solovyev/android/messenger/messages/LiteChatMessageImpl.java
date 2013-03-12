@@ -1,22 +1,19 @@
-package org.solovyev.android.messenger.chats;
+package org.solovyev.android.messenger.messages;
+
+import org.joda.time.DateTime;
+import org.solovyev.android.messenger.AbstractMessengerEntity;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.joda.time.DateTime;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.JObject;
-import org.solovyev.common.VersionedEntity;
-import org.solovyev.common.VersionedEntityImpl;
 
 /**
  * User: serso
  * Date: 6/6/12
  * Time: 2:04 PM
  */
-public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
-
-    @Nonnull
-    private VersionedEntity<String> versionedEntity;
+public class LiteChatMessageImpl extends AbstractMessengerEntity implements LiteChatMessage {
 
     @Nonnull
     private User author;
@@ -33,13 +30,13 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
     @Nonnull
     private String body = "";
 
-    private LiteChatMessageImpl(@Nonnull VersionedEntity<String> versionedEntity) {
-        this.versionedEntity = versionedEntity;
+    private LiteChatMessageImpl(@Nonnull RealmEntity entity) {
+        super(entity);
     }
 
     @Nonnull
-    public static LiteChatMessageImpl newInstance(@Nonnull String id) {
-        return new LiteChatMessageImpl(new VersionedEntityImpl<String>(id));
+    static LiteChatMessageImpl newInstance(@Nonnull RealmEntity entity) {
+        return new LiteChatMessageImpl(entity);
     }
 
     @Nonnull
@@ -79,8 +76,6 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
     public LiteChatMessageImpl clone() {
         final LiteChatMessageImpl clone = (LiteChatMessageImpl) super.clone();
 
-        clone.versionedEntity = this.versionedEntity.clone();
-
         clone.author = this.author.clone();
 
         if (this.recipient != null) {
@@ -92,18 +87,6 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
 
     public void setBody(@Nonnull String body) {
         this.body = body;
-    }
-
-    @Override
-    @Nonnull
-    public String getId() {
-        return versionedEntity.getId();
-    }
-
-    @Override
-    @Nonnull
-    public Integer getVersion() {
-        return versionedEntity.getVersion();
     }
 
     @Nullable
@@ -129,34 +112,5 @@ public class LiteChatMessageImpl extends JObject implements LiteChatMessage {
 
     public void setRecipient(@Nullable User recipient) {
         this.recipient = recipient;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof LiteChatMessageImpl)) return false;
-
-        LiteChatMessageImpl that = (LiteChatMessageImpl) o;
-
-        if (!versionedEntity.equals(that.versionedEntity)) return false;
-
-        return true;
-    }
-
-    @Override
-    public boolean equalsVersion(Object that) {
-        return this.equals(that) && this.versionedEntity.equalsVersion(((LiteChatMessageImpl) that).versionedEntity);
-    }
-
-    @Override
-    public int hashCode() {
-        return versionedEntity.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "LiteChatMessageImpl{" +
-                "versionedEntity=" + versionedEntity +
-                '}';
     }
 }

@@ -45,7 +45,7 @@ public class MessengerChatsFragment extends AbstractMessengerListFragment<UserCh
     private JEventListener<ChatEvent> chatEventListener;
 
     public MessengerChatsFragment() {
-        super(TAG, true);
+        super(TAG, true, true);
     }
 
     @Override

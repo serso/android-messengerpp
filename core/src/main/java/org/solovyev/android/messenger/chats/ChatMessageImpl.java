@@ -1,11 +1,13 @@
 package org.solovyev.android.messenger.chats;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.messages.LiteChatMessage;
+import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,6 +81,12 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
         this.direction = direction;
     }
 
+    @Nonnull
+    @Override
+    public RealmEntity getEntity() {
+        return this.liteChatMessage.getEntity();
+    }
+
     @Override
     @Nonnull
     public User getAuthor() {
@@ -110,22 +118,16 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
     }
 
     @Override
-    @Nonnull
-    public String getId() {
-        return liteChatMessage.getId();
-    }
-
-    @Override
-    @Nonnull
-    public Integer getVersion() {
-        return liteChatMessage.getVersion();
-    }
-
-    @Override
     @Nullable
     public User getSecondUser(@Nonnull User user) {
         return liteChatMessage.getSecondUser(user);
     }
+
+/*    @Nonnull
+    @Override
+    public String getId() {
+        return this.liteChatMessage.getId();
+    }*/
 
     @Override
     public boolean equals(Object o) {
@@ -137,11 +139,6 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
         if (!liteChatMessage.equals(that.liteChatMessage)) return false;
 
         return true;
-    }
-
-    @Override
-    public boolean equalsVersion(Object that) {
-        return this.equals(that) && this.liteChatMessage.equalsVersion(((ChatMessageImpl) that).liteChatMessage);
     }
 
     @Override

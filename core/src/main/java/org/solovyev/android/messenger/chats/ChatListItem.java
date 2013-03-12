@@ -36,7 +36,7 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
     private static ChatMessage loadLastChatMessage(Chat chat, Context context) {
         if (context != null) {
             // todo serso: calling on the main thread
-            return getChatService().getLastMessage(chat.getRealmEntity());
+            return getChatService().getLastMessage(chat.getEntity());
         } else {
             return null;
         }
