@@ -33,10 +33,10 @@ public class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
 
     public MergeDaoResultImpl(@Nonnull List<? extends T> objects) {
         this.objects = objects;
-        removedObjectIds = new ArrayList<ID>(objects.size());
-        addedObjectLinks = new ArrayList<T>(objects.size());
-        addedObjects = new ArrayList<T>(objects.size());
-        updatedObjects = new ArrayList<T>(objects.size());
+        this.removedObjectIds = new ArrayList<ID>(objects.size());
+        this.addedObjectLinks = new ArrayList<T>(objects.size());
+        this.addedObjects = new ArrayList<T>(objects.size());
+        this.updatedObjects = new ArrayList<T>(objects.size());
     }
 
     @Nonnull

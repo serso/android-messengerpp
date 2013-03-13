@@ -26,6 +26,7 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.*;
 
 /**
@@ -33,6 +34,7 @@ import java.util.*;
  * Date: 5/24/12
  * Time: 10:30 PM
  */
+
 @Singleton
 public class DefaultUserService implements UserService {
 

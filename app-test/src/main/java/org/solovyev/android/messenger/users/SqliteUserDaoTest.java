@@ -1,9 +1,12 @@
 package org.solovyev.android.messenger.users;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.realms.TestRealmDef;
@@ -13,9 +16,9 @@ import org.solovyev.common.Objects;
 import org.solovyev.common.equals.CollectionEqualizer;
 import org.solovyev.common.equals.ListEqualizer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * User: serso
@@ -23,6 +26,8 @@ import java.util.List;
  * Time: 4:50 PM
  */
 public class SqliteUserDaoTest extends AbstractMessengerTestCase {
+
+    private static final int REALMS_COUNT = 10;
 
     @Inject
     private UserDao userDao;
@@ -95,6 +100,92 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         expected = Users.newUser(TestRealmDef.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.updateUser(expected);
+
+        List<String> usersIds = userDao.loadUserIds();
+        Assert.assertEquals(2, usersIds.size());
+        userDao.deleteAllUsersInRealm("test~1");
+        usersIds = userDao.loadUserIds();
+        Assert.assertEquals(0, usersIds.size());
+    }
+
+    public void testRandomOperations() throws Exception {
+        final List<Realm> realms = new ArrayList<Realm>(REALMS_COUNT);
+        for (int i = 0; i < REALMS_COUNT; i++) {
+            realms.add(new TestRealm(testRealmDef, i));
+        }
+
+        final List<User> users = new ArrayList<User>();
+
+        final Random random = new Random(new Date().getTime());
+        for (int i = 0; i < 1000; i++) {
+            final int operation = random.nextInt(7);
+            switch (operation) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    final Realm r = realms.get(random.nextInt(REALMS_COUNT));
+                    List<AProperty> newProperties = generateUserProperties(random);
+                    final User newUser = Users.newUser(r.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), newProperties);
+                    users.add(newUser);
+                    userDao.insertUser(newUser);
+                    Assert.assertTrue(Objects.areEqual(newUser, userDao.loadUserById(newUser.getId())));
+                    Assert.assertTrue(Objects.areEqual(newProperties, userDao.loadUserPropertiesById(newUser.getId()), new CollectionEqualizer<AProperty>(null)));
+                    break;
+                case 4:
+                    if (!users.isEmpty()) {
+                        int userPosition = random.nextInt(2 * users.size());
+
+                        if (userPosition < users.size()) {
+                            User updatedUser = users.get(userPosition);
+                            List<AProperty> updatedProperties = generateUserProperties(random);
+                            updatedUser = Users.newUser(updatedUser.getEntity(), Users.newNeverSyncedUserSyncData(), updatedProperties);
+                            users.set(userPosition, updatedUser);
+                            userDao.updateUser(updatedUser);
+                            Assert.assertTrue(Objects.areEqual(updatedProperties, userDao.loadUserPropertiesById(updatedUser.getId()), new CollectionEqualizer<AProperty>(null)));
+                        } else {
+                            final Realm r2 = realms.get(random.nextInt(REALMS_COUNT));
+                            final User newUser2 = Users.newUser(r2.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), generateUserProperties(random));
+                            userDao.updateUser(newUser2);
+                            Assert.assertNull(userDao.loadUserById(newUser2.getId()));
+                            Assert.assertTrue(userDao.loadUserPropertiesById(newUser2.getId()).isEmpty());
+                        }
+                    }
+                    break;
+                case 5:
+                    final Realm realm = realms.get(random.nextInt(realms.size()));
+                    Iterables.removeIf(users, new Predicate<User>() {
+                        @Override
+                        public boolean apply(@Nullable User user) {
+                            return user.getEntity().getRealmId().equals(realm.getId());
+                        }
+                    });
+                    userDao.deleteAllUsersInRealm(realm.getId());
+                    break;
+                case 6:
+                    users.clear();
+                    userDao.deleteAllUsers();
+                    break;
+            }
+
+            final List<String> userIds = userDao.loadUserIds();
+            Assert.assertEquals(users.size(), userIds.size());
+            for (User user : users) {
+                Assert.assertTrue(userIds.contains(user.getId()));
+            }
+
+        }
+
+    }
+
+    @Nonnull
+    private List<AProperty> generateUserProperties(@Nonnull Random random) {
+        final int count = random.nextInt(10);
+        final List<AProperty> result = new ArrayList<AProperty>(count);
+        for (int i = 0; i < count; i++) {
+            result.add(Properties.newProperty("name" + i, "value" + i));
+        }
+        return result;
     }
 
     @Override

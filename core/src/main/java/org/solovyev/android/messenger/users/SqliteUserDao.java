@@ -24,6 +24,7 @@ import org.solovyev.common.collections.Collections;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,11 @@ import java.util.NoSuchElementException;
  * Date: 5/30/12
  * Time: 2:13 AM
  */
+
+/**
+ * This class must be synchronized in outer scope
+ */
+@NotThreadSafe
 @Singleton
 public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
@@ -50,7 +56,10 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
     @Nonnull
     @Override
     public User insertUser(@Nonnull User user) {
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertUser(user), new InsertUserProperties(user)));
+        final long result = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new InsertUser(user));
+        if (result != DbExec.SQL_ERROR) {
+            AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new InsertUserProperties(user));
+        }
         return user;
     }
 
@@ -69,7 +78,11 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
     @Override
     public void updateUser(@Nonnull User user) {
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateUser(user), new DeleteUserProperties(user), new InsertUserProperties(user)));
+        final long rows = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new UpdateUser(user));
+        if (rows > 0) {
+            // user exists => can remove/insert properties
+            AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteUserProperties(user), new InsertUserProperties(user)));
+        }
     }
 
     @Nonnull

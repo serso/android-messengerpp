@@ -16,7 +16,11 @@ public class TestRealm extends AbstractRealm<TestRealmConfiguration> {
 
     @Inject
     public TestRealm(@Nonnull TestRealmDef realmDef) {
-        super(realmDef.getId() + "~1", realmDef, Users.newEmptyUser(RealmEntityImpl.newInstance(realmDef.getId() + "~1", "user01")), new TestRealmConfiguration("test_field", 42));
+        this(realmDef, 1);
+    }
+
+    public TestRealm(@Nonnull TestRealmDef realmDef, int index) {
+        super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(RealmEntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestRealmConfiguration("test_field", 42));
     }
 
 
