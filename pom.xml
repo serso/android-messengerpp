@@ -332,11 +332,6 @@
                             <platform>15</platform>
                         </sdk>
 
-                        <emulator>
-                            <avd>Default</avd>
-                            <wait>60000</wait>
-                        </emulator>
-
                         <zipalign>
                             <verbose>true</verbose>
                         </zipalign>

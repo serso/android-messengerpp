@@ -95,6 +95,49 @@
 
     <profiles>
         <profile>
+            <id>with-emulator</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                        <artifactId>android-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+
+                        <configuration>
+                            <emulator>
+                                <avd>Default</avd>
+                                <wait>60000</wait>
+                            </emulator>
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>emulator-start</id>
+                                <goals>
+                                    <goal>emulator-start</goal>
+                                </goals>
+                                <phase>initialize</phase>
+                            </execution>
+
+                            <execution>
+                                <id>emulator-stop</id>
+                                <goals>
+                                    <goal>emulator-stop</goal>
+                                </goals>
+                                <!--we want to close emulator after emma-->
+                                <phase>verify</phase>
+                                <!--<phase>post-integration-test</phase>-->
+                            </execution>
+
+                        </executions>
+
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
             <id>with-tests</id>
 
             <dependencies>
