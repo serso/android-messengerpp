@@ -1,11 +1,13 @@
 package org.solovyev.android.messenger.users;
 
+import org.joda.time.DateTime;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public final class Users {
 
     @Nonnull
     public static User newEmptyUser(@Nonnull RealmEntity realmUser) {
-        return newUser(realmUser, UserSyncDataImpl.newNeverSyncedInstance(), Collections.<AProperty>emptyList());
+        return newUser(realmUser, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
     }
 
     @Nonnull
@@ -74,5 +76,26 @@ public final class Users {
                                @Nonnull UserSyncData userSyncData,
                                @Nonnull List<AProperty> properties) {
         return UserImpl.newInstance(realmEntity, userSyncData, properties);
+    }
+
+    @Nonnull
+    public static UserSyncData newNeverSyncedUserSyncData() {
+        return UserSyncDataImpl.newNeverSyncedInstance();
+    }
+
+    @Nonnull
+    public static UserSyncData newUserSyncData(@Nullable DateTime lastPropertiesSyncDate,
+                                                    @Nullable DateTime lastContactsSyncDate,
+                                                    @Nullable DateTime lastChatsSyncDate,
+                                                    @Nullable DateTime lastUserIconsSyncDate) {
+        return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
+    }
+
+    @Nonnull
+    public static UserSyncData newUserSyncData(@Nullable String lastPropertiesSyncDate,
+                                               @Nullable String lastContactsSyncDate,
+                                               @Nullable String lastChatsSyncDate,
+                                               @Nullable String lastUserIconsSyncDate) {
+        return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
     }
 }

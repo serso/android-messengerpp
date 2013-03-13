@@ -5,11 +5,15 @@ import com.google.common.collect.Iterables;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -24,6 +28,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
     @Nonnull
     private UserSyncData userSyncData;
 
+    // todo serso: use AProperties object
     @Nonnull
     private List<AProperty> properties = new ArrayList<AProperty>();
 
@@ -52,7 +57,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
             // just in case...
             result.properties.clear();
             for (Map.Entry<String, String> entry : result.propertiesMap.entrySet()) {
-                result.properties.add(APropertyImpl.newInstance(entry.getKey(), entry.getValue()));
+                result.properties.add(Properties.newProperty(entry.getKey(), entry.getValue()));
             }
         }
 
@@ -148,7 +153,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
                 return property != null && property.getName().equals(PROPERTY_ONLINE);
             }
         });
-        clone.properties.add(APropertyImpl.newInstance(PROPERTY_ONLINE, Boolean.toString(online)));
+        clone.properties.add(Properties.newProperty(PROPERTY_ONLINE, Boolean.toString(online)));
         clone.propertiesMap.put(PROPERTY_ONLINE, Boolean.toString(online));
 
         return clone;

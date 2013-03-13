@@ -22,15 +22,38 @@ public interface UserDao {
     **********************************************************************
     */
 
+    /**
+     * Method save user with his properties to persistence storage
+     * Note: this method doesn't check if user with same ID is already in storage.
+     *
+     * @param user user to be inserted in persistence storage
+     * @return newly inserted user
+     */
     @Nonnull
     User insertUser(@Nonnull User user);
 
+    /**
+     * Method loads user by if from storage
+     *
+     * @param userId user id
+     * @return user previously saved into storage identified by <var>userId</var>, null if no such user exists in storage
+     */
     @Nullable
     User loadUserById(@Nonnull String userId);
 
+    /**
+     * Method loads user properties
+     *
+     * @param userId user id
+     * @return properties of a user previously saved into storage, empty list if no such user exists in storage or no properties are set for him
+     */
     @Nonnull
     List<AProperty> loadUserPropertiesById(@Nonnull String userId);
 
+    /**
+     * Method updates user and his properties in the storage
+     * @param user
+     */
     void updateUser(@Nonnull User user);
 
     @Nonnull

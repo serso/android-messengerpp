@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.Gson;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
 import org.solovyev.android.db.AbstractDbQuery;
 import org.solovyev.android.db.AbstractObjectDbExec;
 import org.solovyev.android.db.AbstractSQLiteHelper;
@@ -18,6 +17,7 @@ import org.solovyev.android.db.DeleteAllRowsDbExec;
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.users.UserService;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
@@ -83,12 +83,12 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final Realm realm = getNotNullObject();
 
             final ContentValues values = toContentValues(realm);
 
-            db.insert("realms", null, values);
+            return db.insert("realms", null, values);
         }
     }
 
@@ -99,12 +99,12 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final Realm realm = getNotNullObject();
 
             final ContentValues values = toContentValues(realm);
 
-            db.update("realms", values, "id = ?", new String[]{realm.getId()});
+            return db.update("realms", values, "id = ?", new String[]{realm.getId()});
         }
     }
 
@@ -146,10 +146,10 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final String realmId = getNotNullObject();
 
-            db.delete("realms", "id = ?", new String[]{realmId});
+            return db.delete("realms", "id = ?", new String[]{realmId});
         }
     }
 

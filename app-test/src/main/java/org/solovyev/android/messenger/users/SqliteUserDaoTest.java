@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.android.properties.Properties;
 import org.solovyev.common.Objects;
 import org.solovyev.common.equals.CollectionEqualizer;
 import org.solovyev.common.equals.ListEqualizer;
@@ -43,13 +43,13 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
         // INSERT
 
         List<AProperty> expectedProperties = new ArrayList<AProperty>();
-        expectedProperties.add(APropertyImpl.newInstance("prop_1", "prop_1_value"));
-        expectedProperties.add(APropertyImpl.newInstance("prop_2", "prop_2_value"));
-        expectedProperties.add(APropertyImpl.newInstance("prop_3", "prop_3_value"));
+        expectedProperties.add(Properties.newProperty("prop_1", "prop_1_value"));
+        expectedProperties.add(Properties.newProperty("prop_2", "prop_2_value"));
+        expectedProperties.add(Properties.newProperty("prop_3", "prop_3_value"));
 
         final RealmEntity realmUser = testRealm.newRealmEntity("2");
 
-        User expected = Users.newUser(realmUser, UserSyncDataImpl.newNeverSyncedInstance(), expectedProperties);
+        User expected = Users.newUser(realmUser, Users.newNeverSyncedUserSyncData(), expectedProperties);
 
         userDao.insertUser(expected);
         userDao.insertUser(expected);
@@ -74,16 +74,16 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         final RealmEntity realmUser2 = testRealm.newRealmEntity("3");
 
-        expected = Users.newUser(realmUser2, UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+        expected = Users.newUser(realmUser2, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.insertUser(expected);
         Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
         // UPDATE
         expectedProperties = new ArrayList<AProperty>(expectedProperties);
         expectedProperties.remove(0);
-        expectedProperties.add(APropertyImpl.newInstance("prop_4", "prop_4_value"));
+        expectedProperties.add(Properties.newProperty("prop_4", "prop_4_value"));
 
-        expected = Users.newUser(realmUser, UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+        expected = Users.newUser(realmUser, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.updateUser(expected);
         actual = userDao.loadUserById("test~1:2");
 
@@ -93,7 +93,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
-        expected = Users.newUser(TestRealmDef.REALM_ID, "test_01dsfsdfsf", UserSyncDataImpl.newInstance(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+        expected = Users.newUser(TestRealmDef.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.updateUser(expected);
     }
 

@@ -194,12 +194,12 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final ChatMessage chatMessage = getNotNullObject();
 
             final ContentValues values = toContentValues(chat, chatMessage);
 
-            db.insert("messages", null, values);
+            return db.insert("messages", null, values);
         }
     }
 
@@ -214,13 +214,12 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final ChatMessage chatMessage = getNotNullObject();
-
 
             final ContentValues values = toContentValues(chat, chatMessage);
 
-            db.update("messages", values, "id = ?", new String[]{String.valueOf(chatMessage.getEntity().getEntityId())});
+            return db.update("messages", values, "id = ?", new String[]{String.valueOf(chatMessage.getEntity().getEntityId())});
         }
     }
 
@@ -245,8 +244,8 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
-            db.delete("messages", "chat_id in " + AndroidDbUtils.inClause(messagesIds), AndroidDbUtils.inClauseValues(messagesIds));
+        public long exec(@Nonnull SQLiteDatabase db) {
+            return db.delete("messages", "chat_id in " + AndroidDbUtils.inClause(messagesIds), AndroidDbUtils.inClauseValues(messagesIds));
         }
     }
 

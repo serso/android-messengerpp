@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,7 +55,7 @@ public class ApiChatImpl implements ApiChat {
                         @Nonnull Integer messagesCount,
                         boolean privateChat) {
         final List<AProperty> properties = new ArrayList<AProperty>();
-        properties.add(APropertyImpl.newInstance("private", Boolean.toString(privateChat)));
+        properties.add(Properties.newProperty("private", Boolean.toString(privateChat)));
         this.chat = ChatImpl.newInstance(realmEntity, messagesCount, properties, null);
 
         this.messages = new ArrayList<ChatMessage>(20);

@@ -30,7 +30,7 @@ public class UserMapper implements Converter<Cursor, User> {
     public User convert(@Nonnull Cursor c) {
         final RealmEntity realmUser = RealmEntityMapper.newInstanceFor(0).convert(c);
 
-        final UserSyncData userSyncData = UserSyncDataImpl.newInstanceFromStrings(c.getString(3), c.getString(4), c.getString(5), c.getString(6));
+        final UserSyncData userSyncData = Users.newUserSyncData(c.getString(3), c.getString(4), c.getString(5), c.getString(6));
 
         final List<AProperty> properties;
         if (userDao != null) {

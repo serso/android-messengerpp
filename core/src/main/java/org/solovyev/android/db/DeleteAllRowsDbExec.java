@@ -18,7 +18,7 @@ public class DeleteAllRowsDbExec implements DbExec {
     }
 
     @Override
-    public void exec(@Nonnull SQLiteDatabase db) {
-        db.delete(tableName, null, null);
+    public long exec(@Nonnull SQLiteDatabase db) {
+        return db.delete(tableName, "1", null);
     }
 }

@@ -15,7 +15,7 @@ import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.android.properties.Properties;
 import org.solovyev.android.security.base64.ABase64StringDecoder;
 
 import javax.annotation.Nonnull;
@@ -79,7 +79,7 @@ public class XmppRealmDef extends AbstractRealmDef {
         for (AProperty property : user.getProperties()) {
             final String name = property.getName();
             if ( name.equals(User.PROPERTY_NICKNAME) ) {
-                result.add(APropertyImpl.newInstance(context.getString(R.string.mpp_nickname), property.getValue()));
+                result.add(Properties.newProperty(context.getString(R.string.mpp_nickname), property.getValue()));
             }
         }
 

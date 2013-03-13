@@ -1,18 +1,19 @@
 package org.solovyev.android.messenger.users;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.common.JObject;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
  * Date: 5/30/12
  * Time: 10:43 PM
  */
-public class UserSyncDataImpl extends JObject implements UserSyncData {
+class UserSyncDataImpl extends JObject implements UserSyncData {
 
     @Nullable
     private DateTime lastPropertiesSyncDate;
@@ -40,28 +41,28 @@ public class UserSyncDataImpl extends JObject implements UserSyncData {
     }
 
     @Nonnull
-    public static UserSyncDataImpl newNeverSyncedInstance() {
+    static UserSyncDataImpl newNeverSyncedInstance() {
         return new UserSyncDataImpl(null, null, null, null);
     }
 
     @Nonnull
-    public static UserSyncDataImpl newInstance(@Nullable DateTime lastPropertiesSyncDate,
-                                               @Nullable DateTime lastContactsSyncDate,
-                                               @Nullable DateTime lastChatsSyncDate,
-                                               @Nullable DateTime lastUserIconsSyncDate) {
+    static UserSyncDataImpl newInstance(@Nullable DateTime lastPropertiesSyncDate,
+                                        @Nullable DateTime lastContactsSyncDate,
+                                        @Nullable DateTime lastChatsSyncDate,
+                                        @Nullable DateTime lastUserIconsSyncDate) {
         return new UserSyncDataImpl(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
     }
 
     @Nonnull
-    public static UserSyncDataImpl copyOf(@Nonnull UserSyncData userSyncData) {
+    static UserSyncDataImpl copyOf(@Nonnull UserSyncData userSyncData) {
         return new UserSyncDataImpl(userSyncData.getLastPropertiesSyncDate(), userSyncData.getLastContactsSyncDate(), userSyncData.getLastChatsSyncDate(), userSyncData.getLastUserIconsSyncData());
     }
 
     @Nonnull
-    public static UserSyncDataImpl newInstanceFromStrings(@Nullable String lastPropertiesSyncDateString,
-                                                          @Nullable String lastContactsSyncDateString,
-                                                          @Nullable String lastChatsSyncDateString,
-                                                          @Nullable String lastUserIconsSyncDateString) {
+    static UserSyncDataImpl newInstance(@Nullable String lastPropertiesSyncDateString,
+                                        @Nullable String lastContactsSyncDateString,
+                                        @Nullable String lastChatsSyncDateString,
+                                        @Nullable String lastUserIconsSyncDateString) {
 
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
         final DateTime lastPropertiesSyncDate = lastPropertiesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastPropertiesSyncDateString);

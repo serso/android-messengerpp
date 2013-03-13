@@ -36,7 +36,7 @@ import java.util.NoSuchElementException;
  * Time: 2:13 AM
  */
 @Singleton
-public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
+public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
     @Inject
     public SqliteUserDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
@@ -196,11 +196,11 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final ContentValues values = new ContentValues();
             values.put("user_id", userId);
             values.put("contact_id", contactId);
-            db.insert("user_contacts", null, values);
+            return db.insert("user_contacts", null, values);
         }
     }
 
@@ -229,8 +229,8 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
-            db.delete("user_contacts", "user_id = ? and contact_id in " + AndroidDbUtils.inClause(contactIds), AndroidDbUtils.inClauseValues(contactIds, userId));
+        public long exec(@Nonnull SQLiteDatabase db) {
+            return db.delete("user_contacts", "user_id = ? and contact_id in " + AndroidDbUtils.inClause(contactIds), AndroidDbUtils.inClauseValues(contactIds, userId));
         }
     }
 
@@ -347,12 +347,12 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
             final ContentValues values = toContentValues(user);
 
-            db.insert("users", null, values);
+            return db.insert("users", null, values);
         }
     }
 
@@ -364,12 +364,12 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
             final ContentValues values = toContentValues(user);
 
-            db.update("users", values, "id = ?", new String[]{String.valueOf(user.getEntity().getEntityId())});
+            return db.update("users", values, "id = ?", new String[]{String.valueOf(user.getEntity().getEntityId())});
         }
     }
 
@@ -380,10 +380,10 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final User user = getNotNullObject();
 
-            db.delete("user_properties", "user_id = ?", new String[]{String.valueOf(user.getEntity().getEntityId())});
+            return db.delete("user_properties", "user_id = ?", new String[]{String.valueOf(user.getEntity().getEntityId())});
         }
     }
 
@@ -394,7 +394,9 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
+            long result = 0;
+
             final User user = getNotNullObject();
 
             for (AProperty property : user.getProperties()) {
@@ -404,9 +406,14 @@ public class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
                     values.put("user_id", user.getEntity().getEntityId());
                     values.put("property_name", property.getName());
                     values.put("property_value", value);
-                    db.insert("user_properties", null, values);
+                    final long id = db.insert("user_properties", null, values);
+                    if (id == DbExec.SQL_ERROR) {
+                        result = DbExec.SQL_ERROR;
+                    }
                 }
             }
+
+            return result;
         }
     }
 

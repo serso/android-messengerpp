@@ -3,9 +3,11 @@ package org.solovyev.android.messenger.realms.vk.users;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.*;
+import org.solovyev.android.messenger.users.Gender;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,28 +71,28 @@ class JsonUser {
 
         final List<AProperty> properties = new ArrayList<AProperty>();
 
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, first_name));
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, last_name));
-        properties.add(APropertyImpl.newInstance(User.PROPERTY_NICKNAME, nickname));
+        properties.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, first_name));
+        properties.add(Properties.newProperty(User.PROPERTY_LAST_NAME, last_name));
+        properties.add(Properties.newProperty(User.PROPERTY_NICKNAME, nickname));
 
         final String gender = getGender();
         if (gender != null) {
-            properties.add(APropertyImpl.newInstance(User.PROPERTY_SEX, gender));
+            properties.add(Properties.newProperty(User.PROPERTY_SEX, gender));
         }
 
         final String onlineProperty = getOnline();
         if (onlineProperty != null) {
-            properties.add(APropertyImpl.newInstance(User.PROPERTY_ONLINE, onlineProperty));
+            properties.add(Properties.newProperty(User.PROPERTY_ONLINE, onlineProperty));
         }
-        properties.add(APropertyImpl.newInstance("bdate", bdate));
-        properties.add(APropertyImpl.newInstance("cityId", String.valueOf(city)));
-        properties.add(APropertyImpl.newInstance("countryId", String.valueOf(country)));
-        properties.add(APropertyImpl.newInstance("photo", photo));
-        properties.add(APropertyImpl.newInstance("photoMedium", photo_medium));
-        properties.add(APropertyImpl.newInstance("photoBig", photo_big));
-        properties.add(APropertyImpl.newInstance("photoRec", photo_rec));
+        properties.add(Properties.newProperty("bdate", bdate));
+        properties.add(Properties.newProperty("cityId", String.valueOf(city)));
+        properties.add(Properties.newProperty("countryId", String.valueOf(country)));
+        properties.add(Properties.newProperty("photo", photo));
+        properties.add(Properties.newProperty("photoMedium", photo_medium));
+        properties.add(Properties.newProperty("photoBig", photo_big));
+        properties.add(Properties.newProperty("photoRec", photo_rec));
 
-        return Users.newUser(realm.newRealmEntity(uid), UserSyncDataImpl.newInstance(DateTime.now(), null, null, null), properties);
+        return Users.newUser(realm.newRealmEntity(uid), Users.newUserSyncData(DateTime.now(), null, null, null), properties);
     }
 
     @Nullable

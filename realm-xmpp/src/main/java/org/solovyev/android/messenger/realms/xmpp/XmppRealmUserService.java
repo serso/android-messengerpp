@@ -12,9 +12,11 @@ import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
-import org.solovyev.android.messenger.users.*;
+import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.android.properties.Properties;
 import org.solovyev.android.security.base64.ABase64StringEncoder;
 
 import javax.annotation.Nonnull;
@@ -100,9 +102,8 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
 
     @Nonnull
     public static User toUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, boolean available, @Nonnull Connection connection) throws XMPPException {
-        // todo serso: problem loading VCards - timeout exception
         final List<AProperty> properties = loadUserProperties(true, realmUserId, available, connection, name);
-        return Users.newUser(RealmEntityImpl.newInstance(realmId, realmUserId), UserSyncDataImpl.newNeverSyncedInstance(), properties);
+        return Users.newUser(RealmEntityImpl.newInstance(realmId, realmUserId), Users.newNeverSyncedUserSyncData(), properties);
     }
 
     @Nonnull
@@ -113,7 +114,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
                                                       @Nullable String name) throws XMPPException {
         final List<AProperty> result = new ArrayList<AProperty>();
 
-        result.add(APropertyImpl.newInstance(User.PROPERTY_ONLINE, String.valueOf(available)));
+        result.add(Properties.newProperty(User.PROPERTY_ONLINE, String.valueOf(available)));
 
         if (loadVCard) {
             try {
@@ -122,16 +123,16 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
 
                 userCard.load(connection, realmUserId);
 
-                result.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
-                result.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, userCard.getLastName()));
-                result.add(APropertyImpl.newInstance(User.PROPERTY_NICKNAME, userCard.getNickName()));
-                result.add(APropertyImpl.newInstance(User.PROPERTY_EMAIL, userCard.getEmailHome()));
-                result.add(APropertyImpl.newInstance(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
-                result.add(APropertyImpl.newInstance(XmppRealmDef.USER_PROPERTY_AVATAR_HASH, userCard.getAvatarHash()));
+                result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
+                result.add(Properties.newProperty(User.PROPERTY_LAST_NAME, userCard.getLastName()));
+                result.add(Properties.newProperty(User.PROPERTY_NICKNAME, userCard.getNickName()));
+                result.add(Properties.newProperty(User.PROPERTY_EMAIL, userCard.getEmailHome()));
+                result.add(Properties.newProperty(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
+                result.add(Properties.newProperty(XmppRealmDef.USER_PROPERTY_AVATAR_HASH, userCard.getAvatarHash()));
 
                 final byte[] avatar = userCard.getAvatar();
                 if (avatar != null) {
-                    result.add(APropertyImpl.newInstance(XmppRealmDef.USER_PROPERTY_AVATAR_BASE64, ABase64StringEncoder.getInstance().convert(avatar)));
+                    result.add(Properties.newProperty(XmppRealmDef.USER_PROPERTY_AVATAR_BASE64, ABase64StringEncoder.getInstance().convert(avatar)));
                 }
 
                 // full name
@@ -160,11 +161,11 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
                 // 2. if more than one spaces => both return different
                 final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
                 final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
-                result.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, firstName));
-                result.add(APropertyImpl.newInstance(User.PROPERTY_LAST_NAME, lastName));
+                result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, firstName));
+                result.add(Properties.newProperty(User.PROPERTY_LAST_NAME, lastName));
             } else {
                 // just store full name in first name field
-                result.add(APropertyImpl.newInstance(User.PROPERTY_FIRST_NAME, fullName));
+                result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, fullName));
             }
         }
     }

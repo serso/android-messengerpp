@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
 import android.database.sqlite.SQLiteDatabase;
+import org.solovyev.android.db.DbExec;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.solovyev.android.db.DbExec;
 
 /**
  * User: serso
@@ -46,12 +47,14 @@ public class DeleteAllRowsInRealmDbExec implements DbExec {
 
 
     @Override
-    public void exec(@Nonnull SQLiteDatabase db) {
+    public long exec(@Nonnull SQLiteDatabase db) {
         if (realmColumnName != null) {
-            db.delete(tableName, realmColumnName + " = ?", new String[]{realmId});
+            return db.delete(tableName, realmColumnName + " = ?", new String[]{realmId});
         } else if (foreignKeyColumnName != null) {
             // todo serso: use ?
-            db.delete(tableName, foreignKeyColumnName + " like '" + realmId + RealmEntityImpl.DELIMITER + "%'", null);
+            return db.delete(tableName, foreignKeyColumnName + " like '" + realmId + RealmEntityImpl.DELIMITER + "%'", null);
         }
+
+        return 0;
     }
 }

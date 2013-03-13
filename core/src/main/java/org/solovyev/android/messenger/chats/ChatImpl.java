@@ -5,8 +5,8 @@ import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmEntityImpl;
-import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.APropertyImpl;
+import org.solovyev.android.properties.*;
+import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,7 +75,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
         this.messagesCount = messagesCount;
         this.privateChat = privateChat;
         this.properties = new ArrayList<AProperty>();
-        final AProperty property = APropertyImpl.newInstance(PROPERTY_PRIVATE, Boolean.toString(privateChat));
+        final AProperty property = Properties.newProperty(PROPERTY_PRIVATE, Boolean.toString(privateChat));
         properties.add(property);
         propertiesMap.put(property.getName(), property.getValue());
     }
@@ -98,7 +98,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     @Nonnull
     public static Chat newPrivate(@Nonnull RealmEntity realmEntity) {
         final List<AProperty> properties = new ArrayList<AProperty>();
-        properties.add(APropertyImpl.newInstance(PROPERTY_PRIVATE, Boolean.toString(true)));
+        properties.add(Properties.newProperty(PROPERTY_PRIVATE, Boolean.toString(true)));
         return new ChatImpl(realmEntity, 0, properties, null);
     }
 

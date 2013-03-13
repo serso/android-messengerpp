@@ -10,7 +10,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import javax.annotation.Nonnull;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -31,6 +30,7 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.collections.Collections;
 
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -334,8 +334,8 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
-            db.delete("user_chats", "user_id = ? and chat_id in " + AndroidDbUtils.inClause(chatIds), AndroidDbUtils.inClauseValues(chatIds, userId));
+        public long exec(@Nonnull SQLiteDatabase db) {
+            return db.delete("user_chats", "user_id = ? and chat_id in " + AndroidDbUtils.inClause(chatIds), AndroidDbUtils.inClauseValues(chatIds, userId));
         }
     }
 
@@ -347,12 +347,12 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final Chat chat = getNotNullObject();
 
             final ContentValues values = toContentValues(chat);
 
-            db.update("chats", values, "id = ?", new String[]{String.valueOf(chat.getEntity().getEntityId())});
+            return db.update("chats", values, "id = ?", new String[]{String.valueOf(chat.getEntity().getEntityId())});
         }
     }
 
@@ -363,12 +363,12 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final Chat chat = getNotNullObject();
 
             final ContentValues values = toContentValues(chat);
 
-            db.insert("chats", null, values);
+            return db.insert("chats", null, values);
         }
     }
 
@@ -396,10 +396,10 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final Chat chat = getNotNullObject();
 
-            db.delete("chat_properties", "chat_id = ?", new String[]{String.valueOf(chat.getEntity().getEntityId())});
+            return db.delete("chat_properties", "chat_id = ?", new String[]{String.valueOf(chat.getEntity().getEntityId())});
         }
     }
 
@@ -410,7 +410,8 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
+            long result = 0;
             final Chat chat = getNotNullObject();
 
             for (AProperty property : chat.getProperties()) {
@@ -418,8 +419,13 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
                 values.put("chat_id", chat.getEntity().getEntityId());
                 values.put("property_name", property.getName());
                 values.put("property_value", property.getValue());
-                db.insert("chat_properties", null, values);
+                final long id = db.insert("chat_properties", null, values);
+                if (id == SQL_ERROR) {
+                    result = SQL_ERROR;
+                }
             }
+
+            return result;
         }
     }
 
@@ -437,11 +443,11 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         }
 
         @Override
-        public void exec(@Nonnull SQLiteDatabase db) {
+        public long exec(@Nonnull SQLiteDatabase db) {
             final ContentValues values = new ContentValues();
             values.put("user_id", userId);
             values.put("chat_id", chatId);
-            db.insert("user_chats", null, values);
+            return db.insert("user_chats", null, values);
         }
     }
 
