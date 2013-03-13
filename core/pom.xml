@@ -160,11 +160,48 @@
             <extension>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.5.1</version>
             </extension>
         </extensions>
 
     </build>
+
+    <profiles>
+        <!-- runs emma coverage tool -->
+        <profile>
+            <id>with-tests</id>
+
+            <properties>
+                <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+                <sonar.emma.reportPath>target/emma/</sonar.emma.reportPath>
+                <sonar.surefire.reportsPath >../regalandroid-test/target/surefire-reports</sonar.surefire.reportsPath>
+                <sonar.core.codeCoveragePlugin>emma</sonar.core.codeCoveragePlugin>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                        <artifactId>android-maven-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <configuration>
+                            <!-- emma start -->
+                            <emma>
+                                <enable>true</enable>
+                                <classFolders>${project.basedir}/target/classes/</classFolders>
+                                <outputMetaFile>${project.basedir}/target/emma/coverage.em</outputMetaFile>
+                            </emma>
+                            <!-- emma stop -->
+                            <dex>
+                                <noLocals>true</noLocals> <!--  must be set for emma -->
+                            </dex>
+                        </configuration>
+                        <extensions>true</extensions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 
 </project>

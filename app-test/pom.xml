@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -99,6 +97,16 @@
         <profile>
             <id>with-tests</id>
 
+            <dependencies>
+                <dependency>
+                    <groupId>emma</groupId>
+                    <artifactId>emma</artifactId>
+                    <type>jar</type>
+                    <scope>compile</scope>
+                    <version>2.1.5320</version>
+                </dependency>
+            </dependencies>
+
             <build>
                 <plugins>
                     <plugin>
@@ -107,19 +115,9 @@
                         <configuration>
                             <test>
                                 <skip>false</skip>
-                                <!--<instrumentationPackage>packageName</instrumentationPackage>-->                              `
-                                <!--<instrumentationRunner>className</instrumentationRunner>-->
-                                <!--<debug>true|false</debug>-->
-                                <!--<coverage>true|false</coverage>-->
-                                <!--<logonly>true|false</logonly>  avd-->
-                                <!--<testsize>small|medium|large</testsize>-->
+                                <!-- Run test with flag "-w coverage true" this is need for generate coverage.ec file, result file-->
+                                <coverage>true</coverage>
                                 <createReport>true</createReport>
-                                <!--<classes>-->
-                                <!--<class>your.package.name.YourTestClass</class>-->
-                                <!--</classes>-->
-                                <!--<packages>-->
-                                <!--<package>your.package.name</package>-->
-                                <!--</packages>-->
                             </test>
                         </configuration>
                         <extensions>true</extensions>
@@ -133,6 +131,19 @@
                                 <phase>initialize</phase>
                             </execution>
 
+                            <!-- need for pull coverage.ec file and move to tested project-->
+                            <execution>
+                                <id>pull-coverage</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>pull</goal>
+                                </goals>
+                                <configuration>
+                                    <pullSource>/data/data/org.solovyev.android.messenger/files/coverage.ec</pullSource>
+                                    <pullDestination>core/target/emma/coverage.ec</pullDestination>
+                                </configuration>
+                            </execution>
+
                             <execution>
                                 <id>emulator-stop</id>
                                 <goals>
@@ -140,12 +151,14 @@
                                 </goals>
                                 <phase>post-integration-test</phase>
                             </execution>
+
                         </executions>
 
                     </plugin>
                 </plugins>
             </build>
         </profile>
+
     </profiles>
 
 </project>
