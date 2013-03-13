@@ -166,13 +166,6 @@
                         <extensions>true</extensions>
 
                         <executions>
-                            <execution>
-                                <id>emulator-start</id>
-                                <goals>
-                                    <goal>emulator-start</goal>
-                                </goals>
-                                <phase>initialize</phase>
-                            </execution>
 
                             <!-- need for pull coverage.ec file and move to tested project-->
                             <execution>
@@ -185,14 +178,6 @@
                                     <pullSource>/data/data/org.solovyev.android.messenger/files/coverage.ec</pullSource>
                                     <pullDestination>core/target/emma/coverage.ec</pullDestination>
                                 </configuration>
-                            </execution>
-
-                            <execution>
-                                <id>emulator-stop</id>
-                                <goals>
-                                    <goal>emulator-stop</goal>
-                                </goals>
-                                <phase>post-integration-test</phase>
                             </execution>
 
                         </executions>
