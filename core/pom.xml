@@ -173,8 +173,8 @@
 
             <properties>
                 <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-                <sonar.emma.reportPath>target/emma/</sonar.emma.reportPath>
-                <sonar.surefire.reportsPath >../regalandroid-test/target/surefire-reports</sonar.surefire.reportsPath>
+                <sonar.emma.reportPath>${project.build.directory}/emma/</sonar.emma.reportPath>
+                <sonar.surefire.reportsPath>app-test/target/surefire-reports</sonar.surefire.reportsPath>
                 <sonar.core.codeCoveragePlugin>emma</sonar.core.codeCoveragePlugin>
             </properties>
 
