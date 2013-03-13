@@ -334,8 +334,7 @@
 
                         <emulator>
                             <avd>Default</avd>
-                            <wait>30000</wait>
-                            <!--<options>-no-skin</options>-->
+                            <wait>60000</wait>
                         </emulator>
 
                         <zipalign>
