@@ -14,9 +14,17 @@ import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.*;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -26,8 +34,11 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.*;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -73,6 +84,9 @@ public class DefaultUserService implements UserService {
     **********************************************************************
     */
 
+    /**
+     * Lock for all operations with persistence state. Should guarantee that all operations done over DAOs are thread safe and not corrupt data.
+     */
     @Nonnull
     private final Object lock = new Object();
 
@@ -80,14 +94,17 @@ public class DefaultUserService implements UserService {
     private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().onCallerThread().create();
 
     // key: realm user, value: list of user contacts
+    @GuardedBy("userContactsCache")
     @Nonnull
     private final Map<RealmEntity, List<User>> userContactsCache = new HashMap<RealmEntity, List<User>>();
 
     // key: realm user, value: list of user chats
+    @GuardedBy("userChatsCache")
     @Nonnull
     private final Map<RealmEntity, List<Chat>> userChatsCache = new HashMap<RealmEntity, List<Chat>>();
 
     // key: realm user, value: user object
+    @GuardedBy("usersCache")
     @Nonnull
     private final Map<RealmEntity, User> usersCache = new HashMap<RealmEntity, User>();
 
@@ -195,7 +212,7 @@ public class DefaultUserService implements UserService {
         synchronized (userChatsCache) {
             result = userChatsCache.get(realmUser);
             if (result == null) {
-                result = getChatService().loadUserChats(realmUser);
+                result = chatService.loadUserChats(realmUser);
                 if (!Collections.isEmpty(result)) {
                     userChatsCache.put(realmUser, result);
                 }
@@ -209,11 +226,11 @@ public class DefaultUserService implements UserService {
     @Nonnull
     @Override
     public Chat getPrivateChat(@Nonnull RealmEntity realmUser1, @Nonnull final RealmEntity realmUser2) {
-        final RealmEntity realmChat = getChatService().newPrivateChatId(realmUser1, realmUser2);
+        final RealmEntity realmChat = chatService.newPrivateChatId(realmUser1, realmUser2);
 
-        Chat result = getChatService().getChatById(realmChat);
+        Chat result = chatService.getChatById(realmChat);
         if (result == null) {
-            result = getChatService().newPrivateChat(realmUser1, realmUser2);
+            result = chatService.newPrivateChat(realmUser1, realmUser2);
         }
 
         return result;
@@ -346,7 +363,7 @@ public class DefaultUserService implements UserService {
 
         final MergeDaoResult<ApiChat, String> result;
         synchronized (lock) {
-            result = getChatService().mergeUserChats(realmUser.getEntityId(), apiChats);
+            result = chatService.mergeUserChats(realmUser.getEntityId(), apiChats);
 
             // update sync data
             user = user.updateChatsSyncDate();
@@ -392,12 +409,7 @@ public class DefaultUserService implements UserService {
         }
 
         listeners.fireEvents(userEvents);
-        getChatService().fireEvents(chatEvents);
-    }
-
-    @Nonnull
-    private ChatService getChatService() {
-        return this.chatService;
+        chatService.fireEvents(chatEvents);
     }
 
     @Override
@@ -535,16 +547,6 @@ public class DefaultUserService implements UserService {
     */
 
     @Override
-    public void fireEvent(@Nonnull UserEvent event) {
-        this.listeners.fireEvent(event);
-    }
-
-    @Override
-    public void fireEvents(@Nonnull Collection<UserEvent> events) {
-        this.listeners.fireEvents(events);
-    }
-
-    @Override
     public boolean addListener(@Nonnull JEventListener<UserEvent> listener) {
         return this.listeners.addListener(listener);
     }
@@ -552,11 +554,6 @@ public class DefaultUserService implements UserService {
     @Override
     public boolean removeListener(@Nonnull JEventListener<UserEvent> listener) {
         return this.listeners.removeListener(listener);
-    }
-
-    @Override
-    public void removeListeners() {
-        this.listeners.removeListeners();
     }
 
     private final class UserEventListener extends AbstractJEventListener<UserEvent> {

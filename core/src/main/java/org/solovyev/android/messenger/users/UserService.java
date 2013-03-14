@@ -7,7 +7,6 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.listeners.JEventListeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -22,7 +21,7 @@ import java.util.List;
  * Implementation of this class must provide thread safeness
  */
 @ThreadSafe
-public interface UserService extends JEventListeners<JEventListener<UserEvent>, UserEvent> {
+public interface UserService {
 
     // initial initialization: will be called once on application start
     void init();
@@ -90,4 +89,29 @@ public interface UserService extends JEventListeners<JEventListener<UserEvent>, 
     void checkOnlineUserContacts(@Nonnull RealmEntity realmUser);
 
     void fetchUserIcons(@Nonnull User user);
+
+    /*
+    **********************************************************************
+    *
+    *                           LISTENERS
+    *
+    **********************************************************************
+    */
+
+    /**
+     * Method subscribes listener for user events notifications
+     *
+     * @param listener listener to be subscribed
+     * @return true if was added, false if listener already exists
+     */
+    boolean addListener(@Nonnull JEventListener<UserEvent> listener);
+
+    /**
+     * Method unsubscribes listener from user events notifications
+     *
+     * @param listener listener to be unsubscribed
+     * @return true if listener was successfully unsubscribed, false if no such listener was found
+     */
+    boolean removeListener(@Nonnull JEventListener<UserEvent> listener);
+
 }
