@@ -1,8 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.app.Application;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -11,17 +9,11 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.collections.Collections;
@@ -29,15 +21,11 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: serso
@@ -69,10 +57,6 @@ public class DefaultUserService implements UserService {
 
     @Inject
     @Nonnull
-    private ImageLoader imageLoader;
-
-    @Inject
-    @Nonnull
     private Application context;
 
     /*
@@ -92,17 +76,17 @@ public class DefaultUserService implements UserService {
     @Nonnull
     private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().onCallerThread().create();
 
-    // key: realm user, value: list of user contacts
+    // key: user entity, value: list of user contacts
     @GuardedBy("userContactsCache")
     @Nonnull
     private final Map<Entity, List<User>> userContactsCache = new HashMap<Entity, List<User>>();
 
-    // key: realm user, value: list of user chats
+    // key: user entity, value: list of user chats
     @GuardedBy("userChatsCache")
     @Nonnull
     private final Map<Entity, List<Chat>> userChatsCache = new HashMap<Entity, List<Chat>>();
 
-    // key: realm user, value: user object
+    // key: user entity, value: user object
     @GuardedBy("usersCache")
     @Nonnull
     private final Map<Entity, User> usersCache = new HashMap<Entity, User>();
@@ -118,40 +102,44 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public User getUserById(@Nonnull Entity realmUser) {
-        return getUserById(realmUser, true);
+    public User getUserById(@Nonnull Entity user) {
+        return getUserById(user, true);
     }
 
     @Nonnull
     @Override
-    public User getUserById(@Nonnull Entity realmUser, boolean tryFindInRealm) {
+    public User getUserById(@Nonnull Entity user, boolean tryFindInRealm) {
         boolean saved = true;
 
         User result;
 
         synchronized (usersCache) {
-            result = usersCache.get(realmUser);
+            result = usersCache.get(user);
         }
 
         if (result == null) {
-            result = userDao.loadUserById(realmUser.getEntityId());
+
+            synchronized (lock) {
+                result = userDao.loadUserById(user.getEntityId());
+            }
+
             if (result == null) {
                 saved = false;
             }
 
             if (result == null) {
                 if (tryFindInRealm) {
-                    final Realm realm = getRealmByUser(realmUser);
-                    result = realm.getRealmUserService().getUserById(realmUser.getRealmEntityId());
+                    final Realm realm = getRealmByUser(user);
+                    result = realm.getRealmUserService().getUserById(user.getRealmEntityId());
                 }
             }
 
             if (result == null) {
-                result = Users.newEmptyUser(realmUser);
+                result = Users.newEmptyUser(user);
             } else {
                 // user was loaded either from dao or from API => cache
                 synchronized (usersCache) {
-                    usersCache.put(realmUser, result);
+                    usersCache.put(user, result);
                 }
             }
 
@@ -174,8 +162,8 @@ public class DefaultUserService implements UserService {
         synchronized (lock) {
             final User userFromDb = userDao.loadUserById(user.getEntity().getEntityId());
             if (userFromDb == null) {
-                inserted = true;
                 userDao.insertUser(user);
+                inserted = true;
             }
         }
 
@@ -186,15 +174,15 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public List<Chat> getUserChats(@Nonnull Entity realmUser) {
+    public List<Chat> getUserChats(@Nonnull Entity user) {
         List<Chat> result;
 
         synchronized (userChatsCache) {
-            result = userChatsCache.get(realmUser);
+            result = userChatsCache.get(user);
             if (result == null) {
-                result = chatService.loadUserChats(realmUser);
+                result = chatService.loadUserChats(user);
                 if (!Collections.isEmpty(result)) {
-                    userChatsCache.put(realmUser, result);
+                    userChatsCache.put(user, result);
                 }
             }
         }
@@ -203,36 +191,37 @@ public class DefaultUserService implements UserService {
         return new ArrayList<Chat>(result);
     }
 
-    @Nonnull
-    @Override
-    public Chat getPrivateChat(@Nonnull Entity realmUser1, @Nonnull final Entity realmUser2) {
-        final Entity realmChat = chatService.newPrivateChatId(realmUser1, realmUser2);
-
-        Chat result = chatService.getChatById(realmChat);
-        if (result == null) {
-            result = chatService.newPrivateChat(realmUser1, realmUser2);
-        }
-
-        return result;
-    }
-
     @Override
     public void updateUser(@Nonnull User user) {
+        updateUser(user, true);
+    }
+
+    private void updateUser(@Nonnull User user, boolean fireChangeEvent) {
         synchronized (lock) {
             userDao.updateUser(user);
         }
 
-        listeners.fireEvent(UserEventType.changed.newEvent(user));
+        if (fireChangeEvent) {
+            listeners.fireEvent(UserEventType.changed.newEvent(user));
+        }
     }
 
     @Override
     public void removeUsersInRealm(@Nonnull final String realmId) {
         synchronized (lock) {
-            Iterators.removeIf(this.userChatsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
-            Iterators.removeIf(this.userContactsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
-            Iterators.removeIf(this.usersCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
-
             this.userDao.deleteAllUsersInRealm(realmId);
+        }
+
+        synchronized (userChatsCache) {
+            Iterators.removeIf(userChatsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+        }
+
+        synchronized (userContactsCache) {
+            Iterators.removeIf(userContactsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+        }
+
+        synchronized (usersCache) {
+            Iterators.removeIf(usersCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
         }
     }
 
@@ -252,7 +241,9 @@ public class DefaultUserService implements UserService {
         synchronized (userContactsCache) {
             result = userContactsCache.get(user);
             if (result == null) {
-                result = userDao.loadUserContacts(user.getEntityId());
+                synchronized (lock) {
+                    result = userDao.loadUserContacts(user.getEntityId());
+                }
                 if (!Collections.isEmpty(result)) {
                     userContactsCache.put(user, result);
                 }
@@ -303,39 +294,36 @@ public class DefaultUserService implements UserService {
     */
 
     @Override
-    public void syncUserProperties(@Nonnull Entity realmUser) {
-        final User user = getRealmByUser(realmUser).getRealmUserService().getUserById(realmUser.getRealmEntityId());
+    public void syncUserProperties(@Nonnull Entity entityUser) {
+        final User user = getRealmByUser(entityUser).getRealmUserService().getUserById(entityUser.getRealmEntityId());
         if (user != null) {
-            synchronized (lock) {
-                userDao.updateUser(user);
-            }
-            listeners.fireEvent(UserEventType.changed.newEvent(user));
+            updateUser(user, true);
         }
     }
 
     @Override
     @Nonnull
-    public List<User> syncUserContacts(@Nonnull Entity realmUser) {
-        final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().getUserContacts(realmUser.getRealmEntityId());
+    public List<User> syncUserContacts(@Nonnull Entity user) {
+        final List<User> contacts = getRealmByUser(user).getRealmUserService().getUserContacts(user.getRealmEntityId());
         synchronized (userContactsCache) {
-            userContactsCache.put(realmUser, contacts);
+            userContactsCache.put(user, contacts);
         }
 
-        mergeUserContacts(realmUser, contacts, false, true);
+        mergeUserContacts(user, contacts, false, true);
 
         return java.util.Collections.unmodifiableList(contacts);
     }
 
     @Override
-    public void mergeUserContacts(@Nonnull Entity realmUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
-        User user = getUserById(realmUser);
+    public void mergeUserContacts(@Nonnull Entity entityUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
+        User user = getUserById(entityUser);
         final MergeDaoResult<User, String> result;
         synchronized (lock) {
-            result = userDao.mergeUserContacts(realmUser.getEntityId(), contacts, allowRemoval, allowUpdate);
+            result = userDao.mergeUserContacts(entityUser.getEntityId(), contacts, allowRemoval, allowUpdate);
 
             // update sync data
             user = user.updateContactsSyncDate();
-            updateUser(user);
+            updateUser(user, false);
         }
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
@@ -364,8 +352,8 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public List<Chat> syncUserChats(@Nonnull Entity realmUser) {
-        final List<ApiChat> apiChats = getRealmByUser(realmUser).getRealmChatService().getUserChats(realmUser.getRealmEntityId());
+    public List<Chat> syncUserChats(@Nonnull Entity user) {
+        final List<ApiChat> apiChats = getRealmByUser(user).getRealmChatService().getUserChats(user.getRealmEntityId());
 
         final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
             @Override
@@ -376,25 +364,25 @@ public class DefaultUserService implements UserService {
         }));
 
         synchronized (userChatsCache) {
-            userChatsCache.put(realmUser, chats);
+            userChatsCache.put(user, chats);
         }
 
-        mergeUserChats(realmUser, apiChats);
+        mergeUserChats(user, apiChats);
 
         return java.util.Collections.unmodifiableList(chats);
     }
 
     @Override
-    public void mergeUserChats(@Nonnull Entity realmUser, @Nonnull List<? extends ApiChat> apiChats) {
-        User user = this.getUserById(realmUser);
+    public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends ApiChat> apiChats) {
+        User user = this.getUserById(userEntity);
 
         final MergeDaoResult<ApiChat, String> result;
         synchronized (lock) {
-            result = chatService.mergeUserChats(realmUser.getEntityId(), apiChats);
+            result = chatService.mergeUserChats(userEntity.getEntityId(), apiChats);
 
             // update sync data
             user = user.updateChatsSyncDate();
-            updateUser(user);
+            updateUser(user, false);
         }
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(apiChats.size());
@@ -440,10 +428,10 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void checkOnlineUserContacts(@Nonnull Entity realmUser) {
-        final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().checkOnlineUsers(getUserContacts(realmUser));
+    public void checkOnlineUserContacts(@Nonnull Entity userEntity) {
+        final List<User> contacts = getRealmByUser(userEntity).getRealmUserService().checkOnlineUsers(getUserContacts(userEntity));
 
-        final User user = getUserById(realmUser);
+        final User user = getUserById(userEntity);
 
         final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
@@ -453,94 +441,45 @@ public class DefaultUserService implements UserService {
         }
 
         listeners.fireEvents(userEvents);
-
     }
 
+    /*
+    **********************************************************************
+    *
+    *                           USER ICONS
+    *
+    **********************************************************************
+    */
+
     @Override
-    public void fetchUserIcons(@Nonnull User user) {
-        this.fetchUserIcon(user);
-        this.fetchContactsIcons(user);
+    public void fetchUserAndContactsIcons(@Nonnull User user) {
+        final RealmIconService realmIconService = getRealmIconServiceByUser(user);
+
+        // fetch self icon
+        realmIconService.fetchUsersIcons(Arrays.asList(user));
+
+        // fetch icons for all contacts
+        final List<User> contacts = getUserContacts(user.getEntity());
+        realmIconService.fetchUsersIcons(contacts);
 
         // update sync data
-        user = user.updateContactsSyncDate();
-        updateUser(user);
+        user = user.updateUserIconsSyncDate();
+        updateUser(user, false);
+    }
+
+    @Nonnull
+    private RealmIconService getRealmIconServiceByUser(@Nonnull User user) {
+        return getRealmByUser(user.getEntity()).getRealmDef().getRealmIconService();
     }
 
     @Override
     public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-        final RealmDef realmDef = getRealmByUser(user.getEntity()).getRealmDef();
-
-        Drawable defaultUserIcon = realmDef.getDefaultUserIcon();
-        if ( defaultUserIcon == null ){
-            defaultUserIcon = getDefaultUserIcon();
-        }
-
-        final BitmapDrawable userIcon = realmDef.getUserIcon(user);
-        if (userIcon == null) {
-            final String userIconUri = realmDef.getUserIconUri(user);
-            if (!Strings.isEmpty(userIconUri)) {
-                this.imageLoader.loadImage(userIconUri, imageView, getDefaultUserIconResId());
-            } else {
-                imageView.setImageDrawable(defaultUserIcon);
-            }
-        } else {
-            imageView.setImageDrawable(userIcon);
-        }
-    }
-
-    @Override
-    @Nonnull
-    public Drawable getDefaultUserIcon() {
-        return context.getResources().getDrawable(getDefaultUserIconResId());
-    }
-
-    private int getDefaultUserIconResId() {
-        return R.drawable.mpp_empty_user_icon;
+        getRealmIconServiceByUser(user).setUserIcon(user, imageView);
     }
 
     @Override
     public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-        final RealmDef realmDef = getRealmByUser(user.getEntity()).getRealmDef();
-
-        Drawable defaultUserIcon = realmDef.getDefaultUserIcon();
-        if (defaultUserIcon == null) {
-            defaultUserIcon = getDefaultUserIcon();
-        }
-        final BitmapDrawable userIcon = realmDef.getUserIcon(user);
-        if (userIcon == null) {
-            final String userPhotoUri = getUserPhotoUri(user);
-            if (!Strings.isEmpty(userPhotoUri)) {
-                this.imageLoader.loadImage(userPhotoUri, imageView, getDefaultUserIconResId());
-            } else {
-                imageView.setImageDrawable(defaultUserIcon);
-            }
-        } else {
-            imageView.setImageDrawable(userIcon);
-        }
-    }
-
-    public void fetchUserIcon(@Nonnull User user) {
-        final RealmDef realmDef = getRealmByUser(user.getEntity()).getRealmDef();
-        final String userIconUri = realmDef.getUserIconUri(user);
-        if (!Strings.isEmpty(userIconUri)) {
-            assert userIconUri != null;
-            this.imageLoader.loadImage(userIconUri);
-        }
-    }
-
-    public void fetchContactsIcons(@Nonnull User user) {
-        for (User contact : getUserContacts(user.getEntity())) {
-            fetchUserIcon(contact);
-        }
-    }
-
-    @Nullable
-    private String getUserPhotoUri(@Nonnull User user) {
-        String result = user.getPropertyValueByName("photoRec");
-        if ( result == null ) {
-            result = user.getPropertyValueByName("photoBig");
-        }
-        return result;
+        getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
     }
 
     /*

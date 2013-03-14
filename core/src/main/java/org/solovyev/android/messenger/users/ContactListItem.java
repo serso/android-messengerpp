@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -85,7 +86,7 @@ public class ContactListItem extends AbstractMessengerListItem<User> /*implement
             return Users.getDisplayNameFor(contact);
         } else {
             final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
-            return Users.getDisplayNameFor(contact) + "\n[" + Users.getDisplayNameFor(realm.getUser()) + "]";
+            return Users.getDisplayNameFor(contact) + "\n<font color=\"9a9a9a\" >[" + Users.getDisplayNameFor(realm.getUser()) + "]</font>";
         }
     }
 
@@ -97,11 +98,11 @@ public class ContactListItem extends AbstractMessengerListItem<User> /*implement
         final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
         contactName.setText(getDisplayName());
 
-        final TextView contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online);
+        final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
         if (contact.isOnline()) {
-            contactOnline.setText("·");
+            contactOnline.setVisibility(View.VISIBLE);
         } else {
-            contactOnline.setText("");
+            contactOnline.setVisibility(View.INVISIBLE);
         }
     }
 }

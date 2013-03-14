@@ -51,6 +51,8 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     @Nonnull
     Entity newPrivateChatId(@Nonnull Entity realmUser1, @Nonnull Entity realmUser2);
 
+    @Nonnull
+    Chat getPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2);
 
     /*
     **********************************************************************

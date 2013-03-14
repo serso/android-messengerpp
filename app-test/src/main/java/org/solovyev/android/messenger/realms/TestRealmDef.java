@@ -1,10 +1,12 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
+import android.widget.ImageView;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.test.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -43,13 +45,32 @@ public class TestRealmDef extends AbstractRealmDef {
     @Nonnull
     @Override
     public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Nonnull
     @Override
     public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
         return Collections.emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public RealmIconService getRealmIconService() {
+        return new RealmIconService() {
+            @Override
+            public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
+
+            }
+
+            @Override
+            public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
+            }
+
+            @Override
+            public void fetchUsersIcons(@Nonnull List<User> users) {
+            }
+        };
     }
 
 }

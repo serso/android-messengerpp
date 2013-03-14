@@ -1,4 +1,5 @@
 <resources>
+    <string name="mpp_app_name">Messenger++</string>
     <string name="c_login_label">Login</string>
     <string name="c_password_label">Password</string>
 

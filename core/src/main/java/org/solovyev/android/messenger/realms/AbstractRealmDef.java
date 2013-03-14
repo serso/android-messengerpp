@@ -1,12 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -94,24 +90,6 @@ public abstract class AbstractRealmDef implements RealmDef {
 
     @Override
     public void init(@Nonnull Context context) {
-    }
-
-    @Nullable
-    @Override
-    public Drawable getDefaultUserIcon() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public String getUserIconUri(@Nonnull User user) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public BitmapDrawable getUserIcon(@Nonnull User user) {
-        return null;
     }
 
     @Override

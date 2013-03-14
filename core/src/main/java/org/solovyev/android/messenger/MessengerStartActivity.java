@@ -9,6 +9,8 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.messenger.sync.SyncTask;
+import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.messenger.users.User;
 import roboguice.activity.RoboActivity;
 
@@ -64,6 +66,13 @@ public class MessengerStartActivity extends RoboActivity {
             try {
                 syncService.syncAll(syncDone);
             } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+                // do not care
+            }
+        } else {
+            try {
+                // we must update users availability
+                syncService.sync(SyncTask.check_online_user_contacts, null);
+            } catch (TaskIsAlreadyRunningException e) {
                 // do not care
             }
         }

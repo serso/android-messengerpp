@@ -1,9 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 
@@ -70,20 +69,12 @@ public interface RealmDef extends MessengerEntity {
     @Nonnull
     List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
 
-
-    // todo serso; think about user icons
-    @Nullable
-    Drawable getDefaultUserIcon();
-
-    @Nullable
-    String getUserIconUri(@Nonnull User user);
-
-    @Nullable
-    BitmapDrawable getUserIcon(@Nonnull User user);
-
     /**
      *
      * @return true if sent message should be notified immediately, false to wait until response from remote server will come (and then it must trigger event)
      */
     boolean notifySentMessagesImmediately();
+
+    @Nonnull
+    RealmIconService getRealmIconService();
 }

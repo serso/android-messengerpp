@@ -1,12 +1,16 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
+import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.users.*;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,37 +36,37 @@ class XmppRosterListener implements RosterListener {
 
     @Override
     public void entriesAdded(@Nonnull Collection<String> contactIds) {
-        processEntries(contactIds);
-    }
-
-    private void processEntries(@Nonnull Collection<String> contactIds) {
+        Log.d(TAG, "entriesAdded() called");
+        final RealmUserService realmUserService = realm.getRealmUserService();
         final List<User> contacts = Lists.newArrayList(Iterables.transform(contactIds, new Function<String, User>() {
             @Override
             public User apply(@Nullable String contactId) {
                 assert contactId != null;
-                return Users.newEmptyUser(realm.newRealmEntity(contactId));
+                // we need to request new user entity because user id should be prepared properly
+                final Entity entity = realm.newUserEntity(contactId);
+                return realmUserService.getUserById(entity.getRealmEntityId());
             }
         }));
         // we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed
-        // we cannot allow update because we don't have fully loaded user
-        getUserService().mergeUserContacts(realm.getUser().getEntity(), contacts, false, false);
+        getUserService().mergeUserContacts(realm.getUser().getEntity(), contacts, false, true);
     }
 
     @Override
     public void entriesUpdated(@Nonnull Collection<String> contactIds) {
-        processEntries(contactIds);
+        Log.d(TAG, "entriesUpdated() called");
     }
 
     @Override
     public void entriesDeleted(@Nonnull Collection<String> contactIds) {
-        processEntries(contactIds);
+        Log.d(TAG, "entriesDeleted() called");
     }
 
     @Override
     public void presenceChanged(@Nonnull final Presence presence) {
+        Log.d(TAG, "presenceChanged() called");
         final String realmUserId = presence.getFrom();
 
-        final User contact = getUserService().getUserById(realm.newRealmEntity(realmUserId));
+        final User contact = getUserService().getUserById(realm.newUserEntity(realmUserId));
         getUserService().onContactPresenceChanged(realm.getUser(), contact, presence.isAvailable());
     }
 

@@ -1,14 +1,14 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
+import android.app.Application;
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.jivesfotware.smackx.enitycaps.provider.MessengerCapsExtensionProvider;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
+import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmBuilder;
@@ -16,7 +16,6 @@ import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
-import org.solovyev.android.security.base64.ABase64StringDecoder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +43,18 @@ public class XmppRealmDef extends AbstractRealmDef {
 
     @Nonnull
     static final String REALM_ID = "xmpp";
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @Nonnull
+    private Application context;
 
     public XmppRealmDef() {
         super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationFragment.class, XmppRealmConfiguration.class, true);
@@ -86,21 +97,9 @@ public class XmppRealmDef extends AbstractRealmDef {
         return result;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public BitmapDrawable getUserIcon(@Nonnull User user) {
-        BitmapDrawable result = null;
-
-        final String userIconBase64 = user.getPropertyValueByName(USER_PROPERTY_AVATAR_BASE64);
-        if ( userIconBase64 != null ) {
-            try {
-                final byte[] userIconBytes = ABase64StringDecoder.getInstance().convert(userIconBase64);
-                result = new BitmapDrawable(BitmapFactory.decodeByteArray(userIconBytes, 0, userIconBytes.length));
-            } catch (IllegalArgumentException e) {
-                Log.e("XmppRealmDef", e.getMessage(), e);
-            }
-        }
-
-        return result;
+    public RealmIconService getRealmIconService() {
+        return new XmppRealmIconService(context, R.drawable.mpp_empty_user_icon);
     }
 }

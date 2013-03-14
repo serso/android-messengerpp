@@ -444,6 +444,19 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
+    public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) {
+        final Entity realmChat = this.newPrivateChatId(user1, user2);
+
+        Chat result = this.getChatById(realmChat);
+        if (result == null) {
+            result = this.newPrivateChat(user1, user2);
+        }
+
+        return result;
+    }
+
+    @Nonnull
+    @Override
     public List<User> getParticipants(@Nonnull Entity realmChat) {
         List<User> result;
 

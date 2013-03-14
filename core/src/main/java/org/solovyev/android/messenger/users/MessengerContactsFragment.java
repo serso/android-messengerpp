@@ -63,26 +63,6 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
         return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 
-    @Override
-    protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-        return new AbstractOnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                try {
-                    getSyncService().sync(SyncTask.user_contacts, new Runnable() {
-                        @Override
-                        public void run() {
-                            completeRefresh();
-                        }
-                    });
-                    Toast.makeText(getActivity(), "User contacts sync started!", Toast.LENGTH_SHORT).show();
-                } catch (TaskIsAlreadyRunningException e) {
-                    e.showMessage(getActivity());
-                }
-            }
-        };
-    }
-
     @Nonnull
     protected AbstractContactsAdapter createAdapter() {
         return new ContactsAdapter(getActivity(), getRealmService());

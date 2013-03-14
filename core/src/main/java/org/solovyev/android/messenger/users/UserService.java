@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.users;
 
+import android.widget.ImageView;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.icons.UserIconService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -19,23 +19,44 @@ import java.util.List;
  * Implementation of this class must provide thread safeness
  */
 @ThreadSafe
-public interface UserService extends UserIconService {
+public interface UserService {
 
     // initial initialization: will be called once on application start
     void init();
 
-    // NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
-    @Nonnull
-    User getUserById(@Nonnull Entity realmUser);
+    /*
+    **********************************************************************
+    *
+    *                           USER OPERATIONS
+    *
+    **********************************************************************
+    */
 
+    /**
+     * NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
+     *
+     * @param user user to be found
+     * @return user instance identified by specified <var>user</var> entity
+     */
     @Nonnull
-    User getUserById(@Nonnull Entity realmUser, boolean tryFindInRealm);
+    User getUserById(@Nonnull Entity user);
 
+    /**
+     * NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
+     *
+     * @param user user to be found
+     * @param tryFindInRealm user search will be done in realm service if user was not found in persistence and this parameter is set to true
+     * @return user instance identified by specified <var>user</var> entity
+     */
     @Nonnull
-    List<Chat> getUserChats(@Nonnull Entity realmUser);
+    User getUserById(@Nonnull Entity user, boolean tryFindInRealm);
 
+    /**
+     * @param user user
+     * @return all user chats
+     */
     @Nonnull
-    Chat getPrivateChat(@Nonnull Entity realmUser1, @Nonnull Entity realmUser2);
+    List<Chat> getUserChats(@Nonnull Entity user);
 
     void updateUser(@Nonnull User user);
 
@@ -82,21 +103,37 @@ public interface UserService extends UserIconService {
     **********************************************************************
     */
 
-    void syncUserProperties(@Nonnull Entity realmUser);
+    void syncUserProperties(@Nonnull Entity user);
 
     @Nonnull
-    List<User> syncUserContacts(@Nonnull Entity realmUser);
+    List<User> syncUserContacts(@Nonnull Entity user);
 
     @Nonnull
-    List<Chat> syncUserChats(@Nonnull Entity realmUser);
+    List<Chat> syncUserChats(@Nonnull Entity user);
 
-    void mergeUserChats(@Nonnull Entity realmUser, @Nonnull List<? extends ApiChat> apiChats);
+    void mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> apiChats);
 
-    void mergeUserContacts(@Nonnull Entity realmUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
+    void mergeUserContacts(@Nonnull Entity user, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
 
-    void checkOnlineUserContacts(@Nonnull Entity realmUser);
+    void checkOnlineUserContacts(@Nonnull Entity user);
 
-    void fetchUserIcons(@Nonnull User user);
+    /*
+    **********************************************************************
+    *
+    *                           USER ICONS
+    *
+    **********************************************************************
+    */
+
+    void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);
+
+    void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView);
+
+    /**
+     * Method fetches user icons for specified <var>user</var> and for ALL user contacts
+     * @param user for which icon fetching must be done
+     */
+    void fetchUserAndContactsIcons(@Nonnull User user);
 
     /*
     **********************************************************************

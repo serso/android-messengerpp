@@ -1,11 +1,13 @@
 package org.solovyev.android.messenger.realms.vk;
 
+import android.app.Application;
 import android.content.Context;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.messenger.realms.AbstractRealmDef;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmBuilder;
-import org.solovyev.android.messenger.realms.RealmConfiguration;
+import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.icons.HttpRealmIconService;
+import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -24,12 +26,69 @@ import java.util.List;
 @Singleton
 public class VkRealmDef extends AbstractRealmDef {
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
     @Nonnull
     private static final String REALM_ID = "vk";
+
+    /*
+    **********************************************************************
+    *
+    *                           AUTO INJECTED FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Inject
+    @Nonnull
+    private Application context;
+
+    @Inject
+    @Nonnull
+    private ImageLoader imageLoader;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
+
+    @Nonnull
+    private final HttpRealmIconService.UrlGetter iconUrlGetter = HttpRealmIconService.newUrlFromPropertyGetter("photo");
+
+    @Nonnull
+    private final HttpRealmIconService.UrlGetter photoUrlGetter = new VkPhotoUrlGetter();
+
+    /*@Nonnull*/
+    private volatile HttpRealmIconService iconService;
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTRUCTORS
+    *
+    **********************************************************************
+    */
 
     public VkRealmDef() {
         super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkRealmConfigurationFragment.class, VkRealmConfiguration.class, false);
     }
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
 
     @Nonnull
     @Override
@@ -40,17 +99,8 @@ public class VkRealmDef extends AbstractRealmDef {
     @Nonnull
     @Override
     public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
-
-
-    /*
-    @Nonnull
-    @Override
-    public RealmAuthService newRealmAuthService(@Nonnull Realm realm) {
-        return new VkRealmAuthService(login, password);
-    }*/
-
 
     @Nonnull
     @Override
@@ -76,9 +126,39 @@ public class VkRealmDef extends AbstractRealmDef {
         return result;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getUserIconUri(@Nonnull User user) {
-        return user.getPropertyValueByName("photo");
+    public synchronized RealmIconService getRealmIconService() {
+        if (iconService == null) {
+            iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_empty_user_icon, iconUrlGetter, photoUrlGetter);
+        }
+        return iconService;
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
+
+    private static final class VkPhotoUrlGetter implements HttpRealmIconService.UrlGetter {
+
+        @Nullable
+        @Override
+        public String getUrl(@Nonnull User user) {
+            String result = user.getPropertyValueByName("photoRec");
+
+            if (result == null) {
+                result = user.getPropertyValueByName("photoBig");
+            }
+
+            if ( result == null ) {
+                result = user.getPropertyValueByName("photo");
+            }
+
+            return result;
+        }
     }
 }

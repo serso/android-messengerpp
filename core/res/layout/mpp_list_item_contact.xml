@@ -10,9 +10,10 @@
         a:layout_alignParentLeft="true" />
 
 
-    <TextView
-        a:id="@+id/mpp_li_contact_online"
+    <ImageView
+        a:id="@+id/mpp_li_contact_online_view"
         style="@style/mpp_list_item_contact_online"
+        a:src="@drawable/mpp_contact_online_marker"
         a:layout_centerInParent="true"
         a:layout_width="20dp"
         a:layout_height="wrap_content"
@@ -21,7 +22,7 @@
     <TextView
         a:id="@+id/mpp_li_contact_name_textview"
         a:layout_toRightOf="@id/mpp_li_contact_icon_imageview"
-        a:layout_toLeftOf="@id/mpp_li_contact_online"
+        a:layout_toLeftOf="@id/mpp_li_contact_online_view"
         style="@style/mpp_list_item_name"
         a:layout_centerInParent="true" />
 

@@ -74,7 +74,7 @@ public class DefaultSyncService implements SyncService {
      * Method checks if 'all synchronization task' is not running and starts one with specified parameters
      * @param realms realms for which synchronization should be done
      * @param force force synchronization. See {@link SyncService#syncAll(boolean)}
-     * @throws SyncAllTaskIsAlreadyRunning thrown when task if 'all synchronization task' is alreasy running
+     * @throws SyncAllTaskIsAlreadyRunning thrown when task if 'all synchronization task' is already running
      */
     private void startSyncAllTask(@Nonnull Collection<Realm> realms, boolean force) throws SyncAllTaskIsAlreadyRunning {
         synchronized (syncAllTaskRunning) {

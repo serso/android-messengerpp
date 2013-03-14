@@ -1,9 +1,13 @@
 package org.solovyev.android.messenger;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.IBinder;
 import com.google.inject.Inject;
-import org.solovyev.android.messenger.realms.*;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmEvent;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.network.NetworkData;
 import org.solovyev.android.network.NetworkState;
 import org.solovyev.android.network.NetworkStateListener;
@@ -14,7 +18,8 @@ import roboguice.service.RoboService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * User: serso
@@ -22,6 +27,16 @@ import java.util.*;
  * Time: 8:38 PM
  */
 public class MessengerService extends RoboService implements NetworkStateListener {
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
+
+    private static final int NOTIFICATION_ID = 10002029;
 
     /*
     **********************************************************************
@@ -63,6 +78,12 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Override
     public void onCreate() {
         super.onCreate();
+
+        final Notification.Builder notificationBuilder = new Notification.Builder(this);
+        notificationBuilder.setOngoing(true);
+        notificationBuilder.setSmallIcon(R.drawable.mpp_app_icon);
+        notificationBuilder.setContentText(getString(R.string.mpp_app_name));
+        startForeground(NOTIFICATION_ID, notificationBuilder.getNotification());
 
         realmConnections = new RealmConnections(this);
 

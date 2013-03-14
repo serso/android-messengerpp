@@ -8,7 +8,6 @@
               style="@style/list_item_item">
 
     <ImageView a:id="@+id/mpp_bubble_user_icon_imageview"
-        a:src="@drawable/icon"
         a:paddingRight="2dp"
         a:layout_width="@dimen/mpp_list_item_icon_size"
         a:layout_height="@dimen/mpp_list_item_icon_size"

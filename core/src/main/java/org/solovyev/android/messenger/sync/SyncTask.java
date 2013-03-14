@@ -97,7 +97,7 @@ public enum SyncTask {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
 
-                MessengerApplication.getServiceLocator().getUserService().fetchUserIcons(user);
+                MessengerApplication.getServiceLocator().getUserService().fetchUserAndContactsIcons(user);
 
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in

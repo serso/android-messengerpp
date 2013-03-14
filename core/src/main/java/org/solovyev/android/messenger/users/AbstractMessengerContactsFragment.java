@@ -1,7 +1,11 @@
 package org.solovyev.android.messenger.users;
 
+import android.widget.Toast;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.fragments.DetachableFragment;
+import org.solovyev.android.messenger.sync.SyncTask;
+import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
+import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
@@ -23,6 +27,32 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
     @Override
     protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
         return null;
+    }
+
+    @Override
+    protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+        return new AbstractOnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    getSyncService().sync(SyncTask.user_contacts, null);
+                } catch (TaskIsAlreadyRunningException e) {
+                    e.showMessage(getActivity());
+                }
+
+                try {
+                    getSyncService().sync(SyncTask.check_online_user_contacts, new Runnable() {
+                        @Override
+                        public void run() {
+                            completeRefresh();
+                        }
+                    });
+                    Toast.makeText(getActivity(), "User contacts sync started!", Toast.LENGTH_SHORT).show();
+                } catch (TaskIsAlreadyRunningException e) {
+                    e.showMessage(getActivity());
+                }
+            }
+        };
     }
 
 }

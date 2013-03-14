@@ -17,7 +17,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     private static final String TAG = XmppRealmConnection.class.getSimpleName();
 
-    public static final int CONNECTION_RETRIES = 3;
+    private static final int CONNECTION_RETRIES = 3;
 
     @Nullable
     private volatile Connection connection;

@@ -75,7 +75,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
             })));
         }
 
-        if (type == UserEventType.changed) {
+        if (event.isOfType(UserEventType.changed)) {
             final ContactListItem listItem = findInAllElements(eventUser);
             if (listItem != null) {
                 listItem.onEvent(event);
@@ -83,7 +83,12 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
             }
         }
 
-        if (type == UserEventType.contact_online || type == UserEventType.contact_offline) {
+        if (event.isOfType(UserEventType.contact_online, UserEventType.contact_offline)) {
+            final ContactListItem listItem = findInAllElements(event.getDataAsUser());
+            if (listItem != null) {
+                listItem.onEvent(event);
+                onListItemChanged(eventUser);
+            }
             refilter();
         }
     }

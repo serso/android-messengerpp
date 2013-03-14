@@ -11,6 +11,7 @@
     <color name="base_bg_lighter">#fffefefe</color>
     <color name="text">#ff363636</color>
     <color name="text_lighter">#ff5e5e5e</color>
+    <color name="text_lightest">#ff9a9a9a</color>
     <color name="text_name">#ff0e1825</color>
     <!--<color name="text_link">#ff3266a2</color>-->
     <color name="text_link">#ff363636</color>

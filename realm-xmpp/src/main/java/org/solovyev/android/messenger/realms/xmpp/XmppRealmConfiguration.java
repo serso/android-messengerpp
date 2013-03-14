@@ -8,6 +8,8 @@ import javax.annotation.Nonnull;
 
 public class XmppRealmConfiguration implements RealmConfiguration {
 
+    private static final boolean DEBUG = true;
+
     private static final int DEFAULT_PORT = 5222;
 
     @Nonnull
@@ -74,6 +76,8 @@ public class XmppRealmConfiguration implements RealmConfiguration {
     @Nonnull
     public AndroidConnectionConfiguration toXmppConfiguration() {
         final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, this.resource);
+
+        connectionConfiguration.setDebuggerEnabled(DEBUG);
 
         return connectionConfiguration;
     }

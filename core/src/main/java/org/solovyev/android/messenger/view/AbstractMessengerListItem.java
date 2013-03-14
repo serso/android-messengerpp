@@ -68,16 +68,14 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
         view.setActivated(checked);
 
         ViewAwareTag viewTag = (ViewAwareTag) view.getTag();
-        if (!tag.equals(viewTag)) {
-            if (viewTag != null) {
-                viewTag.update(tag);
-            } else {
-                viewTag = tag;
-                view.setTag(viewTag);
-            }
-            displayName = getDisplayName(this.data, context);
-            fillView(this.data, context, viewTag);
+        if (viewTag != null) {
+            viewTag.update(tag);
+        } else {
+            viewTag = tag;
+            view.setTag(viewTag);
         }
+        displayName = getDisplayName(this.data, context);
+        fillView(this.data, context, viewTag);
     }
 
     @Nonnull
