@@ -127,7 +127,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
             contactName.setText(Users.getDisplayNameFor(contact));
 
             final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon_imageview);
-            MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contactIcon, contact);
+            MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contact, contactIcon);
 
         }
     }

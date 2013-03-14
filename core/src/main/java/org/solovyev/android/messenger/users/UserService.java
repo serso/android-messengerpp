@@ -1,10 +1,8 @@
 package org.solovyev.android.messenger.users;
 
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.icons.UserIconService;
 import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -21,7 +19,7 @@ import java.util.List;
  * Implementation of this class must provide thread safeness
  */
 @ThreadSafe
-public interface UserService {
+public interface UserService extends UserIconService {
 
     // initial initialization: will be called once on application start
     void init();
@@ -48,23 +46,6 @@ public interface UserService {
     void updateUser(@Nonnull User user);
 
     void removeUsersInRealm(@Nonnull String realmId);
-
-
-    /*
-    **********************************************************************
-    *
-    *                           ICONS/PHOTOS
-    *
-    **********************************************************************
-    */
-    @Nonnull
-    Drawable getDefaultUserIcon();
-
-    void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);
-
-    void setUserIcon(@Nonnull User user, @Nonnull OnImageLoadedListener imageLoadedListener);
-
-    void setUserPhoto(@Nonnull ImageView imageView, @Nonnull User user);
 
     /*
     **********************************************************************

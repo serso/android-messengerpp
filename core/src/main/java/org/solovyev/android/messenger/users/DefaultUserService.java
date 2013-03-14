@@ -12,7 +12,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.http.OnImageLoadedListener;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
@@ -135,7 +134,7 @@ public class DefaultUserService implements UserService {
         }
 
         if (result == null) {
-            result = getUserDao().loadUserById(realmUser.getEntityId());
+            result = userDao.loadUserById(realmUser.getEntityId());
             if (result == null) {
                 saved = false;
             }
@@ -173,10 +172,10 @@ public class DefaultUserService implements UserService {
         boolean inserted = false;
 
         synchronized (lock) {
-            final User userFromDb = getUserDao().loadUserById(user.getEntity().getEntityId());
+            final User userFromDb = userDao.loadUserById(user.getEntity().getEntityId());
             if (userFromDb == null) {
                 inserted = true;
-                getUserDao().insertUser(user);
+                userDao.insertUser(user);
             }
         }
 
@@ -193,7 +192,7 @@ public class DefaultUserService implements UserService {
         synchronized (userContactsCache) {
             result = userContactsCache.get(realmUser);
             if (result == null) {
-                result = getUserDao().loadUserContacts(realmUser.getEntityId());
+                result = userDao.loadUserContacts(realmUser.getEntityId());
                 if (!Collections.isEmpty(result)) {
                     userContactsCache.put(realmUser, result);
                 }
@@ -250,7 +249,7 @@ public class DefaultUserService implements UserService {
     @Override
     public void updateUser(@Nonnull User user) {
         synchronized (lock) {
-            getUserDao().updateUser(user);
+            userDao.updateUser(user);
         }
 
         listeners.fireEvent(UserEventType.changed.newEvent(user));
@@ -280,7 +279,7 @@ public class DefaultUserService implements UserService {
         final User user = getRealmByUser(realmUser).getRealmUserService().getUserById(realmUser.getRealmEntityId());
         if (user != null) {
             synchronized (lock) {
-                getUserDao().updateUser(user);
+                userDao.updateUser(user);
             }
             listeners.fireEvent(UserEventType.changed.newEvent(user));
         }
@@ -304,7 +303,7 @@ public class DefaultUserService implements UserService {
         User user = getUserById(realmUser);
         final MergeDaoResult<User, String> result;
         synchronized (lock) {
-            result = getUserDao().mergeUserContacts(realmUser.getEntityId(), contacts, allowRemoval, allowUpdate);
+            result = userDao.mergeUserContacts(realmUser.getEntityId(), contacts, allowRemoval, allowUpdate);
 
             // update sync data
             user = user.updateContactsSyncDate();
@@ -472,24 +471,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void setUserIcon(@Nonnull User user, @Nonnull OnImageLoadedListener imageLoadedListener) {
-        final RealmDef realmDef = getRealmByUser(user.getEntity()).getRealmDef();
-
-        final BitmapDrawable userIcon = realmDef.getUserIcon(user);
-        if (userIcon == null) {
-            final String userIconUri = realmDef.getUserIconUri(user);
-            if (!Strings.isEmpty(userIconUri)) {
-                this.imageLoader.loadImage(userIconUri, imageLoadedListener);
-            } else {
-                imageLoadedListener.setDefaultImage();
-            }
-        } else {
-            imageLoadedListener.onImageLoaded(userIcon.getBitmap());
-        }
-    }
-
-    @Override
-    public void setUserPhoto(@Nonnull ImageView imageView, @Nonnull User user) {
+    public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
         final RealmDef realmDef = getRealmByUser(user.getEntity()).getRealmDef();
 
         Drawable defaultUserIcon = realmDef.getDefaultUserIcon();
@@ -531,11 +513,6 @@ public class DefaultUserService implements UserService {
             result = user.getPropertyValueByName("photoBig");
         }
         return result;
-    }
-
-    @Nonnull
-    private UserDao getUserDao() {
-        return userDao;
     }
 
     /*
