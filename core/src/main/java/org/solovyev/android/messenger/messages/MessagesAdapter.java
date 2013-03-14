@@ -10,8 +10,8 @@ import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
     // map of list items saying that someone start typing message
     // key: realm user id
     @Nonnull
-    private final Map<RealmEntity, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<RealmEntity, MessageListItem>());
+    private final Map<Entity, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<Entity, MessageListItem>());
 
     public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat) {
         super(context, new ArrayList<MessageListItem>());
@@ -99,12 +99,12 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
         }
 
         if (type.isEvent(ChatEventType.user_start_typing, eventChat, chat)) {
-            final RealmEntity userEntity = (RealmEntity) data;
+            final Entity userEntity = (Entity) data;
 
             if (!userTypingListItems.containsKey(userEntity)) {
                 assert userEntity != null;
 
-                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(RealmEntityImpl.fromEntityId(userEntity.getEntityId() + "_typing"));
+                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(userEntity.getEntityId() + "_typing"));
                 liteChatMessage.setSendDate(DateTime.now());
                 liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(userEntity));
                 liteChatMessage.setBody("User start typing...");

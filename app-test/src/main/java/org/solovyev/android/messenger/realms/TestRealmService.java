@@ -4,6 +4,7 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 
@@ -68,7 +69,7 @@ public class TestRealmService implements RealmUserService, RealmChatService {
 
     @Nonnull
     @Override
-    public Chat newPrivateChat(@Nonnull RealmEntity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) {
+    public Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) {
         throw new UnsupportedOperationException();
     }
 }

@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,7 +49,7 @@ public enum ChatEventType {
     user_start_typing {
         @Override
         protected void checkData(@Nullable Object data) {
-            assert data instanceof RealmEntity;
+            assert data instanceof Entity;
         }
     };
 

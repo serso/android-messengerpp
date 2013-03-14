@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger;
 
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
@@ -13,9 +13,9 @@ import javax.annotation.Nonnull;
 public abstract class AbstractMessengerEntity extends JObject implements MessengerEntity {
 
     @Nonnull
-    private /*final*/ RealmEntity entity;
+    private /*final*/ Entity entity;
 
-    protected AbstractMessengerEntity(@Nonnull RealmEntity entity) {
+    protected AbstractMessengerEntity(@Nonnull Entity entity) {
         this.entity = entity;
     }
 
@@ -26,7 +26,7 @@ public abstract class AbstractMessengerEntity extends JObject implements Messeng
     }
 
     @Nonnull
-    public RealmEntity getEntity() {
+    public Entity getEntity() {
         return entity;
     }
 

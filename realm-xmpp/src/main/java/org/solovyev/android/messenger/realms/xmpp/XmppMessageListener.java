@@ -6,8 +6,8 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -23,9 +23,9 @@ class XmppMessageListener implements MessageListener {
     private Realm realm;
 
     @Nonnull
-    private final RealmEntity realmChat;
+    private final Entity realmChat;
 
-    XmppMessageListener(@Nonnull Realm realm, @Nonnull RealmEntity realmChat) {
+    XmppMessageListener(@Nonnull Realm realm, @Nonnull Entity realmChat) {
         this.realm = realm;
         this.realmChat = realmChat;
     }

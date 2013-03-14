@@ -16,9 +16,9 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -97,15 +97,15 @@ public class DefaultChatService implements ChatService {
 
     // key: chat id, value: list of participants
     @Nonnull
-    private final Map<RealmEntity, List<User>> chatParticipantsCache = new HashMap<RealmEntity, List<User>>();
+    private final Map<Entity, List<User>> chatParticipantsCache = new HashMap<Entity, List<User>>();
 
     // key: chat id, value: last message
     @Nonnull
-    private final Map<RealmEntity, ChatMessage> lastMessagesCache = new HashMap<RealmEntity, ChatMessage>();
+    private final Map<Entity, ChatMessage> lastMessagesCache = new HashMap<Entity, ChatMessage>();
 
     // key: chat id, value: chat
     @Nonnull
-    private final Map<RealmEntity, Chat> chatsById = new HashMap<RealmEntity, Chat>();
+    private final Map<Entity, Chat> chatsById = new HashMap<Entity, Chat>();
 
     @Nonnull
     private final Object lock = new Object();
@@ -133,13 +133,13 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public Chat newPrivateChat(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2) {
+    public Chat newPrivateChat(@Nonnull Entity realmUser1, @Nonnull Entity realmUser2) {
         final Realm realm = getRealmByUser(realmUser1);
         final RealmChatService realmChatService = realm.getRealmChatService();
 
         Chat result;
 
-        final RealmEntity realmChat = newPrivateChatId(realmUser1, realmUser2);
+        final Entity realmChat = newPrivateChatId(realmUser1, realmUser2);
         synchronized (lock) {
             result = getChatById(realmChat);
             if ( result == null ) {
@@ -161,13 +161,13 @@ public class DefaultChatService implements ChatService {
     }
 
     @Nonnull
-    private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2) {
+    private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity realmUser1, @Nonnull Entity realmUser2) {
         final Realm realm = getRealmByUser(realmUser1);
-        final RealmEntity realmChat = newPrivateChatId(realmUser1, realmUser2);
+        final Entity realmChat = newPrivateChatId(realmUser1, realmUser2);
 
         if (!realmChat.getRealmEntityId().equals(chat.getEntity().getRealmEntityId())) {
             /**
-             * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.realms.RealmEntity, org.solovyev.android.messenger.realms.RealmEntity)) method)
+             * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
              */
             final String realmChatId = chat.getEntity().getRealmEntityId();
 
@@ -186,14 +186,14 @@ public class DefaultChatService implements ChatService {
             final List<User> participants = apiChat.getParticipantsExcept(user);
 
             if (participants.size() == 1) {
-                final RealmEntity realmUser1 = user.getEntity();
-                final RealmEntity realmUser2 = participants.get(0).getEntity();
+                final Entity realmUser1 = user.getEntity();
+                final Entity realmUser2 = participants.get(0).getEntity();
 
-                final RealmEntity realmChat = newPrivateChatId(realmUser1, realmUser2);
+                final Entity realmChat = newPrivateChatId(realmUser1, realmUser2);
 
                 if (!realmChat.getRealmEntityId().equals(apiChat.getChat().getEntity().getRealmEntityId())) {
                     /**
-                     * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.realms.RealmEntity, org.solovyev.android.messenger.realms.RealmEntity)) method)
+                     * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#newPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
                      */
                     final String realmChatId = apiChat.getChat().getEntity().getRealmEntityId();
 
@@ -208,13 +208,13 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<Chat> loadUserChats(@Nonnull RealmEntity user) {
+    public List<Chat> loadUserChats(@Nonnull Entity user) {
         return getChatDao().loadUserChats(user.getEntityId());
     }
 
     @Nonnull
     @Override
-    public ApiChat saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat) {
+    public ApiChat saveChat(@Nonnull Entity realmUser, @Nonnull ApiChat chat) {
         final MergeDaoResult<ApiChat, String> result = mergeUserChats(realmUser.getEntityId(), Arrays.asList(chat));
         if ( result.getAddedObjects().size() > 0 ) {
             return result.getAddedObjects().get(0);
@@ -241,7 +241,7 @@ public class DefaultChatService implements ChatService {
     }
 
     @Override
-    public Chat getChatById(@Nonnull RealmEntity realmChat) {
+    public Chat getChatById(@Nonnull Entity realmChat) {
         Chat result;
 
         synchronized (chatsById) {
@@ -265,13 +265,13 @@ public class DefaultChatService implements ChatService {
 
 
     @Nonnull
-    private Realm getRealmByUser(@Nonnull RealmEntity realmUser) {
+    private Realm getRealmByUser(@Nonnull Entity realmUser) {
         return realmService.getRealmById(realmUser.getRealmId());
     }
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncChatMessages(@Nonnull RealmEntity user) {
+    public List<ChatMessage> syncChatMessages(@Nonnull Entity user) {
         final List<ChatMessage> chatMessages = getRealmByUser(user).getRealmChatService().getChatMessages(user.getRealmEntityId());
 
 /*        synchronized (userChatsCache) {
@@ -316,7 +316,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser) {
+    public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser) {
         final Realm realm = getRealmByUser(realmUser);
         final RealmChatService realmChatService = realm.getRealmChatService();
 
@@ -329,7 +329,7 @@ public class DefaultChatService implements ChatService {
     }
 
     @Override
-    public void saveChatMessages(@Nonnull RealmEntity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate) {
+    public void saveChatMessages(@Nonnull Entity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate) {
         Chat chat = this.getChatById(realmChat);
 
         if (chat != null) {
@@ -370,7 +370,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser) {
+    public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser) {
         final Integer offset = getChatMessageService().getChatMessages(realmChat).size();
 
         final Chat chat = this.getChatById(realmChat);
@@ -389,21 +389,21 @@ public class DefaultChatService implements ChatService {
     }
 
     @Override
-    public void syncChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser) {
+    public void syncChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser) {
         // todo serso: check if OK
         syncNewerChatMessagesForChat(realmChat, realmUser);
     }
 
     @Nullable
     @Override
-    public RealmEntity getSecondUser(@Nonnull Chat chat) {
+    public Entity getSecondUser(@Nonnull Chat chat) {
         boolean first = true;
 
         for (String userId : Splitter.on(PRIVATE_CHAT_DELIMITER).split(chat.getEntity().getAppRealmEntityId())) {
             if ( first ) {
                 first = false;
             } else {
-                return RealmEntityImpl.newInstance(chat.getEntity().getRealmId(), userId);
+                return EntityImpl.newInstance(chat.getEntity().getRealmId(), userId);
             }
         }
 
@@ -433,7 +433,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public RealmEntity newPrivateChatId(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2) {
+    public Entity newPrivateChatId(@Nonnull Entity realmUser1, @Nonnull Entity realmUser2) {
         return getRealmByUser(realmUser1).newRealmEntity(realmUser1.getRealmEntityId() + PRIVATE_CHAT_DELIMITER + realmUser2.getRealmEntityId());
     }
 
@@ -444,7 +444,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<User> getParticipants(@Nonnull RealmEntity realmChat) {
+    public List<User> getParticipants(@Nonnull Entity realmChat) {
         List<User> result;
 
         synchronized (chatParticipantsCache) {
@@ -463,7 +463,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<User> getParticipantsExcept(@Nonnull RealmEntity realmChat, @Nonnull final RealmEntity realmUser) {
+    public List<User> getParticipantsExcept(@Nonnull Entity realmChat, @Nonnull final Entity realmUser) {
         final List<User> participants = getParticipants(realmChat);
         return Lists.newArrayList(Iterables.filter(participants, new Predicate<User>() {
             @Override
@@ -475,7 +475,7 @@ public class DefaultChatService implements ChatService {
 
     @Nullable
     @Override
-    public ChatMessage getLastMessage(@Nonnull RealmEntity realmChat) {
+    public ChatMessage getLastMessage(@Nonnull Entity realmChat) {
         ChatMessage result;
 
         synchronized (lastMessagesCache) {

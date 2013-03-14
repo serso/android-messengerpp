@@ -4,8 +4,8 @@ import android.content.Context;
 import android.widget.ImageView;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -24,13 +24,13 @@ public interface ChatMessageService {
     void init();
 
     @Nonnull
-    RealmEntity generateEntity(@Nonnull Realm realm);
+    Entity generateEntity(@Nonnull Realm realm);
 
     @Nonnull
-    List<ChatMessage> getChatMessages(@Nonnull RealmEntity realmChat);
+    List<ChatMessage> getChatMessages(@Nonnull Entity realmChat);
 
     void setMessageIcon(@Nonnull ImageView imageView, @Nonnull ChatMessage message, @Nonnull Chat chat, @Nonnull User user, @Nonnull Context context);
 
     @Nullable
-    ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage);
+    ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage);
 }

@@ -10,9 +10,9 @@ import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -69,17 +69,17 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @Nonnull
     @Override
-    public synchronized RealmEntity generateEntity(@Nonnull Realm realm) {
+    public synchronized Entity generateEntity(@Nonnull Realm realm) {
         // todo serso: create normal way of generating ids
-        final RealmEntity tmp = RealmEntityImpl.newInstance(realm.getId(), String.valueOf(System.currentTimeMillis()));
+        final Entity tmp = EntityImpl.newInstance(realm.getId(), String.valueOf(System.currentTimeMillis()));
 
         // NOTE: empty realm entity id in order to get real from realm service
-        return RealmEntityImpl.newInstance(realm.getId(), ChatMessageService.NO_REALM_MESSAGE_ID, tmp.getEntityId());
+        return EntityImpl.newInstance(realm.getId(), ChatMessageService.NO_REALM_MESSAGE_ID, tmp.getEntityId());
     }
 
     @Nonnull
     @Override
-    public List<ChatMessage> getChatMessages(@Nonnull RealmEntity realmChat) {
+    public List<ChatMessage> getChatMessages(@Nonnull Entity realmChat) {
         return getChatMessageDao().loadChatMessages(realmChat.getEntityId());
     }
 
@@ -103,7 +103,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @Nullable
     @Override
-    public ChatMessage sendChatMessage(@Nonnull RealmEntity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
+    public ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
         final Realm realm = getRealmByUser(user);
         final RealmChatService realmChatService = realm.getRealmChatService();
 
@@ -113,7 +113,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
         message.setAuthor(userService.getUserById(user));
         if (chat.isPrivate()) {
-            final RealmEntity secondUser = chat.getSecondUser();
+            final Entity secondUser = chat.getSecondUser();
             message.setRecipient(userService.getUserById(secondUser));
         }
         message.setBody(chatMessage.getBody());
@@ -136,7 +136,7 @@ public class DefaultChatMessageService implements ChatMessageService {
     }
 
     @Nonnull
-    private Realm getRealmByUser(@Nonnull RealmEntity userEntity) {
+    private Realm getRealmByUser(@Nonnull Entity userEntity) {
         return realmService.getRealmById(userEntity.getRealmId());
     }
 }

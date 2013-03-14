@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public interface LiteChatMessage /*extends MessengerEntity*/ {
 
     @Nonnull
-    RealmEntity getEntity();
+    Entity getEntity();
 
     @Nonnull
     User getAuthor();

@@ -3,6 +3,8 @@ package org.solovyev.android.messenger.realms;
 import android.content.Context;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.test.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -28,8 +30,8 @@ public class TestRealmDef extends AbstractRealmDef {
     }
 
     @Nonnull
-    public static RealmEntity newEntity(@Nonnull String realmEntityId) {
-       return RealmEntityImpl.newInstance(REALM_ID, realmEntityId);
+    public static Entity newEntity(@Nonnull String realmEntityId) {
+       return EntityImpl.newInstance(REALM_ID, realmEntityId);
     }
 
     @Nonnull

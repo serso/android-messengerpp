@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -52,12 +52,12 @@ public final class Chats {
     }
 
     @Nonnull
-    public static Chat newPrivateChat(@Nonnull RealmEntity realmChat) {
+    public static Chat newPrivateChat(@Nonnull Entity realmChat) {
         return ChatImpl.newPrivate(realmChat);
     }
 
     @Nonnull
-    public static ApiChat newPrivateApiChat(@Nonnull RealmEntity realmChat,
+    public static ApiChat newPrivateApiChat(@Nonnull Entity realmChat,
                                             @Nonnull Collection<User> participants,
                                             @Nonnull Collection<ChatMessage> messages) {
         final ApiChatImpl result = ApiChatImpl.newInstance(realmChat, messages.size(), true);

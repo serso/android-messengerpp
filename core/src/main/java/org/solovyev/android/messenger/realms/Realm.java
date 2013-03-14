@@ -4,6 +4,7 @@ import android.content.Context;
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
@@ -25,19 +26,19 @@ public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
     C getConfiguration();
 
     @Nonnull
-    RealmEntity newRealmEntity(@Nonnull String realmEntityId);
+    Entity newRealmEntity(@Nonnull String realmEntityId);
 
     @Nonnull
-    RealmEntity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId);
+    Entity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId);
 
     @Nonnull
-    RealmEntity newUserEntity(@Nonnull String realmUserId);
+    Entity newUserEntity(@Nonnull String realmUserId);
 
     @Nonnull
-    RealmEntity newMessageEntity(@Nonnull String realmMessageId);
+    Entity newMessageEntity(@Nonnull String realmMessageId);
 
     @Nonnull
-    RealmEntity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId);
+    Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId);
 
     boolean same(@Nonnull Realm that);
 

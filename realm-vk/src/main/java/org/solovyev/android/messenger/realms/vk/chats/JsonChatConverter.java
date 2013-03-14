@@ -14,8 +14,8 @@ import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessage;
@@ -96,9 +96,9 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         final User secondUser = message.getSecondUser(user);
 
                         if (secondUser != null) {
-                            final RealmEntity realmUser = user.getEntity();
-                            final RealmEntity secondRealmUser = secondUser.getEntity();
-                            final RealmEntity realmChat = MessengerApplication.getServiceLocator().getChatService().newPrivateChatId(realmUser, secondRealmUser);
+                            final Entity realmUser = user.getEntity();
+                            final Entity secondRealmUser = secondUser.getEntity();
+                            final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().newPrivateChatId(realmUser, secondRealmUser);
 
                             ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
                             if (chat == null) {

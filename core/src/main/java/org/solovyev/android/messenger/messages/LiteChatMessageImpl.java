@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -30,12 +30,12 @@ public class LiteChatMessageImpl extends AbstractMessengerEntity implements Lite
     @Nonnull
     private String body = "";
 
-    private LiteChatMessageImpl(@Nonnull RealmEntity entity) {
+    private LiteChatMessageImpl(@Nonnull Entity entity) {
         super(entity);
     }
 
     @Nonnull
-    static LiteChatMessageImpl newInstance(@Nonnull RealmEntity entity) {
+    static LiteChatMessageImpl newInstance(@Nonnull Entity entity) {
         return new LiteChatMessageImpl(entity);
     }
 

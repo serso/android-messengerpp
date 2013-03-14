@@ -5,8 +5,8 @@ import android.util.Log;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 
@@ -73,7 +73,7 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
     }
 
     @Nonnull
-    public RealmEntity newUserEntity(@Nonnull String realmUserId) {
+    public Entity newUserEntity(@Nonnull String realmUserId) {
         final int index = realmUserId.indexOf('/');
         if ( index >= 0 ) {
             return newRealmEntity(realmUserId.substring(0, index));

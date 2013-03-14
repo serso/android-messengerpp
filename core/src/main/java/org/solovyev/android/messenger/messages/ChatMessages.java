@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.messages;
 
-import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 
 import javax.annotation.Nonnull;
 
@@ -18,11 +18,11 @@ public final class ChatMessages {
 
     @Nonnull
     public static LiteChatMessage newEmptyMessage(@Nonnull String messageId) {
-        return LiteChatMessageImpl.newInstance(RealmEntityImpl.fromEntityId(messageId));
+        return LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(messageId));
     }
 
     @Nonnull
-    public static LiteChatMessageImpl newMessage(@Nonnull RealmEntity entity) {
+    public static LiteChatMessageImpl newMessage(@Nonnull Entity entity) {
         return LiteChatMessageImpl.newInstance(entity);
     }
 }

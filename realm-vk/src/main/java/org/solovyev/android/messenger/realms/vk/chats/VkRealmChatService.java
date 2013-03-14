@@ -6,8 +6,8 @@ import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -184,7 +184,7 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public Chat newPrivateChat(@Nonnull RealmEntity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) {
+    public Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) {
         return Chats.newPrivateChat(realm.newRealmEntity(realmUserId1 + CHAT_DELIMITER + realmUserId2));
     }
 }

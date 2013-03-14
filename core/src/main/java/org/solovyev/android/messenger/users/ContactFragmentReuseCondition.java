@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.users;
 
 import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.fragments.AbstractFragmentReuseCondition;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
@@ -15,15 +15,15 @@ import javax.annotation.Nonnull;
 public final class ContactFragmentReuseCondition extends AbstractFragmentReuseCondition<MessengerContactFragment> {
 
     @Nonnull
-    private final RealmEntity contact;
+    private final Entity contact;
 
-    public ContactFragmentReuseCondition(@Nonnull RealmEntity contact) {
+    public ContactFragmentReuseCondition(@Nonnull Entity contact) {
         super(MessengerContactFragment.class);
         this.contact = contact;
     }
 
     @Nonnull
-    public static JPredicate<Fragment> forContact(@Nonnull RealmEntity contact) {
+    public static JPredicate<Fragment> forContact(@Nonnull Entity contact) {
         return new ContactFragmentReuseCondition(contact);
     }
 

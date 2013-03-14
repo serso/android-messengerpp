@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerEntity;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
@@ -19,13 +19,13 @@ public interface Chat extends MessengerEntity {
     String PROPERTY_PRIVATE = "private";
 
     @Nonnull
-    RealmEntity getEntity();
+    Entity getEntity();
 
     boolean isPrivate();
 
     // must be called only after isPrivate() check
     @Nonnull
-    RealmEntity getSecondUser();
+    Entity getSecondUser();
 
     @Nonnull
     Integer getMessagesCount();
@@ -46,7 +46,7 @@ public interface Chat extends MessengerEntity {
      * @return chat copy with updated properties
      */
     @Nonnull
-    Chat copyWithNew(@Nonnull RealmEntity realmChat);
+    Chat copyWithNew(@Nonnull Entity realmChat);
 
     @Nullable
     String getPropertyValueByName(@Nonnull String name);

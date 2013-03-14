@@ -9,8 +9,8 @@ import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.packet.VCard;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
@@ -103,7 +103,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
     @Nonnull
     public static User toUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, boolean available, @Nonnull Connection connection) throws XMPPException {
         final List<AProperty> properties = loadUserProperties(true, realmUserId, available, connection, name);
-        return Users.newUser(RealmEntityImpl.newInstance(realmId, realmUserId), Users.newNeverSyncedUserSyncData(), properties);
+        return Users.newUser(EntityImpl.newInstance(realmId, realmUserId), Users.newNeverSyncedUserSyncData(), properties);
     }
 
     @Nonnull

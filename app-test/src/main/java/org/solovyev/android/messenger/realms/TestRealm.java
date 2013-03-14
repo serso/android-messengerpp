@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -20,7 +21,7 @@ public class TestRealm extends AbstractRealm<TestRealmConfiguration> {
     }
 
     public TestRealm(@Nonnull TestRealmDef realmDef, int index) {
-        super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(RealmEntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestRealmConfiguration("test_field", 42));
+        super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestRealmConfiguration("test_field", 42));
     }
 
 

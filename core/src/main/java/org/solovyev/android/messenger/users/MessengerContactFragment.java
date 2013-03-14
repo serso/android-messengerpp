@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -55,7 +55,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
     private User contact;
 
-    private RealmEntity realmContact;
+    private Entity realmContact;
 
 
     /*
@@ -77,7 +77,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
         this.realmContact = contact.getEntity();
     }
 
-    public MessengerContactFragment(@Nonnull RealmEntity realmContact) {
+    public MessengerContactFragment(@Nonnull Entity realmContact) {
         // will be loaded later by realmContact
         this.contact = null;
         this.realmContact = realmContact;
@@ -92,13 +92,13 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     }
 
     @Nonnull
-    public static MessengerContactFragment newForContact(@Nonnull RealmEntity realmContact) {
+    public static MessengerContactFragment newForContact(@Nonnull Entity realmContact) {
         final MessengerContactFragment result = new MessengerContactFragment(realmContact);
         fillArguments(realmContact, result);
         return result;
     }
 
-    private static void fillArguments(@Nonnull RealmEntity realmUser, @Nonnull MessengerContactFragment result) {
+    private static void fillArguments(@Nonnull Entity realmUser, @Nonnull MessengerContactFragment result) {
         final Bundle args = new Bundle();
         args.putParcelable(CONTACT, realmUser);
         result.setArguments(args);
@@ -110,12 +110,12 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
         if (contact == null) {
             // restore state
-            final RealmEntity realmContact;
+            final Entity realmContact;
 
             if (this.realmContact != null) {
                 realmContact = this.realmContact;
             } else {
-                realmContact = (RealmEntity) getArguments().getParcelable(CONTACT);
+                realmContact = (Entity) getArguments().getParcelable(CONTACT);
             }
 
             if (realmContact != null) {
@@ -164,7 +164,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
     }
 
     @Nonnull
-    public RealmEntity getContact() {
+    public Entity getContact() {
         return realmContact;
     }
 }

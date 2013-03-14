@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.realms;
 
 import android.database.sqlite.SQLiteDatabase;
 import org.solovyev.android.db.DbExec;
+import org.solovyev.android.messenger.entities.EntityImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,7 +53,7 @@ public class DeleteAllRowsInRealmDbExec implements DbExec {
             return db.delete(tableName, realmColumnName + " = ?", new String[]{realmId});
         } else if (foreignKeyColumnName != null) {
             // todo serso: use ?
-            return db.delete(tableName, foreignKeyColumnName + " like '" + realmId + RealmEntityImpl.DELIMITER + "%'", null);
+            return db.delete(tableName, foreignKeyColumnName + " like '" + realmId + EntityImpl.DELIMITER + "%'", null);
         }
 
         return 0;

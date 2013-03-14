@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.users;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 
@@ -35,17 +35,17 @@ final class UserImpl extends AbstractMessengerEntity implements User {
     @Nonnull
     private Map<String, String> propertiesMap = new HashMap<String, String>();
 
-    UserImpl(@Nonnull RealmEntity realmEntity) {
-        super(realmEntity);
+    UserImpl(@Nonnull Entity entity) {
+        super(entity);
     }
 
     @Nonnull
-    static User newInstance(@Nonnull RealmEntity realmEntity,
+    static User newInstance(@Nonnull Entity entity,
                                    @Nonnull UserSyncData userSyncData,
                                    @Nonnull List<AProperty> properties) {
-        final UserImpl result = new UserImpl(realmEntity);
+        final UserImpl result = new UserImpl(entity);
 
-        result.login = realmEntity.getRealmEntityId();
+        result.login = entity.getRealmEntityId();
         result.userSyncData = userSyncData;
         result.properties.addAll(properties);
 

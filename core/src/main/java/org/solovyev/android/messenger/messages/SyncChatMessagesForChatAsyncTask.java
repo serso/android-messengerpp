@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 
 import java.util.List;
@@ -67,15 +67,15 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
     public static class Input {
 
         @Nonnull
-        private RealmEntity realmUser;
+        private Entity realmUser;
 
         @Nonnull
-        private RealmEntity realmChat;
+        private Entity realmChat;
 
         private boolean older;
 
-        public Input(@Nonnull RealmEntity realmUser,
-                     @Nonnull RealmEntity realmChat,
+        public Input(@Nonnull Entity realmUser,
+                     @Nonnull Entity realmChat,
                      boolean older) {
             this.realmUser = realmUser;
             this.realmChat = realmChat;

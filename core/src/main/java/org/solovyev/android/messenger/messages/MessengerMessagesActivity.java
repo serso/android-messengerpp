@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.Builder;
 import org.solovyev.common.listeners.JEventListener;
@@ -60,7 +60,7 @@ public class MessengerMessagesActivity extends MessengerFragmentActivity impleme
 
         final Intent intent = this.getIntent();
         if (intent != null) {
-            final RealmEntity realmChat = intent.getExtras().getParcelable(CHAT);
+            final Entity realmChat = intent.getExtras().getParcelable(CHAT);
             if (realmChat != null) {
                 final Chat chatFromService = getChatService().getChatById(realmChat);
                 if (chatFromService != null) {

@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import android.widget.ImageView;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -25,31 +25,31 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     Chat updateChat(@Nonnull Chat chat);
 
     @Nonnull
-    List<Chat> loadUserChats(@Nonnull RealmEntity user);
+    List<Chat> loadUserChats(@Nonnull Entity user);
 
     @Nonnull
-    ApiChat saveChat(@Nonnull RealmEntity realmUser, @Nonnull ApiChat chat);
+    ApiChat saveChat(@Nonnull Entity realmUser, @Nonnull ApiChat chat);
 
     @Nonnull
     MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
 
     @Nullable
-    Chat getChatById(@Nonnull RealmEntity realmChat);
+    Chat getChatById(@Nonnull Entity realmChat);
 
     @Nonnull
-    List<User> getParticipants(@Nonnull RealmEntity realmChat);
+    List<User> getParticipants(@Nonnull Entity realmChat);
 
     @Nonnull
-    List<User> getParticipantsExcept(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
+    List<User> getParticipantsExcept(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
 
     @Nullable
-    ChatMessage getLastMessage(@Nonnull RealmEntity realmChat);
+    ChatMessage getLastMessage(@Nonnull Entity realmChat);
 
     @Nonnull
-    Chat newPrivateChat(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2);
+    Chat newPrivateChat(@Nonnull Entity realmUser1, @Nonnull Entity realmUser2);
 
     @Nonnull
-    RealmEntity newPrivateChatId(@Nonnull RealmEntity realmUser1, @Nonnull RealmEntity realmUser2);
+    Entity newPrivateChatId(@Nonnull Entity realmUser1, @Nonnull Entity realmUser2);
 
 
     /*
@@ -61,20 +61,20 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     */
 
     @Nonnull
-    List<ChatMessage> syncChatMessages(@Nonnull RealmEntity user);
+    List<ChatMessage> syncChatMessages(@Nonnull Entity user);
 
     @Nonnull
-    List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
+    List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
 
     @Nonnull
-    List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
+    List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
 
-    void syncChat(@Nonnull RealmEntity realmChat, @Nonnull RealmEntity realmUser);
+    void syncChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
 
     @Nullable
-    RealmEntity getSecondUser(@Nonnull Chat chat);
+    Entity getSecondUser(@Nonnull Chat chat);
 
     void setChatIcon(@Nonnull ImageView imageView, @Nonnull Chat chat, @Nonnull User user);
 
-    void saveChatMessages(@Nonnull RealmEntity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate);
+    void saveChatMessages(@Nonnull Entity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate);
 }

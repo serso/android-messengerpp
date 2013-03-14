@@ -5,8 +5,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatMessageImpl;
-import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.RealmEntityMapper;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
@@ -30,15 +30,15 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
     @Nonnull
     @Override
     public ChatMessage convert(@Nonnull Cursor c) {
-        final RealmEntity messageEntity = RealmEntityMapper.newInstanceFor(0).convert(c);
+        final Entity messageEntity = RealmEntityMapper.newInstanceFor(0).convert(c);
 
         final String chatId = c.getString(3);
 
         final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageEntity);
-        liteChatMessage.setAuthor(userService.getUserById(RealmEntityImpl.fromEntityId(c.getString(4))));
+        liteChatMessage.setAuthor(userService.getUserById(EntityImpl.fromEntityId(c.getString(4))));
         if (!c.isNull(5)) {
             final String recipientId = c.getString(5);
-            liteChatMessage.setRecipient(userService.getUserById(RealmEntityImpl.fromEntityId(recipientId)));
+            liteChatMessage.setRecipient(userService.getUserById(EntityImpl.fromEntityId(recipientId)));
         }
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 

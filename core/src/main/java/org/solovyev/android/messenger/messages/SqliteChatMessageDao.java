@@ -19,7 +19,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
@@ -91,7 +91,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull List<? extends ChatMessage> messages, boolean allowDelete) {
         final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>(messages);
 
-        final Chat chat = getChatService().getChatById(RealmEntityImpl.fromEntityId(chatId));
+        final Chat chat = getChatService().getChatById(EntityImpl.fromEntityId(chatId));
 
         if (chat != null) {
             final List<String> messageIdsFromDb = loadChatMessageIds(chatId);

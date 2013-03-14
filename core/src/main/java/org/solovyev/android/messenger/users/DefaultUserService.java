@@ -19,9 +19,9 @@ import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.collections.Collections;
@@ -95,17 +95,17 @@ public class DefaultUserService implements UserService {
     // key: realm user, value: list of user contacts
     @GuardedBy("userContactsCache")
     @Nonnull
-    private final Map<RealmEntity, List<User>> userContactsCache = new HashMap<RealmEntity, List<User>>();
+    private final Map<Entity, List<User>> userContactsCache = new HashMap<Entity, List<User>>();
 
     // key: realm user, value: list of user chats
     @GuardedBy("userChatsCache")
     @Nonnull
-    private final Map<RealmEntity, List<Chat>> userChatsCache = new HashMap<RealmEntity, List<Chat>>();
+    private final Map<Entity, List<Chat>> userChatsCache = new HashMap<Entity, List<Chat>>();
 
     // key: realm user, value: user object
     @GuardedBy("usersCache")
     @Nonnull
-    private final Map<RealmEntity, User> usersCache = new HashMap<RealmEntity, User>();
+    private final Map<Entity, User> usersCache = new HashMap<Entity, User>();
 
     public DefaultUserService() {
         listeners.addListener(new UserEventListener());
@@ -118,13 +118,13 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public User getUserById(@Nonnull RealmEntity realmUser) {
+    public User getUserById(@Nonnull Entity realmUser) {
         return getUserById(realmUser, true);
     }
 
     @Nonnull
     @Override
-    public User getUserById(@Nonnull RealmEntity realmUser, boolean tryFindInRealm) {
+    public User getUserById(@Nonnull Entity realmUser, boolean tryFindInRealm) {
         boolean saved = true;
 
         User result;
@@ -164,7 +164,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Nonnull
-    private Realm getRealmByUser(@Nonnull RealmEntity realmUser) {
+    private Realm getRealmByUser(@Nonnull Entity realmUser) {
         return realmService.getRealmById(realmUser.getRealmId());
     }
 
@@ -186,26 +186,7 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public List<User> getUserContacts(@Nonnull RealmEntity realmUser) {
-        List<User> result;
-
-        synchronized (userContactsCache) {
-            result = userContactsCache.get(realmUser);
-            if (result == null) {
-                result = userDao.loadUserContacts(realmUser.getEntityId());
-                if (!Collections.isEmpty(result)) {
-                    userContactsCache.put(realmUser, result);
-                }
-            }
-
-            // result list might be in cache and might updates due to some user events => must COPY
-            return new ArrayList<User>(result);
-        }
-    }
-
-    @Nonnull
-    @Override
-    public List<Chat> getUserChats(@Nonnull RealmEntity realmUser) {
+    public List<Chat> getUserChats(@Nonnull Entity realmUser) {
         List<Chat> result;
 
         synchronized (userChatsCache) {
@@ -224,8 +205,8 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public Chat getPrivateChat(@Nonnull RealmEntity realmUser1, @Nonnull final RealmEntity realmUser2) {
-        final RealmEntity realmChat = chatService.newPrivateChatId(realmUser1, realmUser2);
+    public Chat getPrivateChat(@Nonnull Entity realmUser1, @Nonnull final Entity realmUser2) {
+        final Entity realmChat = chatService.newPrivateChatId(realmUser1, realmUser2);
 
         Chat result = chatService.getChatById(realmChat);
         if (result == null) {
@@ -233,17 +214,6 @@ public class DefaultUserService implements UserService {
         }
 
         return result;
-    }
-
-    @Nonnull
-    @Override
-    public List<User> getOnlineUserContacts(@Nonnull RealmEntity realmUser) {
-        return Lists.newArrayList(Iterables.filter(getUserContacts(realmUser), new Predicate<User>() {
-            @Override
-            public boolean apply(@javax.annotation.Nullable User contact) {
-                return contact != null && contact.isOnline();
-            }
-        }));
     }
 
     @Override
@@ -269,13 +239,71 @@ public class DefaultUserService implements UserService {
     /*
     **********************************************************************
     *
+    *                           CONTACTS
+    *
+    **********************************************************************
+    */
+
+    @Nonnull
+    @Override
+    public List<User> getUserContacts(@Nonnull Entity user) {
+        List<User> result;
+
+        synchronized (userContactsCache) {
+            result = userContactsCache.get(user);
+            if (result == null) {
+                result = userDao.loadUserContacts(user.getEntityId());
+                if (!Collections.isEmpty(result)) {
+                    userContactsCache.put(user, result);
+                }
+            }
+
+            // result list might be in cache and might updates due to some user events => must COPY
+            return new ArrayList<User>(result);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public List<User> getOnlineUserContacts(@Nonnull Entity user) {
+        return Lists.newArrayList(Iterables.filter(getUserContacts(user), new Predicate<User>() {
+            @Override
+            public boolean apply(@javax.annotation.Nullable User contact) {
+                return contact != null && contact.isOnline();
+            }
+        }));
+    }
+
+    @Override
+    public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, boolean available) {
+        final UserEventType userEventType = available ? UserEventType.contact_online : UserEventType.contact_offline;
+        // update cache
+        synchronized (userContactsCache) {
+            final List<User> contacts = userContactsCache.get(user.getEntity());
+            final int index = Iterables.indexOf(contacts, new Predicate<User>() {
+                @Override
+                public boolean apply(@Nullable User user) {
+                    return contact.equals(user);
+                }
+            });
+            if ( index >= 0 ) {
+                // contact found => update status locally (persistence is not updated at status change is too frequent event)
+                contacts.set(index, contacts.get(index).cloneWithNewStatus(available));
+            }
+        }
+        this.listeners.fireEvent(userEventType.newEvent(user, contact));
+    }
+
+    /*
+    **********************************************************************
+    *
     *                           SYNC
     *
     **********************************************************************
     */
 
     @Override
-    public void syncUserProperties(@Nonnull RealmEntity realmUser) {
+    public void syncUserProperties(@Nonnull Entity realmUser) {
         final User user = getRealmByUser(realmUser).getRealmUserService().getUserById(realmUser.getRealmEntityId());
         if (user != null) {
             synchronized (lock) {
@@ -287,7 +315,7 @@ public class DefaultUserService implements UserService {
 
     @Override
     @Nonnull
-    public List<User> syncUserContacts(@Nonnull RealmEntity realmUser) {
+    public List<User> syncUserContacts(@Nonnull Entity realmUser) {
         final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().getUserContacts(realmUser.getRealmEntityId());
         synchronized (userContactsCache) {
             userContactsCache.put(realmUser, contacts);
@@ -299,7 +327,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void mergeUserContacts(@Nonnull RealmEntity realmUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
+    public void mergeUserContacts(@Nonnull Entity realmUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
         User user = getUserById(realmUser);
         final MergeDaoResult<User, String> result;
         synchronized (lock) {
@@ -336,7 +364,7 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public List<Chat> syncUserChats(@Nonnull RealmEntity realmUser) {
+    public List<Chat> syncUserChats(@Nonnull Entity realmUser) {
         final List<ApiChat> apiChats = getRealmByUser(realmUser).getRealmChatService().getUserChats(realmUser.getRealmEntityId());
 
         final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
@@ -357,7 +385,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void mergeUserChats(@Nonnull RealmEntity realmUser, @Nonnull List<? extends ApiChat> apiChats) {
+    public void mergeUserChats(@Nonnull Entity realmUser, @Nonnull List<? extends ApiChat> apiChats) {
         User user = this.getUserById(realmUser);
 
         final MergeDaoResult<ApiChat, String> result;
@@ -412,7 +440,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void checkOnlineUserContacts(@Nonnull RealmEntity realmUser) {
+    public void checkOnlineUserContacts(@Nonnull Entity realmUser) {
         final List<User> contacts = getRealmByUser(realmUser).getRealmUserService().checkOnlineUsers(getUserContacts(realmUser));
 
         final User user = getUserById(realmUser);

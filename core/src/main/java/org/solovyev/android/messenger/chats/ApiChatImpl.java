@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.chats;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
@@ -33,13 +33,13 @@ public class ApiChatImpl implements ApiChat {
     @Nonnull
     private List<User> participants;
 
-    private ApiChatImpl(@Nonnull RealmEntity realmEntity,
+    private ApiChatImpl(@Nonnull Entity entity,
                         @Nonnull Integer messagesCount,
                         @Nonnull List<AProperty> properties,
                         @Nonnull List<ChatMessage> chatMessages,
                         @Nonnull List<User> chatParticipants,
                         @Nullable DateTime lastMessageSyncDate) {
-        this.chat = ChatImpl.newInstance(realmEntity, messagesCount, properties, lastMessageSyncDate);
+        this.chat = ChatImpl.newInstance(entity, messagesCount, properties, lastMessageSyncDate);
         this.messages = chatMessages;
 
         this.participants = chatParticipants;
@@ -51,32 +51,32 @@ public class ApiChatImpl implements ApiChat {
         this.participants = participants;
     }
 
-    private ApiChatImpl(@Nonnull RealmEntity realmEntity,
+    private ApiChatImpl(@Nonnull Entity entity,
                         @Nonnull Integer messagesCount,
                         boolean privateChat) {
         final List<AProperty> properties = new ArrayList<AProperty>();
         properties.add(Properties.newProperty("private", Boolean.toString(privateChat)));
-        this.chat = ChatImpl.newInstance(realmEntity, messagesCount, properties, null);
+        this.chat = ChatImpl.newInstance(entity, messagesCount, properties, null);
 
         this.messages = new ArrayList<ChatMessage>(20);
         this.participants = new ArrayList<User>(3);
     }
 
     @Nonnull
-    public static ApiChatImpl newInstance(@Nonnull RealmEntity realmEntity,
+    public static ApiChatImpl newInstance(@Nonnull Entity entity,
                                           @Nonnull Integer messagesCount,
                                           boolean privateChat) {
-        return new ApiChatImpl(realmEntity, messagesCount, privateChat);
+        return new ApiChatImpl(entity, messagesCount, privateChat);
     }
 
     @Nonnull
-    public static ApiChatImpl newInstance(@Nonnull RealmEntity realmEntity,
+    public static ApiChatImpl newInstance(@Nonnull Entity entity,
                                           @Nonnull Integer messagesCount,
                                           @Nonnull List<AProperty> properties,
                                           @Nonnull List<ChatMessage> chatMessages,
                                           @Nonnull List<User> chatParticipants,
                                           @Nullable DateTime lastMessageSyncDate) {
-        return new ApiChatImpl(realmEntity, messagesCount, properties, chatMessages, chatParticipants, lastMessageSyncDate);
+        return new ApiChatImpl(entity, messagesCount, properties, chatMessages, chatParticipants, lastMessageSyncDate);
     }
 
     @Nonnull
@@ -130,7 +130,7 @@ public class ApiChatImpl implements ApiChat {
 
     @Nonnull
     @Override
-    public ApiChat copyWithNew(@Nonnull RealmEntity realmChat) {
+    public ApiChat copyWithNew(@Nonnull Entity realmChat) {
         return new ApiChatImpl(chat.copyWithNew(realmChat), messages, participants);
     }
 

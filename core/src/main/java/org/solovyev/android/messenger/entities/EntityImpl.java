@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.entities;
 
 import android.os.Parcel;
 import org.solovyev.common.JCloneable;
@@ -8,7 +8,7 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityImpl>, RealmEntity {
+public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entity {
 
     /*
     **********************************************************************
@@ -21,15 +21,15 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     public static final String DELIMITER = ":";
     public static final String DELIMITER_REALM = "~";
 
-    public static final Creator <RealmEntity> CREATOR = new Creator<RealmEntity>() {
+    public static final Creator <Entity> CREATOR = new Creator<Entity>() {
         @Override
-        public RealmEntity createFromParcel(@Nonnull Parcel in) {
+        public Entity createFromParcel(@Nonnull Parcel in) {
             return null;
         }
 
         @Override
-        public RealmEntity[] newArray(int size) {
-            return new RealmEntity[size];
+        public Entity[] newArray(int size) {
+            return new Entity[size];
         }
     };
 
@@ -64,16 +64,16 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     **********************************************************************
     */
 
-    private RealmEntityImpl(@Nonnull String realmId, @Nonnull String realmEntityId, @Nonnull String entityId) {
+    private EntityImpl(@Nonnull String realmId, @Nonnull String realmEntityId, @Nonnull String entityId) {
         this.realmId = realmId;
         this.realmEntityId = realmEntityId;
         this.entityId = entityId;
     }
 
-    private RealmEntityImpl(@Nonnull String realmId,
-                            @Nullable String realmDefId,
-                            @Nonnull String realmEntityId,
-                            @Nonnull String entityId) {
+    private EntityImpl(@Nonnull String realmId,
+                       @Nullable String realmDefId,
+                       @Nonnull String realmEntityId,
+                       @Nonnull String entityId) {
         this.realmId = realmId;
         this.realmDefId = realmDefId;
         this.realmEntityId = realmEntityId;
@@ -81,7 +81,7 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     }
 
     @Nonnull
-    public static RealmEntityImpl newInstance(@Nonnull String realmId, @Nonnull String realmEntityId, @Nonnull String entityId) {
+    public static EntityImpl newInstance(@Nonnull String realmId, @Nonnull String realmEntityId, @Nonnull String entityId) {
         if (Strings.isEmpty(realmId)) {
             throw new IllegalArgumentException("Realm cannot be empty!");
         }
@@ -94,16 +94,16 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
             throw new IllegalArgumentException("Entity id cannot be empty!");
         }
 
-        return new RealmEntityImpl(realmId, realmEntityId, entityId);
+        return new EntityImpl(realmId, realmEntityId, entityId);
     }
 
     @Nonnull
-    public static RealmEntity newInstance(@Nonnull String realmId, @Nonnull String realmEntityId) {
+    public static Entity newInstance(@Nonnull String realmId, @Nonnull String realmEntityId) {
         return newInstance(realmId, realmEntityId, realmId + DELIMITER + realmEntityId);
     }
 
     @Nonnull
-    public static RealmEntity fromEntityId(@Nonnull String entityId) {
+    public static Entity fromEntityId(@Nonnull String entityId) {
         final int index = entityId.indexOf(DELIMITER);
         if ( index >= 0 ) {
             final String realmId = entityId.substring(0, index);
@@ -115,8 +115,8 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
     }
 
     @Nonnull
-    private static RealmEntity fromParcel(@Nonnull Parcel in) {
-        return new RealmEntityImpl(in.readString(), in.readString(), in.readString(), in.readString());
+    private static Entity fromParcel(@Nonnull Parcel in) {
+        return new EntityImpl(in.readString(), in.readString(), in.readString(), in.readString());
     }
 
     @Nonnull
@@ -166,16 +166,16 @@ public class RealmEntityImpl extends JObject implements JCloneable<RealmEntityIm
 
     @Nonnull
     @Override
-    public RealmEntityImpl clone() {
-        return (RealmEntityImpl) super.clone();
+    public EntityImpl clone() {
+        return (EntityImpl) super.clone();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RealmEntityImpl)) return false;
+        if (!(o instanceof EntityImpl)) return false;
 
-        RealmEntityImpl that = (RealmEntityImpl) o;
+        EntityImpl that = (EntityImpl) o;
 
         if (!entityId.equals(that.entityId)) return false;
 

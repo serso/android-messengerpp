@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.chats;
 import com.google.inject.Inject;
 import junit.framework.Assert;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.messenger.users.UserDao;
@@ -34,7 +34,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
         final ArrayList<ApiChat> chats = new ArrayList<ApiChat>();
 
-        final RealmEntity realmUser = testRealm.newRealmEntity("01");
+        final Entity realmUser = testRealm.newRealmEntity("01");
         final String userId = realmUser.getEntityId();
 
         userDao.insertUser(Users.newEmptyUser(realmUser));
@@ -46,7 +46,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
         chats.add(ApiChatImpl.newInstance(testRealm.newRealmEntity("01"), 10, false));
         chats.add(ApiChatImpl.newInstance(testRealm.newRealmEntity("02"), 10, false));
         chats.add(ApiChatImpl.newInstance(testRealm.newRealmEntity("03"), 10, false));
-        final RealmEntity realmChat4 = testRealm.newRealmEntity("04");
+        final Entity realmChat4 = testRealm.newRealmEntity("04");
         chats.add(ApiChatImpl.newInstance(realmChat4, 10, false));
         chatDao.mergeUserChats(userId, chats);
 

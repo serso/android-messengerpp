@@ -2,6 +2,8 @@ package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.User;
 
@@ -68,31 +70,31 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
 
     @Nonnull
     @Override
-    public RealmEntity newRealmEntity(@Nonnull String realmEntityId) {
-        return RealmEntityImpl.newInstance(getId(), realmEntityId);
+    public Entity newRealmEntity(@Nonnull String realmEntityId) {
+        return EntityImpl.newInstance(getId(), realmEntityId);
     }
 
     @Nonnull
     @Override
-    public RealmEntity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId) {
-        return RealmEntityImpl.newInstance(getId(), realmEntityId, entityId);
+    public Entity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId) {
+        return EntityImpl.newInstance(getId(), realmEntityId, entityId);
     }
 
     @Nonnull
     @Override
-    public RealmEntity newUserEntity(@Nonnull String realmUserId) {
+    public Entity newUserEntity(@Nonnull String realmUserId) {
         return newRealmEntity(realmUserId);
     }
 
     @Nonnull
     @Override
-    public RealmEntity newMessageEntity(@Nonnull String realmMessageId) {
+    public Entity newMessageEntity(@Nonnull String realmMessageId) {
         return newRealmEntity(realmMessageId);
     }
 
     @Nonnull
     @Override
-    public RealmEntity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId) {
+    public Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId) {
         return newRealmEntity(realmMessageId, entityId);
     }
 

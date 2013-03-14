@@ -5,8 +5,8 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
@@ -131,9 +131,9 @@ public interface LongPollUpdate {
         public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             // not self
             if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
-                final RealmEntity secondRealmUser = realm.newRealmEntity(realmUserId);
+                final Entity secondRealmUser = realm.newRealmEntity(realmUserId);
 
-                final RealmEntity realmChat = getChatService().newPrivateChatId(user.getEntity(), secondRealmUser);
+                final Entity realmChat = getChatService().newPrivateChatId(user.getEntity(), secondRealmUser);
                 Chat chat = getChatService().getChatById(realmChat);
                 if (chat != null) {
                     getChatService().fireEvent(ChatEventType.user_start_typing.newEvent(chat, secondRealmUser));
@@ -210,7 +210,7 @@ public interface LongPollUpdate {
 
         @Override
         public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            final RealmEntity realmChat;
+            final Entity realmChat;
             if (this.realmChatId != null) {
                 realmChat = realm.newRealmEntity(this.realmChatId);
             } else {
@@ -242,11 +242,7 @@ public interface LongPollUpdate {
         @Override
         public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
             final User contact = getUserService().getUserById(realm.newRealmEntity(realmFriendId)).cloneWithNewStatus(online);
-            if (online) {
-                getUserService().fireEvent(UserEventType.contact_online.newEvent(user, contact));
-            } else {
-                getUserService().fireEvent(UserEventType.contact_offline.newEvent(user, contact));
-            }
+            getUserService().onContactPresenceChanged(user, contact, online);
         }
 
         private UserService getUserService() {

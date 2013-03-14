@@ -10,8 +10,8 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.ChatMessages;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -56,7 +56,7 @@ public class XmppChatListener implements ChatManagerListener {
     public static ApiChat toApiChat(@Nonnull Chat chat, @Nonnull List<Message> messages, @Nonnull Realm realm) {
         final User participant = toUser(chat.getParticipant(), realm);
 
-        final RealmEntity realmChat;
+        final Entity realmChat;
 
         final String realmChatId = chat.getThreadID();
         if (Strings.isEmpty(realmChatId) ) {

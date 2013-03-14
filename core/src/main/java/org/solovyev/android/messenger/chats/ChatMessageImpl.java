@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.messages.LiteChatMessage;
-import org.solovyev.android.messenger.realms.RealmEntity;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
 
@@ -83,7 +83,7 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 
     @Nonnull
     @Override
-    public RealmEntity getEntity() {
+    public Entity getEntity() {
         return this.liteChatMessage.getEntity();
     }
 

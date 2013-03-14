@@ -8,6 +8,7 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerConfiguration;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.UserService;
@@ -209,7 +210,7 @@ public class DefaultRealmService implements RealmService {
 
     @Nonnull
     private String generateRealmId(@Nonnull RealmDef realmDef) {
-        return RealmEntityImpl.getRealmId(realmDef.getId(), realmCounter.getAndIncrement());
+        return EntityImpl.getRealmId(realmDef.getId(), realmCounter.getAndIncrement());
     }
 
     @Override

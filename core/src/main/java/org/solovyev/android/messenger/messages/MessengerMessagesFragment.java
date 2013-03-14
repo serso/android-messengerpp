@@ -19,8 +19,8 @@ import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
@@ -119,7 +119,7 @@ public class MessengerMessagesFragment extends AbstractMessengerListFragment<Cha
             realm = realmService.getRealmById(chat.getEntity().getRealmId());
         } else {
             // first - restore state
-            final RealmEntity realmChat = savedInstanceState.getParcelable(CHAT);
+            final Entity realmChat = savedInstanceState.getParcelable(CHAT);
             if (realmChat != null) {
                 chat = this.chatService.getChatById(realmChat);
             }

@@ -6,8 +6,8 @@ import com.google.inject.Inject;
 import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.properties.AProperty;
@@ -52,7 +52,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
         expectedProperties.add(Properties.newProperty("prop_2", "prop_2_value"));
         expectedProperties.add(Properties.newProperty("prop_3", "prop_3_value"));
 
-        final RealmEntity realmUser = testRealm.newRealmEntity("2");
+        final Entity realmUser = testRealm.newRealmEntity("2");
 
         User expected = Users.newUser(realmUser, Users.newNeverSyncedUserSyncData(), expectedProperties);
 
@@ -77,7 +77,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
-        final RealmEntity realmUser2 = testRealm.newRealmEntity("3");
+        final Entity realmUser2 = testRealm.newRealmEntity("3");
 
         expected = Users.newUser(realmUser2, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.insertUser(expected);

@@ -8,8 +8,8 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEntity;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 
 import javax.annotation.Nonnull;
@@ -60,7 +60,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
 
     @Nonnull
     @Override
-    public Chat newPrivateChat(@Nonnull final RealmEntity realmChat, @Nonnull String realmUserId1, @Nonnull final String realmUserId2) {
+    public Chat newPrivateChat(@Nonnull final Entity realmChat, @Nonnull String realmUserId1, @Nonnull final String realmUserId2) {
         return doOnConnection(new XmppConnectedCallable<Chat>() {
             @Override
             public Chat call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
@@ -91,7 +91,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         public String call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
             final ChatManager chatManager = connection.getChatManager();
 
-            final RealmEntity realmChat = chat.getEntity();
+            final Entity realmChat = chat.getEntity();
             org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getRealmEntityId());
             if ( smackChat == null ) {
                 // smack forget about chat ids after restart => need to create chat here

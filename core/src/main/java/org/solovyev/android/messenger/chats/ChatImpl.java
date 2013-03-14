@@ -3,8 +3,8 @@ package org.solovyev.android.messenger.chats;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.RealmEntity;
-import org.solovyev.android.messenger.realms.RealmEntityImpl;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.*;
 import org.solovyev.android.properties.Properties;
 
@@ -49,11 +49,11 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     **********************************************************************
     */
 
-    private ChatImpl(@Nonnull RealmEntity realmEntity,
+    private ChatImpl(@Nonnull Entity entity,
                      @Nonnull Integer messagesCount,
                      @Nonnull List<AProperty> properties,
                      @Nullable DateTime lastMessageSyncDate) {
-        super(realmEntity);
+        super(entity);
         this.messagesCount = messagesCount;
         this.lastMessageSyncDate = lastMessageSyncDate;
 
@@ -68,10 +68,10 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
         }
     }
 
-    private ChatImpl(@Nonnull RealmEntity realmEntity,
+    private ChatImpl(@Nonnull Entity entity,
                      @Nonnull Integer messagesCount,
                      boolean privateChat) {
-        super(realmEntity);
+        super(entity);
         this.messagesCount = messagesCount;
         this.privateChat = privateChat;
         this.properties = new ArrayList<AProperty>();
@@ -84,22 +84,22 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
     @Nonnull
     public static Chat newFakeChat(@Nonnull String chatId) {
-        return new ChatImpl(RealmEntityImpl.fromEntityId(chatId), 0, false);
+        return new ChatImpl(EntityImpl.fromEntityId(chatId), 0, false);
     }
 
     @Nonnull
-    public static Chat newInstance(@Nonnull RealmEntity realmEntity,
+    public static Chat newInstance(@Nonnull Entity entity,
                                    @Nonnull Integer messagesCount,
                                    @Nonnull List<AProperty> properties,
                                    @Nullable DateTime lastMessageSyncDate) {
-        return new ChatImpl(realmEntity, messagesCount, properties, lastMessageSyncDate);
+        return new ChatImpl(entity, messagesCount, properties, lastMessageSyncDate);
     }
 
     @Nonnull
-    public static Chat newPrivate(@Nonnull RealmEntity realmEntity) {
+    public static Chat newPrivate(@Nonnull Entity entity) {
         final List<AProperty> properties = new ArrayList<AProperty>();
         properties.add(Properties.newProperty(PROPERTY_PRIVATE, Boolean.toString(true)));
-        return new ChatImpl(realmEntity, 0, properties, null);
+        return new ChatImpl(entity, 0, properties, null);
     }
 
     /*
@@ -132,7 +132,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
     @Nonnull
     @Override
-    public Chat copyWithNew(@Nonnull RealmEntity realmChat) {
+    public Chat copyWithNew(@Nonnull Entity realmChat) {
         return new ChatImpl(realmChat, this.messagesCount, this.properties, this.lastMessageSyncDate);
     }
 
@@ -171,7 +171,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
     @Nonnull
     @Override
-    public RealmEntity getSecondUser() {
+    public Entity getSecondUser() {
         assert isPrivate();
 
         return MessengerApplication.getServiceLocator().getChatService().getSecondUser(this);

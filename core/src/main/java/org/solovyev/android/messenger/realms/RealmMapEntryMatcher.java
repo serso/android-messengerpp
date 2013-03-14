@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
 import com.google.common.base.Predicate;
+import org.solovyev.android.messenger.entities.Entity;
+
 import javax.annotation.Nonnull;
 
 import java.util.Map;
@@ -10,7 +12,7 @@ import java.util.Map;
 * Date: 2/28/13
 * Time: 9:00 PM
 */
-public class RealmMapEntryMatcher implements Predicate<Map.Entry<RealmEntity, ?>> {
+public class RealmMapEntryMatcher implements Predicate<Map.Entry<Entity, ?>> {
 
     @Nonnull
     private final String realmId;
@@ -25,7 +27,7 @@ public class RealmMapEntryMatcher implements Predicate<Map.Entry<RealmEntity, ?>
     }
 
     @Override
-    public boolean apply(@javax.annotation.Nullable Map.Entry<RealmEntity, ?> entry) {
+    public boolean apply(@javax.annotation.Nullable Map.Entry<Entity, ?> entry) {
         return entry != null && entry.getKey().getRealmId().equals(realmId);
     }
 }
