@@ -5,12 +5,14 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.List;
 
 /**
 * User: serso
@@ -33,7 +35,12 @@ class XmppMessageListener implements MessageListener {
     @Override
     public void processMessage(Chat chat, Message message) {
         Log.i("M++/Xmpp", "Message created: " + message.getBody());
-        getChatService().saveChatMessages(realmChat, XmppChatListener.toMessages(realm, Arrays.asList(message)), false);
+        final List<ChatMessage> messages = XmppChatListener.toMessages(realm, Arrays.asList(message));
+        if (!messages.isEmpty()) {
+            getChatService().saveChatMessages(realmChat, messages, false);
+        } else {
+            // todo serso: add support for "Typing" messages
+        }
     }
 
     @Nonnull

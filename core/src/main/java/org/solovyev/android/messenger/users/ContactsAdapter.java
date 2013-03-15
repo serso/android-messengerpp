@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * Date: 6/1/12
  * Time: 7:03 PM
  */
-public class ContactsAdapter extends AbstractContactsAdapter {
+public final class ContactsAdapter extends AbstractContactsAdapter {
 
     public ContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
         super(context, realmService);

@@ -33,7 +33,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:37 PM
  */
-public class MessengerChatsFragment extends AbstractMessengerListFragment<UserChat, ChatListItem> implements DetachableFragment {
+public final class MessengerChatsFragment extends AbstractMessengerListFragment<UserChat, ChatListItem> implements DetachableFragment {
 
     @Nonnull
     public static final String FRAGMENT_TAG = "chats";

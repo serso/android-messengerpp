@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Date: 6/1/12
  * Time: 7:04 PM
  */
-public class ContactListItem extends AbstractMessengerListItem<User> /*implements UserEventListener*/ {
+public final class ContactListItem extends AbstractMessengerListItem<User> /*implements UserEventListener*/ {
 
     @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_";

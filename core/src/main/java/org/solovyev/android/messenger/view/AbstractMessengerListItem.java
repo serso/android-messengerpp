@@ -30,6 +30,8 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     @Nonnull
     private D data;
 
+    private boolean dataChanged = true;
+
     protected AbstractMessengerListItem(@Nonnull String tagPrefix, int layoutResId, @Nonnull D data) {
         this.tagPrefix = tagPrefix;
         this.layoutResId = layoutResId;
@@ -68,14 +70,17 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
         view.setActivated(checked);
 
         ViewAwareTag viewTag = (ViewAwareTag) view.getTag();
-        if (viewTag != null) {
-            viewTag.update(tag);
-        } else {
-            viewTag = tag;
-            view.setTag(viewTag);
+        if (!tag.equals(viewTag) || dataChanged) {
+            if (viewTag != null) {
+                viewTag.update(tag);
+            } else {
+                viewTag = tag;
+                view.setTag(viewTag);
+            }
+            displayName = getDisplayName(this.data, context);
+            fillView(this.data, context, viewTag);
+            dataChanged = false;
         }
-        displayName = getDisplayName(this.data, context);
-        fillView(this.data, context, viewTag);
     }
 
     @Nonnull
@@ -106,6 +111,15 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     protected final void setData(@Nonnull D data) {
         this.data = data;
         // view update will be done by adapter if necessary
+        onDataChanged();
+    }
+
+    /**
+     * Should be called when inner state of data class is changed (for example, properties)
+     * Method is called inside {@link AbstractMessengerListItem#setData(D)} => no need to call this method after setting new data
+     */
+    public void onDataChanged() {
+        dataChanged = true;
     }
 
     @Override

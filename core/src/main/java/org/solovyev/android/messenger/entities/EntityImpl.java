@@ -24,7 +24,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     public static final Creator <Entity> CREATOR = new Creator<Entity>() {
         @Override
         public Entity createFromParcel(@Nonnull Parcel in) {
-            return null;
+            return fromParcel(in);
         }
 
         @Override
@@ -209,7 +209,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     */
 
     @Nonnull
-    public static String getRealmId(@Nonnull String realmDefId, @Nonnull int index) {
+    public static String getRealmId(@Nonnull String realmDefId, int index) {
         return realmDefId + DELIMITER_REALM + index;
     }
 }

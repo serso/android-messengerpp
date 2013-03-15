@@ -19,7 +19,7 @@ import java.util.List;
 * Date: 6/2/12
 * Time: 3:12 PM
 */
-class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListItem> {
+final class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListItem> {
 
     @Nonnull
     private final RealmService realmService;
