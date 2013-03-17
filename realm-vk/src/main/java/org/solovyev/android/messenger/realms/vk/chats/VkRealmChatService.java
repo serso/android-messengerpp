@@ -184,7 +184,7 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     @Override
-    public Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) {
-        return Chats.newPrivateChat(realm.newRealmEntity(realmUserId1 + CHAT_DELIMITER + realmUserId2));
+    public Chat newPrivateChat(@Nonnull Entity chat, @Nonnull String user1, @Nonnull String user2) {
+        return Chats.newPrivateChat(realm.newRealmEntity(user1 + CHAT_DELIMITER + user2));
     }
 }

@@ -8,7 +8,6 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
@@ -106,7 +105,7 @@ public interface LongPollUpdate {
             if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
                 Chat chat = getChatService().getChatById(realm.newRealmEntity(realmChatId));
                 if (chat != null) {
-                    getChatService().fireEvent(ChatEventType.user_start_typing.newEvent(chat, realm.newRealmEntity(realmUserId)));
+                    getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, realm.newRealmEntity(realmUserId)));
                 }
             }
         }
@@ -136,7 +135,7 @@ public interface LongPollUpdate {
                 final Entity realmChat = getChatService().newPrivateChatId(user.getEntity(), secondRealmUser);
                 Chat chat = getChatService().getChatById(realmChat);
                 if (chat != null) {
-                    getChatService().fireEvent(ChatEventType.user_start_typing.newEvent(chat, secondRealmUser));
+                    getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, secondRealmUser));
                 }
             }
         }

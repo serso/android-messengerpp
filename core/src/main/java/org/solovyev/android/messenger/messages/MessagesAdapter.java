@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -10,6 +11,7 @@ import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
@@ -25,6 +27,29 @@ import java.util.*;
  */
 public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /*implements ChatEventListener, UserEventListener*/ {
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
+    private static final int REMOVE_USER_START_TYPING_ID = 1;
+
+    // todo serso: here we need to use different values for different realms
+    // for example, XMPP realms sends 'Stop typing' event => this constant must be high enough
+    // VK doesn't send 'Stop typing' => this constant must be low enough
+    private static final int REMOVE_USER_START_TYPING_DELAY = 30000;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
+
     @Nonnull
     private final User user;
 
@@ -32,9 +57,25 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
     private Chat chat;
 
     // map of list items saying that someone start typing message
-    // key: realm user id
+    // key: user entity
     @Nonnull
     private final Map<Entity, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<Entity, MessageListItem>());
+
+    @Nonnull
+    private final Handler uiHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(@Nonnull Message msg) {
+            switch (msg.what) {
+                case REMOVE_USER_START_TYPING_ID:
+                    final MessageListItem listItem = (MessageListItem) msg.obj;
+                    removeListItem(listItem);
+                    userTypingListItems.remove(listItem.getMessage().getAuthor().getEntity());
+                    return true;
+
+            }
+            return false;
+        }
+    });
 
     public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat) {
         super(context, new ArrayList<MessageListItem>());
@@ -94,33 +135,54 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
                     listItem.onEvent(event);
                 }
             }
-
-            //notifyDataSetChanged();
         }
 
-        if (type.isEvent(ChatEventType.user_start_typing, eventChat, chat)) {
-            final Entity userEntity = (Entity) data;
+        if (event.isOfType(ChatEventType.user_starts_typing, ChatEventType.user_stops_typing)) {
+            if (eventChat.equals(chat)) {
+                final Entity user = (Entity) data;
+                assert user != null;
+                onTypingEvent(type, user);
+            }
+        }
+    }
 
-            if (!userTypingListItems.containsKey(userEntity)) {
-                assert userEntity != null;
+    private void onTypingEvent(@Nonnull ChatEventType type, @Nonnull Entity user) {
+        MessageListItem listItem = userTypingListItems.get(user);
+        if (type == ChatEventType.user_starts_typing) {
+            if (listItem == null) {
+                // 'Typing' message is not shown yet => show it
 
-                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(userEntity.getEntityId() + "_typing"));
+                // create fake message
+                final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(user.getEntityId() + "_typing"));
                 liteChatMessage.setSendDate(DateTime.now());
-                liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(userEntity));
-                liteChatMessage.setBody("User start typing...");
+                liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(user));
+                liteChatMessage.setBody(getContext().getString(R.string.mpp_user_starts_typing));
 
-                final MessageListItem listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));
+                // create fake list item
+                listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));
                 addListItem(listItem);
-                userTypingListItems.put(userEntity, listItem);
 
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeListItem(listItem);
-                        userTypingListItems.remove(userEntity);
-                    }
-                }, 3000);
+                // add list item to the map
+                userTypingListItems.put(user, listItem);
+
+                // send DELAYED 'Removal' message
+                uiHandler.sendMessageDelayed(uiHandler.obtainMessage(REMOVE_USER_START_TYPING_ID, listItem), REMOVE_USER_START_TYPING_DELAY);
+            } else {
+                // 'Typing' message is already shown => prolong the time
+
+                // remove old 'Removal' message
+                uiHandler.removeMessages(REMOVE_USER_START_TYPING_ID);
+
+                // add new 'Removal' message
+                uiHandler.sendMessageDelayed(uiHandler.obtainMessage(REMOVE_USER_START_TYPING_ID, listItem), REMOVE_USER_START_TYPING_DELAY);
+            }
+        } else {
+            if (listItem != null) {
+                // message is still shown
+                uiHandler.removeMessages(REMOVE_USER_START_TYPING_ID);
+                uiHandler.sendMessage(uiHandler.obtainMessage(REMOVE_USER_START_TYPING_ID, listItem));
+            } else {
+                // message is not shown => no removal is needed
             }
         }
     }

@@ -2,9 +2,11 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.util.Log;
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.ChatState;
+import org.jivesoftware.smackx.ChatStateListener;
 import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
@@ -19,17 +21,17 @@ import java.util.List;
 * Date: 3/12/13
 * Time: 8:11 PM
 */
-class XmppMessageListener implements MessageListener {
+final class XmppMessageListener implements ChatStateListener {
 
     @Nonnull
     private Realm realm;
 
     @Nonnull
-    private final Entity realmChat;
+    private final Entity chat;
 
-    XmppMessageListener(@Nonnull Realm realm, @Nonnull Entity realmChat) {
+    XmppMessageListener(@Nonnull Realm realm, @Nonnull Entity chat) {
         this.realm = realm;
-        this.realmChat = realmChat;
+        this.chat = chat;
     }
 
     @Override
@@ -37,9 +39,28 @@ class XmppMessageListener implements MessageListener {
         Log.i("M++/Xmpp", "Message created: " + message.getBody());
         final List<ChatMessage> messages = XmppChatListener.toMessages(realm, Arrays.asList(message));
         if (!messages.isEmpty()) {
-            getChatService().saveChatMessages(realmChat, messages, false);
+            getChatService().saveChatMessages(this.chat, messages, false);
         } else {
-            // todo serso: add support for "Typing" messages
+            /**
+             * Some special messages sent by another client like 'Composing' and 'Pausing'.
+             * 'Composing' message will be processed in {@link XmppMessageListener#stateChanged(org.jivesoftware.smack.Chat, org.jivesoftware.smackx.ChatState)} method
+             */
+        }
+    }
+
+    @Override
+    public void stateChanged(Chat smackChat, ChatState state) {
+        Log.i("M++/Xmpp", "Chat state changed: " + state);
+        if (state == ChatState.composing || state == ChatState.paused) {
+            final org.solovyev.android.messenger.chats.Chat chat = getChatService().getChatById(this.chat);
+            if (chat != null && chat.isPrivate()) {
+                final Entity participant = chat.getSecondUser();
+                if (state == ChatState.composing) {
+                    getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, participant));
+                } else {
+                    getChatService().fireEvent(ChatEventType.user_stops_typing.newEvent(chat, participant));
+                }
+            }
         }
     }
 
@@ -55,13 +76,13 @@ class XmppMessageListener implements MessageListener {
 
         XmppMessageListener that = (XmppMessageListener) o;
 
-        if (!realmChat.equals(that.realmChat)) return false;
+        if (!chat.equals(that.chat)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return realmChat.hashCode();
+        return chat.hashCode();
     }
 }

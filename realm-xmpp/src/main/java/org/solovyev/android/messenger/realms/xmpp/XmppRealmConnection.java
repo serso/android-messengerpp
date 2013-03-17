@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
 import org.jivesoftware.smack.*;
+import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
 
@@ -68,6 +69,9 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
         // Attach listeners to connection
         connection.getChatManager().addChatListener(chatListener);
         connection.getRoster().addRosterListener(rosterListener);
+
+        // init chat state manager (listeners will be added inside this method)
+        ChatStateManager.getInstance(connection);
     }
 
     static void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {

@@ -242,4 +242,9 @@ public class MessageListItem implements ListItem/*, ChatEventListener*/ {
             return context.getString(captionResId);
         }
     }
+
+    @Nonnull
+    public ChatMessage getMessage() {
+        return message;
+    }
 }

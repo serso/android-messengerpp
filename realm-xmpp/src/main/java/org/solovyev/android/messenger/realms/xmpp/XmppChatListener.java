@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class XmppChatListener implements ChatManagerListener {
+public final class XmppChatListener implements ChatManagerListener {
 
     @Nonnull
     private Realm realm;
@@ -55,21 +55,21 @@ public class XmppChatListener implements ChatManagerListener {
     }
 
     @Nonnull
-    public static ApiChat toApiChat(@Nonnull Chat chat, @Nonnull List<Message> messages, @Nonnull Realm realm) {
-        final User participant = toUser(chat.getParticipant(), realm);
+    public static ApiChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> messages, @Nonnull Realm realm) {
+        final User participant = toUser(smackChat.getParticipant(), realm);
 
-        final Entity realmChat;
+        final Entity chat;
 
-        final String realmChatId = chat.getThreadID();
+        final String realmChatId = smackChat.getThreadID();
         if (Strings.isEmpty(realmChatId) ) {
-            realmChat = getChatService().newPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
+            chat = getChatService().newPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
         } else {
-            realmChat = realm.newRealmEntity(realmChatId);
+            chat = realm.newRealmEntity(realmChatId);
         }
 
         final List<ChatMessage> chatMessages = toMessages(realm, messages);
         final List<User> participants = Arrays.asList(realm.getUser(), participant);
-        return Chats.newPrivateApiChat(realmChat, participants, chatMessages);
+        return Chats.newPrivateApiChat(chat, participants, chatMessages);
     }
 
     @Nonnull

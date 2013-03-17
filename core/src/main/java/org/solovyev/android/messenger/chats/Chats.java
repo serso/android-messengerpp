@@ -52,15 +52,15 @@ public final class Chats {
     }
 
     @Nonnull
-    public static Chat newPrivateChat(@Nonnull Entity realmChat) {
-        return ChatImpl.newPrivate(realmChat);
+    public static Chat newPrivateChat(@Nonnull Entity chat) {
+        return ChatImpl.newPrivate(chat);
     }
 
     @Nonnull
-    public static ApiChat newPrivateApiChat(@Nonnull Entity realmChat,
+    public static ApiChat newPrivateApiChat(@Nonnull Entity chat,
                                             @Nonnull Collection<User> participants,
                                             @Nonnull Collection<ChatMessage> messages) {
-        final ApiChatImpl result = ApiChatImpl.newInstance(realmChat, messages.size(), true);
+        final ApiChatImpl result = ApiChatImpl.newInstance(chat, messages.size(), true);
         for (User participant : participants) {
             result.addParticipant(participant);
         }

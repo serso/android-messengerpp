@@ -65,5 +65,6 @@
     <string name="mpp_city">City</string>
     <string name="mpp_sync">Synchronize</string>
     <string name="mpp_icon">Icon</string>
+    <string name="mpp_user_starts_typing">User starts typing…</string>
 
 </resources>

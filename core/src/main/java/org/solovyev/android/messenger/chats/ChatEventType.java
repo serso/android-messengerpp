@@ -45,8 +45,16 @@ public enum ChatEventType {
         }
     },
 
-    // data == realm user which start typing in chat
-    user_start_typing {
+    // data == user which start typing in chat
+    user_starts_typing {
+        @Override
+        protected void checkData(@Nullable Object data) {
+            assert data instanceof Entity;
+        }
+    },
+
+    // data == user which stop typing in chat
+    user_stops_typing {
         @Override
         protected void checkData(@Nullable Object data) {
             assert data instanceof Entity;
