@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -81,26 +80,7 @@ public class MessengerCommonActivityImpl implements MessengerCommonActivity {
             addTab(activity, MessengerPrimaryFragment.contacts);
             addTab(activity, MessengerPrimaryFragment.messages);
             addTab(activity, MessengerPrimaryFragment.realms);
-
-            // settings tab
-            final ActionBar.Tab tab = actionBar.newTab();
-            tab.setTag("settings");
-            tab.setText(R.string.c_settings);
-            tab.setTabListener(new ActionBar.TabListener() {
-                @Override
-                public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                    activity.startActivity(new Intent(activity.getApplicationContext(), MessengerPreferencesActivity.class));
-                }
-
-                @Override
-                public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                }
-
-                @Override
-                public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                }
-            });
-            actionBar.addTab(tab);
+            addTab(activity, MessengerPrimaryFragment.settings);
 
             int navPosition = -1;
             if (savedInstanceState != null) {

@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  * Date: 3/5/13
  * Time: 1:54 PM
  */
-public class ContactGuiEventListener implements EventListener<ContactGuiEvent> {
+public final class ContactGuiEventListener implements EventListener<ContactGuiEvent> {
 
     @Nonnull
     private final MessengerFragmentActivity activity;

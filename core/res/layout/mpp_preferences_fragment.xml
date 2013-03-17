@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    a:background="@color/text"
+    style="@style/mpp_fragment">
+
+    <ListView
+        a:id="@android:id/list"
+        a:layout_height="match_parent"
+        a:layout_width="match_parent"/>
+
+</LinearLayout>

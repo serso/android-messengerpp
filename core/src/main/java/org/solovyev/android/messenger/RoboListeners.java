@@ -33,6 +33,8 @@ public class RoboListeners {
         for (EventEventListener listener : listeners) {
             eventManager.unregisterObserver(listener.eventClass, listener.eventListener);
         }
+
+        listeners.clear();
     }
 
     private static final class EventEventListener {
