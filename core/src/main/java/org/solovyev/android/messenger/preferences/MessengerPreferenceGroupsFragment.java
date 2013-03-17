@@ -42,7 +42,7 @@ public final class MessengerPreferenceGroupsFragment extends AbstractMessengerLi
     protected MessengerListItemAdapter<PreferenceGroupListItem> createAdapter() {
         final List<PreferenceGroupListItem> preferences = new ArrayList<PreferenceGroupListItem>();
 
-        preferences.add(new PreferenceGroupListItem(new PreferenceGroup("test", "test", R.xml.mpp_preferences_appearance)));
+        preferences.add(new PreferenceGroupListItem(new PreferenceGroup("test", "test", R.xml.mpp_preferences_appearance, R.drawable.mpp_app_icon)));
         preferences.add(new PreferenceGroupListItem(new PreferenceGroup("test2", "test2", R.xml.mpp_preferences_others)));
 
         return new PreferencesAdapter(this.getActivity(), preferences);

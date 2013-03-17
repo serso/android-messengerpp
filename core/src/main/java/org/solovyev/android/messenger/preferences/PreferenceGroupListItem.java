@@ -38,7 +38,12 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
     @Override
     protected void fillView(@Nonnull PreferenceGroup preferenceGroup, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
         final ImageView preferenceIconImageView = viewTag.getViewById(R.id.mpp_li_preference_icon_imageview);
-        preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.empty_icon));
+
+        if (preferenceGroup.hasIcon()) {
+            preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(preferenceGroup.getIconResId()));
+        } else {
+            preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.empty_icon));
+        }
 
         final TextView preferenceNameTextView = viewTag.getViewById(R.id.mpp_li_preference_name_textview);
         preferenceNameTextView.setText(getDisplayName());
