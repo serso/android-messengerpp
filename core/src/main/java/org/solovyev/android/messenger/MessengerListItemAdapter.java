@@ -3,6 +3,7 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.Checkable;
+import android.widget.Filter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -113,6 +114,12 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
         this.filterText = filterText;
         this.getFilter().filter(filterText);
     }
+
+    public void filter(@Nullable CharSequence filterText, @Nullable Filter.FilterListener listener) {
+        this.filterText = filterText;
+        this.getFilter().filter(filterText, listener);
+    }
+
 
     public void refilter() {
         this.getFilter().filter(filterText);

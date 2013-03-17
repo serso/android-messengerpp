@@ -251,7 +251,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
         if (listViewFilter != null) {
-            final View filterView = listViewFilter.createView();
+            final View filterView = listViewFilter.createView(savedInstanceState);
             root.addView(filterView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
@@ -272,7 +272,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         super.onViewCreated(root, savedInstanceState);
 
         if (listViewFilter != null) {
-            listViewFilter.loadState(savedInstanceState);
+            listViewFilter.onViewCreated();
         }
 
         eventManager.fire(FragmentGuiEventType.shown.newEvent(this));
@@ -486,10 +486,15 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         super.onDestroy();
     }
 
-    public void filter(@Nonnull CharSequence searchText) {
+    // todo serso: for some reason now on screen rotation filter doesn't work properly! INVESTIGATE!
+    public void filter(@Nonnull CharSequence filterText) {
+        filter(filterText, null);
+    }
+
+    public void filter(@Nonnull CharSequence filterText, @Nullable Filter.FilterListener filterListener) {
         if (this.adapter != null) {
             if (this.adapter.isInitialized()) {
-                this.adapter.filter(searchText);
+                this.adapter.filter(filterText, filterListener);
             }
         }
     }
@@ -623,18 +628,27 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
                 // apply filter if any
                 if (listViewFilter != null) {
-                    filter(listViewFilter.getFilterText());
+                    filter(listViewFilter.getFilterText(), new PostListLoadingFilterListener());
                 } else {
-                    filter("");
+                    filter("", new PostListLoadingFilterListener());
                 }
+            }
+        }
 
-                if (position >= 0 && position < adapter.getCount()) {
-                    adapter.getSelectedItemListener().onItemClick(position);
+        private final class PostListLoadingFilterListener implements Filter.FilterListener {
 
-                    if (multiPaneManager.isDualPane(activity)) {
-                        final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
-                        if (onClickAction != null) {
-                            onClickAction.onClick(activity, adapter, listView);
+            @Override
+            public void onFilterComplete(int count) {
+                final Activity activity = getActivity();
+                if (activity != null && !activity.isFinishing()) {
+                    if (position >= 0 && position < adapter.getCount()) {
+                        adapter.getSelectedItemListener().onItemClick(position);
+
+                        if (multiPaneManager.isDualPane(activity)) {
+                            final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
+                            if (onClickAction != null) {
+                                onClickAction.onClick(activity, adapter, listView);
+                            }
                         }
                     }
                 }

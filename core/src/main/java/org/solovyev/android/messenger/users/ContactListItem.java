@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -81,13 +82,8 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
 
     @Nonnull
     @Override
-    protected String getDisplayName(@Nonnull User contact, @Nonnull Context context) {
-        if ( realmService.isOneRealm() ) {
-            return Users.getDisplayNameFor(contact);
-        } else {
-            final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
-            return Users.getDisplayNameFor(contact) + "\n<font color=\"9a9a9a\" >[" + Users.getDisplayNameFor(realm.getUser()) + "]</font>";
-        }
+    protected CharSequence getDisplayName(@Nonnull User contact, @Nonnull Context context) {
+        return Users.getDisplayNameFor(contact);
     }
 
     @Override
@@ -96,7 +92,12 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
         MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
 
         final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
-        contactName.setText(getDisplayName());
+        if ( realmService.isOneRealm() ) {
+            contactName.setText(getDisplayName());
+        } else {
+            final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
+            contactName.setText(Html.fromHtml(getDisplayName() + "\n<font color=\"grey\">[" + Users.getDisplayNameFor(realm.getUser()) + "]</font>"));
+        }
 
         final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
         if (contact.isOnline()) {

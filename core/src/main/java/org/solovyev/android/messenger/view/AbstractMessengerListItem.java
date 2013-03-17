@@ -25,7 +25,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     private final int layoutResId;
 
     @Nonnull
-    private String displayName = "";
+    private CharSequence displayName = "";
 
     @Nonnull
     private D data;
@@ -84,7 +84,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     }
 
     @Nonnull
-    protected abstract String getDisplayName(@Nonnull D data, @Nonnull Context context);
+    protected abstract CharSequence getDisplayName(@Nonnull D data, @Nonnull Context context);
 
     protected abstract void fillView(@Nonnull D data, @Nonnull Context context, @Nonnull ViewAwareTag viewTag);
 
@@ -149,11 +149,11 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     @Override
     public final String toString() {
         // NOTE: this code is used inside the ArrayAdapter for filtering
-        return this.displayName;
+        return this.displayName.toString();
     }
 
     @Nonnull
-    protected final String getDisplayName() {
+    protected final CharSequence getDisplayName() {
         return displayName;
     }
 

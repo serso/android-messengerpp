@@ -219,6 +219,15 @@
         <item name="android:textSize">13sp</item>
         <item name="android:padding">0dp</item>
         <item name="android:paddingBottom">5dp</item>
+        <item name="android:gravity">top|left</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="mpp_bubble_message_text" parent="mpp_list_item_message_text">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lines">3</item>
+        <item name="android:hint">@string/type_message</item>
     </style>
 
     <style name="list_item_message_date" parent="mpp_list_item">

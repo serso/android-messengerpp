@@ -16,6 +16,7 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -52,7 +53,7 @@ public class ListViewFilter {
     private final FilterableListView filterableListView;
 
     /**
-     * <var>filterEditText</var> might be null if view has not been created yet (i.e. {@link ListViewFilter#createView()} method has not been called )
+     * <var>filterEditText</var> might be null if view has not been created yet (i.e. {@link ListViewFilter#createView(android.os.Bundle)} method has not been called )
      */
     private EditText filterEditText;
 
@@ -62,12 +63,16 @@ public class ListViewFilter {
     }
 
     @Nonnull
-    public View createView() {
+    public View createView(@Nullable Bundle savedInstanceState) {
         final FragmentActivity activity = fragment.getActivity();
         if (activity != null) {
             final ViewGroup result = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_list_filter).build(activity);
 
             filterEditText = (EditText) result.findViewById(R.id.mpp_filter_edittext);
+            if (savedInstanceState != null) {
+                final String filter = savedInstanceState.getString(FILTER);
+                filterEditText.setText(filter);
+            }
             filterEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -89,17 +94,11 @@ public class ListViewFilter {
         }
     }
 
-    public void loadState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            final String filter = savedInstanceState.getString(FILTER);
-            if (Strings.isEmpty(filter)) {
-                setFilterBoxVisible(false);
-            } else {
-                filterEditText.setText(filter);
-                setFilterBoxVisible(true);
-            }
-        } else {
+    public void onViewCreated() {
+        if (Strings.isEmpty(getFilterText())) {
             setFilterBoxVisible(false);
+        } else {
+            setFilterBoxVisible(true);
         }
     }
 
