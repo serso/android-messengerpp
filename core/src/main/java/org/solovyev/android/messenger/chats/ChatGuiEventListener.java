@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.chats;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerFragmentService;
-import org.solovyev.android.messenger.messages.MessengerMessagesActivity;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
@@ -41,10 +40,9 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
         final ChatGuiEventType type = event.getType();
 
         if (type == ChatGuiEventType.chat_clicked) {
+            final MessengerFragmentService fragmentService = activity.getFragmentService();
 
             if (activity.isDualPane()) {
-                final MessengerFragmentService fragmentService = activity.getFragmentService();
-
                 fragmentService.setSecondFragment(new Builder<Fragment>() {
                     @Nonnull
                     @Override
@@ -80,7 +78,13 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                 }
 
             } else {
-                MessengerMessagesActivity.startActivity(activity, chat);
+                fragmentService.setFirstFragment(new Builder<Fragment>() {
+                    @Nonnull
+                    @Override
+                    public Fragment build() {
+                        return new MessengerMessagesFragment(chat);
+                    }
+                }, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG, true);
             }
         }
     }

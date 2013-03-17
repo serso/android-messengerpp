@@ -33,7 +33,6 @@
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerPreferencesActivity"/>
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerMainActivity"/>
-        <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.messages.MessengerMessagesActivity"/>
 
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
 

@@ -42,7 +42,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:38 PM
  */
-public class MessengerMessagesFragment extends AbstractMessengerListFragment<ChatMessage, MessageListItem> implements PullToRefreshListViewProvider {
+public final class MessengerMessagesFragment extends AbstractMessengerListFragment<ChatMessage, MessageListItem> implements PullToRefreshListViewProvider {
 
     /*
     **********************************************************************

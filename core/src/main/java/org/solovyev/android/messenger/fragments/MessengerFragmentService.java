@@ -42,7 +42,14 @@ public class MessengerFragmentService {
     public void setFirstFragment(@Nonnull Builder<Fragment> fragmentBuilder,
                                     @Nullable JPredicate<Fragment> reuseCondition,
                                     @Nonnull String fragmentTag) {
-        setFragment(R.id.content_first_pane, fragmentTag, fragmentBuilder, reuseCondition, false);
+        setFirstFragment(fragmentBuilder, reuseCondition, fragmentTag, false);
+    }
+
+    public void setFirstFragment(@Nonnull Builder<Fragment> fragmentBuilder,
+                                 @Nullable JPredicate<Fragment> reuseCondition,
+                                 @Nonnull String fragmentTag,
+                                 boolean  addToBackStack) {
+        setFragment(R.id.content_first_pane, fragmentTag, fragmentBuilder, reuseCondition, addToBackStack);
     }
 
     protected void emptifyFirstFragment() {
