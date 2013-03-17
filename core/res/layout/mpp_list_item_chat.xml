@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    style="@style/mpp_list_item">
+
+    <ImageView
+        a:id="@+id/mpp_li_chat_icon_imageview"
+        a:src="@drawable/mpp_app_icon"
+        style="@style/mpp_list_item_icon"
+        a:layout_alignParentLeft="true"
+        a:layout_centerInParent="true" />
+
+    <LinearLayout
+        a:orientation="vertical"
+        a:layout_toRightOf="@id/mpp_li_chat_icon_imageview"
+        a:layout_centerInParent="true"
+        a:layout_width="match_parent"
+        a:layout_height="wrap_content">
+
+        <TextView
+            a:id="@+id/mpp_li_chat_title_textview"
+            style="@style/mpp_list_item_name"
+            a:text="mpp_li_chat_title_textview" />
+
+        <TextView
+            a:id="@+id/mpp_li_last_message_text_textview"
+            style="@style/mpp_list_item_text"
+            a:text="mpp_li_last_message_text_textview" />
+
+        <TextView
+            a:id="@+id/mpp_li_last_message_text_time_textview"
+            style="@style/mpp_list_item_last_message_time"
+            a:text="mpp_li_last_message_text_time_textview" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

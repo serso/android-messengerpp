@@ -5,10 +5,10 @@
 
     <ImageView
         a:id="@+id/mpp_li_contact_icon_imageview"
+        a:src="@drawable/mpp_app_icon"
         style="@style/mpp_list_item_icon"
         a:layout_centerInParent="true"
         a:layout_alignParentLeft="true" />
-
 
     <ImageView
         a:id="@+id/mpp_li_contact_online_view"

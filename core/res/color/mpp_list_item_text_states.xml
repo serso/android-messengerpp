@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- pressed -->
-    <item android:state_pressed="true"
-        android:color="@color/text"/>
-
-    <!-- focused -->
-    <item android:state_focused="true"
-        android:color="@color/text"/>
-
     <!--
     For normal size screens selected and not selected states must be the same
     as there is no second pane on which additional content is shown

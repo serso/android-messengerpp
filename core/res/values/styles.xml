@@ -47,11 +47,14 @@
         <item name="android:textCursorDrawable">@null</item>
     </style>
 
-    <style name="mpp_list_item_text" parent="mpp_text">
+    <style name="mpp_list_item_text" parent="mpp_list_item_block">
         <item name="android:textColor">@color/mpp_list_item_text_states</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="mpp_list_item" parent="mpp_list_item_text">
+    <style name="mpp_list_item" parent="mpp_text">
         <item name="android:background">@drawable/mpp_list_item_states</item>
         <!--NOTE: separate definition in order to override them-->
         <item name="android:paddingTop">5dp</item>
@@ -68,10 +71,12 @@
     </style>
     <style name="list_item_item" parent="mpp_list_item"></style>
 
-    <style name="mpp_list_item_block" parent="mpp_list_item_text">
+    <style name="mpp_list_item_block" parent="mpp_text">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="mpp_list_item_icon" parent="mpp_list_item_block">
@@ -84,10 +89,9 @@
         <item name="android:src">@drawable/mpp_search_icon</item>
     </style>
 
-    <style name="mpp_list_item_name" parent="mpp_list_item_block">
+    <style name="mpp_list_item_name" parent="mpp_list_item_text">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:lines">2</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">none</item>
@@ -103,7 +107,7 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="mpp_list_filter_text" parent="mpp_list_item_text">
+    <style name="mpp_list_filter_text" parent="mpp_list_item_block">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">5dp</item>
@@ -113,28 +117,11 @@
         <item name="android:hint">@string/mpp_search_hint</item>
     </style>
 
-
-    <style name="list_item_chat_last_message">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/text</item>
-        <!--<item name="android:background">@color/message_bg</item>-->
-    </style>
-
-    <style name="list_item_chat_last_message_time">
+    <style name="mpp_list_item_last_message_time" parent="mpp_list_item_text">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/text_link</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">right</item>
-    </style>
-
-    <style name="list_item_chat_title">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/text_name</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">left</item>
     </style>
 
 
@@ -215,7 +202,7 @@
 
     </style>
 
-    <style name="mpp_list_item_message_text" parent="mpp_list_item_text">
+    <style name="mpp_list_item_message_text" parent="mpp_text">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textSize">13sp</item>
         <item name="android:padding">0dp</item>

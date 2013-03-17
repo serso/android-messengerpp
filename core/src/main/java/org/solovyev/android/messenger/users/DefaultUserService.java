@@ -363,10 +363,6 @@ public class DefaultUserService implements UserService {
             }
         }));
 
-        synchronized (userChatsCache) {
-            userChatsCache.put(user, chats);
-        }
-
         mergeUserChats(user, apiChats);
 
         return java.util.Collections.unmodifiableList(chats);

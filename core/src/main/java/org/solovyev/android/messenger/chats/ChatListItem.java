@@ -29,7 +29,7 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
     private static final String TAG_PREFIX = "chat_list_item_";
 
     public ChatListItem(@Nonnull User user, @Nonnull Chat chat, @Nullable Context context) {
-        super(TAG_PREFIX, R.layout.msg_list_item_chat, UserChat.newInstance(user, chat, loadLastChatMessage(chat, context)));
+        super(TAG_PREFIX, R.layout.mpp_list_item_chat, UserChat.newInstance(user, chat, loadLastChatMessage(chat, context)));
     }
 
     @Nullable
@@ -84,16 +84,16 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
         final Chat chat = userChat.getChat();
         final User user = userChat.getUser();
 
-        final ImageView chatIcon = viewTag.getViewById(R.id.chat_icon);
+        final ImageView chatIcon = viewTag.getViewById(R.id.mpp_li_chat_icon_imageview);
         getChatService().setChatIcon(chatIcon, chat, user);
 
         final ChatMessage lastMessage = getLastMessage();
 
-        final TextView chatTitle = viewTag.getViewById(R.id.chat_title);
+        final TextView chatTitle = viewTag.getViewById(R.id.mpp_li_chat_title_textview);
         chatTitle.setText(Chats.getDisplayName(chat, lastMessage, user));
 
-        final TextView lastMessageTextTime = viewTag.getViewById(R.id.last_message_text_time);
-        final TextView lastMessageText = viewTag.getViewById(R.id.last_message_text);
+        final TextView lastMessageTextTime = viewTag.getViewById(R.id.mpp_li_last_message_text_time_textview);
+        final TextView lastMessageText = viewTag.getViewById(R.id.mpp_li_last_message_text_textview);
         if (lastMessage != null) {
             lastMessageText.setText(Messages.getMessageTitle(chat, lastMessage, user));
             lastMessageTextTime.setText(Messages.getMessageTime(lastMessage));
