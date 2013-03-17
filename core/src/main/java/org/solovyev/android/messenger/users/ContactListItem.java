@@ -92,11 +92,11 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
         MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
 
         final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
-        if ( realmService.isOneRealm() ) {
+        if (realmService.isOneRealm()) {
             contactName.setText(getDisplayName());
         } else {
             final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
-            contactName.setText(Html.fromHtml(getDisplayName() + "\n<font color=\"grey\">[" + Users.getDisplayNameFor(realm.getUser()) + "]</font>"));
+            contactName.setText(Html.fromHtml(getDisplayName() + "<br/><font color=\"#D0D0D0\">[" + Users.getDisplayNameFor(realm.getUser()) + "]</font>"));
         }
 
         final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);

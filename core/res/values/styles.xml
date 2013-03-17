@@ -48,6 +48,7 @@
     </style>
 
     <style name="mpp_list_item_text" parent="mpp_text">
+        <item name="android:textColor">@color/mpp_list_item_text_states</item>
     </style>
 
     <style name="mpp_list_item" parent="mpp_list_item_text">
