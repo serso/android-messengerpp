@@ -43,8 +43,9 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
         liteChatMessage.setSendDate(dateTimeFormatter.parseDateTime(c.getString(6)));
-        liteChatMessage.setTitle(c.getString(7));
-        liteChatMessage.setBody(c.getString(8));
+        final Long sendTime = c.getLong(7);
+        liteChatMessage.setTitle(c.getString(8));
+        liteChatMessage.setBody(c.getString(9));
 
         return ChatMessageImpl.newInstance(liteChatMessage);
     }

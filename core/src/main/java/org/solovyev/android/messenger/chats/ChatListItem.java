@@ -85,7 +85,7 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
         final User user = userChat.getUser();
 
         final ImageView chatIcon = viewTag.getViewById(R.id.mpp_li_chat_icon_imageview);
-        getChatService().setChatIcon(chatIcon, chat, user);
+        getChatService().setChatIcon(chat, chatIcon);
 
         final ChatMessage lastMessage = getLastMessage();
 

@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -92,11 +91,15 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
         MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
 
         final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
+        contactName.setText(getDisplayName());
+
+        final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
         if (realmService.isOneRealm()) {
-            contactName.setText(getDisplayName());
+            accountName.setVisibility(View.GONE);
         } else {
+            accountName.setVisibility(View.VISIBLE);
             final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
-            contactName.setText(Html.fromHtml(getDisplayName() + "<br/><font color=\"#D0D0D0\">[" + Users.getDisplayNameFor(realm.getUser()) + "]</font>"));
+            accountName.setText("[" + Users.getDisplayNameFor(realm.getUser()) + "]");
         }
 
         final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);

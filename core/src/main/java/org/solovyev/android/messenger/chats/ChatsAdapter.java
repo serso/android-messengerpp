@@ -92,6 +92,7 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
             final ChatListItem chatListItem = findInAllElements(user, eventChat);
             if (chatListItem != null) {
                 chatListItem.onEvent(event);
+                notifyDataSetChanged();
             }
         }
     }

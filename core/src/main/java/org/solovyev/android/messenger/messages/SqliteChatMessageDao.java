@@ -23,6 +23,7 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,9 +82,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     @Nullable
     @Override
     public ChatMessage loadLastChatMessage(@Nonnull String chatId) {
-        final Integer lastChatMessageId = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
-        final List<ChatMessage> messages = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
-        return Collections.getFirstListElement(messages);
+        final String lastChatMessageId = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
+        if (!Strings.isEmpty(lastChatMessageId)) {
+            final List<ChatMessage> messages = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
+            return Collections.getFirstListElement(messages);
+        } else {
+            return null;
+        }
     }
 
     @Nonnull
@@ -283,13 +288,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     private static final class LoadChatMessage extends AbstractDbQuery<List<ChatMessage>> {
 
         @Nonnull
-        private final Integer messageId;
+        private final String messageId;
 
         @Nonnull
         private final UserService userService;
 
         private LoadChatMessage(@Nonnull Context context,
-                                @Nonnull Integer messageId,
+                                @Nonnull String messageId,
                                 @Nonnull UserService userService,
                                 @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
@@ -323,7 +328,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @Nonnull
         @Override
         public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-            return db.rawQuery("select min(send_date) from messages where chat_id = ?", new String[]{chatId});
+            return db.rawQuery("select id from messages where chat_id = ? group by id having min(send_time)", new String[]{chatId});
         }
 
         @Nonnull
@@ -337,7 +342,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         }
     }
 
-    private static class LastChatMessageLoader extends AbstractDbQuery<Integer> {
+    private static class LastChatMessageLoader extends AbstractDbQuery<String> {
 
         @Nonnull
         private String chatId;
@@ -350,16 +355,16 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         @Nonnull
         @Override
         public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-            return db.rawQuery("select max(id) from messages where chat_id = ?", new String[]{chatId});
+            return db.rawQuery("select id from messages where chat_id = ? group by id having max(send_time)", new String[]{chatId});
         }
 
         @Nonnull
         @Override
-        public Integer retrieveData(@Nonnull Cursor cursor) {
+        public String retrieveData(@Nonnull Cursor cursor) {
             if (cursor.moveToFirst()) {
-                return cursor.getInt(0);
+                return cursor.getString(0);
             } else {
-                return 0;
+                return "";
             }
         }
     }
@@ -379,6 +384,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         final User recipient = chatMessage.getRecipient();
         values.put("recipient_id", recipient == null ? null : recipient.getEntity().getEntityId());
         values.put("send_date", dateTimeFormatter.print(chatMessage.getSendDate()));
+        values.put("send_time", chatMessage.getSendDate().getMillis());
         values.put("title", chatMessage.getTitle());
         values.put("body", chatMessage.getBody());
         return values;
