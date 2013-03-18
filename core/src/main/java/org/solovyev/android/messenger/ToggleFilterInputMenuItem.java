@@ -25,7 +25,7 @@ public class ToggleFilterInputMenuItem implements IdentifiableMenuItem<MenuItem>
     @Nonnull
     @Override
     public Integer getItemId() {
-        return R.id.toggle_filter_box;
+        return R.id.mpp_menu_toggle_filter_box;
     }
 
     @Override

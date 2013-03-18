@@ -136,7 +136,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (this.menu == null) {
-            this.menu = ListActivityMenu.fromResource(R.menu.mpp_realms_menu, RealmsMenu.class, SherlockMenuHelper.getInstance());
+            this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_realms, RealmsMenu.class, SherlockMenuHelper.getInstance());
         }
 
         this.menu.onCreateOptionsMenu(this.getActivity(), menu);
@@ -153,7 +153,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
     }
 
     private static enum RealmsMenu implements IdentifiableMenuItem<MenuItem> {
-        realm_add(R.id.mpp_realm_add) {
+        realm_add(R.id.mpp_menu_realm_add) {
             @Override
             public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);

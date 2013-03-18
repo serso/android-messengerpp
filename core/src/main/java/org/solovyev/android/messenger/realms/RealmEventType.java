@@ -28,7 +28,12 @@ public enum RealmEventType {
     /**
      * Fires when realm connection should be stopped for realm
      */
-    stop;
+    stop,
+
+    /**
+     * Fires when realm connection should be started for realm
+     */
+    start;
 
     @Nonnull
     RealmEvent newEvent(@Nonnull Realm realm, @Nullable Object data) {

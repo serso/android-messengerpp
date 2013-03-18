@@ -2,8 +2,8 @@
 
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
-    <item a:id="@+id/toggle_filter_box"
-          a:icon="@drawable/mpp_search_icon"
+    <item a:id="@+id/mpp_menu_toggle_filter_box"
+          a:icon="@drawable/mpp_ab_search"
           a:showAsAction="ifRoom"/>
 
 

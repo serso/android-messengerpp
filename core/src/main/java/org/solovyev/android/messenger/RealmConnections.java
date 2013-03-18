@@ -72,6 +72,27 @@ final class RealmConnections {
         }
     }
 
+    public void tryStopFor(@Nonnull Realm realm) {
+        synchronized (this.realmConnections) {
+            for (RealmConnection realmConnection : realmConnections) {
+                if (realm.equals(realmConnection.getRealm()) && !realmConnection.isStopped()) {
+                    realmConnection.stop();
+                }
+            }
+        }
+    }
+
+    public void tryStartFor(@Nonnull Realm realm) {
+        synchronized (this.realmConnections) {
+            for (RealmConnection realmConnection : realmConnections) {
+                if (realm.equals(realmConnection.getRealm()) && realmConnection.isStopped()) {
+                    realmConnection.start();
+                }
+            }
+        }
+    }
+
+
     public void tryStartAll() {
         synchronized (this.realmConnections) {
             for (RealmConnection realmConnection : realmConnections) {

@@ -14,8 +14,6 @@ import org.solovyev.android.network.NetworkStateListener;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import roboguice.event.EventListener;
-import roboguice.event.EventManager;
 import roboguice.service.RoboService;
 
 import javax.annotation.Nonnull;
@@ -56,10 +54,6 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Nonnull
     private NetworkStateService networkStateService;
 
-    @Inject
-    @Nonnull
-    private EventManager eventManager;
-
     /*
     **********************************************************************
     *
@@ -72,9 +66,6 @@ public class MessengerService extends RoboService implements NetworkStateListene
 
     @Nullable
     private RealmEventListener realmEventListener;
-
-    @Nullable
-    private RoboListeners listeners;
 
     public MessengerService() {
     }
@@ -101,9 +92,6 @@ public class MessengerService extends RoboService implements NetworkStateListene
         realmEventListener = new RealmEventListener();
         realmService.addListener(realmEventListener);
 
-        listeners = new RoboListeners(eventManager);
-        listeners.add(GuiEvent.class, new GuiEventEventListener());
-
         tryStartConnectionsFor(realmService.getRealms());
     }
 
@@ -126,10 +114,6 @@ public class MessengerService extends RoboService implements NetworkStateListene
                 realmService.removeListener(realmEventListener);
             }
 
-            if (listeners != null) {
-                listeners.clearAll();
-            }
-
             realmConnections.tryStopAll();
         } finally {
             super.onDestroy();
@@ -147,17 +131,6 @@ public class MessengerService extends RoboService implements NetworkStateListene
             case NOT_CONNECTED:
                 realmConnections.tryStopAll();
                 break;
-        }
-    }
-
-    private class GuiEventEventListener implements EventListener<GuiEvent> {
-        @Override
-        public void onEvent(GuiEvent event) {
-            switch (event.getType()) {
-                case app_exit:
-                    MessengerService.this.stopSelf();
-                    break;
-            }
         }
     }
 
@@ -179,6 +152,12 @@ public class MessengerService extends RoboService implements NetworkStateListene
                     break;
                 case removed:
                     realmConnections.updateRealm(realm, canStartConnection());
+                    break;
+                case stop:
+                    realmConnections.tryStopFor(realm);
+                    break;
+                case start:
+                    realmConnections.tryStartFor(realm);
                     break;
             }
         }

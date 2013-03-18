@@ -23,7 +23,6 @@ import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 import roboguice.RoboGuice;
-import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 
@@ -85,10 +84,6 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     private NetworkStateService networkStateService;
 
-    @Inject
-    @Nonnull
-    private EventManager eventManager;
-
     /*
     **********************************************************************
     *
@@ -99,8 +94,6 @@ public class MessengerApplication extends Application implements MessengerServic
 
     @Nonnull
     private final Handler uiHandler = new Handler();
-
-    private volatile boolean exiting = false;
 
     public MessengerApplication() {
         instance = this;
@@ -239,22 +232,15 @@ public class MessengerApplication extends Application implements MessengerServic
         this.authService.load();
 
         this.networkStateService.startListening(this);
-
-        final Intent serviceIntent = new Intent();
-        serviceIntent.setClass(this, MessengerService.class);
-        startService(serviceIntent);
     }
 
     public void exit(@Nonnull Activity activity) {
         realmService.stopAllRealmConnections();
 
-        eventManager.fire(GuiEventType.app_exit.newEvent());
+        final Intent serviceIntent = new Intent();
+        serviceIntent.setClass(this, MessengerService.class);
+        stopService(serviceIntent);
 
-        this.exiting = true;
         activity.finish();
-    }
-
-    public boolean isExiting() {
-        return exiting;
     }
 }

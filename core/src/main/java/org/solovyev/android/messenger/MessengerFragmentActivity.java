@@ -1,22 +1,31 @@
 package org.solovyev.android.messenger;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
+import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.menu.IdentifiableMenuItem;
+import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerFragmentService;
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: serso
@@ -84,6 +93,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     @Nonnull
     private final MessengerFragmentService fragmentService;
+
+    private ActivityMenu<Menu, MenuItem> menu;
 
     /*
     **********************************************************************
@@ -191,14 +202,6 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if ( MessengerApplication.getApp().isExiting() ) {
-            finish();
-        }
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -233,6 +236,21 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return this.menu.onPrepareOptionsMenu(this, menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if ( this.menu == null ) {
+            final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>(1);
+            menuItems.add(new MenuItemAppExit(this));
+            this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
+        }
+        return this.menu.onCreateOptionsMenu(this, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -246,7 +264,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
                 }
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return this.menu.onOptionsItemSelected(this, item);
         }
     }
 
@@ -265,4 +283,24 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         return null;
     }
 
+    private static class MenuItemAppExit implements IdentifiableMenuItem<MenuItem> {
+
+        @Nonnull
+        private final Activity activity;
+
+        private MenuItemAppExit(@Nonnull Activity activity) {
+            this.activity = activity;
+        }
+
+        @Nonnull
+        @Override
+        public Integer getItemId() {
+            return R.id.mpp_menu_app_exit;
+        }
+
+        @Override
+        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+            MessengerApplication.getApp().exit(activity);
+        }
+    }
 }

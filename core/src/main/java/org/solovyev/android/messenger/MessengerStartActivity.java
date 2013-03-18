@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -76,6 +77,12 @@ public class MessengerStartActivity extends RoboActivity {
                 // do not care
             }
         }
+
+        // we must start service from here because Android can cache application
+        // and Application#onCreate() is never called!
+        final Intent serviceIntent = new Intent();
+        serviceIntent.setClass(this, MessengerService.class);
+        startService(serviceIntent);
 
         MessengerMainActivity.startActivity(this);
         this.finish();

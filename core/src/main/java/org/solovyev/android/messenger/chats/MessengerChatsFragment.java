@@ -177,7 +177,7 @@ public final class MessengerChatsFragment extends AbstractMessengerListFragment<
 
         menuItems.add(new ToggleFilterInputMenuItem(this));
 
-        this.menu = ListActivityMenu.fromResource(R.menu.chats, menuItems, SherlockMenuHelper.getInstance());
+        this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
         this.menu.onCreateOptionsMenu(this.getActivity(), menu);
     }
 

@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -13,11 +12,7 @@ import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.sync.SyncTask;
-import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
-import org.solovyev.android.view.AbstractOnRefreshListener;
-import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -106,7 +101,7 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
         menuItems.add(new ToggleContactsMenuItem());
         menuItems.add(new ToggleFilterInputMenuItem(this));
 
-        this.menu = ListActivityMenu.fromResource(R.menu.contacts, menuItems, SherlockMenuHelper.getInstance());
+        this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_contacts, menuItems, SherlockMenuHelper.getInstance());
         this.menu.onCreateOptionsMenu(this.getActivity(), menu);
     }
 
@@ -115,12 +110,14 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
         @Nonnull
         @Override
         public Integer getItemId() {
-            return R.id.toggle_contacts;
+            return R.id.mpp_menu_toggle_contacts;
         }
 
         @Override
-        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-            changeMode(mode == MessengerContactsMode.only_online_contacts ? MessengerContactsMode.all_contacts : MessengerContactsMode.only_online_contacts);
+        public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
+            final MessengerContactsMode newMode = mode == MessengerContactsMode.only_online_contacts ? MessengerContactsMode.all_contacts : MessengerContactsMode.only_online_contacts;
+            changeMode(newMode);
+            menuItem.setIcon(newMode.getActionBarIconResId());
         }
     }
 }
