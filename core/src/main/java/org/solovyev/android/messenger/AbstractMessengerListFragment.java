@@ -423,29 +423,35 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         lv.setOnItemClickListener(new ListViewOnItemClickListener());
         lv.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
 
-        Integer position = null;
+        // as newly loaded list can differ from one used last time position may be not accurate
+        // better approach is to use list item which was previously selected and reuse it
+        Integer selectedPosition = null;
+        ListItem selectedListItem = null;
         if ( adapter != null ) {
             // adapter not null => this fragment has been created earlier (and now it just goes to the shown state)
-            position = adapter.getSelectedItemPosition();
-            if (position == NOT_SELECTED_POSITION && selectFirstItemByDefault) {
+            selectedPosition = adapter.getSelectedItemPosition();
+            if (selectedPosition == NOT_SELECTED_POSITION && selectFirstItemByDefault) {
                 // there were no elements in adapter => position == NOT_SELECTED_POSITION
                 // but we need to select first element if selectFirstItemByDefault == true => do it
-                position = 0;
+                selectedPosition = 0;
+            } else if (selectedPosition >= 0 && selectedPosition < adapter.getCount()) {
+                // selected position exists => exists selected list item => can use it
+                selectedListItem = adapter.getItem(selectedPosition);
             }
         }
 
         adapter = createAdapter();
         setListAdapter(adapter);
 
-        if (position == null) {
+        if (selectedPosition == null) {
             if (savedInstanceState != null) {
-                position = adapter.loadState(savedInstanceState, selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION);
+                selectedPosition = adapter.loadState(savedInstanceState, selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION);
             } else {
-                position = selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION;
+                selectedPosition = selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION;
             }
         }
 
-        final PostListLoadingRunnable onPostExecute = new PostListLoadingRunnable(position, lv);
+        final PostListLoadingRunnable onPostExecute = new PostListLoadingRunnable(selectedPosition, selectedListItem, lv);
 
         listLoader = createAsyncLoader(adapter, onPostExecute);
 
@@ -614,14 +620,18 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
     private class PostListLoadingRunnable implements Runnable {
 
-        private final int position;
+        private final int selectedPosition;
+
+        @Nullable
+        private final ListItem selectedListItem;
 
         @Nonnull
         private final ListView listView;
 
-        public PostListLoadingRunnable(int position, @Nonnull ListView lv) {
-            this.position = position;
-            listView = lv;
+        public PostListLoadingRunnable(int selectedPosition, @Nullable ListItem selectedListItem, @Nonnull ListView lv) {
+            this.selectedPosition = selectedPosition;
+            this.selectedListItem = selectedListItem;
+            this.listView = lv;
         }
 
         @Override
@@ -649,17 +659,30 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             @Override
             public void onFilterComplete(int count) {
                 final Activity activity = getActivity();
-                if (activity != null && !activity.isFinishing()) {
-                    if (position >= 0 && position < adapter.getCount()) {
-                        adapter.getSelectedItemListener().onItemClick(position);
+                if (activity != null && !activity.isFinishing() && !isDetached()) {
 
-                        if (multiPaneManager.isDualPane(activity)) {
+                    int position = -1;
+                    if ( selectedListItem != null ) {
+                        position = adapter.getSelectedItemListener().onItemClick(selectedListItem);
+                    } else {
+                        if (selectedPosition >= 0 && selectedPosition < adapter.getCount()) {
+                            adapter.getSelectedItemListener().onItemClick(selectedPosition);
+                        }
+                    }
+
+                    if ( position < 0 ) {
+                        position = selectedPosition;
+                    }
+
+                    if (multiPaneManager.isDualPane(activity)) {
+                        if (position >= 0 && position < adapter.getCount()) {
                             final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
                             if (onClickAction != null) {
                                 onClickAction.onClick(activity, adapter, listView);
                             }
                         }
                     }
+
                 }
             }
         }

@@ -176,10 +176,15 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArray
             }
         }
 
-        public void onItemClick(@Nonnull ListItem selectedItem) {
+        public int onItemClick(@Nonnull ListItem selectedItem) {
             final LI selectedListItem = (LI) selectedItem;
             final int position = getPosition(selectedListItem);
-            onItemClick(position, selectedListItem);
+            if (position >= 0) {
+                onItemClick(position);
+                return position;
+            } else {
+                return NOT_SELECTED;
+            }
         }
 
         private void selectItem(@Nullable ListItem item, boolean selected) {
