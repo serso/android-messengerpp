@@ -42,7 +42,15 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
             @Override
             public List<ChatMessage> call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
                 final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
-                return XmppRealm.toMessages(getRealm(), offlineManager.getMessages());
+                try {
+                    if (offlineManager.supportsFlexibleRetrieval()) {
+                        return XmppRealm.toMessages(getRealm(), offlineManager.getMessages());
+                    }
+                } catch (XMPPException e) {
+                    // ok, not supported by server
+                }
+
+                return Collections.emptyList();
             }
         });
     }
