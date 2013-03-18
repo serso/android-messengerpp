@@ -6,6 +6,7 @@ import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +35,9 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 
     @Nonnull
     private Map<String, String> propertiesMap = new HashMap<String, String>();
+
+    @Nullable
+    private String displayName;
 
     UserImpl(@Nonnull Entity entity) {
         super(entity);
@@ -84,6 +88,46 @@ final class UserImpl extends AbstractMessengerEntity implements User {
     @Nonnull
     public UserSyncData getUserSyncData() {
         return userSyncData;
+    }
+
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        if ( displayName == null ) {
+            displayName = createDisplayName();
+        }
+        return displayName;
+    }
+
+    @Nonnull
+    private String createDisplayName() {
+        final StringBuilder result = new StringBuilder();
+
+        final String firstName = this.getPropertyValueByName(User.PROPERTY_FIRST_NAME);
+        final String lastName = this.getPropertyValueByName(User.PROPERTY_LAST_NAME);
+
+        boolean firstNameExists = !Strings.isEmpty(firstName);
+        boolean lastNameExists = !Strings.isEmpty(lastName);
+
+        if (!firstNameExists && !lastNameExists) {
+            // first and last names are empty
+            result.append(this.getEntity().getRealmEntityId());
+        } else {
+
+            if (firstNameExists) {
+                result.append(firstName);
+            }
+
+            if (firstNameExists && lastNameExists) {
+                result.append(" ");
+            }
+
+            if (lastNameExists) {
+                result.append(lastName);
+            }
+        }
+
+        return result.toString();
     }
 
     @Nonnull

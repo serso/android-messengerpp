@@ -5,7 +5,6 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,38 +23,7 @@ public final class Users {
 
     @Nonnull
     public static String getDisplayNameFor(@Nonnull Entity user) {
-        return getDisplayNameFor(MessengerApplication.getServiceLocator().getUserService().getUserById(user));
-    }
-
-    @Nonnull
-    public static String getDisplayNameFor(@Nonnull User user) {
-        final StringBuilder result = new StringBuilder();
-
-        final String firstName = user.getPropertyValueByName(User.PROPERTY_FIRST_NAME);
-        final String lastName = user.getPropertyValueByName(User.PROPERTY_LAST_NAME);
-
-        boolean firstNameExists = !Strings.isEmpty(firstName);
-        boolean lastNameExists = !Strings.isEmpty(lastName);
-
-        if (!firstNameExists && !lastNameExists) {
-            // first and last names are empty
-            result.append(user.getEntity().getRealmEntityId());
-        } else {
-
-            if (firstNameExists) {
-                result.append(firstName);
-            }
-
-            if (firstNameExists && lastNameExists) {
-                result.append(" ");
-            }
-
-            if (lastNameExists) {
-                result.append(lastName);
-            }
-        }
-
-        return result.toString();
+        return MessengerApplication.getServiceLocator().getUserService().getUserById(user).getDisplayName();
     }
 
     @Nonnull

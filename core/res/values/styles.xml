@@ -2,74 +2,38 @@
 
 <resources>
 
-    <style name="header">
-        <item name="android:padding">5dp</item>
-        <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">@color/mpp_bg</item>
-    </style>
-
-    <style name="footer">
-        <item name="android:padding">5dp</item>
-        <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">@color/mpp_bg</item>
-    </style>
-
-    <style name="footer_button_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:focusable">true</item>
-        <item name="android:background">@color/metro_button_dark_background</item>
-        <item name="android:layout_marginLeft">1dp</item>
-        <item name="android:layout_marginBottom">1dp</item>
-    </style>
-
-    <style name="content">
-        <item name="android:background">@color/mpp_bg</item>
-    </style>
-
-    <!-- LIST -->
-
-    <style name="list">
-        <item name="android:textColor">@android:color/black</item>
-
-        <item name="android:background">@color/mpp_bg</item>
-        <item name="android:fadingEdge">none</item>
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-
-        <item name="android:divider">@android:color/black</item>
-        <item name="android:dividerHeight">1px</item>
-    </style>
-
+    <!--
+        Base style for all text containing views
+    -->
     <style name="mpp_text">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/mpp_text</item>
         <item name="android:textCursorDrawable">@null</item>
     </style>
 
-    <style name="mpp_list_item_text" parent="mpp_list_item_block">
-        <item name="android:textColor">@color/mpp_list_item_text_states</item>
-        <item name="android:lines">1</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
 
+    <!--
+        List item style (whole object)
+        Note: you should not inherit from this style but use at as is
+        If you want to customize list item contents use children of 'list_item_block'
+    -->
     <style name="mpp_list_item" parent="mpp_text">
+        <!-- selected state -->
         <item name="android:background">@drawable/mpp_list_item_states</item>
+
         <!--NOTE: separate definition in order to override them-->
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
+
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="list_item_back" parent="mpp_list_item"></style>
-    <style name="list_item_category" parent="mpp_list_item">
-        <item name="android:textStyle">bold</item>
-    </style>
-    <style name="list_item_item" parent="mpp_list_item"></style>
+    <!--
+        Base style for using inside list view
+    -->
 
     <style name="mpp_list_item_block" parent="mpp_text">
         <item name="android:layout_gravity">center_vertical</item>
@@ -79,15 +43,30 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <!--
+        Block of text in list item
+    -->
+
+    <style name="mpp_list_item_text" parent="mpp_list_item_block">
+        <item name="android:textColor">@color/mpp_list_item_text_states</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!--
+        Icon in list item
+    -->
+
     <style name="mpp_list_item_icon" parent="mpp_list_item_block">
         <item name="android:layout_width">@dimen/mpp_list_item_icon_size</item>
         <item name="android:layout_height">@dimen/mpp_list_item_icon_size</item>
         <item name="android:contentDescription">@string/mpp_icon</item>
     </style>
 
-    <style name="mpp_list_filter_icon" parent="mpp_list_item_icon">
-        <item name="android:src">@drawable/mpp_search_icon</item>
-    </style>
+    <!--
+        Style for highlighted text in list item
+    -->
 
     <style name="mpp_list_item_name" parent="mpp_list_item_text">
         <item name="android:gravity">center_vertical</item>
@@ -98,7 +77,17 @@
         <item name="android:scrollHorizontally">false</item>
     </style>
 
-    <style name="mpp_list_filter">
+    <!--FILTER-->
+
+    <!--
+        Filter icon in list item
+    -->
+
+    <style name="mpp_list_item_filter_icon" parent="mpp_list_item_icon">
+        <item name="android:src">@drawable/mpp_search_icon</item>
+    </style>
+
+    <style name="mpp_list_item_filter">
         <item name="android:background">@drawable/mpp_list_filter_background</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
@@ -107,7 +96,7 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="mpp_list_filter_text" parent="mpp_list_item_block">
+    <style name="mpp_list_item_filter_text" parent="mpp_list_item_block">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">5dp</item>
@@ -124,39 +113,6 @@
         <item name="android:gravity">right</item>
     </style>
 
-
-    <!-- SEARCH -->
-    <style name="search_input">
-        <item name="android:layout_height">40dp</item>
-        <item name="android:focusable">false</item>
-    </style>
-
-    <style name="search_button" parent="search_input">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:src">@drawable/mpp_search_icon</item>
-        <item name="android:contentDescription">@string/c_search</item>
-    </style>
-
-    <style name="search_box" parent="search_input">
-        <item name="android:layout_width">150dp</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:inputType">text</item>
-    </style>
-
-    <style name="contacts_search_box" parent="search_box">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:focusable">true</item>
-    </style>
-
-    <style name="header_icon">
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:layout_width">30dp</item>
-    </style>
-
-    <!-- ITEM -->
 
     <style name="mpp_list_item_message_text" parent="mpp_text">
         <item name="android:background">@android:color/transparent</item>
@@ -183,11 +139,9 @@
     </style>
 
     <style name="mpp_list_item_contact_online" parent="mpp_list_item_block">
-    </style>
-
-    <style name="footer_image_label">
-        <item name="android:textSize">15sp</item>
-        <item name="android:singleLine">true</item>
+        <item name="android:src">@drawable/mpp_list_item_contact_online_states</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="Theme.Messenger" parent="Theme.Sherlock">
@@ -214,7 +168,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/mpp_text</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:padding">5dp</item>
+
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingBottom">-5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+
         <item name="android:background">@drawable/mpp_metro_button_gray</item>
     </style>
 
@@ -251,10 +210,6 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="mpp_list_item_realm_name" parent="list_item_item">
-        <item name="android:maxLines">2</item>
     </style>
 
     <style name="mpp_fragment">

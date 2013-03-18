@@ -27,7 +27,7 @@ import java.util.List;
 public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> {
 
     @Nonnull
-    private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
+    private MessengerContactsMode mode = MessengerContactsFragment.DEFAULT_CONTACTS_MODE;
 
     @Nonnull
     private final RealmService realmService;

@@ -96,7 +96,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_realm_fragment).build(this.getActivity());
+        final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_fragment_realm).build(this.getActivity());
 
         multiPaneManager.fillContentPane(this.getActivity(), container, result);
 

@@ -3,12 +3,12 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
     <item a:id="@+id/mpp_menu_toggle_contacts"
-          a:icon="@drawable/mpp_ab_user"
-          a:showAsAction="ifRoom"/>
+          a:icon="@drawable/mpp_ab_user_offline"
+          a:showAsAction="always"/>
 
     <item a:id="@+id/mpp_menu_toggle_filter_box"
           a:icon="@drawable/mpp_ab_search"
-          a:showAsAction="ifRoom"/>
+          a:showAsAction="always"/>
 
 
 </menu>

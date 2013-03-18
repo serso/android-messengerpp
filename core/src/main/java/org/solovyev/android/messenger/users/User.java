@@ -79,6 +79,9 @@ public interface User extends MutableUserSyncData, MessengerEntity {
     UserSyncData getUserSyncData();
 
     @Nonnull
+    String getDisplayName();
+
+    @Nonnull
     User clone();
 
     @Nonnull

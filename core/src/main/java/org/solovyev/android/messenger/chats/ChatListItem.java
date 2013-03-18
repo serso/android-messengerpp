@@ -90,7 +90,7 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
         final ChatMessage lastMessage = getLastMessage();
 
         final TextView chatTitle = viewTag.getViewById(R.id.mpp_li_chat_title_textview);
-        chatTitle.setText(Chats.getDisplayName(chat, lastMessage, user));
+        chatTitle.setText(getDisplayName());
 
         final TextView lastMessageTextTime = viewTag.getViewById(R.id.mpp_li_last_message_text_time_textview);
         final TextView lastMessageText = viewTag.getViewById(R.id.mpp_li_last_message_text_textview);

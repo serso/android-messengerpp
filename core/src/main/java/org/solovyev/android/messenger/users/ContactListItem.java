@@ -82,7 +82,7 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
     @Nonnull
     @Override
     protected CharSequence getDisplayName(@Nonnull User contact, @Nonnull Context context) {
-        return Users.getDisplayNameFor(contact);
+        return contact.getDisplayName();
     }
 
     @Override
@@ -99,7 +99,7 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
         } else {
             accountName.setVisibility(View.VISIBLE);
             final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
-            accountName.setText("[" + Users.getDisplayNameFor(realm.getUser()) + "]");
+            accountName.setText("[" + realm.getUser().getDisplayName() + "]");
         }
 
         final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);

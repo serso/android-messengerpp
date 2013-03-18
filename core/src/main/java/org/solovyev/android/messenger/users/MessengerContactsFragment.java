@@ -23,7 +23,7 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 4:09 PM
  */
-public class MessengerContactsFragment extends AbstractMessengerContactsFragment {
+public final class MessengerContactsFragment extends AbstractMessengerContactsFragment {
 
     @Nonnull
     public static final String FRAGMENT_TAG = "contacts";
@@ -32,7 +32,10 @@ public class MessengerContactsFragment extends AbstractMessengerContactsFragment
     private static final String MODE = "mode";
 
     @Nonnull
-    private MessengerContactsMode mode = MessengerContactsMode.all_contacts;
+    static final MessengerContactsMode DEFAULT_CONTACTS_MODE = MessengerContactsMode.only_online_contacts;
+
+    @Nonnull
+    private MessengerContactsMode mode = DEFAULT_CONTACTS_MODE;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

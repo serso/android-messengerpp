@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
  * Date: 6/2/12
  * Time: 5:14 PM
  */
+// todo serso: consider removal
 public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFragment {
 
     @Nonnull

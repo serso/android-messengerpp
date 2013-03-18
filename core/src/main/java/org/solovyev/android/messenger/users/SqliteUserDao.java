@@ -260,7 +260,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
         @Nonnull
         @Override
         public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-            return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? ) ", new String[]{userId}, null, null, null);
+            return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? )", new String[]{userId}, null, null, null);
         }
 
         @Nonnull

@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:layout_width="match_parent"
-              a:layout_height="match_parent"
-              a:orientation="horizontal"
-              a:baselineAligned="false">
+    a:layout_width="match_parent"
+    a:layout_height="match_parent"
+    a:orientation="horizontal"
+    a:baselineAligned="false">
 
-    <LinearLayout a:layout_width="0dp"
-                  a:layout_weight="2"
-                  a:layout_height="match_parent"
-                  a:gravity="top"
-                  a:orientation="vertical">
+    <LinearLayout
+        a:layout_width="0dp"
+        a:layout_weight="2"
+        a:layout_height="match_parent"
+        a:id="@+id/content_first_pane" />
 
-        <LinearLayout a:layout_width="match_parent"
-                      a:layout_height="match_parent"
-                      a:id="@+id/content_first_pane"/>
-
-        <LinearLayout a:id="@+id/ad_parent_view"
-                      a:layout_width="fill_parent"
-                      a:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <LinearLayout a:layout_width="0dp"
-                  a:layout_weight="3"
-                  a:layout_height="match_parent"
-                  a:id="@+id/content_second_pane"/>
+    <LinearLayout
+        a:layout_width="0dp"
+        a:layout_weight="3"
+        a:layout_height="match_parent"
+        a:id="@+id/content_second_pane" />
 
 </LinearLayout>

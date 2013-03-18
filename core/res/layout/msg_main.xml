@@ -12,7 +12,7 @@
                 a:id="@+id/main"
                 a:background="@color/mpp_bg">
 
-    <include layout="@layout/msg_footer"
+    <include layout="@layout/mpp_footer"
              a:id="@+id/footer"
              a:layout_width="match_parent"
              a:layout_height="0dp"

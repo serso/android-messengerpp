@@ -5,5 +5,5 @@
     <item a:id="@+id/mpp_menu_app_exit"
           a:title="@string/mpp_app_exit"
           a:icon="@drawable/mpp_ab_exit"
-          a:showAsAction="always"/>
+          a:showAsAction="ifRoom"/>
 </menu>

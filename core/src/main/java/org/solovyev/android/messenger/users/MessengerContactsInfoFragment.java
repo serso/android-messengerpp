@@ -65,7 +65,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View result = ViewFromLayoutBuilder.newInstance(R.layout.msg_contacts).build(this.getActivity());
+        final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_contacts).build(this.getActivity());
 
         multiPaneManager.fillContentPane(this.getActivity(), container, result);
 
@@ -110,7 +110,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
             final LinearLayout contactContainer;
             if ( i % 2 == 0 ) {
-                contactsRow = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.msg_contacts_row).build(this.getActivity());
+                contactsRow = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_contacts_row).build(this.getActivity());
                 root.addView(contactsRow);
                 contactContainer = (LinearLayout) contactsRow.findViewById(R.id.left_contact_container);
             } else {
@@ -124,7 +124,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
             }
 
             final TextView contactName = (TextView) contactContainer.findViewById(R.id.mpp_contact_name_textview);
-            contactName.setText(Users.getDisplayNameFor(contact));
+            contactName.setText(contact.getDisplayName());
 
             final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon_imageview);
             MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contact, contactIcon);

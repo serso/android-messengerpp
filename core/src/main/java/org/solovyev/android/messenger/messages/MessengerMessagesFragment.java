@@ -174,7 +174,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
                 if (!Strings.isEmpty(messageText)) {
                     final Activity activity = getActivity();
-                    Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
 
                     new SendMessageAsyncTask(activity, chat) {
                         @Override

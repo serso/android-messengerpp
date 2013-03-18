@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -119,6 +120,11 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
             final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
             liteChatMessage.setAuthor(author.getEntity());
             liteChatMessage.setBody(message);
+
+            if (chat.isPrivate()) {
+                final Entity secondUser = chat.getSecondUser();
+                liteChatMessage.setRecipient(secondUser);
+            }
 
             liteChatMessage.setTitle(title == null ? "" : title);
             liteChatMessage.setSendDate(DateTime.now());

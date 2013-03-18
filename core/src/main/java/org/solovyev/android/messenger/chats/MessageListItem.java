@@ -139,7 +139,7 @@ public class MessageListItem implements ListItem/*, ChatEventListener*/ {
     }
 
     private boolean isUserMessage() {
-        return user.equals(message.getAuthor());
+        return user.getEntity().equals(message.getAuthor());
     }
 
     private void fillView(@Nonnull Context context, @Nonnull View root, @Nonnull SharedPreferences preferences, boolean userMessage) {

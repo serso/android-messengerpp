@@ -23,26 +23,12 @@ public final class Chats {
     }
 
     @Nonnull
-    public static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage lastMessage, @Nonnull User user) {
-        if (lastMessage == null) {
-            return "";
-        } else {
-            return getChatTitle(chat, lastMessage, user);
-        }
-    }
-
-    @Nonnull
-    private static String getChatTitle(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull User user) {
-        final String title = message.getTitle();
+    static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage message, @Nonnull User user) {
+        final String title = message != null ? message.getTitle() : null;
         if (Strings.isEmpty(title) || title.equals(" ... ")) {
 
             if (chat.isPrivate()) {
-                final Entity secondUser = message.getSecondUser(user.getEntity());
-                if (secondUser != null) {
-                    return Users.getDisplayNameFor(secondUser);
-                } else {
-                    return "";
-                }
+                return Users.getDisplayNameFor(chat.getSecondUser());
             } else {
                 return "";
             }
