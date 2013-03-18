@@ -19,7 +19,7 @@
                    a:contentDescription="@string/contact_icon"/>
 
         <TextView a:id="@+id/mpp_contact_name_textview"
-                  a:textColor="@color/text"
+                  a:textColor="@color/mpp_text"
                   a:layout_height="wrap_content"
                   a:layout_gravity="center"
                   a:gravity="center"
@@ -38,7 +38,7 @@
                    a:contentDescription="@string/contact_icon"/>
 
         <TextView a:id="@+id/mpp_contact_name_textview"
-                  a:textColor="@color/text"
+                  a:textColor="@color/mpp_text"
                   a:layout_height="wrap_content"
                   a:layout_gravity="center"
                   a:gravity="center"

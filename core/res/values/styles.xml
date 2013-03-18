@@ -5,13 +5,13 @@
     <style name="header">
         <item name="android:padding">5dp</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">@color/mpp_base</item>
+        <item name="android:background">@color/mpp_bg</item>
     </style>
 
     <style name="footer">
         <item name="android:padding">5dp</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">@color/mpp_base</item>
+        <item name="android:background">@color/mpp_bg</item>
     </style>
 
     <style name="footer_button_style">
@@ -25,7 +25,7 @@
     </style>
 
     <style name="content">
-        <item name="android:background">@color/base_bg</item>
+        <item name="android:background">@color/mpp_bg</item>
     </style>
 
     <!-- LIST -->
@@ -33,7 +33,7 @@
     <style name="list">
         <item name="android:textColor">@android:color/black</item>
 
-        <item name="android:background">@color/base_bg</item>
+        <item name="android:background">@color/mpp_bg</item>
         <item name="android:fadingEdge">none</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
 
@@ -43,7 +43,7 @@
 
     <style name="mpp_text">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/mpp_text</item>
         <item name="android:textCursorDrawable">@null</item>
     </style>
 
@@ -140,7 +140,7 @@
     <style name="search_box" parent="search_input">
         <item name="android:layout_width">150dp</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/mpp_text</item>
         <item name="android:singleLine">true</item>
         <item name="android:inputType">text</item>
     </style>
@@ -156,51 +156,7 @@
         <item name="android:layout_width">30dp</item>
     </style>
 
-    <style name="header_text">
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20dp</item>
-        <item name="android:textColor">@color/header_text</item>
-    </style>
-
-    <style name="sub_header_text">
-        <item name="android:gravity">left</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:textColor">@color/text</item>
-        <item name="android:textSize">20dp</item>
-        <item name="android:background">@drawable/item_title</item>
-    </style>
-
     <!-- ITEM -->
-
-    <style name="item_title" parent="sub_header_text"/>
-
-    <style name="item_content_container">
-        <item name="android:padding">5dp</item>
-    </style>
-
-    <style name="item_content_text" parent="item_content_container">
-        <item name="android:textSize">15dp</item>
-        <item name="android:textColor">@color/text</item>
-        <item name="android:gravity">left|top</item>
-    </style>
-
-    <style name="item_content">
-    </style>
-
-    <style name="grid_cell" parent="item_content_text">
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="grid_header" parent="item_content_text">
-        <item name="android:textStyle">bold</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="viewpager_title">
-
-    </style>
 
     <style name="mpp_list_item_message_text" parent="mpp_text">
         <item name="android:background">@android:color/transparent</item>
@@ -226,25 +182,6 @@
         <item name="android:singleLine">true</item>
     </style>
 
-    <style name="message_box">
-        <item name="android:gravity">top|left</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:textColor">@color/text</item>
-        <item name="android:background">@color/base_bg</item>
-        <item name="android:freezesText">true</item>
-    </style>
-
-    <style name="message_header_title">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/base_bg</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
     <style name="mpp_list_item_contact_online" parent="mpp_list_item_block">
     </style>
 
@@ -256,8 +193,8 @@
     <style name="Theme.Messenger" parent="Theme.Sherlock">
         <item name="actionBarStyle">@style/Widget.Messenger.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Messenger.ActionBar</item>
-        <item name="android:textColor">@color/text</item>
-        <item name="android:textColorSecondary">@color/text</item>
+        <item name="android:textColor">@color/mpp_text</item>
+        <item name="android:textColorSecondary">@color/mpp_text</item>
     </style>
 
     <style name="Widget.Messenger.ActionBar" parent="Widget.Sherlock.ActionBar">
@@ -275,7 +212,7 @@
         <item name="android:focusable">true</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/mpp_text</item>
         <item name="android:textSize">15sp</item>
         <item name="android:padding">5dp</item>
         <item name="android:background">@drawable/mpp_metro_button_gray</item>
@@ -283,18 +220,18 @@
 
     <style name="mpp_button_bright" parent="mpp_button">
         <item name="android:background">@drawable/mpp_metro_button_blue</item>
-        <item name="android:textColor">@color/mpp_base</item>
+        <item name="android:textColor">@color/mpp_bg</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="mpp_form_label">
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/mpp_text</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="mpp_form_textview">
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/mpp_text</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

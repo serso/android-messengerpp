@@ -15,6 +15,6 @@
 -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient android:startColor="@color/base_bg_darker" android:endColor="@color/base_bg_darker"/>
+    <gradient android:startColor="@color/mpp_button" android:endColor="@color/mpp_button"/>
     <corners android:radius="1dp" />
 </shape>

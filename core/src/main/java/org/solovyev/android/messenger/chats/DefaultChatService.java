@@ -19,6 +19,7 @@ import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -31,7 +32,13 @@ import org.solovyev.common.listeners.Listeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -56,6 +63,7 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     private RealmService realmService;
 
+    @GuardedBy("lock")
     @Inject
     @Nonnull
     private ChatDao chatDao;
@@ -106,10 +114,12 @@ public class DefaultChatService implements ChatService {
     private final Map<Entity, Chat> chatsById = new HashMap<Entity, Chat>();
 
     @Nonnull
-    private final Object lock = new Object();
+    private final Object lock;
 
-    public DefaultChatService() {
-        listeners.addListener(new ChatEventListener());
+    @Inject
+    public DefaultChatService(@Nonnull PersistenceLock lock) {
+        this.listeners.addListener(new ChatEventListener());
+        this.lock = lock;
     }
 
     @Override
@@ -121,7 +131,7 @@ public class DefaultChatService implements ChatService {
     @Override
     public Chat updateChat(@Nonnull Chat chat) {
         synchronized (lock) {
-            getChatDao().updateChat(chat);
+            chatDao.updateChat(chat);
         }
 
         fireEvent(ChatEventType.changed.newEvent(chat, null));
@@ -207,7 +217,9 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     @Override
     public List<Chat> loadUserChats(@Nonnull Entity user) {
-        return getChatDao().loadUserChats(user.getEntityId());
+        synchronized (lock) {
+            return chatDao.loadUserChats(user.getEntityId());
+        }
     }
 
     @Nonnull
@@ -234,7 +246,7 @@ public class DefaultChatService implements ChatService {
                     return prepareChat(chat);
                 }
             });
-            return getChatDao().mergeUserChats(userId, preparedChats);
+            return chatDao.mergeUserChats(userId, preparedChats);
         }
     }
 
@@ -248,7 +260,7 @@ public class DefaultChatService implements ChatService {
 
         if (result == null) {
             synchronized (lock) {
-                result = getChatDao().loadChatById(realmChat.getEntityId());
+                result = chatDao.loadChatById(realmChat.getEntityId());
             }
 
             if ( result != null ) {
@@ -460,7 +472,9 @@ public class DefaultChatService implements ChatService {
         synchronized (chatParticipantsCache) {
             result = chatParticipantsCache.get(realmChat);
             if (result == null) {
-                result = getChatDao().loadChatParticipants(realmChat.getEntityId());
+                synchronized (lock) {
+                    result = chatDao.loadChatParticipants(realmChat.getEntityId());
+                }
                 if (!Collections.isEmpty(result)) {
                     chatParticipantsCache.put(realmChat, result);
                 }
@@ -504,11 +518,6 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     private UserService getUserService() {
         return this.userService;
-    }
-
-    @Nonnull
-    private ChatDao getChatDao() {
-        return chatDao;
     }
 
     @Override

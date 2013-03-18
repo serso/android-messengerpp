@@ -11,7 +11,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Filter;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -621,7 +628,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
             adapter.setInitialized(true);
 
             final Activity activity = getActivity();
-            if (activity != null && !activity.isFinishing()) {
+            if (activity != null && !activity.isFinishing() && !isDetached()) {
 
                 // change UI state
                 setListShown(true);

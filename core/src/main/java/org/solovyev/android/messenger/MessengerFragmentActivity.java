@@ -73,6 +73,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     private int layoutId;
 
     private boolean showActionBarTabs = true;
+
     private boolean actionBarIconAsUp = true;
 
     @Nullable

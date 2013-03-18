@@ -132,7 +132,7 @@ public class PreferenceManagerCompat {
      * Posts a message to bind the preferences to the list view.
      * <p/>
      * Binding late is preferred as any custom preference types created in
-     * {@link #onCreate(android.os.Bundle)} are able to have their views recycled.
+     * {@link Activity#onCreate(android.os.Bundle)} are able to have their views recycled.
      */
     void postBindPreferences() {
         if (!uiHandler.hasMessages(MSG_BIND_PREFERENCES)) {

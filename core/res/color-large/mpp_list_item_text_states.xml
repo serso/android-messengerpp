@@ -10,5 +10,5 @@
         android:color="@color/text_selected"/>
 
     <!-- default, list item not selected -->
-    <item android:color="@color/text"/>
+    <item android:color="@color/mpp_text"/>
 </selector>

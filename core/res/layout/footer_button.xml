@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<Button xmlns:a="http://schemas.android.com/apk/res/android"
-              a:layout_width="match_parent"
-              a:layout_height="match_parent"
-              a:background="@drawable/footer_button_shape"
-              a:textColor="@color/header_text"
-              a:padding="5dp"/>

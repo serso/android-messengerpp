@@ -10,7 +10,7 @@
                 a:layout_width="match_parent"
                 a:layout_height="match_parent"
                 a:id="@+id/main"
-                a:background="@color/base_bg">
+                a:background="@color/mpp_bg">
 
     <include layout="@layout/msg_footer"
              a:id="@+id/footer"

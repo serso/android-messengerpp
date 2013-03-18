@@ -71,7 +71,7 @@ public class DefaultUserService implements UserService {
      * Lock for all operations with persistence state. Should guarantee that all operations done over DAOs are thread safe and not corrupt data.
      */
     @Nonnull
-    private final Object lock = new Object();
+    private final Object lock;
 
     @Nonnull
     private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().onCallerThread().create();
@@ -91,8 +91,10 @@ public class DefaultUserService implements UserService {
     @Nonnull
     private final Map<Entity, User> usersCache = new HashMap<Entity, User>();
 
-    public DefaultUserService() {
-        listeners.addListener(new UserEventListener());
+    @Inject
+    public DefaultUserService(@Nonnull PersistenceLock lock) {
+        this.listeners.addListener(new UserEventListener());
+        this.lock = lock;
     }
 
     @Override

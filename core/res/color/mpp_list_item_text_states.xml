@@ -7,8 +7,8 @@
     -->
     <!-- list item selected-->
     <item android:state_activated="true"
-        android:color="@color/text"/>
+        android:color="@color/mpp_text"/>
 
     <!-- default, list item not selected -->
-    <item android:color="@color/text"/>
+    <item android:color="@color/mpp_text"/>
 </selector>

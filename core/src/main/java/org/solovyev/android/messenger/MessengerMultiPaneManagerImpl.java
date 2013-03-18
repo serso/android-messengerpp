@@ -89,35 +89,21 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
                 pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_right));
                 pane.setPadding(0, 0, 0, 0);
             } else if (this.isSecondPane(paneParent)) {
-                pane.setBackgroundColor(context.getResources().getColor(R.color.base_bg_lighter));
+                pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
             } else if (this.isTriplePane(activity) && this.isThirdPane(paneParent)) {
                 if (Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
                     pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_left));
                 } else {
-                    pane.setBackgroundColor(context.getResources().getColor(R.color.base_bg_lighter));
+                    pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
                 }
             }
         } else if (this.isFirstPane(paneParent)) {
-            pane.setBackgroundColor(context.getResources().getColor(R.color.base_bg_lighter));
+            pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
         }
     }
 
     @Override
     public void fillLoadingLayout(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView) {
-        loadingView.setTextColor(resources.getColor(R.color.text));
-        if (this.isDualPane(activity)) {
-            if (this.isFirstPane(paneParent)) {
-                loadingView.setBackgroundColor(resources.getColor(R.color.base_bg));
-            } else if (this.isSecondPane(paneParent)) {
-                loadingView.setBackgroundColor(resources.getColor(R.color.base_bg_lighter));
-            } else if (this.isTriplePane(activity) && this.isThirdPane(paneParent)) {
-                if (Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
-                    loadingView.setBackgroundColor(resources.getColor(R.color.base_bg));
-                } else {
-                    loadingView.setBackgroundColor(resources.getColor(R.color.base_bg_lighter));
-                }
-            }
-        } else if (this.isFirstPane(paneParent)) {
-            loadingView.setBackgroundColor(resources.getColor(R.color.base_bg_lighter));
-        }
+        loadingView.setTextColor(resources.getColor(R.color.mpp_text));
+        loadingView.setBackgroundColor(resources.getColor(android.R.color.transparent));
     }}
