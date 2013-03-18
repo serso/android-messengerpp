@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 6:23 PM
  */
-public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem> {
+final class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem> {
 
     @Nonnull
     private final RealmService realmService;
@@ -36,7 +36,8 @@ public class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem
 
         for (Realm realm : realmService.getRealms()) {
             final User user = realm.getUser();
-            for (Chat chat : MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity())) {
+            final List<Chat> chats = MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity());
+            for (Chat chat : chats) {
                 result.add(UserChat.newInstance(user, chat, null));
             }
         }

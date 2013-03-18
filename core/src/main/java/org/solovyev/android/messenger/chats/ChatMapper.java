@@ -31,10 +31,8 @@ public class ChatMapper implements Converter<Cursor, Chat> {
     public Chat convert(@Nonnull Cursor c) {
         final Entity realmChat = RealmEntityMapper.newInstanceFor(0).convert(c);
 
-        final Integer messagesCount = c.getInt(3);
-
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-        final String lastMessagesSyncDateString = c.getString(4);
+        final String lastMessagesSyncDateString = c.getString(3);
         final DateTime lastMessagesSyncDate = lastMessagesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastMessagesSyncDateString);
 
         final List<AProperty> properties = chatDao.loadChatPropertiesById(realmChat.getEntityId());
@@ -42,6 +40,6 @@ public class ChatMapper implements Converter<Cursor, Chat> {
         //final List<ChatMessage> chatMessages = chatDao.loadChatMessages(chatId);
         //final List<User> chatParticipants = chatDao.loadChatParticipants(chatId);
 
-        return ChatImpl.newInstance(realmChat, messagesCount, properties, lastMessagesSyncDate);
+        return ChatImpl.newInstance(realmChat, properties, lastMessagesSyncDate);
     }
 }

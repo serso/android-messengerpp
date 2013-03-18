@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -55,8 +56,9 @@ public final class Messages {
 
     @Nonnull
     private static String getMessageAuthorDisplayName(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull User user) {
-        final User author = message.getAuthor();
-        if (user.equals(author)) {
+        final Entity author = message.getAuthor();
+        if (user.getEntity().equals(author)) {
+            // todo serso: translate
             return "Me";
         } else {
             if (!chat.isPrivate()) {

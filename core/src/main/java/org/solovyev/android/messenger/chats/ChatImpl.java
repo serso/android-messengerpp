@@ -30,9 +30,6 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     private boolean privateChat;
 
     @Nonnull
-    private Integer messagesCount = 0;
-
-    @Nonnull
     private List<AProperty> properties;
 
     @Nonnull
@@ -50,11 +47,9 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     */
 
     private ChatImpl(@Nonnull Entity entity,
-                     @Nonnull Integer messagesCount,
                      @Nonnull List<AProperty> properties,
                      @Nullable DateTime lastMessageSyncDate) {
         super(entity);
-        this.messagesCount = messagesCount;
         this.lastMessageSyncDate = lastMessageSyncDate;
 
         this.properties = properties;
@@ -69,10 +64,8 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     }
 
     private ChatImpl(@Nonnull Entity entity,
-                     @Nonnull Integer messagesCount,
                      boolean privateChat) {
         super(entity);
-        this.messagesCount = messagesCount;
         this.privateChat = privateChat;
         this.properties = new ArrayList<AProperty>();
         final AProperty property = Properties.newProperty(PROPERTY_PRIVATE, Boolean.toString(privateChat));
@@ -84,22 +77,21 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
     @Nonnull
     public static Chat newFakeChat(@Nonnull String chatId) {
-        return new ChatImpl(EntityImpl.fromEntityId(chatId), 0, false);
+        return new ChatImpl(EntityImpl.fromEntityId(chatId), false);
     }
 
     @Nonnull
     public static Chat newInstance(@Nonnull Entity entity,
-                                   @Nonnull Integer messagesCount,
                                    @Nonnull List<AProperty> properties,
                                    @Nullable DateTime lastMessageSyncDate) {
-        return new ChatImpl(entity, messagesCount, properties, lastMessageSyncDate);
+        return new ChatImpl(entity, properties, lastMessageSyncDate);
     }
 
     @Nonnull
     public static Chat newPrivate(@Nonnull Entity entity) {
         final List<AProperty> properties = new ArrayList<AProperty>();
         properties.add(Properties.newProperty(PROPERTY_PRIVATE, Boolean.toString(true)));
-        return new ChatImpl(entity, 0, properties, null);
+        return new ChatImpl(entity, properties, null);
     }
 
     /*
@@ -116,11 +108,6 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     }
 
     @Nonnull
-    public Integer getMessagesCount() {
-        return messagesCount;
-    }
-
-    @Nonnull
     @Override
     public ChatImpl updateMessagesSyncDate() {
         final ChatImpl clone = clone();
@@ -133,7 +120,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
     @Nonnull
     @Override
     public Chat copyWithNew(@Nonnull Entity realmChat) {
-        return new ChatImpl(realmChat, this.messagesCount, this.properties, this.lastMessageSyncDate);
+        return new ChatImpl(realmChat, this.properties, this.lastMessageSyncDate);
     }
 
     @Nullable

@@ -35,10 +35,10 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
         final String chatId = c.getString(3);
 
         final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageEntity);
-        liteChatMessage.setAuthor(userService.getUserById(EntityImpl.fromEntityId(c.getString(4))));
+        liteChatMessage.setAuthor(EntityImpl.fromEntityId(c.getString(4)));
         if (!c.isNull(5)) {
             final String recipientId = c.getString(5);
-            liteChatMessage.setRecipient(userService.getUserById(EntityImpl.fromEntityId(recipientId)));
+            liteChatMessage.setRecipient(EntityImpl.fromEntityId(recipientId));
         }
         final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 

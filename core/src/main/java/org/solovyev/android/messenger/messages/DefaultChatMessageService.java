@@ -87,8 +87,9 @@ public class DefaultChatMessageService implements ChatMessageService {
     public void setMessageIcon(@Nonnull ImageView imageView, @Nonnull ChatMessage message, @Nonnull Chat chat, @Nonnull User user, @Nonnull Context context) {
         final Drawable defaultChatIcon = context.getResources().getDrawable(R.drawable.empty_icon);
 
-        final User author = message.getAuthor();
-        final String userIconUri = author.getPropertyValueByName("photo");
+        // todo serso: set icon properly
+        final Entity author = message.getAuthor();
+        final String userIconUri = "";//author.getPropertyValueByName("photo");
         if (!Strings.isEmpty(userIconUri)) {
             this.imageLoader.loadImage(userIconUri, imageView, R.drawable.empty_icon);
         } else {
@@ -111,10 +112,10 @@ public class DefaultChatMessageService implements ChatMessageService {
 
         final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(realm.newMessageEntity(realmMessageId == null ? NO_REALM_MESSAGE_ID : realmMessageId, chatMessage.getEntity().getEntityId()));
 
-        message.setAuthor(userService.getUserById(user));
+        message.setAuthor(user);
         if (chat.isPrivate()) {
             final Entity secondUser = chat.getSecondUser();
-            message.setRecipient(userService.getUserById(secondUser));
+            message.setRecipient(secondUser);
         }
         message.setBody(chatMessage.getBody());
         message.setTitle(chatMessage.getTitle());

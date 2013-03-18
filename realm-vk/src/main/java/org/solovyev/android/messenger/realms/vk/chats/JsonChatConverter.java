@@ -6,25 +6,25 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessages;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,25 +87,24 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
             if (!Collections.isEmpty(jsonMessages)) {
                 for (JsonMessage jsonMessage : jsonMessages) {
-                    final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, userService, realm);
+                    final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, realm);
 
                     final Integer apiChatId = jsonMessage.getChat_id();
                     if (apiChatId == null && explicitChatId == null) {
 
                         // fake chat (message from user to another without explicitly created chat)
-                        final User secondUser = message.getSecondUser(user);
+                        final Entity secondUser = message.getSecondUser(user.getEntity());
 
                         if (secondUser != null) {
                             final Entity realmUser = user.getEntity();
-                            final Entity secondRealmUser = secondUser.getEntity();
-                            final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().newPrivateChatId(realmUser, secondRealmUser);
+                            final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().newPrivateChatId(realmUser, secondUser);
 
                             ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
                             if (chat == null) {
                                 chat = ApiChatImpl.newInstance(realmChat, jsonMessagesResult.getCount(), true);
 
                                 chat.addParticipant(user);
-                                chat.addParticipant(secondUser);
+                                chat.addParticipant(userService.getUserById(secondUser));
 
                                 fakeChats.put(realmChat.getEntityId(), chat);
                             }

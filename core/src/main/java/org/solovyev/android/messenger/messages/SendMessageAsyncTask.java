@@ -117,7 +117,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
         public ChatMessage sendChatMessage() {
 
             final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
-            liteChatMessage.setAuthor(author);
+            liteChatMessage.setAuthor(author.getEntity());
             liteChatMessage.setBody(message);
 
             liteChatMessage.setTitle(title == null ? "" : title);

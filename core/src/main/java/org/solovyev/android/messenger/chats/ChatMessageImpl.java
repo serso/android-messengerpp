@@ -1,9 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
@@ -89,13 +88,13 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 
     @Override
     @Nonnull
-    public User getAuthor() {
+    public Entity getAuthor() {
         return liteChatMessage.getAuthor();
     }
 
     @Override
     @Nullable
-    public User getRecipient() {
+    public Entity getRecipient() {
         return liteChatMessage.getRecipient();
     }
 
@@ -119,7 +118,7 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 
     @Override
     @Nullable
-    public User getSecondUser(@Nonnull User user) {
+    public Entity getSecondUser(@Nonnull Entity user) {
         return liteChatMessage.getSecondUser(user);
     }
 

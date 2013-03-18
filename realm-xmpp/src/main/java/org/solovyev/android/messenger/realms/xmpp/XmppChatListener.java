@@ -90,8 +90,8 @@ public final class XmppChatListener implements ChatManagerListener {
         if (!Strings.isEmpty(body)) {
             final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(realm));
             liteChatMessage.setBody(body);
-            liteChatMessage.setAuthor(toUser(message.getFrom(), realm));
-            liteChatMessage.setRecipient(toUser(message.getTo(), realm));
+            liteChatMessage.setAuthor(realm.newUserEntity(message.getFrom()));
+            liteChatMessage.setRecipient(realm.newUserEntity(message.getTo()));
             liteChatMessage.setSendDate(DateTime.now());
             return ChatMessageImpl.newInstance(liteChatMessage);
         } else {

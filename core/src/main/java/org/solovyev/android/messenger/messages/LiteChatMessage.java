@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,15 +17,15 @@ public interface LiteChatMessage /*extends MessengerEntity*/ {
     Entity getEntity();
 
     @Nonnull
-    User getAuthor();
+    Entity getAuthor();
 
     @Nullable
-    User getRecipient();
+    Entity getRecipient();
 
     boolean isPrivate();
 
     @Nullable
-    User getSecondUser(@Nonnull User user);
+    Entity getSecondUser(@Nonnull Entity user);
 
     @Nonnull
     DateTime getSendDate();

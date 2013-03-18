@@ -27,9 +27,6 @@ public interface Chat extends MessengerEntity {
     @Nonnull
     Entity getSecondUser();
 
-    @Nonnull
-    Integer getMessagesCount();
-
     @Nullable
     DateTime getLastMessagesSyncDate();
 

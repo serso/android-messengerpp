@@ -37,7 +37,7 @@ public final class Chats {
         if (Strings.isEmpty(title) || title.equals(" ... ")) {
 
             if (chat.isPrivate()) {
-                final User secondUser = message.getSecondUser(user);
+                final Entity secondUser = message.getSecondUser(user.getEntity());
                 if (secondUser != null) {
                     return Users.getDisplayNameFor(secondUser);
                 } else {

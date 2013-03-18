@@ -39,7 +39,7 @@ public class ApiChatImpl implements ApiChat {
                         @Nonnull List<ChatMessage> chatMessages,
                         @Nonnull List<User> chatParticipants,
                         @Nullable DateTime lastMessageSyncDate) {
-        this.chat = ChatImpl.newInstance(entity, messagesCount, properties, lastMessageSyncDate);
+        this.chat = ChatImpl.newInstance(entity, properties, lastMessageSyncDate);
         this.messages = chatMessages;
 
         this.participants = chatParticipants;
@@ -56,7 +56,7 @@ public class ApiChatImpl implements ApiChat {
                         boolean privateChat) {
         final List<AProperty> properties = new ArrayList<AProperty>();
         properties.add(Properties.newProperty("private", Boolean.toString(privateChat)));
-        this.chat = ChatImpl.newInstance(entity, messagesCount, properties, null);
+        this.chat = ChatImpl.newInstance(entity, properties, null);
 
         this.messages = new ArrayList<ChatMessage>(20);
         this.participants = new ArrayList<User>(3);

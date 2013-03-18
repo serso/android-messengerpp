@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.messages;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,10 +15,10 @@ import javax.annotation.Nullable;
 public class LiteChatMessageImpl extends AbstractMessengerEntity implements LiteChatMessage {
 
     @Nonnull
-    private User author;
+    private Entity author;
 
     @Nullable
-    private User recipient;
+    private Entity recipient;
 
     @Nonnull
     private DateTime sendDate;
@@ -40,11 +39,11 @@ public class LiteChatMessageImpl extends AbstractMessengerEntity implements Lite
     }
 
     @Nonnull
-    public User getAuthor() {
+    public Entity getAuthor() {
         return author;
     }
 
-    public void setAuthor(@Nonnull User author) {
+    public void setAuthor(@Nonnull Entity author) {
         this.author = author;
     }
 
@@ -90,7 +89,7 @@ public class LiteChatMessageImpl extends AbstractMessengerEntity implements Lite
     }
 
     @Nullable
-    public User getRecipient() {
+    public Entity getRecipient() {
         return recipient;
     }
 
@@ -100,7 +99,7 @@ public class LiteChatMessageImpl extends AbstractMessengerEntity implements Lite
     }
 
     @Override
-    public User getSecondUser(@Nonnull User user) {
+    public Entity getSecondUser(@Nonnull Entity user) {
         if (author.equals(user)) {
             return recipient;
         } else if (user.equals(recipient)) {
@@ -110,7 +109,7 @@ public class LiteChatMessageImpl extends AbstractMessengerEntity implements Lite
         return null;
     }
 
-    public void setRecipient(@Nullable User recipient) {
+    public void setRecipient(@Nullable Entity recipient) {
         this.recipient = recipient;
     }
 }

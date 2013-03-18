@@ -383,7 +383,6 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         values.put("id", chat.getEntity().getEntityId());
         values.put("realm_id", chat.getEntity().getRealmId());
         values.put("realm_chat_id", chat.getEntity().getRealmEntityId());
-        values.put("messages_count", chat.getMessagesCount());
         values.put("last_messages_sync_date", lastMessagesSyncDate == null ? null : dateTimeFormatter.print(lastMessagesSyncDate));
 
         return values;

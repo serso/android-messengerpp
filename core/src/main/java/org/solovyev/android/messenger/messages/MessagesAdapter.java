@@ -8,9 +8,13 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatMessageImpl;
+import org.solovyev.android.messenger.chats.MessageListItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -18,7 +22,12 @@ import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -69,7 +78,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
                 case REMOVE_USER_START_TYPING_ID:
                     final MessageListItem listItem = (MessageListItem) msg.obj;
                     removeListItem(listItem);
-                    userTypingListItems.remove(listItem.getMessage().getAuthor().getEntity());
+                    userTypingListItems.remove(listItem.getMessage().getAuthor());
                     return true;
 
             }
@@ -119,7 +128,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
                 }));
 
                 for (ChatMessage message : messages) {
-                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor().getEntity());
+                    final MessageListItem listItem = userTypingListItems.remove(message.getAuthor());
                     if ( listItem != null ) {
                         removeListItem(listItem);
                     }
@@ -155,7 +164,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
                 // create fake message
                 final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(user.getEntityId() + "_typing"));
                 liteChatMessage.setSendDate(DateTime.now());
-                liteChatMessage.setAuthor(MessengerApplication.getServiceLocator().getUserService().getUserById(user));
+                liteChatMessage.setAuthor(user);
                 liteChatMessage.setBody(getContext().getString(R.string.mpp_user_starts_typing));
 
                 // create fake list item
@@ -204,7 +213,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
     private void addMessageListItem(@Nonnull ChatMessage message) {
         // remove typing message
-        userTypingListItems.remove(message.getAuthor().getEntity());
+        userTypingListItems.remove(message.getAuthor());
 
         addListItem(createListItem(message));
     }

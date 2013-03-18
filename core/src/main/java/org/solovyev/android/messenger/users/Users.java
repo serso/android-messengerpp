@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.AProperty;
@@ -19,6 +20,11 @@ import java.util.List;
 public final class Users {
 
     private Users() {
+    }
+
+    @Nonnull
+    public static String getDisplayNameFor(@Nonnull Entity user) {
+        return getDisplayNameFor(MessengerApplication.getServiceLocator().getUserService().getUserById(user));
     }
 
     @Nonnull
