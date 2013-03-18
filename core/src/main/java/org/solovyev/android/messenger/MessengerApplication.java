@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 
@@ -31,6 +33,17 @@ import javax.annotation.Nonnull;
  * Time: 8:16 PM
  */
 public class MessengerApplication extends Application implements MessengerServiceLocator, MessengerExceptionHandler {
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
+    @Nonnull
+    private static MessengerApplication instance;
 
     /*
     **********************************************************************
@@ -72,11 +85,22 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     private NetworkStateService networkStateService;
 
+    @Inject
     @Nonnull
-    private static MessengerApplication instance;
+    private EventManager eventManager;
+
+    /*
+    **********************************************************************
+    *
+    *                           OWN FIELDS
+    *
+    **********************************************************************
+    */
 
     @Nonnull
     private final Handler uiHandler = new Handler();
+
+    private volatile boolean exiting = false;
 
     public MessengerApplication() {
         instance = this;
@@ -84,6 +108,11 @@ public class MessengerApplication extends Application implements MessengerServic
 
     @Nonnull
     public static MessengerServiceLocator getServiceLocator() {
+        return instance;
+    }
+
+    @Nonnull
+    public static MessengerApplication getApp() {
         return instance;
     }
 
@@ -211,9 +240,21 @@ public class MessengerApplication extends Application implements MessengerServic
 
         this.networkStateService.startListening(this);
 
-        final Intent intent = new Intent();
-        intent.setClass(this, MessengerService.class);
-        startService(intent);
+        final Intent serviceIntent = new Intent();
+        serviceIntent.setClass(this, MessengerService.class);
+        startService(serviceIntent);
     }
 
+    public void exit(@Nonnull Activity activity) {
+        realmService.stopAllRealmConnections();
+
+        eventManager.fire(GuiEventType.app_exit.newEvent());
+
+        this.exiting = true;
+        activity.finish();
+    }
+
+    public boolean isExiting() {
+        return exiting;
+    }
 }

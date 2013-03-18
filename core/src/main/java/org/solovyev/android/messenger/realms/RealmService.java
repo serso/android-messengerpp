@@ -66,4 +66,6 @@ public interface RealmService {
     void addListener(@Nonnull JEventListener<RealmEvent> listener);
 
     void removeListener(@Nonnull JEventListener<RealmEvent> listener);
+
+    void stopAllRealmConnections();
 }

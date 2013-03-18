@@ -15,7 +15,6 @@ public enum RealmEventType {
      */
     created,
 
-
     /**
      * Fired when realm is changed
      */
@@ -24,7 +23,12 @@ public enum RealmEventType {
     /**
      * Fires when realm is removed
      */
-    removed;
+    removed,
+
+    /**
+     * Fires when realm connection should be stopped for realm
+     */
+    stop;
 
     @Nonnull
     RealmEvent newEvent(@Nonnull Realm realm, @Nullable Object data) {

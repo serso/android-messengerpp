@@ -70,7 +70,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
             @Override
             public void onClick(View v) {
                 final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
-                eventManager.fire(GuiEventType.newShowRealmDefsEvent());
+                eventManager.fire(GuiEventType.show_realm_defs.newEvent());
             }
         });
 
@@ -157,7 +157,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
             @Override
             public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
                 final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(GuiEventType.newShowRealmDefsEvent());
+                eventManager.fire(GuiEventType.show_realm_defs.newEvent());
             }
         };
 

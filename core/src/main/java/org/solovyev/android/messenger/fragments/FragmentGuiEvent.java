@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
  */
 public final class FragmentGuiEvent extends AbstractTypedJEvent<Class<? extends Fragment>, FragmentGuiEventType> {
 
-
     FragmentGuiEvent(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull FragmentGuiEventType type) {
         super(fragmentClass, type, View.NO_ID);
     }

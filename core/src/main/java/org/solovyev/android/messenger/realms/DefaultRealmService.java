@@ -246,4 +246,11 @@ public class DefaultRealmService implements RealmService {
     public void removeListener(@Nonnull JEventListener<RealmEvent> listener) {
         listeners.removeListener(listener);
     }
+
+    @Override
+    public void stopAllRealmConnections() {
+        for (Realm realm : realms.values()) {
+            listeners.fireEvent(RealmEventType.stop.newEvent(realm, null));
+        }
+    }
 }

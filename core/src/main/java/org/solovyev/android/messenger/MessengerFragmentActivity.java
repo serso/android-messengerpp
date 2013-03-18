@@ -191,6 +191,14 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if ( MessengerApplication.getApp().isExiting() ) {
+            finish();
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
