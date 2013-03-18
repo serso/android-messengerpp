@@ -32,12 +32,6 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
     @Nonnull
     @Override
     public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) {
-        return Collections.emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
         return doOnConnection(new XmppConnectedCallable<List<ChatMessage>>() {
             @Override
             public List<ChatMessage> call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
@@ -53,6 +47,12 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
                 return Collections.emptyList();
             }
         });
+    }
+
+    @Nonnull
+    @Override
+    public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
+        return Collections.emptyList();
     }
 
     @Nonnull

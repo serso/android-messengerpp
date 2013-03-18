@@ -63,13 +63,13 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     */
 
     @Nonnull
-    List<ChatMessage> syncChatMessages(@Nonnull Entity user);
+    List<ChatMessage> syncNewerChatMessages(@Nonnull Entity user);
 
     @Nonnull
-    List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
+    List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user);
 
     @Nonnull
-    List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
+    List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user);
 
     void syncChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
 

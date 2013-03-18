@@ -281,58 +281,23 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncChatMessages(@Nonnull Entity user) {
+    public List<ChatMessage> syncNewerChatMessages(@Nonnull Entity user) {
         final List<ChatMessage> chatMessages = getRealmByEntity(user).getRealmChatService().getChatMessages(user.getRealmEntityId());
 
-/*        synchronized (userChatsCache) {
-            userChatsCache.put(userId, chats);
-        }
-
-        User user = this.getUserById(userId, context);
-        final MergeDaoResult<Chat, String> result;
-        synchronized (lock) {
-            result = getChatService().updateUserChats(userId, chats, context);
-
-            // update sync data
-            user = user.updateChatsSyncDate();
-            updateUser(user, context);
-        }
-
-        final List<UserEventContainer.UserEvent> userEvents = new ArrayList<UserEventContainer.UserEvent>(chats.size());
-        final List<ChatEventContainer.ChatEvent> chatEvents = new ArrayList<ChatEventContainer.ChatEvent>(chats.size());
-
-        for (Chat addedChatLink : result.getAddedObjectLinks()) {
-            userEvents.add(new UserEventContainer.UserEvent(user, UserEventType.chat_added, addedChatLink));
-        }
-
-        for (Chat addedChat : result.getAddedObjects()) {
-            chatEvents.add(new ChatEventContainer.ChatEvent(addedChat, ChatEventType.added, null));
-            userEvents.add(new UserEventContainer.UserEvent(user, UserEventType.chat_added, addedChat));
-        }
-
-        for (String removedChatId : result.getRemovedObjectIds()) {
-            userEvents.add(new UserEventContainer.UserEvent(user, UserEventType.chat_removed, removedChatId));
-        }
-
-        for (Chat updatedChat : result.getUpdatedObjects()) {
-            chatEvents.add(new ChatEventContainer.ChatEvent(updatedChat, ChatEventType.changed, null));
-        }
-
-        listeners.fireEvents(userEvents);
-        getChatService().fireChatEvents(chatEvents);*/
+        // todo serso: continue
 
         return java.util.Collections.unmodifiableList(chatMessages);
     }
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser) {
-        final Realm realm = getRealmByEntity(realmUser);
+    public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) {
+        final Realm realm = getRealmByEntity(user);
         final RealmChatService realmChatService = realm.getRealmChatService();
 
-        final List<ChatMessage> messages = realmChatService.getNewerChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId());
+        final List<ChatMessage> messages = realmChatService.getNewerChatMessagesForChat(chat.getRealmEntityId(), user.getRealmEntityId());
 
-        saveChatMessages(realmChat, messages, true);
+        saveChatMessages(chat, messages, true);
 
         return java.util.Collections.unmodifiableList(messages);
 
@@ -380,20 +345,11 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser) {
-        final Integer offset = getChatMessageService().getChatMessages(realmChat).size();
+    public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) {
+        final Integer offset = getChatMessageService().getChatMessages(chat).size();
 
-        final Chat chat = this.getChatById(realmChat);
-
-        final List<ChatMessage> messages;
-
-        if (chat != null) {
-            messages = getRealmByEntity(realmUser).getRealmChatService().getOlderChatMessagesForChat(realmChat.getRealmEntityId(), realmUser.getRealmEntityId(), offset);
-            saveChatMessages(realmChat, messages, false);
-        } else {
-            messages = java.util.Collections.emptyList();
-            Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + realmChat.getEntityId());
-        }
+        final List<ChatMessage> messages = getRealmByEntity(user).getRealmChatService().getOlderChatMessagesForChat(chat.getRealmEntityId(), user.getRealmEntityId(), offset);
+        saveChatMessages(chat, messages, false);
 
         return java.util.Collections.unmodifiableList(messages);
     }

@@ -161,7 +161,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getEntity());
+                MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessages(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }

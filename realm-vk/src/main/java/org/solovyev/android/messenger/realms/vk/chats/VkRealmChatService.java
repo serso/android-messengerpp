@@ -147,7 +147,7 @@ public class VkRealmChatService implements RealmChatService {
 
     @Nonnull
     private User getUser(@Nonnull String realmUserId) {
-        return getUserService().getUserById(realm.newRealmEntity(realmUserId));
+        return getUserService().getUserById(realm.newUserEntity(realmUserId));
     }
 
     @Nonnull
