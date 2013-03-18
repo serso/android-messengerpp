@@ -1,7 +1,11 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
-import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
@@ -49,7 +53,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
             // connect to the server
             try {
-                prepareConnection2(connection, getRealm());
+                prepareConnection(connection, getRealm());
 
                 this.connection = connection;
             } catch (XMPPException e) {
@@ -62,8 +66,8 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
         }
     }
 
-    private void prepareConnection2(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
-        prepareConnection(connection, realm);
+    private void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
+        checkConnectionStatus(connection, realm);
 
         // todo serso: investigate why we cannot add listeners in after connection constructor
         // Attach listeners to connection
@@ -74,7 +78,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
         ChatStateManager.getInstance(connection);
     }
 
-    static void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
+    static void checkConnectionStatus(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
         if (!connection.isConnected()) {
             connection.connect();
             if (!connection.isAuthenticated()) {
@@ -102,7 +106,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     @Nonnull
     private Connection tryGetConnection() throws XMPPException {
         if (connection != null) {
-            prepareConnection2(connection, getRealm());
+            prepareConnection(connection, getRealm());
             return connection;
         } else {
             tryToConnect(CONNECTION_RETRIES - 1);

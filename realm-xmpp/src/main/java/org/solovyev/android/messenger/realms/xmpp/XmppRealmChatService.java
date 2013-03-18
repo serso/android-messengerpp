@@ -4,6 +4,7 @@ import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.OfflineMessageManager;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
@@ -37,7 +38,13 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
     @Nonnull
     @Override
     public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
-        return Collections.emptyList();
+        return doOnConnection(new XmppConnectedCallable<List<ChatMessage>>() {
+            @Override
+            public List<ChatMessage> call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
+                final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
+                return XmppRealm.toMessages(getRealm(), offlineManager.getMessages());
+            }
+        });
     }
 
     @Nonnull
@@ -65,7 +72,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
             @Override
             public Chat call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
                 org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getRealm(), realmChat));
-                return XmppChatListener.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
+                return XmppRealm.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
             }
         });
     }

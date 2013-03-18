@@ -2,16 +2,35 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
 import android.util.Log;
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.packet.Message;
+import org.joda.time.DateTime;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatMessageImpl;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.chats.RealmChatService;
-import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.ChatMessages;
+import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
+import org.solovyev.android.messenger.realms.AbstractRealm;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
 
@@ -80,5 +99,80 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
         } else {
             return newRealmEntity(realmUserId);
         }
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
+
+
+    @Nonnull
+    private static ChatService getChatService() {
+        return MessengerApplication.getServiceLocator().getChatService();
+    }
+
+    @Nonnull
+    private static ChatMessageService getChatMessageService() {
+        return MessengerApplication.getServiceLocator().getChatMessageService();
+    }
+
+    @Nonnull
+    static ApiChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> messages, @Nonnull Realm realm) {
+        final User participant = toUser(smackChat.getParticipant(), realm);
+
+        final Entity chat;
+
+        final String realmChatId = smackChat.getThreadID();
+        if (Strings.isEmpty(realmChatId) ) {
+            chat = getChatService().newPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
+        } else {
+            chat = realm.newRealmEntity(realmChatId);
+        }
+
+        final List<ChatMessage> chatMessages = toMessages(realm, messages);
+        final List<User> participants = Arrays.asList(realm.getUser(), participant);
+        return Chats.newPrivateApiChat(chat, participants, chatMessages);
+    }
+
+    @Nonnull
+    static List<ChatMessage> toMessages(@Nonnull Realm realm, @Nonnull Iterable<Message> messages) {
+        return toMessages(realm, messages.iterator());
+    }
+
+    static List<ChatMessage> toMessages(@Nonnull Realm realm, @Nonnull Iterator<Message> messages) {
+        final List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
+
+        while ( messages.hasNext() ) {
+            final Message message = messages.next();
+            final ChatMessage chatMessage = toChatMessage(message, realm);
+            if (chatMessage != null) {
+                chatMessages.add(chatMessage);
+            }
+        }
+        return chatMessages;
+    }
+
+    @Nullable
+    private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Realm realm) {
+        final String body = message.getBody();
+        if (!Strings.isEmpty(body)) {
+            final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(realm));
+            liteChatMessage.setBody(body);
+            liteChatMessage.setAuthor(realm.newUserEntity(message.getFrom()));
+            liteChatMessage.setRecipient(realm.newUserEntity(message.getTo()));
+            liteChatMessage.setSendDate(DateTime.now());
+            return ChatMessageImpl.newInstance(liteChatMessage);
+        } else {
+            return null;
+        }
+    }
+
+    @Nonnull
+    private static User toUser(@Nonnull String realmUserId, @Nonnull Realm realm) {
+        return Users.newEmptyUser(realm.newUserEntity(realmUserId));
     }
 }

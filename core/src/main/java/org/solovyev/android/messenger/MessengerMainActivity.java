@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Date: 6/2/12
  * Time: 3:52 PM
  */
-public class MessengerMainActivity extends MessengerFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
+public final class MessengerMainActivity extends MessengerFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
 
     /*
     **********************************************************************

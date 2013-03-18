@@ -257,6 +257,10 @@ public class MessengerFragmentService {
         activity.getSupportFragmentManager().popBackStack();
     }
 
+    public boolean goBackImmediately() {
+        return activity.getSupportFragmentManager().popBackStackImmediate();
+    }
+
     public void goBack(@Nonnull String tag) {
         activity.getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }

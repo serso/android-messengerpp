@@ -37,7 +37,7 @@ final class XmppMessageListener implements ChatStateListener {
     @Override
     public void processMessage(Chat chat, Message message) {
         Log.i("M++/Xmpp", "Message created: " + message.getBody());
-        final List<ChatMessage> messages = XmppChatListener.toMessages(realm, Arrays.asList(message));
+        final List<ChatMessage> messages = XmppRealm.toMessages(realm, Arrays.asList(message));
         if (!messages.isEmpty()) {
             getChatService().saveChatMessages(this.chat, messages, false);
         } else {

@@ -1,17 +1,16 @@
 package org.solovyev.android.messenger;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerFragmentService;
+import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
 import roboguice.event.EventManager;
@@ -34,8 +33,9 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    protected final String TAG = this.getClass().getSimpleName();
+    private static final String SELECTED_NAV = "selected_nav";
 
+    protected final String TAG = this.getClass().getSimpleName();
 
     /*
     **********************************************************************
@@ -70,17 +70,16 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    @Nullable
-    private ViewGroup firstPane;
+    private int layoutId;
+
+    private boolean showActionBarTabs = true;
+    private boolean actionBarIconAsUp = true;
 
     @Nullable
     private ViewGroup secondPane;
 
     @Nullable
     private ViewGroup thirdPane;
-
-    @Nonnull
-    private final MessengerCommonActivity activity;
 
     @Nonnull
     private final MessengerFragmentService fragmentService;
@@ -94,13 +93,15 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     */
 
     protected MessengerFragmentActivity(int layoutId) {
-        activity = new MessengerCommonActivityImpl(layoutId);
-        fragmentService = new MessengerFragmentService(this);
+        this.layoutId = layoutId;
+        this.fragmentService = new MessengerFragmentService(this);
     }
 
-    protected MessengerFragmentActivity(int layoutId, boolean showActionBarTabs, boolean homeIcon) {
-        activity = new MessengerCommonActivityImpl(layoutId, showActionBarTabs, homeIcon);
-        fragmentService = new MessengerFragmentService(this);
+    protected MessengerFragmentActivity(int layoutId, boolean showActionBarTabs, boolean actionBarIconAsUp) {
+        this.layoutId = layoutId;
+        this.showActionBarTabs = showActionBarTabs;
+        this.actionBarIconAsUp = actionBarIconAsUp;
+        this.fragmentService = new MessengerFragmentService(this);
     }
 
     /*
@@ -142,56 +143,6 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     @Nonnull
-    public ViewGroup getFooterCenter() {
-        return activity.getFooterCenter(this);
-    }
-
-    @Nonnull
-    public ViewGroup getFooterRight() {
-        return activity.getFooterRight(this);
-    }
-
-    @Nonnull
-    public ViewGroup getFooterLeft() {
-        return activity.getFooterLeft(this);
-    }
-
-    @Nonnull
-    public ViewGroup getHeaderLeft() {
-        return this.activity.getHeaderLeft(this);
-    }
-
-    @Nonnull
-    public ViewGroup getHeaderCenter() {
-        return this.activity.getHeaderCenter(this);
-    }
-
-    @Nonnull
-    public ViewGroup getHeaderRight() {
-        return this.activity.getHeaderRight(this);
-    }
-
-    @Nonnull
-    public ViewGroup getCenter(@Nonnull Activity activity) {
-        return this.activity.getCenter(activity);
-    }
-
-    @Nonnull
-    public ImageButton createFooterImageButton(int imageResId, int contentDescriptionResId) {
-        return activity.createFooterImageButton(imageResId, contentDescriptionResId, this);
-    }
-
-    @Nonnull
-    public Button createFooterButton(int captionResId) {
-        return this.activity.createFooterButton(captionResId, this);
-    }
-
-    @Nonnull
-    public ViewPager initTitleForViewPager(@Nonnull Activity activity, @Nonnull ViewPager.OnPageChangeListener listener, @Nonnull PagerAdapter adapter) {
-        return this.activity.initTitleForViewPager(activity, listener, adapter);
-    }
-
-    @Nonnull
     public MessengerFragmentService getFragmentService() {
         return fragmentService;
     }
@@ -208,9 +159,32 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity.onCreate(this, savedInstanceState);
+        setContentView(layoutId);
 
-        this.firstPane = (ViewGroup) findViewById(R.id.content_first_pane);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(actionBarIconAsUp);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+
+        if (showActionBarTabs) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            addTab(MessengerPrimaryFragment.contacts);
+            addTab(MessengerPrimaryFragment.messages);
+            addTab(MessengerPrimaryFragment.realms);
+            addTab(MessengerPrimaryFragment.settings);
+
+            int navPosition = -1;
+            if (savedInstanceState != null) {
+                navPosition = savedInstanceState.getInt(SELECTED_NAV, -1);
+            }
+
+            if (navPosition >= 0) {
+                getSupportActionBar().setSelectedNavigationItem(navPosition);
+            }
+        }
+
         this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
         this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
     }
@@ -219,13 +193,67 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        this.activity.onSaveInstanceState(this, outState);
+        outState.putInt(SELECTED_NAV, getSupportActionBar().getSelectedNavigationIndex());
+    }
+
+
+    private void addTab(@Nonnull final MessengerPrimaryFragment messengerPrimaryFragment) {
+        final String fragmentTag = messengerPrimaryFragment.getFragmentTag();
+
+        final ActionBar actionBar = getSupportActionBar();
+        final ActionBar.Tab tab = actionBar.newTab();
+        tab.setTag(fragmentTag);
+        tab.setText(messengerPrimaryFragment.getTitleResId());
+        tab.setTabListener(new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                getFragmentService().setPrimaryFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
+                getFragmentService().setPrimaryFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
+            }
+        });
+        actionBar.addTab(tab);
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        this.activity.onRestart(this);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (actionBarIconAsUp) {
+                    if ( !fragmentService.goBackImmediately() ) {
+                        final ActionBar.Tab tab = findTabByTag(MessengerPrimaryFragment.contacts.getFragmentTag());
+                        if ( tab != null ) {
+                            tab.select();
+                        }
+                    }
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*@Nullable*/
+    private ActionBar.Tab findTabByTag(/*@NotNull*/ String tag) {
+        final ActionBar actionBar = getSupportActionBar();
+        if ( actionBar != null ) {
+            for ( int i = 0; i < actionBar.getTabCount(); i++ ) {
+                final ActionBar.Tab tab = actionBar.getTabAt(i);
+                if ( tab != null && tag.equals(tab.getTag()) ) {
+                    return tab;
+                }
+            }
+        }
+
+        return null;
     }
 
 }
