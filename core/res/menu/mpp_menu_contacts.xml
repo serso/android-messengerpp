@@ -3,7 +3,7 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
     <item a:id="@+id/mpp_menu_toggle_contacts"
-          a:icon="@drawable/mpp_ab_user_offline"
+          a:icon="@drawable/mpp_ab_user"
           a:showAsAction="always"/>
 
     <item a:id="@+id/mpp_menu_toggle_filter_box"
