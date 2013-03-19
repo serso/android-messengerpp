@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  */
 public enum SyncTask {
 
-    user_properties {
+    user {
         @Override
         public boolean isTime(@Nonnull SyncData syncData) {
             boolean result = false;
@@ -37,7 +37,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getUserService().syncUserProperties(user.getEntity());
+                MessengerApplication.getServiceLocator().getUserService().syncUser(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }
@@ -105,7 +105,7 @@ public enum SyncTask {
         }
     },
 
-    check_online_user_contacts {
+    user_contacts_statuses {
         @Override
         public boolean isTime(@Nonnull SyncData syncData) {
             return true;
@@ -115,7 +115,7 @@ public enum SyncTask {
         public void doTask(@Nonnull SyncData syncData) {
             try {
                 final User user = getRealmService().getRealmById(syncData.getRealmId()).getUser();
-                MessengerApplication.getServiceLocator().getUserService().checkOnlineUserContacts(user.getEntity());
+                MessengerApplication.getServiceLocator().getUserService().syncUserContactsStatuses(user.getEntity());
             } catch (UnsupportedRealmException e) {
                 // ok, user is not logged in
             }

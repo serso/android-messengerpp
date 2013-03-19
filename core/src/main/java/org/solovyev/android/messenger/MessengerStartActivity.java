@@ -72,7 +72,7 @@ public class MessengerStartActivity extends RoboActivity {
         } else {
             try {
                 // we must update users availability
-                syncService.sync(SyncTask.check_online_user_contacts, null);
+                syncService.sync(SyncTask.user_contacts_statuses, null);
             } catch (TaskIsAlreadyRunningException e) {
                 // do not care
             }

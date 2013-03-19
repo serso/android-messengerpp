@@ -9,6 +9,7 @@ import org.solovyev.common.listeners.JEventListeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +18,10 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
+/**
+ * Implementation of this class must provide thread safeness
+ */
+@ThreadSafe
 public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, ChatEvent> {
 
     // initial initialization: will be called once on application start

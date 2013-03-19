@@ -41,7 +41,7 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
                 }
 
                 try {
-                    getSyncService().sync(SyncTask.check_online_user_contacts, new Runnable() {
+                    getSyncService().sync(SyncTask.user_contacts_statuses, new Runnable() {
                         @Override
                         public void run() {
                             completeRefresh();

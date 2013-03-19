@@ -29,7 +29,7 @@
               style="@style/mpp_form_label"/>
 
     <EditText a:id="@+id/mpp_xmpp_resource_edittext"
-              a:text="gmail.com"
+              a:text="Messenger++"
               style="@style/mpp_form_edittext"/>
 
     <LinearLayout a:orientation="horizontal"

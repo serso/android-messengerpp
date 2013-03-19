@@ -296,9 +296,10 @@ public class DefaultUserService implements UserService {
     */
 
     @Override
-    public void syncUserProperties(@Nonnull Entity entityUser) {
-        final User user = getRealmByUser(entityUser).getRealmUserService().getUserById(entityUser.getRealmEntityId());
+    public void syncUser(@Nonnull Entity userEntity) {
+        User user = getRealmByUser(userEntity).getRealmUserService().getUserById(userEntity.getRealmEntityId());
         if (user != null) {
+            user = user.updatePropertiesSyncDate();
             updateUser(user, true);
         }
     }
@@ -317,11 +318,11 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void mergeUserContacts(@Nonnull Entity entityUser, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
-        User user = getUserById(entityUser);
+    public void mergeUserContacts(@Nonnull Entity userEntity, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
+        User user = getUserById(userEntity);
         final MergeDaoResult<User, String> result;
         synchronized (lock) {
-            result = userDao.mergeUserContacts(entityUser.getEntityId(), contacts, allowRemoval, allowUpdate);
+            result = userDao.mergeUserContacts(userEntity.getEntityId(), contacts, allowRemoval, allowUpdate);
 
             // update sync data
             user = user.updateContactsSyncDate();
@@ -426,7 +427,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void checkOnlineUserContacts(@Nonnull Entity userEntity) {
+    public void syncUserContactsStatuses(@Nonnull Entity userEntity) {
         final List<User> contacts = getRealmByUser(userEntity).getRealmUserService().checkOnlineUsers(getUserContacts(userEntity));
 
         final User user = getUserById(userEntity);

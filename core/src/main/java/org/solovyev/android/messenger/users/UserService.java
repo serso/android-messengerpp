@@ -58,8 +58,16 @@ public interface UserService {
     @Nonnull
     List<Chat> getUserChats(@Nonnull Entity user);
 
+    /**
+     * Method updates user in application
+     * @param user user to be updated
+     */
     void updateUser(@Nonnull User user);
 
+    /**
+     * Method removes all users in realm identified by <var>realmId</var>
+     * @param realmId id of realm for which users shall be removed
+     */
     void removeUsersInRealm(@Nonnull String realmId);
 
     /*
@@ -103,11 +111,31 @@ public interface UserService {
     **********************************************************************
     */
 
-    void syncUserProperties(@Nonnull Entity user);
+    /**
+     * Method synchronizes local user data with remote user data
+     * @param user user for whom synchronization must be done
+     */
+    void syncUser(@Nonnull Entity user);
 
+    /**
+     * Method synchronizes local users contacts with remote user contacts
+     *
+     * NOTE: some realms do not support user contacts retrieval, in that case empty list is returned
+     *
+     * @param user user for whom synchronization must be done
+     * @return updated list of user contacts
+     */
     @Nonnull
     List<User> syncUserContacts(@Nonnull Entity user);
 
+    /**
+     * Method synchronizes local users chats with remote user chats
+     *
+     * NOTE: some realms do not support user chats retrieval, in that case empty list is returned
+     *
+     * @param user user for whom synchronization must be done
+     * @return updated list of chats in which user is participated
+     */
     @Nonnull
     List<Chat> syncUserChats(@Nonnull Entity user);
 
@@ -115,7 +143,12 @@ public interface UserService {
 
     void mergeUserContacts(@Nonnull Entity user, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
 
-    void checkOnlineUserContacts(@Nonnull Entity user);
+    /**
+     * Method synchronizes user contacts statuses (presences/availabilities)
+     *
+     * @param user user whose contacts statuses should be synchronized
+     */
+    void syncUserContactsStatuses(@Nonnull Entity user);
 
     /*
     **********************************************************************
