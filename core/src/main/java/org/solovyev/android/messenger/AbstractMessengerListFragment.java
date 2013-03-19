@@ -25,7 +25,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.solovyev.android.AThreads;
-import org.solovyev.android.Views;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -257,8 +256,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         final LinearLayout root = new LinearLayout(this.getActivity());
         root.setOrientation(LinearLayout.VERTICAL);
         root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
-        final int rootPaddingPxs = Views.toPixels(getResources().getDisplayMetrics(), 0);
-        root.setPadding(rootPaddingPxs, rootPaddingPxs, rootPaddingPxs, rootPaddingPxs);
 
         if (listViewFilter != null) {
             final View filterView = listViewFilter.createView(savedInstanceState);

@@ -130,7 +130,7 @@ public class VkRealmDef extends AbstractRealmDef {
     @Override
     public synchronized RealmIconService getRealmIconService() {
         if (iconService == null) {
-            iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_empty_user_icon, iconUrlGetter, photoUrlGetter);
+            iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_icon_user_empty, iconUrlGetter, photoUrlGetter);
         }
         return iconService;
     }

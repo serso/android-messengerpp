@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  * Date: 3/17/13
  * Time: 8:34 PM
  */
-public class MessengerPreferenceListFragment extends PreferenceListFragment {
+public final class MessengerPreferenceListFragment extends PreferenceListFragment {
 
     /*
     **********************************************************************

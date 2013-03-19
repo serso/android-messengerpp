@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    style="@style/mpp_fragment">
+    style="@style/mpp_list_fragment">
 
     <ListView
         a:id="@android:id/list"

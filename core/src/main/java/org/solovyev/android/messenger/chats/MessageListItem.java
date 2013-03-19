@@ -166,7 +166,7 @@ public class MessageListItem implements ListItem/*, ChatEventListener*/ {
             messageIcon.setVisibility(View.VISIBLE);
             MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(messageIcon, message, chat, user, context);
         } else {
-            messageIcon.setImageResource(R.drawable.empty_icon);
+            messageIcon.setImageResource(R.drawable.mpp_icon_empty);
             messageIcon.setVisibility(View.GONE);
         }
     }

@@ -84,7 +84,7 @@
     -->
 
     <style name="mpp_list_item_filter_icon" parent="mpp_list_item_icon">
-        <item name="android:src">@drawable/mpp_search_icon</item>
+        <item name="android:src">@drawable/mpp_li_icon_filter</item>
     </style>
 
     <style name="mpp_list_item_filter">
@@ -210,6 +210,14 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="mpp_list_fragment" parent="mpp_fragment">
+        <!--NOTE: separate definition in order to override them-->
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
     </style>
 
     <style name="mpp_fragment">

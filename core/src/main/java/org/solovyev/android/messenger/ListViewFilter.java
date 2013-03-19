@@ -111,17 +111,20 @@ public class ListViewFilter {
             if (filterBox != null) {
                 int visibility = filterBox.getVisibility();
 
+                final InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+
                 if (visibility != View.VISIBLE) {
                     filterBox.setVisibility(View.VISIBLE);
                     filterEditText.requestFocus();
 
-                    final InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                     manager.showSoftInput(filterEditText, InputMethodManager.SHOW_IMPLICIT);
 
                 } else if (visibility != View.GONE) {
                     // if filter box is visible before hiding it clear filter query
                     filterEditText.getText().clear();
                     filterEditText.clearFocus();
+
+                    manager.hideSoftInputFromWindow(filterEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                     filterBox.setVisibility(View.GONE);
                 }

@@ -16,23 +16,22 @@ public final class PreferenceGroup implements MessengerEntity {
     @Nonnull
     private final String id;
 
-    @Nonnull
-    private final String name;
+    private final int nameResId;
 
     private final int preferencesResId;
 
     private final int iconResId;
 
-    public PreferenceGroup(@Nonnull String id, @Nonnull String name, int preferencesResId) {
+    public PreferenceGroup(@Nonnull String id, int nameResId, int preferencesResId) {
         this.id = id;
-        this.name = name;
+        this.nameResId = nameResId;
         this.preferencesResId = preferencesResId;
         this.iconResId = NO_ICON;
     }
 
-    public PreferenceGroup(@Nonnull String id, @Nonnull String name, int preferencesResId, int iconResId) {
+    public PreferenceGroup(@Nonnull String id, int nameResId, int preferencesResId, int iconResId) {
         this.id = id;
-        this.name = name;
+        this.nameResId = nameResId;
         this.preferencesResId = preferencesResId;
         this.iconResId = iconResId;
     }
@@ -43,8 +42,8 @@ public final class PreferenceGroup implements MessengerEntity {
         return this.id;
     }
 
-    public CharSequence getName() {
-        return this.name;
+    public int getNameResId() {
+        return nameResId;
     }
 
     public int getPreferencesResId() {

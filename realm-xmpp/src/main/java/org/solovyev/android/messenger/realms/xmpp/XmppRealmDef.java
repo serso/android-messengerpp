@@ -100,6 +100,6 @@ public class XmppRealmDef extends AbstractRealmDef {
     @Nonnull
     @Override
     public RealmIconService getRealmIconService() {
-        return new XmppRealmIconService(context, R.drawable.mpp_empty_user_icon);
+        return new XmppRealmIconService(context, R.drawable.mpp_icon_user_empty);
     }
 }

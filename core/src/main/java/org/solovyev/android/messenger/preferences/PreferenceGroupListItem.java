@@ -32,7 +32,7 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
     @Nonnull
     @Override
     protected CharSequence getDisplayName(@Nonnull PreferenceGroup preferenceGroup, @Nonnull Context context) {
-        return preferenceGroup.getName();
+        return context.getString(preferenceGroup.getNameResId());
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
         if (preferenceGroup.hasIcon()) {
             preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(preferenceGroup.getIconResId()));
         } else {
-            preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.empty_icon));
+            preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_empty));
         }
 
         final TextView preferenceNameTextView = viewTag.getViewById(R.id.mpp_li_preference_name_textview);

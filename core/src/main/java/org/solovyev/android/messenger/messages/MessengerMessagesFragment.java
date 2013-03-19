@@ -201,7 +201,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
         final String imageUri = getUser().getPropertyValueByName("photo");
         if (!Strings.isEmpty(imageUri)) {
-            imageLoader.loadImage(imageUri, userIcon, R.drawable.empty_icon);
+            imageLoader.loadImage(imageUri, userIcon, R.drawable.mpp_icon_empty);
         }
     }
 
