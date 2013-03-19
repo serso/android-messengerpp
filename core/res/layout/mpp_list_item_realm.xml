@@ -7,8 +7,20 @@
         a:id="@+id/mpp_realm_icon_imageview"
         style="@style/mpp_list_item_icon" />
 
-    <TextView
-        a:id="@+id/mpp_realm_name_textview"
-        style="@style/mpp_list_item_name" />
+    <LinearLayout
+            a:orientation="vertical"
+            a:layout_width="match_parent"
+            a:layout_height="wrap_content"
+            a:layout_centerInParent="true">
+
+        <TextView
+                a:id="@+id/mpp_realm_user_name_textview"
+                style="@style/mpp_list_item_name" />
+
+        <TextView
+                a:id="@+id/mpp_realm_name_textview"
+                style="@style/mpp_list_item_text_secondary" />
+
+    </LinearLayout>
 
 </LinearLayout>

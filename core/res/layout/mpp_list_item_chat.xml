@@ -24,7 +24,7 @@
 
         <TextView
             a:id="@+id/mpp_li_last_message_text_textview"
-            style="@style/mpp_list_item_text"
+            style="@style/mpp_list_item_text_secondary"
             a:text="mpp_li_last_message_text_textview" />
 
         <TextView

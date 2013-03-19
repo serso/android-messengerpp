@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
@@ -35,6 +36,13 @@ public interface RealmService {
 
     @Nonnull
     Collection<Realm> getRealms();
+
+    /**
+     *
+     * @return collection of users in all configured realms
+     */
+    @Nonnull
+    Collection<User> getRealmUsers();
 
     /**
      * Method returns the realm which previously has been registered in this service

@@ -16,7 +16,7 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RealmListItem extends AbstractMessengerListItem<Realm> {
+public final class RealmListItem extends AbstractMessengerListItem<Realm> {
 
     @Nonnull
     private static final String TAG_PREFIX = "realm_list_item_";
@@ -67,17 +67,20 @@ public class RealmListItem extends AbstractMessengerListItem<Realm> {
     @Nonnull
     @Override
     protected String getDisplayName(@Nonnull Realm realm, @Nonnull Context context) {
-        return realm.getDisplayName(context);
+        return realm.getUser().getDisplayName();
     }
 
     @Override
     protected void fillView(@Nonnull Realm realm, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
         final ImageView realmIconImageView = viewTag.getViewById(R.id.mpp_realm_icon_imageview);
-        final TextView realmNameTextView = viewTag.getViewById(R.id.mpp_realm_name_textview);
 
         final Drawable realmIcon = context.getResources().getDrawable(realm.getRealmDef().getIconResId());
         realmIconImageView.setImageDrawable(realmIcon);
 
-        realmNameTextView.setText(getDisplayName());
+        final TextView realmUserNameTextView = viewTag.getViewById(R.id.mpp_realm_user_name_textview);
+        realmUserNameTextView.setText(getDisplayName());
+
+        final TextView realmNameTextView = viewTag.getViewById(R.id.mpp_realm_name_textview);
+        realmNameTextView.setText(realm.getDisplayName(context));
     }
 }

@@ -31,7 +31,7 @@
         <TextView
             a:id="@+id/mpp_li_contact_account_textview"
             a:visibility="gone"
-            style="@style/mpp_list_item_text" />
+            style="@style/mpp_list_item_text_secondary" />
 
     </LinearLayout>
 

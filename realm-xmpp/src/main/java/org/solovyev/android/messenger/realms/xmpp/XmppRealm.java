@@ -55,11 +55,8 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
         final StringBuilder sb = new StringBuilder();
 
         sb.append(context.getText(getRealmDef().getNameResId()));
-        sb.append("(");
+        sb.append("@");
         sb.append(getConfiguration().getServer());
-        sb.append(", ");
-        sb.append(getConfiguration().getLogin());
-        sb.append(")");
 
         return sb.toString();
     }
@@ -128,7 +125,7 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
 
         final String realmChatId = smackChat.getThreadID();
         if (Strings.isEmpty(realmChatId) ) {
-            chat = getChatService().newPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
+            chat = getChatService().getPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
         } else {
             chat = realm.newRealmEntity(realmChatId);
         }

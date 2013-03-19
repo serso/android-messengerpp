@@ -36,8 +36,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UserContact, 
     protected List<UserContact> getElements(@Nonnull Context context) {
         final List<UserContact> result = new ArrayList<UserContact>();
 
-        for (Realm realm : realmService.getRealms()) {
-            final User user = realm.getUser();
+        for (User user : realmService.getRealmUsers()) {
             for (User contact : MessengerApplication.getServiceLocator().getUserService().getOnlineUserContacts(user.getEntity())) {
                 result.add(new UserContact(user, contact));
             }

@@ -30,9 +30,6 @@ public class VkRealm extends AbstractRealm<VkRealmConfiguration> {
         final StringBuilder sb = new StringBuilder();
 
         sb.append(context.getText(getRealmDef().getNameResId()));
-        sb.append("(");
-        sb.append(getUser().getDisplayName());
-        sb.append(")");
 
         return sb.toString();
     }

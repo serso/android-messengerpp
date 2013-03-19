@@ -66,8 +66,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                             @Override
                             public Fragment build() {
                                 final List<User> participants = new ArrayList<User>();
-                                for (Realm realm : activity.getRealmService().getRealms()) {
-                                    final User user = realm.getUser();
+                                for (User user : activity.getRealmService().getRealmUsers()) {
                                     participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), user.getEntity()));
 
                                 }

@@ -2,6 +2,8 @@
 
 <resources>
     <color name="mpp_text">#ff363636</color>
+    <color name="mpp_text_secondary">#ff939393</color>
+    <color name="mpp_text_selected">#ffffffff</color>
 
     <color name="mpp_bg">#ffffffff</color>
     <color name="mpp_bg_darker">#fffefefe</color>
@@ -11,9 +13,6 @@
     <color name="mpp_filter_bg">#aaffffff</color>
 
     <color name="mpp_button">#ffc2c2c2</color>
-    <color name="text_selected">#ffffffff</color>
-    <color name="text_lighter">#ff5e5e5e</color>
-    <color name="text_lightest">#ff9a9a9a</color>
     <color name="text_name">#ff0e1825</color>
     <!--<color name="text_link">#ff3266a2</color>-->
     <color name="text_link">#ff363636</color>

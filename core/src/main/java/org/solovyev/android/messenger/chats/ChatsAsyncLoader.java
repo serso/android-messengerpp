@@ -34,8 +34,7 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem>
     protected List<UserChat> getElements(@Nonnull Context context) {
         final List<UserChat> result = new ArrayList<UserChat>();
 
-        for (Realm realm : realmService.getRealms()) {
-            final User user = realm.getUser();
+        for (User user : realmService.getRealmUsers()) {
             final List<Chat> chats = MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity());
             for (Chat chat : chats) {
                 result.add(UserChat.newInstance(user, chat, null));

@@ -97,7 +97,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
                         if (secondUser != null) {
                             final Entity realmUser = user.getEntity();
-                            final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().newPrivateChatId(realmUser, secondUser);
+                            final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().getPrivateChatId(realmUser, secondUser);
 
                             ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
                             if (chat == null) {

@@ -166,7 +166,7 @@ public class DefaultSyncService implements SyncService {
         private final boolean force;
 
         @Nonnull
-        private Collection<Realm> realms;
+        private final Collection<Realm> realms;
 
         public SyncRunnable(boolean force, @Nonnull Collection<Realm> realms) {
             this.force = force;
@@ -177,7 +177,6 @@ public class DefaultSyncService implements SyncService {
         public void run() {
             try {
 
-                realms = DefaultSyncService.this.realmService.getRealms();
                 for (Realm realm : realms) {
                     final SyncData syncData = new SyncDataImpl(realm.getId());
 

@@ -12,8 +12,8 @@
     -->
     <!-- list item selected-->
     <item android:state_activated="true"
-        android:color="@color/mpp_text_selected"/>
+        android:color="@color/mpp_text_secondary"/>
 
     <!-- default, list item not selected -->
-    <item android:color="@color/mpp_text"/>
+    <item android:color="@color/mpp_text_secondary"/>
 </selector>

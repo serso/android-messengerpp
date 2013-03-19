@@ -35,7 +35,7 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
         final Context context = getContext();
         if (context != null) {
             if (!input.older) {
-                MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat, input.realmUser);
+                MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat);
             } else {
                 MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
             }

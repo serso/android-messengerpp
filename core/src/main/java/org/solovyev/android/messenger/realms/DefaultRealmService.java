@@ -11,6 +11,7 @@ import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -18,9 +19,12 @@ import org.solovyev.common.listeners.Listeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,6 +65,7 @@ public class DefaultRealmService implements RealmService {
     @Nonnull
     private final Map<String, RealmDef> realmDefs = new HashMap<String, RealmDef>();
 
+    @GuardedBy("realms")
     @Nonnull
     private final Map<String, Realm> realms = new HashMap<String, Realm>();
 
@@ -100,7 +105,22 @@ public class DefaultRealmService implements RealmService {
     @Nonnull
     @Override
     public Collection<Realm> getRealms() {
-        return Collections.unmodifiableCollection(this.realms.values());
+        synchronized (this.realms) {
+            // must copy as concurrent modification might occur (e.g. realm removal)
+            return new ArrayList<Realm>(this.realms.values());
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Collection<User> getRealmUsers() {
+        final List<User> result = new ArrayList<User>();
+        synchronized (this.realms) {
+            for (Realm realm : this.realms.values()) {
+                result.add(realm.getUser());
+            }
+        }
+        return result;
     }
 
     @Nonnull
@@ -249,7 +269,7 @@ public class DefaultRealmService implements RealmService {
 
     @Override
     public void stopAllRealmConnections() {
-        for (Realm realm : realms.values()) {
+        for (Realm realm : getRealms()) {
             listeners.fireEvent(RealmEventType.stop.newEvent(realm, null));
         }
     }

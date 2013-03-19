@@ -10,6 +10,7 @@ import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.List;
 
 /**
@@ -17,6 +18,10 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
+/**
+ * Implementation of this class must provide thread safeness
+ */
+@ThreadSafe
 public interface ChatMessageService {
 
     final String NO_REALM_MESSAGE_ID = "empty";
