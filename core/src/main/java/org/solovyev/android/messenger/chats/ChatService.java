@@ -9,6 +9,7 @@ import org.solovyev.common.listeners.JEventListeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -78,5 +79,5 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
     void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView);
 
-    void saveChatMessages(@Nonnull Entity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate);
+    void saveChatMessages(@Nonnull Entity realmChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate);
 }

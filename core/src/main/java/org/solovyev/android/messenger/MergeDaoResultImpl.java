@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,9 +29,9 @@ public class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
     private final List<T> updatedObjects;
 
     @Nonnull
-    private final List<? extends T> objects;
+    private final Collection<? extends T> objects;
 
-    public MergeDaoResultImpl(@Nonnull List<? extends T> objects) {
+    public MergeDaoResultImpl(@Nonnull Collection<? extends T> objects) {
         this.objects = objects;
         this.removedObjectIds = new ArrayList<ID>(objects.size());
         this.addedObjectLinks = new ArrayList<T>(objects.size());

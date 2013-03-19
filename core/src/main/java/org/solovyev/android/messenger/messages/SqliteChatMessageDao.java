@@ -34,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -98,7 +99,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
     @Nonnull
     @Override
-    public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull List<? extends ChatMessage> messages, boolean allowDelete) {
+    public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete) {
         final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>(messages);
 
         final Chat chat = getChatService().getChatById(EntityImpl.fromEntityId(chatId));

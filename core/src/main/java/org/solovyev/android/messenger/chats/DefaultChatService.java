@@ -6,8 +6,10 @@ import android.widget.ImageView;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
@@ -282,11 +284,25 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     @Override
     public List<ChatMessage> syncNewerChatMessages(@Nonnull Entity user) {
-        final List<ChatMessage> chatMessages = getRealmByEntity(user).getRealmChatService().getChatMessages(user.getRealmEntityId());
+        final List<ChatMessage> messages = getRealmByEntity(user).getRealmChatService().getChatMessages(user.getRealmEntityId());
 
-        // todo serso: continue
+        final Multimap<Chat, ChatMessage> messagesByChats = ArrayListMultimap.create();
 
-        return java.util.Collections.unmodifiableList(chatMessages);
+        for (ChatMessage message : messages) {
+            if (message.isPrivate()) {
+                final Entity participant = message.getSecondUser(user);
+                final Chat chat = getPrivateChat(user, participant);
+                messagesByChats.put(chat, message);
+            } else {
+                // todo serso: we need link to chat here
+            }
+        }
+
+        for (Chat chat : messagesByChats.keys()) {
+            saveChatMessages(chat.getEntity(), messagesByChats.get(chat), true);
+        }
+
+        return java.util.Collections.unmodifiableList(messages);
     }
 
     @Nonnull
@@ -304,7 +320,7 @@ public class DefaultChatService implements ChatService {
     }
 
     @Override
-    public void saveChatMessages(@Nonnull Entity realmChat, @Nonnull List<? extends ChatMessage> messages, boolean updateChatSyncDate) {
+    public void saveChatMessages(@Nonnull Entity realmChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate) {
         Chat chat = this.getChatById(realmChat);
 
         if (chat != null) {

@@ -257,7 +257,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         final LinearLayout root = new LinearLayout(this.getActivity());
         root.setOrientation(LinearLayout.VERTICAL);
         root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
-        final int rootPaddingPxs = Views.toPixels(getResources().getDisplayMetrics(), 5);
+        final int rootPaddingPxs = Views.toPixels(getResources().getDisplayMetrics(), 0);
         root.setPadding(rootPaddingPxs, rootPaddingPxs, rootPaddingPxs, rootPaddingPxs);
 
         if (listViewFilter != null) {
