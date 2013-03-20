@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.IBinder;
 import com.google.inject.Inject;
@@ -81,8 +82,9 @@ public class MessengerService extends RoboService implements NetworkStateListene
 
         final Notification.Builder notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setOngoing(true);
-        notificationBuilder.setSmallIcon(R.drawable.mpp_app_icon);
+        notificationBuilder.setSmallIcon(R.drawable.mpp_sb_icon);
         notificationBuilder.setContentText(getString(R.string.mpp_app_name));
+        notificationBuilder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MessengerStartActivity.class), 0));
         startForeground(NOTIFICATION_ID, notificationBuilder.getNotification());
 
         realmConnections = new RealmConnections(this);
