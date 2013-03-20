@@ -85,16 +85,8 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @Override
     public void setMessageIcon(@Nonnull ImageView imageView, @Nonnull ChatMessage message, @Nonnull Chat chat, @Nonnull User user, @Nonnull Context context) {
-        final Drawable defaultChatIcon = context.getResources().getDrawable(R.drawable.mpp_icon_empty);
-
-        // todo serso: set icon properly
         final Entity author = message.getAuthor();
-        final String userIconUri = "";//author.getPropertyValueByName("photo");
-        if (!Strings.isEmpty(userIconUri)) {
-            this.imageLoader.loadImage(userIconUri, imageView, R.drawable.mpp_icon_empty);
-        } else {
-            imageView.setImageDrawable(defaultChatIcon);
-        }
+        userService.setUserIcon(userService.getUserById(author), imageView);
     }
 
     @Nonnull

@@ -36,7 +36,7 @@
     -->
 
     <style name="mpp_list_item_block" parent="mpp_text">
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_gravity">top</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_width">match_parent</item>
@@ -117,29 +117,31 @@
         <item name="android:gravity">right</item>
     </style>
 
-
-    <style name="mpp_list_item_message_text" parent="mpp_text">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:gravity">top|left</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="mpp_list_item_message_date_left" parent="mpp_list_item_message_text_left">
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
     </style>
 
-    <style name="mpp_bubble_message_text" parent="mpp_list_item_message_text">
+    <style name="mpp_list_item_message_date_right" parent="mpp_list_item_message_text_right">
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="mpp_list_item_message_text_left" parent="mpp_list_item_block">
+        <item name="android:textColor">@color/mpp_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="mpp_list_item_message_text_right" parent="mpp_list_item_block">
+        <item name="android:textColor">@color/mpp_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <style name="mpp_bubble_message_text" parent="mpp_list_item_message_text_left">
         <item name="android:textSize">16sp</item>
         <item name="android:lines">3</item>
         <item name="android:hint">@string/type_message</item>
-    </style>
-
-    <style name="list_item_message_date" parent="mpp_list_item">
-        <item name="android:textSize">9sp</item>
-        <item name="android:textColor">@color/mpp_text_secondary</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:singleLine">true</item>
     </style>
 
     <style name="mpp_list_item_contact_online" parent="mpp_list_item_block">

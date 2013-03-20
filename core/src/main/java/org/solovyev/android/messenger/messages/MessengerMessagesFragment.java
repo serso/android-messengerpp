@@ -5,10 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import com.google.inject.Inject;
 import org.solovyev.android.AThreads;
 import org.solovyev.android.http.ImageLoader;
@@ -134,24 +134,6 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View root = super.onCreateView(inflater, container, savedInstanceState);
-
-        final ListView listView = getListView(root);
-        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        listView.setStackFromBottom(true);
-
-        final View messagesFooter = ViewFromLayoutBuilder.newInstance(R.layout.mpp_messages_footer).build(this.getActivity());
-
-        /*final ImageView bubbleUserIconImageView = (ImageView) messagesFooter.findViewById(R.id.mpp_bubble_user_icon_imageview);
-        getUserService().setUserIcon(getUser(), bubbleUserIconImageView);*/
-
-        listView.addFooterView(messagesFooter, null, false);
-
-        return root;
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // then call parent
         super.onActivityCreated(savedInstanceState);
@@ -164,9 +146,9 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
     public void onViewCreated(View root, Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
 
-        final EditText messageBody = (EditText) root.findViewById(R.id.message_body);
+        final EditText messageBody = (EditText) root.findViewById(R.id.mpp_message_bubble_body_edittext);
 
-        final Button sendButton = (Button) root.findViewById(R.id.send_message_button);
+        final Button sendButton = (Button) root.findViewById(R.id.mpp_message_bubble_send_button);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +169,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
             }
         });
 
-        final Button clearButton = (Button) root.findViewById(R.id.clear_message_button);
+        final Button clearButton = (Button) root.findViewById(R.id.mpp_message_bubble_clear_button);
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,12 +179,12 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
 
         // user` icon
-        final ImageView userIcon = (ImageView) root.findViewById(R.id.message_icon);
+/*        final ImageView userIcon = (ImageView) root.findViewById(R.id.message_icon);
 
         final String imageUri = getUser().getPropertyValueByName("photo");
         if (!Strings.isEmpty(imageUri)) {
             imageLoader.loadImage(imageUri, userIcon, R.drawable.mpp_icon_empty);
-        }
+        }*/
     }
 
     @Nonnull
@@ -231,7 +213,18 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
     @Override
     protected void fillListView(@Nonnull ListView lv, @Nonnull Context context) {
         super.fillListView(lv, context);
+
         lv.setDividerHeight(0);
+
+        lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        lv.setStackFromBottom(true);
+
+        final View messagesFooter = ViewFromLayoutBuilder.newInstance(R.layout.mpp_messages_footer).build(this.getActivity());
+
+        /*final ImageView bubbleUserIconImageView = (ImageView) messagesFooter.findViewById(R.id.mpp_bubble_user_icon_imageview);
+        getUserService().setUserIcon(getUser(), bubbleUserIconImageView);*/
+
+        lv.addFooterView(messagesFooter, null, false);
     }
 
     @Override

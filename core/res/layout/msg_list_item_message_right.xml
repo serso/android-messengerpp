@@ -1,44 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:gravity="right"
-              style="@style/mpp_list_item">
 
-    <LinearLayout a:layout_height="wrap_content"
-                  a:background="@drawable/mpp_message_bubble_right"
-                  a:layout_width="wrap_content"
-                  a:paddingRight="24px"
-                  a:paddingLeft="5dp"
-                  a:layout_marginLeft="50dp"
-                  a:paddingTop="5dp"
-                  a:paddingBottom="5dp"
-                  a:orientation="horizontal">
+<FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    a:layout_width="match_parent"
+    a:layout_height="match_parent"
+    a:paddingLeft="12dp"
+    a:paddingTop="2dp"
+    a:paddingBottom="2dp">
 
-        <LinearLayout a:layout_height="wrap_content"
-                      a:layout_width="wrap_content"
-                      a:paddingRight="5dp"
-                      a:layout_gravity="top"
-                      a:background="@android:color/transparent"
-                      a:orientation="vertical">
+    <RelativeLayout
+        a:background="@drawable/mpp_message_bubble_right_gray"
+        a:paddingRight="18dp"
+        style="@style/mpp_list_item">
 
-            <TextView a:id="@+id/message_body"
-                      style="@style/mpp_list_item_message_text"
-                      a:gravity="right"
-                      a:layout_width="wrap_content"
-                      a:layout_height="wrap_content"/>
+        <ImageView
+            a:id="@+id/mpp_li_message_icon_imageview"
+            style="@style/mpp_list_item_icon"
+            a:src="@drawable/mpp_icon_user_empty"
+            a:visibility="gone"
+            a:layout_alignParentRight="true"/>
 
-            <TextView a:id="@+id/message_date"
-                      style="@style/list_item_message_date"
-                      a:layout_width="match_parent"
-                      a:layout_height="wrap_content"
-                      a:gravity="left"/>
+        <LinearLayout
+            a:layout_toLeftOf="@id/mpp_li_message_icon_imageview"
+            style="@style/mpp_list_item_block"
+            a:orientation="vertical">
+
+            <TextView
+                a:id="@+id/mpp_li_message_body_textview"
+                style="@style/mpp_list_item_message_text_right"
+                a:text="tsdfsf fdag dfdgdfgdfg adfgfg dfgddfg dfgdfg addfg dfg adfdfg dfgffgdfgadfgadgadfgadfg sdfad fadfasdf f as fdf adfasdfd" />
+
+            <TextView
+                a:id="@+id/mpp_li_message_date_textview"
+                style="@style/mpp_list_item_message_date_right"
+                a:gravity="right"
+                a:text="tsdfsfd" />
 
         </LinearLayout>
 
-        <ImageView a:id="@+id/message_icon"
-                   a:layout_width="30dp"
-                   a:layout_height="30dp"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

@@ -27,7 +27,7 @@ import java.util.Arrays;
  * Date: 6/10/12
  * Time: 11:25 PM
  */
-public class MessageListItem implements ListItem/*, ChatEventListener*/ {
+public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
 
     @Nonnull
     private static final String LEFT_VIEW_TAG = "left";
@@ -143,13 +143,13 @@ public class MessageListItem implements ListItem/*, ChatEventListener*/ {
     }
 
     private void fillView(@Nonnull Context context, @Nonnull View root, @Nonnull SharedPreferences preferences, boolean userMessage) {
-        final TextView messageText = (TextView) root.findViewById(R.id.message_body);
+        final TextView messageText = (TextView) root.findViewById(R.id.mpp_li_message_body_textview);
         messageText.setText(Html.fromHtml(message.getBody()));
 
-        final TextView messageDate = (TextView) root.findViewById(R.id.message_date);
+        final TextView messageDate = (TextView) root.findViewById(R.id.mpp_li_message_date_textview);
         messageDate.setText(Messages.getMessageTime(message));
 
-        final ImageView messageIcon = (ImageView) root.findViewById(R.id.message_icon);
+        final ImageView messageIcon = (ImageView) root.findViewById(R.id.mpp_li_message_icon_imageview);
         if (userMessage) {
             fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showUserIcon.getPreference(preferences));
         } else {
@@ -166,7 +166,6 @@ public class MessageListItem implements ListItem/*, ChatEventListener*/ {
             messageIcon.setVisibility(View.VISIBLE);
             MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(messageIcon, message, chat, user, context);
         } else {
-            messageIcon.setImageResource(R.drawable.mpp_icon_empty);
             messageIcon.setVisibility(View.GONE);
         }
     }

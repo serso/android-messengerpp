@@ -28,7 +28,7 @@
                       a:layout_width="match_parent"
                       a:orientation="horizontal">
 
-            <EditText a:id="@+id/message_body"
+            <EditText a:id="@+id/mpp_message_bubble_body_edittext"
                       style="@style/mpp_bubble_message_text"/>
         </LinearLayout>
 
@@ -38,11 +38,11 @@
                       a:gravity="right"
                       a:orientation="horizontal">
 
-            <Button a:id="@+id/send_message_button"
+            <Button a:id="@+id/mpp_message_bubble_send_button"
                     a:text="@string/send"
                     style="@style/mpp_button"/>
 
-            <Button a:id="@+id/clear_message_button"
+            <Button a:id="@+id/mpp_message_bubble_clear_button"
                     a:text="@string/clear"
                     style="@style/mpp_button"/>
 

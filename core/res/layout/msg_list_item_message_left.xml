@@ -1,44 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:gravity="left"
-              a:paddingRight="50dp"
-              style="@style/mpp_list_item">
+<FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
+    a:layout_width="match_parent"
+    a:layout_height="match_parent"
+    a:paddingRight="12dp"
+    a:paddingTop="2dp"
+    a:paddingBottom="2dp">
 
-    <LinearLayout a:layout_height="wrap_content"
-                  a:background="@drawable/mpp_message_bubble_left"
-                  a:layout_width="wrap_content"
-                  a:gravity="left"
-                  a:paddingLeft="24px"
-                  a:paddingRight="5dp"
-                  a:paddingTop="5dp"
-                  a:paddingBottom="5dp"
-                  a:orientation="horizontal">
+    <LinearLayout
+        a:background="@drawable/mpp_message_bubble_left_gray_light"
+        a:paddingLeft="25dp"
+        style="@style/mpp_list_item">
 
-        <ImageView a:id="@+id/message_icon"
-                   a:layout_width="30dp"
-                   a:layout_height="30dp"/>
+        <ImageView
+            a:id="@+id/mpp_li_message_icon_imageview"
+            style="@style/mpp_list_item_icon"
+            a:visibility="gone"
+            a:src="@drawable/mpp_icon_user_empty" />
 
-        <LinearLayout a:layout_height="wrap_content"
-                      a:layout_width="wrap_content"
-                      a:paddingLeft="5dp"
-                      a:layout_gravity="top"
-                      a:background="@android:color/transparent"
-                      a:orientation="vertical">
+        <LinearLayout
+            style="@style/mpp_list_item_block"
+            a:orientation="vertical">
 
-            <TextView a:id="@+id/message_body"
-                      style="@style/mpp_list_item_message_text"
-                      a:gravity="left"
-                      a:layout_width="wrap_content"
-                      a:layout_height="wrap_content"/>
+            <TextView
+                a:id="@+id/mpp_li_message_body_textview"
+                style="@style/mpp_list_item_message_text_left"
+                a:text="tsdfsf fdag dfdgdfgdfg adfgfg dfgddfg dfgdfg addfg dfg adfdfg dfgffgdfgadfgadgadfgadfg sdfad fadfasdf f as fdf adfasdfd" />
 
-            <TextView a:id="@+id/message_date"
-                      style="@style/list_item_message_date"
-                      a:layout_width="match_parent"
-                      a:layout_height="wrap_content"
-                      a:gravity="right"/>
+            <TextView
+                a:id="@+id/mpp_li_message_date_textview"
+                style="@style/mpp_list_item_message_date_left"
+                a:gravity="right"
+                a:text="tsdfsfd" />
 
         </LinearLayout>
-    </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>
