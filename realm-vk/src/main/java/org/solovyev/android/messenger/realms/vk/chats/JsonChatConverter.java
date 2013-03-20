@@ -121,12 +121,12 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         ApiChatImpl chat = chats.get(realmChatId);
                         if (chat == null) {
                             // create new chat object
-                            chat = ApiChatImpl.newInstance(realm.newRealmEntity(realmChatId), jsonMessagesResult.getCount(), false);
+                            chat = ApiChatImpl.newInstance(realm.newChatEntity(realmChatId), jsonMessagesResult.getCount(), false);
 
                             final String participantsStr = jsonMessage.getChat_active();
                             if (!Strings.isEmpty(participantsStr)) {
                                 for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
-                                    chat.addParticipant(userService.getUserById(realm.newRealmEntity(String.valueOf(participantId))));
+                                    chat.addParticipant(userService.getUserById(realm.newUserEntity(String.valueOf(participantId))));
                                 }
                             }
 

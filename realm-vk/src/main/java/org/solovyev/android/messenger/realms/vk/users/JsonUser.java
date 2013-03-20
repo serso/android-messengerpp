@@ -92,7 +92,7 @@ class JsonUser {
         properties.add(Properties.newProperty("photoBig", photo_big));
         properties.add(Properties.newProperty("photoRec", photo_rec));
 
-        return Users.newUser(realm.newRealmEntity(uid), Users.newUserSyncData(DateTime.now(), null, null, null), properties);
+        return Users.newUser(realm.newUserEntity(uid), Users.newUserSyncData(DateTime.now(), null, null, null), properties);
     }
 
     @Nullable

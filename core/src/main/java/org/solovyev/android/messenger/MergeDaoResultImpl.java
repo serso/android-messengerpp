@@ -11,7 +11,7 @@ import java.util.List;
 * Date: 6/9/12
 * Time: 8:19 PM
 */
-public class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
+public final class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
 
     // ids of objects which were removed on the remote server
     @Nonnull

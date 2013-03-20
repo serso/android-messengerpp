@@ -82,7 +82,7 @@ public class VkRealmChatService implements RealmChatService {
     }
 
     private List<ChatMessage> getChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull VkHttpTransactionForMessagesForChatProvider p) {
-        final Chat chat = getChatService().getChatById(realm.newRealmEntity(realmChatId));
+        final Chat chat = getChatService().getChatById(realm.newChatEntity(realmChatId));
 
         if (chat != null) {
             try {
@@ -165,7 +165,7 @@ public class VkRealmChatService implements RealmChatService {
     @Override
     public List<ApiChat> getUserChats(@Nonnull String realmUserId) {
         try {
-            final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(realm.newRealmEntity(realmUserId));
+            final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(realm.newUserEntity(realmUserId));
             return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(realm, user));
         } catch (IOException e) {
             throw new HttpRuntimeIoException(e);
@@ -185,6 +185,6 @@ public class VkRealmChatService implements RealmChatService {
     @Nonnull
     @Override
     public Chat newPrivateChat(@Nonnull Entity chat, @Nonnull String user1, @Nonnull String user2) {
-        return Chats.newPrivateChat(realm.newRealmEntity(user1 + CHAT_DELIMITER + user2));
+        return Chats.newPrivateChat(realm.newChatEntity(user1 + CHAT_DELIMITER + user2));
     }
 }

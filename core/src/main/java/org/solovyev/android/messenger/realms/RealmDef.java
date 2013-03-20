@@ -57,10 +57,6 @@ public interface RealmDef extends MessengerEntity {
     @Nonnull
     RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm);
 
-    boolean equals(@Nullable Object o);
-
-    int hashCode();
-
     /**
      * Returns list of translated user properties where property name = title, property value = value
      * @param user user which properties will be returned
@@ -77,4 +73,16 @@ public interface RealmDef extends MessengerEntity {
 
     @Nonnull
     RealmIconService getRealmIconService();
+
+    /*
+    **********************************************************************
+    *
+    *                           EQUALS/HASHCODE
+    *
+    **********************************************************************
+    */
+
+    boolean equals(@Nullable Object o);
+
+    int hashCode();
 }

@@ -52,7 +52,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
         expectedProperties.add(Properties.newProperty("prop_2", "prop_2_value"));
         expectedProperties.add(Properties.newProperty("prop_3", "prop_3_value"));
 
-        final Entity realmUser = testRealm.newRealmEntity("2");
+        final Entity realmUser = testRealm.newUserEntity("2");
 
         User expected = Users.newUser(realmUser, Users.newNeverSyncedUserSyncData(), expectedProperties);
 
@@ -77,7 +77,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
         Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
-        final Entity realmUser2 = testRealm.newRealmEntity("3");
+        final Entity realmUser2 = testRealm.newUserEntity("3");
 
         expected = Users.newUser(realmUser2, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
         userDao.insertUser(expected);

@@ -25,6 +25,8 @@ public final class HttpRealmIconService implements RealmIconService {
 
     private final int defaultUserIconResId;
 
+    private final int defaultUsersIconResId;
+
     @Nonnull
     private final UrlGetter iconUrlGetter;
 
@@ -34,11 +36,13 @@ public final class HttpRealmIconService implements RealmIconService {
     public HttpRealmIconService(@Nonnull Context context,
                                 @Nonnull ImageLoader imageLoader,
                                 int defaultUserIconResId,
+                                int defaultUsersIconResId,
                                 @Nonnull UrlGetter iconUrlGetter,
                                 @Nonnull UrlGetter photoUrlGetter) {
         this.context = context;
         this.imageLoader = imageLoader;
         this.defaultUserIconResId = defaultUserIconResId;
+        this.defaultUsersIconResId = defaultUsersIconResId;
         this.iconUrlGetter = iconUrlGetter;
         this.photoUrlGetter = photoUrlGetter;
     }
@@ -70,6 +74,11 @@ public final class HttpRealmIconService implements RealmIconService {
         for (User contact : users) {
             fetchUserIcon(contact);
         }
+    }
+
+    @Override
+    public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
+        imageView.setImageDrawable(context.getResources().getDrawable(defaultUsersIconResId));
     }
 
     public void fetchUserIcon(@Nonnull User user) {

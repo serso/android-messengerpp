@@ -35,6 +35,9 @@ public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
     Entity newUserEntity(@Nonnull String realmUserId);
 
     @Nonnull
+    Entity newChatEntity(@Nonnull String realmUserId);
+
+    @Nonnull
     Entity newMessageEntity(@Nonnull String realmMessageId);
 
     @Nonnull

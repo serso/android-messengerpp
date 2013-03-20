@@ -34,7 +34,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
         final ArrayList<ApiChat> chats = new ArrayList<ApiChat>();
 
-        final Entity realmUser = testRealm.newRealmEntity("01");
+        final Entity realmUser = testRealm.newUserEntity("01");
         final String userId = realmUser.getEntityId();
 
         userDao.insertUser(Users.newEmptyUser(realmUser));
@@ -43,10 +43,10 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
         Assert.assertTrue(chatDao.loadUserChats(userId).isEmpty());
 
-        chats.add(ApiChatImpl.newInstance(testRealm.newRealmEntity("01"), 10, false));
-        chats.add(ApiChatImpl.newInstance(testRealm.newRealmEntity("02"), 10, false));
-        chats.add(ApiChatImpl.newInstance(testRealm.newRealmEntity("03"), 10, false));
-        final Entity realmChat4 = testRealm.newRealmEntity("04");
+        chats.add(ApiChatImpl.newInstance(testRealm.newChatEntity("01"), 10, false));
+        chats.add(ApiChatImpl.newInstance(testRealm.newChatEntity("02"), 10, false));
+        chats.add(ApiChatImpl.newInstance(testRealm.newChatEntity("03"), 10, false));
+        final Entity realmChat4 = testRealm.newChatEntity("04");
         chats.add(ApiChatImpl.newInstance(realmChat4, 10, false));
         chatDao.mergeUserChats(userId, chats);
 

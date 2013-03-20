@@ -116,7 +116,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
             Thread.sleep(100);
 
 
-            final User user2InRealm1 = Users.newEmptyUser(realm1.newRealmEntity(realm2.getUser().getEntity().getRealmEntityId()));
+            final User user2InRealm1 = Users.newEmptyUser(realm1.newUserEntity(realm2.getUser().getEntity().getRealmEntityId()));
             final List<User> users1 = realmUserService1.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
             Assert.assertNotNull(users1);
             Assert.assertTrue(!users1.isEmpty());

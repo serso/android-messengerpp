@@ -88,6 +88,12 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
 
     @Nonnull
     @Override
+    public Entity newChatEntity(@Nonnull String realmUserId) {
+        return newRealmEntity(realmUserId);
+    }
+
+    @Nonnull
+    @Override
     public Entity newMessageEntity(@Nonnull String realmMessageId) {
         return newRealmEntity(realmMessageId);
     }

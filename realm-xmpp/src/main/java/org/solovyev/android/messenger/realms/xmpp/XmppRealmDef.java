@@ -28,7 +28,7 @@ import java.util.List;
  * Time: 8:09 PM
  */
 @Singleton
-public class XmppRealmDef extends AbstractRealmDef {
+public final class XmppRealmDef extends AbstractRealmDef {
 
     /*
     **********************************************************************
@@ -90,7 +90,7 @@ public class XmppRealmDef extends AbstractRealmDef {
         for (AProperty property : user.getProperties()) {
             final String name = property.getName();
             if ( name.equals(User.PROPERTY_NICKNAME) ) {
-                result.add(Properties.newProperty(context.getString(R.string.mpp_nickname), property.getValue()));
+                addUserProperty(context, result, R.string.mpp_nickname, property.getValue());
             }
         }
 
@@ -100,6 +100,6 @@ public class XmppRealmDef extends AbstractRealmDef {
     @Nonnull
     @Override
     public RealmIconService getRealmIconService() {
-        return new XmppRealmIconService(context, R.drawable.mpp_icon_user_empty);
+        return new XmppRealmIconService(context, R.drawable.mpp_icon_user_empty, R.drawable.mpp_icon_users);
     }
 }

@@ -35,23 +35,48 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     **********************************************************************
     */
 
+    /**
+     * Method loads all user chats
+     * @param user user
+     * @return list of chats of current user
+     */
     @Nonnull
     List<Chat> loadUserChats(@Nonnull Entity user);
 
+    /**
+     * Method updates chat (it's properties) in storage
+     * @param chat chat to be update
+     * @return updated chat
+     */
     @Nonnull
     Chat updateChat(@Nonnull Chat chat);
 
-    @Nonnull
-    ApiChat saveChat(@Nonnull Entity realmUser, @Nonnull ApiChat chat);
-
+    /**
+     * Method returns chat identified by <var>chat</var> entity.
+     * NOTE: this method doesn't lookup realm for specified chat, all chats should be preloaded for realm.
+     *
+     * @param chat chat
+     * @return chat, null if no chat found
+     */
     @Nullable
-    Chat getChatById(@Nonnull Entity realmChat);
+    Chat getChatById(@Nonnull Entity chat);
 
+    /**
+     * Method returns all participants of specified chat
+     * @param chat chat
+     * @return chat participants
+     */
     @Nonnull
-    List<User> getParticipants(@Nonnull Entity realmChat);
+    List<User> getParticipants(@Nonnull Entity chat);
 
+    /**
+     * Method returns all participants of specified chat except <var>user</var>
+     * @param chat chat
+     * @param user user
+     * @return chat participants except <var>user</var>
+     */
     @Nonnull
-    List<User> getParticipantsExcept(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
+    List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull Entity user);
 
     @Nullable
     ChatMessage getLastMessage(@Nonnull Entity realmChat);
@@ -138,8 +163,28 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     @Nonnull
     List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user);
 
-    void syncChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser);
+    void syncChat(@Nonnull Entity chat, @Nonnull Entity user);
 
+    /**
+     * Method merges specified <var>chats</var> with already saved in the storage.
+     *
+     * @param user user
+     * @param chats to be merged chats
+     * @return merge result
+     */
     @Nonnull
-    MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
+    MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> chats);
+
+    /**
+     * Method tries to save chat.
+     * If chats already exists in storage - it will be updated,
+     * if no chat exists -  it will be added,
+     *
+     * @param user user
+     * @param chat chat
+     *
+     * @return updated chat
+     */
+    @Nonnull
+    ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat);
 }

@@ -70,6 +70,11 @@ public class TestRealmDef extends AbstractRealmDef {
             @Override
             public void fetchUsersIcons(@Nonnull List<User> users) {
             }
+
+            @Override
+            public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
         };
     }
 

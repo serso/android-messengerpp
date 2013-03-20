@@ -132,11 +132,14 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     @Override
     public Chat updateChat(@Nonnull Chat chat) {
+        final boolean changed;
         synchronized (lock) {
-            chatDao.updateChat(chat);
+            changed = chatDao.updateChat(chat);
         }
 
-        fireEvent(ChatEventType.changed.newEvent(chat, null));
+        if (changed) {
+            fireEvent(ChatEventType.changed.newEvent(chat, null));
+        }
 
         return chat;
     }
@@ -237,8 +240,8 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public ApiChat saveChat(@Nonnull Entity realmUser, @Nonnull ApiChat chat) {
-        final MergeDaoResult<ApiChat, String> result = mergeUserChats(realmUser.getEntityId(), Arrays.asList(chat));
+    public ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) {
+        final MergeDaoResult<ApiChat, String> result = mergeUserChats(user, Arrays.asList(chat));
         if ( result.getAddedObjects().size() > 0 ) {
             return result.getAddedObjects().get(0);
         } else if (result.getUpdatedObjects().size() > 0) {
@@ -250,7 +253,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats) {
+    public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) {
         synchronized (lock) {
             final List<ApiChat> preparedChats = Lists.transform(chats, new Function<ApiChat, ApiChat>() {
                 @Override
@@ -259,21 +262,21 @@ public class DefaultChatService implements ChatService {
                     return prepareChat(chat);
                 }
             });
-            return chatDao.mergeUserChats(userId, preparedChats);
+            return chatDao.mergeUserChats(user.getEntityId(), preparedChats);
         }
     }
 
     @Override
-    public Chat getChatById(@Nonnull Entity realmChat) {
+    public Chat getChatById(@Nonnull Entity chat) {
         Chat result;
 
         synchronized (chatsById) {
-            result = chatsById.get(realmChat);
+            result = chatsById.get(chat);
         }
 
         if (result == null) {
             synchronized (lock) {
-                result = chatDao.loadChatById(realmChat.getEntityId());
+                result = chatDao.loadChatById(chat.getEntityId());
             }
 
             if ( result != null ) {
@@ -382,9 +385,9 @@ public class DefaultChatService implements ChatService {
     }
 
     @Override
-    public void syncChat(@Nonnull Entity realmChat, @Nonnull Entity realmUser) {
+    public void syncChat(@Nonnull Entity chat, @Nonnull Entity user) {
         // todo serso: check if OK
-        syncNewerChatMessagesForChat(realmChat);
+        syncNewerChatMessagesForChat(chat);
     }
 
     @Nullable
@@ -416,8 +419,7 @@ public class DefaultChatService implements ChatService {
                 final User participant = otherParticipants.get(0);
                 userService.setUserIcon(participant, imageView);
             } else {
-                // todo serso: set icon for group chat
-                imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_app_icon));
+                userService.setUsersIcon(realm, otherParticipants, imageView);
             }
         } else {
             // just in case...
@@ -428,7 +430,7 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     @Override
     public Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2) {
-        return getRealmByEntity(user1).newRealmEntity(user1.getRealmEntityId() + PRIVATE_CHAT_DELIMITER + user2.getRealmEntityId());
+        return getRealmByEntity(user1).newChatEntity(user1.getRealmEntityId() + PRIVATE_CHAT_DELIMITER + user2.getRealmEntityId());
     }
 
     @Nonnull
@@ -451,17 +453,17 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<User> getParticipants(@Nonnull Entity chatEntity) {
+    public List<User> getParticipants(@Nonnull Entity chat) {
         List<User> result;
 
         synchronized (chatParticipantsCache) {
-            result = chatParticipantsCache.get(chatEntity);
+            result = chatParticipantsCache.get(chat);
             if (result == null) {
                 synchronized (lock) {
-                    result = chatDao.loadChatParticipants(chatEntity.getEntityId());
+                    result = chatDao.loadChatParticipants(chat.getEntityId());
                 }
                 if (!Collections.isEmpty(result)) {
-                    chatParticipantsCache.put(chatEntity, result);
+                    chatParticipantsCache.put(chat, result);
                 }
             }
         }
@@ -472,12 +474,12 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<User> getParticipantsExcept(@Nonnull Entity realmChat, @Nonnull final Entity realmUser) {
-        final List<User> participants = getParticipants(realmChat);
+    public List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull final Entity user) {
+        final List<User> participants = getParticipants(chat);
         return Lists.newArrayList(Iterables.filter(participants, new Predicate<User>() {
             @Override
             public boolean apply(@javax.annotation.Nullable User input) {
-                return input != null && !input.getEntity().equals(realmUser);
+                return input != null && !input.getEntity().equals(user);
             }
         }));
     }

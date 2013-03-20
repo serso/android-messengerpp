@@ -73,8 +73,14 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
     }
 
     @Override
-    public void updateChat(@Nonnull Chat chat) {
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateChat(chat), new DeleteChatProperties(chat), new InsertChatProperties(chat)));
+    public boolean updateChat(@Nonnull Chat chat) {
+        final long rows = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new UpdateChat(chat));
+        if (rows >= 0) {
+            AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteChatProperties(chat), new InsertChatProperties(chat)));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

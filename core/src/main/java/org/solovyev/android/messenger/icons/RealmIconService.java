@@ -22,4 +22,6 @@ public interface RealmIconService {
      * @param users for which icon fetching must be done
      */
     void fetchUsersIcons(@Nonnull List<User> users);
+
+    void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView);
 }

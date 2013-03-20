@@ -12,6 +12,7 @@ import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -110,7 +111,7 @@ public class VkRealmDef extends AbstractRealmDef {
         for (AProperty property : user.getProperties()) {
             final String name = property.getName();
             if ( name.equals(User.PROPERTY_NICKNAME) ) {
-                result.add(Properties.newProperty(context.getString(R.string.mpp_nickname), property.getValue()));
+                addUserProperty(context, result, R.string.mpp_nickname, property.getValue());
             } else if ( name.equals(User.PROPERTY_SEX) ) {
                 result.add(Properties.newProperty(context.getString(R.string.mpp_sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
             } else if ( name.equals("bdate") ) {
@@ -130,7 +131,7 @@ public class VkRealmDef extends AbstractRealmDef {
     @Override
     public synchronized RealmIconService getRealmIconService() {
         if (iconService == null) {
-            iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_icon_user_empty, iconUrlGetter, photoUrlGetter);
+            iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_icon_user_empty, R.drawable.mpp_icon_users, iconUrlGetter, photoUrlGetter);
         }
         return iconService;
     }

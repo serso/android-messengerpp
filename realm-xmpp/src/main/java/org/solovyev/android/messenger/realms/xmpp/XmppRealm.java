@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
+public final class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
 
     private static final String TAG = XmppRealm.class.getSimpleName();
 
@@ -90,12 +90,22 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
 
     @Nonnull
     public Entity newUserEntity(@Nonnull String realmUserId) {
+        return newEntity(realmUserId);
+    }
+
+    @Nonnull
+    private Entity newEntity(@Nonnull String realmUserId) {
         final int index = realmUserId.indexOf('/');
         if ( index >= 0 ) {
             return newRealmEntity(realmUserId.substring(0, index));
         } else {
             return newRealmEntity(realmUserId);
         }
+    }
+
+    @Nonnull
+    public Entity newChatEntity(@Nonnull String realmUserId) {
+        return newEntity(realmUserId);
     }
 
     /*
@@ -127,7 +137,7 @@ public class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
         if (Strings.isEmpty(realmChatId) ) {
             chat = getChatService().getPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
         } else {
-            chat = realm.newRealmEntity(realmChatId);
+            chat = realm.newChatEntity(realmChatId);
         }
 
         final List<ChatMessage> chatMessages = toMessages(realm, messages);

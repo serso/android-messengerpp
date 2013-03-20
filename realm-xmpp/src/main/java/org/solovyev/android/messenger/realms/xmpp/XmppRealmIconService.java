@@ -25,9 +25,12 @@ public class XmppRealmIconService implements RealmIconService {
 
     private final int defaultUserIconResId;
 
-    public XmppRealmIconService(@Nonnull Context context, int defaultUserIconResId) {
+    private final int defaultUsersIconResId;
+
+    public XmppRealmIconService(@Nonnull Context context, int defaultUserIconResId, int defaultUsersIconResId) {
         this.context = context;
         this.defaultUserIconResId = defaultUserIconResId;
+        this.defaultUsersIconResId = defaultUsersIconResId;
     }
 
     @Override
@@ -48,6 +51,11 @@ public class XmppRealmIconService implements RealmIconService {
     @Override
     public void fetchUsersIcons(@Nonnull List<User> users) {
         // everything is already fetched
+    }
+
+    @Override
+    public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
+        imageView.setImageDrawable(context.getResources().getDrawable(defaultUsersIconResId));
     }
 
     @Nullable

@@ -4,6 +4,7 @@ import android.widget.ImageView;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
@@ -158,7 +159,20 @@ public interface UserService {
     **********************************************************************
     */
 
+    /**
+     * Method sets icon of <var>user</var> in <var>imageView</var>
+     * @param user user for whom icon shall be set
+     * @param imageView view to which icon shall be set
+     */
     void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);
+
+    /**
+     * Method sets some icon which represents set of <var>users</var> in <var>imageView</var>
+     * @param realm realm
+     * @param users users for whom icon shall be set
+     * @param imageView view to which icon shall be set
+     */
+    void setUsersIcon(@Nonnull Realm realm, @Nonnull List<User> users, ImageView imageView);
 
     void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView);
 
@@ -191,5 +205,4 @@ public interface UserService {
      * @return true if listener was successfully unsubscribed, false if no such listener was found
      */
     boolean removeListener(@Nonnull JEventListener<UserEvent> listener);
-
 }

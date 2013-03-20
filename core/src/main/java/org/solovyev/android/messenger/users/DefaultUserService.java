@@ -377,7 +377,7 @@ public class DefaultUserService implements UserService {
 
         final MergeDaoResult<ApiChat, String> result;
         synchronized (lock) {
-            result = chatService.mergeUserChats(userEntity.getEntityId(), apiChats);
+            result = chatService.mergeUserChats(userEntity, apiChats);
 
             // update sync data
             user = user.updateChatsSyncDate();
@@ -474,6 +474,11 @@ public class DefaultUserService implements UserService {
     @Override
     public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
         getRealmIconServiceByUser(user).setUserIcon(user, imageView);
+    }
+
+    @Override
+    public void setUsersIcon(@Nonnull Realm realm, @Nonnull List<User> users, ImageView imageView) {
+        realm.getRealmDef().getRealmIconService().setUsersIcon(users, imageView);
     }
 
     @Override

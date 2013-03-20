@@ -1,11 +1,11 @@
 package org.solovyev.android.messenger.chats;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.properties.AProperty;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -36,7 +36,12 @@ public interface ChatDao {
     @Nullable
     Chat loadChatById(@Nonnull String chatId);
 
-    void updateChat(@Nonnull Chat chat);
+    /**
+     * Method updates chat in the storage
+     * @param chat chat to be updated
+     * @return true if chat was updated, false if no chat exists in storage
+     */
+    boolean updateChat(@Nonnull Chat chat);
 
     void deleteAllChats();
 }

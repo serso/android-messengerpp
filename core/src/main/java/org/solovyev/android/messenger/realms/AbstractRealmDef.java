@@ -1,8 +1,13 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.Properties;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * User: serso
@@ -23,6 +28,7 @@ public abstract class AbstractRealmDef implements RealmDef {
 
     @Nonnull
     private final Class<? extends RealmConfiguration> configurationClass;
+
     private final boolean notifySentMessagesImmediately;
 
     protected AbstractRealmDef(@Nonnull String id,
@@ -86,6 +92,12 @@ public abstract class AbstractRealmDef implements RealmDef {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    protected void addUserProperty(@Nonnull Context context, @Nonnull List<AProperty> properties, int propertyNameResId, @Nullable String propertyValue) {
+        if (!Strings.isEmpty(propertyValue)) {
+            properties.add(Properties.newProperty(context.getString(propertyNameResId), propertyValue));
+        }
     }
 
     @Override
