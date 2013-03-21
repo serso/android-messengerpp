@@ -158,15 +158,7 @@ public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
         messageDate.setText(Messages.getMessageTime(message));
 
         final ImageView messageIcon = (ImageView) root.findViewById(R.id.mpp_li_message_icon_imageview);
-        if (userMessage) {
-            fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showUserIcon.getPreference(preferences));
-        } else {
-            if (chat.isPrivate()) {
-                fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showContactIconInPrivateChat.getPreference(preferences));
-            } else {
-                fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showContactIcon.getPreference(preferences));
-            }
-        }
+        fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences));
     }
 
     private void fillMessageIcon(@Nonnull Context context, @Nonnull ImageView messageIcon, @Nonnull Boolean show) {

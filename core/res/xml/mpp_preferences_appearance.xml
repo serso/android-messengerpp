@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:a="http://schemas.android.com/apk/res/android"
-    a:title="@string/mpp_settings_appearance">
+                  a:title="@string/mpp_settings_appearance">
 
     <!--<org.solovyev.android.ads.AdViewPreference a:layout="@layout/acl_adview_pref" />-->
+
+    <CheckBoxPreference a:key="gui.chat.message.showIcon"
+                        a:title="Show user icon in chat message"
+                        a:summary="If checked user icon will be shown in message bubble in chat"/>
+
+    <ListPreference a:key="gui.chat.message.userMessageStyle"
+                    a:entries="@array/mpp_message_style_names"
+                    a:entryValues="@array/mpp_message_style_ids"
+                    a:title="User message style"
+                    a:summary="Defined style of user message in chat"/>
+
+    <ListPreference a:key="gui.chat.message.contactMessageStyle"
+                    a:entries="@array/mpp_message_style_names"
+                    a:entryValues="@array/mpp_message_style_ids"
+                    a:title="Contact message style"
+                    a:summary="Defined style of contact message in chat"/>
 
 </PreferenceScreen>

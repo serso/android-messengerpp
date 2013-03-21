@@ -8,36 +8,34 @@
     a:paddingTop="2dp"
     a:paddingBottom="2dp">
 
-    <RelativeLayout
-        a:id="@+id/mpp_li_message_linearlayout"
-        a:background="@drawable/mpp_message_bubble_right_gray"
-        a:paddingRight="25dp"
-        style="@style/mpp_list_item">
+    <LinearLayout
+            a:id="@+id/mpp_li_message_linearlayout"
+            a:background="@drawable/mpp_message_bubble_right_gray_light"
+            a:paddingRight="25dp"
+            style="@style/mpp_list_item">
 
         <ImageView
-            a:id="@+id/mpp_li_message_icon_imageview"
-            style="@style/mpp_list_item_icon"
-            a:src="@drawable/mpp_icon_user_empty"
-            a:visibility="gone"
-            a:layout_alignParentRight="true"/>
+                a:id="@+id/mpp_li_message_icon_imageview"
+                style="@style/mpp_list_item_icon"
+                a:visibility="gone"
+                a:src="@drawable/mpp_icon_user_empty" />
 
         <LinearLayout
-            a:layout_toLeftOf="@id/mpp_li_message_icon_imageview"
-            style="@style/mpp_list_item_block"
-            a:orientation="vertical">
+                style="@style/mpp_list_item_block"
+                a:orientation="vertical">
 
             <TextView
-                a:id="@+id/mpp_li_message_body_textview"
-                style="@style/mpp_list_item_message_text_right"
-                a:text="tsdfsf fdag dfdgdfgdfg adfgfg dfgddfg dfgdfg addfg dfg adfdfg dfgffgdfgadfgadgadfgadfg sdfad fadfasdf f as fdf adfasdfd" />
+                    a:id="@+id/mpp_li_message_body_textview"
+                    style="@style/mpp_list_item_message_text_right"
+                    a:text="tsdfsf fdag dfdgdfgdfg adfgfg dfgddfg dfgdfg addfg dfg adfdfg dfgffgdfgadfgadgadfgadfg sdfad fadfasdf f as fdf adfasdfd" />
 
             <TextView
-                a:id="@+id/mpp_li_message_date_textview"
-                style="@style/mpp_list_item_message_date_right"
-                a:gravity="right"
-                a:text="tsdfsfd" />
+                    a:id="@+id/mpp_li_message_date_textview"
+                    style="@style/mpp_list_item_message_date_right"
+                    a:gravity="right"
+                    a:text="tsdfsfd" />
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>

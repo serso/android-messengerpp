@@ -150,9 +150,10 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="Theme.Messenger" parent="Theme.Sherlock">
+    <style name="mpp_theme_metro" parent="Theme.Sherlock">
         <item name="actionBarStyle">@style/Widget.Messenger.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Messenger.ActionBar</item>
+        <!--todo serso: currently alert dialogs are shown with black text on black background-->
         <item name="android:textColor">@color/mpp_text</item>
         <item name="android:textColorSecondary">@color/mpp_text</item>
     </style>

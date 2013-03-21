@@ -9,7 +9,7 @@
 
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="13"/>
 
-    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/Theme.Messenger">
+    <application android:debuggable="true" android:hardwareAccelerated="false" android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/mpp_theme_metro">
 
         <activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerStartActivity" android:windowSoftInputMode="adjustPan">
 

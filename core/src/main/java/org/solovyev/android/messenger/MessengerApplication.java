@@ -198,6 +198,8 @@ public class MessengerApplication extends Application implements MessengerServic
 
         DateTimeZone.setDefault(DateTimeZone.UTC);
 
+        MessengerPreferences.setDefaultValues(this);
+
         RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
 
         // init services
