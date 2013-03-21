@@ -18,9 +18,6 @@ import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
-import org.solovyev.android.prefs.BooleanPreference;
-import org.solovyev.android.prefs.Preference;
-import org.solovyev.android.prefs.StringPreference;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 import roboguice.RoboGuice;
 
@@ -135,23 +132,6 @@ public class MessengerApplication extends Application implements MessengerServic
                 }
             });
             Log.e("Msg_Exception", e.getMessage(), e);
-        }
-    }
-
-    public static class Preferences {
-
-        public static class Gui {
-            public static class Chat {
-                public static Preference<Boolean> showUserIcon = BooleanPreference.of("gui.chat.showUserIcon", false);
-                public static Preference<Boolean> showContactIconInChat = BooleanPreference.of("gui.chat.showContactIconInChat", false);
-                public static Preference<Boolean> showContactIconInPrivateChat = BooleanPreference.of("gui.chat.showContactIconInPrivateChat", false);
-                public static Preference<UserIconPosition> userMessagesPosition = StringPreference.ofEnum("gui.chat.userMessagesPosition", UserIconPosition.left, UserIconPosition.class);
-
-                public static enum UserIconPosition {
-                    left,
-                    right
-                }
-            }
         }
     }
 

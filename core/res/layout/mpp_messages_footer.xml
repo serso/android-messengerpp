@@ -15,7 +15,7 @@
 
     <LinearLayout a:layout_height="wrap_content"
                   a:layout_width="match_parent"
-                  a:background="@drawable/mpp_message_bubble_left"
+                  a:background="@drawable/mpp_message_bubble_left_blue"
                   a:paddingLeft="24px"
                   a:paddingRight="5dp"
                   a:paddingTop="5dp"

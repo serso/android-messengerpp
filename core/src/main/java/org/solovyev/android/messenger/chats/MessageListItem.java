@@ -3,9 +3,11 @@ package org.solovyev.android.messenger.chats;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +16,7 @@ import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerPreferences;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.User;
@@ -78,23 +81,23 @@ public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean userMessage = isUserMessage();
-        if (userMessage == isUserMessagesToTheRight(preferences)) {
-            if (getRightTag().equals(viewTag)) {
-                // this is the view for this list item => just return
-                return view;
-            } else if (viewTag != null && viewTag.startsWith(RIGHT_VIEW_TAG)) {
-                // this is the view for this TYPE of list item => refill it with values
-                view.setTag(getRightTag());
-                fillView(context, view, preferences, userMessage);
-                return view;
-            }
-        } else {
+        if (userMessage) {
             if (getLeftTag().equals(viewTag)) {
                 // this is the view for this list item => just return
                 return view;
             } else if (viewTag != null && viewTag.startsWith(LEFT_VIEW_TAG)) {
                 // this is the view for this TYPE of list item => refill it with values
                 view.setTag(getLeftTag());
+                fillView(context, view, preferences, userMessage);
+                return view;
+            }
+        } else {
+            if (getRightTag().equals(viewTag)) {
+                // this is the view for this list item => just return
+                return view;
+            } else if (viewTag != null && viewTag.startsWith(RIGHT_VIEW_TAG)) {
+                // this is the view for this TYPE of list item => refill it with values
+                view.setTag(getRightTag());
                 fillView(context, view, preferences, userMessage);
                 return view;
             }
@@ -111,12 +114,12 @@ public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
 
         final View root;
         boolean userMessage = isUserMessage();
-        if (userMessage == isUserMessagesToTheRight(preferences)) {
-            root = ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_message_right).build(context);
-            root.setTag(getRightTag());
-        } else {
+        if (userMessage) {
             root = ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_message_left).build(context);
             root.setTag(getLeftTag());
+        } else {
+            root = ViewFromLayoutBuilder.newInstance(R.layout.msg_list_item_message_right).build(context);
+            root.setTag(getRightTag());
         }
 
         fillView(context, root, preferences, userMessage);
@@ -134,15 +137,20 @@ public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
         return rightTag;
     }
 
-    private boolean isUserMessagesToTheRight(@Nonnull SharedPreferences preferences) {
-        return MessengerApplication.Preferences.Gui.Chat.userMessagesPosition.getPreference(preferences) == MessengerApplication.Preferences.Gui.Chat.UserIconPosition.right;
-    }
-
     private boolean isUserMessage() {
         return user.getEntity().equals(message.getAuthor());
     }
 
     private void fillView(@Nonnull Context context, @Nonnull View root, @Nonnull SharedPreferences preferences, boolean userMessage) {
+        final Resources resources = context.getResources();
+
+        final ViewGroup messageLayout = (ViewGroup) root.findViewById(R.id.mpp_li_message_linearlayout);
+        if ( userMessage ) {
+            messageLayout.setBackgroundDrawable(resources.getDrawable(MessengerPreferences.Gui.Chat.Message.userMessageStyle.getPreference(preferences).getLeftMessageBackground()));
+        } else {
+            messageLayout.setBackgroundDrawable(resources.getDrawable(MessengerPreferences.Gui.Chat.Message.contactMessageStyle.getPreference(preferences).getRightMessageBackground()));
+        }
+
         final TextView messageText = (TextView) root.findViewById(R.id.mpp_li_message_body_textview);
         messageText.setText(Html.fromHtml(message.getBody()));
 
@@ -151,12 +159,12 @@ public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
 
         final ImageView messageIcon = (ImageView) root.findViewById(R.id.mpp_li_message_icon_imageview);
         if (userMessage) {
-            fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showUserIcon.getPreference(preferences));
+            fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showUserIcon.getPreference(preferences));
         } else {
             if (chat.isPrivate()) {
-                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showContactIconInPrivateChat.getPreference(preferences));
+                fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showContactIconInPrivateChat.getPreference(preferences));
             } else {
-                fillMessageIcon(context, messageIcon, MessengerApplication.Preferences.Gui.Chat.showContactIconInChat.getPreference(preferences));
+                fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showContactIcon.getPreference(preferences));
             }
         }
     }

@@ -8,6 +8,7 @@
     a:paddingBottom="2dp">
 
     <LinearLayout
+        a:id="@+id/mpp_li_message_linearlayout"
         a:background="@drawable/mpp_message_bubble_left_gray_light"
         a:paddingLeft="25dp"
         style="@style/mpp_list_item">

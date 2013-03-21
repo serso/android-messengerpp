@@ -9,8 +9,9 @@
     a:paddingBottom="2dp">
 
     <RelativeLayout
+        a:id="@+id/mpp_li_message_linearlayout"
         a:background="@drawable/mpp_message_bubble_right_gray"
-        a:paddingRight="18dp"
+        a:paddingRight="25dp"
         style="@style/mpp_list_item">
 
         <ImageView
