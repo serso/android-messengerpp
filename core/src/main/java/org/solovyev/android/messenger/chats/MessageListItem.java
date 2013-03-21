@@ -145,11 +145,6 @@ public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
         final Resources resources = context.getResources();
 
         final ViewGroup messageLayout = (ViewGroup) root.findViewById(R.id.mpp_li_message_linearlayout);
-        if ( userMessage ) {
-            messageLayout.setBackgroundDrawable(resources.getDrawable(MessengerPreferences.Gui.Chat.Message.userMessageStyle.getPreference(preferences).getLeftMessageBackground()));
-        } else {
-            messageLayout.setBackgroundDrawable(resources.getDrawable(MessengerPreferences.Gui.Chat.Message.contactMessageStyle.getPreference(preferences).getRightMessageBackground()));
-        }
 
         final TextView messageText = (TextView) root.findViewById(R.id.mpp_li_message_body_textview);
         messageText.setText(Html.fromHtml(message.getBody()));
@@ -159,6 +154,20 @@ public final class MessageListItem implements ListItem/*, ChatEventListener*/ {
 
         final ImageView messageIcon = (ImageView) root.findViewById(R.id.mpp_li_message_icon_imageview);
         fillMessageIcon(context, messageIcon, MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences));
+
+        if ( userMessage ) {
+            final MessengerPreferences.Gui.Chat.Message.Style userMessageStyle = MessengerPreferences.Gui.Chat.Message.userMessageStyle.getPreference(preferences);
+            messageLayout.setBackgroundDrawable(resources.getDrawable(userMessageStyle.getLeftMessageBackground()));
+            final int textColor = resources.getColor(userMessageStyle.getTextColorResId());
+            messageText.setTextColor(textColor);
+            messageDate.setTextColor(textColor);
+        } else {
+            final MessengerPreferences.Gui.Chat.Message.Style contactMessageStyle = MessengerPreferences.Gui.Chat.Message.contactMessageStyle.getPreference(preferences);
+            messageLayout.setBackgroundDrawable(resources.getDrawable(contactMessageStyle.getRightMessageBackground()));
+            final int textColor = resources.getColor(contactMessageStyle.getTextColorResId());
+            messageText.setTextColor(textColor);
+            messageDate.setTextColor(textColor);
+        }
     }
 
     private void fillMessageIcon(@Nonnull Context context, @Nonnull ImageView messageIcon, @Nonnull Boolean show) {

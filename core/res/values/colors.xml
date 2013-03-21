@@ -5,6 +5,8 @@
     <color name="mpp_text_secondary">#ff939393</color>
     <color name="mpp_text_selected">#ffffffff</color>
 
+    <color name="mpp_message_white_text">#ffffffff</color>
+
     <color name="mpp_bg">#ffffffff</color>
     <color name="mpp_bg_darker">#fffefefe</color>
     <color name="mpp_bg_darkest">#ffeeeeee</color>

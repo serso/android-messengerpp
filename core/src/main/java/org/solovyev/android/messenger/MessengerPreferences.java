@@ -30,17 +30,19 @@ public final class MessengerPreferences {
                 public static Preference<Gui.Chat.Message.Style> contactMessageStyle = StringPreference.ofEnum("gui.chat.message.contactMessageStyle", Gui.Chat.Message.Style.metro_gray, Gui.Chat.Message.Style.class);
 
                 public static enum Style {
-                    metro_blue(R.drawable.mpp_message_bubble_left_blue, R.drawable.mpp_message_bubble_right_blue),
-                    metro_gray(R.drawable.mpp_message_bubble_left_gray, R.drawable.mpp_message_bubble_right_gray),
-                    metro_gray_light(R.drawable.mpp_message_bubble_left_gray_light, R.drawable.mpp_message_bubble_right_gray_light);
+                    metro_blue(R.drawable.mpp_message_bubble_left_blue, R.drawable.mpp_message_bubble_right_blue, R.color.mpp_message_white_text),
+                    metro_gray(R.drawable.mpp_message_bubble_left_gray, R.drawable.mpp_message_bubble_right_gray, R.color.mpp_text),
+                    metro_gray_light(R.drawable.mpp_message_bubble_left_gray_light, R.drawable.mpp_message_bubble_right_gray_light, R.color.mpp_text);
 
                     private final int leftMessageBackground;
 
                     private final int rightMessageBackground;
+                    private final int textColorResId;
 
-                    Style(int leftMessageBackground, int rightMessageBackground) {
+                    Style(int leftMessageBackground, int rightMessageBackground, int textColorResId) {
                         this.leftMessageBackground = leftMessageBackground;
                         this.rightMessageBackground = rightMessageBackground;
+                        this.textColorResId = textColorResId;
                     }
 
                     public int getLeftMessageBackground() {
@@ -49,6 +51,10 @@ public final class MessengerPreferences {
 
                     public int getRightMessageBackground() {
                         return rightMessageBackground;
+                    }
+
+                    public int getTextColorResId() {
+                        return textColorResId;
                     }
                 }
             }
