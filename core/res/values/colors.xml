@@ -2,10 +2,9 @@
 
 <resources>
     <color name="mpp_text">#ff363636</color>
-    <color name="mpp_text_secondary">#ff939393</color>
+    <color name="mpp_text_inverted">#ffffffff</color>
     <color name="mpp_text_selected">#ffffffff</color>
-
-    <color name="mpp_message_white_text">#ffffffff</color>
+    <color name="mpp_text_secondary">#ff939393</color>
 
     <color name="mpp_bg">#ffffffff</color>
     <color name="mpp_bg_darker">#fffefefe</color>
@@ -20,12 +19,8 @@
     <color name="text_link">#ff363636</color>
     <color name="mpp_selected">#cc33b5e5</color>
     <color name="mpp_blue">#ff33b5e5</color>
+    <color name="mpp_black">#ff000000</color>
     <color name="mpp_blue_darker">#ff247697</color>
-    <color name="gray">#ffdddddd</color>
-
-    <color name="image_button_unselected">#ff999999</color>
-    <color name="image_button_selected">#ffffffff</color>
-
-    <color name="message_bg">#ffecf0f5</color>
+    <color name="mpp_gray">#ffdddddd</color>
 
 </resources>

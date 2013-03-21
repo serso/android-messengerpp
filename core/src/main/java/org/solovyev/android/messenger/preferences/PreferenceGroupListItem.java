@@ -26,7 +26,7 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
     private static final String TAG_PREFIX = "preference_group_list_item_";
 
     public PreferenceGroupListItem(@Nonnull PreferenceGroup preferenceGroup) {
-        super(TAG_PREFIX, R.layout.mpp_list_item_preference, preferenceGroup);
+        super(TAG_PREFIX, preferenceGroup, R.layout.mpp_list_item_preference);
     }
 
     @Nonnull

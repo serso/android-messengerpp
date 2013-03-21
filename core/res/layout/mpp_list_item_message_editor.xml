@@ -2,19 +2,19 @@
 
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
              a:layout_width="match_parent"
-             a:layout_height="match_parent"
-             a:paddingRight="12dp"
+             a:layout_height="wrap_content"
+             a:paddingRight="14dp"
              a:paddingTop="2dp"
              a:paddingBottom="2dp">
 
     <LinearLayout
-            a:id="@+id/mpp_li_message_linearlayout"
+            a:id="@+id/mpp_message_bubble_linearlayout"
             a:background="@drawable/mpp_message_bubble_left_gray_light"
             a:paddingLeft="25dp"
             style="@style/mpp_list_item">
 
         <ImageView
-                a:id="@+id/mpp_li_message_icon_imageview"
+                a:id="@+id/mpp_message_bubble_icon_imageview"
                 style="@style/mpp_list_item_icon"
                 a:visibility="gone"
                 a:src="@drawable/mpp_icon_user_empty"/>
@@ -23,8 +23,9 @@
                 style="@style/mpp_list_item_block"
                 a:orientation="vertical">
 
-            <EditText a:id="@+id/mpp_message_bubble_body_edittext"
-                      style="@style/mpp_bubble_message_text"/>
+            <EditText
+                    a:id="@+id/mpp_message_bubble_body_edittext"
+                    style="@style/mpp_bubble_message_text"/>
 
             <LinearLayout
                     a:gravity="right"

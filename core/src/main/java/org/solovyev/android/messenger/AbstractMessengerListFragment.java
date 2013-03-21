@@ -29,6 +29,7 @@ import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.fragments.FragmentGuiEventType;
+import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -92,6 +93,10 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Inject
     @Nonnull
     private ChatService chatService;
+
+    @Inject
+    @Nonnull
+    private ChatMessageService chatMessageService;
 
     @Inject
     @Nonnull
@@ -201,6 +206,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Nonnull
     protected ChatService getChatService() {
         return chatService;
+    }
+
+    @Nonnull
+    protected ChatMessageService getChatMessageService() {
+        return chatMessageService;
     }
 
     @Nonnull

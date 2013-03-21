@@ -14,7 +14,6 @@ import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatMessageImpl;
-import org.solovyev.android.messenger.chats.MessageListItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -65,6 +64,9 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
     @Nonnull
     private Chat chat;
 
+    @Nonnull
+    private final MessageListItemStyle messageStyle;
+
     // map of list items saying that someone start typing message
     // key: user entity
     @Nonnull
@@ -86,10 +88,11 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
         }
     });
 
-    public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat) {
+    public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat, @Nonnull MessageListItemStyle messageStyle) {
         super(context, new ArrayList<MessageListItem>());
         this.user = user;
         this.chat = chat;
+        this.messageStyle = messageStyle;
     }
 
     /*@Override*/
@@ -208,7 +211,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
     @Nonnull
     private MessageListItem createListItem(@Nonnull ChatMessage message) {
-        return new MessageListItem(user, chat, message);
+        return MessageListItem.newInstance(user, chat, message, messageStyle);
     }
 
     private void addMessageListItem(@Nonnull ChatMessage message) {

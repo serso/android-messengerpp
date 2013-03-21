@@ -22,7 +22,7 @@ class RealmDefListItem extends AbstractMessengerListItem<RealmDef> {
     private static final String TAG_PREFIX = "realm_def_list_item_";
 
     RealmDefListItem(@Nonnull RealmDef realmDef) {
-        super(TAG_PREFIX, R.layout.mpp_list_item_realm_def, realmDef);
+        super(TAG_PREFIX, realmDef, R.layout.mpp_list_item_realm_def);
     }
 
     @Nullable

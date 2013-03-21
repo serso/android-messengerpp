@@ -122,11 +122,11 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
         return liteChatMessage.getSecondUser(user);
     }
 
-/*    @Nonnull
+    @Nonnull
     @Override
     public String getId() {
-        return this.liteChatMessage.getId();
-    }*/
+        return liteChatMessage.getId();
+    }
 
     @Override
     public boolean equals(Object o) {

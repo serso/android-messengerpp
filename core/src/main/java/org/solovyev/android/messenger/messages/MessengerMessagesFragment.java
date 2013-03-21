@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.google.inject.Inject;
 import org.solovyev.android.AThreads;
@@ -17,7 +18,11 @@ import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
@@ -176,15 +181,6 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
                 messageBody.setText("");
             }
         });
-
-
-        // user` icon
-/*        final ImageView userIcon = (ImageView) root.findViewById(R.id.message_icon);
-
-        final String imageUri = getUser().getPropertyValueByName("photo");
-        if (!Strings.isEmpty(imageUri)) {
-            imageLoader.loadImage(imageUri, userIcon, R.drawable.mpp_icon_empty);
-        }*/
     }
 
     @Nonnull
@@ -219,12 +215,17 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
         lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         lv.setStackFromBottom(true);
 
-        final View messagesFooter = ViewFromLayoutBuilder.newInstance(R.layout.mpp_messages_footer).build(this.getActivity());
+        final View messageLayoutParent = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(this.getActivity());
+        final View messageLayout = messageLayoutParent.findViewById(R.id.mpp_message_bubble_linearlayout);
+        final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
 
-        /*final ImageView bubbleUserIconImageView = (ImageView) messagesFooter.findViewById(R.id.mpp_bubble_user_icon_imageview);
-        getUserService().setUserIcon(getUser(), bubbleUserIconImageView);*/
+        // paddings
+        MessageBubbleViews.fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, null, true, true);
 
-        lv.addFooterView(messagesFooter, null, false);
+        // setting user icon
+        MessageBubbleViews.setMessageBubbleUserIcon(context, getUser(), (ImageView) messageLayoutParent.findViewById(R.id.mpp_message_bubble_icon_imageview));
+
+        lv.addFooterView(messageLayoutParent, null, false);
     }
 
     @Override
@@ -297,7 +298,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
     @Nonnull
     @Override
     protected MessagesAdapter createAdapter() {
-        return new MessagesAdapter(getActivity(), getUser(), chat);
+        return new MessagesAdapter(getActivity(), getUser(), chat, MessageListItemStyle.newFromDefaultPreferences(getActivity()));
     }
 
     @Override
@@ -308,7 +309,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
     @Nonnull
     @Override
     protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@Nonnull MessengerListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
-        return new MessagesAsyncLoader(adapter, onPostExecute);
+        return new MessagesAsyncLoader(adapter, onPostExecute, MessageListItemStyle.newFromDefaultPreferences(getActivity()));
     }
 
     private void scrollToTheEnd(long delayMillis) {
@@ -392,8 +393,12 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
     private class MessagesAsyncLoader extends AbstractAsyncLoader<ChatMessage, MessageListItem> {
 
-        public MessagesAsyncLoader(MessengerListItemAdapter<MessageListItem> adapter, Runnable onPostExecute) {
+        @Nonnull
+        private final MessageListItemStyle messageStyle;
+
+        public MessagesAsyncLoader(MessengerListItemAdapter<MessageListItem> adapter, Runnable onPostExecute, @Nonnull MessageListItemStyle messageStyle) {
             super(MessengerMessagesFragment.this.getActivity(), adapter, onPostExecute);
+            this.messageStyle = messageStyle;
         }
 
         @Nonnull
@@ -410,7 +415,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
         @Nonnull
         @Override
         protected MessageListItem createListItem(@Nonnull ChatMessage message) {
-            return new MessageListItem(getUser(), chat, message);
+            return MessageListItem.newInstance(getUser(), chat, message, messageStyle);
         }
 
         @Override

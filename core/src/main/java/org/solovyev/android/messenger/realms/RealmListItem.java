@@ -31,7 +31,7 @@ public final class RealmListItem extends AbstractMessengerListItem<Realm> {
 
 
     public RealmListItem(@Nonnull Realm realm) {
-        super(TAG_PREFIX, R.layout.mpp_list_item_realm, realm);
+        super(TAG_PREFIX, realm, R.layout.mpp_list_item_realm);
     }
 
     @Nullable

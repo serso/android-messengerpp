@@ -32,7 +32,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
 
     private boolean dataChanged = true;
 
-    protected AbstractMessengerListItem(@Nonnull String tagPrefix, int layoutResId, @Nonnull D data) {
+    protected AbstractMessengerListItem(@Nonnull String tagPrefix, @Nonnull D data, int layoutResId) {
         this.tagPrefix = tagPrefix;
         this.layoutResId = layoutResId;
         this.data = data;

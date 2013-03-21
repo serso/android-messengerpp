@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    a:layout_width="match_parent"
-    a:layout_height="match_parent"
-    a:paddingLeft="12dp"
-    a:paddingTop="2dp"
-    a:paddingBottom="2dp">
+             a:layout_width="match_parent"
+             a:layout_height="match_parent"
+             a:paddingRight="14dp"
+             a:paddingTop="2dp"
+             a:paddingBottom="2dp">
 
     <LinearLayout
             a:id="@+id/mpp_li_message_linearlayout"
-            a:background="@drawable/mpp_message_bubble_right_gray_light"
-            a:paddingRight="25dp"
+            a:background="@drawable/mpp_message_bubble_left_gray_light"
+            a:paddingLeft="25dp"
             style="@style/mpp_list_item">
 
         <ImageView
                 a:id="@+id/mpp_li_message_icon_imageview"
                 style="@style/mpp_list_item_icon"
                 a:visibility="gone"
-                a:src="@drawable/mpp_icon_user_empty" />
+                a:src="@drawable/mpp_icon_user_empty"/>
 
         <LinearLayout
                 style="@style/mpp_list_item_block"
@@ -26,14 +25,14 @@
 
             <TextView
                     a:id="@+id/mpp_li_message_body_textview"
-                    style="@style/mpp_list_item_message_text_right"
-                    a:text="tsdfsf fdag dfdgdfgdfg adfgfg dfgddfg dfgdfg addfg dfg adfdfg dfgffgdfgadfgadgadfgadfg sdfad fadfasdf f as fdf adfasdfd" />
+                    style="@style/mpp_list_item_message_text"
+                    a:text="tsdfsf fdag dfdgdfgdfg adfgfg dfgddfg dfgdfg addfg dfg adfdfg dfgffgdfgadfgadgadfgadfg sdfad fadfasdf f as fdf adfasdfd"/>
 
             <TextView
                     a:id="@+id/mpp_li_message_date_textview"
-                    style="@style/mpp_list_item_message_date_right"
+                    style="@style/mpp_list_item_message_date"
                     a:gravity="right"
-                    a:text="tsdfsfd" />
+                    a:text="tsdfsfd"/>
 
         </LinearLayout>
 

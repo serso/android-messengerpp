@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  * Date: 6/6/12
  * Time: 2:04 PM
  */
-public class LiteChatMessageImpl extends AbstractMessengerEntity implements LiteChatMessage {
+public final class LiteChatMessageImpl extends AbstractMessengerEntity implements LiteChatMessage {
 
     @Nonnull
     private Entity author;

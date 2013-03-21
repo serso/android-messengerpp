@@ -32,7 +32,7 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
     private final RealmService realmService;
 
     public ContactListItem(@Nonnull User contact, @Nonnull RealmService realmService) {
-        super(TAG_PREFIX, R.layout.mpp_list_item_contact, contact);
+        super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
         this.realmService = realmService;
     }
 

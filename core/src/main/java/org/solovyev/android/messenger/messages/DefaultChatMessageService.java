@@ -1,22 +1,17 @@
 package org.solovyev.android.messenger.messages;
 
 import android.app.Application;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,7 +79,7 @@ public class DefaultChatMessageService implements ChatMessageService {
     }
 
     @Override
-    public void setMessageIcon(@Nonnull ImageView imageView, @Nonnull ChatMessage message, @Nonnull Chat chat, @Nonnull User user, @Nonnull Context context) {
+    public void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView) {
         final Entity author = message.getAuthor();
         userService.setUserIcon(userService.getUserById(author), imageView);
     }
