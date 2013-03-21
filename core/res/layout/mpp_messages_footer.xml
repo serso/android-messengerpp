@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:orientation="horizontal"
-              a:gravity="bottom"
-              style="@style/mpp_list_item">
+<FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
+             a:layout_width="match_parent"
+             a:layout_height="match_parent"
+             a:paddingRight="12dp"
+             a:paddingTop="2dp"
+             a:paddingBottom="2dp">
 
-<!--    <ImageView a:id="@+id/mpp_bubble_user_icon_imageview"
-        a:paddingRight="2dp"
-        a:layout_width="@dimen/mpp_list_item_icon_size"
-        a:layout_height="@dimen/mpp_list_item_icon_size"
-        a:paddingTop="5dp"
-        a:paddingBottom="5dp"
-        a:contentDescription="@string/contact_icon" />-->
+    <LinearLayout
+            a:id="@+id/mpp_li_message_linearlayout"
+            a:background="@drawable/mpp_message_bubble_left_gray_light"
+            a:paddingLeft="25dp"
+            style="@style/mpp_list_item">
 
-    <LinearLayout a:layout_height="wrap_content"
-                  a:layout_width="match_parent"
-                  a:background="@drawable/mpp_message_bubble_left_blue"
-                  a:paddingLeft="24px"
-                  a:paddingRight="5dp"
-                  a:paddingTop="5dp"
-                  a:paddingBottom="5dp"
-                  a:layout_marginBottom="5dp"
-                  a:orientation="vertical">
+        <ImageView
+                a:id="@+id/mpp_li_message_icon_imageview"
+                style="@style/mpp_list_item_icon"
+                a:visibility="gone"
+                a:src="@drawable/mpp_icon_user_empty"/>
 
-        <LinearLayout a:layout_height="0dp"
-                      a:layout_weight="1"
-                      a:layout_width="match_parent"
-                      a:orientation="horizontal">
+        <LinearLayout
+                style="@style/mpp_list_item_block"
+                a:orientation="vertical">
 
             <EditText a:id="@+id/mpp_message_bubble_body_edittext"
                       style="@style/mpp_bubble_message_text"/>
-        </LinearLayout>
 
-        <LinearLayout a:layout_height="0dp"
-                      a:layout_weight="1"
-                      a:layout_width="match_parent"
-                      a:gravity="right"
-                      a:orientation="horizontal">
+            <LinearLayout
+                    a:gravity="right"
+                    a:layout_height="wrap_content"
+                    a:layout_width="match_parent"
+                    a:orientation="horizontal">
 
-            <Button a:id="@+id/mpp_message_bubble_send_button"
-                    a:text="@string/send"
-                    style="@style/mpp_button"/>
+                <Button a:id="@+id/mpp_message_bubble_send_button"
+                        a:text="@string/send"
+                        style="@style/mpp_button"/>
 
-            <Button a:id="@+id/mpp_message_bubble_clear_button"
-                    a:text="@string/clear"
-                    style="@style/mpp_button"/>
+                <Button a:id="@+id/mpp_message_bubble_clear_button"
+                        a:text="@string/clear"
+                        style="@style/mpp_button"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>
