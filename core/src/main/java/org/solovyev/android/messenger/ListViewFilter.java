@@ -80,6 +80,11 @@ public class ListViewFilter {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // todo serso: maybe move to onFreezeSomething?
+                    // when fragment is restored views are unfreezed in some moment of time, we must catch text change and show filter box if needed
+                    if (!Strings.isEmpty(s)) {
+                        setFilterBoxVisible(true);
+                    }
                     filterableListView.filter(s);
                 }
 

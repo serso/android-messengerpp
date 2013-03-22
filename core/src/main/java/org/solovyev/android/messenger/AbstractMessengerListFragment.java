@@ -515,7 +515,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
     public void filter(@Nonnull CharSequence filterText, @Nullable Filter.FilterListener filterListener) {
         if (this.adapter != null) {
+            Log.i("Filtering", "Filter text: " + filterText);
             if (this.adapter.isInitialized()) {
+                Log.i("Filtering", "Count: " + adapter.getCount());
                 this.adapter.filter(filterText, filterListener);
             }
         }
@@ -665,6 +667,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
             @Override
             public void onFilterComplete(int count) {
+                Log.i("Filtering", "Filter completed: " + count);
+
                 final Activity activity = getActivity();
                 if (activity != null && !activity.isFinishing() && !isDetached()) {
 
