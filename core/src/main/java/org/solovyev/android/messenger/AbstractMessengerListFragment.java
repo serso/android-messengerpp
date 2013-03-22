@@ -255,6 +255,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(tag, "onCreate: " + this);
+        Log.d(tag, "onCreate bundle: " + savedInstanceState);
 
         eventManager.fire(FragmentGuiEventType.created.newEvent(this));
     }
@@ -262,6 +263,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(tag, "onCreateView: " + this);
+        Log.d(tag, "onCreateView bundle: " + savedInstanceState);
 
         final LinearLayout root = new LinearLayout(this.getActivity());
         root.setOrientation(LinearLayout.VERTICAL);
@@ -286,6 +288,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     @Override
     public void onViewCreated(View root, Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
+        Log.d(tag, "onViewCreated");
+        Log.d(tag, "onViewCreated bundle: " + savedInstanceState);
 
         if (listViewFilter != null) {
             listViewFilter.onViewCreated();
@@ -488,6 +492,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         if (listViewFilter != null) {
             listViewFilter.saveState(outState);
         }
+
+        Log.d(tag, "onSaveInstanceState: " + outState);
     }
 
     @Override

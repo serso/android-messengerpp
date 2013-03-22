@@ -80,8 +80,10 @@ public class ListViewFilter {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    // todo serso: maybe move to onFreezeSomething?
-                    // when fragment is restored views are unfreezed in some moment of time, we must catch text change and show filter box if needed
+                    /**
+                     *  Fragment's {@link android.support.v4.app.Fragment#restoreViewState()} is called after {@link android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)} =>
+                     *  => we need to update view visibility according to restored values
+                     */
                     if (!Strings.isEmpty(s)) {
                         setFilterBoxVisible(true);
                     }

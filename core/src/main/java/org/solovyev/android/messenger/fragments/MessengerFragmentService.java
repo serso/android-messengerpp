@@ -1,11 +1,14 @@
 package org.solovyev.android.messenger.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.common.Builder;
@@ -126,6 +129,8 @@ public class MessengerFragmentService {
                              @Nonnull FragmentManager fm,
                              @Nonnull FragmentTransaction ft,
                              boolean addToBackStack) {
+        hideKeyboard();
+
         // in some cases we cannot execute pending transactions after commit (e.g. transactions from action bar => we need to try to execute them now)
         boolean canContinue = executePendingTransactions(fm);
 
@@ -144,6 +149,7 @@ public class MessengerFragmentService {
              * Fragments identified by tag defines set of fragments of the same LOCATION in view
              */
             final Fragment fragmentById = fm.findFragmentById(fragmentViewId);
+
             if (fragmentByTag != null) {
                 // found fragment of known type - reuse?
                 if (reuseCondition != null && reuseCondition.apply(fragmentByTag)) {
@@ -184,6 +190,15 @@ public class MessengerFragmentService {
                 }
                 ft.add(fragmentViewId, fragmentBuilder.build(), fragmentTag);
             }
+        }
+    }
+
+    private void hideKeyboard() {
+        final View focusedView = activity.getCurrentFocus();
+
+        if (focusedView != null) {
+            final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
         }
     }
 

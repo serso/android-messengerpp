@@ -219,7 +219,6 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
         final View messageLayout = messageLayoutParent.findViewById(R.id.mpp_message_bubble_linearlayout);
         final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
 
-        // paddings
         MessageBubbleViews.fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, null, true, true);
 
         // setting user icon

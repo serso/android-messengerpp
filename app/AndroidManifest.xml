@@ -32,6 +32,7 @@
 
         <activity android:label="@string/mpp_app_name"
                   android:name="org.solovyev.android.messenger.MessengerMainActivity"
+                  android:windowSoftInputMode="stateHidden"
                   android:launchMode="singleTask"/>
 
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
