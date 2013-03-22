@@ -80,6 +80,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
     public void onCreate() {
         super.onCreate();
 
+        // todo serso: not supported in 2.3
         final Notification.Builder notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setOngoing(true);
         notificationBuilder.setSmallIcon(R.drawable.mpp_sb_icon);
