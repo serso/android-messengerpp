@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Filter;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -178,8 +179,13 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
                     if (shown) {
                         if (!Strings.isEmpty(prefix)) {
                             assert prefix != null;
-                            shown = new PrefixFilter<ContactListItem>(prefix.toString().toLowerCase()).apply(listItem);
+                            shown = new PrefixFilter<String>(prefix.toString().toLowerCase()).apply(contact.getDisplayName());
+                            if ( !shown ) {
+                                Log.d("Filtering", contact.getDisplayName() + " is filtered due to filter " + prefix);
+                            }
                         }
+                    } else {
+                        Log.d("Filtering", contact.getDisplayName() + " is filtered due to mode " + mode);
                     }
 
                     return !shown;
