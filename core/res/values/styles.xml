@@ -36,7 +36,7 @@
     -->
 
     <style name="mpp_list_item_block" parent="mpp_text">
-        <item name="android:layout_gravity">top</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_width">match_parent</item>
@@ -79,6 +79,7 @@
 
     <style name="mpp_list_item_text_secondary" parent="mpp_list_item_text">
         <item name="android:textColor">@color/mpp_list_item_text_secondary_states</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!--FILTER-->
@@ -111,15 +112,16 @@
     </style>
 
     <style name="mpp_list_item_last_message_time" parent="mpp_list_item_text_secondary">
-        <item name="android:textSize">15sp</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">right</item>
     </style>
 
     <style name="mpp_list_item_message_text" parent="mpp_list_item_block">
+        <item name="android:layout_gravity">top</item>
+        <item name="android:gravity">top</item>
         <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="mpp_list_item_message_date" parent="mpp_list_item_message_text">
@@ -128,8 +130,8 @@
     </style>
 
     <style name="mpp_bubble_message_text" parent="mpp_list_item_message_text">
-        <item name="android:textSize">16sp</item>
         <item name="android:hint">@string/type_message</item>
+        <item name="android:minLines">2</item>
     </style>
 
     <style name="mpp_list_item_contact_online" parent="mpp_list_item_block">

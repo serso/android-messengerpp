@@ -15,6 +15,7 @@
 
         <ImageView
                 a:id="@+id/mpp_li_message_icon_imageview"
+                a:layout_gravity="top"
                 style="@style/mpp_list_item_icon"
                 a:visibility="gone"
                 a:src="@drawable/mpp_icon_user_empty"/>
