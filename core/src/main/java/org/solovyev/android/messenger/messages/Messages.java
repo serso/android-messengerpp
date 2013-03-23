@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -67,5 +68,24 @@ public final class Messages {
                 return "";
             }
         }
+    }
+
+    @Nonnull
+    public static LiteChatMessage newEmptyMessage(@Nonnull String messageId) {
+        return LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(messageId));
+    }
+
+    @Nonnull
+    public static LiteChatMessageImpl newMessage(@Nonnull Entity entity) {
+        return LiteChatMessageImpl.newInstance(entity);
+    }
+
+    public static ChatMessageImpl newInstance(@Nonnull LiteChatMessage liteChatMessage, boolean read) {
+        return ChatMessageImpl.newInstance(liteChatMessage, read);
+    }
+
+    @Nonnull
+    public static ChatMessage newEmpty(@Nonnull String messageId) {
+        return newInstance(newEmptyMessage(messageId), false);
     }
 }

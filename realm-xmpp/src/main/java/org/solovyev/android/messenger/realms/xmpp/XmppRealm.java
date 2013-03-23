@@ -9,14 +9,13 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatMessageImpl;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.messages.ChatMessages;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
+import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
@@ -167,12 +166,13 @@ public final class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
     private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Realm realm) {
         final String body = message.getBody();
         if (!Strings.isEmpty(body)) {
-            final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(realm));
+            final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(realm));
             liteChatMessage.setBody(body);
             liteChatMessage.setAuthor(realm.newUserEntity(message.getFrom()));
             liteChatMessage.setRecipient(realm.newUserEntity(message.getTo()));
             liteChatMessage.setSendDate(DateTime.now());
-            return ChatMessageImpl.newInstance(liteChatMessage);
+            // new message by default unread
+            return Messages.newInstance(liteChatMessage, false);
         } else {
             return null;
         }

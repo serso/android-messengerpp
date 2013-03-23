@@ -4,7 +4,6 @@ import android.database.Cursor;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatMessageImpl;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.RealmEntityMapper;
@@ -46,7 +45,8 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
         final Long sendTime = c.getLong(7);
         liteChatMessage.setTitle(c.getString(8));
         liteChatMessage.setBody(c.getString(9));
+        final boolean read = c.getInt(10) == 1;
 
-        return ChatMessageImpl.newInstance(liteChatMessage);
+        return Messages.newInstance(liteChatMessage, read);
     }
 }

@@ -59,6 +59,14 @@ public enum ChatEventType {
         protected void checkData(@Nullable Object data) {
             assert data instanceof Entity;
         }
+    },
+
+    // data == number of unread messages
+    unread_message_counter_changed {
+        @Override
+        protected void checkData(@Nullable Object data) {
+            assert data instanceof Integer;
+        }
     };
 
     public final boolean isEvent(@Nonnull ChatEventType chatEventType, @Nonnull Chat eventChat, @Nonnull Chat chat) {

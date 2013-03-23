@@ -29,4 +29,6 @@ public interface ChatMessageDao {
 
     @Nullable
     ChatMessage loadLastChatMessage(@Nonnull String chatId);
+
+    int getUnreadMessagesCount();
 }

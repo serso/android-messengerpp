@@ -108,13 +108,13 @@ public class DefaultChatMessageService implements ChatMessageService {
         message.setTitle(chatMessage.getTitle());
         message.setSendDate(DateTime.now());
 
-        final ChatMessageImpl result = new ChatMessageImpl(message);
+        // user's message is read (he is an author)
+        final ChatMessageImpl result = Messages.newInstance(message, true);
         for (LiteChatMessage fwtMessage : chatMessage.getFwdMessages()) {
             result.addFwdMessage(fwtMessage);
         }
 
         result.setDirection(MessageDirection.out);
-        result.setRead(true);
 
         if ( realm.getRealmDef().notifySentMessagesImmediately() ) {
             chatService.saveChatMessages(chat.getEntity(), Arrays.asList(result), false);

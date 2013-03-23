@@ -13,7 +13,6 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatMessageImpl;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -111,16 +110,13 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
         if (type == ChatEventType.message_added) {
             if (eventChat.equals(chat)) {
-                final ChatMessage message = (ChatMessage) data;
-                assert message != null;
-                addMessageListItem(message);
+                addMessageListItem(event.getDataAsChatMessage());
             }
         }
 
         if (type == ChatEventType.message_added_batch) {
             if (eventChat.equals(chat)) {
-                final List<ChatMessage> messages = (List<ChatMessage>) data;
-                assert messages != null;
+                final List<ChatMessage> messages = event.getDataAsChatMessages();
 
                 addListItems(Lists.transform(messages, new Function<ChatMessage, MessageListItem>() {
                     @Override
@@ -171,7 +167,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
                 liteChatMessage.setBody(getContext().getString(R.string.mpp_user_starts_typing));
 
                 // create fake list item
-                listItem = createListItem(ChatMessageImpl.newInstance(liteChatMessage));
+                listItem = createListItem(Messages.newInstance(liteChatMessage, true));
                 addListItem(listItem);
 
                 // add list item to the map
@@ -226,7 +222,6 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
     }
 
     private void removeMessageListItem(@Nonnull String messageId) {
-        final ChatMessage message = ChatMessageImpl.newInstance(ChatMessages.newEmptyMessage(messageId));
-        removeListItem(message);
+        removeListItem(Messages.newEmpty(messageId));
     }
 }

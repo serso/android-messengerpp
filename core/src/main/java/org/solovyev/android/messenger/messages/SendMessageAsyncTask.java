@@ -117,7 +117,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
         @Nullable
         public ChatMessage sendChatMessage() {
 
-            final LiteChatMessageImpl liteChatMessage = ChatMessages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
+            final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
             liteChatMessage.setAuthor(author.getEntity());
             liteChatMessage.setBody(message);
 
@@ -129,8 +129,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
             liteChatMessage.setTitle(title == null ? "" : title);
             liteChatMessage.setSendDate(DateTime.now());
 
-            final ChatMessageImpl chatMessage = new ChatMessageImpl(liteChatMessage);
-            chatMessage.setRead(true);
+            final ChatMessageImpl chatMessage = Messages.newInstance(liteChatMessage, true);
             chatMessage.setDirection(MessageDirection.out);
             for (LiteChatMessage fwdMessage : fwdMessages) {
                 chatMessage.addFwdMessage(fwdMessage);

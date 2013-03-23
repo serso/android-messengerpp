@@ -609,34 +609,30 @@ public class DefaultChatService implements ChatService {
             synchronized (lastMessagesCache) {
 
                 if (type == ChatEventType.message_added) {
-                    if (data instanceof ChatMessage) {
-                        final ChatMessage message = (ChatMessage) data;
-                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-                        if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate()) ) {
-                            lastMessagesCache.put(eventChat.getEntity(), message);
-                            changesLastMessages.put(eventChat, message);
-                        }
+                    final ChatMessage message = event.getDataAsChatMessage();
+                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
+                    if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate())) {
+                        lastMessagesCache.put(eventChat.getEntity(), message);
+                        changesLastMessages.put(eventChat, message);
                     }
                 }
 
                 if (type == ChatEventType.message_added_batch) {
-                    if (data instanceof List) {
-                        final List<ChatMessage> messages = (List<ChatMessage>) data;
+                    final List<ChatMessage> messages = event.getDataAsChatMessages();
 
-                        ChatMessage newestMessage = null;
-                        for (ChatMessage message : messages) {
-                            if (newestMessage == null) {
-                                newestMessage = message;
-                            } else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
-                                newestMessage = message;
-                            }
+                    ChatMessage newestMessage = null;
+                    for (ChatMessage message : messages) {
+                        if (newestMessage == null) {
+                            newestMessage = message;
+                        } else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
+                            newestMessage = message;
                         }
+                    }
 
-                        final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-                        if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
-                            lastMessagesCache.put(eventChat.getEntity(), newestMessage);
-                            changesLastMessages.put(eventChat, newestMessage);
-                        }
+                    final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
+                    if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
+                        lastMessagesCache.put(eventChat.getEntity(), newestMessage);
+                        changesLastMessages.put(eventChat, newestMessage);
                     }
                 }
 

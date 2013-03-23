@@ -97,6 +97,11 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         }
     }
 
+    @Override
+    public int getUnreadMessagesCount() {
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new UnreadMessagesCountLoader(getContext(), getSqliteOpenHelper()));
+    }
+
     @Nonnull
     @Override
     public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete) {
@@ -155,6 +160,14 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     private ChatService getChatService() {
         return this.chatService;
     }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC
+    *
+    **********************************************************************
+    */
 
     private static class LoadChatMessageIdsByChatId extends AbstractDbQuery<List<String>> {
 
@@ -393,6 +406,30 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         values.put("send_time", chatMessage.getSendDate().getMillis());
         values.put("title", chatMessage.getTitle());
         values.put("body", chatMessage.getBody());
+        values.put("read", chatMessage.isRead() ? 1 : 0);
         return values;
+    }
+
+    private static class UnreadMessagesCountLoader extends AbstractDbQuery<Integer> {
+
+        private UnreadMessagesCountLoader(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+            super(context, sqliteOpenHelper);
+        }
+
+        @Nonnull
+        @Override
+        public Cursor createCursor(@Nonnull SQLiteDatabase db) {
+            return db.rawQuery("select count(*) from messages where read = 0", null);
+        }
+
+        @Nonnull
+        @Override
+        public Integer retrieveData(@Nonnull Cursor cursor) {
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            } else {
+                return 0;
+            }
+        }
     }
 }

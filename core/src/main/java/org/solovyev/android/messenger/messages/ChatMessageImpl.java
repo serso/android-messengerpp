@@ -1,8 +1,9 @@
-package org.solovyev.android.messenger.chats;
+package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
@@ -29,21 +30,20 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
     @Nonnull
     private MessageDirection direction = MessageDirection.in;
 
-    public ChatMessageImpl(@Nonnull LiteChatMessage liteChatMessage) {
+    private ChatMessageImpl(@Nonnull LiteChatMessage liteChatMessage) {
         this.liteChatMessage = liteChatMessage;
     }
 
     @Nonnull
-    public static ChatMessageImpl newInstance(@Nonnull LiteChatMessage liteChatMessage) {
-        return new ChatMessageImpl(liteChatMessage);
+    static ChatMessageImpl newInstance(@Nonnull LiteChatMessage liteChatMessage, boolean read) {
+        final ChatMessageImpl result = new ChatMessageImpl(liteChatMessage);
+        result.read = read;
+        return result;
     }
+
 
     public boolean isRead() {
         return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
     }
 
     @Nonnull

@@ -3,12 +3,12 @@ package org.solovyev.android.messenger.realms.vk.messages;
 import android.util.Log;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatMessageImpl;
+import org.solovyev.android.messenger.messages.ChatMessageImpl;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.messages.ChatMessages;
 import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
+import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
@@ -138,7 +138,7 @@ public class JsonMessage {
             throw new IllegalJsonException();
         }
 
-        final LiteChatMessageImpl result = ChatMessages.newMessage(realm.newMessageEntity(mid));
+        final LiteChatMessageImpl result = Messages.newMessage(realm.newMessageEntity(mid));
 
         final MessageDirection messageDirection = getMessageDirection();
         if (messageDirection == MessageDirection.out) {
@@ -174,8 +174,8 @@ public class JsonMessage {
             throw new IllegalJsonException();
         }
 
-        final ChatMessageImpl result = new ChatMessageImpl(toLiteChatMessage(user, explicitUserId, realm));
-        result.setRead(isRead());
+        // todo serso: use read_state
+        final ChatMessageImpl result = Messages.newInstance(toLiteChatMessage(user, explicitUserId, realm), false);
         result.setDirection(getNotNullMessageDirection());
         for (LiteChatMessage fwdMessage : getFwdMessages(user, realm)) {
             result.addFwdMessage(fwdMessage);
