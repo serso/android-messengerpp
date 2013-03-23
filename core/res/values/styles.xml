@@ -166,9 +166,13 @@
         <item name="android:textColor">@color/mpp_text</item>
         <item name="android:textSize">15sp</item>
 
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+
         <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingBottom">-5dp</item>
-        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingRight">25dp</item>
         <item name="android:paddingTop">5dp</item>
 
         <item name="android:background">@drawable/mpp_metro_button_gray</item>

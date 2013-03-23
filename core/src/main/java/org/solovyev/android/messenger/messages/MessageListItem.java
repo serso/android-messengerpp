@@ -51,7 +51,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
                             @Nonnull ChatMessage message,
                             boolean userMessage,
                             @Nonnull MessageListItemStyle style) {
-        super(TAG_PREFIX, message, R.layout.mpp_list_item_message);
+        super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
         this.user = user;
         this.chat = chat;
         this.userMessage = userMessage;

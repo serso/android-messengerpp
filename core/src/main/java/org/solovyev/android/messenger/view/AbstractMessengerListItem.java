@@ -1,11 +1,20 @@
 package org.solovyev.android.messenger.view;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Typeface;
+import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
+import android.widget.ImageView;
+import android.widget.TextView;
+import org.solovyev.android.Views;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 import javax.annotation.Nonnull;
@@ -24,6 +33,8 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
 
     private final int layoutResId;
 
+    private final boolean canBeSelected;
+
     @Nonnull
     private CharSequence displayName = "";
 
@@ -33,9 +44,14 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     private boolean dataChanged = true;
 
     protected AbstractMessengerListItem(@Nonnull String tagPrefix, @Nonnull D data, int layoutResId) {
+        this(tagPrefix, data, layoutResId, true);
+    }
+
+    protected AbstractMessengerListItem(@Nonnull String tagPrefix, @Nonnull D data, int layoutResId, boolean canBeSelected) {
         this.tagPrefix = tagPrefix;
         this.layoutResId = layoutResId;
         this.data = data;
+        this.canBeSelected = canBeSelected;
     }
 
     @Nonnull
@@ -67,7 +83,13 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     private void fillView(@Nonnull Context context, @Nonnull final ViewGroup view) {
         final ViewAwareTag tag = createTag(view);
 
-        view.setActivated(checked);
+        if (canBeSelected) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                view.setActivated(checked);
+            } else {
+                setActivated(context, view, checked);
+            }
+        }
 
         ViewAwareTag viewTag = (ViewAwareTag) view.getTag();
         if (!tag.equals(viewTag) || dataChanged) {
@@ -160,5 +182,77 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     @Override
     public final int compareTo(@Nonnull AbstractMessengerListItem<D> another) {
         return this.toString().compareTo(another.toString());
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC (API < 11 SUPPORT)
+    *
+    **********************************************************************
+    */
+
+
+    private static void setActivated(@Nonnull Context context, @Nonnull ViewGroup view, boolean checked) {
+        final Resources resources = context.getResources();
+
+        if (checked) {
+            final boolean largeScreen = Views.isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE, resources.getConfiguration());
+            final boolean landscapeMode = isLandscapeMode(resources);
+            if (largeScreen || landscapeMode) {
+                setActivatedStyles(view, resources);
+            } else {
+                setNotActivatedStyle(view, resources);
+            }
+        } else {
+            setNotActivatedStyle(view, resources);
+        }
+    }
+
+    private static void setNotActivatedStyle(@Nonnull final ViewGroup view, @Nonnull final Resources resources) {
+        Views.processViewsOfType(view, TextView.class, new Views.ViewProcessor<TextView>() {
+            @Override
+            public void process(@Nonnull TextView view) {
+                final Typeface typeface = view.getTypeface();
+                if ( typeface != null && typeface.isBold()) {
+                    // NOTE: checking 'bold' property is only one way to determine if text is main or secondary
+                    view.setTextColor(resources.getColor(R.color.mpp_text));
+                } else {
+                    view.setTextColor(resources.getColor(R.color.mpp_text_secondary));
+                }
+            }
+        });
+        view.setBackgroundColor(resources.getColor(android.R.color.transparent));
+
+        setOnlineContactMarker(view, resources, false);
+    }
+
+    private static void setOnlineContactMarker(@Nonnull ViewGroup view, @Nonnull Resources resources, boolean selected) {
+        final ImageView contactOnlineView = (ImageView) view.findViewById(R.id.mpp_li_contact_online_view);
+        if ( contactOnlineView != null ) {
+            final int drawableResId = selected ? R.drawable.mpp_contact_online_inversed : R.drawable.mpp_contact_online;
+            contactOnlineView.setImageDrawable(resources.getDrawable(drawableResId));
+        }
+    }
+
+    private static void setActivatedStyles(@Nonnull final ViewGroup view, @Nonnull final Resources resources) {
+        Views.processViewsOfType(view, TextView.class, new Views.ViewProcessor<TextView>() {
+            @Override
+            public void process(@Nonnull TextView view) {
+                view.setTextColor(resources.getColor(R.color.mpp_text_selected));
+            }
+        });
+        view.setBackgroundColor(resources.getColor(R.color.mpp_selected));
+        setOnlineContactMarker(view, resources, true);
+    }
+
+    private static boolean isLandscapeMode(@Nonnull Resources resources) {
+        final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+
+        if (displayMetrics.widthPixels <= displayMetrics.heightPixels) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

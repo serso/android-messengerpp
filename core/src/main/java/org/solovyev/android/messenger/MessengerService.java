@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
@@ -80,8 +81,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
     public void onCreate() {
         super.onCreate();
 
-        // todo serso: not supported in 2.3
-        final Notification.Builder notificationBuilder = new Notification.Builder(this);
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
         notificationBuilder.setOngoing(true);
         notificationBuilder.setSmallIcon(R.drawable.mpp_sb_icon);
         notificationBuilder.setContentText(getString(R.string.mpp_app_name));

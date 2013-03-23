@@ -39,6 +39,9 @@ public final class PreferenceGuiEventListener implements EventListener<Preferenc
                         return new MessengerPreferenceListFragment(preferencesResId, R.layout.mpp_fragment_preferences);
                     }
                 }, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG);
+                if ( activity.isTriplePane() ) {
+                    fragmentService.emptifyThirdFragment();
+                }
             } else {
                 fragmentService.setFirstFragment(new Builder<Fragment>() {
                     @Nonnull

@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
     style="@style/mpp_list_item">
 
     <ImageView
         a:id="@+id/mpp_li_chat_icon_imageview"
-        a:src="@drawable/mpp_app_icon"
-        style="@style/mpp_list_item_icon"
-        a:layout_alignParentLeft="true"
-        a:layout_centerInParent="true" />
+        style="@style/mpp_list_item_icon"/>
 
     <LinearLayout
         a:orientation="vertical"
-        a:layout_toRightOf="@id/mpp_li_chat_icon_imageview"
-        a:layout_centerInParent="true"
         a:layout_width="match_parent"
-        a:layout_height="wrap_content">
+        a:layout_height="wrap_content"
+        a:layout_gravity="center_vertical">
 
         <TextView
             a:id="@+id/mpp_li_chat_title_textview"
@@ -34,5 +30,4 @@
 
     </LinearLayout>
 
-
-</RelativeLayout>
+</LinearLayout>

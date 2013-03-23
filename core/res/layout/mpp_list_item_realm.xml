@@ -11,7 +11,7 @@
             a:orientation="vertical"
             a:layout_width="match_parent"
             a:layout_height="wrap_content"
-            a:layout_centerInParent="true">
+            a:layout_gravity="center_vertical">
 
         <TextView
                 a:id="@+id/mpp_realm_user_name_textview"

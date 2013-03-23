@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -404,7 +405,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
         lv.setScrollbarFadingEnabled(true);
         lv.setCacheColorHint(Color.TRANSPARENT);
         lv.setOnScrollListener(this);
-        lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        }
         lv.setDividerHeight(1);
     }
 
