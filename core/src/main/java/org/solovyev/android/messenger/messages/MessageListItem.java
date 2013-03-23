@@ -11,14 +11,13 @@ import android.widget.Toast;
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -34,9 +33,6 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
     private static final String TAG_PREFIX = "message_list_item_";
 
     @Nonnull
-    private User user;
-
-    @Nonnull
     private Chat chat;
 
     private final boolean userMessage;
@@ -44,15 +40,11 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
     @Nonnull
     private final MessageListItemStyle style;
 
-    // todo serso: add listener interfaces
-
-    private MessageListItem(@Nonnull User user,
-                            @Nonnull Chat chat,
+    private MessageListItem(@Nonnull Chat chat,
                             @Nonnull ChatMessage message,
                             boolean userMessage,
                             @Nonnull MessageListItemStyle style) {
         super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
-        this.user = user;
         this.chat = chat;
         this.userMessage = userMessage;
         this.style = style;
@@ -61,7 +53,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
     @Nonnull
     public static MessageListItem newInstance(@Nonnull User user, @Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull MessageListItemStyle style) {
         final boolean userMessage = user.getEntity().equals(message.getAuthor());
-        return new MessageListItem(user, chat, message, userMessage, style);
+        return new MessageListItem(chat, message, userMessage, style);
     }
 
     @Override
@@ -96,6 +88,13 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
         final View root = viewTag.getView();
 
         MessageBubbleViews.fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage, false, style);
+
+        if ( !message.isRead() ) {
+            final ChatMessage readMessage = message.cloneRead();
+            setData(readMessage);
+            final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+            eventManager.fire(ChatGuiEventType.chat_message_read.newEvent(chat, readMessage));
+        }
     }
 
     /*@Override*/

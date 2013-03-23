@@ -13,13 +13,20 @@ import com.google.inject.Inject;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerFragmentService;
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
+import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
@@ -68,6 +75,14 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     @Inject
     @Nonnull
+    private MessengerListeners messengerListeners;
+
+    @Inject
+    @Nonnull
+    private UnreadMessagesCounter unreadMessagesCounter;
+
+    @Inject
+    @Nonnull
     private EventManager eventManager;
 
 
@@ -95,6 +110,9 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     private final MessengerFragmentService fragmentService;
 
     private ActivityMenu<Menu, MenuItem> menu;
+
+    @Nullable
+    private JEventListener<MessengerEvent> messengerEventListener;
 
     /*
     **********************************************************************
@@ -145,6 +163,15 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         return realmService;
     }
 
+    @Nonnull
+    public MessengerListeners getMessengerListeners() {
+        return messengerListeners;
+    }
+
+    @Nonnull
+    public UnreadMessagesCounter getUnreadMessagesCounter() {
+        return unreadMessagesCounter;
+    }
 
     public boolean isDualPane() {
         return this.secondPane != null;
@@ -199,6 +226,9 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
         this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
         this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
+
+        this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
+        this.messengerListeners.addListener(messengerEventListener);
     }
 
     @Override
@@ -236,15 +266,50 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     @Override
+    protected void onDestroy() {
+        if ( this.messengerEventListener != null ) {
+            this.messengerListeners.removeListener(messengerEventListener);
+        }
+
+        super.onDestroy();
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           MENU
+    *
+    **********************************************************************
+    */
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        return this.menu.onPrepareOptionsMenu(this, menu);
+        boolean result = this.menu.onPrepareOptionsMenu(this, menu);
+
+        onUnreadMessagesCountChanged(menu, unreadMessagesCounter.getUnreadMessagesCount());
+
+        return result;
+    }
+
+    private void onUnreadMessagesCountChanged(@Nonnull Menu menu, int unreadMessagesCount) {
+        final MenuItem menuItem = menu.findItem(R.id.mpp_menu_unread_messages_counter);
+        if (unreadMessagesCount == 0) {
+            menuItem.setVisible(false);
+            menuItem.setEnabled(false);
+        } else {
+            menuItem.setTitle(String.valueOf(unreadMessagesCount));
+            menuItem.setVisible(true);
+            menuItem.setEnabled(true);
+        }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         if ( this.menu == null ) {
             final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>(1);
-            menuItems.add(new MenuItemAppExit(this));
+            menuItems.add(new MenuItemAppExitMenuItem(this));
+            menuItems.add(new UnreadMessagesCounterMenuItem(this));
+
             this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
         }
         return this.menu.onCreateOptionsMenu(this, menu);
@@ -283,12 +348,12 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         return null;
     }
 
-    private static class MenuItemAppExit implements IdentifiableMenuItem<MenuItem> {
+    private static class MenuItemAppExitMenuItem implements IdentifiableMenuItem<MenuItem> {
 
         @Nonnull
         private final Activity activity;
 
-        private MenuItemAppExit(@Nonnull Activity activity) {
+        private MenuItemAppExitMenuItem(@Nonnull Activity activity) {
             this.activity = activity;
         }
 
@@ -301,6 +366,51 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         @Override
         public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
             MessengerApplication.getApp().exit(activity);
+        }
+    }
+
+    private static class UnreadMessagesCounterMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+        @Nonnull
+        private final MessengerFragmentActivity activity;
+
+        private UnreadMessagesCounterMenuItem(@Nonnull MessengerFragmentActivity activity) {
+            this.activity = activity;
+        }
+
+        @Nonnull
+        @Override
+        public Integer getItemId() {
+            return R.id.mpp_menu_unread_messages_counter;
+        }
+
+        @Override
+        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+            final Entity chatEntity = activity.getUnreadMessagesCounter().getUnreadChat();
+            if (chatEntity != null) {
+                final Chat chat = activity.getChatService().getChatById(chatEntity);
+                if (chat != null) {
+                    // todo serso: currently we do not update list pane!!!
+                    final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+                    eventManager.fire(ChatGuiEventType.chat_clicked.newEvent(chat));
+                }
+            }
+        }
+    }
+
+    private class MessengerEventListener extends AbstractJEventListener<MessengerEvent> {
+
+        protected MessengerEventListener() {
+            super(MessengerEvent.class);
+        }
+
+        @Override
+        public void onEvent(@Nonnull MessengerEvent event) {
+            switch (event.getType()) {
+                case unread_messages_count_changed:
+                    invalidateOptionsMenu();
+                    break;
+            }
         }
     }
 }

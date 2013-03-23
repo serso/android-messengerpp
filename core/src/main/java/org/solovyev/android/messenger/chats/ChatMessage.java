@@ -22,4 +22,7 @@ public interface ChatMessage extends LiteChatMessage {
 
     @Nonnull
     ChatMessage clone();
+
+    @Nonnull
+    ChatMessage cloneRead();
 }

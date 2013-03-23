@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -9,10 +10,26 @@ import javax.annotation.Nonnull;
  */
 public enum ChatGuiEventType {
 
-    chat_clicked;
+    chat_clicked,
+    chat_message_read {
+        @Override
+        protected void checkData(@Nullable Object data) {
+            assert data instanceof ChatMessage;
+        }
+    };
 
     @Nonnull
-    public ChatGuiEvent newEvent(@Nonnull Chat chat) {
-        return new ChatGuiEvent(chat, this);
+    public final ChatGuiEvent newEvent(@Nonnull Chat chat) {
+        return newEvent(chat, null);
+    }
+
+    @Nonnull
+    public final ChatGuiEvent newEvent(@Nonnull Chat chat, @Nullable Object data) {
+        checkData(data);
+        return new ChatGuiEvent(chat, this, data);
+    }
+
+    protected void checkData(@Nullable Object data) {
+        assert data == null;
     }
 }

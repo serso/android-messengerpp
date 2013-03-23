@@ -368,6 +368,23 @@ public class DefaultChatService implements ChatService {
         }
     }
 
+    @Override
+    public void onChatMessageRead(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+        if ( !message.isRead() ) {
+            message = message.cloneRead();
+        }
+
+        final boolean changedReadStatus;
+        synchronized (lock) {
+            changedReadStatus = chatMessageDao.changeReadStatus(message.getId(), true);
+        }
+
+        if ( changedReadStatus ) {
+            fireEvent(ChatEventType.message_changed.newEvent(chat, message));
+            fireEvent(ChatEventType.message_read.newEvent(chat, message));
+        }
+    }
+
     @Nonnull
     private ChatMessageDao getChatMessageDao() {
         return chatMessageDao;

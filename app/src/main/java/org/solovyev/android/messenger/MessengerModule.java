@@ -43,6 +43,7 @@ public class MessengerModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
         bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
         bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 

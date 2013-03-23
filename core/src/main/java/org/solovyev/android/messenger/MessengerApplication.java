@@ -12,6 +12,7 @@ import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.security.AuthServiceFacade;
@@ -76,6 +77,10 @@ public class MessengerApplication extends Application implements MessengerServic
     @Inject
     @Nonnull
     private RealmService realmService;
+
+    @Inject
+    @Nonnull
+    private UnreadMessagesCounter unreadMessagesCounter;
 
     @Inject
     @Nonnull
@@ -208,6 +213,7 @@ public class MessengerApplication extends Application implements MessengerServic
         this.chatService.init();
         this.chatMessageService.init();
         this.syncService.init();
+        this.unreadMessagesCounter.init();
 
         // load persistence data
         this.realmService.load();

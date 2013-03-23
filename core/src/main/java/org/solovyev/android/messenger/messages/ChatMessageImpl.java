@@ -60,6 +60,14 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 
     @Nonnull
     @Override
+    public ChatMessage cloneRead() {
+        final ChatMessageImpl clone = clone();
+        clone.read = true;
+        return clone;
+    }
+
+    @Nonnull
+    @Override
     public ChatMessageImpl clone() {
         final ChatMessageImpl clone = (ChatMessageImpl) super.clone();
 

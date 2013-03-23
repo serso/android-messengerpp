@@ -69,5 +69,6 @@
     <string name="mpp_sync">Synchronize</string>
     <string name="mpp_icon">Icon</string>
     <string name="mpp_user_starts_typing">User starts typing…</string>
+    <string name="mpp_unread_messages_counter">0</string>
 
 </resources>

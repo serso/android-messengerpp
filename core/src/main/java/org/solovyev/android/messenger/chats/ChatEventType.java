@@ -67,6 +67,13 @@ public enum ChatEventType {
         protected void checkData(@Nullable Object data) {
             assert data instanceof Integer;
         }
+    },
+
+    message_read{
+        @Override
+        protected void checkData(@Nullable Object data) {
+            assert data instanceof ChatMessage;
+        }
     };
 
     public final boolean isEvent(@Nonnull ChatEventType chatEventType, @Nonnull Chat eventChat, @Nonnull Chat chat) {

@@ -31,4 +31,6 @@ public interface ChatMessageDao {
     ChatMessage loadLastChatMessage(@Nonnull String chatId);
 
     int getUnreadMessagesCount();
+
+    boolean changeReadStatus(@Nonnull String messageId, boolean read);
 }

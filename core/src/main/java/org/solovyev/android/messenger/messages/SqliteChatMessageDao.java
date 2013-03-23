@@ -102,6 +102,12 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
         return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new UnreadMessagesCountLoader(getContext(), getSqliteOpenHelper()));
     }
 
+    @Override
+    public boolean changeReadStatus(@Nonnull String messageId, boolean read) {
+        final Long rows = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new ReadMessageStatusUpdater(messageId, read));
+        return rows != 0;
+    }
+
     @Nonnull
     @Override
     public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete) {
@@ -430,6 +436,27 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
             } else {
                 return 0;
             }
+        }
+    }
+
+    private static class ReadMessageStatusUpdater implements DbExec {
+
+        @Nonnull
+        private final String messageId;
+
+        private final boolean read;
+
+        private ReadMessageStatusUpdater(@Nonnull String messageId, boolean read) {
+            this.messageId = messageId;
+            this.read = read;
+        }
+
+        @Override
+        public long exec(@Nonnull SQLiteDatabase db) {
+            final ContentValues values = new ContentValues();
+            final int newReadValue = read ? 1 : 0;
+            values.put("read", newReadValue);
+            return db.update("messages", values, "id = ? and read <> ?", new String[]{messageId, String.valueOf(newReadValue)});
         }
     }
 }

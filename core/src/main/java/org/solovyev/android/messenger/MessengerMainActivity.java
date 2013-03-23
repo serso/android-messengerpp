@@ -90,7 +90,7 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
         listeners.add(RealmGuiEvent.class, new RealmGuiEventListener(this));
         listeners.add(RealmDefGuiEvent.class, new RealmDefGuiEventListener(this));
         listeners.add(ContactGuiEvent.class, new ContactGuiEventListener(this));
-        listeners.add(ChatGuiEvent.class, new ChatGuiEventListener(this));
+        listeners.add(ChatGuiEvent.class, new ChatGuiEventListener(this, getChatService()));
         listeners.add(FragmentGuiEvent.class, new FragmentGuiEventListener(this));
         listeners.add(PreferenceGuiEvent.class, new PreferenceGuiEventListener(this));
 
