@@ -257,6 +257,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         tab.setTabListener(new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                emptifyNotPrimaryPanes();
                 getFragmentService().setPrimaryFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
             }
 
@@ -266,11 +267,21 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
             @Override
             public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                emptifyNotPrimaryPanes();
                 // in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
                 getFragmentService().setPrimaryFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
             }
         });
         actionBar.addTab(tab);
+    }
+
+    private void emptifyNotPrimaryPanes() {
+        if (isDualPane()) {
+            getFragmentService().emptifySecondFragment();
+            if (isTriplePane()) {
+                getFragmentService().emptifyThirdFragment();
+            }
+        }
     }
 
     @Override
