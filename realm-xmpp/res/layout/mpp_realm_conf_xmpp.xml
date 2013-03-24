@@ -7,6 +7,10 @@
     <LinearLayout style="@style/mpp_fragment">
 
         <TextView
+            a:id="@+id/mpp_fragment_title"
+            style="@style/mpp_fragment_title" />
+
+        <TextView
             a:text="@string/mpp_xmpp_server"
             style="@style/mpp_form_label" />
 

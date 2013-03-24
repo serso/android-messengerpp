@@ -72,5 +72,6 @@
     <string name="mpp_user_starts_typing">User starts typing…</string>
     <string name="mpp_menu_unread_messages_counter">0</string>
     <string name="mpp_menu_toggle_users">Online/Offline</string>
+    <string name="mpp_realm_configuration">Configuration of %1$s</string>
 
 </resources>

@@ -181,6 +181,7 @@
 
     <style name="mpp_form_label">
         <item name="android:textColor">@color/mpp_text</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -192,6 +193,7 @@
     </style>
 
     <style name="mpp_form_edittext" parent="mpp_form_label">
+        <item name="android:textStyle">normal</item>
     </style>
 
 

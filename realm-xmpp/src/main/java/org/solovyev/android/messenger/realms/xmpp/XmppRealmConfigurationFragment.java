@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
@@ -42,6 +43,8 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
     @Inject
     @Nonnull
     private RealmService realmService;
+
+
 
     /*
     **********************************************************************
@@ -130,6 +133,11 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
                 saveRealm();
             }
         });
+
+        final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
+        fragmentTitle.setText(getFragmentTitle());
+
+        getMultiPaneManager().onPaneCreated(getActivity(), root);
     }
 
     private void saveRealm() {

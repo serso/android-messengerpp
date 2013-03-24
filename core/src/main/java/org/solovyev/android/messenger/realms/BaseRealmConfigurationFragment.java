@@ -8,13 +8,14 @@ import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends RoboSherlockFragment {
+public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends RoboSherlockFragment {
 
     /*
     **********************************************************************
@@ -58,7 +59,7 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
     **********************************************************************
     */
 
-    private R editedRealm;
+    private T editedRealm;
 
     private int layoutResId;
 
@@ -74,7 +75,7 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
         if (arguments != null) {
             final String realmId = arguments.getString(EXTRA_REALM_ID);
             if (realmId != null) {
-                editedRealm = (R) realmService.getRealmById(realmId);
+                editedRealm = (T) realmService.getRealmById(realmId);
             }
         }
     }
@@ -90,7 +91,7 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
         return result;
     }
 
-    public R getEditedRealm() {
+    public T getEditedRealm() {
         return editedRealm;
     }
 
@@ -107,7 +108,7 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
     }
 
     protected void backButtonPressed() {
-        R editedRealm = getEditedRealm();
+        T editedRealm = getEditedRealm();
         if (editedRealm != null) {
             eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(editedRealm, RealmGuiEventType.FinishedState.back));
         } else {
@@ -122,6 +123,12 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
 
     @Nonnull
     public abstract RealmDef getRealmDef();
+
+    @Nonnull
+    protected CharSequence getFragmentTitle() {
+        final String realmName = getString(getRealmDef().getNameResId());
+        return getString(R.string.mpp_realm_configuration, realmName);
+    }
 
     /*
     **********************************************************************
