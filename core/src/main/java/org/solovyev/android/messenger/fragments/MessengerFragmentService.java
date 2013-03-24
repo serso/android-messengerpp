@@ -249,13 +249,17 @@ public class MessengerFragmentService {
         setFragment(R.id.content_first_pane, pf.getFragmentTag(), fragmentBuilder, fragmentReuseCondition, fm, ft, pf.isAddToBackStack());
     }
 
-    public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment pf) {
+    public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment pf, @Nullable Bundle fragmentArgs) {
         goBackTillStart(activity.getSupportFragmentManager());
 
         final Class<? extends Fragment> fragmentClass = pf.getFragmentClass();
-        final Builder<Fragment> fragmentBuilder = ReflectionFragmentBuilder.newInstance(activity, fragmentClass, null);
+        final Builder<Fragment> fragmentBuilder = ReflectionFragmentBuilder.newInstance(activity, fragmentClass, fragmentArgs);
         final JPredicate<Fragment> fragmentReuseCondition = SimpleFragmentReuseCondition.forClass(fragmentClass);
         setFragment(R.id.content_first_pane, pf.getFragmentTag(), fragmentBuilder, fragmentReuseCondition, pf.isAddToBackStack());
+    }
+
+    public void setPrimaryFragment(@Nonnull MessengerPrimaryFragment pf) {
+        setPrimaryFragment(pf, null);
     }
 
     private void goBackTillStart(@Nonnull FragmentManager fm) {
@@ -278,6 +282,22 @@ public class MessengerFragmentService {
 
     public void goBack(@Nonnull String tag) {
         activity.getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    public boolean isFragmentShown(@Nonnull String fragmentTag) {
+        final FragmentManager fm = activity.getSupportFragmentManager();
+        final Fragment fragment = fm.findFragmentByTag(fragmentTag);
+        if ( fragment != null && fragment.isAdded() && !fragment.isDetached() ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Nullable
+    public <F extends Fragment> F getFragment(@Nonnull String fragmentTag) {
+        final FragmentManager fm = activity.getSupportFragmentManager();
+        return (F) fm.findFragmentByTag(fragmentTag);
     }
 
     private static final class EmptyFragmentReuseCondition implements JPredicate<Fragment> {

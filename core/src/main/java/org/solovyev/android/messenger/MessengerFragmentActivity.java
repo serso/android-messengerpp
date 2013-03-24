@@ -75,6 +75,10 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     @Inject
     @Nonnull
+    private MessengerMultiPaneManager multiPaneManager;
+
+    @Inject
+    @Nonnull
     private MessengerListeners messengerListeners;
 
     @Inject
@@ -157,7 +161,6 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         return eventManager;
     }
 
-
     @Nonnull
     public RealmService getRealmService() {
         return realmService;
@@ -171,6 +174,11 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Nonnull
     public UnreadMessagesCounter getUnreadMessagesCounter() {
         return unreadMessagesCounter;
+    }
+
+    @Nonnull
+    public MessengerMultiPaneManager getMultiPaneManager() {
+        return multiPaneManager;
     }
 
     public boolean isDualPane() {
@@ -334,7 +342,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     /*@Nullable*/
-    private ActionBar.Tab findTabByTag(/*@NotNull*/ String tag) {
+    public ActionBar.Tab findTabByTag(/*@NotNull*/ String tag) {
         final ActionBar actionBar = getSupportActionBar();
         if ( actionBar != null ) {
             for ( int i = 0; i < actionBar.getTabCount(); i++ ) {
@@ -390,9 +398,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
             if (chatEntity != null) {
                 final Chat chat = activity.getChatService().getChatById(chatEntity);
                 if (chat != null) {
-                    // todo serso: currently we do not update list pane!!!
                     final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                    eventManager.fire(ChatGuiEventType.chat_clicked.newEvent(chat));
+                    eventManager.fire(ChatGuiEventType.chat_open_requested.newEvent(chat));
                 }
             }
         }

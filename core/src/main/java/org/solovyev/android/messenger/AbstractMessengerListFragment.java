@@ -36,6 +36,7 @@ import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.view.IdentifiableListItem;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
@@ -53,7 +54,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractMessengerListFragment<T, LI extends ListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener, ListViewFilter.FilterableListView {
+public abstract class AbstractMessengerListFragment<T, LI extends IdentifiableListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener, ListViewFilter.FilterableListView {
 
     /*
     **********************************************************************
@@ -610,6 +611,24 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
     protected void onListViewTopReached() {
     }
 
+    public final void selectListItem(@Nonnull String listItemId) {
+        final Activity activity = getActivity();
+        if (activity != null && adapter != null && adapter.isInitialized() && !activity.isFinishing() && !isDetached()) {
+            final int size = adapter.getCount();
+            for ( int i = 0; i < size; i++ ) {
+                final IdentifiableListItem listItem = adapter.getItem(i);
+                if ( listItem.getId().equals(listItemId) ) {
+                    adapter.getSelectedItemListener().onItemClick(i);
+                    final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
+                    if (onClickAction != null) {
+                        onClickAction.onClick(activity, adapter, getListView());
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     /*
     **********************************************************************
     *
@@ -695,6 +714,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends ListItem> exte
 
                     if (multiPaneManager.isDualPane(activity)) {
                         if (position >= 0 && position < adapter.getCount()) {
+                            adapter.getSelectedItemListener().onItemClick(position);
                             final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
                             if (onClickAction != null) {
                                 onClickAction.onClick(activity, adapter, listView);

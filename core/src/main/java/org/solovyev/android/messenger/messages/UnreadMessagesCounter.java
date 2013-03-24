@@ -37,6 +37,17 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent>{
     /*
     **********************************************************************
     *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
+    private static final int DELAY_LONG = 2500;
+    private static final int DELAY_SHORT = 500;
+
+    /*
+    **********************************************************************
+    *
     *                           AUTO INJECTED FIELDS
     *
     **********************************************************************
@@ -167,7 +178,7 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent>{
                     messengerListeners.fireEvent(MessengerEventType.unread_messages_count_changed.newEvent(counter.get()));
                 }
             }
-        }, longDelay ? 2500 : 500, TimeUnit.MILLISECONDS);
+        }, longDelay ? DELAY_LONG : DELAY_SHORT, TimeUnit.MILLISECONDS);
     }
 
     public int getUnreadMessagesCount() {

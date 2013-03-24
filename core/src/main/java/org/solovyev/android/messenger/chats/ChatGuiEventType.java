@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
  */
 public enum ChatGuiEventType {
 
+    chat_open_requested,
     chat_clicked,
     chat_message_read {
         @Override

@@ -12,7 +12,6 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.solovyev.android.Views;
-import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -24,7 +23,7 @@ import javax.annotation.Nonnull;
  * Date: 3/6/13
  * Time: 11:57 PM
  */
-public abstract class AbstractMessengerListItem<D extends MessengerEntity> implements ListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
+public abstract class AbstractMessengerListItem<D extends MessengerEntity> implements IdentifiableListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
 
     private boolean checked;
 
@@ -78,6 +77,12 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     @Nonnull
     private ViewAwareTag createTag(@Nonnull ViewGroup view) {
         return new ViewAwareTag(tagPrefix + this.data.getId(), view);
+    }
+
+    @Nonnull
+    @Override
+    public final String getId() {
+        return this.data.getId();
     }
 
     private void fillView(@Nonnull Context context, @Nonnull final ViewGroup view) {

@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
+import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerFragmentService;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
@@ -42,12 +43,40 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
         final ChatGuiEventType type = event.getType();
 
         switch (type) {
+            case chat_open_requested:
+                handleChatOpenRequestedEvent(chat);
+                break;
             case chat_clicked:
                 handleChatClickedEvent(chat);
                 break;
             case chat_message_read:
                 handleMessageReadEvent(chat, event.getDataAsChatMessage());
                 break;
+        }
+    }
+
+    private void handleChatOpenRequestedEvent(@Nonnull final Chat chat) {
+        final MessengerFragmentService fragmentService = activity.getFragmentService();
+        if (activity.getMultiPaneManager().isDualPane(activity)) {
+            if (!fragmentService.isFragmentShown(MessengerChatsFragment.FRAGMENT_TAG)) {
+                final ActionBar.Tab tab = activity.findTabByTag(MessengerChatsFragment.FRAGMENT_TAG);
+                if ( tab != null ) {
+                    tab.select();
+                }
+            }
+
+            final MessengerChatsFragment fragment = fragmentService.getFragment(MessengerChatsFragment.FRAGMENT_TAG);
+            if (fragment != null) {
+                fragment.selectListItem(chat.getId());
+            }
+        } else {
+            fragmentService.setFirstFragment(new Builder<Fragment>() {
+                @Nonnull
+                @Override
+                public Fragment build() {
+                    return new MessengerMessagesFragment(chat);
+                }
+            }, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG, false);
         }
     }
 
