@@ -6,11 +6,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,7 +85,7 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
     }
 
     @Override
-    public void fillContentPane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane) {
+    public void onCreatePane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane) {
         if (this.isDualPane(activity)) {
             if (this.isFirstPane(paneParent)) {
                 pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_right));
@@ -98,8 +100,26 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
                     pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
                 }
             }
-        } else if (this.isFirstPane(paneParent)) {
+        } else {
             pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
+        }
+    }
+
+    @Override
+    public void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane) {
+        final TextView fragmentTitleTextView = (TextView) pane.findViewById(R.id.mpp_fragment_title);
+        if (fragmentTitleTextView != null) {
+            if (this.isDualPane(activity)) {
+                final CharSequence fragmentTitle = fragmentTitleTextView.getText();
+                if (Strings.isEmpty(fragmentTitle) ) {
+                    fragmentTitleTextView.setVisibility(View.GONE);
+                } else {
+                    fragmentTitleTextView.setText(String.valueOf(fragmentTitle).toUpperCase());
+                    fragmentTitleTextView.setVisibility(View.VISIBLE);
+                }
+            } else {
+                fragmentTitleTextView.setVisibility(View.GONE);
+            }
         }
     }
 

@@ -3,6 +3,10 @@
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
     style="@style/mpp_list_fragment">
 
+    <TextView
+        a:id="@+id/mpp_fragment_title"
+        style="@style/mpp_fragment_title" />
+
     <ListView
         a:id="@android:id/list"
         a:layout_height="match_parent"

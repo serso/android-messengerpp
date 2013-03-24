@@ -36,7 +36,7 @@ public final class PreferenceGuiEventListener implements EventListener<Preferenc
                     @Nonnull
                     @Override
                     public Fragment build() {
-                        return new MessengerPreferenceListFragment(preferencesResId, R.layout.mpp_fragment_preferences);
+                        return new MessengerPreferenceListFragment(preferencesResId);
                     }
                 }, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG);
                 if ( activity.isTriplePane() ) {
@@ -47,7 +47,7 @@ public final class PreferenceGuiEventListener implements EventListener<Preferenc
                     @Nonnull
                     @Override
                     public Fragment build() {
-                        return new MessengerPreferenceListFragment(preferencesResId, R.layout.mpp_fragment_preferences);
+                        return new MessengerPreferenceListFragment(preferencesResId);
                     }
                 }, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG, true);
             }

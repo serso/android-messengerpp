@@ -282,7 +282,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends IdentifiableLi
         params.gravity = Gravity.CENTER_VERTICAL;
         root.addView(listViewParent, params);
 
-        multiPaneManager.fillContentPane(getActivity(), container, root);
+        multiPaneManager.onCreatePane(getActivity(), container, root);
 
         return root;
     }

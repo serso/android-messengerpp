@@ -98,7 +98,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_fragment_realm).build(this.getActivity());
 
-        multiPaneManager.fillContentPane(this.getActivity(), container, result);
+        multiPaneManager.onCreatePane(this.getActivity(), container, result);
 
         result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -152,6 +152,8 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
                 MessengerSyncAllAsyncTask.newForRealm(getActivity(), syncService, realm).execute((Void)null);
             }
         });
+
+        multiPaneManager.onPaneCreated(getActivity(), root);
     }
 
     private void editRealm() {

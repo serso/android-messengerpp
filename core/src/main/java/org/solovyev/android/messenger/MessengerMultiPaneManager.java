@@ -34,7 +34,9 @@ public interface MessengerMultiPaneManager {
     @Nonnull
     ViewGroup getThirdPane(@Nonnull Activity activity);
 
-    void fillContentPane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane);
+    void onCreatePane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane);
+
+    void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane);
 
     void fillLoadingLayout(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView);
 }

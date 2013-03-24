@@ -141,20 +141,11 @@
     </style>
 
     <style name="mpp_theme_metro" parent="Theme.Sherlock">
-        <item name="actionBarStyle">@style/Widget.Messenger.ActionBar</item>
-        <item name="android:actionBarStyle">@style/Widget.Messenger.ActionBar</item>
-        <!--todo serso: currently alert dialogs are shown with black text on black background-->
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:textColorSecondary">@color/mpp_text</item>
     </style>
 
-    <style name="Widget.Messenger.ActionBar" parent="Widget.Sherlock.ActionBar">
-<!--        <item name="titleTextStyle">@color/header_text</item>
-        <item name="android:titleTextStyle">@color/header_text</item>
-        <item name="subtitleTextStyle">@color/header_text</item>
-        <item name="android:subtitleTextStyle">@color/header_text</item>-->
-        <!--<item name="background">@color/selected</item>
-        <item name="android:background">@color/selected</item>-->
+    <style name="mpp_theme_metro_preferences" parent="mpp_theme_metro">
+        <!--todo serso: currently alert dialogs are shown with black text on black background from preferences-->
+        <item name="android:textColor">@color/mpp_text</item>
     </style>
 
     <style name="mpp_button">
@@ -250,4 +241,5 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
 </resources>

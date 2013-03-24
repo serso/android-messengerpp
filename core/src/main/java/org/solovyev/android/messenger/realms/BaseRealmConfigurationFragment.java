@@ -83,7 +83,7 @@ public abstract class BaseRealmConfigurationFragment<R extends Realm<?>> extends
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(this.getActivity());
 
-        getMultiPaneManager().fillContentPane(this.getActivity(), container, result);
+        getMultiPaneManager().onCreatePane(this.getActivity(), container, result);
 
         result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 

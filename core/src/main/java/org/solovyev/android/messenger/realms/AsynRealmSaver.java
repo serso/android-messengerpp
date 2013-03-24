@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.realms;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -69,10 +68,8 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
         if (!consumed) {
             if (e instanceof InvalidCredentialsException) {
                 Toast.makeText(getContext(), "Invalid credentials!", Toast.LENGTH_SHORT).show();
-                Log.e("XmppRealm", e.getMessage(), e);
             } else if (e instanceof RealmAlreadyExistsException) {
-                Toast.makeText(getContext(), "Same account alraedy configured!", Toast.LENGTH_SHORT).show();
-                Log.e("XmppRealm", e.getMessage(), e);
+                Toast.makeText(getContext(), "Same account already configured!", Toast.LENGTH_SHORT).show();
             } else {
                 super.onFailurePostExecute(e);
             }

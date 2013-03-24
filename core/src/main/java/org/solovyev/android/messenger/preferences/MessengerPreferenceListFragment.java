@@ -1,11 +1,15 @@
 package org.solovyev.android.messenger.preferences;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.core.R;
 import roboguice.RoboGuice;
 
 import javax.annotation.Nonnull;
@@ -29,8 +33,8 @@ public final class MessengerPreferenceListFragment extends PreferenceListFragmen
     @Nonnull
     private MessengerMultiPaneManager multiPaneManager;
 
-    public MessengerPreferenceListFragment(int preferencesResId, int layoutResId) {
-        super(preferencesResId, layoutResId);
+    public MessengerPreferenceListFragment(int preferencesResId) {
+        super(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_preferences);
     }
 
     public MessengerPreferenceListFragment() {
@@ -44,9 +48,24 @@ public final class MessengerPreferenceListFragment extends PreferenceListFragmen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
-        final View root = super.onCreateView(inflater, container, b);
-        multiPaneManager.fillContentPane(getActivity(), container, root);
-        return root;
+    protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nonnull Bundle b) {
+        super.onCreateView(context, inflater, root, container, b);
+
+        multiPaneManager.onCreatePane(getActivity(), container, root);
+    }
+
+    @Override
+    public void onViewCreated(View root, Bundle savedInstanceState) {
+        super.onViewCreated(root, savedInstanceState);
+
+        final PreferenceScreen preferenceScreen = getPreferenceScreen();
+        if ( preferenceScreen != null ) {
+            final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
+            if (fragmentTitle != null) {
+                fragmentTitle.setText(preferenceScreen.getTitle());
+            }
+        }
+
+        multiPaneManager.onPaneCreated(getActivity(), root);
     }
 }

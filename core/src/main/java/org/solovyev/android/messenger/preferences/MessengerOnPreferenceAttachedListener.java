@@ -40,6 +40,7 @@ public final class MessengerOnPreferenceAttachedListener implements PreferenceLi
         reloadData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                // todo serso: show user message that action has been started
                 MessengerSyncAllAsyncTask.newForAllRealms(context, syncService).execute((Void) null);
                 return true;
             }

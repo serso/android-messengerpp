@@ -32,7 +32,7 @@ public class MessengerEmptyFragment extends RoboSherlockFragment implements Deta
 
         root.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
-        multiPaneManager.fillContentPane(this.getActivity(), container, root);
+        multiPaneManager.onCreatePane(this.getActivity(), container, root);
 
         return root;
     }

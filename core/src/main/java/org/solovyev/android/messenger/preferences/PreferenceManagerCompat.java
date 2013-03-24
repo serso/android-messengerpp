@@ -79,18 +79,23 @@ public class PreferenceManagerCompat {
      * preference hierarchy.
      *
      * @param preferencesResId The XML resource ID to inflate.
+     * @param themeContext context holding the theme
      */
-    public void addPreferencesFromResource(int preferencesResId) {
+    public void addPreferencesFromResource(int preferencesResId, @Nonnull Context themeContext) {
         try {
             Method m = PreferenceManager.class.getDeclaredMethod("inflateFromResource", Context.class, int.class, PreferenceScreen.class);
             m.setAccessible(true);
-            final PreferenceScreen preferenceScreen = (PreferenceScreen) m.invoke(preferenceManager, fragment.getActivity(), preferencesResId, getPreferenceScreen());
+            final PreferenceScreen preferenceScreen = (PreferenceScreen) m.invoke(preferenceManager, themeContext, preferencesResId, getPreferenceScreen());
             if (preferenceScreen != null) {
                 setPreferenceScreen(preferenceScreen);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void addPreferencesFromResource(int preferencesResId) {
+        addPreferencesFromResource(preferencesResId, fragment.getActivity());
     }
 
 

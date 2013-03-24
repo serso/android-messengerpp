@@ -1,19 +1,18 @@
 package org.solovyev.android.messenger.preferences;
 
 import android.R;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.view.*;
 import android.widget.ListView;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -21,6 +20,8 @@ import javax.annotation.Nonnull;
  * Time: 6:43 PM
  */
 public class PreferenceListFragment extends ListFragment {
+
+    private static final int NO_THEME = -1;
 
     public static final String FRAGMENT_TAG = "preferences";
     public static final String PREFERENCES_RES_ID = "preferences_res_id";
@@ -34,9 +35,18 @@ public class PreferenceListFragment extends ListFragment {
 
     private int layoutResId;
 
+    private int themeResId = NO_THEME;
+    private Context themeContext;
+
     public PreferenceListFragment(int preferencesResId, int layoutResId) {
         this.preferencesResId = preferencesResId;
         this.layoutResId = layoutResId;
+    }
+
+    public PreferenceListFragment(int preferencesResId, int layoutResId, int themeResId) {
+        this.preferencesResId = preferencesResId;
+        this.layoutResId = layoutResId;
+        this.themeResId = themeResId;
     }
 
     //must be provided
@@ -52,12 +62,6 @@ public class PreferenceListFragment extends ListFragment {
         }
 
         preferenceManager = new PreferenceManagerCompat(this);
-
-        final FragmentActivity activity = getActivity();
-        root = LayoutInflater.from(activity).inflate(layoutResId, null);
-
-        final ListView lv = (ListView) root.findViewById(R.id.list);
-        prepareListView(lv);
     }
 
     protected void prepareListView(@Nonnull ListView lv) {
@@ -65,24 +69,49 @@ public class PreferenceListFragment extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
+    public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
+        final LayoutInflater themeInflater;
+
+        if (themeResId == NO_THEME) {
+            themeContext = getActivity();
+            themeInflater = inflater;
+        } else {
+            themeContext = new ContextThemeWrapper(getActivity(), themeResId);
+            themeInflater = LayoutInflater.from(themeContext);
+        }
+
+        root = themeInflater.inflate(layoutResId, null);
+
+        final ListView lv = (ListView) root.findViewById(R.id.list);
+        prepareListView(lv);
+
+        onCreateView(themeContext, themeInflater, root, container, b);
+
         return root;
+    }
+
+    protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nonnull Bundle b) {
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        preferenceManager.addPreferencesFromResource(preferencesResId);
+        preferenceManager.addPreferencesFromResource(preferencesResId, themeContext);
         preferenceManager.postBindPreferences();
 
-        final FragmentActivity activity = getActivity();
+        final Activity activity = getActivity();
         if (activity instanceof OnPreferenceAttachedListener) {
             final PreferenceScreen preferenceScreen = preferenceManager.getPreferenceScreen();
             if (preferenceScreen != null) {
                 ((OnPreferenceAttachedListener) activity).onPreferenceAttached(preferenceScreen, preferencesResId);
             }
         }
+    }
+
+    @Nullable
+    public PreferenceScreen getPreferenceScreen() {
+        return preferenceManager.getPreferenceScreen();
     }
 
     @Override
