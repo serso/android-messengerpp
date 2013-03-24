@@ -49,13 +49,14 @@
     <string name="female">Female</string>
     <string name="mpp_sex">Sex</string>
     <string name="mpp_search_hint">Search</string>
+    <string name="mpp_menu_search">Search</string>
     <string name="mpp_settings_appearance">Appearance settings</string>
     <string name="mpp_settings_other">Other settings</string>
     <string name="c_settings">Settings</string>
 
     <string name="mpp_realm_icon">Account icon</string>
     <string name="mpp_realm_add">Add account</string>
-    <string name="mpp_app_exit">Exit</string>
+    <string name="mpp_menu_app_exit">Exit</string>
     <string name="mpp_back">Back</string>
     <string name="mpp_save">Save</string>
     <string name="mpp_remove">Remove</string>
@@ -69,6 +70,7 @@
     <string name="mpp_sync">Synchronize</string>
     <string name="mpp_icon">Icon</string>
     <string name="mpp_user_starts_typing">User starts typing…</string>
-    <string name="mpp_unread_messages_counter">0</string>
+    <string name="mpp_menu_unread_messages_counter">0</string>
+    <string name="mpp_menu_toggle_users">Online/Offline</string>
 
 </resources>

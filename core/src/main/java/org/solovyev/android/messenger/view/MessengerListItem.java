@@ -9,9 +9,12 @@ import javax.annotation.Nonnull;
  * Date: 3/24/13
  * Time: 11:55 AM
  */
-public interface IdentifiableListItem extends ListItem {
+public interface MessengerListItem extends ListItem {
 
     @Nonnull
     String getId();
+
+    @Nonnull
+    CharSequence getDisplayName();
 
 }

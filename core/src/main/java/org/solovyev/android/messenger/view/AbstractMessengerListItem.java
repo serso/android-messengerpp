@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Date: 3/6/13
  * Time: 11:57 PM
  */
-public abstract class AbstractMessengerListItem<D extends MessengerEntity> implements IdentifiableListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
+public abstract class AbstractMessengerListItem<D extends MessengerEntity> implements MessengerListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
 
     private boolean checked;
 
@@ -180,7 +180,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     }
 
     @Nonnull
-    protected final CharSequence getDisplayName() {
+    public final CharSequence getDisplayName() {
         return displayName;
     }
 

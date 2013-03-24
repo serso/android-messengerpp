@@ -36,7 +36,7 @@ import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.view.IdentifiableListItem;
+import org.solovyev.android.messenger.view.MessengerListItem;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractMessengerListFragment<T, LI extends IdentifiableListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener, ListViewFilter.FilterableListView {
+public abstract class AbstractMessengerListFragment<T, LI extends MessengerListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener, ListViewFilter.FilterableListView {
 
     /*
     **********************************************************************
@@ -616,7 +616,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends IdentifiableLi
         if (activity != null && adapter != null && adapter.isInitialized() && !activity.isFinishing() && !isDetached()) {
             final int size = adapter.getCount();
             for ( int i = 0; i < size; i++ ) {
-                final IdentifiableListItem listItem = adapter.getItem(i);
+                final MessengerListItem listItem = adapter.getItem(i);
                 if ( listItem.getId().equals(listItemId) ) {
                     adapter.getSelectedItemListener().onItemClick(i);
                     final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();

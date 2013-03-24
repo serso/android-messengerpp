@@ -188,7 +188,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
                         Log.d("Filtering", contact.getDisplayName() + " is filtered due to mode " + mode);
                     }
 
-                    return !shown;
+                    return shown;
                 }
 
                 return true;

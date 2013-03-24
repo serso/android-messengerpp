@@ -3,10 +3,12 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
     <item a:id="@+id/mpp_menu_toggle_contacts"
+          a:title="@string/mpp_menu_toggle_users"
           a:icon="@drawable/mpp_ab_user"
           a:showAsAction="always"/>
 
     <item a:id="@+id/mpp_menu_toggle_filter_box"
+          a:title="@string/mpp_menu_search"
           a:icon="@drawable/mpp_ab_search"
           a:showAsAction="always"/>
 
