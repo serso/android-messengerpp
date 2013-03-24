@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.IBinder;
@@ -38,7 +37,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
     **********************************************************************
     */
 
-    private static final int NOTIFICATION_ID = 10002029;
+    private static final int NOTIFICATION_ID_APP_IS_RUNNING = 10002029;
 
     /*
     **********************************************************************
@@ -55,6 +54,10 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Inject
     @Nonnull
     private NetworkStateService networkStateService;
+
+    @Inject
+    @Nonnull
+    private MessengerListeners messengerListeners;
 
     /*
     **********************************************************************
@@ -81,12 +84,12 @@ public class MessengerService extends RoboService implements NetworkStateListene
     public void onCreate() {
         super.onCreate();
 
-        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-        notificationBuilder.setOngoing(true);
-        notificationBuilder.setSmallIcon(R.drawable.mpp_sb_icon);
-        notificationBuilder.setContentText(getString(R.string.mpp_app_name));
-        notificationBuilder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MessengerStartActivity.class), 0));
-        startForeground(NOTIFICATION_ID, notificationBuilder.getNotification());
+        final NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
+        nb.setOngoing(true);
+        nb.setSmallIcon(R.drawable.mpp_sb_icon);
+        nb.setContentText(getString(R.string.mpp_app_name));
+        nb.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MessengerStartActivity.class), 0));
+        startForeground(NOTIFICATION_ID_APP_IS_RUNNING, nb.getNotification());
 
         realmConnections = new RealmConnections(this);
 

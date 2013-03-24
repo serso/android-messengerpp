@@ -84,6 +84,10 @@ public class MessengerApplication extends Application implements MessengerServic
 
     @Inject
     @Nonnull
+    private UnreadMessagesNotifier unreadMessagesNotifier;
+
+    @Inject
+    @Nonnull
     private NetworkStateService networkStateService;
 
     /*

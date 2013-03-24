@@ -102,6 +102,7 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent>{
         synchronized (lock) {
             counter.set(chatMessageDao.getUnreadMessagesCount());
         }
+        // todo serso: init countersByChats
         chatService.addListener(this);
     }
 

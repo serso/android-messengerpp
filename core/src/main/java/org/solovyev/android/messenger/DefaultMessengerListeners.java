@@ -19,7 +19,6 @@ public final class DefaultMessengerListeners implements MessengerListeners {
     @Nonnull
     private final JEventListeners<JEventListener<? extends MessengerEvent>, MessengerEvent> listeners = Listeners.newEventBusFor(MessengerEvent.class);
 
-
     @Override
     public void fireEvent(@Nonnull MessengerEvent event) {
         listeners.fireEvent(event);
