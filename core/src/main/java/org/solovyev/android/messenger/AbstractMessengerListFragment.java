@@ -612,17 +612,12 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
     }
 
     public final void selectListItem(@Nonnull String listItemId) {
-        final Activity activity = getActivity();
-        if (activity != null && adapter != null && adapter.isInitialized() && !activity.isFinishing() && !isDetached()) {
+        if (adapter != null && adapter.isInitialized()) {
             final int size = adapter.getCount();
             for ( int i = 0; i < size; i++ ) {
                 final MessengerListItem listItem = adapter.getItem(i);
                 if ( listItem.getId().equals(listItemId) ) {
                     adapter.getSelectedItemListener().onItemClick(i);
-                    final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
-                    if (onClickAction != null) {
-                        onClickAction.onClick(activity, adapter, getListView());
-                    }
                     break;
                 }
             }
