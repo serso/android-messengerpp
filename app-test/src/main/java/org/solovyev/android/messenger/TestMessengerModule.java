@@ -64,6 +64,7 @@ public class TestMessengerModule extends AbstractModule {
         bind(RealmService.class).to(DefaultRealmService.class);
         bind(RealmDao.class).to(SqliteRealmDao.class);
 
+        bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
         bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
         bind(AuthService.class).to(AuthServiceImpl.class);
         bind(AuthServiceFacade.class).to(AuthServiceFacadeImpl.class);

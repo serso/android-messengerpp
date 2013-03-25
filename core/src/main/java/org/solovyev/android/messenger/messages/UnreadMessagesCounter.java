@@ -59,11 +59,11 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent>{
 
     @Inject
     @Nonnull
-    private ChatMessageDao chatMessageDao;
+    private ChatService chatService;
 
     @Inject
     @Nonnull
-    private ChatService chatService;
+    private ChatMessageService chatMessageService;
 
     @Inject
     @Nonnull
@@ -100,9 +100,14 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent>{
 
     public void init() {
         synchronized (lock) {
-            counter.set(chatMessageDao.getUnreadMessagesCount());
+            for (Map.Entry<Entity, Integer> entry : chatService.getUnreadChats().entrySet()) {
+                final Integer unreadInChat = entry.getValue();
+                if (unreadInChat > 0) {
+                    countersByChats.put(entry.getKey(), new AtomicInteger(unreadInChat));
+                    counter.addAndGet(unreadInChat);
+                }
+            }
         }
-        // todo serso: init countersByChats
         chatService.addListener(this);
     }
 

@@ -36,4 +36,9 @@ public interface ChatMessageService {
 
     @Nullable
     ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage);
+
+    /**
+     * @return total number of unread messages in the application
+     */
+    int getUnreadMessagesCount();
 }

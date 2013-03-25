@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.common.Builder;
@@ -219,6 +220,9 @@ public class MessengerFragmentService {
              * May be thrown by {@link android.support.v4.app.FragmentManager#executePendingTransactions()}.
              */
             Log.e(TAG, e.getMessage(), e);
+
+            // we cannot work with the same UI anymore => restart activity (as persistence data is OK, only UI is broken)
+            Activities.restartActivity(activity);
         }
         return success;
     }
@@ -263,9 +267,11 @@ public class MessengerFragmentService {
     }
 
     private void goBackTillStart(@Nonnull FragmentManager fm) {
-        int backStackEntryCount = fm.getBackStackEntryCount();
-        for ( int i = 0; i < backStackEntryCount; i++) {
-            fm.popBackStack();
+        if (!activity.isFinishing()) {
+            int backStackEntryCount = fm.getBackStackEntryCount();
+            for ( int i = 0; i < backStackEntryCount; i++) {
+                fm.popBackStack();
+            }
         }
     }
     public void goBackTillStart() {

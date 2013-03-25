@@ -30,7 +30,12 @@ public interface ChatMessageDao {
     @Nullable
     ChatMessage loadLastChatMessage(@Nonnull String chatId);
 
+    /**
+     * @return total number of unread messages in the application
+     */
     int getUnreadMessagesCount();
 
     boolean changeReadStatus(@Nonnull String messageId, boolean read);
+
+    void deleteAllMessages();
 }

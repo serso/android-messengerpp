@@ -253,6 +253,14 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
+    public Map<Entity, Integer> getUnreadChats() {
+        synchronized (lock) {
+            return chatDao.getUnreadChats();
+        }
+    }
+
+    @Nonnull
+    @Override
     public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) {
         synchronized (lock) {
             final List<ApiChat> preparedChats = Lists.transform(chats, new Function<ApiChat, ApiChat>() {

@@ -1,8 +1,6 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.entities;
 
 import android.database.Cursor;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.common.Converter;
 
 import javax.annotation.Nonnull;
@@ -12,17 +10,17 @@ import javax.annotation.Nonnull;
  * Date: 7/25/12
  * Time: 2:00 AM
  */
-public class RealmEntityMapper implements Converter<Cursor, Entity> {
+public class EntityMapper implements Converter<Cursor, Entity> {
 
     private int cursorPosition;
 
-    private RealmEntityMapper(int cursorPosition) {
+    private EntityMapper(int cursorPosition) {
         this.cursorPosition = cursorPosition;
     }
 
     @Nonnull
-    public static RealmEntityMapper newInstanceFor(int cursorPosition) {
-        return new RealmEntityMapper(cursorPosition);
+    public static EntityMapper newInstanceFor(int cursorPosition) {
+        return new EntityMapper(cursorPosition);
     }
 
     @Nonnull

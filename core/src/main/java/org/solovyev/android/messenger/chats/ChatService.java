@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -189,4 +190,11 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
      */
     @Nonnull
     ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat);
+
+    /**
+     * Key: chat for which unread messages exist, value: number of unread messages
+     * @return map of chats with unread messages counts for them
+     */
+    @Nonnull
+    Map<Entity, Integer> getUnreadChats();
 }

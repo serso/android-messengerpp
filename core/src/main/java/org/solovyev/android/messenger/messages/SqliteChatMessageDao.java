@@ -17,6 +17,7 @@ import org.solovyev.android.db.AbstractObjectDbExec;
 import org.solovyev.android.db.AbstractSQLiteHelper;
 import org.solovyev.android.db.AndroidDbUtils;
 import org.solovyev.android.db.DbExec;
+import org.solovyev.android.db.DeleteAllRowsDbExec;
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
@@ -106,6 +107,11 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     public boolean changeReadStatus(@Nonnull String messageId, boolean read) {
         final Long rows = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new ReadMessageStatusUpdater(messageId, read));
         return rows != 0;
+    }
+
+    @Override
+    public void deleteAllMessages() {
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("messages"));
     }
 
     @Nonnull

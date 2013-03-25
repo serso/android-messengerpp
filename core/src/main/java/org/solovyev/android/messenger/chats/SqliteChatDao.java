@@ -24,7 +24,9 @@ import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.db.StringIdMapper;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
+import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
@@ -34,7 +36,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -88,6 +92,12 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chat_properties"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chats"));
+    }
+
+    @Nonnull
+    @Override
+    public Map<Entity, Integer> getUnreadChats() {
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new UnreadChatsLoader(getContext(), getSqliteOpenHelper()));
     }
 
     @Nonnull
@@ -480,6 +490,37 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         @Override
         public List<Chat> retrieveData(@Nonnull Cursor cursor) {
             return new ListMapper<Chat>(new ChatMapper(chatDao)).convert(cursor);
+        }
+    }
+
+    private static final class UnreadChatsLoader extends AbstractDbQuery<Map<Entity, Integer>> {
+
+        protected UnreadChatsLoader(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+            super(context, sqliteOpenHelper);
+        }
+
+        @Nonnull
+        @Override
+        public Cursor createCursor(@Nonnull SQLiteDatabase db) {
+            return db.rawQuery("select c.id, c.realm_id, c.realm_chat_id, count(*) from chats c, messages m where c.id = m.chat_id and m.read = 0 group by c.id, c.realm_id, c.realm_chat_id", null);
+        }
+
+        @Nonnull
+        @Override
+        public Map<Entity, Integer> retrieveData(@Nonnull Cursor cursor) {
+            final Map<Entity, Integer> result = new HashMap<Entity, Integer>();
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    final int unreadMessagesCount = cursor.getInt(3);
+                    if ( unreadMessagesCount > 0 ) {
+                        result.put(EntityMapper.newInstanceFor(0).convert(cursor), unreadMessagesCount);
+                    }
+                    cursor.moveToNext();
+                }
+            }
+
+            return result;
         }
     }
 }

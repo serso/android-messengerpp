@@ -6,15 +6,21 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.MessageDirection;
+import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,6 +56,7 @@ public class DefaultChatMessageService implements ChatMessageService {
     @Nonnull
     private ChatService chatService;
 
+    @GuardedBy("lock")
     @Inject
     @Nonnull
     private ChatMessageDao chatMessageDao;
@@ -57,6 +64,14 @@ public class DefaultChatMessageService implements ChatMessageService {
     @Inject
     @Nonnull
     private Application context;
+
+    @Nonnull
+    private final PersistenceLock lock;
+
+    @Inject
+    public DefaultChatMessageService(@Nonnull PersistenceLock lock) {
+        this.lock = lock;
+    }
 
     @Override
     public void init() {
@@ -75,7 +90,9 @@ public class DefaultChatMessageService implements ChatMessageService {
     @Nonnull
     @Override
     public List<ChatMessage> getChatMessages(@Nonnull Entity realmChat) {
-        return getChatMessageDao().loadChatMessages(realmChat.getEntityId());
+        synchronized (lock) {
+            return chatMessageDao.loadChatMessages(realmChat.getEntityId());
+        }
     }
 
     @Override
@@ -84,10 +101,6 @@ public class DefaultChatMessageService implements ChatMessageService {
         userService.setUserIcon(userService.getUserById(author), imageView);
     }
 
-    @Nonnull
-    private ChatMessageDao getChatMessageDao() {
-        return chatMessageDao;
-    }
 
     @Nullable
     @Override
@@ -121,6 +134,13 @@ public class DefaultChatMessageService implements ChatMessageService {
         }
 
         return result;
+    }
+
+    @Override
+    public int getUnreadMessagesCount() {
+        synchronized (lock) {
+            return this.chatMessageDao.getUnreadMessagesCount();
+        }
     }
 
     @Nonnull

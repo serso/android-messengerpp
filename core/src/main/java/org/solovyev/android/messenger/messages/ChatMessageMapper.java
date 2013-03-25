@@ -6,7 +6,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.RealmEntityMapper;
+import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
 
@@ -29,7 +29,7 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
     @Nonnull
     @Override
     public ChatMessage convert(@Nonnull Cursor c) {
-        final Entity messageEntity = RealmEntityMapper.newInstanceFor(0).convert(c);
+        final Entity messageEntity = EntityMapper.newInstanceFor(0).convert(c);
 
         final String chatId = c.getString(3);
 
