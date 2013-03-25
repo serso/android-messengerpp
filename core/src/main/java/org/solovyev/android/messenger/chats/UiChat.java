@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI
  */
-final class UserChat implements MessengerEntity {
+final class UiChat implements MessengerEntity {
 
     @Nonnull
     private final User user;
@@ -17,18 +17,21 @@ final class UserChat implements MessengerEntity {
     @Nonnull
     private final Chat chat;
 
+    private final int unreadMessagesCount;
+
     @Nullable
     private final ChatMessage lastMessage;
 
-    private UserChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage) {
+    private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount) {
         this.user = user;
         this.chat = chat;
         this.lastMessage = lastMessage;
+        this.unreadMessagesCount = unreadMessagesCount;
     }
 
     @Nonnull
-    static UserChat newInstance(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage) {
-        return new UserChat(user, chat, lastMessage);
+    static UiChat newInstance(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount) {
+        return new UiChat(user, chat, lastMessage, unreadMessagesCount);
     }
 
     @Nonnull
@@ -56,7 +59,7 @@ final class UserChat implements MessengerEntity {
             return false;
         }
 
-        final UserChat that = (UserChat) o;
+        final UiChat that = (UiChat) o;
 
         if (!chat.equals(that.chat)) {
             return false;
@@ -70,6 +73,10 @@ final class UserChat implements MessengerEntity {
         return chat.hashCode();
     }
 
+    public int getUnreadMessagesCount() {
+        return unreadMessagesCount;
+    }
+
     @Nonnull
     @Override
     public String getId() {
@@ -77,12 +84,17 @@ final class UserChat implements MessengerEntity {
     }
 
     @Nonnull
-    public UserChat copyForNewChat(@Nonnull Chat newChat) {
-        return UserChat.newInstance(this.user, newChat, this.lastMessage);
+    public UiChat copyForNewChat(@Nonnull Chat newChat) {
+        return UiChat.newInstance(this.user, newChat, this.lastMessage, this.unreadMessagesCount);
     }
 
     @Nonnull
-    public UserChat copyForNewLastMessage(@Nonnull ChatMessage newLastMessage) {
-        return UserChat.newInstance(this.user, this.chat, newLastMessage);
+    public UiChat copyForNewLastMessage(@Nonnull ChatMessage newLastMessage) {
+        return UiChat.newInstance(this.user, this.chat, newLastMessage, this.unreadMessagesCount);
+    }
+
+    @Nonnull
+    public UiChat copyForNewUnreadMessageCount(@Nonnull Integer unreadMessagesCount) {
+        return UiChat.newInstance(this.user, this.chat, this.lastMessage, unreadMessagesCount);
     }
 }

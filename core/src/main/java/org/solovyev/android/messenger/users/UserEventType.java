@@ -63,6 +63,14 @@ public enum UserEventType {
         protected void checkData(@Nullable Object data) {
             assert data instanceof User;
         }
+    },
+
+    // Number of unread messages in private chat has changed
+    unread_messages_count_changed {
+        @Override
+        protected void checkData(@Nullable Object data) {
+            assert data instanceof Integer;
+        }
     };
 
     @Nonnull

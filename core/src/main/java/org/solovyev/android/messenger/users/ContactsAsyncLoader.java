@@ -5,7 +5,6 @@ import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 
 import javax.annotation.Nonnull;
@@ -19,26 +18,25 @@ import java.util.List;
 * Date: 6/2/12
 * Time: 3:12 PM
 */
-final class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListItem> {
-
-    @Nonnull
-    private final RealmService realmService;
+final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
 
     ContactsAsyncLoader(@Nonnull Context context,
                         @Nonnull ListItemArrayAdapter<ContactListItem> adapter,
-                        @Nullable Runnable onPostExecute,
-                        @Nonnull RealmService realmService) {
+                        @Nullable Runnable onPostExecute) {
         super(context, adapter, onPostExecute);
-        this.realmService = realmService;
     }
 
     @Nonnull
-    protected List<UserContact> getElements(@Nonnull Context context) {
-        final List<UserContact> result = new ArrayList<UserContact>();
+    protected List<UiContact> getElements(@Nonnull Context context) {
+        final List<UiContact> result = new ArrayList<UiContact>();
+
+
+        final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
+        final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 
         for (User user : realmService.getRealmUsers()) {
-            for (User contact : MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getEntity())) {
-                result.add(new UserContact(user, contact));
+            for (User contact : userService.getUserContacts(user.getEntity())) {
+                result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
             }
         }
 
@@ -52,7 +50,7 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UserContact, Contact
 
     @Nonnull
     @Override
-    protected ContactListItem createListItem(@Nonnull UserContact userContact) {
-        return new ContactListItem(userContact.getContact(), realmService);
+    protected ContactListItem createListItem(@Nonnull UiContact uiContact) {
+        return new ContactListItem(uiContact);
     }
 }

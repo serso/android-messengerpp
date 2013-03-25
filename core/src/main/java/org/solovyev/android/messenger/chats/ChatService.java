@@ -80,7 +80,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull Entity user);
 
     @Nullable
-    ChatMessage getLastMessage(@Nonnull Entity realmChat);
+    ChatMessage getLastMessage(@Nonnull Entity chat);
 
     void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView);
 
@@ -197,4 +197,13 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
      */
     @Nonnull
     Map<Entity, Integer> getUnreadChats();
+
+    /**
+     * Must be called when number of unread messages has changed for a chat (user hsa read message)
+     * @param chat chat
+     * @param unreadMessagesCount number of unread messages
+     */
+    void onUnreadMessagesCountChanged(@Nonnull Entity chat, @Nonnull Integer unreadMessagesCount);
+
+    int getUnreadMessagesCount(@Nonnull Entity chat);
 }

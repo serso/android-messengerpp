@@ -19,6 +19,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.PersistenceLock;
@@ -89,6 +90,11 @@ public class DefaultChatService implements ChatService {
     @Inject
     @Nonnull
     private ChatMessageDao chatMessageDao;
+
+    @Inject
+    @Nonnull
+    private UnreadMessagesCounter unreadMessagesCounter;
+
 
     /*
     **********************************************************************
@@ -259,6 +265,26 @@ public class DefaultChatService implements ChatService {
         }
     }
 
+    @Override
+    public void onUnreadMessagesCountChanged(@Nonnull Entity chatEntity, @Nonnull Integer unreadMessagesCount) {
+        final Chat chat = getChatById(chatEntity);
+        if (chat != null) {
+            fireEvent(ChatEventType.unread_message_count_changed.newEvent(chat, unreadMessagesCount));
+
+            if (chat.isPrivate()) {
+                final Entity secondUser = getSecondUser(chat);
+                if (secondUser != null) {
+                    userService.onUnreadMessagesCountChanged(secondUser, unreadMessagesCount);
+                }
+            }
+        }
+    }
+
+    @Override
+    public int getUnreadMessagesCount(@Nonnull Entity chat) {
+        return unreadMessagesCounter.getUnreadMessagesCountForChat(chat);
+    }
+
     @Nonnull
     @Override
     public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) {
@@ -274,6 +300,7 @@ public class DefaultChatService implements ChatService {
         }
     }
 
+    @Nullable
     @Override
     public Chat getChatById(@Nonnull Entity chat) {
         Chat result;
@@ -511,15 +538,15 @@ public class DefaultChatService implements ChatService {
 
     @Nullable
     @Override
-    public ChatMessage getLastMessage(@Nonnull Entity realmChat) {
+    public ChatMessage getLastMessage(@Nonnull Entity chat) {
         ChatMessage result;
 
         synchronized (lastMessagesCache) {
-            result = lastMessagesCache.get(realmChat);
+            result = lastMessagesCache.get(chat);
             if (result == null) {
-                result = getChatMessageDao().loadLastChatMessage(realmChat.getEntityId());
+                result = getChatMessageDao().loadLastChatMessage(chat.getEntityId());
                 if (result != null) {
-                    lastMessagesCache.put(realmChat, result);
+                    lastMessagesCache.put(chat, result);
                 }
             }
         }

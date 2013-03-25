@@ -4,9 +4,9 @@ import android.content.Context;
 import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,25 +19,26 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 6:23 PM
  */
-final class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem> {
+final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 
-    @Nonnull
-    private final RealmService realmService;
-
-    ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemArrayAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute, @Nonnull RealmService realmService) {
+    ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemArrayAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute) {
         super(context, adapter, onPostExecute);
-        this.realmService = realmService;
     }
 
     @Nonnull
     @Override
-    protected List<UserChat> getElements(@Nonnull Context context) {
-        final List<UserChat> result = new ArrayList<UserChat>();
+    protected List<UiChat> getElements(@Nonnull Context context) {
+        final List<UiChat> result = new ArrayList<UiChat>();
+
+        final UserService userService = MessengerApplication.getServiceLocator().getUserService();
+        final ChatService chatService = MessengerApplication.getServiceLocator().getChatService();
+        final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
+
 
         for (User user : realmService.getRealmUsers()) {
-            final List<Chat> chats = MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity());
+            final List<Chat> chats = userService.getUserChats(user.getEntity());
             for (Chat chat : chats) {
-                result.add(UserChat.newInstance(user, chat, null));
+                result.add(UiChat.newInstance(user, chat, chatService.getLastMessage(chat.getEntity()), chatService.getUnreadMessagesCount(chat.getEntity())));
             }
         }
 
@@ -51,8 +52,8 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UserChat, ChatListItem>
 
     @Nonnull
     @Override
-    protected ChatListItem createListItem(@Nonnull UserChat userChat) {
-        return new ChatListItem(userChat.getUser(), userChat.getChat(), getContext());
+    protected ChatListItem createListItem(@Nonnull UiChat uiChat) {
+        return new ChatListItem(uiChat);
     }
 
 }

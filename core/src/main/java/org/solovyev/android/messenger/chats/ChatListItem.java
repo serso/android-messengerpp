@@ -23,23 +23,26 @@ import javax.annotation.Nullable;
  * Date: 6/7/12
  * Time: 6:24 PM
  */
-public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implements ChatEventListener*/ {
+public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements ChatEventListener*/ {
 
     @Nonnull
     private static final String TAG_PREFIX = "chat_list_item_";
 
-    public ChatListItem(@Nonnull User user, @Nonnull Chat chat, @Nullable Context context) {
-        super(TAG_PREFIX, UserChat.newInstance(user, chat, loadLastChatMessage(chat, context)), R.layout.mpp_list_item_chat);
+    public ChatListItem(@Nonnull User user, @Nonnull Chat chat) {
+        this(UiChat.newInstance(user, chat, getLastChatMessage(chat), getUnreadMessagesCount(chat)));
+    }
+
+    public ChatListItem(@Nonnull UiChat data) {
+        super(TAG_PREFIX, data, R.layout.mpp_list_item_chat);
     }
 
     @Nullable
-    private static ChatMessage loadLastChatMessage(Chat chat, Context context) {
-        if (context != null) {
-            // todo serso: calling on the main thread
-            return getChatService().getLastMessage(chat.getEntity());
-        } else {
-            return null;
-        }
+    private static ChatMessage getLastChatMessage(Chat chat) {
+        return getChatService().getLastMessage(chat.getEntity());
+    }
+
+    private static int getUnreadMessagesCount(@Nonnull Chat chat) {
+        return getChatService().getUnreadMessagesCount(chat.getEntity());
     }
 
     @Override
@@ -75,14 +78,18 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
 
     @Nonnull
     @Override
-    protected String getDisplayName(@Nonnull UserChat userChat, @Nonnull Context context) {
-        return Chats.getDisplayName(userChat.getChat(), userChat.getLastMessage(), userChat.getUser());
+    protected String getDisplayName(@Nonnull UiChat uiChat, @Nonnull Context context) {
+        String result = Chats.getDisplayName(uiChat.getChat(), uiChat.getLastMessage(), uiChat.getUser());
+        if (uiChat.getUnreadMessagesCount() > 0) {
+            result += " (" + uiChat.getUnreadMessagesCount() + ")";
+        }
+        return result;
     }
 
     @Override
-    protected void fillView(@Nonnull UserChat userChat, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final Chat chat = userChat.getChat();
-        final User user = userChat.getUser();
+    protected void fillView(@Nonnull UiChat uiChat, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+        final Chat chat = uiChat.getChat();
+        final User user = uiChat.getUser();
 
         final ImageView chatIcon = viewTag.getViewById(R.id.mpp_li_chat_icon_imageview);
         getChatService().setChatIcon(chat, chatIcon);
@@ -113,17 +120,25 @@ public class ChatListItem extends AbstractMessengerListItem<UserChat> /*implemen
         final Chat chat = getChat();
         final Chat eventChat = event.getChat();
 
-        if (event.getType() == ChatEventType.changed) {
-            if (eventChat.equals(chat)) {
-                setData(getData().copyForNewChat(eventChat));
-            }
+        switch (event.getType()) {
+            case changed:
+                if (eventChat.equals(chat)) {
+                    setData(getData().copyForNewChat(eventChat));
+                }
+                break;
+
+            case last_message_changed:
+                if (eventChat.equals(chat)) {
+                    setData(getData().copyForNewLastMessage(event.getDataAsChatMessage()));
+                }
+                break;
+            case unread_message_count_changed:
+                if ( eventChat.equals(chat) ) {
+                    setData(getData().copyForNewUnreadMessageCount(event.getDataAsInteger()));
+                }
+                break;
         }
 
-        if (event.getType() == ChatEventType.last_message_changed) {
-            if (eventChat.equals(chat)) {
-                setData(getData().copyForNewLastMessage(event.getDataAsChatMessage()));
-            }
-        }
     }
 
 }

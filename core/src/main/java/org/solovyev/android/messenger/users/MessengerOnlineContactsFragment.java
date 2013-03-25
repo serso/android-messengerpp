@@ -10,12 +10,11 @@ import javax.annotation.Nonnull;
  * Date: 6/2/12
  * Time: 5:14 PM
  */
-// todo serso: consider removal
 public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFragment {
 
     @Nonnull
     @Override
-    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
+    protected AbstractAsyncLoader<UiContact, ContactListItem> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
         return new OnlineContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
     }
 

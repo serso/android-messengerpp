@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class OnlineContactsAdapter extends AbstractContactsAdapter {
 
     public OnlineContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
-        super(context, realmService);
+        super(context);
     }
 
     @Override

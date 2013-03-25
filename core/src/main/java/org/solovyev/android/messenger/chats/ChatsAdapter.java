@@ -70,7 +70,7 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
 
     @Nonnull
     private ChatListItem createListItem(@Nonnull User user, @Nonnull Chat chat) {
-        return new ChatListItem(user, chat, getContext());
+        return new ChatListItem(user, chat);
     }
 
     @Override
@@ -87,13 +87,17 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
     public void onEvent(@Nonnull ChatEvent event) {
         final Chat eventChat = event.getChat();
 
-        if (event.isOfType(ChatEventType.changed, ChatEventType.last_message_changed)) {
-            final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getEntity().getRealmId()).getUser();
-            final ChatListItem chatListItem = findInAllElements(user, eventChat);
-            if (chatListItem != null) {
-                chatListItem.onEvent(event);
-                notifyDataSetChanged();
-            }
+        switch (event.getType()) {
+            case changed:
+            case last_message_changed:
+            case unread_message_count_changed:
+                final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getEntity().getRealmId()).getUser();
+                final ChatListItem chatListItem = findInAllElements(user, eventChat);
+                if (chatListItem != null) {
+                    chatListItem.onEvent(event);
+                    notifyDataSetChanged();
+                }
+                break;
         }
     }
 

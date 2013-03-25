@@ -2,11 +2,10 @@ package org.solovyev.android.messenger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.vk.VkRealmDef;
 import org.solovyev.android.messenger.realms.xmpp.XmppRealmDef;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,10 +25,6 @@ public class MessengerConfigurationImpl implements MessengerConfiguration {
     @Nonnull
     private XmppRealmDef xmppRealmDef;
 
-    @Inject
-    @Nonnull
-    private VkRealmDef vkRealmDef;
-
     public MessengerConfigurationImpl() {
     }
 
@@ -39,7 +34,6 @@ public class MessengerConfigurationImpl implements MessengerConfiguration {
         synchronized (realmDefs) {
             if (realmDefs.isEmpty()) {
                 realmDefs.add(xmppRealmDef);
-                realmDefs.add(vkRealmDef);
             }
         }
 

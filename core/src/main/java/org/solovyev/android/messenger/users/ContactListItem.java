@@ -23,17 +23,21 @@ import javax.annotation.Nonnull;
  * Date: 6/1/12
  * Time: 7:04 PM
  */
-public final class ContactListItem extends AbstractMessengerListItem<User> /*implements UserEventListener*/ {
+public final class ContactListItem extends AbstractMessengerListItem<UiContact> /*implements UserEventListener*/ {
 
     @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_";
 
-    @Nonnull
-    private final RealmService realmService;
+    public ContactListItem(@Nonnull User contact) {
+        this(UiContact.newInstance(contact, getUnreadMessagesCount(contact)));
+    }
 
-    public ContactListItem(@Nonnull User contact, @Nonnull RealmService realmService) {
+    private static int getUnreadMessagesCount(@Nonnull User contact) {
+        return MessengerApplication.getServiceLocator().getUserService().getUnreadMessagesCount(contact.getEntity());
+    }
+
+    public ContactListItem(@Nonnull UiContact contact) {
         super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
-        this.realmService = realmService;
     }
 
     @Override
@@ -60,38 +64,51 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
         final UserEventType type = event.getType();
         final User eventUser = event.getUser();
 
-        if (type == UserEventType.changed) {
-            if (contact.equals(eventUser)) {
-                setData(eventUser);
-            }
-        }
-
-        if (type == UserEventType.contact_offline || type == UserEventType.contact_online) {
-            final User eventContact = event.getDataAsUser();
-            if (contact.equals(eventContact)) {
-                setData(eventContact);
-            }
+        switch (type) {
+            case changed:
+                if (contact.equals(eventUser)) {
+                    setData(getData().copyForNewUser(eventUser));
+                }
+                break;
+            case contact_offline:
+            case contact_online:
+                final User eventContact = event.getDataAsUser();
+                if (contact.equals(eventContact)) {
+                    setData(getData().copyForNewUser(eventContact));
+                }
+                break;
+            case unread_messages_count_changed:
+                if (contact.equals(eventUser)) {
+                    setData(getData().copyForNewUnreadMessagesCount(event.getDataAsInteger()));
+                }
+                break;
         }
     }
 
     @Nonnull
     public User getContact() {
-        return getData();
+        return getData().getContact();
     }
 
     @Nonnull
     @Override
-    protected CharSequence getDisplayName(@Nonnull User contact, @Nonnull Context context) {
-        return contact.getDisplayName();
+    protected CharSequence getDisplayName(@Nonnull UiContact contact, @Nonnull Context context) {
+        String displayName = contact.getContact().getDisplayName();
+        if ( contact.getUnreadMessagesCount() > 0 ) {
+            displayName += " (" + contact.getUnreadMessagesCount() + ")";
+        }
+        return displayName;
     }
 
     @Override
-    protected void fillView(@Nonnull User contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+    protected void fillView(@Nonnull UiContact contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
         final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
-        MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact, contactIcon);
+        MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact.getContact(), contactIcon);
 
         final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
         contactName.setText(getDisplayName());
+
+        final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
 
         final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
         if (realmService.isOneRealm()) {
@@ -103,7 +120,7 @@ public final class ContactListItem extends AbstractMessengerListItem<User> /*imp
         }
 
         final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
-        if (contact.isOnline()) {
+        if (contact.getContact().isOnline()) {
             contactOnline.setVisibility(View.VISIBLE);
         } else {
             contactOnline.setVisibility(View.INVISIBLE);

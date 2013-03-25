@@ -205,4 +205,9 @@ public interface UserService {
      * @return true if listener was successfully unsubscribed, false if no such listener was found
      */
     boolean removeListener(@Nonnull JEventListener<UserEvent> listener);
+
+
+    void onUnreadMessagesCountChanged(@Nonnull Entity contact, @Nonnull Integer unreadMessagesCount);
+
+    int getUnreadMessagesCount(@Nonnull Entity contact);
 }

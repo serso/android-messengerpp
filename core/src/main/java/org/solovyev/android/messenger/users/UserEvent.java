@@ -52,4 +52,9 @@ public class UserEvent extends AbstractTypedJEvent<User, UserEventType> {
     public List<Chat> getDataAsChats() {
         return (List<Chat>)getData();
     }
+
+    @Nonnull
+    public Integer getDataAsInteger() {
+        return (Integer) getData();
+    }
 }

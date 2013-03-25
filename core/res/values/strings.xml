@@ -73,6 +73,8 @@
     <string name="mpp_menu_unread_messages_counter">0</string>
     <string name="mpp_menu_toggle_users">Online/Offline</string>
     <string name="mpp_realm_configuration">Configuration of %1$s</string>
+    <string name="mpp_notification_title">Messenger++</string>
+    <string name="mpp_notification_text">Click to open app</string>
 
     <plurals name="mpp_unread_messages_count_notification">
         <item quantity="one">There is one unread message.</item>

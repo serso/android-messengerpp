@@ -13,6 +13,7 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -58,6 +59,10 @@ public class DefaultUserService implements UserService {
     @Inject
     @Nonnull
     private Application context;
+
+    @Inject
+    @Nonnull
+    private UnreadMessagesCounter unreadMessagesCounter;
 
     /*
     **********************************************************************
@@ -154,8 +159,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Nonnull
-    private Realm getRealmByUser(@Nonnull Entity realmUser) {
-        return realmService.getRealmById(realmUser.getRealmId());
+    private Realm getRealmByUser(@Nonnull Entity user) {
+        return realmService.getRealmById(user.getRealmId());
     }
 
     private void insertUser(@Nonnull User user) {
@@ -502,6 +507,18 @@ public class DefaultUserService implements UserService {
     @Override
     public boolean removeListener(@Nonnull JEventListener<UserEvent> listener) {
         return this.listeners.removeListener(listener);
+    }
+
+    @Override
+    public void onUnreadMessagesCountChanged(@Nonnull Entity contactEntity, @Nonnull Integer unreadMessagesCount) {
+        final User contact = getUserById(contactEntity);
+        this.listeners.fireEvent(UserEventType.unread_messages_count_changed.newEvent(contact, unreadMessagesCount));
+    }
+
+    @Override
+    public int getUnreadMessagesCount(@Nonnull Entity contact) {
+        final Chat chat = chatService.getPrivateChat(getRealmByUser(contact).getUser().getEntity(), contact);
+        return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
     }
 
     private final class UserEventListener extends AbstractJEventListener<UserEvent> {

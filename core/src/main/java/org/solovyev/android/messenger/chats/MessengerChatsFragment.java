@@ -33,7 +33,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:37 PM
  */
-public final class MessengerChatsFragment extends AbstractMessengerListFragment<UserChat, ChatListItem> implements DetachableFragment {
+public final class MessengerChatsFragment extends AbstractMessengerListFragment<UiChat, ChatListItem> implements DetachableFragment {
 
     @Nonnull
     public static final String FRAGMENT_TAG = "chats";
@@ -120,8 +120,8 @@ public final class MessengerChatsFragment extends AbstractMessengerListFragment<
 
     @Nonnull
     @Override
-    protected MessengerAsyncTask<Void, Void, List<UserChat>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
-        return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
+    protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
+        return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute);
     }
 
     @Override

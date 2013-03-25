@@ -180,8 +180,27 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent>{
             @Override
             public void run() {
                 if ( runnableIndex == runnablesCounter.get() ) {
+
+                    final int unreadMessagesCount;
+                    final Map<Entity, Integer> countersByChatsCopy = new HashMap<Entity, Integer>(countersByChats.size());
+                    synchronized (counter) {
+                        unreadMessagesCount = counter.get();
+
+                        for (Map.Entry<Entity, AtomicInteger> entry : countersByChats.entrySet()) {
+                            countersByChatsCopy.put(entry.getKey(), entry.getValue().get());
+                        }
+                    }
+
                     // no new runnables scheduled => can continue
-                    messengerListeners.fireEvent(MessengerEventType.unread_messages_count_changed.newEvent(counter.get()));
+                    messengerListeners.fireEvent(MessengerEventType.unread_messages_count_changed.newEvent(unreadMessagesCount));
+
+                    for (Map.Entry<Entity, Integer> entry : countersByChatsCopy.entrySet()) {
+                        final Entity chatEntity = entry.getKey();
+                        final Integer counter = entry.getValue();
+
+                        // fire chat event
+                        chatService.onUnreadMessagesCountChanged(chatEntity, counter);
+                    }
                 }
             }
         }, longDelay ? DELAY_LONG : DELAY_SHORT, TimeUnit.MILLISECONDS);
@@ -203,5 +222,16 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent>{
         }
 
         return null;
+    }
+
+    public int getUnreadMessagesCountForChat(@Nonnull Entity chat) {
+        synchronized (counter) {
+            final AtomicInteger counterByChat = countersByChats.get(chat);
+            if ( counterByChat == null ) {
+                return 0;
+            } else {
+                return counterByChat.get();
+            }
+        }
     }
 }

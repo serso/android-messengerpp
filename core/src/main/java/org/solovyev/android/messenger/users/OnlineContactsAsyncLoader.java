@@ -5,7 +5,6 @@ import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 
 import javax.annotation.Nonnull;
@@ -19,7 +18,7 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 5:24 PM
  */
-public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UserContact, ContactListItem> {
+public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
 
     @Nonnull
     private final RealmService realmService;
@@ -33,12 +32,14 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UserContact, 
     }
 
     @Nonnull
-    protected List<UserContact> getElements(@Nonnull Context context) {
-        final List<UserContact> result = new ArrayList<UserContact>();
+    protected List<UiContact> getElements(@Nonnull Context context) {
+        final List<UiContact> result = new ArrayList<UiContact>();
+
+        final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 
         for (User user : realmService.getRealmUsers()) {
-            for (User contact : MessengerApplication.getServiceLocator().getUserService().getOnlineUserContacts(user.getEntity())) {
-                result.add(new UserContact(user, contact));
+            for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
+                result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
             }
         }
 
@@ -52,7 +53,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UserContact, 
 
     @Nonnull
     @Override
-    protected ContactListItem createListItem(@Nonnull UserContact userContact) {
-        return new ContactListItem(userContact.getContact(), realmService);
+    protected ContactListItem createListItem(@Nonnull UiContact contact) {
+        return new ContactListItem(contact);
     }
 }

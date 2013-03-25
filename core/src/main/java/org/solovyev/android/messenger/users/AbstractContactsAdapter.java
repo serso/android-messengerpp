@@ -11,7 +11,6 @@ import com.google.common.collect.Lists;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.text.Strings;
 
@@ -30,12 +29,8 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
     @Nonnull
     private MessengerContactsMode mode = MessengerContactsFragment.DEFAULT_CONTACTS_MODE;
 
-    @Nonnull
-    private final RealmService realmService;
-
-    public AbstractContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
+    public AbstractContactsAdapter(@Nonnull Context context) {
         super(context, new ArrayList<ContactListItem>());
-        this.realmService = realmService;
     }
 
     @Override
@@ -45,53 +40,61 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
         final UserEventType type = event.getType();
         final User eventUser = event.getUser();
 
-        if (type == UserEventType.contact_removed) {
-            final String contactId = event.getDataAsUserId();
-            removeListItem(contactId);
-        }
-
-        if (type == UserEventType.contact_added) {
-            final User contact = event.getDataAsUser();
-            if (canAddContact(contact)) {
-                addListItem(contact);
-            }
-        }
-
-        if (type == UserEventType.contact_added_batch) {
-            // first - filter contacts which can be added
-            // then - transform user objects to list items objects
-            final List<User> contacts = event.getDataAsUsers();
-            addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
-                @Override
-                public boolean apply(@Nullable User contact) {
-                    assert contact != null;
-                    return canAddContact(contact);
+        switch (type) {
+            case contact_removed:
+                final String contactId = event.getDataAsUserId();
+                removeListItem(contactId);
+                break;
+            case contact_added:
+                final User contact = event.getDataAsUser();
+                if (canAddContact(contact)) {
+                    addListItem(contact);
                 }
-            }), new Function<User, ContactListItem>() {
-                @Override
-                public ContactListItem apply(@Nullable User contact) {
-                    assert contact != null;
-                    return createListItem(contact);
+                break;
+            case contact_added_batch:
+                // first - filter contacts which can be added
+                // then - transform user objects to list items objects
+                final List<User> contacts = event.getDataAsUsers();
+                addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
+                    @Override
+                    public boolean apply(@Nullable User contact) {
+                        assert contact != null;
+                        return canAddContact(contact);
+                    }
+                }), new Function<User, ContactListItem>() {
+                    @Override
+                    public ContactListItem apply(@Nullable User contact) {
+                        assert contact != null;
+                        return createListItem(contact);
+                    }
+                })));
+                break;
+            case changed:
+            case unread_messages_count_changed:
+                final ContactListItem listItem = findInAllElements(eventUser);
+                if (listItem != null) {
+                    listItem.onEvent(event);
+                    onListItemChanged(eventUser);
+                    notifyDataSetChanged();
                 }
-            })));
+                break;
+            case contact_online:
+            case contact_offline:
+                onContactPresenceChanged(event);
+                break;
         }
 
-        if (event.isOfType(UserEventType.changed)) {
-            final ContactListItem listItem = findInAllElements(eventUser);
-            if (listItem != null) {
-                listItem.onEvent(event);
-                onListItemChanged(eventUser);
-            }
-        }
+    }
 
-        if (event.isOfType(UserEventType.contact_online, UserEventType.contact_offline)) {
-            final ContactListItem listItem = findInAllElements(event.getDataAsUser());
-            if (listItem != null) {
-                listItem.onEvent(event);
-                onListItemChanged(eventUser);
-            }
-            refilter();
+    private void onContactPresenceChanged(@Nonnull UserEvent event) {
+        final User contact = event.getDataAsUser();
+        final ContactListItem listItem = findInAllElements(contact);
+        if (listItem != null) {
+            listItem.onEvent(event);
+            onListItemChanged(contact);
+            notifyDataSetChanged();
         }
+        refilter();
     }
 
     @Nullable
@@ -115,7 +118,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
     @Nonnull
     private ContactListItem createListItem(@Nonnull User contact) {
-        return new ContactListItem(contact, realmService);
+        return new ContactListItem(contact);
     }
 
     protected abstract void onListItemChanged(@Nonnull User contact);

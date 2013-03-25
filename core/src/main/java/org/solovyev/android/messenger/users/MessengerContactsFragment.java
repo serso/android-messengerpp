@@ -8,9 +8,9 @@ import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 
@@ -57,8 +57,8 @@ public final class MessengerContactsFragment extends AbstractMessengerContactsFr
     }
 
     @Nonnull
-    protected AbstractAsyncLoader<UserContact, ContactListItem> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
-        return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
+    protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
+        return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute);
     }
 
     @Nonnull

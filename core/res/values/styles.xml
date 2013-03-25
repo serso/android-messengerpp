@@ -160,6 +160,8 @@
         <item name="android:lines">1</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:scrollHorizontally">true</item>
 
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingBottom">15dp</item>

@@ -30,4 +30,9 @@ public class ChatEvent extends AbstractTypedJEvent<Chat, ChatEventType> {
     public List<ChatMessage> getDataAsChatMessages() {
         return (List<ChatMessage>) getData();
     }
+
+    @Nonnull
+    public Integer getDataAsInteger() {
+        return (Integer) getData();
+    }
 }
