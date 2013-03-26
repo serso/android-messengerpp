@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.messages;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
@@ -134,6 +136,18 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
                 getActivity().finish();
             } else {
                 realm = realmService.getRealmById(chat.getEntity().getRealmId());
+            }
+        }
+
+        if (chat != null) {
+            if (!getMultiPaneManager().isDualPane(getActivity())) {
+                final ActionBar actionBar = getActivity().getActionBar();
+                //actionBar.setIcon();
+                if ( chat.isPrivate() ) {
+                    actionBar.setTitle(getString(R.string.mpp_private_chat_title, Users.getDisplayNameFor(chat.getSecondUser())));
+                } else {
+                    actionBar.setTitle(getString(R.string.mpp_public_chat_title));
+                }
             }
         }
     }
