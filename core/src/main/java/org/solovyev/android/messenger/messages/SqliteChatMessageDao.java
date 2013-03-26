@@ -27,6 +27,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.realms.DeleteAllRowsInRealmDbExec;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
@@ -112,6 +113,11 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     @Override
     public void deleteAllMessages() {
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("messages"));
+    }
+
+    @Override
+    public void deleteAllMessagesInRealm(@Nonnull String realmId) {
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newInstance("messages", "realm_id", realmId));
     }
 
     @Nonnull

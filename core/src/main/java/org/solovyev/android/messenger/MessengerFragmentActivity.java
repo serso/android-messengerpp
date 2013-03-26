@@ -18,7 +18,7 @@ import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.fragments.MessengerFragmentService;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -111,7 +111,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     private ViewGroup thirdPane;
 
     @Nonnull
-    private final MessengerFragmentService fragmentService;
+    private final MessengerMultiPaneFragmentManager multiPaneFragmentManager;
 
     private ActivityMenu<Menu, MenuItem> menu;
 
@@ -128,14 +128,14 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     protected MessengerFragmentActivity(int layoutId) {
         this.layoutId = layoutId;
-        this.fragmentService = new MessengerFragmentService(this);
+        this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
     }
 
     protected MessengerFragmentActivity(int layoutId, boolean showActionBarTabs, boolean actionBarIconAsUp) {
         this.layoutId = layoutId;
         this.showActionBarTabs = showActionBarTabs;
         this.actionBarIconAsUp = actionBarIconAsUp;
-        this.fragmentService = new MessengerFragmentService(this);
+        this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
     }
 
     /*
@@ -190,8 +190,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     }
 
     @Nonnull
-    public MessengerFragmentService getFragmentService() {
-        return fragmentService;
+    public MessengerMultiPaneFragmentManager getMultiPaneFragmentManager() {
+        return multiPaneFragmentManager;
     }
 
     /*
@@ -258,7 +258,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 emptifyNotPrimaryPanes();
-                getFragmentService().setPrimaryFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
+                getMultiPaneFragmentManager().setMainFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
             }
 
             @Override
@@ -269,7 +269,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
             public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
                 emptifyNotPrimaryPanes();
                 // in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
-                getFragmentService().setPrimaryFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
+                getMultiPaneFragmentManager().setMainFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
             }
         });
         actionBar.addTab(tab);
@@ -277,9 +277,9 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     private void emptifyNotPrimaryPanes() {
         if (isDualPane()) {
-            getFragmentService().emptifySecondFragment();
+            getMultiPaneFragmentManager().emptifySecondFragment();
             if (isTriplePane()) {
-                getFragmentService().emptifyThirdFragment();
+                getMultiPaneFragmentManager().emptifyThirdFragment();
             }
         }
     }
@@ -339,7 +339,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (actionBarIconAsUp) {
-                    if ( !fragmentService.goBackImmediately() ) {
+                    if ( !multiPaneFragmentManager.goBackImmediately() ) {
                         final ActionBar.Tab tab = findTabByTag(MessengerPrimaryFragment.contacts.getFragmentTag());
                         if ( tab != null ) {
                             tab.select();

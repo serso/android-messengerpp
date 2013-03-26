@@ -1,18 +1,17 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
-import android.content.Context;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
+import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class VkMessagesGetHttpTransaction extends AbstractVkHttpTransaction<List
     @Nonnull
     private User user;
 
-    protected VkMessagesGetHttpTransaction(@Nonnull Realm realm, @Nonnull User user) {
+    protected VkMessagesGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull User user) {
         super(realm, "messages.get");
         this.user = user;
     }

@@ -2,13 +2,13 @@ package org.solovyev.android.messenger.realms.vk.users;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
+import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -21,13 +21,13 @@ public class VkFriendsGetHttpTransaction extends AbstractVkHttpTransaction<List<
     @Nonnull
     private final String userId;
 
-    private VkFriendsGetHttpTransaction(@Nonnull Realm realm, @Nonnull String userId) {
+    private VkFriendsGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull String userId) {
         super(realm, "friends.get");
         this.userId = userId;
     }
 
     @Nonnull
-    public static VkFriendsGetHttpTransaction newInstance(@Nonnull Realm realm, @Nonnull String userId) {
+    public static VkFriendsGetHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull String userId) {
         return new VkFriendsGetHttpTransaction(realm, userId);
     }
 

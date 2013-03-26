@@ -32,11 +32,7 @@ public abstract class LoginUserAsyncTask extends MessengerAsyncTask<LoginUserAsy
 
         final Context context = getContext();
         if (context != null) {
-            try {
-                MessengerApplication.getServiceLocator().getAuthService().loginUser(realmId, input.login, input.password, input.resolvedCaptcha);
-            } catch (InvalidCredentialsException e) {
-                throwException(e);
-            }
+            // todo serso: implement
         }
 
         return null;

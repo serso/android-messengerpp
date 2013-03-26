@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  * Date: 3/7/13
  * Time: 5:04 PM
  */
-public enum MessengerPrimaryFragment {
+public enum MessengerPrimaryFragment implements FragmentDef {
 
     contacts(MessengerContactsFragment.class, MessengerContactsFragment.FRAGMENT_TAG, R.string.mpp_tab_contacts),
     messages(MessengerChatsFragment.class, MessengerChatsFragment.FRAGMENT_TAG, R.string.mpp_tab_messages),
@@ -44,11 +44,13 @@ public enum MessengerPrimaryFragment {
         this.addToBackStack = addToBackStack;
     }
 
+    @Override
     @Nonnull
     public String getFragmentTag() {
         return this.fragmentTag;
     }
 
+    @Override
     @Nonnull
     public Class<? extends Fragment> getFragmentClass() {
         return fragmentClass;
@@ -58,6 +60,7 @@ public enum MessengerPrimaryFragment {
         return titleResId;
     }
 
+    @Override
     public boolean isAddToBackStack() {
         return addToBackStack;
     }

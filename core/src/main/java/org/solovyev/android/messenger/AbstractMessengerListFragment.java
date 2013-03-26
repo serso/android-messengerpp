@@ -32,7 +32,6 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.fragments.FragmentGuiEventType;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
@@ -99,10 +98,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
     @Inject
     @Nonnull
     private ChatMessageService chatMessageService;
-
-    @Inject
-    @Nonnull
-    private AuthServiceFacade authServiceFacade;
 
     @Inject
     @Nonnull
@@ -193,11 +188,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
     @Nonnull
     protected UserService getUserService() {
         return userService;
-    }
-
-    @Nonnull
-    protected AuthServiceFacade getAuthServiceFacade() {
-        return authServiceFacade;
     }
 
     @Nonnull

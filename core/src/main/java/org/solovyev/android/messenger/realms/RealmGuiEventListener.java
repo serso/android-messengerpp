@@ -54,9 +54,9 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         final Bundle fragmentArgs = new Bundle();
         fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, realm.getId());
         if (activity.isDualPane()) {
-            activity.getFragmentService().setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
+            activity.getMultiPaneFragmentManager().setSecondFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
         } else {
-            activity.getFragmentService().setFirstFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
+            activity.getMultiPaneFragmentManager().setMainFragment(realm.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
         }
     }
 
@@ -64,7 +64,7 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         if (activity.isDualPane()) {
             showRealmFragment(realm, false);
             if ( activity.isTriplePane() ) {
-                activity.getFragmentService().emptifyThirdFragment();
+                activity.getMultiPaneFragmentManager().emptifyThirdFragment();
             }
         } else {
             showRealmFragment(realm, true);
@@ -75,9 +75,9 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         final Bundle fragmentArgs = new Bundle();
         fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, realm.getId());
         if (firstPane) {
-            activity.getFragmentService().setFirstFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, true);
+            activity.getMultiPaneFragmentManager().setMainFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, true);
         } else {
-            activity.getFragmentService().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, false);
+            activity.getMultiPaneFragmentManager().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(realm), MessengerRealmFragment.FRAGMENT_TAG, false);
         }
     }
 
@@ -86,16 +86,16 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
         assert state != null;
         switch (state) {
             case back:
-                activity.getFragmentService().goBack();
+                activity.getMultiPaneFragmentManager().goBack();
                 break;
             case removed:
-                activity.getFragmentService().goBackTillStart();
+                activity.getMultiPaneFragmentManager().goBackTillStart();
                 if ( activity.isDualPane() ) {
-                    activity.getFragmentService().emptifySecondFragment();
+                    activity.getMultiPaneFragmentManager().emptifySecondFragment();
                 }
                 break;
             case saved:
-                activity.getFragmentService().goBackTillStart();
+                activity.getMultiPaneFragmentManager().goBackTillStart();
                 break;
         }
     }

@@ -182,14 +182,6 @@
                 <type>apklib</type>
             </dependency>
 
-            <!-- Titles in ViewPager -->
-            <dependency>
-                <groupId>com.viewpagerindicator</groupId>
-                <artifactId>library</artifactId>
-                <version>2.3.1</version>
-                <type>apklib</type>
-            </dependency>
-
             <dependency>
                 <groupId>com.actionbarsherlock</groupId>
                 <artifactId>library</artifactId>
@@ -214,24 +206,6 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>2.2.1</version>
-            </dependency>
-
-            <!--Simple XML-->
-
-            <dependency>
-                <groupId>org.simpleframework</groupId>
-                <artifactId>simple-xml</artifactId>
-                <version>2.6.1</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>stax-api</artifactId>
-                        <groupId>stax</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>xpp3</artifactId>
-                        <groupId>xpp3</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <!-- Joda time -->

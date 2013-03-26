@@ -25,6 +25,10 @@ import java.util.Map;
 @ThreadSafe
 public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, ChatEvent> {
 
+    @Nonnull
+    static final String TAG = "ChatService";
+
+
     // initial initialization: will be called once on application start
     void init();
 
@@ -206,4 +210,6 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     void onUnreadMessagesCountChanged(@Nonnull Entity chat, @Nonnull Integer unreadMessagesCount);
 
     int getUnreadMessagesCount(@Nonnull Entity chat);
+
+    void removeChatsInRealm(@Nonnull String realmId);
 }

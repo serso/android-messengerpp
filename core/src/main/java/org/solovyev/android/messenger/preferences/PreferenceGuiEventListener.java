@@ -2,8 +2,7 @@ package org.solovyev.android.messenger.preferences;
 
 import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.fragments.MessengerFragmentService;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.common.Builder;
 import roboguice.event.EventListener;
 
@@ -25,14 +24,14 @@ public final class PreferenceGuiEventListener implements EventListener<Preferenc
 
     @Override
     public void onEvent(@Nonnull PreferenceGuiEvent event) {
-        final MessengerFragmentService fragmentService = activity.getFragmentService();
+        final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
         final PreferenceGroup preferenceGroup = event.getPreferenceScreen();
 
         if (event.isOfType(PreferenceGuiEventType.preference_group_clicked)) {
             final int preferencesResId = preferenceGroup.getPreferencesResId();
 
             if (activity.isDualPane()) {
-                fragmentService.setSecondFragment(new Builder<Fragment>() {
+                fm.setSecondFragment(new Builder<Fragment>() {
                     @Nonnull
                     @Override
                     public Fragment build() {
@@ -40,10 +39,10 @@ public final class PreferenceGuiEventListener implements EventListener<Preferenc
                     }
                 }, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG);
                 if ( activity.isTriplePane() ) {
-                    fragmentService.emptifyThirdFragment();
+                    fm.emptifyThirdFragment();
                 }
             } else {
-                fragmentService.setFirstFragment(new Builder<Fragment>() {
+                fm.setMainFragment(new Builder<Fragment>() {
                     @Nonnull
                     @Override
                     public Fragment build() {

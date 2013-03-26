@@ -12,18 +12,18 @@ import java.util.Map;
 * Date: 2/28/13
 * Time: 9:00 PM
 */
-public class RealmMapEntryMatcher implements Predicate<Map.Entry<Entity, ?>> {
+public final class EntityMapEntryMatcher implements Predicate<Map.Entry<Entity, ?>> {
 
     @Nonnull
     private final String realmId;
 
-    private RealmMapEntryMatcher(@Nonnull String realmId) {
+    private EntityMapEntryMatcher(@Nonnull String realmId) {
         this.realmId = realmId;
     }
 
     @Nonnull
-    public static RealmMapEntryMatcher forRealm(@Nonnull String realmId) {
-        return new RealmMapEntryMatcher(realmId);
+    public static EntityMapEntryMatcher forRealm(@Nonnull String realmId) {
+        return new EntityMapEntryMatcher(realmId);
     }
 
     @Override

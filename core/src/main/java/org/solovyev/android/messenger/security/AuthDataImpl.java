@@ -1,26 +1,20 @@
 package org.solovyev.android.messenger.security;
 
 import javax.annotation.Nonnull;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
 
 /**
 * User: serso
 * Date: 5/30/12
 * Time: 12:47 AM
 */
-@Root
 public class AuthDataImpl implements AuthData {
 
-    @Element
     @Nonnull
     private String accessToken;
 
-    @Element
     @Nonnull
     private String realmUserId;
 
-    @Element
     @Nonnull
     private String realmUserLogin;
 

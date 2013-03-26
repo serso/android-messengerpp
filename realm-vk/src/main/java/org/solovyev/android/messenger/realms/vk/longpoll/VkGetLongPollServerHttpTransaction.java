@@ -1,10 +1,11 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
 import com.google.gson.Gson;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -13,7 +14,7 @@ import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
  */
 public class VkGetLongPollServerHttpTransaction extends AbstractVkHttpTransaction<LongPollServerData> {
 
-    public VkGetLongPollServerHttpTransaction(@Nonnull Realm realm) {
+    public VkGetLongPollServerHttpTransaction(@Nonnull VkRealm realm) {
         super(realm, "messages.getLongPollServer");
     }
 

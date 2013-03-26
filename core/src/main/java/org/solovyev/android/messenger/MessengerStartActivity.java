@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.security.AuthService;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.sync.SyncTask;
@@ -26,10 +25,6 @@ import java.util.List;
  * Time: 9:47 PM
  */
 public class MessengerStartActivity extends RoboActivity {
-
-    @Inject
-    @Nonnull
-    private AuthService authService;
 
     @Inject
     @Nonnull

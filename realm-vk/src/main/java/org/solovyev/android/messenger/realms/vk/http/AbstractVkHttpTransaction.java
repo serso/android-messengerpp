@@ -6,15 +6,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import javax.annotation.Nonnull;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.security.UserIsNotLoggedInException;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,31 +27,27 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
     private static final String URI = "https://api.vkontakte.ru/method/";
 
     @Nonnull
-    private final Realm realm;
+    private final VkRealm realm;
 
-    protected AbstractVkHttpTransaction(@Nonnull Realm realm, @Nonnull String method) {
+    protected AbstractVkHttpTransaction(@Nonnull VkRealm realm, @Nonnull String method) {
         this(realm, method, HttpMethod.GET);
     }
 
-    protected AbstractVkHttpTransaction(@Nonnull Realm realm, @Nonnull String method, @Nonnull HttpMethod httpMethod) {
+    protected AbstractVkHttpTransaction(@Nonnull VkRealm realm, @Nonnull String method, @Nonnull HttpMethod httpMethod) {
         super(URI + method, httpMethod);
         this.realm = realm;
     }
 
     @Nonnull
-    protected Realm getRealm() {
+    protected VkRealm getRealm() {
         return realm;
     }
 
     @Nonnull
     @Override
     public List<NameValuePair> getRequestParameters() {
-        final ArrayList<NameValuePair> result = new ArrayList<NameValuePair>();
-        try {
-            result.add(new BasicNameValuePair("access_token", MessengerApplication.getServiceLocator().getAuthServiceFacade().getAuthData().getAccessToken()));
-        } catch (UserIsNotLoggedInException e) {
-            // todo serso: think
-        }
+        final List<NameValuePair> result = new ArrayList<NameValuePair>();
+        result.add(new BasicNameValuePair("access_token", getRealm().getConfiguration().getAccessToken()));
         return result;
     }
 

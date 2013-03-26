@@ -3,7 +3,8 @@ package org.solovyev.android.messenger.chats;
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.fragments.MessengerFragmentService;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
+import org.solovyev.android.messenger.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.MessengerContactFragment;
@@ -56,7 +57,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
     }
 
     private void handleChatOpenRequestedEvent(@Nonnull final Chat chat) {
-        final MessengerFragmentService fragmentService = activity.getFragmentService();
+        final MultiPaneFragmentManager fragmentService = activity.getMultiPaneFragmentManager();
         if (activity.getMultiPaneManager().isDualPane(activity)) {
             if (!fragmentService.isFragmentShown(MessengerChatsFragment.FRAGMENT_TAG)) {
                 final ActionBar.Tab tab = activity.findTabByTag(MessengerChatsFragment.FRAGMENT_TAG);
@@ -70,7 +71,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                 fragment.selectListItem(chat.getId());
             }
         } else {
-            fragmentService.setFirstFragment(new Builder<Fragment>() {
+            fragmentService.setMainFragment(new Builder<Fragment>() {
                 @Nonnull
                 @Override
                 public Fragment build() {
@@ -85,10 +86,10 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
     }
 
     private void handleChatClickedEvent(@Nonnull final Chat chat) {
-        final MessengerFragmentService fragmentService = activity.getFragmentService();
+        final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 
         if (activity.isDualPane()) {
-            fragmentService.setSecondFragment(new Builder<Fragment>() {
+            fm.setSecondFragment(new Builder<Fragment>() {
                 @Nonnull
                 @Override
                 public Fragment build() {
@@ -98,7 +99,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
 
             if (activity.isTriplePane()) {
                 if (chat.isPrivate()) {
-                    fragmentService.setThirdFragment(new Builder<Fragment>() {
+                    fm.setThirdFragment(new Builder<Fragment>() {
                         @Nonnull
                         @Override
                         public Fragment build() {
@@ -106,7 +107,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                         }
                     }, ContactFragmentReuseCondition.forContact(chat.getSecondUser()), MessengerContactFragment.FRAGMENT_TAG);
                 } else {
-                    fragmentService.setThirdFragment(new Builder<Fragment>() {
+                    fm.setThirdFragment(new Builder<Fragment>() {
                         @Nonnull
                         @Override
                         public Fragment build() {
@@ -122,7 +123,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
             }
 
         } else {
-            fragmentService.setFirstFragment(new Builder<Fragment>() {
+            fm.setMainFragment(new Builder<Fragment>() {
                 @Nonnull
                 @Override
                 public Fragment build() {

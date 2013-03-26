@@ -14,8 +14,6 @@ import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.security.AuthService;
-import org.solovyev.android.messenger.security.AuthServiceFacade;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
@@ -49,14 +47,6 @@ public class MessengerApplication extends Application implements MessengerServic
     *
     **********************************************************************
     */
-
-    @Inject
-    @Nonnull
-    private AuthService authService;
-
-    @Inject
-    @Nonnull
-    private AuthServiceFacade authServiceFacade;
 
     @Inject
     @Nonnull
@@ -164,12 +154,6 @@ public class MessengerApplication extends Application implements MessengerServic
 
     @Override
     @Nonnull
-    public AuthService getAuthService() {
-        return authService;
-    }
-
-    @Override
-    @Nonnull
     public SyncService getSyncService() {
         return syncService;
     }
@@ -178,12 +162,6 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     public RealmService getRealmService() {
         return realmService;
-    }
-
-    @Override
-    @Nonnull
-    public AuthServiceFacade getAuthServiceFacade() {
-        return authServiceFacade;
     }
 
     @Override
@@ -221,7 +199,6 @@ public class MessengerApplication extends Application implements MessengerServic
 
         // load persistence data
         this.realmService.load();
-        this.authService.load();
 
         this.networkStateService.startListening(this);
     }

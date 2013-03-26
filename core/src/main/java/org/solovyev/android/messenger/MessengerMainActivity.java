@@ -95,11 +95,11 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
         listeners.add(PreferenceGuiEvent.class, new PreferenceGuiEventListener(this));
 
         if (isDualPane()) {
-            getFragmentService().emptifySecondFragment();
+            getMultiPaneFragmentManager().emptifySecondFragment();
         }
 
         if (isTriplePane()) {
-            getFragmentService().emptifyThirdFragment();
+            getMultiPaneFragmentManager().emptifyThirdFragment();
         }
     }
 

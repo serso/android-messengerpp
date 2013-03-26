@@ -25,10 +25,6 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.SqliteRealmDao;
 import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
 import org.solovyev.android.messenger.registration.RegistrationService;
-import org.solovyev.android.messenger.security.AuthService;
-import org.solovyev.android.messenger.security.AuthServiceFacade;
-import org.solovyev.android.messenger.security.AuthServiceFacadeImpl;
-import org.solovyev.android.messenger.security.AuthServiceImpl;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DefaultUserService;
@@ -66,8 +62,6 @@ public class TestMessengerModule extends AbstractModule {
 
         bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
         bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
-        bind(AuthService.class).to(AuthServiceImpl.class);
-        bind(AuthServiceFacade.class).to(AuthServiceFacadeImpl.class);
         bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
         bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 

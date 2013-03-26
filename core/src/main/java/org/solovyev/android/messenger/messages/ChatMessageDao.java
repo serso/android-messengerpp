@@ -38,4 +38,6 @@ public interface ChatMessageDao {
     boolean changeReadStatus(@Nonnull String messageId, boolean read);
 
     void deleteAllMessages();
+
+    void deleteAllMessagesInRealm(@Nonnull String realmId);
 }

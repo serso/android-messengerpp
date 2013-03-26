@@ -47,6 +47,8 @@ public interface ChatDao {
 
     void deleteAllChats();
 
+    void deleteAllChatsInRealm(@Nonnull String realmId);
+
     /**
      * Key: chat for which unread messages exist, value: number of unread messages
      * @return map of chats with unread messages counts for them

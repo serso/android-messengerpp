@@ -7,9 +7,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.messages.LiteChatMessage;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.common.text.Strings;
 
@@ -32,7 +32,7 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
     @Nonnull
     private final Chat chat;
 
-    public VkMessagesSendHttpTransaction(@Nonnull Realm realm, @Nonnull ChatMessage chatMessage, @Nonnull Chat chat) {
+    public VkMessagesSendHttpTransaction(@Nonnull VkRealm realm, @Nonnull ChatMessage chatMessage, @Nonnull Chat chat) {
         super(realm, "messages.send");
         this.chatMessage = chatMessage;
         this.chat = chat;

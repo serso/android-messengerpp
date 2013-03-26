@@ -41,4 +41,6 @@ public interface ChatMessageService {
      * @return total number of unread messages in the application
      */
     int getUnreadMessagesCount();
+
+    void removeAllMessagesInRealm(@Nonnull String realmId);
 }

@@ -100,7 +100,7 @@ public final class LiteChatMessageImpl extends AbstractMessengerEntity implement
 
     @Override
     public Entity getSecondUser(@Nonnull Entity user) {
-        if (author.equals(user)) {
+        if (user.equals(author)) {
             return recipient;
         } else if (user.equals(recipient)) {
             return author;

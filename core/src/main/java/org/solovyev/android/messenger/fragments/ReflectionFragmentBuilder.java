@@ -31,7 +31,7 @@ public class ReflectionFragmentBuilder<F extends Fragment> implements Builder<F>
     }
 
     @Nonnull
-    public static <F extends Fragment> ReflectionFragmentBuilder<F> newInstance(@Nonnull Context context, @Nonnull Class<? extends F> fragmentClass, @Nullable Bundle fragmentArgs) {
+    public static <F extends Fragment> ReflectionFragmentBuilder<F> forClass(@Nonnull Context context, @Nonnull Class<? extends F> fragmentClass, @Nullable Bundle fragmentArgs) {
         return new ReflectionFragmentBuilder<F>(context, fragmentClass, fragmentArgs);
     }
 

@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.collections.Collections;
@@ -21,9 +21,9 @@ import java.util.List;
 public class VkRealmUserService implements RealmUserService {
 
     @Nonnull
-    private final Realm realm;
+    private final VkRealm realm;
 
-    public VkRealmUserService(@Nonnull Realm realm) {
+    public VkRealmUserService(@Nonnull VkRealm realm) {
         this.realm = realm;
     }
 

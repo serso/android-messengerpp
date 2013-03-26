@@ -95,13 +95,16 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
     public void deleteAllUsers() {
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_contacts"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_properties"));
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("users"));
     }
 
     @Override
     public void deleteAllUsersInRealm(@Nonnull String realmId) {
+        // todo serso: startWith must be replaced with equals!
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_contacts", "user_id", realmId));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_properties", "user_id", realmId));
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_chats", "user_id", realmId));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newInstance("users", "realm_id", realmId));
     }
 

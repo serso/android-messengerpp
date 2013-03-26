@@ -29,6 +29,6 @@ public class GuiEventListener implements EventListener<GuiEvent> {
     }
 
     private void handleShowRealmDefsEvent() {
-        activity.getFragmentService().setPrimaryFragment(MessengerPrimaryFragment.realm_defs);
+        activity.getMultiPaneFragmentManager().setMainFragment(MessengerPrimaryFragment.realm_defs);
     }
 }

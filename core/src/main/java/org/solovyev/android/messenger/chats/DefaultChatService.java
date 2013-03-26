@@ -8,6 +8,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
@@ -20,6 +21,7 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
+import org.solovyev.android.messenger.realms.EntityMapEntryMatcher;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.PersistenceLock;
@@ -32,6 +34,7 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,6 +53,14 @@ import java.util.Map;
  */
 @Singleton
 public class DefaultChatService implements ChatService {
+
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
 
     @Nonnull
     private static final Character PRIVATE_CHAT_DELIMITER = ':';
@@ -216,10 +227,10 @@ public class DefaultChatService implements ChatService {
             final List<User> participants = apiChat.getParticipantsExcept(user);
 
             if (participants.size() == 1) {
-                final Entity realmUser1 = user.getEntity();
-                final Entity realmUser2 = participants.get(0).getEntity();
+                final Entity participant1 = user.getEntity();
+                final Entity participant2 = participants.get(0).getEntity();
 
-                final Entity realmChat = getPrivateChatId(realmUser1, realmUser2);
+                final Entity realmChat = getPrivateChatId(participant1, participant2);
 
                 if (!realmChat.getRealmEntityId().equals(apiChat.getChat().getEntity().getRealmEntityId())) {
                     /**
@@ -283,6 +294,25 @@ public class DefaultChatService implements ChatService {
     @Override
     public int getUnreadMessagesCount(@Nonnull Entity chat) {
         return unreadMessagesCounter.getUnreadMessagesCountForChat(chat);
+    }
+
+    @Override
+    public void removeChatsInRealm(@Nonnull String realmId) {
+        synchronized (lock) {
+            this.chatDao.deleteAllChatsInRealm(realmId);
+        }
+
+        synchronized (chatParticipantsCache) {
+            Iterators.removeIf(chatParticipantsCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
+        }
+
+        synchronized (lastMessagesCache) {
+            Iterators.removeIf(lastMessagesCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
+        }
+
+        synchronized (chatsById) {
+            Iterators.removeIf(chatsById.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
+        }
     }
 
     @Nonnull
@@ -482,7 +512,12 @@ public class DefaultChatService implements ChatService {
     @Nonnull
     @Override
     public Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2) {
-        return getRealmByEntity(user1).newChatEntity(user1.getRealmEntityId() + PRIVATE_CHAT_DELIMITER + user2.getRealmEntityId());
+        final String realmEntityId1 = user1.getRealmEntityId();
+        final String realmEntityId2 = user2.getRealmEntityId();
+        if ( realmEntityId1.equals(realmEntityId2) ) {
+            Log.e(TAG, "Same user in private chat " + Strings.fromStackTrace(Thread.currentThread().getStackTrace()));
+        }
+        return getRealmByEntity(user1).newChatEntity(realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
     }
 
     @Nonnull

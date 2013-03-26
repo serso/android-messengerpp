@@ -5,9 +5,14 @@ import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.Chats;
+import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -33,9 +38,9 @@ public class VkRealmChatService implements RealmChatService {
     private static final String CHAT_DELIMITER = "_";
 
     @Nonnull
-    private final Realm realm;
+    private final VkRealm realm;
 
-    public VkRealmChatService(@Nonnull Realm realm) {
+    public VkRealmChatService(@Nonnull VkRealm realm) {
         this.realm = realm;
     }
 

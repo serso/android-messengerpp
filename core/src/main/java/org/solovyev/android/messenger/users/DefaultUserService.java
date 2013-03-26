@@ -14,8 +14,8 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
+import org.solovyev.android.messenger.realms.EntityMapEntryMatcher;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmMapEntryMatcher;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -220,15 +220,15 @@ public class DefaultUserService implements UserService {
         }
 
         synchronized (userChatsCache) {
-            Iterators.removeIf(userChatsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+            Iterators.removeIf(userChatsCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
         }
 
         synchronized (userContactsCache) {
-            Iterators.removeIf(userContactsCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+            Iterators.removeIf(userContactsCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
         }
 
         synchronized (usersCache) {
-            Iterators.removeIf(usersCache.entrySet().iterator(), RealmMapEntryMatcher.forRealm(realmId));
+            Iterators.removeIf(usersCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
         }
     }
 

@@ -27,6 +27,7 @@ import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.entities.EntityMapper;
+import org.solovyev.android.messenger.realms.DeleteAllRowsInRealmDbExec;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
@@ -92,6 +93,14 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chat_properties"));
         AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chats"));
+    }
+
+    @Override
+    public void deleteAllChatsInRealm(@Nonnull String realmId) {
+        // todo serso: startWith must be replaced with equals!
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_chats", "chat_id", realmId));
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("chat_properties", "chat_id", realmId));
+        AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newInstance("chats", "realm_id", realmId));
     }
 
     @Nonnull

@@ -19,7 +19,7 @@ public class VkResponseErrorException extends ApiResponseErrorException {
 /*    @Nonnull
     public static VkResponseErrorException newInstance(@Nonnull HttpResponse response) {
         try {
-            throw newInstance(Strings.convertStream(response.getEntity().getContent()), null);
+            throw forClass(Strings.convertStream(response.getEntity().getContent()), null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

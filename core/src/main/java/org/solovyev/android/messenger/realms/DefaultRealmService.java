@@ -8,9 +8,12 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerConfiguration;
+import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.listeners.JEventListener;
@@ -44,6 +47,7 @@ public class DefaultRealmService implements RealmService {
     **********************************************************************
     */
 
+    @GuardedBy("lock")
     @Inject
     @Nonnull
     private RealmDao realmDao;
@@ -51,6 +55,17 @@ public class DefaultRealmService implements RealmService {
     @Inject
     @Nonnull
     private UserService userService;
+
+    @Inject
+    @Nonnull
+    private ChatService chatService;
+
+    @Inject
+    @Nonnull
+    private ChatMessageService messageService;
+
+    @Nonnull
+    private final Object lock;
 
     /*
     **********************************************************************
@@ -76,16 +91,17 @@ public class DefaultRealmService implements RealmService {
     private final JEventListeners<JEventListener<? extends RealmEvent>, RealmEvent> listeners;
 
     @Inject
-    public DefaultRealmService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration) {
-        this(context, configuration.getRealmDefs());
+    public DefaultRealmService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock) {
+        this(context, configuration.getRealmDefs(), lock);
     }
 
-    public DefaultRealmService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs) {
+    public DefaultRealmService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs, @Nonnull PersistenceLock lock) {
         for (RealmDef realmDef : realmDefs) {
             this.realmDefs.put(realmDef.getId(), realmDef);
         }
 
         this.context = context;
+        this.lock = lock;
         this.listeners = Listeners.newEventListenersBuilderFor(RealmEvent.class).withHardReferences().onBackgroundThread().create();
     }
 
@@ -180,14 +196,16 @@ public class DefaultRealmService implements RealmService {
                     if (alreadyExists) {
                         throw new RealmAlreadyExistsException();
                     } else {
-                        if (oldRealm != null) {
-                            realmDao.updateRealm(newRealm);
-                            realms.put(newRealm.getId(), newRealm);
-                            listeners.fireEvent(RealmEventType.changed.newEvent(newRealm, null));
-                        } else {
-                            realmDao.insertRealm(newRealm);
-                            realms.put(newRealm.getId(), newRealm);
-                            listeners.fireEvent(RealmEventType.created.newEvent(newRealm, null));
+                        synchronized (lock) {
+                            if (oldRealm != null) {
+                                realmDao.updateRealm(newRealm);
+                                realms.put(newRealm.getId(), newRealm);
+                                listeners.fireEvent(RealmEventType.changed.newEvent(newRealm, null));
+                            } else {
+                                realmDao.insertRealm(newRealm);
+                                realms.put(newRealm.getId(), newRealm);
+                                listeners.fireEvent(RealmEventType.created.newEvent(newRealm, null));
+                            }
                         }
                     }
                 }
@@ -211,10 +229,14 @@ public class DefaultRealmService implements RealmService {
     public void removeRealm(@Nonnull String realmId) {
         synchronized (realms) {
             final Realm realm = this.realms.get(realmId);
-                if (realm != null) {
-                this.userService.removeUsersInRealm(realmId);
-                this.realmDao.deleteRealm(realmId);
-                this.realms.remove(realmId);
+            if (realm != null) {
+                synchronized (lock) {
+                    this.messageService.removeAllMessagesInRealm(realmId);
+                    this.chatService.removeChatsInRealm(realmId);
+                    this.userService.removeUsersInRealm(realmId);
+                    this.realmDao.deleteRealm(realmId);
+                    this.realms.remove(realmId);
+                }
 
                 listeners.fireEvent(RealmEventType.removed.newEvent(realm, null));
             }
