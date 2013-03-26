@@ -3,6 +3,9 @@ package org.solovyev.android.messenger.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
+import org.solovyev.android.fragments.MultiPaneFragmentManager;
+import org.solovyev.android.fragments.ReflectionFragmentBuilder;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.common.Builder;
@@ -14,7 +17,7 @@ import javax.annotation.Nullable;
 public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager {
     
     public MessengerMultiPaneFragmentManager(@Nonnull FragmentActivity activity) {
-        super(activity, R.id.content_first_pane, MessengerEmptyFragment.class, MessengerEmptyFragment.FRAGMENT_TAG);
+        super(activity, R.id.content_first_pane, MessengerEmptyFragment.class, MessengerEmptyFragment.FRAGMENT_TAG, R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
     }
 
     public void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,

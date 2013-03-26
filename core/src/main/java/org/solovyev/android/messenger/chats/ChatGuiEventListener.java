@@ -2,9 +2,9 @@ package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.app.ActionBar;
+import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.android.messenger.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;

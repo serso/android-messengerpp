@@ -34,6 +34,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -80,7 +85,7 @@
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-view</artifactId>
+            <artifactId>android-common-views</artifactId>
             <type>apklib</type>
         </dependency>
 
@@ -92,7 +97,7 @@
 
         <dependency>
             <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-network</artifactId>
+            <artifactId>android-common-networks</artifactId>
             <type>apklib</type>
         </dependency>
 

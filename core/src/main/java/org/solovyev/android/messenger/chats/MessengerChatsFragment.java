@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.fragments.DetachableFragment;
+import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;

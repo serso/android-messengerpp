@@ -4,7 +4,7 @@ import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.fragments.DetachableFragment;
+import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;

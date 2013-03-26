@@ -22,7 +22,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <common.version>1.0.4-SNAPSHOT</common.version>
-        <android.common.version>1.0.7-SNAPSHOT</android.common.version>
+        <android.common.version>1.1.0-SNAPSHOT</android.common.version>
     </properties>
 
     <dependencyManagement>
@@ -70,6 +70,12 @@
                 <artifactId>android</artifactId>
                 <version>4.0.1.2</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.android</groupId>
+                <artifactId>support-v4</artifactId>
+                <version>r7</version>
             </dependency>
 
             <dependency>
@@ -153,7 +159,7 @@
 
             <dependency>
                 <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-view</artifactId>
+                <artifactId>android-common-views</artifactId>
                 <version>${android.common.version}</version>
                 <type>apklib</type>
             </dependency>
@@ -167,7 +173,14 @@
 
             <dependency>
                 <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-network</artifactId>
+                <artifactId>android-common-networks</artifactId>
+                <version>${android.common.version}</version>
+                <type>apklib</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.solovyev.android</groupId>
+                <artifactId>android-common-fragments</artifactId>
                 <version>${android.common.version}</version>
                 <type>apklib</type>
             </dependency>

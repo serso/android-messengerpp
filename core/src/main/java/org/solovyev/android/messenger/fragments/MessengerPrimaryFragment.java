@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.Fragment;
+import org.solovyev.android.fragments.FragmentDef;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.MessengerPreferenceGroupsFragment;

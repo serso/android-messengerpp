@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.preferences;
 
-import org.solovyev.android.messenger.fragments.AbstractFragmentReuseCondition;
+import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 
 import javax.annotation.Nonnull;
 

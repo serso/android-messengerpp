@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
-import org.solovyev.android.messenger.fragments.DetachableFragment;
+import org.solovyev.android.fragments.DetachableFragment;
 
 import javax.annotation.Nonnull;
 
