@@ -54,6 +54,6 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
     @Nonnull
     @Override
     protected ContactListItem createListItem(@Nonnull UiContact contact) {
-        return new ContactListItem(contact);
+        return ContactListItem.newInstance(contact);
     }
 }

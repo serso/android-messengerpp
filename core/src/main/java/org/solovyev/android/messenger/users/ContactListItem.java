@@ -27,17 +27,27 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
     @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_";
-
-    public ContactListItem(@Nonnull User contact) {
-        this(UiContact.newInstance(contact, getUnreadMessagesCount(contact)));
+    private ContactListItem(@Nonnull UiContact contact) {
+        super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
     }
 
     private static int getUnreadMessagesCount(@Nonnull User contact) {
         return MessengerApplication.getServiceLocator().getUserService().getUnreadMessagesCount(contact.getEntity());
     }
 
-    public ContactListItem(@Nonnull UiContact contact) {
-        super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
+    @Nonnull
+    public static ContactListItem newEmpty(User contact) {
+        return newInstance(UiContact.newInstance(contact, 0));
+    }
+
+    @Nonnull
+    public static ContactListItem newInstance(@Nonnull User contact) {
+        return new ContactListItem(UiContact.newInstance(contact, getUnreadMessagesCount(contact)));
+    }
+
+    @Nonnull
+    public static ContactListItem newInstance(@Nonnull UiContact contact) {
+        return new ContactListItem(contact);
     }
 
     @Override

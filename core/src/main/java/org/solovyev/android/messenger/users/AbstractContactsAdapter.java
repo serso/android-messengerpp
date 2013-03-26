@@ -65,18 +65,15 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
                     @Override
                     public ContactListItem apply(@Nullable User contact) {
                         assert contact != null;
-                        return createListItem(contact);
+                        return ContactListItem.newInstance(contact);
                     }
                 })));
                 break;
             case changed:
+                onContactChanged(event, eventUser);
+                break;
             case unread_messages_count_changed:
-                final ContactListItem listItem = findInAllElements(eventUser);
-                if (listItem != null) {
-                    listItem.onEvent(event);
-                    onListItemChanged(eventUser);
-                    notifyDataSetChanged();
-                }
+                onContactChanged(event, eventUser);
                 break;
             case contact_online:
             case contact_offline:
@@ -86,20 +83,24 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
     }
 
-    private void onContactPresenceChanged(@Nonnull UserEvent event) {
-        final User contact = event.getDataAsUser();
+    private void onContactChanged(@Nonnull UserEvent event, @Nonnull User contact) {
         final ContactListItem listItem = findInAllElements(contact);
         if (listItem != null) {
             listItem.onEvent(event);
             onListItemChanged(contact);
             notifyDataSetChanged();
         }
+    }
+
+    private void onContactPresenceChanged(@Nonnull UserEvent event) {
+        final User contact = event.getDataAsUser();
+        onContactChanged(event, contact);
         refilter();
     }
 
     @Nullable
     protected ContactListItem findInAllElements(@Nonnull User contact) {
-        return Iterables.find(getAllElements(), Predicates.<ContactListItem>equalTo(createListItem(contact)), null);
+        return Iterables.find(getAllElements(), Predicates.<ContactListItem>equalTo(ContactListItem.newEmpty(contact)), null);
     }
 
 
@@ -109,16 +110,11 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
     }
 
     protected void removeListItem(@Nonnull User contact) {
-        remove(createListItem(contact));
+        remove(ContactListItem.newEmpty(contact));
     }
 
     protected void addListItem(@Nonnull User contact) {
-        addListItem(createListItem(contact));
-    }
-
-    @Nonnull
-    private ContactListItem createListItem(@Nonnull User contact) {
-        return new ContactListItem(contact);
+        addListItem(ContactListItem.newInstance(contact));
     }
 
     protected abstract void onListItemChanged(@Nonnull User contact);
