@@ -48,29 +48,22 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
                 @Override
                 public ChatListItem apply(@javax.annotation.Nullable Chat chat) {
                     assert chat != null;
-                    return createListItem(eventUser, chat);
+                    return ChatListItem.newInstance(eventUser, chat);
                 }
             }));
         }
     }
 
     protected void removeListItem(@Nonnull User user, @Nonnull String chatId) {
-        // todo serso: not good solution => better way is to load full user object for chat (but it can take long time)
-        final Chat chat = ChatImpl.newFakeChat(chatId);
-        removeListItem(user, chat);
+        removeListItem(user, ChatImpl.newFakeChat(chatId));
     }
 
     protected void removeListItem(@Nonnull User user, @Nonnull Chat chat) {
-        remove(createListItem(user, chat));
+        remove(ChatListItem.newEmpty(user, chat));
     }
 
     protected void addListItem(@Nonnull User user, @Nonnull Chat chat) {
-        addListItem(createListItem(user, chat));
-    }
-
-    @Nonnull
-    private ChatListItem createListItem(@Nonnull User user, @Nonnull Chat chat) {
-        return new ChatListItem(user, chat);
+        addListItem(ChatListItem.newInstance(user, chat));
     }
 
     @Override
@@ -103,7 +96,6 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
 
     @Nullable
     protected ChatListItem findInAllElements(@Nonnull User user, @Nonnull Chat chat) {
-        return Iterables.find(getAllElements(), Predicates.<ChatListItem>equalTo(createListItem(user, chat)), null);
+        return Iterables.find(getAllElements(), Predicates.<ChatListItem>equalTo(ChatListItem.newEmpty(user, chat)), null);
     }
-
 }

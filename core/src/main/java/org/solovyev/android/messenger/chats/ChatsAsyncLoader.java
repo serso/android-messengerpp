@@ -53,7 +53,7 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
     @Nonnull
     @Override
     protected ChatListItem createListItem(@Nonnull UiChat uiChat) {
-        return new ChatListItem(uiChat);
+        return ChatListItem.newInstance(uiChat);
     }
 
 }

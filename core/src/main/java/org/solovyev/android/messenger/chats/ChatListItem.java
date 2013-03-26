@@ -28,11 +28,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
     @Nonnull
     private static final String TAG_PREFIX = "chat_list_item_";
 
-    public ChatListItem(@Nonnull User user, @Nonnull Chat chat) {
-        this(UiChat.newInstance(user, chat, getLastChatMessage(chat), getUnreadMessagesCount(chat)));
-    }
-
-    public ChatListItem(@Nonnull UiChat data) {
+    private ChatListItem(@Nonnull UiChat data) {
         super(TAG_PREFIX, data, R.layout.mpp_list_item_chat);
     }
 
@@ -43,6 +39,21 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 
     private static int getUnreadMessagesCount(@Nonnull Chat chat) {
         return getChatService().getUnreadMessagesCount(chat.getEntity());
+    }
+
+    @Nonnull
+    public static ChatListItem newInstance(@Nonnull User user, @Nonnull Chat chat) {
+        return new ChatListItem(UiChat.newInstance(user, chat, getLastChatMessage(chat), getUnreadMessagesCount(chat)));
+    }
+
+    @Nonnull
+    public static ChatListItem newInstance(@Nonnull UiChat data) {
+        return new ChatListItem(data);
+    }
+
+    @Nonnull
+    public static ChatListItem newEmpty(User user, Chat chat) {
+        return new ChatListItem(UiChat.newInstance(user, chat, null, 0));
     }
 
     @Override
@@ -140,5 +151,4 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
         }
 
     }
-
 }
