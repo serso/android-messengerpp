@@ -9,6 +9,7 @@ import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.AuthDataImpl;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -53,8 +54,8 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
 
     @Nonnull
     @Override
-    protected Realm newRealm(@Nonnull String id, @Nonnull User user) {
-        return new XmppRealm(id, getRealmDef(), user, configuration);
+    protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state) {
+        return new XmppRealm(id, getRealmDef(), user, configuration, state);
     }
 
     @Override

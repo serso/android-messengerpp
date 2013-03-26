@@ -49,7 +49,7 @@ public interface RealmDef extends MessengerEntity {
     Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
 
     @Nonnull
-    Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration);
+    Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state);
 
     @Nonnull
     Class<? extends RealmConfiguration> getConfigurationClass();

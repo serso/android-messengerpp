@@ -27,7 +27,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
         Assert.assertTrue(realms.isEmpty());
 
         TestRealmConfiguration expectedConfig1 = new TestRealmConfiguration("test_config_field", 42);
-        final Realm expected1 = testRealmDef.newRealm("test~01", Users.newEmptyUser(EntityImpl.newInstance("test~01", "user01")), expectedConfig1);
+        final Realm expected1 = testRealmDef.newRealm("test~01", Users.newEmptyUser(EntityImpl.newInstance("test~01", "user01")), expectedConfig1, RealmState.enabled);
         realmDao.insertRealm(expected1);
 
         realms = realmDao.loadRealms();
@@ -50,7 +50,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
         for (RealmDef realmDef : getRealmService().getRealmDefs()) {
             final RealmConfiguration realmConfiguration = realmDef.getConfigurationClass().newInstance();
             final String realmId = EntityImpl.getRealmId(realmDef.getId(), index);
-            Realm expected = realmDef.newRealm(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), realmConfiguration);
+            Realm expected = realmDef.newRealm(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), realmConfiguration, RealmState.enabled);
             realmDao.insertRealm(expected);
         }
 

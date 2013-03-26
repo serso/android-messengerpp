@@ -53,6 +53,7 @@ public enum RealmGuiEventType {
     public static enum FinishedState {
         back,
         removed,
+        status_changed,
         saved;
     }
 }

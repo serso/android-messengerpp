@@ -77,6 +77,12 @@
     <string name="mpp_notification_text">Click to open app</string>
     <string name="mpp_private_chat_title">Chat with %1$s</string>
     <string name="mpp_public_chat_title">Chat</string>
+    <string name="mpp_saving_realm_title">Saving…</string>
+    <string name="mpp_saving_realm_message">Wait a second while app is trying to save account</string>
+    <string name="mpp_removing_realm_title">Removing…</string>
+    <string name="mpp_removing_realm_message">Wait a second while app is trying to remove account</string>
+    <string name="mpp_disable">Disable</string>
+    <string name="mpp_enable">Enable</string>
 
     <plurals name="mpp_unread_messages_count_notification">
         <item quantity="one">There is one unread message.</item>

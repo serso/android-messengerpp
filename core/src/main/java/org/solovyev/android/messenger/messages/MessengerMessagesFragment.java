@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import com.google.inject.Inject;
-import org.solovyev.android.AThreads;
+import org.solovyev.android.Threads;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
@@ -395,7 +395,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
                    chat = event.getChat();
                }
             }
-            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
+            Threads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
                     getAdapter().onEvent(event);

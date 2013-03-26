@@ -5,6 +5,7 @@ import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.realms.vk.chats.VkRealmChatService;
 import org.solovyev.android.messenger.realms.vk.users.VkRealmUserService;
 import org.solovyev.android.messenger.users.RealmUserService;
@@ -14,8 +15,8 @@ import javax.annotation.Nonnull;
 
 public class VkRealm extends AbstractRealm<VkRealmConfiguration> {
 
-    public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration) {
-        super(id, realmDef, user, configuration);
+    public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration, @Nonnull RealmState state) {
+        super(id, realmDef, user, configuration, state);
     }
 
     @Nonnull

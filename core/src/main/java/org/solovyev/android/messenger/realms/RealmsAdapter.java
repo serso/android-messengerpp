@@ -35,8 +35,14 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem>  {
                     listItem.onRealmChangedEvent(realm, getContext());
                 }
                 break;
-            case removed:
-                removeListItem(createListItem(realm));
+            case state_changed:
+                switch (realm.getState()) {
+                    case enabled:
+                        break;
+                    case removed:
+                        removeListItem(createListItem(realm));
+                        break;
+                }
                 break;
         }
     }

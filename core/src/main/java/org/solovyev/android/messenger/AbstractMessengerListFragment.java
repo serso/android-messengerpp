@@ -25,7 +25,7 @@ import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
-import org.solovyev.android.AThreads;
+import org.solovyev.android.Threads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -630,7 +630,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
         @Override
         public void onEvent(@Nonnull final UserEvent event) {
-            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
+            Threads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
                     adapter.onEvent(event);

@@ -11,7 +11,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import org.solovyev.android.AThreads;
+import org.solovyev.android.Threads;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
@@ -114,7 +114,9 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
     protected MessengerListItemAdapter<RealmListItem> createAdapter() {
         final List<RealmListItem> listItems = new ArrayList<RealmListItem>();
         for (Realm realm : realmService.getRealms()) {
-            listItems.add(new RealmListItem(realm));
+            if (realm.getState() != RealmState.removed) {
+                listItems.add(new RealmListItem(realm));
+            }
         }
         return new RealmsAdapter(getActivity(), listItems);
     }
@@ -188,7 +190,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 
         @Override
         public void onEvent(@Nonnull final RealmEvent realmEvent) {
-            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
+            Threads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
                     getAdapter().onRealmEvent(realmEvent);

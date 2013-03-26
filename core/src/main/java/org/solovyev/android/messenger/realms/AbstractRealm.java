@@ -6,11 +6,12 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class AbstractRealm<C extends RealmConfiguration> implements Realm<C> {
+public abstract class AbstractRealm<C extends RealmConfiguration> extends JObject implements Realm<C> {
 
     @Nonnull
     private String id;
@@ -24,6 +25,9 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     @Nonnull
     private C configuration;
 
+    @Nonnull
+    private RealmState state;
+
     /**
      * Last created realm connection
      */
@@ -33,7 +37,8 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     public AbstractRealm(@Nonnull String id,
                          @Nonnull RealmDef realmDef,
                          @Nonnull User user,
-                         @Nonnull C configuration) {
+                         @Nonnull C configuration,
+                         @Nonnull RealmState state) {
         if (!user.getEntity().getRealmId().equals(id)) {
             throw new IllegalArgumentException("User must belong to realm!");
         }
@@ -42,30 +47,42 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
         this.realmDef = realmDef;
         this.user = user;
         this.configuration = configuration;
+        this.state = state;
     }
 
     @Nonnull
     @Override
-    public String getId() {
+    public final String getId() {
         return this.id;
     }
 
     @Nonnull
     @Override
-    public RealmDef getRealmDef() {
+    public final RealmDef getRealmDef() {
         return realmDef;
     }
 
     @Nonnull
     @Override
-    public User getUser() {
+    public final User getUser() {
         return this.user;
     }
 
     @Nonnull
     @Override
-    public C getConfiguration() {
+    public final C getConfiguration() {
         return this.configuration;
+    }
+
+    @Nonnull
+    @Override
+    public final RealmState getState() {
+        return state;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return state == RealmState.enabled;
     }
 
     @Nonnull
@@ -108,6 +125,25 @@ public abstract class AbstractRealm<C extends RealmConfiguration> implements Rea
     @Override
     public RealmAuthService getRealmAuthService() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Nonnull
+    @Override
+    public final Realm copyForNewState(@Nonnull RealmState newState) {
+        final AbstractRealm clone = clone();
+        clone.state = newState;
+        return clone;
+    }
+
+    @Nonnull
+    @Override
+    public AbstractRealm clone() {
+        final AbstractRealm clone = (AbstractRealm) super.clone();
+
+        clone.user = this.user.clone();
+        clone.configuration = this.configuration.clone();
+
+        return clone;
     }
 
     @Nonnull

@@ -39,7 +39,7 @@ public class MessengerStartActivity extends RoboActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Collection<Realm> realms = realmService.getRealms();
+        final Collection<Realm> realms = realmService.getEnabledRealms();
         // todo serso: maybe move to Application or Service?
         // prefetch data and do synchronization
 

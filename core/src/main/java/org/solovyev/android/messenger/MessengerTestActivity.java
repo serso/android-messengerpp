@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
-import org.solovyev.android.AThreads;
+import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -44,7 +44,7 @@ public class MessengerTestActivity extends RoboSherlockActivity {
             public void run() {
                 for (Realm realm : realmService.getRealms()) {
                     final User user = realm.getRealmUserService().getUserById("se.solovyev@gmail.com");
-                    AThreads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
+                    Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
                         @Override
                         public void run() {
                             if (user == null) {

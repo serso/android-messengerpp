@@ -3,10 +3,11 @@ package org.solovyev.android.messenger.realms.xmpp;
 import com.google.gson.Gson;
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
+import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 
-public class XmppRealmConfiguration implements RealmConfiguration {
+public class XmppRealmConfiguration extends JObject implements RealmConfiguration {
 
     private static final boolean DEBUG = true;
 
@@ -107,5 +108,11 @@ public class XmppRealmConfiguration implements RealmConfiguration {
     @Nonnull
     public static XmppRealmConfiguration fromJson(@Nonnull String json) {
         return new Gson().fromJson(json, XmppRealmConfiguration.class);
+    }
+
+    @Nonnull
+    @Override
+    public XmppRealmConfiguration clone() {
+        return (XmppRealmConfiguration) super.clone();
     }
 }

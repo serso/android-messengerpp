@@ -99,7 +99,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
         realmEventListener = new RealmEventListener();
         realmService.addListener(realmEventListener);
 
-        tryStartConnectionsFor(realmService.getRealms());
+        tryStartConnectionsFor(realmService.getEnabledRealms());
     }
 
     private void tryStartConnectionsFor(@Nonnull Collection<Realm> realms) {
@@ -155,10 +155,16 @@ public class MessengerService extends RoboService implements NetworkStateListene
                     tryStartConnectionsFor(Arrays.asList(realm));
                     break;
                 case changed:
-                    realmConnections.removeConnectionFor(realm);
-                    break;
-                case removed:
                     realmConnections.updateRealm(realm, canStartConnection());
+                    break;
+                case state_changed:
+                    switch (realm.getState()) {
+                        case enabled:
+                            break;
+                        case removed:
+                            realmConnections.removeConnectionFor(realm);
+                            break;
+                    }
                     break;
                 case stop:
                     realmConnections.tryStopFor(realm);

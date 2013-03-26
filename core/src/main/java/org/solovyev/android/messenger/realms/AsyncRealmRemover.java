@@ -2,7 +2,9 @@ package org.solovyev.android.messenger.realms;
 
 import android.app.Activity;
 import android.content.Context;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.core.R;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -15,19 +17,17 @@ import java.util.List;
 * Date: 3/1/13
 * Time: 9:18 PM
 */
-class AsynRealmRemover extends MessengerAsyncTask<Realm, Integer, List<Realm>> {
+class AsyncRealmRemover extends MessengerAsyncTask<Realm, Integer, List<Realm>> {
 
-    @Nonnull
-    private final RealmService realmService;
 
-    AsynRealmRemover(@Nonnull Activity context,
-                     @Nonnull RealmService realmService) {
-        super(context, MaskParams.newDefault());
-        this.realmService = realmService;
+    AsyncRealmRemover(@Nonnull Activity context) {
+        super(context, MaskParams.newInstance(R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message));
     }
 
     @Override
     protected List<Realm> doWork(@Nonnull List<Realm> realms) {
+        final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
+
         for (Realm realm : realms) {
             realmService.removeRealm(realm.getId());
         }

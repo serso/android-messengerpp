@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
@@ -37,12 +38,22 @@ public interface RealmService {
     @Nonnull
     Collection<Realm> getRealms();
 
+    @Nonnull
+    Collection<Realm> getEnabledRealms();
+
     /**
      *
      * @return collection of users in all configured realms
      */
     @Nonnull
     Collection<User> getRealmUsers();
+
+    /**
+     *
+     * @return collection of users in all configured ENABLED realms
+     */
+    @Nonnull
+    Collection<User> getEnabledRealmUsers();
 
     /**
      * Method returns the realm which previously has been registered in this service
@@ -57,7 +68,13 @@ public interface RealmService {
     Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
 
     @Nonnull
+    Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
+
+    @Nonnull
     Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+
+    @Nonnull
+    Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState);
 
     void removeRealm(@Nonnull String realmId);
 

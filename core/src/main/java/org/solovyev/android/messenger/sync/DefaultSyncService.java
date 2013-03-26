@@ -67,7 +67,7 @@ public class DefaultSyncService implements SyncService {
 
     @Override
     public void syncAll(final boolean force) throws SyncAllTaskIsAlreadyRunning {
-        startSyncAllTask(realmService.getRealms(), force);
+        startSyncAllTask(realmService.getEnabledRealms(), force);
     }
 
     /**

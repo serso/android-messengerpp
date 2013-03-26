@@ -5,7 +5,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import org.solovyev.android.AThreads;
+import org.solovyev.android.Threads;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
@@ -137,7 +137,7 @@ public final class MessengerChatsFragment extends AbstractMessengerListFragment<
 
         @Override
         public void onEvent(@Nonnull final ChatEvent event) {
-            AThreads.tryRunOnUiThread(getActivity(), new Runnable() {
+            Threads.tryRunOnUiThread(getActivity(), new Runnable() {
                 @Override
                 public void run() {
                     getAdapter().onEvent(event);

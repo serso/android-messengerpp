@@ -26,7 +26,7 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doWork(@Nonnull List<Void> voids) {
-        for (Realm realm : MessengerApplication.getServiceLocator().getRealmService().getRealms()) {
+        for (Realm realm : MessengerApplication.getServiceLocator().getRealmService().getEnabledRealms()) {
             final SyncData syncData = new SyncDataImpl(realm.getId());
 
             for (SyncTask syncTask : syncTasks) {

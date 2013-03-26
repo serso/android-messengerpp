@@ -6,6 +6,7 @@ import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.MessengerContactFragment;
 import org.solovyev.android.messenger.users.MessengerContactsInfoFragment;
@@ -112,10 +113,8 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                         @Override
                         public Fragment build() {
                             final List<User> participants = new ArrayList<User>();
-                            for (User user : activity.getRealmService().getRealmUsers()) {
-                                participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), user.getEntity()));
-
-                            }
+                            final Realm realm = activity.getRealmService().getRealmByEntity(chat.getEntity());
+                            participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity()));
                             return new MessengerContactsInfoFragment(participants);
                         }
                     }, null, MessengerContactsInfoFragment.FRAGMENT_TAG);

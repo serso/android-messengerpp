@@ -18,6 +18,7 @@ import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,7 +56,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     @Nonnull
     @Override
     public Collection<Realm> loadRealms() {
-        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), getSqliteOpenHelper()));
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
     }
 
     @Override
@@ -66,6 +67,12 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     @Override
     public void updateRealm(@Nonnull Realm realm) {
         AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(realm)));
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Realm> loadRealmsInState(@Nonnull RealmState state) {
+        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
     }
 
     /*
@@ -116,20 +123,29 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         values.put("realm_def_id", realm.getRealmDef().getId());
         values.put("user_id", realm.getUser().getEntity().getEntityId());
         values.put("configuration", new Gson().toJson(realm.getConfiguration()));
+        values.put("state", realm.getState().name());
 
         return values;
     }
 
     private class LoadRealm extends AbstractDbQuery<Collection<Realm>> {
 
-        protected LoadRealm(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+        @Nullable
+        private final RealmState state;
+
+        protected LoadRealm(@Nonnull Context context, @Nullable RealmState state, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
             super(context, sqliteOpenHelper);
+            this.state = state;
         }
 
         @Nonnull
         @Override
         public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-            return db.query("realms", null, null, null, null, null, null);
+            if (state == null) {
+                return db.query("realms", null, null, null, null, null, null);
+            } else {
+                return db.query("realms", null, "state = ?", new String[]{state.name()}, null, null, null);
+            }
         }
 
         @Nonnull

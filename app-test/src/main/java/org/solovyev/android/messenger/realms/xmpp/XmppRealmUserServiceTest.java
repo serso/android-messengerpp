@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -150,13 +151,13 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
     protected XmppRealm newRealm1() {
         final String realmId = xmppRealmDef.getId() + "~01";
         XmppRealmConfiguration instance = TestXmppConfiguration.getInstance();
-        return new XmppRealm(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newInstance(realmId, instance.getLogin())), instance);
+        return new XmppRealm(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newInstance(realmId, instance.getLogin())), instance, RealmState.enabled);
     }
 
     @Nonnull
     protected XmppRealm newRealm2() {
         final String realmId = xmppRealmDef.getId() + "~02";
         XmppRealmConfiguration instance2 = TestXmppConfiguration.getInstance2();
-        return new XmppRealm(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newInstance(realmId, instance2.getLogin())), instance2);
+        return new XmppRealm(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newInstance(realmId, instance2.getLogin())), instance2, RealmState.enabled);
     }
 }

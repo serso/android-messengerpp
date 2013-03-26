@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
@@ -29,7 +30,7 @@ class AsynRealmSaver extends MessengerAsyncTask<RealmBuilder, Integer, List<Real
     AsynRealmSaver(@Nonnull Activity context,
                    @Nonnull RealmService realmService,
                    @Nullable BaseRealmConfigurationFragment.RealmSaveHandler realmSaveHandler) {
-        super(context, MaskParams.newDefault());
+        super(context, MaskParams.newInstance(R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message));
         this.realmService = realmService;
         this.realmSaveHandler = realmSaveHandler;
     }

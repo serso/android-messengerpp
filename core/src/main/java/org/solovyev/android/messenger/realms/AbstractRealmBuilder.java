@@ -1,11 +1,11 @@
 package org.solovyev.android.messenger.realms;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class AbstractRealmBuilder implements RealmBuilder {
 
@@ -30,7 +30,7 @@ public abstract class AbstractRealmBuilder implements RealmBuilder {
             user = Users.newEmptyUser(EntityImpl.newInstance(realmId, data.getAuthData().getRealmUserId()));
         }
 
-        return newRealm(realmId, user);
+        return newRealm(realmId, user, RealmState.enabled);
     }
 
     @Nullable
@@ -48,5 +48,5 @@ public abstract class AbstractRealmBuilder implements RealmBuilder {
     }
 
     @Nonnull
-    protected abstract Realm newRealm(@Nonnull String id, @Nonnull User user);
+    protected abstract Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state);
 }

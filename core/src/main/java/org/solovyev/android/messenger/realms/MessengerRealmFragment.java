@@ -10,14 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
+import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.listeners.AbstractJEventListener;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -75,6 +78,9 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
     private Realm realm;
 
+    @Nullable
+    private RealmEventListener realmEventListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +96,9 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
         if (realm == null) {
             // remove fragment
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        } else {
+            realmEventListener = new RealmEventListener();
+            realmService.addListener(realmEventListener);
         }
     }
 
@@ -153,7 +162,42 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
             }
         });
 
+        final Button realmStateButton = (Button) root.findViewById(R.id.mpp_realm_state_button);
+        realmStateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeState();
+            }
+        });
+
+        onRealmStateChanged(root);
+
         multiPaneManager.onPaneCreated(getActivity(), root);
+    }
+
+    @Override
+    public void onDestroy() {
+        if ( realmEventListener != null ) {
+            realmService.removeListener(realmEventListener);
+        }
+
+        super.onDestroy();
+    }
+
+    private void onRealmStateChanged(@Nonnull View root) {
+        final Button realmSyncButton = (Button) root.findViewById(R.id.mpp_realm_sync_button);
+        final Button realmStateButton = (Button) root.findViewById(R.id.mpp_realm_state_button);
+        if ( realm.isEnabled() ) {
+            realmStateButton.setText(R.string.mpp_disable);
+            realmSyncButton.setVisibility(View.VISIBLE);
+        } else {
+            realmStateButton.setText(R.string.mpp_enable);
+            realmSyncButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void changeState() {
+        new AsyncRealmStateChanger(this.getActivity()).execute(realm);
     }
 
     private void editRealm() {
@@ -167,6 +211,39 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
 
     private void removeRealm() {
-        new AsynRealmRemover(this.getActivity(), realmService).execute(realm);
+        new AsyncRealmRemover(this.getActivity()).execute(realm);
+    }
+
+    private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
+
+        protected RealmEventListener() {
+            super(RealmEvent.class);
+        }
+
+        @Override
+        public void onEvent(@Nonnull RealmEvent event) {
+            final Realm eventRealm = event.getRealm();
+            switch (event.getType()) {
+                case changed:
+                    if (eventRealm.equals(realm)) {
+                        realm = eventRealm;
+                    }
+                    break;
+                case state_changed:
+                    if (eventRealm.equals(realm)) {
+                        realm = eventRealm;
+                        Threads.tryRunOnUiThread(getActivity(), new Runnable() {
+                            @Override
+                            public void run() {
+                                final View view = getView();
+                                if (view != null) {
+                                    onRealmStateChanged(view);
+                                }
+                            }
+                        });
+                    }
+                    break;
+            }
+        }
     }
 }

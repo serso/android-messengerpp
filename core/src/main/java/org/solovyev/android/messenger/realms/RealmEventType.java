@@ -11,19 +11,19 @@ import javax.annotation.Nullable;
 public enum RealmEventType {
 
     /**
-     * Fired when realm is created
+     * Fires when realm is created
      */
     created,
 
     /**
-     * Fired when realm is changed
+     * Fires when realm is changed
      */
     changed,
 
     /**
-     * Fires when realm is removed
+     * Fires when realm state is changed
      */
-    removed,
+    state_changed,
 
     /**
      * Fires when realm connection should be stopped for realm

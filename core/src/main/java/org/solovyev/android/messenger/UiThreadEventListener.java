@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
-import org.solovyev.android.AThreads;
+import org.solovyev.android.Threads;
 import org.solovyev.common.listeners.JEvent;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -38,7 +38,7 @@ public final class UiThreadEventListener<E extends JEvent> implements JEventList
 
     @Override
     public void onEvent(@Nonnull final E event) {
-        AThreads.tryRunOnUiThread(activity, new Runnable() {
+        Threads.tryRunOnUiThread(activity, new Runnable() {
             @Override
             public void run() {
                 eventListener.onEvent(event);

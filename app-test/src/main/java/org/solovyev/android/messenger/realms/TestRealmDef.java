@@ -38,7 +38,7 @@ public class TestRealmDef extends AbstractRealmDef {
 
     @Nonnull
     @Override
-    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration) {
+    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, RealmState state) {
         return new TestRealm(realmId, this, user, (TestRealmConfiguration) configuration);
     }
 

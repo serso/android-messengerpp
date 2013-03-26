@@ -12,7 +12,6 @@ import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,8 +92,8 @@ public class VkRealmDef extends AbstractRealmDef {
 
     @Nonnull
     @Override
-    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration) {
-        return new VkRealm(realmId, this, user, (VkRealmConfiguration) configuration);
+    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state) {
+        return new VkRealm(realmId, this, user, (VkRealmConfiguration) configuration, state);
     }
 
     @Nonnull

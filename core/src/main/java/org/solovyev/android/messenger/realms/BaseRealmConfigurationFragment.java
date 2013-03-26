@@ -100,7 +100,7 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     }
 
     protected void removeRealm(@Nonnull Realm realm) {
-        new AsynRealmRemover(this.getActivity(), realmService).execute(realm);
+        new AsyncRealmRemover(this.getActivity()).execute(realm);
     }
 
     protected void saveRealm(@Nonnull RealmBuilder realmBuilder, @Nullable RealmSaveHandler realmSaveHandler) {

@@ -13,9 +13,9 @@ import org.solovyev.android.messenger.realms.AbstractRealmDef;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.RealmConfiguration;
+import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,8 +62,8 @@ public final class XmppRealmDef extends AbstractRealmDef {
 
     @Nonnull
     @Override
-    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration) {
-        return new XmppRealm(realmId, this, user, (XmppRealmConfiguration) configuration);
+    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state) {
+        return new XmppRealm(realmId, this, user, (XmppRealmConfiguration) configuration, state);
     }
 
     @Override

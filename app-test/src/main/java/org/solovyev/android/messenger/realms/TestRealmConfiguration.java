@@ -1,8 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
+import org.solovyev.common.JObject;
+
 import javax.annotation.Nonnull;
 
-public class TestRealmConfiguration implements RealmConfiguration {
+public class TestRealmConfiguration extends JObject implements RealmConfiguration {
 
     @Nonnull
     private String testStringField;
@@ -25,6 +27,12 @@ public class TestRealmConfiguration implements RealmConfiguration {
 
     public int getTestIntField() {
         return testIntField;
+    }
+
+    @Nonnull
+    @Override
+    public TestRealmConfiguration clone() {
+        return (TestRealmConfiguration) super.clone();
     }
 
     @Override

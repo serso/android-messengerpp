@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.security.AuthData;
@@ -110,6 +111,17 @@ public class DefaultRealmService implements RealmService {
         for (RealmDef realmDef : realmDefs.values()) {
             realmDef.init(context);
         }
+
+        // remove all scheduled to remove realms
+        synchronized (lock) {
+            for (Realm realm : realmDao.loadRealmsInState(RealmState.removed)) {
+                this.messageService.removeAllMessagesInRealm(realm.getId());
+                this.chatService.removeChatsInRealm(realm.getId());
+                this.userService.removeUsersInRealm(realm.getId());
+                this.realmDao.deleteRealm(realm.getId());
+                this.realms.remove(realm.getId());
+            }
+        }
     }
 
     @Nonnull
@@ -125,6 +137,32 @@ public class DefaultRealmService implements RealmService {
             // must copy as concurrent modification might occur (e.g. realm removal)
             return new ArrayList<Realm>(this.realms.values());
         }
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Realm> getEnabledRealms() {
+        synchronized (this.realms) {
+            final List<Realm> result = new ArrayList<Realm>(this.realms.size());
+            for (Realm realm : this.realms.values()) {
+                if ( realm.isEnabled() ) {
+                    result.add(realm);
+                }
+            }
+            return result;
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Collection<User> getEnabledRealmUsers() {
+        final List<User> result = new ArrayList<User>();
+
+        for (Realm realm : getEnabledRealms()) {
+            result.add(realm.getUser());
+        }
+
+        return result;
     }
 
     @Nonnull
@@ -225,21 +263,37 @@ public class DefaultRealmService implements RealmService {
         return result;
     }
 
+    @Nonnull
+    @Override
+    public Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState) {
+        if (realm.getState() != newState) {
+            final Realm result = realm.copyForNewState(newState);
+
+            synchronized (realms) {
+                this.realms.put(realm.getId(), result);
+                synchronized (lock) {
+                    this.realmDao.updateRealm(result);
+                }
+            }
+
+            listeners.fireEvent(RealmEventType.state_changed.newEvent(result, null));
+
+            return result;
+        } else {
+            return realm;
+        }
+    }
+
     @Override
     public void removeRealm(@Nonnull String realmId) {
-        synchronized (realms) {
-            final Realm realm = this.realms.get(realmId);
-            if (realm != null) {
-                synchronized (lock) {
-                    this.messageService.removeAllMessagesInRealm(realmId);
-                    this.chatService.removeChatsInRealm(realmId);
-                    this.userService.removeUsersInRealm(realmId);
-                    this.realmDao.deleteRealm(realmId);
-                    this.realms.remove(realmId);
-                }
+        final Realm realm;
 
-                listeners.fireEvent(RealmEventType.removed.newEvent(realm, null));
-            }
+        synchronized (realms) {
+            realm = this.realms.get(realmId);
+        }
+
+        if (realm != null) {
+            changeRealmState(realm, RealmState.removed);
         }
     }
 
@@ -248,6 +302,12 @@ public class DefaultRealmService implements RealmService {
         synchronized (realms) {
             return realms.size() == 1;
         }
+    }
+
+    @Nonnull
+    @Override
+    public Realm getRealmByEntity(@Nonnull Entity entity) {
+        return getRealmById(entity.getRealmId());
     }
 
     @Nonnull

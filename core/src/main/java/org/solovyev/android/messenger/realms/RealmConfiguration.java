@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
-public interface RealmConfiguration {
+import org.solovyev.common.JCloneable;
+
+public interface RealmConfiguration extends JCloneable<RealmConfiguration> {
 
     int hashCode();
 

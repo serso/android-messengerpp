@@ -94,6 +94,9 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
                     activity.getMultiPaneFragmentManager().emptifySecondFragment();
                 }
                 break;
+            case status_changed:
+                // do nothing as we can change state only from realm info fragment and that is OK
+                break;
             case saved:
                 activity.getMultiPaneFragmentManager().goBackTillStart();
                 break;

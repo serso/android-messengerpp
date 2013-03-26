@@ -16,4 +16,7 @@ public interface RealmDao {
     void deleteAllRealms();
 
     void updateRealm(@Nonnull Realm realm);
+
+    @Nonnull
+    Collection<Realm> loadRealmsInState(@Nonnull RealmState state);
 }

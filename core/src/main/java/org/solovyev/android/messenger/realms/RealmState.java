@@ -1,0 +1,12 @@
+package org.solovyev.android.messenger.realms;
+
+public enum RealmState {
+    enabled,
+
+    /**
+     * Temporary state, indicates that user requested realm removal, but it cannot be done instantly => this states indicates that realm will be removed soon (e.g. on the next app boot)
+     */
+    removed,
+
+    disabled_by_user;
+}
