@@ -138,18 +138,6 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
                 realm = realmService.getRealmById(chat.getEntity().getRealmId());
             }
         }
-
-        if (chat != null) {
-            if (!getMultiPaneManager().isDualPane(getActivity())) {
-                final ActionBar actionBar = getActivity().getActionBar();
-                //actionBar.setIcon();
-                if ( chat.isPrivate() ) {
-                    actionBar.setTitle(getString(R.string.mpp_private_chat_title, Users.getDisplayNameFor(chat.getSecondUser())));
-                } else {
-                    actionBar.setTitle(getString(R.string.mpp_public_chat_title));
-                }
-            }
-        }
     }
 
     @Override
@@ -195,6 +183,17 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
                 messageBody.setText("");
             }
         });
+
+        // change title
+        if (!getMultiPaneManager().isDualPane(getActivity())) {
+            final ActionBar actionBar = getActivity().getActionBar();
+            //actionBar.setIcon();
+            if (chat.isPrivate()) {
+                actionBar.setTitle(getString(R.string.mpp_private_chat_title, Users.getDisplayNameFor(chat.getSecondUser())));
+            } else {
+                actionBar.setTitle(getString(R.string.mpp_public_chat_title));
+            }
+        }
     }
 
     @Nonnull
