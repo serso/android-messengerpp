@@ -19,7 +19,7 @@
     -->
     <style name="mpp_list_item" parent="mpp_text">
         <!-- selected state -->
-        <item name="android:background">@drawable/mpp_list_item_states</item>
+        <item name="android:background">@drawable/mpp_li_states</item>
 
         <!--NOTE: separate definition in order to override them-->
         <item name="android:paddingTop">5dp</item>
@@ -135,7 +135,7 @@
     </style>
 
     <style name="mpp_list_item_contact_online" parent="mpp_list_item_block">
-        <item name="android:src">@drawable/mpp_list_item_contact_online_states</item>
+        <item name="android:src">@drawable/mpp_li_contact_online_states</item>
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

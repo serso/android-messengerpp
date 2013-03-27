@@ -4,7 +4,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- pressed -->
     <item android:state_pressed="true"
-          android:drawable="@drawable/mpp_contact_online_inversed"/>
+          android:drawable="@drawable/mpp_li_realm_warning_inverted"/>
 
     <!--
     For normal size screens selected and not selected states must be the same
@@ -12,8 +12,8 @@
     -->
     <!-- list item selected-->
     <item android:state_activated="true"
-        android:drawable="@drawable/mpp_contact_online"/>
+          android:drawable="@drawable/mpp_li_realm_warning"/>
 
     <!-- default, list item not selected -->
-    <item android:drawable="@drawable/mpp_contact_online"/>
+    <item android:drawable="@drawable/mpp_li_realm_warning"/>
 </selector>

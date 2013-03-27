@@ -235,7 +235,7 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
     private static void setOnlineContactMarker(@Nonnull ViewGroup view, @Nonnull Resources resources, boolean selected) {
         final ImageView contactOnlineView = (ImageView) view.findViewById(R.id.mpp_li_contact_online_view);
         if ( contactOnlineView != null ) {
-            final int drawableResId = selected ? R.drawable.mpp_contact_online_inversed : R.drawable.mpp_contact_online;
+            final int drawableResId = selected ? R.drawable.mpp_contact_online_inverted : R.drawable.mpp_contact_online;
             contactOnlineView.setImageDrawable(resources.getDrawable(drawableResId));
         }
     }

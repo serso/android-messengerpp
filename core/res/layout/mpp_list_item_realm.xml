@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
     style="@style/mpp_list_item">
 
     <ImageView
-        a:id="@+id/mpp_realm_icon_imageview"
-        style="@style/mpp_list_item_icon" />
+        a:id="@+id/mpp_li_realm_icon_imageview"
+        style="@style/mpp_list_item_icon"
+        a:layout_centerInParent="true"
+        a:layout_alignParentLeft="true" />
+
+    <ImageView
+            a:id="@+id/mpp_li_realm_warning_imageview"
+            a:background="@drawable/mpp_li_realm_warning_states"
+            style="@style/mpp_list_item_icon"
+            a:layout_centerInParent="true"
+            a:layout_alignParentRight="true"
+            a:visibility="gone"/>
 
     <LinearLayout
             a:orientation="vertical"
             a:layout_width="match_parent"
             a:layout_height="wrap_content"
+            a:layout_toRightOf="@id/mpp_li_realm_icon_imageview"
+            a:layout_toLeftOf="@id/mpp_li_realm_warning_imageview"
             a:layout_gravity="center_vertical">
 
         <TextView
-                a:id="@+id/mpp_realm_user_name_textview"
+                a:id="@+id/mpp_li_realm_user_name_textview"
                 style="@style/mpp_list_item_name" />
 
         <TextView
-                a:id="@+id/mpp_realm_name_textview"
+                a:id="@+id/mpp_li_realm_name_textview"
                 style="@style/mpp_list_item_text_secondary" />
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

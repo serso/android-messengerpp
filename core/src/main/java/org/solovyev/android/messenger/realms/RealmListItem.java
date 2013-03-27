@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,7 +58,7 @@ public final class RealmListItem extends AbstractMessengerListItem<Realm> {
         return null;
     }
 
-    public void onRealmChangedEvent(@Nonnull Realm eventRealm, @Nonnull Context context) {
+    public void onRealmChangedEvent(@Nonnull Realm eventRealm) {
         final Realm realm = getRealm();
         if (realm.equals(eventRealm)) {
             setData(eventRealm);
@@ -72,15 +73,22 @@ public final class RealmListItem extends AbstractMessengerListItem<Realm> {
 
     @Override
     protected void fillView(@Nonnull Realm realm, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final ImageView realmIconImageView = viewTag.getViewById(R.id.mpp_realm_icon_imageview);
+        final ImageView realmIconImageView = viewTag.getViewById(R.id.mpp_li_realm_icon_imageview);
 
         final Drawable realmIcon = context.getResources().getDrawable(realm.getRealmDef().getIconResId());
         realmIconImageView.setImageDrawable(realmIcon);
 
-        final TextView realmUserNameTextView = viewTag.getViewById(R.id.mpp_realm_user_name_textview);
+        final TextView realmUserNameTextView = viewTag.getViewById(R.id.mpp_li_realm_user_name_textview);
         realmUserNameTextView.setText(getDisplayName());
 
-        final TextView realmNameTextView = viewTag.getViewById(R.id.mpp_realm_name_textview);
+        final TextView realmNameTextView = viewTag.getViewById(R.id.mpp_li_realm_name_textview);
         realmNameTextView.setText(realm.getDisplayName(context));
+
+        final View realmWarningView = viewTag.getViewById(R.id.mpp_li_realm_warning_imageview);
+        if ( realm.isEnabled() ) {
+            realmWarningView.setVisibility(View.GONE);
+        } else {
+            realmWarningView.setVisibility(View.VISIBLE);
+        }
     }
 }
