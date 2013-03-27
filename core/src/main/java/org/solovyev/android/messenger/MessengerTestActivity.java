@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 
@@ -43,17 +44,21 @@ public class MessengerTestActivity extends RoboSherlockActivity {
             @Override
             public void run() {
                 for (Realm realm : realmService.getRealms()) {
-                    final User user = realm.getRealmUserService().getUserById("se.solovyev@gmail.com");
-                    Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
-                        @Override
-                        public void run() {
-                            if (user == null) {
-                                console.setText("null");
-                            } else {
-                                console.setText(user.getDisplayName());
+                    try {
+                        final User user = realm.getRealmUserService().getUserById("se.solovyev@gmail.com");
+                        Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
+                            @Override
+                            public void run() {
+                                if (user == null) {
+                                    console.setText("null");
+                                } else {
+                                    console.setText(user.getDisplayName());
+                                }
                             }
-                        }
-                    });
+                        });
+                    } catch (RealmException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

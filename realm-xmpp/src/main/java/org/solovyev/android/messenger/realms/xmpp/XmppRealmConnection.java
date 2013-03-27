@@ -8,7 +8,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,14 +40,14 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     }
 
     @Override
-    protected void doWork() {
+    protected void doWork() throws RealmConnectionException {
         // Try to create connection (if not exists)
         if (this.connection == null) {
             tryToConnect(0);
         }
     }
 
-    private synchronized void tryToConnect(int connectionAttempt) {
+    private synchronized void tryToConnect(int connectionAttempt) throws RealmConnectionException {
         if (this.connection == null) {
             final Connection connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
 
@@ -60,7 +60,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
                 if (connectionAttempt < CONNECTION_RETRIES) {
                     tryToConnect(connectionAttempt + 1);
                 } else {
-                    stop();
+                    throw new RealmConnectionException("Unable to connect!");
                 }
             }
         }
@@ -104,7 +104,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
     }
 
     @Nonnull
-    private Connection tryGetConnection() throws XMPPException {
+    private Connection tryGetConnection() throws XMPPException, RealmConnectionException {
         if (connection != null) {
             prepareConnection(connection, getRealm());
             return connection;
@@ -113,13 +113,13 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
             if (connection != null) {
                 return connection;
             } else {
-                throw new RealmIsNotConnectedException();
+                throw new RealmConnectionException();
             }
         }
     }
 
     @Override
-    public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException {
+    public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException {
         final Connection connection = tryGetConnection();
         synchronized (connection) {
             return callable.call(connection);

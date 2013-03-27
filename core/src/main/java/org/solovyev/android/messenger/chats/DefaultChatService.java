@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -23,7 +24,10 @@ import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.EntityMapEntryMatcher;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -162,7 +166,7 @@ public class DefaultChatService implements ChatService {
     }
 
     @Nonnull
-    private Chat newPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) {
+    private Chat newPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws RealmException {
         final Realm realm = getRealmByEntity(user1);
 
         Chat result;
@@ -202,7 +206,7 @@ public class DefaultChatService implements ChatService {
      * @return prepared chat
      */
     @Nonnull
-    private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity user1, @Nonnull Entity user2) {
+    private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity user1, @Nonnull Entity user2) throws UnsupportedRealmException {
         final Realm realm = getRealmByEntity(user1);
         final Entity chatEntity = getPrivateChatId(user1, user2);
 
@@ -220,7 +224,7 @@ public class DefaultChatService implements ChatService {
     }
 
     @Nonnull
-    private ApiChat prepareChat(@Nonnull ApiChat apiChat) {
+    private ApiChat prepareChat(@Nonnull ApiChat apiChat) throws UnsupportedRealmException {
         if (apiChat.getChat().isPrivate()) {
             final Realm realm = realmService.getRealmById(apiChat.getChat().getEntity().getRealmId());
             final User user = realm.getUser();
@@ -257,7 +261,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) {
+    public ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws RealmException {
         final MergeDaoResult<ApiChat, String> result = mergeUserChats(user, Arrays.asList(chat));
         if ( result.getAddedObjects().size() > 0 ) {
             return result.getAddedObjects().get(0);
@@ -317,15 +321,24 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) {
+    public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) throws RealmException {
         synchronized (lock) {
-            final List<ApiChat> preparedChats = Lists.transform(chats, new Function<ApiChat, ApiChat>() {
-                @Override
-                public ApiChat apply(@Nullable ApiChat chat) {
-                    assert chat != null;
-                    return prepareChat(chat);
-                }
-            });
+            final List<ApiChat> preparedChats;
+            try {
+                preparedChats = Lists.transform(chats, new Function<ApiChat, ApiChat>() {
+                    @Override
+                    public ApiChat apply(@Nullable ApiChat chat) {
+                        assert chat != null;
+                        try {
+                            return prepareChat(chat);
+                        } catch (UnsupportedRealmException e) {
+                            throw new RealmRuntimeException(e);
+                        }
+                    }
+                });
+            } catch (RealmRuntimeException e) {
+                throw new RealmException(e);
+            }
             return chatDao.mergeUserChats(user.getEntityId(), preparedChats);
         }
     }
@@ -356,13 +369,13 @@ public class DefaultChatService implements ChatService {
 
 
     @Nonnull
-    private Realm getRealmByEntity(@Nonnull Entity entity) {
+    private Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
         return realmService.getRealmById(entity.getRealmId());
     }
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncChatMessages(@Nonnull Entity user) {
+    public List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws RealmException {
         final List<ChatMessage> messages = getRealmByEntity(user).getRealmChatService().getChatMessages(user.getRealmEntityId());
 
         final Multimap<Chat, ChatMessage> messagesByChats = ArrayListMultimap.create();
@@ -386,7 +399,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) {
+    public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws RealmException {
         final Realm realm = getRealmByEntity(chat);
         final RealmChatService realmChatService = realm.getRealmChatService();
 
@@ -457,7 +470,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) {
+    public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException {
         final Integer offset = getChatMessageService().getChatMessages(chat).size();
 
         final List<ChatMessage> messages = getRealmByEntity(user).getRealmChatService().getOlderChatMessagesForChat(chat.getRealmEntityId(), user.getRealmEntityId(), offset);
@@ -467,7 +480,7 @@ public class DefaultChatService implements ChatService {
     }
 
     @Override
-    public void syncChat(@Nonnull Entity chat, @Nonnull Entity user) {
+    public void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException {
         // todo serso: check if OK
         syncNewerChatMessagesForChat(chat);
     }
@@ -492,20 +505,25 @@ public class DefaultChatService implements ChatService {
 
     @Override
     public void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView) {
-        final Realm realm = getRealmByEntity(chat.getEntity());
+        try {
+            final Realm realm = getRealmByEntity(chat.getEntity());
 
-        final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity());
+            final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity());
 
-        if (!otherParticipants.isEmpty()) {
-            if (otherParticipants.size() == 1) {
-                final User participant = otherParticipants.get(0);
-                userService.setUserIcon(participant, imageView);
+            if (!otherParticipants.isEmpty()) {
+                if (otherParticipants.size() == 1) {
+                    final User participant = otherParticipants.get(0);
+                    userService.setUserIcon(participant, imageView);
+                } else {
+                    userService.setUsersIcon(realm, otherParticipants, imageView);
+                }
             } else {
-                userService.setUsersIcon(realm, otherParticipants, imageView);
+                // just in case...
+                imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_app_icon));
             }
-        } else {
-            // just in case...
+        } catch (UnsupportedRealmException e) {
             imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_app_icon));
+            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
         }
     }
 
@@ -517,7 +535,7 @@ public class DefaultChatService implements ChatService {
         if ( realmEntityId1.equals(realmEntityId2) ) {
             Log.e(TAG, "Same user in private chat " + Strings.fromStackTrace(Thread.currentThread().getStackTrace()));
         }
-        return getRealmByEntity(user1).newChatEntity(realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
+        return EntityImpl.newInstance(user1.getRealmId(), realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
     }
 
     @Nonnull
@@ -527,7 +545,7 @@ public class DefaultChatService implements ChatService {
 
     @Nonnull
     @Override
-    public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) {
+    public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) throws RealmException {
         final Entity chat = this.getPrivateChatId(user1, user2);
 
         Chat result = this.getChatById(chat);

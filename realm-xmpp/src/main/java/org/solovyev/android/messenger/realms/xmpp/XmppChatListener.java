@@ -7,6 +7,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmException;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -26,8 +27,12 @@ final class XmppChatListener implements ChatManagerListener {
 
         if (!createdLocally) {
             ApiChat newChat = XmppRealm.toApiChat(chat, Collections.<Message>emptyList(), realm);
-            newChat = getChatService().saveChat(realm.getUser().getEntity(), newChat);
-            chat.addMessageListener(new XmppMessageListener(realm, newChat.getChat().getEntity()));
+            try {
+                newChat = getChatService().saveChat(realm.getUser().getEntity(), newChat);
+                chat.addMessageListener(new XmppMessageListener(realm, newChat.getChat().getEntity()));
+            } catch (RealmException e) {
+                MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+            }
         }
     }
 

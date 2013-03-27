@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,16 +15,16 @@ import java.util.List;
 public interface RealmChatService {
 
     @Nonnull
-    List<ChatMessage> getChatMessages(@Nonnull String realmUserId);
+    List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws RealmConnectionException;
 
     @Nonnull
-    List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId);
+    List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) throws RealmConnectionException;
 
     @Nonnull
-    List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset);
+    List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) throws RealmConnectionException;
 
     @Nonnull
-    List<ApiChat> getUserChats(@Nonnull String realmUserId);
+    List<ApiChat> getUserChats(@Nonnull String realmUserId) throws RealmConnectionException;
 
     /**
      * Method sends message to the realm and, if possible, returns message is. If message id could not be returned
@@ -34,8 +35,8 @@ public interface RealmChatService {
      * @return message id of send message if possible
      */
     @Nullable
-    String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message);
+    String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws RealmConnectionException;
 
     @Nonnull
-    Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2);
+    Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) throws RealmConnectionException;
 }

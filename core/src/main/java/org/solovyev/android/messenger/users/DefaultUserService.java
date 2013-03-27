@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.ImageView;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -10,13 +11,21 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.MessengerExceptionHandler;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.EntityMapEntryMatcher;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -26,7 +35,11 @@ import org.solovyev.common.listeners.Listeners;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
@@ -59,6 +72,10 @@ public class DefaultUserService implements UserService {
     @Inject
     @Nonnull
     private Application context;
+
+    @Inject
+    @Nonnull
+    private MessengerExceptionHandler exceptionHandler;
 
     @Inject
     @Nonnull
@@ -136,8 +153,13 @@ public class DefaultUserService implements UserService {
 
             if (result == null) {
                 if (tryFindInRealm) {
-                    final Realm realm = getRealmByUser(user);
-                    result = realm.getRealmUserService().getUserById(user.getRealmEntityId());
+                    try {
+                        final Realm realm = getRealmByEntity(user);
+                        result = realm.getRealmUserService().getUserById(user.getRealmEntityId());
+                    } catch (RealmException e) {
+                        // unable to load from realm => just return empty user
+                        Log.e(TAG, e.getMessage(), e);
+                    }
                 }
             }
 
@@ -159,8 +181,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Nonnull
-    private Realm getRealmByUser(@Nonnull Entity user) {
-        return realmService.getRealmById(user.getRealmId());
+    private Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+        return realmService.getRealmById(entity.getRealmId());
     }
 
     private void insertUser(@Nonnull User user) {
@@ -301,8 +323,8 @@ public class DefaultUserService implements UserService {
     */
 
     @Override
-    public void syncUser(@Nonnull Entity userEntity) {
-        User user = getRealmByUser(userEntity).getRealmUserService().getUserById(userEntity.getRealmEntityId());
+    public void syncUser(@Nonnull Entity userEntity) throws RealmException {
+        User user = getRealmByEntity(userEntity).getRealmUserService().getUserById(userEntity.getRealmEntityId());
         if (user != null) {
             user = user.updatePropertiesSyncDate();
             updateUser(user, true);
@@ -311,8 +333,8 @@ public class DefaultUserService implements UserService {
 
     @Override
     @Nonnull
-    public List<User> syncUserContacts(@Nonnull Entity user) {
-        final List<User> contacts = getRealmByUser(user).getRealmUserService().getUserContacts(user.getRealmEntityId());
+    public List<User> syncUserContacts(@Nonnull Entity user) throws RealmException {
+        final List<User> contacts = getRealmByEntity(user).getRealmUserService().getUserContacts(user.getRealmEntityId());
         synchronized (userContactsCache) {
             userContactsCache.put(user, contacts);
         }
@@ -360,8 +382,8 @@ public class DefaultUserService implements UserService {
 
     @Nonnull
     @Override
-    public List<Chat> syncUserChats(@Nonnull Entity user) {
-        final List<ApiChat> apiChats = getRealmByUser(user).getRealmChatService().getUserChats(user.getRealmEntityId());
+    public List<Chat> syncUserChats(@Nonnull Entity user) throws RealmException {
+        final List<ApiChat> apiChats = getRealmByEntity(user).getRealmChatService().getUserChats(user.getRealmEntityId());
 
         final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
             @Override
@@ -377,7 +399,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends ApiChat> apiChats) {
+    public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends ApiChat> apiChats) throws RealmException {
         User user = this.getUserById(userEntity);
 
         final MergeDaoResult<ApiChat, String> result;
@@ -432,8 +454,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void syncUserContactsStatuses(@Nonnull Entity userEntity) {
-        final List<User> contacts = getRealmByUser(userEntity).getRealmUserService().checkOnlineUsers(getUserContacts(userEntity));
+    public void syncUserContactsStatuses(@Nonnull Entity userEntity) throws RealmException {
+        final List<User> contacts = getRealmByEntity(userEntity).getRealmUserService().checkOnlineUsers(getUserContacts(userEntity));
 
         final User user = getUserById(userEntity);
 
@@ -456,7 +478,7 @@ public class DefaultUserService implements UserService {
     */
 
     @Override
-    public void fetchUserAndContactsIcons(@Nonnull User user) {
+    public void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedRealmException {
         final RealmIconService realmIconService = getRealmIconServiceByUser(user);
 
         // fetch self icon
@@ -472,13 +494,18 @@ public class DefaultUserService implements UserService {
     }
 
     @Nonnull
-    private RealmIconService getRealmIconServiceByUser(@Nonnull User user) {
-        return getRealmByUser(user.getEntity()).getRealmDef().getRealmIconService();
+    private RealmIconService getRealmIconServiceByUser(@Nonnull User user) throws UnsupportedRealmException {
+        return getRealmByEntity(user.getEntity()).getRealmDef().getRealmIconService();
     }
 
     @Override
     public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-        getRealmIconServiceByUser(user).setUserIcon(user, imageView);
+        try {
+            getRealmIconServiceByUser(user).setUserIcon(user, imageView);
+        } catch (UnsupportedRealmException e) {
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
+            exceptionHandler.handleException(e);
+        }
     }
 
     @Override
@@ -487,8 +514,13 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-        getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
+    public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView){
+        try {
+            getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
+        } catch (UnsupportedRealmException e) {
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
+            exceptionHandler.handleException(e);
+        }
     }
 
     /*
@@ -517,8 +549,12 @@ public class DefaultUserService implements UserService {
 
     @Override
     public int getUnreadMessagesCount(@Nonnull Entity contact) {
-        final Chat chat = chatService.getPrivateChat(getRealmByUser(contact).getUser().getEntity(), contact);
-        return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
+        try {
+            final Chat chat = chatService.getPrivateChat(getRealmByEntity(contact).getUser().getEntity(), contact);
+            return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
+        } catch (RealmException e) {
+            return 0;
+        }
     }
 
     private final class UserEventListener extends AbstractJEventListener<UserEvent> {

@@ -11,6 +11,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 import roboguice.RoboGuice;
@@ -27,6 +28,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
     @Nonnull
     private static final String TAG_PREFIX = "contact_list_item_";
+
     private ContactListItem(@Nonnull UiContact contact) {
         super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
     }
@@ -125,8 +127,13 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
             accountName.setVisibility(View.GONE);
         } else {
             accountName.setVisibility(View.VISIBLE);
-            final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
-            accountName.setText("[" + realm.getUser().getDisplayName() + "]");
+            try {
+                final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
+                accountName.setText("[" + realm.getUser().getDisplayName() + "]");
+            } catch (UnsupportedRealmException e) {
+                // cannot do anything => just handle exception
+                MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+            }
         }
 
         final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);

@@ -4,7 +4,6 @@ import android.content.Context;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.security.RealmAuthService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
 
@@ -119,12 +118,6 @@ public abstract class AbstractRealm<C extends RealmConfiguration> extends JObjec
     @Override
     public Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId) {
         return newRealmEntity(realmMessageId, entityId);
-    }
-
-    @Nonnull
-    @Override
-    public RealmAuthService getRealmAuthService() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Nonnull

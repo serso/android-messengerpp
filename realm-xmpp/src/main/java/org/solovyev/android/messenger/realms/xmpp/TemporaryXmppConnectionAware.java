@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +31,7 @@ class TemporaryXmppConnectionAware implements XmppConnectionAware {
     }
 
     @Override
-    public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException {
+    public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException {
         final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
         XmppRealmConnection.checkConnectionStatus(connection, realm);
         return callable.call(connection);

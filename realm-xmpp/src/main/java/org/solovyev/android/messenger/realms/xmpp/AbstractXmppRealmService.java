@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import org.jivesoftware.smack.XMPPException;
-import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
 
@@ -28,11 +28,11 @@ public abstract class AbstractXmppRealmService {
         return realm;
     }
 
-    protected <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) {
+    protected <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws RealmConnectionException {
         try {
             return connectionAware.doOnConnection(callable);
         } catch (XMPPException e) {
-            throw new RealmIsNotConnectedException(e);
+            throw new RealmConnectionException(e);
         }
     }
 }

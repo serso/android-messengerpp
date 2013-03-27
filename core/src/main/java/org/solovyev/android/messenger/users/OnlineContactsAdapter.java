@@ -23,7 +23,6 @@ public class OnlineContactsAdapter extends AbstractContactsAdapter {
         if (event.isOfType(UserEventType.contact_offline)) {
             final User offlineContact = event.getDataAsUser();
             removeListItem(offlineContact);
-
         }
 
         if (event.isOfType(UserEventType.contact_online)) {

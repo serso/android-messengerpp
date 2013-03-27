@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -27,7 +29,7 @@ public abstract class LongPollRealmConnection extends AbstractRealmConnection<Re
     }
 
     @Override
-    public void doWork() {
+    public void doWork() throws RealmConnectionException {
         // first loop guarantees that if something gone wrong we will initiate new long polling session
         while (!isStopped()) {
             try {
@@ -51,7 +53,9 @@ public abstract class LongPollRealmConnection extends AbstractRealmConnection<Re
                 }
 
             } catch (RuntimeException e) {
-                Log.e(TAG, e.getMessage(), e);
+                throw new RealmConnectionException(e);
+            } catch (RealmException e) {
+                throw new RealmConnectionException(e);
             }
         }
     }

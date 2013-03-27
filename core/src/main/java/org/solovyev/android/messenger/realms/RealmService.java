@@ -1,12 +1,15 @@
 package org.solovyev.android.messenger.realms;
 
+import android.content.Context;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * User: serso
@@ -93,4 +96,6 @@ public interface RealmService {
     void removeListener(@Nonnull JEventListener<RealmEvent> listener);
 
     void stopAllRealmConnections();
+
+    List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
 }

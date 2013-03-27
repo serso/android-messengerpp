@@ -1,11 +1,13 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -40,7 +42,11 @@ public class VkLongPollResult implements LongPollResult {
     @Override
     public void doUpdates(@Nonnull User user, @Nonnull Realm realm) {
         for (LongPollUpdate update : updates) {
-            update.doUpdate(user, realm);
+            try {
+                update.doUpdate(user, realm);
+            } catch (RealmException e) {
+                MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+            }
         }
     }
 }

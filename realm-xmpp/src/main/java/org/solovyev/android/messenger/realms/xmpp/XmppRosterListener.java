@@ -8,6 +8,8 @@ import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -38,17 +40,28 @@ class XmppRosterListener implements RosterListener {
     public void entriesAdded(@Nonnull Collection<String> contactIds) {
         Log.d(TAG, "entriesAdded() called");
         final RealmUserService realmUserService = realm.getRealmUserService();
-        final List<User> contacts = Lists.newArrayList(Iterables.transform(contactIds, new Function<String, User>() {
-            @Override
-            public User apply(@Nullable String contactId) {
-                assert contactId != null;
-                // we need to request new user entity because user id should be prepared properly
-                final Entity entity = realm.newUserEntity(contactId);
-                return realmUserService.getUserById(entity.getRealmEntityId());
-            }
-        }));
-        // we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed
-        getUserService().mergeUserContacts(realm.getUser().getEntity(), contacts, false, true);
+        final List<User> contacts;
+        try {
+            contacts = Lists.newArrayList(Iterables.transform(contactIds, new Function<String, User>() {
+                @Override
+                public User apply(@Nullable String contactId) {
+                    assert contactId != null;
+                    // we need to request new user entity because user id should be prepared properly
+                    final Entity entity = realm.newUserEntity(contactId);
+                    try {
+                        return realmUserService.getUserById(entity.getRealmEntityId());
+                    } catch (RealmException e) {
+                        throw new RealmRuntimeException(e);
+                    }
+                }
+            }));
+
+            // we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed
+            getUserService().mergeUserContacts(realm.getUser().getEntity(), contacts, false, true);
+
+        } catch (RealmRuntimeException e) {
+            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(new RealmException(e));
+        }
     }
 
     @Override

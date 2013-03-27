@@ -17,6 +17,7 @@ import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
@@ -306,7 +307,7 @@ public class DefaultRealmService implements RealmService {
 
     @Nonnull
     @Override
-    public Realm getRealmByEntity(@Nonnull Entity entity) {
+    public Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
         return getRealmById(entity.getRealmId());
     }
 
@@ -353,6 +354,15 @@ public class DefaultRealmService implements RealmService {
     public void stopAllRealmConnections() {
         for (Realm realm : getRealms()) {
             listeners.fireEvent(RealmEventType.stop.newEvent(realm, null));
+        }
+    }
+
+    @Override
+    public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
+        try {
+            return getRealmById(user.getEntity().getRealmId()).getRealmDef().getUserProperties(user, context);
+        } catch (UnsupportedRealmException e) {
+            return Collections.emptyList();
         }
     }
 }

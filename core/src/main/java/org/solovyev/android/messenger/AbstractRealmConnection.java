@@ -2,6 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,12 +50,14 @@ public abstract class AbstractRealmConnection<R extends Realm> implements RealmC
         stopped.set(false);
         try {
             doWork();
+        } catch (RealmConnectionException e) {
+            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
         } finally {
             stop();
         }
     }
 
-    protected abstract void doWork();
+    protected abstract void doWork() throws RealmConnectionException;
     protected abstract void stopWork();
 
     @Override

@@ -30,7 +30,6 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactLi
     protected List<UiContact> getElements(@Nonnull Context context) {
         final List<UiContact> result = new ArrayList<UiContact>();
 
-
         final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
         final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 

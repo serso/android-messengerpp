@@ -11,7 +11,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -42,19 +42,19 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
 
     @Nullable
     @Override
-    public User getUserById(@Nonnull final String realmUserId) {
+    public User getUserById(@Nonnull final String realmUserId) throws RealmConnectionException {
         return doOnConnection(new UserLoader(getRealm(), realmUserId));
     }
 
     @Nonnull
     @Override
-    public List<User> getUserContacts(@Nonnull final String realmUserId) {
+    public List<User> getUserContacts(@Nonnull final String realmUserId) throws RealmConnectionException {
         return doOnConnection(new UserContactsLoader(getRealm(), realmUserId));
     }
 
     @Nonnull
     @Override
-    public List<User> checkOnlineUsers(@Nonnull final List<User> users) {
+    public List<User> checkOnlineUsers(@Nonnull final List<User> users) throws RealmConnectionException {
         return doOnConnection(new OnlineUsersChecker(getRealm(), users));
     }
 
@@ -80,7 +80,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         }
 
         @Override
-        public User call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
+        public User call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
             final User result;
 
             if (realm.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
@@ -184,7 +184,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         }
 
         @Override
-        public List<User> call(@Nonnull final Connection connection) throws RealmIsNotConnectedException, XMPPException {
+        public List<User> call(@Nonnull final Connection connection) throws RealmConnectionException, XMPPException {
 
             if (realm.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
                 // realm user => load contacts through the roster
@@ -218,7 +218,7 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
         }
 
         @Override
-        public List<User> call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
+        public List<User> call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
             final List<User> result = new ArrayList<User>();
 
             final Roster roster = connection.getRoster();

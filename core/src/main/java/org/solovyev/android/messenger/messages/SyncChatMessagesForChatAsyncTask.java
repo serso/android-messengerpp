@@ -2,13 +2,14 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -34,11 +35,16 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
 
         final Context context = getContext();
         if (context != null) {
-            if (!input.older) {
-                MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat);
-            } else {
-                MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
+            try {
+                if (!input.older) {
+                    MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat);
+                } else {
+                    MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
+                }
+            } catch (RealmException e) {
+                throwException(e);
             }
+
         }
 
         return input;

@@ -14,7 +14,9 @@ import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -96,7 +98,7 @@ public class DefaultChatMessageService implements ChatMessageService {
     }
 
     @Override
-    public void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView) {
+    public void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView){
         final Entity author = message.getAuthor();
         userService.setUserIcon(userService.getUserById(author), imageView);
     }
@@ -104,7 +106,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
     @Nullable
     @Override
-    public ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
+    public ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws RealmException {
         final Realm realm = getRealmByUser(user);
         final RealmChatService realmChatService = realm.getRealmChatService();
 
@@ -151,7 +153,7 @@ public class DefaultChatMessageService implements ChatMessageService {
     }
 
     @Nonnull
-    private Realm getRealmByUser(@Nonnull Entity userEntity) {
+    private Realm getRealmByUser(@Nonnull Entity userEntity) throws UnsupportedRealmException {
         return realmService.getRealmById(userEntity.getRealmId());
     }
 }

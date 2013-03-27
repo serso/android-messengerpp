@@ -5,6 +5,8 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
@@ -21,6 +23,8 @@ import java.util.List;
  */
 @ThreadSafe
 public interface UserService {
+
+    static final String TAG = "UserService";
 
     // initial initialization: will be called once on application start
     void init();
@@ -116,7 +120,7 @@ public interface UserService {
      * Method synchronizes local user data with remote user data
      * @param user user for whom synchronization must be done
      */
-    void syncUser(@Nonnull Entity user);
+    void syncUser(@Nonnull Entity user) throws RealmException;
 
     /**
      * Method synchronizes local users contacts with remote user contacts
@@ -127,7 +131,7 @@ public interface UserService {
      * @return updated list of user contacts
      */
     @Nonnull
-    List<User> syncUserContacts(@Nonnull Entity user);
+    List<User> syncUserContacts(@Nonnull Entity user) throws RealmException;
 
     /**
      * Method synchronizes local users chats with remote user chats
@@ -138,9 +142,9 @@ public interface UserService {
      * @return updated list of chats in which user is participated
      */
     @Nonnull
-    List<Chat> syncUserChats(@Nonnull Entity user);
+    List<Chat> syncUserChats(@Nonnull Entity user) throws RealmException;
 
-    void mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> apiChats);
+    void mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> apiChats) throws RealmException;
 
     void mergeUserContacts(@Nonnull Entity user, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
 
@@ -149,7 +153,7 @@ public interface UserService {
      *
      * @param user user whose contacts statuses should be synchronized
      */
-    void syncUserContactsStatuses(@Nonnull Entity user);
+    void syncUserContactsStatuses(@Nonnull Entity user) throws RealmException;
 
     /*
     **********************************************************************
@@ -180,7 +184,7 @@ public interface UserService {
      * Method fetches user icons for specified <var>user</var> and for ALL user contacts
      * @param user for which icon fetching must be done
      */
-    void fetchUserAndContactsIcons(@Nonnull User user);
+    void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedRealmException;
 
     /*
     **********************************************************************

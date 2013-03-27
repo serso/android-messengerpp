@@ -6,6 +6,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -34,16 +35,20 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
     protected List<ChatMessage> doWork(@Nonnull List<Input> inputs) {
         final List<ChatMessage> result = new ArrayList<ChatMessage>(inputs.size());
 
-        for (Input input : inputs) {
-            final Context context = getContext();
-            if (context != null) {
-                assert chat.equals(input.chat);
+        try {
+            for (Input input : inputs) {
+                final Context context = getContext();
+                if (context != null) {
+                    assert chat.equals(input.chat);
 
-                final ChatMessage message = input.sendChatMessage();
-                if (message != null) {
-                    result.add(message);
+                    final ChatMessage message = input.sendChatMessage();
+                    if (message != null) {
+                        result.add(message);
+                    }
                 }
             }
+        } catch (RealmException e) {
+            throwException(e);
         }
 
         return result;
@@ -115,8 +120,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
         }
 
         @Nullable
-        public ChatMessage sendChatMessage() {
-
+        public ChatMessage sendChatMessage() throws RealmException {
             final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
             liteChatMessage.setAuthor(author.getEntity());
             liteChatMessage.setBody(message);

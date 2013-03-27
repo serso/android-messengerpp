@@ -1,14 +1,16 @@
 package org.solovyev.android.messenger.users;
 
-import android.os.AsyncTask;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.RealmException;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * User: serso
@@ -31,23 +33,27 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 
         if (type == ContactGuiEventType.contact_clicked) {
 
-            new AsyncTask<Void, Void, Chat>() {
+            new MessengerAsyncTask<Void, Void, Chat>() {
 
                 @Override
-                protected Chat doInBackground(Void... params) {
+                protected Chat doWork(@Nonnull List<Void> params) {
+                    Chat result = null;
+
                     try {
                         final User user = activity.getRealmService().getRealmById(contact.getEntity().getRealmId()).getUser();
-                        return MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
-                    } catch (UnsupportedRealmException e) {
-                        throw new AssertionError(e);
+                        result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
+                    } catch (RealmException e) {
+                        throwException(e);
                     }
+
+                    return result;
                 }
 
                 @Override
-                protected void onPostExecute(@Nonnull Chat chat) {
-                    super.onPostExecute(chat);
-
-                    activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
+                protected void onSuccessPostExecute(@Nullable Chat chat) {
+                    if (chat != null) {
+                        activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
+                    }
                 }
 
             }.execute(null, null);

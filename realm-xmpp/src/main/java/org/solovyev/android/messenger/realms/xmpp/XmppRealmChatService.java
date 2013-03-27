@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmIsNotConnectedException;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,10 +31,10 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
 
     @Nonnull
     @Override
-    public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) {
+    public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws RealmConnectionException {
         return doOnConnection(new XmppConnectedCallable<List<ChatMessage>>() {
             @Override
-            public List<ChatMessage> call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
+            public List<ChatMessage> call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
                 final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
                 try {
                     if (offlineManager.supportsFlexibleRetrieval()) {
@@ -69,16 +69,16 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
 
     @Nullable
     @Override
-    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws RealmConnectionException {
         return doOnConnection(new MessengerSender(chat, message, getRealm()));
     }
 
     @Nonnull
     @Override
-    public Chat newPrivateChat(@Nonnull final Entity realmChat, @Nonnull String realmUserId1, @Nonnull final String realmUserId2) {
+    public Chat newPrivateChat(@Nonnull final Entity realmChat, @Nonnull String realmUserId1, @Nonnull final String realmUserId2) throws RealmConnectionException {
         return doOnConnection(new XmppConnectedCallable<Chat>() {
             @Override
-            public Chat call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
+            public Chat call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
                 org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getRealm(), realmChat));
                 return XmppRealm.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
             }
@@ -103,7 +103,7 @@ class XmppRealmChatService extends AbstractXmppRealmService implements RealmChat
         }
 
         @Override
-        public String call(@Nonnull Connection connection) throws RealmIsNotConnectedException, XMPPException {
+        public String call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
             final ChatManager chatManager = connection.getChatManager();
 
             final Entity realmChat = chat.getEntity();
