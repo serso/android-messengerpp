@@ -157,11 +157,11 @@
         <item name="android:textColor">@color/mpp_text</item>
         <item name="android:textSize">15sp</item>
 
-        <item name="android:lines">1</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:scrollHorizontally">true</item>
+        <item name="android:lines">2</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:scrollHorizontally">false</item>
 
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingBottom">15dp</item>
@@ -198,25 +198,11 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-
-    <style name="mpp_form_buttons_vertical">
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="mpp_form_buttons">
         <item name="android:orientation">horizontal</item>
         <item name="android:baselineAligned">false</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="mpp_form_button_vertical" parent="mpp_button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:minWidth">120dp</item>
-        <item name="android:layout_height">0dp</item>
     </style>
 
     <style name="mpp_form_button" parent="mpp_button">
