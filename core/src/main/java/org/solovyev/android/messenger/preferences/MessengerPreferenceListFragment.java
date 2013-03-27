@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.google.inject.Inject;
+import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import roboguice.RoboGuice;
@@ -19,7 +20,7 @@ import javax.annotation.Nonnull;
  * Date: 3/17/13
  * Time: 8:34 PM
  */
-public final class MessengerPreferenceListFragment extends PreferenceListFragment {
+public final class MessengerPreferenceListFragment extends PreferenceListFragment implements DetachableFragment {
 
     /*
     **********************************************************************

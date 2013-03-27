@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -29,6 +30,7 @@ import org.solovyev.android.Threads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.FragmentGuiEventType;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -271,6 +273,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
         final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
         params.gravity = Gravity.CENTER_VERTICAL;
         root.addView(listViewParent, params);
+
+        // some fragments may change the title and icon of action bar => we need to reset it every time new fragment is shown
+        final ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setTitle(R.string.mpp_app_name);
+        actionBar.setIcon(R.drawable.mpp_app_icon);
 
         multiPaneManager.onCreatePane(getActivity(), container, root);
 
