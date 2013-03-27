@@ -80,6 +80,10 @@ public class MessengerApplication extends Application implements MessengerServic
 
     @Inject
     @Nonnull
+    private NotificationService notificationService;
+
+    @Inject
+    @Nonnull
     private NetworkStateService networkStateService;
 
     public MessengerApplication() {
@@ -136,6 +140,18 @@ public class MessengerApplication extends Application implements MessengerServic
     @Override
     public MessengerExceptionHandler getExceptionHandler() {
         return exceptionHandler;
+    }
+
+    @Nonnull
+    @Override
+    public UnreadMessagesCounter getUnreadMessagesCounter() {
+        return unreadMessagesCounter;
+    }
+
+    @Nonnull
+    @Override
+    public NotificationService getNotificationService() {
+        return notificationService;
     }
 
     @Override

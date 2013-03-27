@@ -2,6 +2,7 @@ package org.solovyev.android.messenger;
 
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
@@ -36,4 +37,10 @@ public interface MessengerServiceLocator {
 
     @Nonnull
     MessengerExceptionHandler getExceptionHandler();
+
+    @Nonnull
+    UnreadMessagesCounter getUnreadMessagesCounter();
+
+    @Nonnull
+    NotificationService getNotificationService();
 }

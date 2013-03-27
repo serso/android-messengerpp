@@ -26,6 +26,7 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.msg.Message;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -84,6 +85,10 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Inject
     @Nonnull
     private UnreadMessagesCounter unreadMessagesCounter;
+
+    @Inject
+    @Nonnull
+    private NotificationService notificationService;
 
     @Inject
     @Nonnull
@@ -306,8 +311,20 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         boolean result = this.menu.onPrepareOptionsMenu(this, menu);
 
         onUnreadMessagesCountChanged(menu, unreadMessagesCounter.getUnreadMessagesCount());
+        onNewNotificationsAdded(menu, notificationService.existNotifications());
 
         return result;
+    }
+
+    private void onNewNotificationsAdded(@Nonnull Menu menu, boolean existNotifications) {
+        final MenuItem menuItem = menu.findItem(R.id.mpp_menu_notifications);
+        if (existNotifications) {
+            menuItem.setVisible(true);
+            menuItem.setEnabled(true);
+        } else {
+            menuItem.setVisible(false);
+            menuItem.setEnabled(false);
+        }
     }
 
     private void onUnreadMessagesCountChanged(@Nonnull Menu menu, int unreadMessagesCount) {
@@ -326,8 +343,9 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     public boolean onCreateOptionsMenu(final Menu menu) {
         if ( this.menu == null ) {
             final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>(1);
+            menuItems.add(new NotificationsMenuItem());
+            menuItems.add(new UnreadMessagesCounterMenuItem());
             menuItems.add(new MenuItemAppExitMenuItem(this));
-            menuItems.add(new UnreadMessagesCounterMenuItem(this));
 
             this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
         }
@@ -390,11 +408,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     private static class UnreadMessagesCounterMenuItem implements IdentifiableMenuItem<MenuItem> {
 
-        @Nonnull
-        private final MessengerFragmentActivity activity;
-
-        private UnreadMessagesCounterMenuItem(@Nonnull MessengerFragmentActivity activity) {
-            this.activity = activity;
+        private UnreadMessagesCounterMenuItem() {
         }
 
         @Nonnull
@@ -405,13 +419,33 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
         @Override
         public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-            final Entity chatEntity = activity.getUnreadMessagesCounter().getUnreadChat();
+            final Entity chatEntity = MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadChat();
             if (chatEntity != null) {
-                final Chat chat = activity.getChatService().getChatById(chatEntity);
+                final Chat chat = MessengerApplication.getServiceLocator().getChatService().getChatById(chatEntity);
                 if (chat != null) {
                     final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
                     eventManager.fire(ChatGuiEventType.chat_open_requested.newEvent(chat));
                 }
+            }
+        }
+    }
+
+    private static class NotificationsMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+        private NotificationsMenuItem() {
+        }
+
+        @Nonnull
+        @Override
+        public Integer getItemId() {
+            return R.id.mpp_menu_notifications;
+        }
+
+        @Override
+        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+            final List<Message> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
+            if (notifications.isEmpty()) {
+                // todo serso: continue
             }
         }
     }
@@ -426,6 +460,9 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         public void onEvent(@Nonnull MessengerEvent event) {
             switch (event.getType()) {
                 case unread_messages_count_changed:
+                    invalidateOptionsMenu();
+                    break;
+                case notification_added:
                     invalidateOptionsMenu();
                     break;
             }

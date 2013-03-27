@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger;
 
+import org.solovyev.common.msg.Message;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -19,6 +21,13 @@ public enum MessengerEventType {
         @Override
         protected void checkData(@Nullable Object data) {
             assert data instanceof Integer;
+        }
+    },
+
+    notification_added {
+        @Override
+        protected void checkData(@Nullable Object data) {
+            assert data instanceof Message;
         }
     };
 

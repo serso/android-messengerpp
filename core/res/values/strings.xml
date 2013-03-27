@@ -83,6 +83,7 @@
     <string name="mpp_removing_realm_message">Wait a second while app is trying to remove account</string>
     <string name="mpp_disable">Disable</string>
     <string name="mpp_enable">Enable</string>
+    <string name="mpp_menu_notifications">Notifications</string>
 
     <plurals name="mpp_unread_messages_count_notification">
         <item quantity="one">There is one unread message.</item>

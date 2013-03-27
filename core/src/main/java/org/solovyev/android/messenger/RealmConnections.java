@@ -5,6 +5,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +57,15 @@ final class RealmConnections {
             @Override
             public void run() {
                 if (realmConnection.isStopped()) {
-                    realmConnection.start();
+                    try {
+                        realmConnection.start();
+                    } catch (RealmConnectionException e) {
+                        if ( !realmConnection.isStopped() ) {
+                            realmConnection.stop();
+                            // todo serso: try to reconnect
+                            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+                        }
+                    }
                 }
             }
         }, "Realm connection thread: " + realmConnection.getRealm().getId()).start();
@@ -86,7 +95,7 @@ final class RealmConnections {
         synchronized (this.realmConnections) {
             for (RealmConnection realmConnection : realmConnections) {
                 if (realm.equals(realmConnection.getRealm()) && realmConnection.isStopped()) {
-                    realmConnection.start();
+                    startRealmConnection(realmConnection);
                 }
             }
         }

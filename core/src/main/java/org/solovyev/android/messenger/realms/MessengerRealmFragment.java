@@ -10,7 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
+import org.solovyev.android.Activities;
 import org.solovyev.android.Threads;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
@@ -89,7 +91,12 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
         if (arguments != null) {
             final String realmId = arguments.getString(EXTRA_REALM_ID);
             if (realmId != null) {
-                realm = realmService.getRealmById(realmId);
+                try {
+                    realm = realmService.getRealmById(realmId);
+                } catch (UnsupportedRealmException e) {
+                    MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+                    Activities.restartActivity(getActivity());
+                }
             }
         }
 

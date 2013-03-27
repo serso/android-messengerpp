@@ -41,6 +41,7 @@ public class MessengerModule extends AbstractModule {
     protected void configure() {
         bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
         bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
+        bind(NotificationService.class).to(DefaultNotificationService.class);
         bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
         bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 

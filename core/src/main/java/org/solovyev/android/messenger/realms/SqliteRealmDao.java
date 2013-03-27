@@ -15,6 +15,7 @@ import org.solovyev.android.db.AndroidDbUtils;
 import org.solovyev.android.db.DbExec;
 import org.solovyev.android.db.DeleteAllRowsDbExec;
 import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
@@ -22,6 +23,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 @Singleton
 public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
@@ -56,7 +58,12 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     @Nonnull
     @Override
     public Collection<Realm> loadRealms() {
-        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
+        try {
+            return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
+        } catch (RealmRuntimeException e) {
+            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -72,7 +79,12 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     @Nonnull
     @Override
     public Collection<Realm> loadRealmsInState(@Nonnull RealmState state) {
-        return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
+        try {
+            return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
+        } catch (RealmRuntimeException e) {
+            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+            return Collections.emptyList();
+        }
     }
 
     /*

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
+import org.solovyev.android.Activities;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -75,7 +77,12 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
         if (arguments != null) {
             final String realmId = arguments.getString(EXTRA_REALM_ID);
             if (realmId != null) {
-                editedRealm = (T) realmService.getRealmById(realmId);
+                try {
+                    editedRealm = (T) realmService.getRealmById(realmId);
+                } catch (UnsupportedRealmException e) {
+                    MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+                    Activities.restartActivity(getActivity());
+                }
             }
         }
     }

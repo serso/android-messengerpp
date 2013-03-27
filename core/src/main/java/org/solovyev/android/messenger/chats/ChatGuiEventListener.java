@@ -3,10 +3,12 @@ package org.solovyev.android.messenger.chats;
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.MessengerContactFragment;
 import org.solovyev.android.messenger.users.MessengerContactsInfoFragment;
@@ -113,8 +115,12 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                         @Override
                         public Fragment build() {
                             final List<User> participants = new ArrayList<User>();
-                            final Realm realm = activity.getRealmService().getRealmByEntity(chat.getEntity());
-                            participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity()));
+                            try {
+                                final Realm realm = activity.getRealmService().getRealmByEntity(chat.getEntity());
+                                participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity()));
+                            } catch (UnsupportedRealmException e) {
+                                MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+                            }
                             return new MessengerContactsInfoFragment(participants);
                         }
                     }, null, MessengerContactsInfoFragment.FRAGMENT_TAG);

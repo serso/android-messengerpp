@@ -46,12 +46,10 @@ public abstract class AbstractRealmConnection<R extends Realm> implements RealmC
     }
 
     @Override
-    public final void start() {
+    public final void start() throws RealmConnectionException {
         stopped.set(false);
         try {
             doWork();
-        } catch (RealmConnectionException e) {
-            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
         } finally {
             stop();
         }

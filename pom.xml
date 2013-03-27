@@ -132,6 +132,12 @@
 
             <dependency>
                 <groupId>org.solovyev</groupId>
+                <artifactId>common-msg</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.solovyev</groupId>
                 <artifactId>common-core-jodatime</artifactId>
                 <version>${common.version}</version>
             </dependency>

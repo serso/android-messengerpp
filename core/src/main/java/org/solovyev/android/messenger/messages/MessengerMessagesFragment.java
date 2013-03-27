@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import com.google.inject.Inject;
+import org.solovyev.android.Activities;
 import org.solovyev.android.Threads;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
@@ -28,6 +29,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
@@ -121,22 +123,28 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (chat != null) {
-            // chat is set => fragment was just created => we need to load realm
-            realm = realmService.getRealmById(chat.getEntity().getRealmId());
-        } else {
-            // first - restore state
-            final Entity realmChat = savedInstanceState.getParcelable(CHAT);
-            if (realmChat != null) {
-                chat = this.chatService.getChatById(realmChat);
-            }
-
-            if (chat == null) {
-                Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
-                getActivity().finish();
-            } else {
+        try {
+            if (chat != null) {
+                // chat is set => fragment was just created => we need to load realm
                 realm = realmService.getRealmById(chat.getEntity().getRealmId());
+            } else {
+                // first - restore state
+                final Entity realmChat = savedInstanceState.getParcelable(CHAT);
+                if (realmChat != null) {
+                    chat = this.chatService.getChatById(realmChat);
+                }
+
+                if (chat == null) {
+                    Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
+                    // todo serso: notify error
+                    Activities.restartActivity(getActivity());
+                } else {
+                    realm = realmService.getRealmById(chat.getEntity().getRealmId());
+                }
             }
+        } catch (UnsupportedRealmException e) {
+            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+            Activities.restartActivity(getActivity());
         }
     }
 

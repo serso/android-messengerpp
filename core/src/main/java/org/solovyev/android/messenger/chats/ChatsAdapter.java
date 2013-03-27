@@ -7,6 +7,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserEventType;
@@ -84,11 +85,15 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
             case changed:
             case last_message_changed:
             case unread_message_count_changed:
-                final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getEntity().getRealmId()).getUser();
-                final ChatListItem chatListItem = findInAllElements(user, eventChat);
-                if (chatListItem != null) {
-                    chatListItem.onEvent(event);
-                    notifyDataSetChanged();
+                try {
+                    final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getEntity().getRealmId()).getUser();
+                    final ChatListItem chatListItem = findInAllElements(user, eventChat);
+                    if (chatListItem != null) {
+                        chatListItem.onEvent(event);
+                        notifyDataSetChanged();
+                    }
+                } catch (UnsupportedRealmException e) {
+                    MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
                 }
                 break;
         }
