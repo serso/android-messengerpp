@@ -65,6 +65,34 @@
     </style>
 
     <!--
+        Button style in list item
+    -->
+
+    <style name="mpp_list_item_button" parent="mpp_list_item_block">
+        <!--mpp_button-->
+        <item name="android:gravity">top|left</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/mpp_text</item>
+        <item name="android:textSize">15sp</item>
+
+        <item name="android:lines">2</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:scrollHorizontally">false</item>
+
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingRight">25dp</item>
+        <item name="android:paddingTop">5dp</item>
+
+        <item name="android:background">@drawable/mpp_metro_button_gray</item>
+    </style>
+
+    <!--
         Style for highlighted text in list item
     -->
 

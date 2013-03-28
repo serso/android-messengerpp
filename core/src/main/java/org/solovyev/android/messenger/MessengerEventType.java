@@ -24,6 +24,13 @@ public enum MessengerEventType {
         }
     },
 
+    notification_removed {
+        @Override
+        protected void checkData(@Nullable Object data) {
+            assert data instanceof Message;
+        }
+    },
+
     notification_added {
         @Override
         protected void checkData(@Nullable Object data) {

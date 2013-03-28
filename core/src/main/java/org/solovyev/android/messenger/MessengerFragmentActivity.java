@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
-import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.menu.AMenuItem;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.chats.Chat;
@@ -21,12 +24,18 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
+import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.notifications.NotificationsViewBuilder;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
+import org.solovyev.android.view.APopupWindow;
+import org.solovyev.android.view.AbsoluteAPopupWindow;
+import org.solovyev.android.view.AnchorAPopupWindow;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.msg.Message;
+import org.solovyev.common.msg.MessageType;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -118,7 +127,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Nonnull
     private final MessengerMultiPaneFragmentManager multiPaneFragmentManager;
 
-    private ActivityMenu<Menu, MenuItem> menu;
+    private ListActivityMenu<Menu, MenuItem> menu;
 
     @Nullable
     private JEventListener<MessengerEvent> messengerEventListener;
@@ -242,6 +251,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
         this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
         this.messengerListeners.addListener(messengerEventListener);
+
+        notificationService.addNotification(R.string.mpp_saving_realm_message, MessageType.info);
     }
 
     @Override
@@ -318,12 +329,19 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     private void onNewNotificationsAdded(@Nonnull Menu menu, boolean existNotifications) {
         final MenuItem menuItem = menu.findItem(R.id.mpp_menu_notifications);
+        final AMenuItem<MenuItem> aMenuItem = this.menu.findMenuItemById(R.id.mpp_menu_notifications);
         if (existNotifications) {
             menuItem.setVisible(true);
             menuItem.setEnabled(true);
+            if ( aMenuItem instanceof NotificationsMenuItem ) {
+                ((NotificationsMenuItem) aMenuItem).onNotificationsChanged();
+            }
         } else {
             menuItem.setVisible(false);
             menuItem.setEnabled(false);
+            if ( aMenuItem instanceof NotificationsMenuItem ) {
+                ((NotificationsMenuItem) aMenuItem).dismissPopup();
+            }
         }
     }
 
@@ -430,7 +448,10 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         }
     }
 
-    private static class NotificationsMenuItem implements IdentifiableMenuItem<MenuItem> {
+    private class NotificationsMenuItem implements IdentifiableMenuItem<MenuItem>,PopupWindow.OnDismissListener {
+
+        @Nullable
+        private APopupWindow notificationPopupWindow;
 
         private NotificationsMenuItem() {
         }
@@ -442,11 +463,43 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         }
 
         @Override
-        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-            final List<Message> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
-            if (notifications.isEmpty()) {
-                // todo serso: continue
+        public void onClick(@Nonnull final MenuItem menuItem, @Nonnull Context context) {
+            if (notificationPopupWindow == null) {
+                final List<Message> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
+                if (!notifications.isEmpty()) {
+                    final NotificationsViewBuilder viewBuilder = new NotificationsViewBuilder(notifications);
+
+                    final View menuItemView = findViewById(menuItem.getItemId());
+                    if (menuItemView == null) {
+                        final AbsoluteAPopupWindow notificationPopupWindow = new AbsoluteAPopupWindow(MessengerFragmentActivity.this, viewBuilder);
+                        notificationPopupWindow.showLikePopDownMenu(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+                        this.notificationPopupWindow = notificationPopupWindow;
+                    } else {
+                        final AnchorAPopupWindow notificationPopupWindow = new AnchorAPopupWindow(menuItemView, viewBuilder);
+                        notificationPopupWindow.showLikePopDownMenu();
+                        this.notificationPopupWindow = notificationPopupWindow;
+                    }
+                    this.notificationPopupWindow.setOnDismissListener(this);
+                }
+            } else {
+                dismissPopup();
             }
+        }
+
+        private void dismissPopup() {
+            if (notificationPopupWindow != null) {
+                notificationPopupWindow.dismiss();
+                notificationPopupWindow = null;
+            }
+        }
+
+        public void onNotificationsChanged() {
+            dismissPopup();
+        }
+
+        @Override
+        public void onDismiss() {
+            notificationPopupWindow = null;
         }
     }
 
@@ -462,6 +515,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
                 case unread_messages_count_changed:
                     invalidateOptionsMenu();
                     break;
+                case notification_removed:
                 case notification_added:
                     invalidateOptionsMenu();
                     break;

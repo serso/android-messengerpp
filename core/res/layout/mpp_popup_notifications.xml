@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ListView xmlns:a="http://schemas.android.com/apk/res/android"
+          a:id="@android:id/list"
+          a:background="@color/mpp_bg"
+          a:orientation="vertical"
+          a:layout_width="200dp"
+          a:layout_height="wrap_content">
+
+</ListView>

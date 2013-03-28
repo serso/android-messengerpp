@@ -56,11 +56,11 @@ class RealmDefListItem extends AbstractMessengerListItem<RealmDef> {
 
     @Override
     protected void fillView(@Nonnull RealmDef realmDef, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final ImageView realmDefIconImageView = viewTag.getViewById(R.id.mpp_realm_def_icon_imageview);
+        final ImageView realmDefIconImageView = viewTag.getViewById(R.id.mpp_li_realm_def_icon_imageview);
         final Drawable configuredRealmIcon = context.getResources().getDrawable(realmDef.getIconResId());
         realmDefIconImageView.setImageDrawable(configuredRealmIcon);
 
-        final TextView realmDefNameTextView = viewTag.getViewById(R.id.mpp_realm_def_name_textview);
+        final TextView realmDefNameTextView = viewTag.getViewById(R.id.mpp_li_realm_def_name_textview);
         realmDefNameTextView.setText(getDisplayName());
     }
 }

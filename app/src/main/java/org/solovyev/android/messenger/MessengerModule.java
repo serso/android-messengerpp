@@ -15,6 +15,8 @@ import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
+import org.solovyev.android.messenger.notifications.DefaultNotificationService;
+import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.DefaultRealmService;
 import org.solovyev.android.messenger.realms.RealmDao;
 import org.solovyev.android.messenger.realms.RealmService;
