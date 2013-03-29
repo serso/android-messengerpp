@@ -38,7 +38,7 @@ public class AnchorAPopupWindow extends APopupWindow {
      */
     public void showLikePopDownMenu(int xOffset, int yOffset) {
         this.show();
-        this.getWindow().setAnimationStyle(org.solovyev.android.messenger.core.R.style.pw_pop_down_menu);
+        this.getWindow().setAnimationStyle(org.solovyev.android.messenger.core.R.style.pw_grow_from_top);
         this.getWindow().showAsDropDown(this.anchor, xOffset, yOffset);
     }
 

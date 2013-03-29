@@ -13,7 +13,7 @@
    height="1052.3622047"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="bubble.svg">
   <defs
      id="defs4" />
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="296.18508"
-     inkscape:cy="636.95118"
+     inkscape:zoom="0.7"
+     inkscape:cx="-1105.4713"
+     inkscape:cy="835.34643"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -36,10 +36,10 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-grids="true"
-     inkscape:window-width="1366"
-     inkscape:window-height="741"
-     inkscape:window-x="0"
-     inkscape:window-y="1"
+     inkscape:window-width="1680"
+     inkscape:window-height="988"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
      inkscape:window-maximized="1">
     <sodipodi:guide
        orientation="-0.70710678,0.70710678"
@@ -65,6 +65,30 @@
        orientation="0,1"
        position="-145,653.57143"
        id="guide3012" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-1679.4314,653.57143"
+       id="guide3064" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-1587.4018,653.57143"
+       id="guide3066" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-2245.5691,603.06107"
+       id="guide3068" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-1522.2971,653.57143"
+       id="guide3070" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-1738.4725,588.91893"
+       id="guide3072" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-2105.7143,547.85714"
+       id="guide3074" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -92,13 +116,76 @@
        inkscape:export-ydpi="19.85"
        inkscape:export-filename="/home/serso/projects/java/android/messenger/core/misc/resources/bubble_gray_light.png" />
     <path
-       style="fill:#d4d4d4;fill-opacity:1;stroke:none"
+       style="fill:#d4d4d4;fill-opacity:1;stroke:#7e7e7e;stroke-opacity:1"
        d="m -414.91303,0.68433903 -316.57937,0 -0.17057,317.40603097 372.3612,-0.2154 -55.61126,-46.0148 z"
        id="rect2987-3"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
        inkscape:export-xdpi="19.85"
        inkscape:export-ydpi="19.85"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_right_gray.png" />
+    <path
+       style="fill:#d4d4d4;fill-opacity:1;stroke:none"
+       d="m -663.41055,444.80555 -316.57937,0 -0.17057,317.40603 372.3612,-0.2154 -55.61126,-46.0148 z"
+       id="rect2987-3-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="19.85"
+       inkscape:export-ydpi="19.85"
        inkscape:export-filename="/home/serso/projects/java/android/messenger/core/misc/resources/bubble_gray_right.png" />
+    <path
+       style="fill:#eeeeee;fill-opacity:1;stroke:#b6b6b6;stroke-opacity:1"
+       d="m -160.35459,-488.22951 -316.57937,0 -0.17057,317.40603 372.3612,-0.2154 -55.61126,-46.0148 z"
+       id="rect2987-3-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="19.85"
+       inkscape:export-ydpi="19.85"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_right_gray_light.png" />
+    <path
+       style="fill:#eeeeee;fill-opacity:1;stroke:#b6b6b6;stroke-opacity:1"
+       d="m -1209.4122,-498.33103 316.57939,0 0.1705,317.40603 -372.36119,-0.2154 55.6113,-46.0148 z"
+       id="rect2987-3-7-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="19.85"
+       inkscape:export-ydpi="19.85"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_left_gray_light.png" />
+    <path
+       style="fill:#d4d4d4;fill-opacity:1;stroke:#7e7e7e;stroke-opacity:1"
+       d="m -1166.9858,-132.65581 316.5793,0 0.1706,317.40603 -372.3612,-0.2154 55.6113,-46.0148 z"
+       id="rect2987-3-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="19.85"
+       inkscape:export-ydpi="19.85"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_left_gray.png" />
+    <path
+       style="fill:#33b5e5;fill-opacity:1;stroke:#0e5b76;stroke-opacity:1"
+       d="m -1454.719,-221.77692 -316.5794,0 -0.1705,317.406027 372.3612,-0.2154 -55.6113,-46.0148 z"
+       id="rect2987-3-17"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="19.85"
+       inkscape:export-ydpi="19.85"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_right_blue.png" />
+    <path
+       style="fill:#33b5e5;fill-opacity:1;stroke:#0e5b76;stroke-opacity:1"
+       d="m -1702.3667,-601.36659 316.5794,0 0.1705,317.40603 -372.3612,-0.2154 55.6113,-46.0148 z"
+       id="rect2987-3-17-5"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="19.85"
+       inkscape:export-ydpi="19.85"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_left_blue.png" />
+    <path
+       id="rect2987-3-7-7-7-4"
+       style="fill:#eeeeee;fill-opacity:1;stroke:#b6b6b6;stroke-opacity:1"
+       d="m -1369.749,193.17945 -46.0148,55.6113 -65.1047,0 0,105.71429 m 111.1195,-161.32559 46.0148,55.6113 65.1047,0 0,105.71429 -222.239,0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccc"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_notification_bubble.png"
+       inkscape:export-xdpi="19"
+       inkscape:export-ydpi="19" />
   </g>
 </svg>

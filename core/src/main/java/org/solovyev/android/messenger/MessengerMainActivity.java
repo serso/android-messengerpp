@@ -64,7 +64,7 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
     */
 
     public MessengerMainActivity() {
-        super(R.layout.msg_main);
+        super(R.layout.mpp_main);
     }
 
     public static void startActivity(@Nonnull Activity activity) {
