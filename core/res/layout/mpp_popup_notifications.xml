@@ -7,7 +7,7 @@
 
     <ListView
             a:id="@android:id/list"
-            a:background="@drawable/mpp_notification_bubble"
+            a:background="@drawable/mpp_notification_bubble_white"
             a:paddingLeft="5dp"
             a:paddingRight="5dp"
             a:paddingBottom="5dp"

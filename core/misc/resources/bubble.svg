@@ -25,8 +25,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="-1105.4713"
-     inkscape:cy="835.34643"
+     inkscape:cx="-1328.3524"
+     inkscape:cy="835.307"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -180,11 +180,11 @@
        inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_left_blue.png" />
     <path
        id="rect2987-3-7-7-7-4"
-       style="fill:#eeeeee;fill-opacity:1;stroke:#b6b6b6;stroke-opacity:1"
-       d="m -1369.749,193.17945 -46.0148,55.6113 -65.1047,0 0,105.71429 m 111.1195,-161.32559 46.0148,55.6113 65.1047,0 0,105.71429 -222.239,0"
+       style="fill:#ffffff;fill-opacity:1;stroke:#b6b6b6;stroke-opacity:1"
+       d="m -1361.1776,166.03659 -46.0148,55.6113 -65.1047,0 0,105.71429 m 111.1195,-161.32559 46.0148,55.6113 65.1047,0 0,105.71429 -222.239,0"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccccc"
-       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_notification_bubble.png"
+       inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_notification_bubble_white.png"
        inkscape:export-xdpi="19"
        inkscape:export-ydpi="19" />
   </g>
