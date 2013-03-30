@@ -10,13 +10,10 @@
 
     <TextView
             a:id="@+id/mpp_li_notification_text_textview"
+            a:singleLine="false"
+            a:lines="3"
+            a:ellipsize="end"
             a:layout_width="150dp"
             style="@style/mpp_list_item_text_secondary"/>
-
-    <Button
-            a:id="@+id/mpp_li_notification_remove_button"
-            a:text="@string/mpp_remove"
-            style="@style/mpp_list_item_button"
-            a:layout_marginRight="0dp"/>
 
 </LinearLayout>

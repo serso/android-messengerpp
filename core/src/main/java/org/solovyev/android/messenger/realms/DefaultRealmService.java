@@ -228,7 +228,7 @@ public class DefaultRealmService implements RealmService {
                     final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Realm>() {
                         @Override
                         public boolean apply(@Nullable Realm realm) {
-                            return realm != null && newRealm.same(realm);
+                            return realm != null && realm.getState() != RealmState.removed && newRealm.same(realm);
                         }
                     });
 

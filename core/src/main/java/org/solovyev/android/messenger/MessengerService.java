@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmEvent;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -15,6 +16,7 @@ import org.solovyev.android.network.NetworkStateListener;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.msg.MessageType;
 import roboguice.service.RoboService;
 
 import javax.annotation.Nonnull;
@@ -58,6 +60,10 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Inject
     @Nonnull
     private MessengerListeners messengerListeners;
+
+    @Inject
+    @Nonnull
+    private NotificationService notificationService;
 
     /*
     **********************************************************************
@@ -133,9 +139,11 @@ public class MessengerService extends RoboService implements NetworkStateListene
             case UNKNOWN:
                 break;
             case CONNECTED:
+                notificationService.removeNotification(R.string.mpp_notification_network_problem);
                 realmConnections.tryStartAll();
                 break;
             case NOT_CONNECTED:
+                notificationService.addNotification(R.string.mpp_notification_network_problem, MessageType.warning);
                 realmConnections.tryStopAll();
                 break;
         }

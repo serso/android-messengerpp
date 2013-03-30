@@ -13,14 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Filter;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.*;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -160,6 +153,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
      * If nothing selected - first list item will be selected
      */
     private final boolean selectFirstItemByDefault;
+
+    @Nonnull
+    private final Handler uiHandler = Threads.newUiHandler();
 
     /*
     **********************************************************************
@@ -471,7 +467,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
             listLoader.execute();
         } else {
             // we need to schedule onPostExecute in order to be after all pending transaction in fragment manager
-            new Handler().post(onPostExecute);
+            uiHandler.post(onPostExecute);
         }
     }
 
@@ -668,17 +664,27 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
             adapter.setInitialized(true);
 
             final Activity activity = getActivity();
-            if (activity != null && !activity.isFinishing() && !isDetached()) {
+            if (activity != null) {
 
-                // change UI state
-                setListShown(true);
-
-                // apply filter if any
-                if (listViewFilter != null) {
-                    filter(listViewFilter.getFilterText(), new PostListLoadingFilterListener());
-                } else {
-                    filter("", new PostListLoadingFilterListener());
+                try {
+                    runPostFilling();
+                } catch (IllegalStateException e) {
+                    // todo serso: investigate the root of the problem
+                    // oops, list view is not created yet
+                    Log.w(tag, e.getMessage(), e);
                 }
+            }
+        }
+
+        private void runPostFilling() {
+            // change UI state
+            setListShown(true);
+
+            // apply filter if any
+            if (listViewFilter != null) {
+                filter(listViewFilter.getFilterText(), new PostListLoadingFilterListener());
+            } else {
+                filter("", new PostListLoadingFilterListener());
             }
         }
 

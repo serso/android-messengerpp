@@ -2,10 +2,13 @@ package org.solovyev.android.messenger.notifications;
 
 import android.app.Application;
 import android.content.Context;
+import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.MessengerEventType;
 import org.solovyev.android.messenger.MessengerListeners;
 import org.solovyev.android.messenger.MessengerNotification;
@@ -113,6 +116,27 @@ public final class DefaultNotificationService implements NotificationService {
 
         if (removed) {
             messengerListeners.fireEvent(MessengerEventType.notification_removed.newEvent(notification));
+        }
+    }
+
+    @Override
+    public void removeNotification(int notificationId) {
+        final List<Message> removedNotifications = new ArrayList<Message>();
+
+        final String messageCode = String.valueOf(notificationId);
+        synchronized (notifications) {
+            Iterables.removeIf(notifications, PredicateSpy.spyOn(new Predicate<Message>() {
+                @Override
+                public boolean apply(@Nullable Message notification) {
+                    return notification != null && notification.getMessageCode().equals(messageCode);
+                }
+            }, removedNotifications));
+        }
+
+        if (!removedNotifications.isEmpty()) {
+            for (Message removedNotification : removedNotifications) {
+                messengerListeners.fireEvent(MessengerEventType.notification_removed.newEvent(removedNotification));
+            }
         }
     }
 }

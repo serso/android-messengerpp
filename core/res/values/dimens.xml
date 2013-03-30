@@ -3,4 +3,5 @@
     <dimen name="mpp_fragment_title_text_size">18sp</dimen>
     <dimen name="mpp_fragment_icon_size">75dp</dimen>
     <dimen name="mpp_list_item_icon_size">50dp</dimen>
+    <dimen name="mpp_popup_notification_width">200dp</dimen>
 </resources>

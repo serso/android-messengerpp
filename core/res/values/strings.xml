@@ -85,6 +85,13 @@
     <string name="mpp_enable">Enable</string>
     <string name="mpp_menu_notifications">Notifications</string>
 
+    <string name="mpp_notification_network_problem">No internet connection available: connect to the network and try again</string>
+    <string name="mpp_notification_invalid_response">Server returned invalid response</string>
+    <string name="mpp_notification_undefined_error">Some error occurred</string>
+    <string name="mpp_notification_realm_exception">Account error occurred</string>
+    <string name="mpp_notification_realm_connection_exception">Some error occurred while connecting to the remote server, check internet connection and try again</string>
+    <string name="mpp_notification_realm_unsupported_exception">Account is not defined in the app</string>
+
     <plurals name="mpp_unread_messages_count_notification">
         <item quantity="one">There is one unread message.</item>
         <item quantity="other">There are %s unread messages.</item>

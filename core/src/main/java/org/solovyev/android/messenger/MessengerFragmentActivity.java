@@ -35,7 +35,6 @@ import org.solovyev.android.view.AnchorAPopupWindow;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.msg.Message;
-import org.solovyev.common.msg.MessageType;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -251,8 +250,6 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
         this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
         this.messengerListeners.addListener(messengerEventListener);
-
-        notificationService.addNotification(R.string.mpp_saving_realm_message, MessageType.info);
     }
 
     @Override
@@ -476,7 +473,9 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
                         this.notificationPopupWindow = notificationPopupWindow;
                     } else {
                         final AnchorAPopupWindow notificationPopupWindow = new AnchorAPopupWindow(menuItemView, viewBuilder);
-                        notificationPopupWindow.showLikePopDownMenu();
+                        final int popupWidth = getResources().getDimensionPixelSize(R.dimen.mpp_popup_notification_width);
+                        final int popupXOffset = -popupWidth / 2 + menuItemView.getWidth() / 2;
+                        notificationPopupWindow.showLikePopDownMenu(popupXOffset, 0);
                         this.notificationPopupWindow = notificationPopupWindow;
                     }
                     this.notificationPopupWindow.setOnDismissListener(this);

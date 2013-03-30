@@ -19,4 +19,6 @@ public interface NotificationService {
     boolean existNotifications();
 
     void removeNotification(@Nonnull Message notification);
+
+    void removeNotification(int notificationId);
 }

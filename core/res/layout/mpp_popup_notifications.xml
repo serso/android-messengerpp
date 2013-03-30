@@ -13,7 +13,7 @@
             a:paddingBottom="5dp"
             a:paddingTop="15dp"
             a:orientation="vertical"
-            a:layout_width="wrap_content"
+            a:layout_width="@dimen/mpp_popup_notification_width"
             a:layout_height="wrap_content">
 
     </ListView>
