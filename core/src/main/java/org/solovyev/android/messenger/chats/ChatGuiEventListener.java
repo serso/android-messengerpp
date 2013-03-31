@@ -75,6 +75,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                 fragment.selectListItem(chat.getId());
             }
         } else {
+            fragmentService.goBackTillStart();
             fragmentService.setMainFragment(MultiPaneFragmentDef.newInstance(MessengerMessagesFragment.FRAGMENT_TAG, true, new Builder<Fragment>() {
                 @Nonnull
                 @Override
