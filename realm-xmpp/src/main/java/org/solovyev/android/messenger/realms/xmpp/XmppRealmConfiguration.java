@@ -76,7 +76,7 @@ public class XmppRealmConfiguration extends JObject implements RealmConfiguratio
 
     @Nonnull
     public AndroidConnectionConfiguration toXmppConfiguration() {
-        final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, this.resource);
+        final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, null);
 
         connectionConfiguration.setDebuggerEnabled(DEBUG);
 
