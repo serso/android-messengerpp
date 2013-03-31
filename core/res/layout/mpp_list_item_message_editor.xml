@@ -38,10 +38,6 @@
                         a:text="@string/send"
                         style="@style/mpp_button"/>
 
-                <Button a:id="@+id/mpp_message_bubble_clear_button"
-                        a:text="@string/clear"
-                        style="@style/mpp_button"/>
-
             </LinearLayout>
 
         </LinearLayout>

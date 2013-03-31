@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.app.ActionBar;
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
@@ -74,13 +75,13 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
                 fragment.selectListItem(chat.getId());
             }
         } else {
-            fragmentService.setMainFragment(new Builder<Fragment>() {
+            fragmentService.setMainFragment(MultiPaneFragmentDef.newInstance(MessengerMessagesFragment.FRAGMENT_TAG, true, new Builder<Fragment>() {
                 @Nonnull
                 @Override
                 public Fragment build() {
                     return new MessengerMessagesFragment(chat);
                 }
-            }, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG, false);
+            }, MessagesFragmentReuseCondition.forChat(chat)));
         }
     }
 

@@ -27,6 +27,7 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
@@ -39,6 +40,7 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.msg.MessageType;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -81,6 +83,10 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
     @Inject
     @Nonnull
     private RealmService realmService;
+
+    @Inject
+    @Nonnull
+    private NotificationService notificationService;
 
 
     /*
@@ -136,7 +142,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
                 if (chat == null) {
                     Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
-                    // todo serso: notify error
+                    notificationService.addNotification(R.string.mpp_notification_undefined_error, MessageType.error);
                     Activities.restartActivity(getActivity());
                 } else {
                     realm = realmService.getRealmById(chat.getEntity().getRealmId());
@@ -181,14 +187,6 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
                         }
                     }.execute(new SendMessageAsyncTask.Input(getUser(), messageText, chat));
                 }
-            }
-        });
-
-        final Button clearButton = (Button) root.findViewById(R.id.mpp_message_bubble_clear_button);
-        clearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                messageBody.setText("");
             }
         });
 
