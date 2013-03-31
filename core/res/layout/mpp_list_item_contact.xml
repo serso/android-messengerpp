@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    style="@style/mpp_list_item">
+    style="?mpp_list_item">
 
     <ImageView
         a:id="@+id/mpp_li_contact_icon_imageview"
         a:src="@drawable/mpp_app_icon"
-        style="@style/mpp_list_item_icon"
+        style="?mpp_list_item_icon"
         a:layout_centerInParent="true"
         a:layout_alignParentLeft="true" />
 
     <ImageView
         a:id="@+id/mpp_li_contact_online_view"
-        style="@style/mpp_list_item_contact_online"
+        style="?mpp_list_item_contact_online"
         a:layout_centerInParent="true"
         a:layout_alignParentRight="true" />
 
@@ -26,12 +26,12 @@
 
         <TextView
             a:id="@+id/mpp_li_contact_name_textview"
-            style="@style/mpp_list_item_name" />
+            style="?mpp_list_item_name" />
 
         <TextView
             a:id="@+id/mpp_li_contact_account_textview"
             a:visibility="gone"
-            style="@style/mpp_list_item_text_secondary" />
+            style="?mpp_list_item_text_secondary" />
 
     </LinearLayout>
 

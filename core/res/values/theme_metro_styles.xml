@@ -54,6 +54,11 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="mpp_list_item_text_secondary" parent="mpp_list_item_text">
+        <item name="android:textColor">@color/mpp_list_item_text_secondary_states</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <!--
         Icon in list item
     -->
@@ -62,34 +67,6 @@
         <item name="android:layout_width">@dimen/mpp_list_item_icon_size</item>
         <item name="android:layout_height">@dimen/mpp_list_item_icon_size</item>
         <item name="android:contentDescription">@string/mpp_icon</item>
-    </style>
-
-    <!--
-        Button style in list item
-    -->
-
-    <style name="mpp_list_item_button" parent="mpp_list_item_block">
-        <!--mpp_button-->
-        <item name="android:gravity">top|left</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:focusable">true</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:textSize">15sp</item>
-
-        <item name="android:lines">2</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:ellipsize">none</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:scrollHorizontally">false</item>
-
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingBottom">15dp</item>
-        <item name="android:paddingRight">25dp</item>
-        <item name="android:paddingTop">5dp</item>
-
-        <item name="android:background">@drawable/mpp_metro_button_gray</item>
     </style>
 
     <!--
@@ -103,11 +80,6 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">none</item>
         <item name="android:scrollHorizontally">false</item>
-    </style>
-
-    <style name="mpp_list_item_text_secondary" parent="mpp_list_item_text">
-        <item name="android:textColor">@color/mpp_list_item_text_secondary_states</item>
-        <item name="android:textSize">14sp</item>
     </style>
 
     <!--FILTER-->
@@ -157,7 +129,7 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="mpp_bubble_message_text" parent="mpp_list_item_message_text">
+    <style name="mpp_list_item_message_text_editor" parent="mpp_list_item_message_text">
         <item name="android:hint">@string/type_message</item>
         <item name="android:minLines">2</item>
     </style>
@@ -166,14 +138,6 @@
         <item name="android:src">@drawable/mpp_li_contact_online_states</item>
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="mpp_theme_metro" parent="Theme.Sherlock">
-    </style>
-
-    <style name="mpp_theme_metro_preferences" parent="mpp_theme_metro">
-        <!--todo serso: currently alert dialogs are shown with black text on black background from preferences-->
-        <item name="android:textColor">@color/mpp_text</item>
     </style>
 
     <style name="mpp_button">
@@ -199,10 +163,6 @@
         <item name="android:background">@drawable/mpp_metro_button_blue</item>
         <item name="android:textColor">@color/mpp_bg</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="mpp_button_white" parent="mpp_button">
-        <item name="android:background">@drawable/mpp_metro_button_white</item>
     </style>
 
     <style name="mpp_form_label">

@@ -11,29 +11,27 @@
             a:id="@+id/mpp_li_message_linearlayout"
             a:background="@drawable/mpp_message_bubble_left_gray_light"
             a:paddingLeft="25dp"
-            style="@style/mpp_list_item">
+            style="?mpp_list_item">
 
         <ImageView
                 a:id="@+id/mpp_li_message_icon_imageview"
                 a:layout_gravity="top"
-                style="@style/mpp_list_item_icon"
+                style="?mpp_list_item_icon"
                 a:visibility="gone"
                 a:src="@drawable/mpp_icon_user_empty"/>
 
         <LinearLayout
-                style="@style/mpp_list_item_block"
+                style="?mpp_list_item_block"
                 a:orientation="vertical">
 
             <TextView
                     a:id="@+id/mpp_li_message_body_textview"
-                    style="@style/mpp_list_item_message_text"
-                    a:text="tsdfsf fdag dfdgdfgdfg adfgfg dfgddfg dfgdfg addfg dfg adfdfg dfgffgdfgadfgadgadfgadfg sdfad fadfasdf f as fdf adfasdfd"/>
+                    style="?mpp_list_item_message_text"/>
 
             <TextView
                     a:id="@+id/mpp_li_message_date_textview"
-                    style="@style/mpp_list_item_message_date"
-                    a:gravity="right"
-                    a:text="tsdfsfd"/>
+                    style="?mpp_list_item_message_date"
+                    a:gravity="right"/>
 
         </LinearLayout>
 

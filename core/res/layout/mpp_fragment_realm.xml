@@ -5,44 +5,44 @@
             a:layout_height="match_parent">
 
     <LinearLayout
-            style="@style/mpp_fragment">
+            style="?mpp_fragment">
 
         <TextView
                 a:id="@+id/mpp_fragment_title"
-                style="@style/mpp_fragment_title"/>
+                style="?mpp_fragment_title"/>
 
         <ImageView
                 a:id="@+id/mpp_realm_def_icon_imageview"
-                style="@style/mpp_fragment_icon"/>
+                style="?mpp_fragment_icon"/>
 
         <LinearLayout
-                style="@style/mpp_form_buttons">
+                style="?mpp_form_buttons">
 
             <Button
                     a:id="@+id/mpp_realm_back_button"
                     a:text="@string/mpp_back"
                     a:visibility="gone"
-                    style="@style/mpp_form_button"/>
+                    style="?mpp_form_button"/>
 
             <Button
                     a:id="@+id/mpp_realm_sync_button"
                     a:text="@string/mpp_sync"
-                    style="@style/mpp_form_button"/>
+                    style="?mpp_form_button"/>
 
             <Button
                     a:id="@+id/mpp_realm_remove_button"
                     a:text="@string/mpp_remove"
-                    style="@style/mpp_form_button"/>
+                    style="?mpp_form_button"/>
 
             <Button
                     a:id="@+id/mpp_realm_edit_button"
                     a:text="@string/mpp_edit"
-                    style="@style/mpp_form_button"/>
+                    style="?mpp_form_button"/>
 
             <Button
                     a:id="@+id/mpp_realm_state_button"
                     a:text="@string/mpp_disable"
-                    style="@style/mpp_form_button"/>
+                    style="?mpp_form_button"/>
 
         </LinearLayout>
 
