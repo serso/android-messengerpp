@@ -8,5 +8,12 @@ public enum RealmState {
      */
     removed,
 
+    /**
+     * Realm may be disable by app due to some error occurred in it (e.g. connection problems)
+     * NOTE: this state is reset every start up
+     */
+    disabled_by_app,
+
+
     disabled_by_user;
 }

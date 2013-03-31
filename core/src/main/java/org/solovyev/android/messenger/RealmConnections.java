@@ -1,17 +1,23 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
+import android.util.Log;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.RealmState;
+import org.solovyev.android.messenger.sync.SyncTask;
+import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
 * User: serso
@@ -21,12 +27,48 @@ import java.util.*;
 @ThreadSafe
 final class RealmConnections {
 
+    /*
+    **********************************************************************
+    *
+    *                           CONSTANTS
+    *
+    **********************************************************************
+    */
+
+    private static final int RETRY_CONNECTION_ATTEMPT_COUNT = 5;
+
+    // seconds
+    private static final int POST_START_DELAY = 3;
+
+    /*
+    **********************************************************************
+    *
+    *                           FIELDS
+    *
+    **********************************************************************
+    */
+
     @Nonnull
     private final Context context;
 
     @GuardedBy("realmConnections")
     @Nonnull
     private final Set<RealmConnection> realmConnections = new HashSet<RealmConnection>();
+
+    @Nonnull
+    private final AtomicInteger threadCounter = new AtomicInteger(0);
+
+    @Nonnull
+    private final ScheduledExecutorService postStartExecutor = Executors.newSingleThreadScheduledExecutor();
+
+    @Nonnull
+    private final ExecutorService executor = Executors.newCachedThreadPool(new ThreadFactory() {
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "Realm connection thread: " + threadCounter.incrementAndGet());
+        }
+    });
 
     RealmConnections(@Nonnull Context context) {
         this.context = context.getApplicationContext();
@@ -50,25 +92,65 @@ final class RealmConnections {
                 }
             }
         }
+
+        onRealmConnectionsStarted();
     }
 
-    private static void startRealmConnection(@Nonnull final RealmConnection realmConnection) {
-        new Thread(new Runnable() {
+    private void startRealmConnection(@Nonnull final RealmConnection realmConnection) {
+        executor.execute(new Runnable() {
             @Override
             public void run() {
-                if (realmConnection.isStopped()) {
-                    try {
-                        realmConnection.start();
-                    } catch (RealmConnectionException e) {
-                        if ( !realmConnection.isStopped() ) {
-                            realmConnection.stop();
-                            // todo serso: try to reconnect
-                            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+                startRealmConnection(0, null);
+            }
+
+            private void startRealmConnection(int attempt, @Nullable RealmConnectionException lastError) {
+                Log.d(MessengerApplication.TAG, "Realm start requested, attempt: " + attempt);
+
+                if (attempt > RETRY_CONNECTION_ATTEMPT_COUNT) {
+                    Log.d(MessengerApplication.TAG, "Max retry count reached => stopping...");
+
+                    if (!realmConnection.isStopped()) {
+                        realmConnection.stop();
+                    }
+
+                    if ( lastError != null ) {
+                        MessengerApplication.getServiceLocator().getExceptionHandler().handleException(lastError);
+                    }
+
+                    MessengerApplication.getServiceLocator().getRealmService().changeRealmState(realmConnection.getRealm(), RealmState.disabled_by_app);
+                } else {
+                    if (realmConnection.isStopped()) {
+                        try {
+                            if (realmConnection.getRealm().isEnabled()) {
+                                Log.d(MessengerApplication.TAG, "Realm is enabled => starting connection...");
+                                realmConnection.start();
+                            }
+                        } catch (RealmConnectionException e) {
+                            Log.w(MessengerApplication.TAG, "Realm connection error occurred, connection attempt: " + attempt, e);
+                            if ( !realmConnection.isStopped() ) {
+                                realmConnection.stop();
+                            }
+                            startRealmConnection(attempt + 1, e);
                         }
                     }
                 }
             }
-        }, "Realm connection thread: " + realmConnection.getRealm().getId()).start();
+        });
+    }
+
+    // todo serso: better approach is to fire "realm_connected" events from realm connection and do sync for each realm separately (as soon as it is connected)
+    private void onRealmConnectionsStarted() {
+        postStartExecutor.schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // after realm connection is started we have to check user presences
+                    MessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.user_contacts_statuses, null);
+                } catch (TaskIsAlreadyRunningException e) {
+                    // do not care
+                }
+            }
+        }, POST_START_DELAY, TimeUnit.SECONDS);
     }
 
     public void tryStopAll() {
@@ -91,17 +173,6 @@ final class RealmConnections {
         }
     }
 
-    public void tryStartFor(@Nonnull Realm realm) {
-        synchronized (this.realmConnections) {
-            for (RealmConnection realmConnection : realmConnections) {
-                if (realm.equals(realmConnection.getRealm()) && realmConnection.isStopped()) {
-                    startRealmConnection(realmConnection);
-                }
-            }
-        }
-    }
-
-
     public void tryStartAll() {
         synchronized (this.realmConnections) {
             for (RealmConnection realmConnection : realmConnections) {
@@ -110,6 +181,8 @@ final class RealmConnections {
                 }
             }
         }
+
+        onRealmConnectionsStarted();
     }
 
     public void removeConnectionFor(@Nonnull Realm realm) {

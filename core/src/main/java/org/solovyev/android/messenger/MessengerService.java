@@ -140,6 +140,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
                 break;
             case CONNECTED:
                 notificationService.removeNotification(R.string.mpp_notification_network_problem);
+                notificationService.removeNotification(R.string.mpp_notification_realm_connection_exception);
                 realmConnections.tryStartAll();
                 break;
             case NOT_CONNECTED:
@@ -172,9 +173,9 @@ public class MessengerService extends RoboService implements NetworkStateListene
                             break;
                         default:
                             if ( realm.isEnabled() ) {
-                                realmConnections.tryStartFor(realm);
+                                tryStartConnectionsFor(Arrays.asList(realm));
                             } else {
-                                realmConnections.tryStartFor(realm);
+                                realmConnections.tryStopFor(realm);
                             }
                             break;
                     }
@@ -183,7 +184,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
                     realmConnections.tryStopFor(realm);
                     break;
                 case start:
-                    realmConnections.tryStartFor(realm);
+                    tryStartConnectionsFor(Arrays.asList(realm));
                     break;
             }
         }

@@ -39,6 +39,7 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem>  {
                 switch (realm.getState()) {
                     case enabled:
                     case disabled_by_user:
+                    case disabled_by_app:
                         final RealmListItem realmListItem = findInAllElements(realm);
                         if ( realmListItem != null ) {
                             realmListItem.onRealmChangedEvent(realm);

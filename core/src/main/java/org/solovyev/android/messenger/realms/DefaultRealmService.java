@@ -113,8 +113,13 @@ public class DefaultRealmService implements RealmService {
             realmDef.init(context);
         }
 
-        // remove all scheduled to remove realms
         synchronized (lock) {
+            // reset status to enabled for temporary disable realms
+            for (Realm realm : realmDao.loadRealmsInState(RealmState.disabled_by_app)) {
+                changeRealmState(realm, RealmState.enabled, false);
+            }
+
+            // remove all scheduled to remove realms
             for (Realm realm : realmDao.loadRealmsInState(RealmState.removed)) {
                 this.messageService.removeAllMessagesInRealm(realm.getId());
                 this.chatService.removeChatsInRealm(realm.getId());
@@ -267,6 +272,11 @@ public class DefaultRealmService implements RealmService {
     @Nonnull
     @Override
     public Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState) {
+        return changeRealmState(realm, newState, true);
+    }
+
+    @Nonnull
+    private Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState, boolean fireEvent) {
         if (realm.getState() != newState) {
             final Realm result = realm.copyForNewState(newState);
 
@@ -277,7 +287,9 @@ public class DefaultRealmService implements RealmService {
                 }
             }
 
-            listeners.fireEvent(RealmEventType.state_changed.newEvent(result, null));
+            if (fireEvent) {
+                listeners.fireEvent(RealmEventType.state_changed.newEvent(result, null));
+            }
 
             return result;
         } else {
@@ -294,7 +306,7 @@ public class DefaultRealmService implements RealmService {
         }
 
         if (realm != null) {
-            changeRealmState(realm, RealmState.removed);
+            changeRealmState((Realm) realm, (RealmState) RealmState.removed);
         }
     }
 
