@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 import com.actionbarsherlock.app.ActionBar;
@@ -200,6 +201,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FragmentManager.enableDebugLogging(true);
 
         setContentView(layoutId);
 

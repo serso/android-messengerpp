@@ -1,11 +1,7 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.RosterListener;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.AbstractRealmConnection;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
@@ -90,17 +86,19 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     @Override
     protected void stopWork() {
-        if (connection != null) {
-            connection.getRoster().removeRosterListener(rosterListener);
-            connection.getChatManager().removeChatListener(chatListener);
-
-            /**
-             * we can't just close connection because some classes may use connection
-             * via {@link org.solovyev.android.messenger.realms.xmpp.XmppRealmConnection#doOnConnection(XmppConnectedCallable)}
-             */
-            //connection.disconnect();
-            //connection = null;
+        final Connection localConnection = connection;
+        if (localConnection != null) {
+            final Roster roster = localConnection.getRoster();
+            if (roster != null) {
+                roster.removeRosterListener(rosterListener);
+            }
+            final ChatManager chatManager = localConnection.getChatManager();
+            if (chatManager != null) {
+                chatManager.removeChatListener(chatListener);
+            }
+            localConnection.disconnect();
         }
+        connection = null;
     }
 
     @Nonnull
