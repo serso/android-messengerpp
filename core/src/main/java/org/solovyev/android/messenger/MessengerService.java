@@ -167,10 +167,15 @@ public class MessengerService extends RoboService implements NetworkStateListene
                     break;
                 case state_changed:
                     switch (realm.getState()) {
-                        case enabled:
-                            break;
                         case removed:
                             realmConnections.removeConnectionFor(realm);
+                            break;
+                        default:
+                            if ( realm.isEnabled() ) {
+                                realmConnections.tryStartFor(realm);
+                            } else {
+                                realmConnections.tryStartFor(realm);
+                            }
                             break;
                     }
                     break;
