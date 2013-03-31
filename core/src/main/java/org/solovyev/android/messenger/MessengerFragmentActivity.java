@@ -1,47 +1,28 @@
 package org.solovyev.android.messenger;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupWindow;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
-import org.solovyev.android.menu.AMenuItem;
-import org.solovyev.android.menu.IdentifiableMenuItem;
-import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatGuiEventType;
+import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.notifications.NotificationsViewBuilder;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
-import org.solovyev.android.view.APopupWindow;
-import org.solovyev.android.view.AbsoluteAPopupWindow;
-import org.solovyev.android.view.AnchorAPopupWindow;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.msg.Message;
-import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: serso
@@ -126,7 +107,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     @Nonnull
     private final MessengerMultiPaneFragmentManager multiPaneFragmentManager;
 
-    private ListActivityMenu<Menu, MenuItem> menu;
+    @Nonnull
+    private ActivityMenu<Menu, MenuItem> menu;
 
     @Nullable
     private JEventListener<MessengerEvent> messengerEventListener;
@@ -248,6 +230,20 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
         this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
 
+        this.menu = new MessengerMenu(new Runnable() {
+            @Override
+            public void run() {
+                if (actionBarIconAsUp) {
+                    if ( !multiPaneFragmentManager.goBackImmediately() ) {
+                        final ActionBar.Tab tab = findTabByTag(MessengerPrimaryFragment.contacts.getFragmentTag());
+                        if ( tab != null ) {
+                            tab.select();
+                        }
+                    }
+                }
+            }
+        });
+
         this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
         this.messengerListeners.addListener(messengerEventListener);
     }
@@ -316,73 +312,18 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean result = this.menu.onPrepareOptionsMenu(this, menu);
-
-        onUnreadMessagesCountChanged(menu, unreadMessagesCounter.getUnreadMessagesCount());
-        onNewNotificationsAdded(menu, notificationService.existNotifications());
-
-        return result;
+        return this.menu.onPrepareOptionsMenu(this, menu);
     }
 
-    private void onNewNotificationsAdded(@Nonnull Menu menu, boolean existNotifications) {
-        final MenuItem menuItem = menu.findItem(R.id.mpp_menu_notifications);
-        final AMenuItem<MenuItem> aMenuItem = this.menu.findMenuItemById(R.id.mpp_menu_notifications);
-        if (existNotifications) {
-            menuItem.setVisible(true);
-            menuItem.setEnabled(true);
-            if ( aMenuItem instanceof NotificationsMenuItem ) {
-                ((NotificationsMenuItem) aMenuItem).onNotificationsChanged();
-            }
-        } else {
-            menuItem.setVisible(false);
-            menuItem.setEnabled(false);
-            if ( aMenuItem instanceof NotificationsMenuItem ) {
-                ((NotificationsMenuItem) aMenuItem).dismissPopup();
-            }
-        }
-    }
-
-    private void onUnreadMessagesCountChanged(@Nonnull Menu menu, int unreadMessagesCount) {
-        final MenuItem menuItem = menu.findItem(R.id.mpp_menu_unread_messages_counter);
-        if (unreadMessagesCount == 0) {
-            menuItem.setVisible(false);
-            menuItem.setEnabled(false);
-        } else {
-            menuItem.setTitle(String.valueOf(unreadMessagesCount));
-            menuItem.setVisible(true);
-            menuItem.setEnabled(true);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        if ( this.menu == null ) {
-            final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>(1);
-            menuItems.add(new NotificationsMenuItem());
-            menuItems.add(new UnreadMessagesCounterMenuItem());
-            menuItems.add(new MenuItemAppExitMenuItem(this));
-
-            this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
-        }
         return this.menu.onCreateOptionsMenu(this, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (actionBarIconAsUp) {
-                    if ( !multiPaneFragmentManager.goBackImmediately() ) {
-                        final ActionBar.Tab tab = findTabByTag(MessengerPrimaryFragment.contacts.getFragmentTag());
-                        if ( tab != null ) {
-                            tab.select();
-                        }
-                    }
-                }
-                return true;
-            default:
-                return this.menu.onOptionsItemSelected(this, item);
-        }
+        return this.menu.onOptionsItemSelected(this, item);
     }
 
     /*@Nullable*/
@@ -398,108 +339,6 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
         }
 
         return null;
-    }
-
-    private static class MenuItemAppExitMenuItem implements IdentifiableMenuItem<MenuItem> {
-
-        @Nonnull
-        private final Activity activity;
-
-        private MenuItemAppExitMenuItem(@Nonnull Activity activity) {
-            this.activity = activity;
-        }
-
-        @Nonnull
-        @Override
-        public Integer getItemId() {
-            return R.id.mpp_menu_app_exit;
-        }
-
-        @Override
-        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-            MessengerApplication.getApp().exit(activity);
-        }
-    }
-
-    private static class UnreadMessagesCounterMenuItem implements IdentifiableMenuItem<MenuItem> {
-
-        private UnreadMessagesCounterMenuItem() {
-        }
-
-        @Nonnull
-        @Override
-        public Integer getItemId() {
-            return R.id.mpp_menu_unread_messages_counter;
-        }
-
-        @Override
-        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-            final Entity chatEntity = MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadChat();
-            if (chatEntity != null) {
-                final Chat chat = MessengerApplication.getServiceLocator().getChatService().getChatById(chatEntity);
-                if (chat != null) {
-                    final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                    eventManager.fire(ChatGuiEventType.chat_open_requested.newEvent(chat));
-                }
-            }
-        }
-    }
-
-    private class NotificationsMenuItem implements IdentifiableMenuItem<MenuItem>,PopupWindow.OnDismissListener {
-
-        @Nullable
-        private APopupWindow notificationPopupWindow;
-
-        private NotificationsMenuItem() {
-        }
-
-        @Nonnull
-        @Override
-        public Integer getItemId() {
-            return R.id.mpp_menu_notifications;
-        }
-
-        @Override
-        public void onClick(@Nonnull final MenuItem menuItem, @Nonnull Context context) {
-            if (notificationPopupWindow == null) {
-                final List<Message> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
-                if (!notifications.isEmpty()) {
-                    final NotificationsViewBuilder viewBuilder = new NotificationsViewBuilder(notifications);
-
-                    final View menuItemView = findViewById(menuItem.getItemId());
-                    if (menuItemView == null) {
-                        final AbsoluteAPopupWindow notificationPopupWindow = new AbsoluteAPopupWindow(MessengerFragmentActivity.this, viewBuilder);
-                        notificationPopupWindow.showLikePopDownMenu(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
-                        this.notificationPopupWindow = notificationPopupWindow;
-                    } else {
-                        final AnchorAPopupWindow notificationPopupWindow = new AnchorAPopupWindow(menuItemView, viewBuilder);
-                        final int popupWidth = getResources().getDimensionPixelSize(R.dimen.mpp_popup_notification_width);
-                        final int popupXOffset = -popupWidth / 2 + menuItemView.getWidth() / 2;
-                        notificationPopupWindow.showLikePopDownMenu(popupXOffset, 0);
-                        this.notificationPopupWindow = notificationPopupWindow;
-                    }
-                    this.notificationPopupWindow.setOnDismissListener(this);
-                }
-            } else {
-                dismissPopup();
-            }
-        }
-
-        private void dismissPopup() {
-            if (notificationPopupWindow != null) {
-                notificationPopupWindow.dismiss();
-                notificationPopupWindow = null;
-            }
-        }
-
-        public void onNotificationsChanged() {
-            dismissPopup();
-        }
-
-        @Override
-        public void onDismiss() {
-            notificationPopupWindow = null;
-        }
     }
 
     private class MessengerEventListener extends AbstractJEventListener<MessengerEvent> {
