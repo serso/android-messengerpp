@@ -20,6 +20,8 @@ public final class TaskOverlayDialog<V> implements ActivityCallback<Activity, V>
     @Nonnull
     private final ProgressDialog progressDialog;
 
+    private volatile boolean finished = false;
+
     private TaskOverlayDialog(@Nonnull ProgressDialog progressDialog) {
         this.progressDialog = progressDialog;
     }
@@ -40,7 +42,7 @@ public final class TaskOverlayDialog<V> implements ActivityCallback<Activity, V>
         try {
             MessengerApplication.getServiceLocator().getAsyncTaskService().addListener(taskName, Tasks.newFutureCallback(activity, taskOverlayDialog));
             // attached to task => can show dialog
-            taskOverlayDialog.progressDialog.show();
+            taskOverlayDialog.show();
         } catch (NoSuchTaskException e) {
             taskOverlayDialog = null;
         } catch (TaskFinishedException e) {
@@ -56,9 +58,16 @@ public final class TaskOverlayDialog<V> implements ActivityCallback<Activity, V>
         dismiss();
     }
 
-    public void dismiss() {
+    public synchronized void dismiss() {
+        finished = true;
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
+        }
+    }
+
+    public synchronized void show() {
+        if (!finished) {
+            progressDialog.show();
         }
     }
 
