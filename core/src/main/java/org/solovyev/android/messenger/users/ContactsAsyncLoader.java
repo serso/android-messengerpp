@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import org.solovyev.android.list.ListItemArrayAdapter;
+import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -21,7 +21,7 @@ import java.util.List;
 final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
 
     ContactsAsyncLoader(@Nonnull Context context,
-                        @Nonnull ListItemArrayAdapter<ContactListItem> adapter,
+                        @Nonnull ListAdapter<ContactListItem> adapter,
                         @Nullable Runnable onPostExecute) {
         super(context, adapter, onPostExecute);
     }

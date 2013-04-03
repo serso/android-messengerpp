@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.Checkable;
 import android.widget.Filter;
 import org.solovyev.android.list.ListItem;
-import org.solovyev.android.list.ListItemArrayAdapter;
+import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.common.Objects;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:58 PM
  */
-public class MessengerListItemAdapter<LI extends ListItem> extends ListItemArrayAdapter<LI> /*implements UserEventListener*/ {
+public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> /*implements UserEventListener*/ {
 
     /*
     **********************************************************************

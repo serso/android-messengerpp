@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -93,18 +94,18 @@ public class DefaultRealmService implements RealmService {
     private final JEventListeners<JEventListener<? extends RealmEvent>, RealmEvent> listeners;
 
     @Inject
-    public DefaultRealmService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock) {
-        this(context, configuration.getRealmDefs(), lock);
+    public DefaultRealmService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+        this(context, configuration.getRealmDefs(), lock, eventExecutor);
     }
 
-    public DefaultRealmService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs, @Nonnull PersistenceLock lock) {
+    public DefaultRealmService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
         for (RealmDef realmDef : realmDefs) {
             this.realmDefs.put(realmDef.getId(), realmDef);
         }
 
         this.context = context;
         this.lock = lock;
-        this.listeners = Listeners.newEventListenersBuilderFor(RealmEvent.class).withHardReferences().onBackgroundThread().create();
+        this.listeners = Listeners.newEventListenersBuilderFor(RealmEvent.class).withHardReferences().withExecutor(eventExecutor).create();
     }
 
     @Override

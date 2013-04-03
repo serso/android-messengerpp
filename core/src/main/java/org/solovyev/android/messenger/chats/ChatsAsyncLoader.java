@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import org.solovyev.android.list.ListItemArrayAdapter;
+import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 
-    ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemArrayAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute) {
+    ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute) {
         super(context, adapter, onPostExecute);
     }
 

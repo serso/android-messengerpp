@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * User: serso
@@ -96,7 +97,7 @@ public class DefaultUserService implements UserService {
     private final Object lock;
 
     @Nonnull
-    private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().onCallerThread().create();
+    private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners;
 
     // key: user entity, value: list of user contacts
     @GuardedBy("userContactsCache")
@@ -114,7 +115,8 @@ public class DefaultUserService implements UserService {
     private final Map<Entity, User> usersCache = new HashMap<Entity, User>();
 
     @Inject
-    public DefaultUserService(@Nonnull PersistenceLock lock) {
+    public DefaultUserService(@Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+        this.listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().withExecutor(eventExecutor).create();
         this.listeners.addListener(new UserEventListener());
         this.lock = lock;
     }

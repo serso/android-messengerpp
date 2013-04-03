@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import org.solovyev.android.list.ListItemArrayAdapter;
+import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -24,7 +24,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
     private final RealmService realmService;
 
     OnlineContactsAsyncLoader(@Nonnull Context context,
-                              @Nonnull ListItemArrayAdapter<ContactListItem> adapter,
+                              @Nonnull ListAdapter<ContactListItem> adapter,
                               @Nullable Runnable onPostExecute,
                               @Nonnull RealmService realmService) {
         super(context, adapter, onPostExecute);

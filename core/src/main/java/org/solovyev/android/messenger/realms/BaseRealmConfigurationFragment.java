@@ -10,12 +10,13 @@ import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.TaskOverlayDialogs;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.tasks.AsyncTaskService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends RoboSherlockFragment {
 
@@ -32,6 +33,9 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
 
     @Nonnull
     public static final String FRAGMENT_TAG = "realm-configuration";
+
+    @Nonnull
+    private static final String TAG = "RealmConfiguration";
 
     /*
     **********************************************************************
@@ -53,6 +57,10 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     @Nonnull
     private EventManager eventManager;
 
+    @Inject
+    @Nonnull
+    private AsyncTaskService asyncTaskService;
+
     /*
     **********************************************************************
     *
@@ -64,6 +72,9 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     private T editedRealm;
 
     private int layoutResId;
+
+    @Nonnull
+    private final TaskOverlayDialogs taskOverlayDialogs = new TaskOverlayDialogs();
 
     protected BaseRealmConfigurationFragment(int layoutResId) {
         this.layoutResId = layoutResId;
@@ -98,6 +109,14 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
         return result;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToSaveTask(getActivity()));
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveTask(getActivity()));
+    }
+
     public T getEditedRealm() {
         return editedRealm;
     }
@@ -107,11 +126,18 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     }
 
     protected void removeRealm(@Nonnull Realm realm) {
-        new AsyncRealmRemover(this.getActivity()).execute(realm);
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncRemoveRealm(realm, getActivity()));
     }
 
-    protected void saveRealm(@Nonnull RealmBuilder realmBuilder, @Nullable RealmSaveHandler realmSaveHandler) {
-        new AsynRealmSaver(this.getActivity(), realmService, realmSaveHandler).execute(realmBuilder);
+    protected void saveRealm(@Nonnull RealmBuilder realmBuilder) {
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncSaveRealm(realmBuilder, getActivity()));
+    }
+
+    @Override
+    public void onPause() {
+        taskOverlayDialogs.dismissAll();
+
+        super.onPause();
     }
 
     protected void backButtonPressed() {
@@ -135,24 +161,6 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     protected CharSequence getFragmentTitle() {
         final String realmName = getString(getRealmDef().getNameResId());
         return getString(R.string.mpp_realm_configuration, realmName);
-    }
-
-    /*
-    **********************************************************************
-    *
-    *                           STATIC
-    *
-    **********************************************************************
-    */
-
-    public static interface RealmSaveHandler {
-
-        /**
-         * @param e exception during saving the realm
-         * @return true if exception was consumed and no further action is required
-         */
-        boolean onFailure(@Nonnull Exception e);
-
     }
 
 }

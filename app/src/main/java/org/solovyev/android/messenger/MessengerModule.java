@@ -31,6 +31,11 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
+import org.solovyev.android.tasks.AsyncTaskService;
+import org.solovyev.android.tasks.AsyncTaskServiceImpl;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: serso
@@ -41,6 +46,9 @@ public class MessengerModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(ExecutorService.class).toInstance(Executors.newSingleThreadExecutor());
+        bind(AsyncTaskService.class).to(AsyncTaskServiceImpl.class);
+
         bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
         bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
         bind(NotificationService.class).to(DefaultNotificationService.class);

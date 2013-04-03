@@ -149,7 +149,7 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
         final XmppRealmConfiguration configuration = validateData(server, login, password, resource);
         if (configuration != null) {
             final RealmBuilder realmBuilder = realmDef.newRealmBuilder(configuration, getEditedRealm());
-            saveRealm(realmBuilder, null);
+            saveRealm(realmBuilder);
         }
     }
 

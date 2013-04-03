@@ -14,6 +14,7 @@ import org.solovyev.android.Activities;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.TaskOverlayDialogs;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -82,6 +83,9 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
     @Nullable
     private RealmEventListener realmEventListener;
+
+    @Nonnull
+    private final TaskOverlayDialogs taskOverlayDialogs = new TaskOverlayDialogs();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -183,6 +187,20 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveTask(getActivity()));
+    }
+
+    @Override
+    public void onPause() {
+        taskOverlayDialogs.dismissAll();
+
+        super.onPause();
+    }
+
+    @Override
     public void onDestroy() {
         if ( realmEventListener != null ) {
             realmService.removeListener(realmEventListener);
@@ -218,7 +236,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
 
     private void removeRealm() {
-        new AsyncRealmRemover(this.getActivity()).execute(realm);
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncRemoveRealm(realm, getActivity()));
     }
 
     private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {

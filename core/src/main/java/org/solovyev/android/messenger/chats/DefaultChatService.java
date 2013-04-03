@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 /**
  * User: serso
@@ -122,7 +123,7 @@ public class DefaultChatService implements ChatService {
     private static final String EVENT_TAG = "ChatEvent";
 
     @Nonnull
-    private final JEventListeners<JEventListener<? extends ChatEvent>, ChatEvent> listeners = Listeners.newEventListenersBuilderFor(ChatEvent.class).withHardReferences().onCallerThread().create();
+    private final JEventListeners<JEventListener<? extends ChatEvent>, ChatEvent> listeners;
 
     // key: chat id, value: list of participants
     @Nonnull
@@ -140,7 +141,8 @@ public class DefaultChatService implements ChatService {
     private final Object lock;
 
     @Inject
-    public DefaultChatService(@Nonnull PersistenceLock lock) {
+    public DefaultChatService(@Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+        this.listeners = Listeners.newEventListenersBuilderFor(ChatEvent.class).withHardReferences().withExecutor(eventExecutor).create();
         this.listeners.addListener(new ChatEventListener());
         this.lock = lock;
     }

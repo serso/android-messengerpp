@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
-import org.solovyev.android.list.ListItemArrayAdapter;
+import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewBuilder;
 import org.solovyev.common.msg.Message;
@@ -35,7 +35,7 @@ public final class NotificationsViewBuilder implements ViewBuilder<View> {
             notificationListItems.add(new NotificationListItem(notification));
         }
 
-        ListItemArrayAdapter.attach(listView, ListItemArrayAdapter.newInstance(context, notificationListItems), context);
+        ListItemAdapter.attach(listView, ListItemAdapter.newInstance(context, notificationListItems), context);
 
         return root;
     }

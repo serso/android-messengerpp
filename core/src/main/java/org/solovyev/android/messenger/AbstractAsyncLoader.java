@@ -1,12 +1,12 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
-import org.solovyev.android.list.ListItemArrayAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -19,13 +19,13 @@ import java.util.List;
 public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends MessengerAsyncTask<Void, Void, List<R>> {
 
     @Nonnull
-    private ListItemArrayAdapter<LI> adapter;
+    private ListAdapter<LI> adapter;
 
     @Nullable
     private Runnable onPostExecute;
 
     public AbstractAsyncLoader(@Nonnull Context context,
-                               @Nonnull ListItemArrayAdapter<LI> adapter,
+                               @Nonnull ListAdapter<LI> adapter,
                                @Nullable Runnable onPostExecute) {
         super(context);
         this.adapter = adapter;
