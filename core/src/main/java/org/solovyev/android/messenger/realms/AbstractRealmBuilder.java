@@ -1,13 +1,11 @@
 package org.solovyev.android.messenger.realms;
 
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class AbstractRealmBuilder implements RealmBuilder {
+public abstract class AbstractRealmBuilder<C extends RealmConfiguration> implements RealmBuilder {
 
     @Nonnull
     private RealmDef realmDef;
@@ -15,9 +13,20 @@ public abstract class AbstractRealmBuilder implements RealmBuilder {
     @Nullable
     private Realm editedRealm;
 
-    protected AbstractRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm) {
+    @Nonnull
+    private C configuration;
+
+    protected AbstractRealmBuilder(@Nonnull RealmDef realmDef,
+                                   @Nullable Realm editedRealm,
+                                   @Nonnull C configuration) {
         this.realmDef = realmDef;
         this.editedRealm = editedRealm;
+        this.configuration = configuration;
+    }
+
+    @Nonnull
+    public C getConfiguration() {
+        return configuration;
     }
 
     @Nonnull
@@ -25,16 +34,13 @@ public abstract class AbstractRealmBuilder implements RealmBuilder {
     public final Realm build(@Nonnull Data data) {
         final String realmId = data.getRealmId();
 
-        User user = getUserById(realmId, data.getAuthData().getRealmUserId());
-        if ( user == null ) {
-            user = Users.newEmptyUser(EntityImpl.newInstance(realmId, data.getAuthData().getRealmUserId()));
-        }
+        final User user = getRealmUser(realmId);
 
         return newRealm(realmId, user, RealmState.enabled);
     }
 
-    @Nullable
-    protected abstract User getUserById(@Nonnull String realmId, @Nonnull String realmUserId);
+    @Nonnull
+    protected abstract User getRealmUser(@Nonnull String realmId);
 
     @Nonnull
     public RealmDef getRealmDef() {

@@ -12,7 +12,6 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
@@ -220,7 +219,7 @@ public class DefaultRealmService implements RealmService {
 
                 realmBuilder.connect();
 
-                final AuthData authData = realmBuilder.loginUser(null);
+                realmBuilder.loginUser(null);
 
                 final String newRealmId;
                 if ( oldRealm != null ) {
@@ -228,7 +227,7 @@ public class DefaultRealmService implements RealmService {
                 } else {
                     newRealmId = generateRealmId(realmBuilder.getRealmDef());
                 }
-                final Realm newRealm = realmBuilder.build(new RealmBuilder.Data(authData, newRealmId));
+                final Realm newRealm = realmBuilder.build(new RealmBuilder.Data(newRealmId));
 
                 synchronized (realms) {
                     final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Realm>() {

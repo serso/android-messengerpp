@@ -5,23 +5,19 @@ import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
-import org.solovyev.android.messenger.security.AuthData;
-import org.solovyev.android.messenger.security.AuthDataImpl;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class XmppRealmBuilder extends AbstractRealmBuilder {
-
-    @Nonnull
-    private XmppRealmConfiguration configuration;
+public class XmppRealmBuilder extends AbstractRealmBuilder<XmppRealmConfiguration> {;
 
     @Nullable
     private Connection connection;
@@ -29,24 +25,23 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
     public XmppRealmBuilder(@Nonnull RealmDef realmDef,
                             @Nullable Realm editedRealm,
                             @Nonnull XmppRealmConfiguration configuration) {
-        super(realmDef, editedRealm);
-        this.configuration = configuration;
+        super(realmDef, editedRealm, configuration);
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    protected User getUserById(@Nonnull String realmId, @Nonnull String realmUserId) {
+    protected User getRealmUser(@Nonnull String realmId) {
         User user;
 
         if ( connection != null ) {
             try {
-                user = XmppRealmUserService.toUser(realmId, realmUserId, null, true, connection);
+                user = XmppRealmUserService.toUser(realmId, getConfiguration().getLogin(), null, true, connection);
             } catch (XMPPException e) {
                 Log.e("XmppRealmBuilder", e.getMessage(), e);
-                user = null;
+                user = Users.newEmptyUser(EntityImpl.newInstance(realmId, getConfiguration().getLogin()));
             }
         } else {
-            user = null;
+            user = Users.newEmptyUser(EntityImpl.newInstance(realmId, getConfiguration().getLogin()));
         }
 
         return user;
@@ -55,12 +50,12 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
     @Nonnull
     @Override
     protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state) {
-        return new XmppRealm(id, getRealmDef(), user, configuration, state);
+        return new XmppRealm(id, getRealmDef(), user, getConfiguration(), state);
     }
 
     @Override
     public void connect() throws ConnectionException {
-        connection = new XMPPConnection(configuration.toXmppConfiguration());
+        connection = new XMPPConnection(getConfiguration().toXmppConfiguration());
 
         try {
             connection.connect();
@@ -83,31 +78,17 @@ public class XmppRealmBuilder extends AbstractRealmBuilder {
         }
     }
 
-    @Nonnull
     @Override
-    public AuthData loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
+    public void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
         try {
             if (connection != null) {
+                final XmppRealmConfiguration configuration = getConfiguration();
                 connection.login(configuration.getLogin(), configuration.getPassword());
-
-                final AuthDataImpl result = new AuthDataImpl();
-
-                result.setRealmUserId(configuration.getLogin());
-                result.setRealmUserLogin(configuration.getLogin());
-                result.setAccessToken("");
-
-                return result;
             } else {
                 throw new InvalidCredentialsException("Not connected!");
             }
         } catch (XMPPException e) {
             throw new InvalidCredentialsException(e);
         }
-    }
-
-    @Nonnull
-    @Override
-    public RealmConfiguration getConfiguration() {
-        return configuration;
     }
 }
