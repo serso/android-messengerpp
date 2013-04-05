@@ -2,13 +2,11 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
-import org.solovyev.android.messenger.realms.RealmBuilder;
+import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.text.Strings;
@@ -44,8 +42,6 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
     @Nonnull
     private RealmService realmService;
 
-
-
     /*
     **********************************************************************
     *
@@ -65,15 +61,6 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
 
     @Nonnull
     private EditText resourceEditText;
-
-    @Nonnull
-    private Button backButton;
-
-    @Nonnull
-    private Button saveButton;
-
-    @Nonnull
-    private Button removeButton;
 
     public XmppRealmConfigurationFragment() {
         super(R.layout.mpp_realm_conf_xmpp);
@@ -97,60 +84,16 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
             passwordEditText.setText(configuration.getPassword());
             resourceEditText.setText(configuration.getResource());
         }
-
-        removeButton = (Button) root.findViewById(R.id.mpp_xmpp_remove_button);
-        if (isNewRealm()) {
-            removeButton.setVisibility(View.GONE);
-        } else {
-            removeButton.setVisibility(View.VISIBLE);
-            removeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeRealm(getEditedRealm());
-                }
-            });
-        }
-
-        backButton = (Button) root.findViewById(R.id.mpp_xmpp_back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backButtonPressed();
-            }
-        });
-        if (isNewRealm() && getMultiPaneManager().isDualPane(getActivity())) {
-            // in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-            backButton.setVisibility(View.GONE);
-        } else {
-            backButton.setVisibility(View.VISIBLE);
-        }
-
-
-        saveButton = (Button) root.findViewById(R.id.mpp_xmpp_save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveRealm();
-            }
-        });
-
-        final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
-        fragmentTitle.setText(getFragmentTitle());
-
-        getMultiPaneManager().onPaneCreated(getActivity(), root);
     }
 
-    private void saveRealm() {
+    @Override
+    protected RealmConfiguration validateData() {
         final String server = serverEditText.getText().toString();
         final String login = loginEditText.getText().toString();
         final String password = passwordEditText.getText().toString();
         final String resource = resourceEditText.getText().toString();
 
-        final XmppRealmConfiguration configuration = validateData(server, login, password, resource);
-        if (configuration != null) {
-            final RealmBuilder realmBuilder = realmDef.newRealmBuilder(configuration, getEditedRealm());
-            saveRealm(realmBuilder);
-        }
+        return validateData(server, login, password, resource);
     }
 
     @Nullable

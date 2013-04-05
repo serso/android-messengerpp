@@ -16,6 +16,11 @@ public class VkRealmConfiguration extends JObject implements RealmConfiguration 
     @Nonnull
     private String accessToken;
 
+    public VkRealmConfiguration(@Nonnull String login, @Nonnull String password) {
+        this.login = login;
+        this.password = password;
+    }
+
     // todo serso: implement
 
     public String getAccessToken() {
@@ -43,6 +48,6 @@ public class VkRealmConfiguration extends JObject implements RealmConfiguration 
     }
 
     public String getUserId() {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        return login;
     }
 }

@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
@@ -17,6 +19,7 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends RoboSherlockFragment {
 
@@ -73,6 +76,23 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
 
     private int layoutResId;
 
+    /*
+    **********************************************************************
+    *
+    *                           VIEWS
+    *
+    **********************************************************************
+    */
+
+    @Nonnull
+    private Button backButton;
+
+    @Nonnull
+    private Button saveButton;
+
+    @Nonnull
+    private Button removeButton;
+
     @Nonnull
     private final TaskOverlayDialogs taskOverlayDialogs = new TaskOverlayDialogs();
 
@@ -110,6 +130,52 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     }
 
     @Override
+    public void onViewCreated(View root, Bundle savedInstanceState) {
+        super.onViewCreated(root, savedInstanceState);
+
+        removeButton = (Button) root.findViewById(R.id.mpp_realm_conf_remove_button);
+        if (isNewRealm()) {
+            removeButton.setVisibility(View.GONE);
+        } else {
+            removeButton.setVisibility(View.VISIBLE);
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeRealm(getEditedRealm());
+                }
+            });
+        }
+
+        backButton = (Button) root.findViewById(R.id.mpp_realm_conf_back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backButtonPressed();
+            }
+        });
+        if (isNewRealm() && getMultiPaneManager().isDualPane(getActivity())) {
+            // in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
+            backButton.setVisibility(View.GONE);
+        } else {
+            backButton.setVisibility(View.VISIBLE);
+        }
+
+
+        saveButton = (Button) root.findViewById(R.id.mpp_realm_conf_save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveRealm();
+            }
+        });
+
+        final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
+        fragmentTitle.setText(getFragmentTitle());
+
+        getMultiPaneManager().onPaneCreated(getActivity(), root);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -125,13 +191,24 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
         return editedRealm == null;
     }
 
-    protected void removeRealm(@Nonnull Realm realm) {
+    protected final void removeRealm(@Nonnull Realm realm) {
         taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncRemoveRealm(realm, getActivity()));
     }
 
-    protected void saveRealm(@Nonnull RealmBuilder realmBuilder) {
+    private final void saveRealm(@Nonnull RealmBuilder realmBuilder) {
         taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncSaveRealm(realmBuilder, getActivity()));
     }
+
+    protected final void saveRealm() {
+        final RealmConfiguration configuration = validateData();
+        if (configuration != null) {
+            final RealmBuilder realmBuilder = getRealmDef().newRealmBuilder(configuration, getEditedRealm());
+            saveRealm(realmBuilder);
+        }
+    }
+
+    @Nullable
+    protected abstract RealmConfiguration validateData();
 
     @Override
     public void onPause() {

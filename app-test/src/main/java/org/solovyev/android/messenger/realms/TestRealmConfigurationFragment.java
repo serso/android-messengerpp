@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.realms;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -17,6 +18,12 @@ public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragme
 
     public TestRealmConfigurationFragment() {
         super(0);
+    }
+
+    @Nullable
+    @Override
+    protected RealmConfiguration validateData() {
+        return new TestRealmConfiguration("test", 42);
     }
 
     @Nonnull

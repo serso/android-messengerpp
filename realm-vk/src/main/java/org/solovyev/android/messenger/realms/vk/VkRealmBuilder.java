@@ -1,19 +1,25 @@
 package org.solovyev.android.messenger.realms.vk;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthServiceProvider;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.HttpTransactions;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
-import org.solovyev.android.messenger.realms.vk.secutiry.VkAuthenticationHttpTransaction;
 import org.solovyev.android.messenger.realms.vk.users.VkUsersGetHttpTransaction;
-import org.solovyev.android.messenger.security.AuthData;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -68,13 +74,23 @@ public class VkRealmBuilder extends AbstractRealmBuilder<VkRealmConfiguration> {
     @Override
     public void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
         final VkRealmConfiguration configuration = getConfiguration();
-        try {
-            final AuthData authData = HttpTransactions.execute(new VkAuthenticationHttpTransaction(configuration.getLogin(), configuration.getPassword(), resolvedCaptcha));
-            configuration.setAccessToken(authData.getAccessToken());
 
-        } catch (IOException e) {
-            throw new InvalidCredentialsException(e);
-        }
+        final AccountManager am = AccountManager.get(MessengerApplication.getApp());
+        final Bundle options = new Bundle();
+
+        //am.addAccount("messengerpp.vk", "auth", new String[]{}, )
+
+        am.getAuthToken(new Account(configuration.getLogin(), "messengerpp.vk"), "SETTINGS", options, null, new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+
+            }
+        }, new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                return false;
+            }
+        }));
     }
 
     private OAuthAccessor createOAuthAccessor(){

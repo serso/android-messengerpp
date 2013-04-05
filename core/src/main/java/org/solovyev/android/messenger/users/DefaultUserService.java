@@ -10,6 +10,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerExceptionHandler;
 import org.solovyev.android.messenger.chats.ApiChat;
@@ -552,8 +553,12 @@ public class DefaultUserService implements UserService {
     @Override
     public int getUnreadMessagesCount(@Nonnull Entity contact) {
         try {
-            final Chat chat = chatService.getPrivateChat(getRealmByEntity(contact).getUser().getEntity(), contact);
-            return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
+            if (!Threads.isUiThread()) {
+                final Chat chat = chatService.getPrivateChat(getRealmByEntity(contact).getUser().getEntity(), contact);
+                return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
+            } else {
+                return 0;
+            }
         } catch (RealmException e) {
             return 0;
         }

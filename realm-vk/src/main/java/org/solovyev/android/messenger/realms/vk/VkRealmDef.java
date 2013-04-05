@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms.vk;
 
+import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
@@ -85,7 +86,7 @@ public class VkRealmDef extends AbstractRealmDef {
     /*
     **********************************************************************
     *
-    *                           FIELDS
+    *                           METHODS
     *
     **********************************************************************
     */
@@ -99,7 +100,7 @@ public class VkRealmDef extends AbstractRealmDef {
     @Nonnull
     @Override
     public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
-        return null;
+        return new VkRealmBuilder(this, editedRealm, (VkRealmConfiguration) configuration);
     }
 
     @Nonnull
@@ -124,6 +125,11 @@ public class VkRealmDef extends AbstractRealmDef {
         }
 
         return result;
+    }
+
+    @Override
+    public void init(@Nonnull Context context) {
+        super.init(context);
     }
 
     @Nonnull

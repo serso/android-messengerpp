@@ -43,7 +43,8 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
         }
     }
 
-    private synchronized void tryToConnect(int connectionAttempt) throws RealmConnectionException {
+    @Nullable
+    private synchronized Connection tryToConnect(int connectionAttempt) throws RealmConnectionException {
         if (this.connection == null) {
             final Connection connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
 
@@ -60,6 +61,8 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
                 }
             }
         }
+
+        return this.connection;
     }
 
     private void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
@@ -103,13 +106,14 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 
     @Nonnull
     private Connection tryGetConnection() throws XMPPException, RealmConnectionException {
-        if (connection != null) {
-            prepareConnection(connection, getRealm());
-            return connection;
+        Connection localConnection = connection;
+        if (localConnection != null) {
+            prepareConnection(localConnection, getRealm());
+            return localConnection;
         } else {
-            tryToConnect(CONNECTION_RETRIES - 1);
-            if (connection != null) {
-                return connection;
+            localConnection = tryToConnect(CONNECTION_RETRIES - 1);
+            if (localConnection != null) {
+                return localConnection;
             } else {
                 throw new RealmConnectionException();
             }

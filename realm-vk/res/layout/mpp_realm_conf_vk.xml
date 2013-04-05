@@ -16,7 +16,7 @@
 
         <EditText
             a:id="@+id/mpp_vk_login_edittext"
-            a:text="talk.google.com"
+            a:text="se.solovyev"
             style="?mpp_form_edittext" />
 
         <TextView
@@ -25,7 +25,6 @@
 
         <EditText
             a:id="@+id/mpp_vk_password_edittext"
-            a:text="messengerplusplus@gmail.com"
             style="?mpp_form_edittext" />
 
         <LinearLayout
@@ -34,18 +33,18 @@
             a:layout_height="wrap_content">
 
             <Button
-                a:id="@+id/mpp_vk_back_button"
+                a:id="@+id/mpp_realm_conf_back_button"
                 a:text="@string/mpp_back"
                 style="?mpp_form_button" />
 
             <Button
-                a:id="@+id/mpp_vk_remove_button"
+                a:id="@+id/mpp_realm_conf_remove_button"
                 a:visibility="gone"
                 a:text="@string/mpp_remove"
                 style="?mpp_form_button" />
 
             <Button
-                a:id="@+id/mpp_vk_save_button"
+                a:id="@+id/mpp_realm_conf_save_button"
                 a:text="@string/mpp_save"
                 style="?mpp_form_button" />
 
