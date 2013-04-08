@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.TaskOverlayDialogs;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.tasks.AsyncTaskService;
+import org.solovyev.tasks.TaskService;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import roboguice.event.EventManager;
 
@@ -62,7 +62,7 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
 
     @Inject
     @Nonnull
-    private AsyncTaskService asyncTaskService;
+    private TaskService taskService;
 
     /*
     **********************************************************************

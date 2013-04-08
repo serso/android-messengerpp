@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
-import org.solovyev.android.tasks.AsyncTaskService;
+import org.solovyev.tasks.TaskService;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 import roboguice.RoboGuice;
 
@@ -90,7 +90,7 @@ public class MessengerApplication extends Application implements MessengerServic
 
     @Inject
     @Nonnull
-    private AsyncTaskService asyncTaskService;
+    private TaskService taskService;
 
     public MessengerApplication() {
         instance = this;
@@ -156,8 +156,8 @@ public class MessengerApplication extends Application implements MessengerServic
 
     @Nonnull
     @Override
-    public AsyncTaskService getAsyncTaskService() {
-        return asyncTaskService;
+    public TaskService getTaskService() {
+        return taskService;
     }
 
     @Nonnull

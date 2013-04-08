@@ -2,10 +2,10 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import org.solovyev.android.tasks.ActivityCallback;
-import org.solovyev.android.tasks.NoSuchTaskException;
-import org.solovyev.android.tasks.TaskFinishedException;
-import org.solovyev.android.tasks.Tasks;
+import org.solovyev.android.tasks.ContextCallback;
+import org.solovyev.tasks.NoSuchTaskException;
+import org.solovyev.tasks.TaskFinishedException;
+import org.solovyev.tasks.Tasks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 * Date: 4/3/13
 * Time: 11:01 PM
 */
-public final class TaskOverlayDialog<V> implements ActivityCallback<Activity, V> {
+public final class TaskOverlayDialog<V> implements ContextCallback<Activity, V> {
 
     @Nonnull
     private final ProgressDialog progressDialog;
@@ -40,7 +40,7 @@ public final class TaskOverlayDialog<V> implements ActivityCallback<Activity, V>
     public static TaskOverlayDialog<?> attachToTask(@Nonnull Activity activity, @Nonnull String taskName, int titleResId, int messageResId) {
         TaskOverlayDialog<Object> taskOverlayDialog = newInstance(activity, titleResId, messageResId);
         try {
-            MessengerApplication.getServiceLocator().getAsyncTaskService().addListener(taskName, Tasks.newFutureCallback(activity, taskOverlayDialog));
+            MessengerApplication.getServiceLocator().getTaskService().tryAddTaskListener(taskName, Tasks.toFutureCallback(activity, taskOverlayDialog));
             // attached to task => can show dialog
             taskOverlayDialog.show();
         } catch (NoSuchTaskException e) {
@@ -54,7 +54,7 @@ public final class TaskOverlayDialog<V> implements ActivityCallback<Activity, V>
 
 
     @Override
-    public void onSuccess(@Nonnull Activity activity, V result) {
+    public void onSuccess(@Nonnull Activity context, V result) {
         dismiss();
     }
 
@@ -72,7 +72,7 @@ public final class TaskOverlayDialog<V> implements ActivityCallback<Activity, V>
     }
 
     @Override
-    public void onFailure(@Nonnull Activity activity, Throwable t) {
+    public void onFailure(@Nonnull Activity context, Throwable t) {
         dismiss();
     }
 }

@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
-import org.solovyev.android.tasks.AsyncTaskService;
+import org.solovyev.tasks.TaskService;
 
 import javax.annotation.Nonnull;
 
@@ -47,5 +47,5 @@ public interface MessengerServiceLocator {
     NotificationService getNotificationService();
 
     @Nonnull
-    AsyncTaskService getAsyncTaskService();
+    TaskService getTaskService();
 }

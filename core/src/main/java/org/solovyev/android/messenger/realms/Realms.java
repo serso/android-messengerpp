@@ -4,7 +4,7 @@ import android.app.Activity;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.TaskOverlayDialog;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.tasks.Tasks;
+import org.solovyev.tasks.Tasks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,16 +27,16 @@ public final class Realms {
     }
 
     static boolean isRemoveTaskRunning() {
-        return MessengerApplication.getServiceLocator().getAsyncTaskService().isRunning(TASK_REALM_REMOVE);
+        return MessengerApplication.getServiceLocator().getTaskService().isRunning(TASK_REALM_REMOVE);
     }
 
     static boolean isSaveTaskRunning() {
-        return MessengerApplication.getServiceLocator().getAsyncTaskService().isRunning(TASK_REALM_SAVE);
+        return MessengerApplication.getServiceLocator().getTaskService().isRunning(TASK_REALM_SAVE);
     }
 
     @Nullable
     static TaskOverlayDialog<?> asyncRemoveRealm(@Nonnull Realm realm, @Nonnull Activity activity) {
-        MessengerApplication.getServiceLocator().getAsyncTaskService().run(TASK_REALM_REMOVE, new RealmRemoverCallable(realm), Tasks.newUiThreadCallback(activity, new RealmRemoverCallback()));
+        MessengerApplication.getServiceLocator().getTaskService().run(TASK_REALM_REMOVE, new RealmRemoverCallable(realm), Tasks.toUiThreadFutureCallback(activity, new RealmRemoverCallback()));
         return attachToRemoveTask(activity);
     }
 
@@ -47,7 +47,7 @@ public final class Realms {
 
     @Nullable
     static TaskOverlayDialog<?> asyncSaveRealm(RealmBuilder realmBuilder, @Nonnull Activity activity) {
-        MessengerApplication.getServiceLocator().getAsyncTaskService().run(TASK_REALM_SAVE, new RealmSaverCallable(realmBuilder), Tasks.newUiThreadCallback(activity, new RealmSaverCallback()));
+        MessengerApplication.getServiceLocator().getTaskService().run(TASK_REALM_SAVE, new RealmSaverCallable(realmBuilder), Tasks.toUiThreadFutureCallback(activity, new RealmSaverCallback()));
         return attachToSaveTask(activity);
     }
 
