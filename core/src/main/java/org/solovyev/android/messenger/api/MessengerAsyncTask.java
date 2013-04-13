@@ -20,10 +20,6 @@ public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsync
         super(context);
     }
 
-    protected MessengerAsyncTask(@Nonnull Context context, @Nonnull MaskParams maskParams) {
-        super(context, maskParams);
-    }
-
     @Override
     protected void onFailurePostExecute(@Nonnull Exception e) {
         MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);

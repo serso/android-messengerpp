@@ -3,9 +3,9 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import org.solovyev.android.tasks.ContextCallback;
+import org.solovyev.android.tasks.Tasks;
 import org.solovyev.tasks.NoSuchTaskException;
 import org.solovyev.tasks.TaskFinishedException;
-import org.solovyev.tasks.Tasks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

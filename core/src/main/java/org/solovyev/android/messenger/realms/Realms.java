@@ -4,7 +4,7 @@ import android.app.Activity;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.TaskOverlayDialog;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.tasks.Tasks;
+import org.solovyev.android.tasks.Tasks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,43 +16,40 @@ import javax.annotation.Nullable;
  */
 public final class Realms {
 
-    @Nonnull
-    private static final String TASK_REALM_SAVE = "realm-save";
-
-    @Nonnull
-    private static final String TASK_REALM_REMOVE = "realm-remove";
-
     private Realms() {
         throw new AssertionError();
     }
 
-    static boolean isRemoveTaskRunning() {
-        return MessengerApplication.getServiceLocator().getTaskService().isRunning(TASK_REALM_REMOVE);
+    @Nullable
+    static TaskOverlayDialog<?> asyncChangeRealmState(@Nonnull Realm realm, @Nonnull Activity activity) {
+        MessengerApplication.getServiceLocator().getTaskService().run(Tasks.toTask(activity, new RealmChangeStateTask(realm)));
+        return attachToChangeRealmStateTask(activity);
     }
 
-    static boolean isSaveTaskRunning() {
-        return MessengerApplication.getServiceLocator().getTaskService().isRunning(TASK_REALM_SAVE);
+    @Nullable
+    static TaskOverlayDialog<?> attachToChangeRealmStateTask(@Nonnull Activity activity) {
+        return TaskOverlayDialog.attachToTask(activity, RealmChangeStateTask.TASK_NAME, R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
     }
 
     @Nullable
     static TaskOverlayDialog<?> asyncRemoveRealm(@Nonnull Realm realm, @Nonnull Activity activity) {
-        MessengerApplication.getServiceLocator().getTaskService().run(TASK_REALM_REMOVE, new RealmRemoverCallable(realm), Tasks.toUiThreadFutureCallback(activity, new RealmRemoverCallback()));
-        return attachToRemoveTask(activity);
+        MessengerApplication.getServiceLocator().getTaskService().run(Tasks.toTask(activity, new RealmRemoverTask(realm)));
+        return attachToRemoveRealmTask(activity);
     }
 
     @Nullable
-    static TaskOverlayDialog<?> attachToRemoveTask(@Nonnull Activity activity) {
-        return TaskOverlayDialog.attachToTask(activity, TASK_REALM_REMOVE, R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+    static TaskOverlayDialog<?> attachToRemoveRealmTask(@Nonnull Activity activity) {
+        return TaskOverlayDialog.attachToTask(activity, RealmRemoverTask.TASK_NAME, R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
     }
 
     @Nullable
     static TaskOverlayDialog<?> asyncSaveRealm(RealmBuilder realmBuilder, @Nonnull Activity activity) {
-        MessengerApplication.getServiceLocator().getTaskService().run(TASK_REALM_SAVE, new RealmSaverCallable(realmBuilder), Tasks.toUiThreadFutureCallback(activity, new RealmSaverCallback()));
-        return attachToSaveTask(activity);
+        MessengerApplication.getServiceLocator().getTaskService().run(Tasks.toTask(activity, new RealmSaverTask(realmBuilder)));
+        return attachToSaveRealmTask(activity);
     }
 
     @Nullable
-    static TaskOverlayDialog<?> attachToSaveTask(@Nonnull Activity activity) {
-        return TaskOverlayDialog.attachToTask(activity, TASK_REALM_SAVE, R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+    static TaskOverlayDialog<?> attachToSaveRealmTask(@Nonnull Activity activity) {
+        return TaskOverlayDialog.attachToTask(activity, RealmSaverTask.TASK_NAME, R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
     }
 }

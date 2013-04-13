@@ -179,8 +179,9 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     public void onResume() {
         super.onResume();
 
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToSaveTask(getActivity()));
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveTask(getActivity()));
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToSaveRealmTask(getActivity()));
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveRealmTask(getActivity()));
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToChangeRealmStateTask(getActivity()));
     }
 
     public T getEditedRealm() {

@@ -191,6 +191,13 @@
                 <type>apklib</type>
             </dependency>
 
+            <dependency>
+                <groupId>org.solovyev.android</groupId>
+                <artifactId>android-common-tasks</artifactId>
+                <version>${android.common.version}</version>
+                <type>apklib</type>
+            </dependency>
+
             <!-- OTHER -->
 
             <!-- Pull-to-Refresh -->

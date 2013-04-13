@@ -190,7 +190,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     public void onResume() {
         super.onResume();
 
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveTask(getActivity()));
+        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveRealmTask(getActivity()));
     }
 
     @Override
@@ -222,7 +222,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     }
 
     private void changeState() {
-        new AsyncRealmStateChanger(this.getActivity()).execute(realm);
+        Realms.asyncChangeRealmState(realm, getActivity());
     }
 
     private void editRealm() {
