@@ -14,8 +14,9 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.TaskOverlayDialogs;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.tasks.TaskService;
+import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.tasks.TaskService;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
@@ -94,7 +95,7 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     private Button removeButton;
 
     @Nonnull
-    private final TaskOverlayDialogs taskOverlayDialogs = new TaskOverlayDialogs();
+    private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
 
     protected BaseRealmConfigurationFragment(int layoutResId) {
         this.layoutResId = layoutResId;
@@ -179,9 +180,8 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     public void onResume() {
         super.onResume();
 
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToSaveRealmTask(getActivity()));
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveRealmTask(getActivity()));
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToChangeRealmStateTask(getActivity()));
+        taskListeners.addTaskListener(RealmSaverCallable.TASK_NAME, RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+        taskListeners.addTaskListener(RealmRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
     }
 
     public T getEditedRealm() {
@@ -193,11 +193,11 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     }
 
     protected final void removeRealm(@Nonnull Realm realm) {
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncRemoveRealm(realm, getActivity()));
+        taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(realm), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
     }
 
-    private final void saveRealm(@Nonnull RealmBuilder realmBuilder) {
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncSaveRealm(realmBuilder, getActivity()));
+    private void saveRealm(@Nonnull RealmBuilder realmBuilder) {
+        taskListeners.run(RealmSaverCallable.TASK_NAME, new RealmSaverCallable(realmBuilder), RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
     }
 
     protected final void saveRealm() {
@@ -213,7 +213,7 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
 
     @Override
     public void onPause() {
-        taskOverlayDialogs.dismissAll();
+        taskListeners.removeAllTaskListeners();
 
         super.onPause();
     }

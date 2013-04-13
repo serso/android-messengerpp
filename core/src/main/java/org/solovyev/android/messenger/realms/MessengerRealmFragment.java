@@ -18,6 +18,7 @@ import org.solovyev.android.messenger.TaskOverlayDialogs;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import roboguice.event.EventManager;
@@ -85,7 +86,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     private RealmEventListener realmEventListener;
 
     @Nonnull
-    private final TaskOverlayDialogs taskOverlayDialogs = new TaskOverlayDialogs();
+    private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -190,12 +191,13 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     public void onResume() {
         super.onResume();
 
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.attachToRemoveRealmTask(getActivity()));
+        taskListeners.addTaskListener(RealmChangeStateCallable.TASK_NAME, RealmChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+        taskListeners.addTaskListener(RealmRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
     }
 
     @Override
     public void onPause() {
-        taskOverlayDialogs.dismissAll();
+        taskListeners.removeAllTaskListeners();
 
         super.onPause();
     }
@@ -222,7 +224,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     }
 
     private void changeState() {
-        Realms.asyncChangeRealmState(realm, getActivity());
+        taskListeners.run(RealmChangeStateCallable.TASK_NAME, new RealmChangeStateCallable(realm), RealmChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
     }
 
     private void editRealm() {
@@ -236,7 +238,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
 
     private void removeRealm() {
-        taskOverlayDialogs.addTaskOverlayDialog(Realms.asyncRemoveRealm(realm, getActivity()));
+        taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(getRealm()), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
     }
 
     private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
