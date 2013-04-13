@@ -4,7 +4,6 @@ import android.widget.ImageView;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmException;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -88,7 +87,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     @Nullable
     ChatMessage getLastMessage(@Nonnull Entity chat);
 
-    void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView) throws UnsupportedRealmException;
+    void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView);
 
     void saveChatMessages(@Nonnull Entity realmChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate);
 

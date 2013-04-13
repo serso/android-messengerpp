@@ -9,7 +9,6 @@ import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.Messages;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
@@ -104,11 +103,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
         final User user = uiChat.getUser();
 
         final ImageView chatIcon = viewTag.getViewById(R.id.mpp_li_chat_icon_imageview);
-        try {
-            getChatService().setChatIcon(chat, chatIcon);
-        } catch (UnsupportedRealmException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        getChatService().setChatIcon(chat, chatIcon);
 
         final ChatMessage lastMessage = getLastMessage();
 

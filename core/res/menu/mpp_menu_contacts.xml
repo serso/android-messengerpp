@@ -4,7 +4,7 @@
 
     <item a:id="@+id/mpp_menu_toggle_contacts"
           a:title="@string/mpp_menu_toggle_users"
-          a:icon="@drawable/mpp_ab_user"
+          a:icon="@drawable/mpp_ab_user_offline"
           a:showAsAction="always"/>
 
     <item a:id="@+id/mpp_menu_toggle_filter_box"

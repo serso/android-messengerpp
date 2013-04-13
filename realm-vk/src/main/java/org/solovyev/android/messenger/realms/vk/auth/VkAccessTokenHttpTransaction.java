@@ -24,6 +24,8 @@ import java.util.List;
 */
 final class VkAccessTokenHttpTransaction extends AbstractHttpTransaction<JsonAuthResult> {
 
+    // todo serso: add VkConfiguration
+
     @Nonnull
     private final String code;
 

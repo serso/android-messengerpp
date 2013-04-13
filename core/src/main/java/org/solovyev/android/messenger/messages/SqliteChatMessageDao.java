@@ -241,6 +241,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
             final ContentValues values = toContentValues(chat, chatMessage);
 
+            // todo serso: duplicate in vk
             return db.insert("messages", null, values);
         }
     }

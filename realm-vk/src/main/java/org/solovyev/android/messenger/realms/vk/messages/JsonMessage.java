@@ -174,8 +174,7 @@ public class JsonMessage {
             throw new IllegalJsonException();
         }
 
-        // todo serso: use read_state
-        final ChatMessageImpl result = Messages.newInstance(toLiteChatMessage(user, explicitUserId, realm), false);
+        final ChatMessageImpl result = Messages.newInstance(toLiteChatMessage(user, explicitUserId, realm), isRead());
         result.setDirection(getNotNullMessageDirection());
         for (LiteChatMessage fwdMessage : getFwdMessages(user, realm)) {
             result.addFwdMessage(fwdMessage);

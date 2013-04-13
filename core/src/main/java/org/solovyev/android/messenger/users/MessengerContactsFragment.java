@@ -32,7 +32,7 @@ public final class MessengerContactsFragment extends AbstractMessengerContactsFr
     private static final String MODE = "mode";
 
     @Nonnull
-    static final MessengerContactsMode DEFAULT_CONTACTS_MODE = MessengerContactsMode.all_contacts;
+    static final MessengerContactsMode DEFAULT_CONTACTS_MODE = MessengerContactsMode.only_online_contacts;
 
     @Nonnull
     private MessengerContactsMode mode = DEFAULT_CONTACTS_MODE;
