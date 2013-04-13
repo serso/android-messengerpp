@@ -36,7 +36,7 @@ public class VkRealmChatService implements RealmChatService {
     private static final String TAG = VkRealmChatService.class.getSimpleName();
 
     @Nonnull
-    private static final String CHAT_DELIMITER = "_";
+    private static final String CHAT_DELIMITER = ":";
 
     @Nonnull
     private final VkRealm realm;
@@ -95,7 +95,7 @@ public class VkRealmChatService implements RealmChatService {
         if (chat != null) {
             try {
                 if (chat.isPrivate()) {
-                    final int index = realmChatId.indexOf("_");
+                    final int index = realmChatId.indexOf(":");
                     if (index >= 0) {
 
                         final String secondUserId = realmChatId.substring(index + 1, realmChatId.length());
@@ -106,7 +106,7 @@ public class VkRealmChatService implements RealmChatService {
                         return result;
 
                     } else {
-                        Log.e(TAG, "Chat is private but don't have '_', chat id: " + realmChatId);
+                        Log.e(TAG, "Chat is private but don't have ':', chat id: " + realmChatId);
                         return Collections.emptyList();
                     }
 

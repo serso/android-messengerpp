@@ -16,15 +16,17 @@ public class VkRealmConfiguration extends JObject implements RealmConfiguration 
     @Nonnull
     private String accessToken;
 
+    @Nonnull
+    private String userId;
+
     public VkRealmConfiguration(@Nonnull String login, @Nonnull String password) {
         this.login = login;
         this.password = password;
     }
 
-    // todo serso: implement
-
+    @Nonnull
     public String getAccessToken() {
-        throw new UnsupportedOperationException();
+        return accessToken;
     }
 
     @Nonnull
@@ -43,11 +45,16 @@ public class VkRealmConfiguration extends JObject implements RealmConfiguration 
         return password;
     }
 
-    public void setAccessToken(@Nonnull String accessToken) {
+    public void setAccessParameters(@Nonnull String accessToken, @Nonnull String userId) {
         this.accessToken = accessToken;
+        this.userId = userId;
+        // we obtained access token => password is not needed anymore
+        this.password = "";
     }
 
+
+    @Nonnull
     public String getUserId() {
-        return login;
+        return userId;
     }
 }

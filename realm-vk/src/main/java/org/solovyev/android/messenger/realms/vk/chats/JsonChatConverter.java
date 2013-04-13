@@ -96,20 +96,23 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
                         final Entity secondUser = message.getSecondUser(user.getEntity());
 
                         if (secondUser != null) {
-                            final Entity realmUser = user.getEntity();
-                            final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().getPrivateChatId(realmUser, secondUser);
+                            // vk allows to have messages sent to person self himself - we don't
+                            if (!secondUser.getRealmEntityId().equals(user.getEntity().getRealmEntityId())) {
+                                final Entity realmUser = user.getEntity();
+                                final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().getPrivateChatId(realmUser, secondUser);
 
-                            ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
-                            if (chat == null) {
-                                chat = ApiChatImpl.newInstance(realmChat, jsonMessagesResult.getCount(), true);
+                                ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
+                                if (chat == null) {
+                                    chat = ApiChatImpl.newInstance(realmChat, jsonMessagesResult.getCount(), true);
 
-                                chat.addParticipant(user);
-                                chat.addParticipant(userService.getUserById(secondUser));
+                                    chat.addParticipant(user);
+                                    chat.addParticipant(userService.getUserById(secondUser));
 
-                                fakeChats.put(realmChat.getEntityId(), chat);
+                                    fakeChats.put(realmChat.getEntityId(), chat);
+                                }
+
+                                chat.addMessage(message);
                             }
-
-                            chat.addMessage(message);
                         } else {
                             Log.e(this.getClass().getSimpleName(), "Recipient is null for message " + message);
                         }

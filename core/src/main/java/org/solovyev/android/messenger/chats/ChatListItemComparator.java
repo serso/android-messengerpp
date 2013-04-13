@@ -28,8 +28,10 @@ final class ChatListItemComparator implements java.util.Comparator<ChatListItem>
             return -llm.getSendDate().compareTo(rlm.getSendDate());
         } else if (llm != null) {
             return -1;
-        } else {
+        } else if ( rlm != null ) {
             return 1;
+        } else {
+            return 0;
         }
     }
 }
