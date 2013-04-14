@@ -399,6 +399,12 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
         lv.setScrollbarFadingEnabled(true);
         lv.setCacheColorHint(Color.TRANSPARENT);
         lv.setOnScrollListener(this);
+
+        // filter so done manually
+        lv.setTextFilterEnabled(false);
+
+        lv.setVerticalFadingEdgeEnabled(false);
+        lv.setFocusable(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
         }
@@ -426,8 +432,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
         userService.addListener(userEventListener);
 
         final ListView lv = getListView();
-        lv.setTextFilterEnabled(true);
-        lv.setVerticalFadingEdgeEnabled(false);
         lv.setOnItemClickListener(new ListViewOnItemClickListener());
         lv.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
 
