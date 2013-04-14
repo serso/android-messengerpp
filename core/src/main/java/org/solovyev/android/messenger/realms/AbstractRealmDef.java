@@ -1,8 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
+import org.solovyev.common.security.SecurityService;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;

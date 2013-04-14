@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.icons.HttpRealmIconService;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.*;
@@ -12,7 +13,6 @@ import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
-import org.solovyev.android.security.Security;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
@@ -147,7 +147,7 @@ public class VkRealmDef extends AbstractRealmDef {
     @Nullable
     @Override
     public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
-        return new VkRealmConfigurationCipherer(Security.newAndroidAesStringCipherer());
+        return new VkRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
     }
 
     /*

@@ -31,6 +31,8 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
+import org.solovyev.android.security.Security;
+import org.solovyev.common.security.SecurityService;
 import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
 

@@ -6,6 +6,8 @@ import java.util.Collection;
 
 public interface RealmDao {
 
+    final String TAG = RealmDao.class.getSimpleName();
+
     void insertRealm(@Nonnull Realm realm) throws RealmException;
 
     void deleteRealm(@Nonnull String realmId);

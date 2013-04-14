@@ -5,6 +5,7 @@ import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
@@ -48,4 +49,7 @@ public interface MessengerServiceLocator {
 
     @Nonnull
     TaskService getTaskService();
+
+    @Nonnull
+    MessengerSecurityService getSecurityService();
 }

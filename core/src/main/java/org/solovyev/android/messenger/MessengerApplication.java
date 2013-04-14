@@ -10,11 +10,12 @@ import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
-import org.solovyev.tasks.TaskService;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
+import org.solovyev.tasks.TaskService;
 import roboguice.RoboGuice;
 
 import javax.annotation.Nonnull;
@@ -92,6 +93,10 @@ public class MessengerApplication extends Application implements MessengerServic
     @Nonnull
     private TaskService taskService;
 
+    @Inject
+    @Nonnull
+    private MessengerSecurityService securityService;
+
     public MessengerApplication() {
         instance = this;
     }
@@ -158,6 +163,11 @@ public class MessengerApplication extends Application implements MessengerServic
     @Override
     public TaskService getTaskService() {
         return taskService;
+    }
+
+    @Nonnull
+    public MessengerSecurityService getSecurityService() {
+        return securityService;
     }
 
     @Nonnull

@@ -21,6 +21,11 @@ public final class MessengerPreferences {
 
     }
 
+    public static final class Security {
+        public static Preference<String> uuid = StringPreference.of("security.uuid", null);
+        public static Preference<String> salt = StringPreference.of("security.salt", null);
+    }
+
     public static final class Gui {
         public static final class Chat {
 

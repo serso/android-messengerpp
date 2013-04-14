@@ -8,15 +8,11 @@ import org.jivesfotware.smackx.enitycaps.provider.MessengerCapsExtensionProvider
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.icons.RealmIconService;
-import org.solovyev.android.messenger.realms.AbstractRealmDef;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmBuilder;
-import org.solovyev.android.messenger.realms.RealmConfiguration;
-import org.solovyev.android.messenger.realms.RealmState;
+import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.security.Security;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
@@ -110,7 +106,7 @@ public final class XmppRealmDef extends AbstractRealmDef {
     @Nullable
     @Override
     public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
-        return new XmppRealmConfigurationCipherer(Security.newAndroidAesStringCipherer());
+        return new XmppRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
     }
 
     /*

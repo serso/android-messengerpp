@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.database.Cursor;
+import android.util.Log;
 import com.google.gson.Gson;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -38,6 +39,17 @@ public class RealmMapper implements Converter<Cursor, Realm> {
 
             final RealmConfiguration encryptedConfiguration = new Gson().fromJson(configuration, realmDef.getConfigurationClass());
 
+            final RealmConfiguration decryptedConfiguration = decryptConfiguration(realmDef, encryptedConfiguration);
+
+            return realmDef.newRealm(realmId, user, decryptedConfiguration, RealmState.valueOf(state));
+        } catch (UnsupportedRealmException e) {
+            throw new RealmRuntimeException(e);
+        }
+    }
+
+    @Nonnull
+    private RealmConfiguration decryptConfiguration(@Nonnull RealmDef realmDef, @Nonnull RealmConfiguration encryptedConfiguration) {
+        try {
             final RealmConfiguration decryptedConfiguration;
             final Cipherer<RealmConfiguration, RealmConfiguration> cipherer = realmDef.getCipherer();
             if (secret != null && cipherer != null) {
@@ -45,12 +57,11 @@ public class RealmMapper implements Converter<Cursor, Realm> {
             } else {
                 decryptedConfiguration = encryptedConfiguration;
             }
-
-            return realmDef.newRealm(realmId, user, decryptedConfiguration, RealmState.valueOf(state));
-        } catch (UnsupportedRealmException e) {
-            throw new RealmRuntimeException(e);
-        }  catch (CiphererException e) {
-            throw new RealmRuntimeException(e);
+            return decryptedConfiguration;
+        } catch (CiphererException e) {
+            Log.e("Realm", e.getMessage(), e);
+            // user will see an error notification later when realm will try to connect to remote server
+            return encryptedConfiguration;
         }
     }
 }

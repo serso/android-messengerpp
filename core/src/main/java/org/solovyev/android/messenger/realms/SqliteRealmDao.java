@@ -8,13 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.Gson;
 import com.google.inject.Singleton;
-import org.solovyev.android.db.AbstractDbQuery;
-import org.solovyev.android.db.AbstractObjectDbExec;
-import org.solovyev.android.db.AbstractSQLiteHelper;
-import org.solovyev.android.db.AndroidDbUtils;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.db.DeleteAllRowsDbExec;
-import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.security.Cipherer;
@@ -53,6 +47,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
     @Override
     public void init() {
+        secret = MessengerApplication.getServiceLocator().getSecurityService().getSecretKey();
     }
 
     @Override

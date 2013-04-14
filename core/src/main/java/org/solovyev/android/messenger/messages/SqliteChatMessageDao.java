@@ -241,7 +241,6 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
             final ContentValues values = toContentValues(chat, chatMessage);
 
-            // todo serso: duplicate in vk
             return db.insert("messages", null, values);
         }
     }
@@ -262,7 +261,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
             final ContentValues values = toContentValues(chat, chatMessage);
 
-            return db.update("messages", values, "id = ?", new String[]{String.valueOf(chatMessage.getEntity().getEntityId())});
+            return db.update("messages", values, "id = ? and chat_id = ?", new String[]{String.valueOf(chatMessage.getEntity().getEntityId()), String.valueOf(chat.getEntity().getEntityId())});
         }
     }
 
