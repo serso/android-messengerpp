@@ -5,6 +5,7 @@ import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.common.security.Cipherer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,6 +74,12 @@ public interface RealmDef extends MessengerEntity {
 
     @Nonnull
     RealmIconService getRealmIconService();
+
+    /**
+     * @return cipherer to be used while saving {@link RealmConfiguration} in persistence storage
+     */
+    @Nullable
+    Cipherer<RealmConfiguration, RealmConfiguration> getCipherer();
 
     /*
     **********************************************************************

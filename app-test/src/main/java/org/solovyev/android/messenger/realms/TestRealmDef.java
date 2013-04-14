@@ -10,6 +10,7 @@ import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.test.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.common.security.Cipherer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,6 +77,12 @@ public class TestRealmDef extends AbstractRealmDef {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
         };
+    }
+
+    @Nullable
+    @Override
+    public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
+        return null;
     }
 
 }

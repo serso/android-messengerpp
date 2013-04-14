@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.realms.vk;
 
-import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
@@ -13,9 +12,13 @@ import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
+import org.solovyev.android.security.Security;
+import org.solovyev.common.security.Cipherer;
+import org.solovyev.common.security.CiphererException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,6 +144,12 @@ public class VkRealmDef extends AbstractRealmDef {
         return iconService;
     }
 
+    @Nullable
+    @Override
+    public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
+        return new VkRealmConfigurationCipherer(Security.newAndroidAesStringCipherer());
+    }
+
     /*
     **********************************************************************
     *
@@ -165,6 +174,42 @@ public class VkRealmDef extends AbstractRealmDef {
             }
 
             return result;
+        }
+    }
+
+    private static class VkRealmConfigurationCipherer implements Cipherer<RealmConfiguration, RealmConfiguration> {
+
+        @Nonnull
+        private final Cipherer<String, String> stringCipherer;
+
+        private VkRealmConfigurationCipherer(@Nonnull Cipherer<String, String> stringCipherer) {
+            this.stringCipherer = stringCipherer;
+        }
+
+        @Nonnull
+        @Override
+        public RealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull RealmConfiguration decrypted) throws CiphererException {
+            return encrypt(secret, (VkRealmConfiguration)decrypted);
+        }
+
+        @Nonnull
+        public RealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration decrypted) throws CiphererException {
+            final VkRealmConfiguration encrypted = decrypted.clone();
+            encrypted.setAccessParameters(stringCipherer.encrypt(secret, decrypted.getAccessToken()), decrypted.getUserId());
+            return encrypted;
+        }
+
+        @Nonnull
+        @Override
+        public RealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull RealmConfiguration encrypted) throws CiphererException {
+            return decrypt(secret, (VkRealmConfiguration)encrypted);
+        }
+
+        @Nonnull
+        public RealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration encrypted) throws CiphererException {
+            final VkRealmConfiguration decrypted = encrypted.clone();
+            decrypted.setAccessParameters(stringCipherer.decrypt(secret, encrypted.getAccessToken()), encrypted.getUserId());
+            return decrypted;
         }
     }
 }

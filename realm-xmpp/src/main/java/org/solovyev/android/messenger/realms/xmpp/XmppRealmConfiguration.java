@@ -115,4 +115,8 @@ public class XmppRealmConfiguration extends JObject implements RealmConfiguratio
     public XmppRealmConfiguration clone() {
         return (XmppRealmConfiguration) super.clone();
     }
+
+    public void setPassword(@Nonnull String password) {
+        this.password = password;
+    }
 }

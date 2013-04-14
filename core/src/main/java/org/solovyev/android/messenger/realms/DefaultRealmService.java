@@ -7,6 +7,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
@@ -109,6 +110,8 @@ public class DefaultRealmService implements RealmService {
 
     @Override
     public void init() {
+        realmDao.init();
+
         for (RealmDef realmDef : realmDefs.values()) {
             realmDef.init(context);
         }
@@ -258,6 +261,9 @@ public class DefaultRealmService implements RealmService {
             }
         } catch (RealmBuilder.ConnectionException e) {
             throw new InvalidCredentialsException(e);
+        } catch (RealmException e) {
+            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+            throw new InvalidCredentialsException(e);
         } finally {
             try {
                 realmBuilder.disconnect();
@@ -278,20 +284,26 @@ public class DefaultRealmService implements RealmService {
     @Nonnull
     private Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState, boolean fireEvent) {
         if (realm.getState() != newState) {
-            final Realm result = realm.copyForNewState(newState);
+            try {
+                final Realm result = realm.copyForNewState(newState);
 
-            synchronized (realms) {
-                this.realms.put(realm.getId(), result);
-                synchronized (lock) {
-                    this.realmDao.updateRealm(result);
+                synchronized (realms) {
+                    this.realms.put(realm.getId(), result);
+                    synchronized (lock) {
+                        this.realmDao.updateRealm(result);
+                    }
                 }
-            }
 
-            if (fireEvent) {
-                listeners.fireEvent(RealmEventType.state_changed.newEvent(result, null));
-            }
+                if (fireEvent) {
+                    listeners.fireEvent(RealmEventType.state_changed.newEvent(result, null));
+                }
 
-            return result;
+                return result;
+            } catch (RealmException e) {
+                MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+                // return old unchanged value in case of error
+                return realm;
+            }
         } else {
             return realm;
         }

@@ -17,9 +17,12 @@ import org.solovyev.android.db.DeleteAllRowsDbExec;
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.security.Cipherer;
+import org.solovyev.common.security.CiphererException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,6 +39,9 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     @Nonnull
     private RealmService realmService;
 
+    @Nullable
+    private SecretKey secret;
+
     @Inject
     public SqliteRealmDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
         super(context, sqliteOpenHelper);
@@ -46,8 +52,16 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     }
 
     @Override
-    public void insertRealm(@Nonnull Realm realm) {
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(realm)));
+    public void init() {
+    }
+
+    @Override
+    public void insertRealm(@Nonnull Realm realm) throws RealmException {
+        try {
+            AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(realm, secret)));
+        } catch (RealmRuntimeException e) {
+            throw new RealmException(e);
+        }
     }
 
     @Override
@@ -72,8 +86,12 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     }
 
     @Override
-    public void updateRealm(@Nonnull Realm realm) {
-        AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(realm)));
+    public void updateRealm(@Nonnull Realm realm) throws RealmException {
+        try {
+            AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(realm, secret)));
+        } catch (RealmRuntimeException e) {
+            throw new RealmException(e);
+        }
     }
 
     @Nonnull
@@ -97,15 +115,19 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
     private static class InsertRealm extends AbstractObjectDbExec<Realm> {
 
-        public InsertRealm(@Nonnull Realm realm) {
+        @Nullable
+        private final SecretKey secret;
+
+        public InsertRealm(@Nonnull Realm realm, @Nullable SecretKey secret) {
             super(realm);
+            this.secret = secret;
         }
 
         @Override
         public long exec(@Nonnull SQLiteDatabase db) {
             final Realm realm = getNotNullObject();
 
-            final ContentValues values = toContentValues(realm);
+            final ContentValues values = toContentValues(realm, secret);
 
             return db.insert("realms", null, values);
         }
@@ -113,28 +135,46 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
     private static class UpdateRealm extends AbstractObjectDbExec<Realm> {
 
-        public UpdateRealm(@Nonnull Realm realm) {
+        @Nullable
+        private final SecretKey secret;
+
+        public UpdateRealm(@Nonnull Realm realm, @Nullable SecretKey secret) {
             super(realm);
+            this.secret = secret;
         }
 
         @Override
         public long exec(@Nonnull SQLiteDatabase db) {
             final Realm realm = getNotNullObject();
 
-            final ContentValues values = toContentValues(realm);
+            final ContentValues values = toContentValues(realm, secret);
 
             return db.update("realms", values, "id = ?", new String[]{realm.getId()});
         }
     }
 
     @Nonnull
-    private static ContentValues toContentValues(@Nonnull Realm realm) {
+    private static ContentValues toContentValues(@Nonnull Realm realm, @Nullable SecretKey secret) throws RealmRuntimeException {
         final ContentValues values = new ContentValues();
 
         values.put("id", realm.getId());
         values.put("realm_def_id", realm.getRealmDef().getId());
         values.put("user_id", realm.getUser().getEntity().getEntityId());
-        values.put("configuration", new Gson().toJson(realm.getConfiguration()));
+
+        final RealmConfiguration configuration;
+
+        try {
+            final Cipherer<RealmConfiguration, RealmConfiguration> cipherer = realm.getRealmDef().getCipherer();
+            if (cipherer != null && secret != null) {
+                configuration = cipherer.encrypt(secret, realm.getConfiguration());
+            } else {
+                configuration = realm.getConfiguration();
+            }
+            values.put("configuration", new Gson().toJson(configuration));
+        } catch (CiphererException e) {
+            throw new RealmRuntimeException(e);
+        }
+
         values.put("state", realm.getState().name());
 
         return values;
@@ -163,7 +203,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
         @Nonnull
         @Override
         public Collection<Realm> retrieveData(@Nonnull Cursor cursor) {
-            return new ListMapper<Realm>(new RealmMapper(realmService, userService)).convert(cursor);
+            return new ListMapper<Realm>(new RealmMapper(secret)).convert(cursor);
         }
     }
 

@@ -392,7 +392,7 @@ public class DefaultChatService implements ChatService {
             }
         }
 
-        for (Chat chat : messagesByChats.keys()) {
+        for (Chat chat : messagesByChats.keySet()) {
             saveChatMessages(chat.getEntity(), messagesByChats.get(chat), true);
         }
 
@@ -483,7 +483,6 @@ public class DefaultChatService implements ChatService {
 
     @Override
     public void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException {
-        // todo serso: check if OK
         syncNewerChatMessagesForChat(chat);
     }
 

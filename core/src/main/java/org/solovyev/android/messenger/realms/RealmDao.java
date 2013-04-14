@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface RealmDao {
 
-    void insertRealm(@Nonnull Realm realm);
+    void insertRealm(@Nonnull Realm realm) throws RealmException;
 
     void deleteRealm(@Nonnull String realmId);
 
@@ -15,8 +15,10 @@ public interface RealmDao {
 
     void deleteAllRealms();
 
-    void updateRealm(@Nonnull Realm realm);
+    void updateRealm(@Nonnull Realm realm) throws RealmException;
 
     @Nonnull
     Collection<Realm> loadRealmsInState(@Nonnull RealmState state);
+
+    void init();
 }

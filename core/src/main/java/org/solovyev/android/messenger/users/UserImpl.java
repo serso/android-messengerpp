@@ -1,20 +1,16 @@
 package org.solovyev.android.messenger.users;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: serso
@@ -29,12 +25,8 @@ final class UserImpl extends AbstractMessengerEntity implements User {
     @Nonnull
     private UserSyncData userSyncData;
 
-    // todo serso: use AProperties object
     @Nonnull
-    private List<AProperty> properties = new ArrayList<AProperty>();
-
-    @Nonnull
-    private Map<String, String> propertiesMap = new HashMap<String, String>();
+    private MutableAProperties properties;
 
     @Nullable
     private String displayName;
@@ -51,19 +43,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 
         result.login = entity.getRealmEntityId();
         result.userSyncData = userSyncData;
-        result.properties.addAll(properties);
-
-        for (AProperty property : result.properties) {
-            result.propertiesMap.put(property.getName(), property.getValue());
-        }
-
-        if ( result.propertiesMap.size() != result.properties.size() ) {
-            // just in case...
-            result.properties.clear();
-            for (Map.Entry<String, String> entry : result.propertiesMap.entrySet()) {
-                result.properties.add(Properties.newProperty(entry.getKey(), entry.getValue()));
-            }
-        }
+        result.properties = Properties.newProperties(properties);
 
         return result;
     }
@@ -164,19 +144,21 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 
     @Override
     @Nonnull
-    public List<AProperty> getProperties() {
-        return Collections.unmodifiableList(properties);
+    public Collection<AProperty> getProperties() {
+        return properties.getPropertiesCollection();
     }
 
     @Override
     public String getPropertyValueByName(@Nonnull String name) {
-        return this.propertiesMap.get(name);
+        return this.properties.getPropertyValue(name);
     }
 
     @Nonnull
     @Override
     public UserImpl clone() {
-        return (UserImpl) super.clone();
+        final UserImpl clone = (UserImpl) super.clone();
+        clone.properties = this.properties.clone();
+        return clone;
     }
 
     @Override
@@ -191,14 +173,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
     public User cloneWithNewStatus(boolean online) {
         final UserImpl clone = clone();
 
-        Iterables.removeIf(clone.properties, new Predicate<AProperty>() {
-            @Override
-            public boolean apply(@Nullable AProperty property) {
-                return property != null && property.getName().equals(PROPERTY_ONLINE);
-            }
-        });
-        clone.properties.add(Properties.newProperty(PROPERTY_ONLINE, Boolean.toString(online)));
-        clone.propertiesMap.put(PROPERTY_ONLINE, Boolean.toString(online));
+        clone.properties.setProperty(PROPERTY_ONLINE, Boolean.toString(online));
 
         return clone;
     }

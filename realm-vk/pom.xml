@@ -96,11 +96,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.scribe</groupId>
-            <artifactId>scribe</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.7.2</version>

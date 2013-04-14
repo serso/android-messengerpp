@@ -16,9 +16,13 @@ import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.security.Security;
+import org.solovyev.common.security.Cipherer;
+import org.solovyev.common.security.CiphererException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,5 +105,55 @@ public final class XmppRealmDef extends AbstractRealmDef {
     @Override
     public RealmIconService getRealmIconService() {
         return new XmppRealmIconService(context, R.drawable.mpp_icon_user_empty, R.drawable.mpp_icon_users);
+    }
+
+    @Nullable
+    @Override
+    public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
+        return new XmppRealmConfigurationCipherer(Security.newAndroidAesStringCipherer());
+    }
+
+    /*
+    **********************************************************************
+    *
+    *                           STATIC/INNER CLASSES
+    *
+    **********************************************************************
+    */
+
+    private static class XmppRealmConfigurationCipherer implements Cipherer<RealmConfiguration, RealmConfiguration> {
+
+        @Nonnull
+        private final Cipherer<String, String> stringCipherer;
+
+        private XmppRealmConfigurationCipherer(@Nonnull Cipherer<String, String> stringCipherer) {
+            this.stringCipherer = stringCipherer;
+        }
+
+        @Nonnull
+        @Override
+        public RealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull RealmConfiguration decrypted) throws CiphererException {
+            return encrypt(secret, (XmppRealmConfiguration)decrypted);
+        }
+
+        @Nonnull
+        public RealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull XmppRealmConfiguration decrypted) throws CiphererException {
+            final XmppRealmConfiguration encrypted = decrypted.clone();
+            encrypted.setPassword(stringCipherer.encrypt(secret, decrypted.getPassword()));
+            return encrypted;
+        }
+
+        @Nonnull
+        @Override
+        public RealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull RealmConfiguration encrypted) throws CiphererException {
+            return decrypt(secret, (XmppRealmConfiguration)encrypted);
+        }
+
+        @Nonnull
+        public RealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull XmppRealmConfiguration encrypted) throws CiphererException {
+            final XmppRealmConfiguration decrypted = encrypted.clone();
+            decrypted.setPassword(stringCipherer.decrypt(secret, encrypted.getPassword()));
+            return decrypted;
+        }
     }
 }
