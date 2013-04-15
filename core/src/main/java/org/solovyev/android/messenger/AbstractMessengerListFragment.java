@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.actionbarsherlock.app.ActionBar;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -271,7 +271,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
         root.addView(listViewParent, params);
 
         // some fragments may change the title and icon of action bar => we need to reset it every time new fragment is shown
-        final ActionBar actionBar = getActivity().getActionBar();
+        final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
         actionBar.setTitle(R.string.mpp_app_name);
         actionBar.setIcon(R.drawable.mpp_app_icon);
 

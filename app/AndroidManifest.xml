@@ -38,7 +38,7 @@
 
         <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:name="com.google.ads.AdActivity"/>
 
-        <service android:name="org.solovyev.android.messenger.MessengerService" />
+        <service android:name=".OngoingNotificationService" />
 
         <service android:name="net.robotmedia.billing.BillingService"/>
         <receiver android:name="net.robotmedia.billing.BillingReceiver">

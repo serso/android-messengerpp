@@ -67,7 +67,7 @@ public class MessengerStartActivity extends RoboActivity {
         // we must start service from here because Android can cache application
         // and Application#onCreate() is never called!
         final Intent serviceIntent = new Intent();
-        serviceIntent.setClass(this, MessengerService.class);
+        serviceIntent.setClass(this, OngoingNotificationService.class);
         startService(serviceIntent);
 
         MessengerMainActivity.startActivity(this);

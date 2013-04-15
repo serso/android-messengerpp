@@ -1,13 +1,12 @@
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import android.util.Log;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.PredicateSpy;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
-import org.solovyev.android.messenger.realms.RealmState;
+import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 

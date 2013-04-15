@@ -9,6 +9,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.realms.RealmConnectionsService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -68,6 +69,10 @@ public class MessengerApplication extends Application implements MessengerServic
     @Inject
     @Nonnull
     private RealmService realmService;
+
+    @Inject
+    @Nonnull
+    private RealmConnectionsService realmConnectionsService;
 
     @Inject
     @Nonnull
@@ -200,6 +205,10 @@ public class MessengerApplication extends Application implements MessengerServic
         // load persistence data
         this.realmService.load();
 
+
+        // must be done after all loadings
+        this.realmConnectionsService.init();
+
         this.networkStateService.startListening(this);
     }
 
@@ -207,7 +216,7 @@ public class MessengerApplication extends Application implements MessengerServic
         realmService.stopAllRealmConnections();
 
         final Intent serviceIntent = new Intent();
-        serviceIntent.setClass(this, MessengerService.class);
+        serviceIntent.setClass(this, OngoingNotificationService.class);
         stopService(serviceIntent);
 
         activity.finish();

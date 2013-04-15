@@ -1,15 +1,11 @@
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.realms;
 
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+import android.app.Application;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import org.solovyev.android.messenger.MessengerListeners;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmEvent;
-import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.network.NetworkData;
 import org.solovyev.android.network.NetworkState;
 import org.solovyev.android.network.NetworkStateListener;
@@ -17,7 +13,6 @@ import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.msg.MessageType;
-import roboguice.service.RoboService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,20 +21,11 @@ import java.util.Collection;
 
 /**
  * User: serso
- * Date: 5/25/12
- * Time: 8:38 PM
+ * Date: 4/15/13
+ * Time: 8:17 PM
  */
-public class MessengerService extends RoboService implements NetworkStateListener {
-
-    /*
-    **********************************************************************
-    *
-    *                           STATIC
-    *
-    **********************************************************************
-    */
-
-    private static final int NOTIFICATION_ID_APP_IS_RUNNING = 10002029;
+@Singleton
+public final class RealmConnectionsServiceImpl implements RealmConnectionsService, NetworkStateListener {
 
     /*
     **********************************************************************
@@ -65,6 +51,9 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Nonnull
     private NotificationService notificationService;
 
+    @Nonnull
+    private final Application context;
+
     /*
     **********************************************************************
     *
@@ -78,27 +67,14 @@ public class MessengerService extends RoboService implements NetworkStateListene
     @Nullable
     private RealmEventListener realmEventListener;
 
-    public MessengerService() {
+    @Inject
+    public RealmConnectionsServiceImpl(@Nonnull Application context) {
+        this.context = context;
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        final NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
-        nb.setOngoing(true);
-        nb.setSmallIcon(R.drawable.mpp_sb_icon);
-        nb.setContentTitle(getString(R.string.mpp_notification_title));
-        nb.setContentText(getString(R.string.mpp_notification_text));
-        nb.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MessengerStartActivity.class), 0));
-        startForeground(NOTIFICATION_ID_APP_IS_RUNNING, nb.getNotification());
-
-        realmConnections = new RealmConnections(this);
+    public void init() {
+        realmConnections = new RealmConnections(context);
 
         networkStateService.addListener(this);
 
@@ -116,21 +92,6 @@ public class MessengerService extends RoboService implements NetworkStateListene
     private boolean canStartConnection() {
         final NetworkData networkData = networkStateService.getNetworkData();
         return networkData.getState() == NetworkState.CONNECTED;
-    }
-
-    @Override
-    public void onDestroy() {
-        try {
-            networkStateService.removeListener(this);
-
-            if (realmEventListener != null) {
-                realmService.removeListener(realmEventListener);
-            }
-
-            realmConnections.tryStopAll();
-        } finally {
-            super.onDestroy();
-        }
     }
 
     @Override
@@ -172,7 +133,7 @@ public class MessengerService extends RoboService implements NetworkStateListene
                             realmConnections.removeConnectionFor(realm);
                             break;
                         default:
-                            if ( realm.isEnabled() ) {
+                            if (realm.isEnabled()) {
                                 tryStartConnectionsFor(Arrays.asList(realm));
                             } else {
                                 realmConnections.tryStopFor(realm);
@@ -189,5 +150,4 @@ public class MessengerService extends RoboService implements NetworkStateListene
             }
         }
     }
-
 }

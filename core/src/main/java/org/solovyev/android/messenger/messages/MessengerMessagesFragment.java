@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.messages;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,11 +19,7 @@ import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
@@ -192,7 +187,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
         // change title
         if (!getMultiPaneManager().isDualPane(getActivity())) {
-            final ActionBar actionBar = getActivity().getActionBar();
+            final com.actionbarsherlock.app.ActionBar actionBar = getSherlockActivity().getSupportActionBar();
             //actionBar.setIcon();
             if (chat.isPrivate()) {
                 actionBar.setTitle(getString(R.string.mpp_private_chat_title, Users.getDisplayNameFor(chat.getSecondUser())));

@@ -17,10 +17,7 @@ import org.solovyev.android.messenger.messages.DefaultChatMessageService;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.notifications.DefaultNotificationService;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.DefaultRealmService;
-import org.solovyev.android.messenger.realms.RealmDao;
-import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.realms.SqliteRealmDao;
+import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
@@ -31,8 +28,6 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
-import org.solovyev.android.security.Security;
-import org.solovyev.common.security.SecurityService;
 import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
 
@@ -60,6 +55,7 @@ public class MessengerModule extends AbstractModule {
         bind(RealmService.class).to(DefaultRealmService.class);
         bind(RealmDao.class).to(SqliteRealmDao.class);
 
+        bind(RealmConnectionsService.class).to(RealmConnectionsServiceImpl.class);
         bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
         bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
         bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
