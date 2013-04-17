@@ -19,6 +19,10 @@ public class VkRealmConfiguration extends JObject implements RealmConfiguration 
     @Nonnull
     private String userId;
 
+    // for json
+    public VkRealmConfiguration() {
+    }
+
     public VkRealmConfiguration(@Nonnull String login, @Nonnull String password) {
         this.login = login;
         this.password = password;

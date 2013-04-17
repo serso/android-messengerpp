@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import com.google.inject.Inject;
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 import org.joda.time.DateTimeZone;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
@@ -26,6 +29,10 @@ import javax.annotation.Nonnull;
  * Date: 5/25/12
  * Time: 8:16 PM
  */
+
+@ReportsCrashes(formKey = "",
+        mailTo = "se.solovyev+programming+messengerpp+crashes+1.0@gmail.com",
+        mode = ReportingInteractionMode.SILENT)
 public class MessengerApplication extends Application implements MessengerServiceLocator {
 
     /*
@@ -184,6 +191,8 @@ public class MessengerApplication extends Application implements MessengerServic
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ACRA.init(this);
 
         // initialize Joda time for android
         System.setProperty("org.joda.time.DateTimeZone.Provider", FastDateTimeZoneProvider.class.getName());

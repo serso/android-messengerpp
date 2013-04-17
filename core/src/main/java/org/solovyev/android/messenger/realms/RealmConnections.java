@@ -126,10 +126,19 @@ final class RealmConnections {
                             }
                         } catch (RealmConnectionException e) {
                             Log.w(MessengerApplication.TAG, "Realm connection error occurred, connection attempt: " + attempt, e);
+
                             if ( !realmConnection.isStopped() ) {
                                 realmConnection.stop();
                             }
-                            startRealmConnection(attempt + 1, e);
+
+                            try {
+                                // let's wait a little bit - may be the exception was caused by connectivity problem
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e1) {
+                                Log.e(MessengerApplication.TAG, e1.getMessage(), e1);
+                            } finally {
+                                startRealmConnection(attempt + 1, e);
+                            }
                         }
                     }
                 }

@@ -140,6 +140,13 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <!--OTHER-->
+        <dependency>
+            <groupId>ch.acra</groupId>
+            <artifactId>acra</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
