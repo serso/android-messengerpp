@@ -10,23 +10,16 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.ThreadSafeMultimap;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerExceptionHandler;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.android.messenger.realms.EntityMapEntryMatcher;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmException;
-import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.*;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -36,11 +29,7 @@ import org.solovyev.common.listeners.Listeners;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -101,9 +90,8 @@ public class DefaultUserService implements UserService {
     private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners;
 
     // key: user entity, value: list of user contacts
-    @GuardedBy("userContactsCache")
     @Nonnull
-    private final Map<Entity, List<User>> userContactsCache = new HashMap<Entity, List<User>>();
+    private final ThreadSafeMultimap<Entity, User> userContactsCache = ThreadSafeMultimap.newInstance();
 
     // key: user entity, value: list of user chats
     @GuardedBy("userChatsCache")
@@ -248,9 +236,7 @@ public class DefaultUserService implements UserService {
             Iterators.removeIf(userChatsCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
         }
 
-        synchronized (userContactsCache) {
-            Iterators.removeIf(userContactsCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
-        }
+        userContactsCache.update(new UsersRemovedMapUpdater(realmId));
 
         synchronized (usersCache) {
             Iterators.removeIf(usersCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
@@ -268,22 +254,18 @@ public class DefaultUserService implements UserService {
     @Nonnull
     @Override
     public List<User> getUserContacts(@Nonnull Entity user) {
-        List<User> result;
+        List<User> result = userContactsCache.get(user);
 
-        synchronized (userContactsCache) {
-            result = userContactsCache.get(user);
-            if (result == null) {
-                synchronized (lock) {
-                    result = userDao.loadUserContacts(user.getEntityId());
-                }
-                if (!Collections.isEmpty(result)) {
-                    userContactsCache.put(user, result);
-                }
+        if (result == ThreadSafeMultimap.NO_VALUE) {
+            synchronized (lock) {
+                result = userDao.loadUserContacts(user.getEntityId());
             }
-
-            // result list might be in cache and might updates due to some user events => must COPY
-            return new ArrayList<User>(result);
+            if (!Collections.isEmpty(result)) {
+                userContactsCache.update(user, new UserListWholeListUpdater(result));
+            }
         }
+
+        return result;
     }
 
     @Nonnull
@@ -298,22 +280,11 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, boolean available) {
+    public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, final boolean available) {
         final UserEventType userEventType = available ? UserEventType.contact_online : UserEventType.contact_offline;
-        // update cache
-        synchronized (userContactsCache) {
-            final List<User> contacts = userContactsCache.get(user.getEntity());
-            final int index = Iterables.indexOf(contacts, new Predicate<User>() {
-                @Override
-                public boolean apply(@Nullable User user) {
-                    return contact.equals(user);
-                }
-            });
-            if ( index >= 0 ) {
-                // contact found => update status locally (persistence is not updated at status change is too frequent event)
-                contacts.set(index, contacts.get(index).cloneWithNewStatus(available));
-            }
-        }
+
+        userContactsCache.update(user.getEntity(), new UserListContactStatusUpdater(contact, available));
+
         this.listeners.fireEvent(userEventType.newEvent(user, contact));
     }
 
@@ -337,12 +308,16 @@ public class DefaultUserService implements UserService {
     @Override
     @Nonnull
     public List<User> syncUserContacts(@Nonnull Entity user) throws RealmException {
-        final List<User> contacts = getRealmByEntity(user).getRealmUserService().getUserContacts(user.getRealmEntityId());
-        synchronized (userContactsCache) {
-            userContactsCache.put(user, contacts);
-        }
+        final Realm realm = getRealmByEntity(user);
+        final List<User> contacts = realm.getRealmUserService().getUserContacts(user.getRealmEntityId());
 
-        mergeUserContacts(user, contacts, false, true);
+        if (!contacts.isEmpty()) {
+            userContactsCache.update(user, new UserListWholeListUpdater(contacts));
+
+            mergeUserContacts(user, contacts, false, true);
+        } else {
+            Log.w(TAG, "User contacts synchronization returned empty list for realm " + realm.getId());
+        }
 
         return java.util.Collections.unmodifiableList(contacts);
     }
@@ -575,59 +550,30 @@ public class DefaultUserService implements UserService {
             final UserEventType type = event.getType();
             final User eventUser = event.getUser();
 
-            synchronized (userContactsCache) {
 
-                if (type == UserEventType.changed) {
-                    // user changed => update it in contacts cache
-                    for (List<User> contacts : userContactsCache.values()) {
-                        for (int i = 0; i < contacts.size(); i++) {
-                            final User contact = contacts.get(i);
-                            if (contact.equals(eventUser)) {
-                                contacts.set(i, eventUser);
-                            }
-                        }
-                    }
-                }
+            if (type == UserEventType.changed) {
+                // user changed => update it in contacts cache
+                userContactsCache.update(new UserChangedMapUpdater(eventUser));
+            }
 
-                if (type == UserEventType.contact_added) {
-                    // contact added => need to add to list of cached contacts
-                    final User contact = event.getDataAsUser();
-                    final List<User> contacts = userContactsCache.get(eventUser.getEntity());
-                    if (contacts != null) {
-                        // check if not contains as can be added in parallel
-                        if (!Iterables.contains(contacts, contact)) {
-                            contacts.add(contact);
-                        }
-                    }
-                }
+            if (type == UserEventType.contact_added) {
+                // contact added => need to add to list of cached contacts
+                final User contact = event.getDataAsUser();
+                userContactsCache.update(eventUser.getEntity(), new UserListAddedContactUpdater(contact));
+            }
 
-                if (type == UserEventType.contact_added_batch) {
-                    // contacts added => need to add to list of cached contacts
-                    final List<User> contacts = event.getDataAsUsers();
-                    final List<User> contactsFromCache = userContactsCache.get(eventUser.getEntity());
-                    if (contactsFromCache != null) {
-                        for (User contact : contacts) {
-                            // check if not contains as can be added in parallel
-                            if (!Iterables.contains(contactsFromCache, contact)) {
-                                contactsFromCache.add(contact);
-                            }
-                        }
-                    }
+            if (type == UserEventType.contact_added_batch) {
+                // contacts added => need to add to list of cached contacts
+                final List<User> contacts = event.getDataAsUsers();
+                for (final User contact : contacts) {
+                    userContactsCache.update(eventUser.getEntity(), new UserListAddedContactUpdater(contact));
                 }
+            }
 
-                if (type == UserEventType.contact_removed) {
-                    // contact removed => try to remove from cached contacts
-                    final String removedContactId = event.getDataAsUserId();
-                    final List<User> contacts = userContactsCache.get(eventUser.getEntity());
-                    if (contacts != null) {
-                        Iterables.removeIf(contacts, new Predicate<User>() {
-                            @Override
-                            public boolean apply(@javax.annotation.Nullable User contact) {
-                                return contact != null && contact.getEntity().getEntityId().equals(removedContactId);
-                            }
-                        });
-                    }
-                }
+            if (type == UserEventType.contact_removed) {
+                // contact removed => try to remove from cached contacts
+                final String removedContactId = event.getDataAsUserId();
+                userContactsCache.update(eventUser.getEntity(), new UserListRemovedContactUpdater(removedContactId));
             }
 
             synchronized (userChatsCache) {
@@ -668,8 +614,8 @@ public class DefaultUserService implements UserService {
                 }
             }
         }
-    }
 
+    }
     private final class ChatEventListener extends AbstractJEventListener<ChatEvent> {
 
         private ChatEventListener() {
@@ -694,6 +640,165 @@ public class DefaultUserService implements UserService {
 
             }
         }
+
+    }
+    /*
+    **********************************************************************
+    *
+    *                           CACHES
+    *
+    **********************************************************************
+    */
+
+
+    private static class UserListWholeListUpdater implements ThreadSafeMultimap.ListUpdater<User> {
+
+        @Nonnull
+        private final List<User> contacts;
+
+        public UserListWholeListUpdater(@Nonnull List<User> contacts) {
+            this.contacts = contacts;
+        }
+
+        @Nonnull
+        @Override
+        public List<User> update(@Nonnull List<User> values) {
+            return contacts;
+        }
     }
 
+    private static class UserListAddedContactUpdater implements ThreadSafeMultimap.ListUpdater<User> {
+
+        @Nonnull
+        private final User contact;
+
+        public UserListAddedContactUpdater(@Nonnull User contact) {
+            this.contact = contact;
+        }
+
+        @Nullable
+        @Override
+        public List<User> update(@Nonnull List<User> values) {
+            if (values == ThreadSafeMultimap.NO_VALUE) {
+                return null;
+            } else if (!Iterables.contains(values, contact)) {
+                final List<User> result = ThreadSafeMultimap.copy(values);
+                result.add(contact);
+                return result;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class UserListRemovedContactUpdater implements ThreadSafeMultimap.ListUpdater<User> {
+
+        @Nonnull
+        private final String removedContactId;
+
+        public UserListRemovedContactUpdater(@Nonnull String removedContactId) {
+            this.removedContactId = removedContactId;
+        }
+
+        @Nullable
+        @Override
+        public List<User> update(@Nonnull List<User> values) {
+            if (values == ThreadSafeMultimap.NO_VALUE) {
+                return null;
+            } else {
+                final List<User> result = ThreadSafeMultimap.copy(values);
+                Iterables.removeIf(result, new Predicate<User>() {
+                    @Override
+                    public boolean apply(@Nullable User contact) {
+                        return contact != null && contact.getEntity().getEntityId().equals(removedContactId);
+                    }
+                });
+                return result;
+            }
+        }
+    }
+
+    private static class UserListContactStatusUpdater implements ThreadSafeMultimap.ListUpdater<User> {
+
+        @Nonnull
+        private final User contact;
+
+        private final boolean available;
+
+        public UserListContactStatusUpdater(@Nonnull User contact, boolean available) {
+            this.contact = contact;
+            this.available = available;
+        }
+
+        @Nullable
+        @Override
+        public List<User> update(@Nonnull List<User> values) {
+            final int index = Iterables.indexOf(values, new Predicate<User>() {
+                @Override
+                public boolean apply(@Nullable User user) {
+                    return contact.equals(user);
+                }
+            });
+
+            if (index >= 0) {
+                // contact found => update status locally (persistence is not updated at status change is too frequent event)
+                final List<User> result = ThreadSafeMultimap.copy(values);
+                result.set(index, result.get(index).cloneWithNewStatus(available));
+                return result;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class UserChangedMapUpdater implements ThreadSafeMultimap.MapUpdater<Entity, User> {
+
+        @Nonnull
+        private final User user;
+
+        public UserChangedMapUpdater(@Nonnull User user) {
+            this.user = user;
+        }
+
+        @Nullable
+        @Override
+        public Map<Entity, List<User>> update(@Nonnull Map<Entity, List<User>> map) {
+            final Map<Entity, List<User>> result = ThreadSafeMultimap.copy(map);
+
+            for (List<User> contacts : result.values()) {
+                for (int i = 0; i < contacts.size(); i++) {
+                    final User contact = contacts.get(i);
+                    if (contact.equals(user)) {
+                        contacts.set(i, user);
+                    }
+                }
+            }
+
+            return result;
+        }
+    }
+
+    private static class UsersRemovedMapUpdater implements ThreadSafeMultimap.MapUpdater<Entity, User> {
+
+        @Nonnull
+        private final String realmId;
+
+        public UsersRemovedMapUpdater(@Nonnull String realmId) {
+            this.realmId = realmId;
+        }
+
+        @Nonnull
+        @Override
+        public Map<Entity, List<User>> update(@Nonnull Map<Entity, List<User>> map) {
+            final Map<Entity, List<User>> result = new HashMap<Entity, List<User>>(map.size());
+
+            for (Map.Entry<Entity, List<User>> entry : map.entrySet()) {
+                if (!entry.getKey().getRealmId().equals(realmId)) {
+                    result.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            return result;
+        }
+    }
 }

@@ -35,17 +35,20 @@ public class JsonMessages {
             if (json.isJsonObject()) {
                 final JsonObject response = json.getAsJsonObject();
                 final JsonArray responseArray = response.getAsJsonArray("response");
+                if ( responseArray != null && responseArray.isJsonArray() ) {
+                    boolean first = true;
 
-                boolean first = true;
-
-                result.response = new ArrayList<JsonMessage>();
-                for (JsonElement e : responseArray.getAsJsonArray()) {
-                    if (first) {
-                        result.count = e.getAsInt();
-                        first = false;
-                    } else {
-                        result.response.add((JsonMessage) context.deserialize(e, JsonMessage.class));
+                    result.response = new ArrayList<JsonMessage>();
+                    for (JsonElement e : responseArray.getAsJsonArray()) {
+                        if (first) {
+                            result.count = e.getAsInt();
+                            first = false;
+                        } else {
+                            result.response.add((JsonMessage) context.deserialize(e, JsonMessage.class));
+                        }
                     }
+                } else {
+                    throw new JsonParseException("Unexpected JSON type: " + (responseArray == null ? null : responseArray.getClass()));
                 }
 
             } else {
