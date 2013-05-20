@@ -19,8 +19,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<common.version>1.0.4-SNAPSHOT</common.version>
-		<android.common.version>1.1.0-SNAPSHOT</android.common.version>
+		<common.version>1.0.4</common.version>
+		<android.common.version>1.1.0</android.common.version>
 	</properties>
 
 	<dependencyManagement>
