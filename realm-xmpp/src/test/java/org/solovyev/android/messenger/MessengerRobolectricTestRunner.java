@@ -12,7 +12,7 @@ import java.io.File;
  * Time: 9:02 PM
  */
 public class MessengerRobolectricTestRunner extends RobolectricTestRunner {
-    public MessengerRobolectricTestRunner(Class<?> testClass) throws InitializationError {
-        super(testClass, new RobolectricConfig(new File("realm-xmpp")));
-    }
+	public MessengerRobolectricTestRunner(Class<?> testClass) throws InitializationError {
+		super(testClass, new RobolectricConfig(new File("realm-xmpp")));
+	}
 }

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    style="?mpp_list_item">
+	style="?mpp_list_item">
 
-    <ImageView
-        a:id="@+id/mpp_li_chat_icon_imageview"
-        style="?mpp_list_item_icon"/>
+	<ImageView
+		a:id="@+id/mpp_li_chat_icon_imageview"
+		style="?mpp_list_item_icon" />
 
-    <LinearLayout
-        a:orientation="vertical"
-        a:layout_width="match_parent"
-        a:layout_height="wrap_content"
-        a:layout_gravity="center_vertical">
+	<LinearLayout
+		a:orientation="vertical"
+		a:layout_width="match_parent"
+		a:layout_height="wrap_content"
+		a:layout_gravity="center_vertical">
 
-        <TextView
-            a:id="@+id/mpp_li_chat_title_textview"
-            style="?mpp_list_item_name"
-            a:text="mpp_li_chat_title_textview" />
+		<TextView
+			a:id="@+id/mpp_li_chat_title_textview"
+			style="?mpp_list_item_name"
+			a:text="mpp_li_chat_title_textview" />
 
-        <TextView
-            a:id="@+id/mpp_li_last_message_text_textview"
-            style="?mpp_list_item_text_secondary"
-            a:text="mpp_li_last_message_text_textview" />
+		<TextView
+			a:id="@+id/mpp_li_last_message_text_textview"
+			style="?mpp_list_item_text_secondary"
+			a:text="mpp_li_last_message_text_textview" />
 
-        <TextView
-            a:id="@+id/mpp_li_last_message_text_time_textview"
-            style="?mpp_list_item_last_message_time"
-            a:text="mpp_li_last_message_text_time_textview" />
+		<TextView
+			a:id="@+id/mpp_li_last_message_text_time_textview"
+			style="?mpp_list_item_last_message_time"
+			a:text="mpp_li_last_message_text_time_textview" />
 
-    </LinearLayout>
+	</LinearLayout>
 
 </LinearLayout>

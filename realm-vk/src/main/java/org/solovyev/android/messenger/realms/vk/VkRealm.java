@@ -15,35 +15,35 @@ import javax.annotation.Nonnull;
 
 public class VkRealm extends AbstractRealm<VkRealmConfiguration> {
 
-    public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration, @Nonnull RealmState state) {
-        super(id, realmDef, user, configuration, state);
-    }
+	public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration, @Nonnull RealmState state) {
+		super(id, realmDef, user, configuration, state);
+	}
 
-    @Nonnull
-    @Override
-    protected RealmConnection newRealmConnection0(@Nonnull Context context) {
-        return new VkLongPollRealmConnection(this, context);
-    }
+	@Nonnull
+	@Override
+	protected RealmConnection newRealmConnection0(@Nonnull Context context) {
+		return new VkLongPollRealmConnection(this, context);
+	}
 
-    @Nonnull
-    @Override
-    public String getDisplayName(@Nonnull Context context) {
-        final StringBuilder sb = new StringBuilder();
+	@Nonnull
+	@Override
+	public String getDisplayName(@Nonnull Context context) {
+		final StringBuilder sb = new StringBuilder();
 
-        sb.append(context.getText(getRealmDef().getNameResId()));
+		sb.append(context.getText(getRealmDef().getNameResId()));
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    @Nonnull
-    @Override
-    public RealmUserService getRealmUserService() {
-        return new VkRealmUserService(this);
-    }
+	@Nonnull
+	@Override
+	public RealmUserService getRealmUserService() {
+		return new VkRealmUserService(this);
+	}
 
-    @Nonnull
-    @Override
-    public RealmChatService getRealmChatService() {
-        return new VkRealmChatService(this);
-    }
+	@Nonnull
+	@Override
+	public RealmChatService getRealmChatService() {
+		return new VkRealmChatService(this);
+	}
 }

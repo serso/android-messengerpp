@@ -9,25 +9,25 @@ import javax.annotation.Nonnull;
  */
 public final class TestXmppConfiguration {
 
-    public static final String USER_LOGIN = "messengerplusplus@gmail.com";
-    public static final String USER_LOGIN2 = "messengerplusplus2@gmail.com";
+	public static final String USER_LOGIN = "messengerplusplus@gmail.com";
+	public static final String USER_LOGIN2 = "messengerplusplus2@gmail.com";
 
-    @Nonnull
-    private final static XmppRealmConfiguration instance = new XmppRealmConfiguration("talk.google.com", USER_LOGIN, "Qwerty!@");
+	@Nonnull
+	private final static XmppRealmConfiguration instance = new XmppRealmConfiguration("talk.google.com", USER_LOGIN, "Qwerty!@");
 
-    @Nonnull
-    private final static XmppRealmConfiguration instance2 = new XmppRealmConfiguration("talk.google.com", USER_LOGIN2, "Qwerty!@");
+	@Nonnull
+	private final static XmppRealmConfiguration instance2 = new XmppRealmConfiguration("talk.google.com", USER_LOGIN2, "Qwerty!@");
 
-    private TestXmppConfiguration() {
-    }
+	private TestXmppConfiguration() {
+	}
 
-    @Nonnull
-    public static XmppRealmConfiguration getInstance() {
-        return instance;
-    }
+	@Nonnull
+	public static XmppRealmConfiguration getInstance() {
+		return instance;
+	}
 
-    @Nonnull
-    public static XmppRealmConfiguration getInstance2() {
-        return instance2;
-    }
+	@Nonnull
+	public static XmppRealmConfiguration getInstance2() {
+		return instance2;
+	}
 }

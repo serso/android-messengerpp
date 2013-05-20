@@ -17,53 +17,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* User: serso
-* Date: 4/13/13
-* Time: 11:29 PM
-*/
+ * User: serso
+ * Date: 4/13/13
+ * Time: 11:29 PM
+ */
 final class VkSubmitAuthFormHttpTransaction extends AbstractHttpTransaction<String> {
 
-    @Nonnull
-    private final Element authForm;
+	@Nonnull
+	private final Element authForm;
 
-    @Nonnull
-    private final String login;
+	@Nonnull
+	private final String login;
 
-    @Nonnull
-    private final String password;
+	@Nonnull
+	private final String password;
 
-    public VkSubmitAuthFormHttpTransaction(@Nonnull Element authForm, @Nonnull String login, @Nonnull String password) {
-        super(authForm.attr("action"), HttpMethod.POST);
-        this.authForm = authForm;
-        this.login = login;
-        this.password = password;
-    }
+	public VkSubmitAuthFormHttpTransaction(@Nonnull Element authForm, @Nonnull String login, @Nonnull String password) {
+		super(authForm.attr("action"), HttpMethod.POST);
+		this.authForm = authForm;
+		this.login = login;
+		this.password = password;
+	}
 
-    @Override
-    public String getResponse(@Nonnull HttpResponse response) {
-        boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
-        if (!ok) {
-            throw new RealmRuntimeException();
-        }
+	@Override
+	public String getResponse(@Nonnull HttpResponse response) {
+		boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+		if (!ok) {
+			throw new RealmRuntimeException();
+		}
 
-        try {
-            return EntityUtils.toString(response.getEntity());
-        } catch (IOException e) {
-            throw new HttpRuntimeIoException(e);
-        }
-    }
+		try {
+			return EntityUtils.toString(response.getEntity());
+		} catch (IOException e) {
+			throw new HttpRuntimeIoException(e);
+		}
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> result = new ArrayList<NameValuePair>();
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-        for (Element input : authForm.getElementsByTag("input")) {
-            result.add(new BasicNameValuePair(input.attr("name"), input.val()));
-        }
-        result.add(new BasicNameValuePair("email", login));
-        result.add(new BasicNameValuePair("pass", password));
+		for (Element input : authForm.getElementsByTag("input")) {
+			result.add(new BasicNameValuePair(input.attr("name"), input.val()));
+		}
+		result.add(new BasicNameValuePair("email", login));
+		result.add(new BasicNameValuePair("pass", password));
 
-        return result;
-    }
+		return result;
+	}
 }

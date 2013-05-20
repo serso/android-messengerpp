@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.longpoll;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -12,8 +13,8 @@ import org.solovyev.android.messenger.users.User;
  */
 public interface LongPollResult {
 
-    @Nullable
-    Object updateLongPollServerData(@Nullable Object longPollServerData);
+	@Nullable
+	Object updateLongPollServerData(@Nullable Object longPollServerData);
 
-    void doUpdates(@Nonnull User user, @Nonnull Realm realm);
+	void doUpdates(@Nonnull User user, @Nonnull Realm realm);
 }

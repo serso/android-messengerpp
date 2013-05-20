@@ -17,40 +17,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* User: serso
-* Date: 4/13/13
-* Time: 11:44 PM
-*/
+ * User: serso
+ * Date: 4/13/13
+ * Time: 11:44 PM
+ */
 final class VkSubmitApprovalFormHttpTransaction extends AbstractHttpTransaction<String> {
 
-    private final Element approvalForm;
+	private final Element approvalForm;
 
-    public VkSubmitApprovalFormHttpTransaction(Element approvalForm) {
-        super(approvalForm.attr("action"), HttpMethod.POST);
-        this.approvalForm = approvalForm;
-    }
+	public VkSubmitApprovalFormHttpTransaction(Element approvalForm) {
+		super(approvalForm.attr("action"), HttpMethod.POST);
+		this.approvalForm = approvalForm;
+	}
 
-    @Override
-    public String getResponse(@Nonnull HttpResponse response) {
-        boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
-        if (!ok) {
-            throw new RealmRuntimeException();
-        }
+	@Override
+	public String getResponse(@Nonnull HttpResponse response) {
+		boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+		if (!ok) {
+			throw new RealmRuntimeException();
+		}
 
-        try {
-            return EntityUtils.toString(response.getEntity());
-        } catch (IOException e) {
-            throw new HttpRuntimeIoException(e);
-        }
-    }
+		try {
+			return EntityUtils.toString(response.getEntity());
+		} catch (IOException e) {
+			throw new HttpRuntimeIoException(e);
+		}
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> result = new ArrayList<NameValuePair>();
-        for (Element input : approvalForm.getElementsByTag("input")) {
-            result.add(new BasicNameValuePair(input.attr("name"), input.val()));
-        }
-        return result;
-    }
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> result = new ArrayList<NameValuePair>();
+		for (Element input : approvalForm.getElementsByTag("input")) {
+			result.add(new BasicNameValuePair(input.attr("name"), input.val()));
+		}
+		return result;
+	}
 }

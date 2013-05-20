@@ -14,29 +14,29 @@ import javax.annotation.Nullable;
  */
 public interface LiteChatMessage extends MessengerEntity {
 
-    @Nonnull
-    Entity getEntity();
+	@Nonnull
+	Entity getEntity();
 
-    @Nonnull
-    Entity getAuthor();
+	@Nonnull
+	Entity getAuthor();
 
-    @Nullable
-    Entity getRecipient();
+	@Nullable
+	Entity getRecipient();
 
-    boolean isPrivate();
+	boolean isPrivate();
 
-    @Nullable
-    Entity getSecondUser(@Nonnull Entity user);
+	@Nullable
+	Entity getSecondUser(@Nonnull Entity user);
 
-    @Nonnull
-    DateTime getSendDate();
+	@Nonnull
+	DateTime getSendDate();
 
-    @Nonnull
-    String getTitle();
+	@Nonnull
+	String getTitle();
 
-    @Nonnull
-    String getBody();
+	@Nonnull
+	String getBody();
 
-    @Nonnull
-    LiteChatMessage clone();
+	@Nonnull
+	LiteChatMessage clone();
 }

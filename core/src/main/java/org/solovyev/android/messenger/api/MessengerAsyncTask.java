@@ -13,15 +13,15 @@ import javax.annotation.Nonnull;
  */
 public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsyncTask<Param, Progress, R> {
 
-    protected MessengerAsyncTask() {
-    }
+	protected MessengerAsyncTask() {
+	}
 
-    protected MessengerAsyncTask(@Nonnull Context context) {
-        super(context);
-    }
+	protected MessengerAsyncTask(@Nonnull Context context) {
+		super(context);
+	}
 
-    @Override
-    protected void onFailurePostExecute(@Nonnull Exception e) {
-        MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
-    }
+	@Override
+	protected void onFailurePostExecute(@Nonnull Exception e) {
+		MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+	}
 }

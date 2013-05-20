@@ -14,38 +14,38 @@ import javax.annotation.Nonnull;
  */
 public abstract class AbstractMessengerTestCase extends InstrumentationTestCase {
 
-    @Nonnull
-    @Inject
-    private Application application;
+	@Nonnull
+	@Inject
+	private Application application;
 
-    @Nonnull
-    @Inject
-    private RealmService realmService;
+	@Nonnull
+	@Inject
+	private RealmService realmService;
 
-    @Nonnull
-    private TestMessengerModule module;
+	@Nonnull
+	private TestMessengerModule module;
 
-    public void setUp() throws Exception {
-        super.setUp();
-        Thread.sleep(100);
-        final Application applicationContext = (Application) getInstrumentation().getTargetContext().getApplicationContext();
-        module = new TestMessengerModule(applicationContext);
-        module.setUp(this, module);
-    }
+	public void setUp() throws Exception {
+		super.setUp();
+		Thread.sleep(100);
+		final Application applicationContext = (Application) getInstrumentation().getTargetContext().getApplicationContext();
+		module = new TestMessengerModule(applicationContext);
+		module.setUp(this, module);
+	}
 
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        module.tearDown();
-    }
+	@Override
+	public void tearDown() throws Exception {
+		super.tearDown();
+		module.tearDown();
+	}
 
 /*    @Nonnull
-    public Application getApplication() {
+	public Application getApplication() {
         return application;
     }*/
 
-    @Nonnull
-    public RealmService getRealmService() {
-        return realmService;
-    }
+	@Nonnull
+	public RealmService getRealmService() {
+		return realmService;
+	}
 }

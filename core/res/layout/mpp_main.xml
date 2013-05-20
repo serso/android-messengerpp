@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-        <!--
-        ~ Copyright (c) 2009-2011. Created by serso aka se.solovyev.
-        ~ For more information, please, contact se.solovyev@gmail.com
-        ~ or visit http://se.solovyev.org
-        -->
+<!--
+~ Copyright (c) 2009-2011. Created by serso aka se.solovyev.
+~ For more information, please, contact se.solovyev@gmail.com
+~ or visit http://se.solovyev.org
+-->
 
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-                a:layout_width="match_parent"
-                a:layout_height="match_parent"
-                a:id="@+id/main"
-                a:background="@color/mpp_bg">
+	a:layout_width="match_parent"
+	a:layout_height="match_parent"
+	a:id="@+id/main"
+	a:background="@color/mpp_bg">
 
-<include layout="@layout/mpp_footer"
-         a:id="@+id/footer"
-         a:layout_width="match_parent"
-         a:layout_height="0dp"
-         a:layout_alignParentBottom="true"/>
+	<include
+		layout="@layout/mpp_footer"
+		a:id="@+id/footer"
+		a:layout_width="match_parent"
+		a:layout_height="0dp"
+		a:layout_alignParentBottom="true" />
 
-<include layout="@layout/mpp_main_content"
-         a:layout_above="@id/footer"
-         a:layout_height="match_parent"
-         a:layout_width="match_parent"/>
+	<include
+		layout="@layout/mpp_main_content"
+		a:layout_above="@id/footer"
+		a:layout_height="match_parent"
+		a:layout_width="match_parent" />
 
 </RelativeLayout>

@@ -2,12 +2,12 @@
 
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- pressed -->
-    <item android:state_pressed="true" android:drawable="@color/mpp_selected" />
+	<!-- pressed -->
+	<item android:state_pressed="true" android:drawable="@color/mpp_selected" />
 
-    <!-- list item selected-->
-    <item android:state_activated="true" android:drawable="@color/mpp_selected" />
+	<!-- list item selected-->
+	<item android:state_activated="true" android:drawable="@color/mpp_selected" />
 
-    <!-- default, list item not selected -->
-    <item android:drawable="@android:color/transparent" />
+	<!-- default, list item not selected -->
+	<item android:drawable="@android:color/transparent" />
 </selector>

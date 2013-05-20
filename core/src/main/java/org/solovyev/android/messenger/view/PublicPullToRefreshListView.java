@@ -15,23 +15,23 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  */
 public class PublicPullToRefreshListView extends PullToRefreshListView {
 
-    public PublicPullToRefreshListView(Context context) {
-        super(context);
-    }
+	public PublicPullToRefreshListView(Context context) {
+		super(context);
+	}
 
-    public PublicPullToRefreshListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public PublicPullToRefreshListView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    public PublicPullToRefreshListView(Context context, Mode mode) {
-        super(context, mode);
-    }
+	public PublicPullToRefreshListView(Context context, Mode mode) {
+		super(context, mode);
+	}
 
-    /*
-     * Method scope visibility changed
-     */
-    @Override
-    public void setRefreshingInternal(boolean doScroll) {
-        super.setRefreshingInternal(doScroll);
-    }
+	/*
+	 * Method scope visibility changed
+	 */
+	@Override
+	public void setRefreshingInternal(boolean doScroll) {
+		super.setRefreshingInternal(doScroll);
+	}
 }

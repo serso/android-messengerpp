@@ -7,12 +7,12 @@ import org.solovyev.android.messenger.realms.RealmConnectionException;
 import javax.annotation.Nonnull;
 
 /**
-* User: serso
-* Date: 3/5/13
-* Time: 9:21 PM
-*/
+ * User: serso
+ * Date: 3/5/13
+ * Time: 9:21 PM
+ */
 interface XmppConnectedCallable<R> {
 
-    R call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException;
+	R call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException;
 
 }

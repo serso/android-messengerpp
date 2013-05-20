@@ -6,5 +6,5 @@ package org.solovyev.android.messenger.realms;
  * Time: 8:17 PM
  */
 public interface RealmConnectionsService {
-    void init();
+	void init();
 }

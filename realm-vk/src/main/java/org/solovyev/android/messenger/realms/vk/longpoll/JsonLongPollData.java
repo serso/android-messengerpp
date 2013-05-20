@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,18 +14,18 @@ import java.util.List;
  */
 public class JsonLongPollData {
 
-    @Nullable
-    private Long ts;
+	@Nullable
+	private Long ts;
 
-    @Nullable
-    private List<LongPollUpdate> updates;
+	@Nullable
+	private List<LongPollUpdate> updates;
 
-    @Nonnull
-    public VkLongPollResult toResult() throws IllegalJsonException {
-         if ( ts == null) {
-             throw new IllegalJsonException();
-         }
+	@Nonnull
+	public VkLongPollResult toResult() throws IllegalJsonException {
+		if (ts == null) {
+			throw new IllegalJsonException();
+		}
 
-        return new VkLongPollResult(ts, updates == null ? Collections.<LongPollUpdate>emptyList() : updates);
-    }
+		return new VkLongPollResult(ts, updates == null ? Collections.<LongPollUpdate>emptyList() : updates);
+	}
 }

@@ -5,6 +5,6 @@ import com.google.inject.Singleton;
 @Singleton
 public final class PersistenceLock {
 
-    public PersistenceLock() {
-    }
+	public PersistenceLock() {
+	}
 }

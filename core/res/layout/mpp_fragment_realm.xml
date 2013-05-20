@@ -1,50 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
-            a:layout_width="match_parent"
-            a:layout_height="match_parent">
+	a:layout_width="match_parent"
+	a:layout_height="match_parent">
 
-    <LinearLayout
-            style="?mpp_fragment">
+	<LinearLayout style="?mpp_fragment">
 
-        <TextView
-                a:id="@+id/mpp_fragment_title"
-                style="?mpp_fragment_title"/>
+		<TextView
+			a:id="@+id/mpp_fragment_title"
+			style="?mpp_fragment_title" />
 
-        <ImageView
-                a:id="@+id/mpp_realm_def_icon_imageview"
-                style="?mpp_fragment_icon"/>
+		<ImageView
+			a:id="@+id/mpp_realm_def_icon_imageview"
+			style="?mpp_fragment_icon" />
 
-        <LinearLayout
-                style="?mpp_form_buttons">
+		<LinearLayout style="?mpp_form_buttons">
 
-            <Button
-                    a:id="@+id/mpp_realm_back_button"
-                    a:text="@string/mpp_back"
-                    a:visibility="gone"
-                    style="?mpp_form_button"/>
+			<Button
+				a:id="@+id/mpp_realm_back_button"
+				a:text="@string/mpp_back"
+				a:visibility="gone"
+				style="?mpp_form_button" />
 
-            <Button
-                    a:id="@+id/mpp_realm_sync_button"
-                    a:text="@string/mpp_sync"
-                    style="?mpp_form_button"/>
+			<Button
+				a:id="@+id/mpp_realm_sync_button"
+				a:text="@string/mpp_sync"
+				style="?mpp_form_button" />
 
-            <Button
-                    a:id="@+id/mpp_realm_remove_button"
-                    a:text="@string/mpp_remove"
-                    style="?mpp_form_button"/>
+			<Button
+				a:id="@+id/mpp_realm_remove_button"
+				a:text="@string/mpp_remove"
+				style="?mpp_form_button" />
 
-            <Button
-                    a:id="@+id/mpp_realm_edit_button"
-                    a:text="@string/mpp_edit"
-                    style="?mpp_form_button"/>
+			<Button
+				a:id="@+id/mpp_realm_edit_button"
+				a:text="@string/mpp_edit"
+				style="?mpp_form_button" />
 
-            <Button
-                    a:id="@+id/mpp_realm_state_button"
-                    a:text="@string/mpp_disable"
-                    style="?mpp_form_button"/>
+			<Button
+				a:id="@+id/mpp_realm_state_button"
+				a:text="@string/mpp_disable"
+				style="?mpp_form_button" />
 
-        </LinearLayout>
+		</LinearLayout>
 
-    </LinearLayout>
+	</LinearLayout>
 </ScrollView>

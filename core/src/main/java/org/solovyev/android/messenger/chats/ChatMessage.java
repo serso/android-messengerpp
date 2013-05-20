@@ -12,17 +12,17 @@ import java.util.List;
  */
 public interface ChatMessage extends LiteChatMessage {
 
-    boolean isRead();
+	boolean isRead();
 
-    @Nonnull
-    MessageDirection getDirection();
+	@Nonnull
+	MessageDirection getDirection();
 
-    @Nonnull
-    List<LiteChatMessage> getFwdMessages();
+	@Nonnull
+	List<LiteChatMessage> getFwdMessages();
 
-    @Nonnull
-    ChatMessage clone();
+	@Nonnull
+	ChatMessage clone();
 
-    @Nonnull
-    ChatMessage cloneRead();
+	@Nonnull
+	ChatMessage cloneRead();
 }

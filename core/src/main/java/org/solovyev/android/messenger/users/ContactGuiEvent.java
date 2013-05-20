@@ -11,12 +11,12 @@ import javax.annotation.Nonnull;
  */
 public class ContactGuiEvent extends AbstractTypedJEvent<User, ContactGuiEventType> {
 
-    public ContactGuiEvent(@Nonnull User contact, @Nonnull ContactGuiEventType type) {
-        super(contact, type, null);
-    }
+	public ContactGuiEvent(@Nonnull User contact, @Nonnull ContactGuiEventType type) {
+		super(contact, type, null);
+	}
 
-    @Nonnull
-    public User getContact() {
-        return getEventObject();
-    }
+	@Nonnull
+	public User getContact() {
+		return getEventObject();
+	}
 }

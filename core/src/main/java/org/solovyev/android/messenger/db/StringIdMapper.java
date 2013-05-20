@@ -1,8 +1,9 @@
 package org.solovyev.android.messenger.db;
 
 import android.database.Cursor;
-import javax.annotation.Nonnull;
 import org.solovyev.common.Converter;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -11,20 +12,20 @@ import org.solovyev.common.Converter;
  */
 public class StringIdMapper implements Converter<Cursor, String> {
 
-    @Nonnull
-    private static final StringIdMapper instance = new StringIdMapper();
+	@Nonnull
+	private static final StringIdMapper instance = new StringIdMapper();
 
-    private StringIdMapper() {
-    }
+	private StringIdMapper() {
+	}
 
-    @Nonnull
-    public static StringIdMapper getInstance() {
-        return instance;
-    }
+	@Nonnull
+	public static StringIdMapper getInstance() {
+		return instance;
+	}
 
-    @Nonnull
-    @Override
-    public String convert(@Nonnull Cursor cursor) {
-        return cursor.getString(0);
-    }
+	@Nonnull
+	@Override
+	public String convert(@Nonnull Cursor cursor) {
+		return cursor.getString(0);
+	}
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    style="?mpp_list_item">
+	style="?mpp_list_item">
 
-    <ImageView
-        a:id="@+id/mpp_li_preference_icon_imageview"
-        style="?mpp_list_item_icon" />
+	<ImageView
+		a:id="@+id/mpp_li_preference_icon_imageview"
+		style="?mpp_list_item_icon" />
 
-    <TextView
-        a:id="@+id/mpp_li_preference_name_textview"
-        style="?mpp_list_item_name" />
+	<TextView
+		a:id="@+id/mpp_li_preference_name_textview"
+		style="?mpp_list_item_name" />
 
 </LinearLayout>

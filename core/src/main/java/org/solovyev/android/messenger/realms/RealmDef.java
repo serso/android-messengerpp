@@ -18,78 +18,80 @@ import java.util.List;
  */
 public interface RealmDef extends MessengerEntity {
 
-    @Nonnull
-    String FAKE_REALM_ID = "fake";
+	@Nonnull
+	String FAKE_REALM_ID = "fake";
 
-    /**
-     * Method returns realm definition's identifier. Must be unique for all existed realm difinitions.
-     * Realm definition id must contain only alpha-numeric symbols in lower case: [a-z][0-9]
-     * @return realm definition id in application
-     */
-    @Nonnull
-    String getId();
+	/**
+	 * Method returns realm definition's identifier. Must be unique for all existed realm difinitions.
+	 * Realm definition id must contain only alpha-numeric symbols in lower case: [a-z][0-9]
+	 *
+	 * @return realm definition id in application
+	 */
+	@Nonnull
+	String getId();
 
-    /**
-     * @return android string resource id for realm's name
-     */
-    int getNameResId();
+	/**
+	 * @return android string resource id for realm's name
+	 */
+	int getNameResId();
 
-    /**
-     * @return android drawable resource id for realm's icon
-     */
-    int getIconResId();
+	/**
+	 * @return android drawable resource id for realm's icon
+	 */
+	int getIconResId();
 
-    /**
-     * Method does initial setup for realm definition.
-     * NOTE: this method must be called on application start, e.g. in {@link android.app.Application#onCreate()} method
-     * @param context application's context
-     */
-    void init(@Nonnull Context context);
+	/**
+	 * Method does initial setup for realm definition.
+	 * NOTE: this method must be called on application start, e.g. in {@link android.app.Application#onCreate()} method
+	 *
+	 * @param context application's context
+	 */
+	void init(@Nonnull Context context);
 
-    @Nonnull
-    Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
+	@Nonnull
+	Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
 
-    @Nonnull
-    Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state);
+	@Nonnull
+	Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state);
 
-    @Nonnull
-    Class<? extends RealmConfiguration> getConfigurationClass();
+	@Nonnull
+	Class<? extends RealmConfiguration> getConfigurationClass();
 
-    @Nonnull
-    RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm);
+	@Nonnull
+	RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm);
 
-    /**
-     * Returns list of translated user properties where property name = title, property value = value
-     * @param user user which properties will be returned
-     * @return list of translated user properties
-     */
-    @Nonnull
-    List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
+	/**
+	 * Returns list of translated user properties where property name = title, property value = value
+	 *
+	 * @param user user which properties will be returned
+	 * @return list of translated user properties
+	 */
+	@Nonnull
+	List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
 
-    /**
-     *
-     * @return true if sent message should be notified immediately, false to wait until response from remote server will come (and then it must trigger event)
-     */
-    boolean notifySentMessagesImmediately();
+	/**
+	 * @return true if sent message should be notified immediately, false to wait until response from remote server will come (and then it must trigger event)
+	 */
+	boolean notifySentMessagesImmediately();
 
-    @Nonnull
-    RealmIconService getRealmIconService();
+	@Nonnull
+	RealmIconService getRealmIconService();
 
-    /**
-     * @return cipherer to be used while saving {@link RealmConfiguration} in persistence storage
-     */
-    @Nullable
-    Cipherer<RealmConfiguration, RealmConfiguration> getCipherer();
+	/**
+	 * @return cipherer to be used while saving {@link RealmConfiguration} in persistence storage
+	 */
+	@Nullable
+	Cipherer<RealmConfiguration, RealmConfiguration> getCipherer();
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           EQUALS/HASHCODE
     *
     **********************************************************************
     */
 
-    boolean equals(@Nullable Object o);
+	boolean equals(@Nullable Object o);
 
-    int hashCode();
+	int hashCode();
 }

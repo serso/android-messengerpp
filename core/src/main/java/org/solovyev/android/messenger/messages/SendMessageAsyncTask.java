@@ -4,7 +4,10 @@ import android.content.Context;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -23,126 +26,126 @@ import java.util.List;
  */
 public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTask.Input, Void, List<ChatMessage>> {
 
-    @Nonnull
-    private final Chat chat;
+	@Nonnull
+	private final Chat chat;
 
-    public SendMessageAsyncTask(@Nonnull Context context, @Nonnull Chat chat) {
-        super(context);
-        this.chat = chat;
-    }
+	public SendMessageAsyncTask(@Nonnull Context context, @Nonnull Chat chat) {
+		super(context);
+		this.chat = chat;
+	}
 
-    @Override
-    protected List<ChatMessage> doWork(@Nonnull List<Input> inputs) {
-        final List<ChatMessage> result = new ArrayList<ChatMessage>(inputs.size());
+	@Override
+	protected List<ChatMessage> doWork(@Nonnull List<Input> inputs) {
+		final List<ChatMessage> result = new ArrayList<ChatMessage>(inputs.size());
 
-        try {
-            for (Input input : inputs) {
-                final Context context = getContext();
-                if (context != null) {
-                    assert chat.equals(input.chat);
+		try {
+			for (Input input : inputs) {
+				final Context context = getContext();
+				if (context != null) {
+					assert chat.equals(input.chat);
 
-                    final ChatMessage message = input.sendChatMessage();
-                    if (message != null) {
-                        result.add(message);
-                    }
-                }
-            }
-        } catch (RealmException e) {
-            throwException(e);
-        }
+					final ChatMessage message = input.sendChatMessage();
+					if (message != null) {
+						result.add(message);
+					}
+				}
+			}
+		} catch (RealmException e) {
+			throwException(e);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
-        if (result != null) {
-            //getChatService().fireEvent(ChatEventType.message_added_batch.newEvent(chat, result)); wait remote add
-        }
-    }
+	@Override
+	protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
+		if (result != null) {
+			//getChatService().fireEvent(ChatEventType.message_added_batch.newEvent(chat, result)); wait remote add
+		}
+	}
 
-    @Nonnull
-    private static ChatService getChatService() {
-        return MessengerApplication.getServiceLocator().getChatService();
-    }
+	@Nonnull
+	private static ChatService getChatService() {
+		return MessengerApplication.getServiceLocator().getChatService();
+	}
 
-    @Nonnull
-    private static ChatMessageService getChatMessageService() {
-        return MessengerApplication.getServiceLocator().getChatMessageService();
-    }
+	@Nonnull
+	private static ChatMessageService getChatMessageService() {
+		return MessengerApplication.getServiceLocator().getChatMessageService();
+	}
 
-    @Nonnull
-    private static UserService getUserService() {
-        return MessengerApplication.getServiceLocator().getUserService();
-    }
+	@Nonnull
+	private static UserService getUserService() {
+		return MessengerApplication.getServiceLocator().getUserService();
+	}
 
-    @Nonnull
-    private static RealmService getRealmService() {
-        return MessengerApplication.getServiceLocator().getRealmService();
-    }
+	@Nonnull
+	private static RealmService getRealmService() {
+		return MessengerApplication.getServiceLocator().getRealmService();
+	}
 
-    public static class Input {
+	public static class Input {
 
-        @Nonnull
-        private final User author;
+		@Nonnull
+		private final User author;
 
-        @Nonnull
-        private String message;
+		@Nonnull
+		private String message;
 
-        @Nullable
-        private String title;
+		@Nullable
+		private String title;
 
-        @Nonnull
-        private final List<Object> attachments = new ArrayList<Object>();
+		@Nonnull
+		private final List<Object> attachments = new ArrayList<Object>();
 
-        @Nonnull
-        private final List<LiteChatMessage> fwdMessages = new ArrayList<LiteChatMessage>();
+		@Nonnull
+		private final List<LiteChatMessage> fwdMessages = new ArrayList<LiteChatMessage>();
 
-        @Nonnull
-        private final Chat chat;
+		@Nonnull
+		private final Chat chat;
 
-        public Input(@Nonnull User author, @Nonnull String message, @Nonnull Chat chat) {
-            this.author = author;
-            this.message = message;
-            this.chat = chat;
-        }
+		public Input(@Nonnull User author, @Nonnull String message, @Nonnull Chat chat) {
+			this.author = author;
+			this.message = message;
+			this.chat = chat;
+		}
 
-        public void setTitle(@Nullable String title) {
-            this.title = title;
-        }
+		public void setTitle(@Nullable String title) {
+			this.title = title;
+		}
 
-        public boolean addAttachment(Object attachment) {
-            return attachments.add(attachment);
-        }
+		public boolean addAttachment(Object attachment) {
+			return attachments.add(attachment);
+		}
 
-        public boolean addFwdMessage(@Nonnull LiteChatMessage fwdMessage) {
-            return fwdMessages.add(fwdMessage);
-        }
+		public boolean addFwdMessage(@Nonnull LiteChatMessage fwdMessage) {
+			return fwdMessages.add(fwdMessage);
+		}
 
-        @Nullable
-        public ChatMessage sendChatMessage() throws RealmException {
-            final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
-            liteChatMessage.setAuthor(author.getEntity());
-            liteChatMessage.setBody(message);
+		@Nullable
+		public ChatMessage sendChatMessage() throws RealmException {
+			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
+			liteChatMessage.setAuthor(author.getEntity());
+			liteChatMessage.setBody(message);
 
-            if (chat.isPrivate()) {
-                final Entity secondUser = chat.getSecondUser();
-                liteChatMessage.setRecipient(secondUser);
-            }
+			if (chat.isPrivate()) {
+				final Entity secondUser = chat.getSecondUser();
+				liteChatMessage.setRecipient(secondUser);
+			}
 
-            liteChatMessage.setTitle(title == null ? "" : title);
-            liteChatMessage.setSendDate(DateTime.now());
+			liteChatMessage.setTitle(title == null ? "" : title);
+			liteChatMessage.setSendDate(DateTime.now());
 
-            final ChatMessageImpl chatMessage = Messages.newInstance(liteChatMessage, true);
-            chatMessage.setDirection(MessageDirection.out);
-            for (LiteChatMessage fwdMessage : fwdMessages) {
-                chatMessage.addFwdMessage(fwdMessage);
-            }
+			final ChatMessageImpl chatMessage = Messages.newInstance(liteChatMessage, true);
+			chatMessage.setDirection(MessageDirection.out);
+			for (LiteChatMessage fwdMessage : fwdMessages) {
+				chatMessage.addFwdMessage(fwdMessage);
+			}
 
-            return getChatMessageService().sendChatMessage(author.getEntity(), chat, chatMessage);
-        }
+			return getChatMessageService().sendChatMessage(author.getEntity(), chat, chatMessage);
+		}
 
-    }
+	}
 }
 
 

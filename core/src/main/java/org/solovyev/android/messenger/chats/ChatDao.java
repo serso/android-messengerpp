@@ -17,42 +17,44 @@ import java.util.Map;
  */
 public interface ChatDao {
 
-    @Nonnull
-    MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
+	@Nonnull
+	MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
 
-    @Nonnull
-    List<String> loadUserChatIds(@Nonnull String userId);
+	@Nonnull
+	List<String> loadUserChatIds(@Nonnull String userId);
 
-    @Nonnull
-    List<String> loadChatIds();
+	@Nonnull
+	List<String> loadChatIds();
 
-    @Nonnull
-    List<AProperty> loadChatPropertiesById(@Nonnull String chatId);
+	@Nonnull
+	List<AProperty> loadChatPropertiesById(@Nonnull String chatId);
 
-    @Nonnull
-    List<Chat> loadUserChats(@Nonnull String userId);
+	@Nonnull
+	List<Chat> loadUserChats(@Nonnull String userId);
 
-    @Nonnull
-    List<User> loadChatParticipants(@Nonnull String chatId);
+	@Nonnull
+	List<User> loadChatParticipants(@Nonnull String chatId);
 
-    @Nullable
-    Chat loadChatById(@Nonnull String chatId);
+	@Nullable
+	Chat loadChatById(@Nonnull String chatId);
 
-    /**
-     * Method updates chat in the storage
-     * @param chat chat to be updated
-     * @return true if chat was updated, false if no chat exists in storage
-     */
-    boolean updateChat(@Nonnull Chat chat);
+	/**
+	 * Method updates chat in the storage
+	 *
+	 * @param chat chat to be updated
+	 * @return true if chat was updated, false if no chat exists in storage
+	 */
+	boolean updateChat(@Nonnull Chat chat);
 
-    void deleteAllChats();
+	void deleteAllChats();
 
-    void deleteAllChatsInRealm(@Nonnull String realmId);
+	void deleteAllChatsInRealm(@Nonnull String realmId);
 
-    /**
-     * Key: chat for which unread messages exist, value: number of unread messages
-     * @return map of chats with unread messages counts for them
-     */
-    @Nonnull
-    Map<Entity,Integer> getUnreadChats();
+	/**
+	 * Key: chat for which unread messages exist, value: number of unread messages
+	 *
+	 * @return map of chats with unread messages counts for them
+	 */
+	@Nonnull
+	Map<Entity, Integer> getUnreadChats();
 }

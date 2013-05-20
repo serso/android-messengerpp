@@ -6,34 +6,34 @@ import roboguice.event.EventListener;
 import javax.annotation.Nonnull;
 
 /**
-* User: serso
-* Date: 3/8/13
-* Time: 11:46 AM
-*/
+ * User: serso
+ * Date: 3/8/13
+ * Time: 11:46 AM
+ */
 public class RealmDefGuiEventListener implements EventListener<RealmDefGuiEvent> {
 
-    @Nonnull
-    private MessengerFragmentActivity activity;
+	@Nonnull
+	private MessengerFragmentActivity activity;
 
-    public RealmDefGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
-        this.activity = activity;
-    }
+	public RealmDefGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+		this.activity = activity;
+	}
 
-    @Override
-    public void onEvent(@Nonnull RealmDefGuiEvent event) {
-        final RealmDef realmDef = event.getRealmDef();
+	@Override
+	public void onEvent(@Nonnull RealmDefGuiEvent event) {
+		final RealmDef realmDef = event.getRealmDef();
 
-        switch (event.getType()) {
-            case realm_def_clicked:
-                if (activity.isDualPane()) {
-                    activity.getMultiPaneFragmentManager().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
-                } else {
-                    activity.getMultiPaneFragmentManager().setMainFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
-                }
-                break;
-            case realm_def_edit_finished:
-                activity.getMultiPaneFragmentManager().goBack();
-                break;
-        }
-    }
+		switch (event.getType()) {
+			case realm_def_clicked:
+				if (activity.isDualPane()) {
+					activity.getMultiPaneFragmentManager().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
+				} else {
+					activity.getMultiPaneFragmentManager().setMainFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
+				}
+				break;
+			case realm_def_edit_finished:
+				activity.getMultiPaneFragmentManager().goBack();
+				break;
+		}
+	}
 }

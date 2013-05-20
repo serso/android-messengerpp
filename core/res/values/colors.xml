@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <color name="mpp_text">#ff363636</color>
-    <color name="mpp_text_inverted">#ffffffff</color>
-    <color name="mpp_text_selected">#ffffffff</color>
-    <color name="mpp_text_secondary">#ff939393</color>
+	<color name="mpp_text">#ff363636</color>
+	<color name="mpp_text_inverted">#ffffffff</color>
+	<color name="mpp_text_selected">#ffffffff</color>
+	<color name="mpp_text_secondary">#ff939393</color>
 
-    <color name="mpp_bg">#ffffffff</color>
-    <color name="mpp_bg_darker">#fffefefe</color>
-    <color name="mpp_bg_darkest">#ffeeeeee</color>
+	<color name="mpp_bg">#ffffffff</color>
+	<color name="mpp_bg_darker">#fffefefe</color>
+	<color name="mpp_bg_darkest">#ffeeeeee</color>
 
-    <!-- a little bit alpha for filter box in order to separate it from fragment next to it-->
-    <color name="mpp_filter_bg">#aaffffff</color>
+	<!-- a little bit alpha for filter box in order to separate it from fragment next to it-->
+	<color name="mpp_filter_bg">#aaffffff</color>
 
-    <color name="mpp_button">#ffc2c2c2</color>
-    <color name="text_name">#ff0e1825</color>
-    <!--<color name="text_link">#ff3266a2</color>-->
-    <color name="text_link">#ff363636</color>
-    <color name="mpp_selected">#cc33b5e5</color>
-    <color name="mpp_blue">#ff33b5e5</color>
-    <color name="mpp_black">#ff000000</color>
-    <color name="mpp_blue_darker">#ff247697</color>
-    <color name="mpp_gray">#ffdddddd</color>
+	<color name="mpp_button">#ffc2c2c2</color>
+	<color name="text_name">#ff0e1825</color>
+	<!--<color name="text_link">#ff3266a2</color>-->
+	<color name="text_link">#ff363636</color>
+	<color name="mpp_selected">#cc33b5e5</color>
+	<color name="mpp_blue">#ff33b5e5</color>
+	<color name="mpp_black">#ff000000</color>
+	<color name="mpp_blue_darker">#ff247697</color>
+	<color name="mpp_gray">#ffdddddd</color>
 
 </resources>

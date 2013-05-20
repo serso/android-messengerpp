@@ -27,116 +27,116 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public final class DefaultNotificationService implements NotificationService {
 
-    @Inject
-    @Nonnull
-    private MessengerListeners messengerListeners;
+	@Inject
+	@Nonnull
+	private MessengerListeners messengerListeners;
 
-    @GuardedBy("notifications")
-    @Nonnull
-    private final Cache<Message, Message> recentNotifications = CacheBuilder.newBuilder()
-            .concurrencyLevel(4)
-            .maximumSize(100)
-            .expireAfterWrite(20, TimeUnit.SECONDS)
-            .build();
+	@GuardedBy("notifications")
+	@Nonnull
+	private final Cache<Message, Message> recentNotifications = CacheBuilder.newBuilder()
+			.concurrencyLevel(4)
+			.maximumSize(100)
+			.expireAfterWrite(20, TimeUnit.SECONDS)
+			.build();
 
-    @GuardedBy("notifications")
-    @Nonnull
-    private final List<Message> notifications = new ArrayList<Message>();
+	@GuardedBy("notifications")
+	@Nonnull
+	private final List<Message> notifications = new ArrayList<Message>();
 
-    @Nonnull
-    private final Context context;
+	@Nonnull
+	private final Context context;
 
-    @Inject
-    public DefaultNotificationService(@Nonnull Application context) {
-        this.context = context;
-    }
+	@Inject
+	public DefaultNotificationService(@Nonnull Application context) {
+		this.context = context;
+	}
 
-    private void notify(@Nonnull final Message notification) {
+	private void notify(@Nonnull final Message notification) {
 
-        boolean notifyUser = false;
+		boolean notifyUser = false;
 
-        synchronized (notifications) {
-            try {
-                recentNotifications.get(notification, new Callable<Message>() {
-                    @Override
-                    public Message call() throws Exception {
-                        throw new Exception();
-                    }
-                });
+		synchronized (notifications) {
+			try {
+				recentNotifications.get(notification, new Callable<Message>() {
+					@Override
+					public Message call() throws Exception {
+						throw new Exception();
+					}
+				});
 
-                // notification is in cache => do nothing as same notifications has already been shown recently
-            } catch (ExecutionException e) {
-                // notification is not in cache => check if it is already shown
-                if (!notifications.contains(notification)) {
-                    // not shown yet => add to cache and to shown notifications
-                    recentNotifications.put(notification, notification);
-                    notifications.add(notification);
-                    notifyUser = true;
-                }
-            }
-        }
+				// notification is in cache => do nothing as same notifications has already been shown recently
+			} catch (ExecutionException e) {
+				// notification is not in cache => check if it is already shown
+				if (!notifications.contains(notification)) {
+					// not shown yet => add to cache and to shown notifications
+					recentNotifications.put(notification, notification);
+					notifications.add(notification);
+					notifyUser = true;
+				}
+			}
+		}
 
-        if (notifyUser) {
-            messengerListeners.fireEvent(MessengerEventType.notification_added.newEvent(notification));
-        }
-    }
+		if (notifyUser) {
+			messengerListeners.fireEvent(MessengerEventType.notification_added.newEvent(notification));
+		}
+	}
 
-    @Override
-    public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nullable Object... parameters) {
-        notify(new MessengerNotification(context, messageResId, level, parameters));
-    }
+	@Override
+	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nullable Object... parameters) {
+		notify(new MessengerNotification(context, messageResId, level, parameters));
+	}
 
-    @Override
-    public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull List<Object> parameters) {
-        notify(new MessengerNotification(context, messageResId, level, parameters));
-    }
+	@Override
+	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull List<Object> parameters) {
+		notify(new MessengerNotification(context, messageResId, level, parameters));
+	}
 
-    @Override
-    @Nonnull
-    public List<Message> getNotifications() {
-        synchronized (notifications) {
-            return new ArrayList<Message>(notifications);
-        }
-    }
+	@Override
+	@Nonnull
+	public List<Message> getNotifications() {
+		synchronized (notifications) {
+			return new ArrayList<Message>(notifications);
+		}
+	}
 
-    @Override
-    public boolean existNotifications() {
-        synchronized (notifications) {
-            return !notifications.isEmpty();
-        }
-    }
+	@Override
+	public boolean existNotifications() {
+		synchronized (notifications) {
+			return !notifications.isEmpty();
+		}
+	}
 
-    @Override
-    public void removeNotification(@Nonnull Message notification) {
-        boolean removed;
+	@Override
+	public void removeNotification(@Nonnull Message notification) {
+		boolean removed;
 
-        synchronized (notifications) {
-            removed = notifications.remove(notification);
-        }
+		synchronized (notifications) {
+			removed = notifications.remove(notification);
+		}
 
-        if (removed) {
-            messengerListeners.fireEvent(MessengerEventType.notification_removed.newEvent(notification));
-        }
-    }
+		if (removed) {
+			messengerListeners.fireEvent(MessengerEventType.notification_removed.newEvent(notification));
+		}
+	}
 
-    @Override
-    public void removeNotification(int notificationId) {
-        final List<Message> removedNotifications = new ArrayList<Message>();
+	@Override
+	public void removeNotification(int notificationId) {
+		final List<Message> removedNotifications = new ArrayList<Message>();
 
-        final String messageCode = String.valueOf(notificationId);
-        synchronized (notifications) {
-            Iterables.removeIf(notifications, PredicateSpy.spyOn(new Predicate<Message>() {
-                @Override
-                public boolean apply(@Nullable Message notification) {
-                    return notification != null && notification.getMessageCode().equals(messageCode);
-                }
-            }, removedNotifications));
-        }
+		final String messageCode = String.valueOf(notificationId);
+		synchronized (notifications) {
+			Iterables.removeIf(notifications, PredicateSpy.spyOn(new Predicate<Message>() {
+				@Override
+				public boolean apply(@Nullable Message notification) {
+					return notification != null && notification.getMessageCode().equals(messageCode);
+				}
+			}, removedNotifications));
+		}
 
-        if (!removedNotifications.isEmpty()) {
-            for (Message removedNotification : removedNotifications) {
-                messengerListeners.fireEvent(MessengerEventType.notification_removed.newEvent(removedNotification));
-            }
-        }
-    }
+		if (!removedNotifications.isEmpty()) {
+			for (Message removedNotification : removedNotifications) {
+				messengerListeners.fireEvent(MessengerEventType.notification_removed.newEvent(removedNotification));
+			}
+		}
+	}
 }

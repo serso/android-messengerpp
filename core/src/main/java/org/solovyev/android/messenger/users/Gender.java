@@ -9,18 +9,18 @@ import org.solovyev.android.messenger.core.R;
  * Time: 5:46 PM
  */
 public enum Gender implements Labeled {
-    male(R.string.male),
-    female(R.string.female);
+	male(R.string.male),
+	female(R.string.female);
 
-    private int captionResId;
+	private int captionResId;
 
-    private Gender(int captionResId) {
-        this.captionResId = captionResId;
-    }
+	private Gender(int captionResId) {
+		this.captionResId = captionResId;
+	}
 
 
-    @Override
-    public int getCaptionResId() {
-        return this.captionResId;
-    }
+	@Override
+	public int getCaptionResId() {
+		return this.captionResId;
+	}
 }

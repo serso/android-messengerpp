@@ -12,16 +12,16 @@ import javax.annotation.Nonnull;
  */
 public final class ContactsAdapter extends AbstractContactsAdapter {
 
-    public ContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
-        super(context);
-    }
+	public ContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
+		super(context);
+	}
 
-    @Override
-    protected void onListItemChanged(@Nonnull User contact) {
-    }
+	@Override
+	protected void onListItemChanged(@Nonnull User contact) {
+	}
 
-    @Override
-    protected boolean canAddContact(@Nonnull User contact) {
-        return true;
-    }
+	@Override
+	protected boolean canAddContact(@Nonnull User contact) {
+		return true;
+	}
 }

@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import javax.annotation.Nonnull;
 import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.DownloadFileAsyncTask;
@@ -18,6 +17,7 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.Builder;
 import org.solovyev.common.collections.Collections;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -27,58 +27,58 @@ import java.util.List;
  */
 public class CaptchaViewBuilder implements Builder<AlertDialog> {
 
-    @Nonnull
-    private Context context;
+	@Nonnull
+	private Context context;
 
-    @Nonnull
-    private Captcha captcha;
+	@Nonnull
+	private Captcha captcha;
 
-    @Nonnull
-    private CaptchaEnteredListener captchaEnteredListener;
+	@Nonnull
+	private CaptchaEnteredListener captchaEnteredListener;
 
-    public CaptchaViewBuilder(@Nonnull Context context, @Nonnull Captcha captcha, @Nonnull CaptchaEnteredListener captchaEnteredListener) {
-        this.context = context;
-        this.captcha = captcha;
-        this.captchaEnteredListener = captchaEnteredListener;
-    }
+	public CaptchaViewBuilder(@Nonnull Context context, @Nonnull Captcha captcha, @Nonnull CaptchaEnteredListener captchaEnteredListener) {
+		this.context = context;
+		this.captcha = captcha;
+		this.captchaEnteredListener = captchaEnteredListener;
+	}
 
-    @Nonnull
-    @Override
-    public AlertDialog build() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+	@Nonnull
+	@Override
+	public AlertDialog build() {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        builder.setTitle(R.string.c_captcha);
-        final View view = ViewFromLayoutBuilder.newInstance(R.layout.captcha).build(context);
+		builder.setTitle(R.string.c_captcha);
+		final View view = ViewFromLayoutBuilder.newInstance(R.layout.captcha).build(context);
 
-        final ImageView captchaImage = (ImageView) view.findViewById(R.id.captcha_image);
-        final EditText captchaCodeInput = (EditText) view.findViewById(R.id.captcha_code);
+		final ImageView captchaImage = (ImageView) view.findViewById(R.id.captcha_image);
+		final EditText captchaCodeInput = (EditText) view.findViewById(R.id.captcha_code);
 
-        builder.setView(view);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                captchaEnteredListener.onCaptchaEntered(captcha.resolve(captchaCodeInput.getText().toString()));
-            }
-        });
+		builder.setView(view);
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				captchaEnteredListener.onCaptchaEntered(captcha.resolve(captchaCodeInput.getText().toString()));
+			}
+		});
 
-        final AlertDialog result = builder.create();
+		final AlertDialog result = builder.create();
 
-        // todo serso: fragment dialog!
+		// todo serso: fragment dialog!
 
-        // at the end schedule captcha download
-        new DownloadFileAsyncTask(context, new DownloadFileAsyncTask.OnPostExecute<List<Object>>() {
-            @Override
-            public void onPostExecute(@Nonnull final List<Object> result) {
-                if (!Collections.isEmpty(result)) {
-                    captchaImage.setImageDrawable((Drawable) result.get(0));
-                }
-            }
-        }).execute(new DownloadFileAsyncTask.Input(captcha.getCaptchaImage(), HttpMethod.GET, DrawableFromIsConverter.getInstance()));
+		// at the end schedule captcha download
+		new DownloadFileAsyncTask(context, new DownloadFileAsyncTask.OnPostExecute<List<Object>>() {
+			@Override
+			public void onPostExecute(@Nonnull final List<Object> result) {
+				if (!Collections.isEmpty(result)) {
+					captchaImage.setImageDrawable((Drawable) result.get(0));
+				}
+			}
+		}).execute(new DownloadFileAsyncTask.Input(captcha.getCaptchaImage(), HttpMethod.GET, DrawableFromIsConverter.getInstance()));
 
-        return result;
-    }
+		return result;
+	}
 
-    public static interface CaptchaEnteredListener {
-        void onCaptchaEntered(@Nonnull ResolvedCaptcha resolvedCaptcha);
-    }
+	public static interface CaptchaEnteredListener {
+		void onCaptchaEntered(@Nonnull ResolvedCaptcha resolvedCaptcha);
+	}
 }

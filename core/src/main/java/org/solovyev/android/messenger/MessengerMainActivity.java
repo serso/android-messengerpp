@@ -33,16 +33,16 @@ import javax.annotation.Nullable;
 public final class MessengerMainActivity extends MessengerFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private SyncService syncService;
+	@Inject
+	@Nonnull
+	private SyncService syncService;
 
     /*
     **********************************************************************
@@ -52,8 +52,8 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
     **********************************************************************
     */
 
-    @Nullable
-    private RoboListeners listeners;
+	@Nullable
+	private RoboListeners listeners;
 
     /*
     **********************************************************************
@@ -63,15 +63,15 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
     **********************************************************************
     */
 
-    public MessengerMainActivity() {
-        super(R.layout.mpp_main);
-    }
+	public MessengerMainActivity() {
+		super(R.layout.mpp_main);
+	}
 
-    public static void startActivity(@Nonnull Activity activity) {
-        final Intent result = new Intent();
-        result.setClass(activity, MessengerMainActivity.class);
-        activity.startActivity(result);
-    }
+	public static void startActivity(@Nonnull Activity activity) {
+		final Intent result = new Intent();
+		result.setClass(activity, MessengerMainActivity.class);
+		activity.startActivity(result);
+	}
 
     /*
     **********************************************************************
@@ -81,60 +81,60 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
     **********************************************************************
     */
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        listeners = new RoboListeners(getEventManager());
-        listeners.add(GuiEvent.class, new GuiEventListener(this));
-        listeners.add(RealmGuiEvent.class, new RealmGuiEventListener(this));
-        listeners.add(RealmDefGuiEvent.class, new RealmDefGuiEventListener(this));
-        listeners.add(ContactGuiEvent.class, new ContactGuiEventListener(this));
-        listeners.add(ChatGuiEvent.class, new ChatGuiEventListener(this, getChatService()));
-        listeners.add(FragmentGuiEvent.class, new FragmentGuiEventListener(this));
-        listeners.add(PreferenceGuiEvent.class, new PreferenceGuiEventListener(this));
+		listeners = new RoboListeners(getEventManager());
+		listeners.add(GuiEvent.class, new GuiEventListener(this));
+		listeners.add(RealmGuiEvent.class, new RealmGuiEventListener(this));
+		listeners.add(RealmDefGuiEvent.class, new RealmDefGuiEventListener(this));
+		listeners.add(ContactGuiEvent.class, new ContactGuiEventListener(this));
+		listeners.add(ChatGuiEvent.class, new ChatGuiEventListener(this, getChatService()));
+		listeners.add(FragmentGuiEvent.class, new FragmentGuiEventListener(this));
+		listeners.add(PreferenceGuiEvent.class, new PreferenceGuiEventListener(this));
 
-        if (isDualPane()) {
-            getMultiPaneFragmentManager().emptifySecondFragment();
-        }
+		if (isDualPane()) {
+			getMultiPaneFragmentManager().emptifySecondFragment();
+		}
 
-        if (isTriplePane()) {
-            getMultiPaneFragmentManager().emptifyThirdFragment();
-        }
-    }
+		if (isTriplePane()) {
+			getMultiPaneFragmentManager().emptifyThirdFragment();
+		}
+	}
 
 
-    @Override
-    protected void onDestroy() {
-        if ( listeners != null ) {
-            listeners.clearAll();
-        }
+	@Override
+	protected void onDestroy() {
+		if (listeners != null) {
+			listeners.clearAll();
+		}
 
-        super.onDestroy();
-    }
+		super.onDestroy();
+	}
 
-    @Override
-    public void onPreferenceAttached(PreferenceScreen preferenceScreen, int preferenceResId) {
-        new MessengerOnPreferenceAttachedListener(this, syncService).onPreferenceAttached(preferenceScreen, preferenceResId);
-    }
+	@Override
+	public void onPreferenceAttached(PreferenceScreen preferenceScreen, int preferenceResId) {
+		new MessengerOnPreferenceAttachedListener(this, syncService).onPreferenceAttached(preferenceScreen, preferenceResId);
+	}
 
-    private static final class FragmentGuiEventListener implements EventListener<FragmentGuiEvent> {
+	private static final class FragmentGuiEventListener implements EventListener<FragmentGuiEvent> {
 
-        @Nonnull
-        private final MessengerFragmentActivity activity;
+		@Nonnull
+		private final MessengerFragmentActivity activity;
 
-        private FragmentGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
-            this.activity = activity;
-        }
+		private FragmentGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+			this.activity = activity;
+		}
 
-        @Override
-        public void onEvent(@Nonnull FragmentGuiEvent event) {
-            switch (event.getType()) {
-                case created:
-                    break;
-                case shown:
-                    break;
-                case started:
+		@Override
+		public void onEvent(@Nonnull FragmentGuiEvent event) {
+			switch (event.getType()) {
+				case created:
+					break;
+				case shown:
+					break;
+				case started:
                     /*if (event.getParentViewId() == R.id.content_first_pane) {
                         // if new fragment is shown on the first pane => emptify other panes
                         if (activity.isDualPane()) {
@@ -144,8 +144,8 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
                             }
                         }
                     }*/
-                    break;
-            }
-        }
-    }
+					break;
+			}
+		}
+	}
 }

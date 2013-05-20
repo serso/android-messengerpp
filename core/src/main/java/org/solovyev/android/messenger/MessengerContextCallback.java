@@ -12,8 +12,8 @@ import javax.annotation.Nonnull;
  */
 public abstract class MessengerContextCallback<C extends Context, V> implements ContextCallback<C, V> {
 
-    @Override
-    public void onFailure(@Nonnull C context, Throwable t) {
-        MessengerApplication.getServiceLocator().getExceptionHandler().handleException(t);
-    }
+	@Override
+	public void onFailure(@Nonnull C context, Throwable t) {
+		MessengerApplication.getServiceLocator().getExceptionHandler().handleException(t);
+	}
 }

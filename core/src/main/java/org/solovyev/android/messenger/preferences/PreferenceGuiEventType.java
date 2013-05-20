@@ -9,11 +9,11 @@ import javax.annotation.Nonnull;
  */
 public enum PreferenceGuiEventType {
 
-    preference_group_clicked;
+	preference_group_clicked;
 
 
-    @Nonnull
-    public PreferenceGuiEvent newEvent(@Nonnull PreferenceGroup preferenceGroup) {
-        return new PreferenceGuiEvent(preferenceGroup, this, null);
-    }
+	@Nonnull
+	public PreferenceGuiEvent newEvent(@Nonnull PreferenceGroup preferenceGroup) {
+		return new PreferenceGuiEvent(preferenceGroup, this, null);
+	}
 }

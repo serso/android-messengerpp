@@ -21,39 +21,39 @@ import java.util.List;
  */
 final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 
-    ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute) {
-        super(context, adapter, onPostExecute);
-    }
+	ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute) {
+		super(context, adapter, onPostExecute);
+	}
 
-    @Nonnull
-    @Override
-    protected List<UiChat> getElements(@Nonnull Context context) {
-        final List<UiChat> result = new ArrayList<UiChat>();
+	@Nonnull
+	@Override
+	protected List<UiChat> getElements(@Nonnull Context context) {
+		final List<UiChat> result = new ArrayList<UiChat>();
 
-        final UserService userService = MessengerApplication.getServiceLocator().getUserService();
-        final ChatService chatService = MessengerApplication.getServiceLocator().getChatService();
-        final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
+		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
+		final ChatService chatService = MessengerApplication.getServiceLocator().getChatService();
+		final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
 
 
-        for (User user : realmService.getEnabledRealmUsers()) {
-            final List<Chat> chats = userService.getUserChats(user.getEntity());
-            for (Chat chat : chats) {
-                result.add(UiChat.newInstance(user, chat, chatService.getLastMessage(chat.getEntity()), chatService.getUnreadMessagesCount(chat.getEntity())));
-            }
-        }
+		for (User user : realmService.getEnabledRealmUsers()) {
+			final List<Chat> chats = userService.getUserChats(user.getEntity());
+			for (Chat chat : chats) {
+				result.add(UiChat.newInstance(user, chat, chatService.getLastMessage(chat.getEntity()), chatService.getUnreadMessagesCount(chat.getEntity())));
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    protected Comparator<? super ChatListItem> getComparator() {
-        return ChatListItemComparator.getInstance();
-    }
+	@Override
+	protected Comparator<? super ChatListItem> getComparator() {
+		return ChatListItemComparator.getInstance();
+	}
 
-    @Nonnull
-    @Override
-    protected ChatListItem createListItem(@Nonnull UiChat uiChat) {
-        return ChatListItem.newInstance(uiChat);
-    }
+	@Nonnull
+	@Override
+	protected ChatListItem createListItem(@Nonnull UiChat uiChat) {
+		return ChatListItem.newInstance(uiChat);
+	}
 
 }

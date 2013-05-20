@@ -19,27 +19,27 @@ import java.util.List;
  */
 public class ChatMapper implements Converter<Cursor, Chat> {
 
-    @Nonnull
-    private final ChatDao chatDao;
+	@Nonnull
+	private final ChatDao chatDao;
 
-    public ChatMapper(@Nonnull ChatDao chatDao) {
-        this.chatDao = chatDao;
-    }
+	public ChatMapper(@Nonnull ChatDao chatDao) {
+		this.chatDao = chatDao;
+	}
 
-    @Nonnull
-    @Override
-    public Chat convert(@Nonnull Cursor c) {
-        final Entity realmChat = EntityMapper.newInstanceFor(0).convert(c);
+	@Nonnull
+	@Override
+	public Chat convert(@Nonnull Cursor c) {
+		final Entity realmChat = EntityMapper.newInstanceFor(0).convert(c);
 
-        final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-        final String lastMessagesSyncDateString = c.getString(3);
-        final DateTime lastMessagesSyncDate = lastMessagesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastMessagesSyncDateString);
+		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
+		final String lastMessagesSyncDateString = c.getString(3);
+		final DateTime lastMessagesSyncDate = lastMessagesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastMessagesSyncDateString);
 
-        final List<AProperty> properties = chatDao.loadChatPropertiesById(realmChat.getEntityId());
+		final List<AProperty> properties = chatDao.loadChatPropertiesById(realmChat.getEntityId());
 
-        //final List<ChatMessage> chatMessages = chatDao.loadChatMessages(chatId);
-        //final List<User> chatParticipants = chatDao.loadChatParticipants(chatId);
+		//final List<ChatMessage> chatMessages = chatDao.loadChatMessages(chatId);
+		//final List<User> chatParticipants = chatDao.loadChatParticipants(chatId);
 
-        return ChatImpl.newInstance(realmChat, properties, lastMessagesSyncDate);
-    }
+		return ChatImpl.newInstance(realmChat, properties, lastMessagesSyncDate);
+	}
 }

@@ -12,55 +12,55 @@ import javax.annotation.Nonnull;
  */
 public abstract class AbstractMessengerEntity extends JObject implements MessengerEntity {
 
-    @Nonnull
-    private /*final*/ Entity entity;
+	@Nonnull
+	private /*final*/ Entity entity;
 
-    protected AbstractMessengerEntity(@Nonnull Entity entity) {
-        this.entity = entity;
-    }
+	protected AbstractMessengerEntity(@Nonnull Entity entity) {
+		this.entity = entity;
+	}
 
-    @Nonnull
-    @Override
-    public final String getId() {
-        return entity.getEntityId();
-    }
+	@Nonnull
+	@Override
+	public final String getId() {
+		return entity.getEntityId();
+	}
 
-    @Nonnull
-    public Entity getEntity() {
-        return entity;
-    }
+	@Nonnull
+	public Entity getEntity() {
+		return entity;
+	}
 
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+	@Override
+	public final boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
 
-        if (o == null || o.getClass() != this.getClass()) {
-            return false;
-        }
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
+		}
 
-        final AbstractMessengerEntity that = (AbstractMessengerEntity) o;
+		final AbstractMessengerEntity that = (AbstractMessengerEntity) o;
 
-        if (!entity.equals(that.entity)) {
-            return false;
-        }
+		if (!entity.equals(that.entity)) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public final int hashCode() {
-        return entity.hashCode();
-    }
+	@Override
+	public final int hashCode() {
+		return entity.hashCode();
+	}
 
-    @Nonnull
-    @Override
-    public AbstractMessengerEntity clone() {
-        final AbstractMessengerEntity clone = (AbstractMessengerEntity) super.clone();
+	@Nonnull
+	@Override
+	public AbstractMessengerEntity clone() {
+		final AbstractMessengerEntity clone = (AbstractMessengerEntity) super.clone();
 
-        clone.entity = entity.clone();
+		clone.entity = entity.clone();
 
-        return clone;
-    }
+		return clone;
+	}
 }

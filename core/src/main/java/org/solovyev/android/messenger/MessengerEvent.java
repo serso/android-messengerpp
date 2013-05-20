@@ -12,12 +12,12 @@ import javax.annotation.Nullable;
  */
 final class MessengerEvent extends AbstractTypedJEvent<Integer, MessengerEventType> {
 
-    MessengerEvent(@Nonnull MessengerEventType type, @Nullable Object data) {
-        super(0, type, data);
-    }
+	MessengerEvent(@Nonnull MessengerEventType type, @Nullable Object data) {
+		super(0, type, data);
+	}
 
-    @Nonnull
-    public Integer getDataAsInteger() {
-        return (Integer) getData();
-    }
+	@Nonnull
+	public Integer getDataAsInteger() {
+		return (Integer) getData();
+	}
 }

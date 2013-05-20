@@ -12,23 +12,23 @@ import javax.annotation.Nonnull;
  */
 public class GuiEventListener implements EventListener<GuiEvent> {
 
-    @Nonnull
-    private final MessengerMainActivity activity;
+	@Nonnull
+	private final MessengerMainActivity activity;
 
-    public GuiEventListener(@Nonnull MessengerMainActivity activity) {
-        this.activity = activity;
-    }
+	public GuiEventListener(@Nonnull MessengerMainActivity activity) {
+		this.activity = activity;
+	}
 
-    @Override
-    public void onEvent(@Nonnull GuiEvent event) {
-        switch (event.getType()) {
-            case show_realm_defs:
-                handleShowRealmDefsEvent();
-                break;
-        }
-    }
+	@Override
+	public void onEvent(@Nonnull GuiEvent event) {
+		switch (event.getType()) {
+			case show_realm_defs:
+				handleShowRealmDefsEvent();
+				break;
+		}
+	}
 
-    private void handleShowRealmDefsEvent() {
-        activity.getMultiPaneFragmentManager().setMainFragment(MessengerPrimaryFragment.realm_defs);
-    }
+	private void handleShowRealmDefsEvent() {
+		activity.getMultiPaneFragmentManager().setMainFragment(MessengerPrimaryFragment.realm_defs);
+	}
 }

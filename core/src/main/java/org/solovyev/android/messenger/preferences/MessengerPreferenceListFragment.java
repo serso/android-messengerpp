@@ -23,50 +23,50 @@ import javax.annotation.Nonnull;
 public final class MessengerPreferenceListFragment extends PreferenceListFragment implements DetachableFragment {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED VIEWS
     *
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private MessengerMultiPaneManager multiPaneManager;
+	@Inject
+	@Nonnull
+	private MessengerMultiPaneManager multiPaneManager;
 
-    public MessengerPreferenceListFragment(int preferencesResId) {
-        super(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_preferences);
-    }
+	public MessengerPreferenceListFragment(int preferencesResId) {
+		super(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_preferences);
+	}
 
-    public MessengerPreferenceListFragment() {
-    }
+	public MessengerPreferenceListFragment() {
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        RoboGuice.getInjector(this.getActivity()).injectMembersWithoutViews(this);
-    }
+		RoboGuice.getInjector(this.getActivity()).injectMembersWithoutViews(this);
+	}
 
-    @Override
-    protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nonnull Bundle b) {
-        super.onCreateView(context, inflater, root, container, b);
+	@Override
+	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nonnull Bundle b) {
+		super.onCreateView(context, inflater, root, container, b);
 
-        multiPaneManager.onCreatePane(getActivity(), container, root);
-    }
+		multiPaneManager.onCreatePane(getActivity(), container, root);
+	}
 
-    @Override
-    public void onViewCreated(View root, Bundle savedInstanceState) {
-        super.onViewCreated(root, savedInstanceState);
+	@Override
+	public void onViewCreated(View root, Bundle savedInstanceState) {
+		super.onViewCreated(root, savedInstanceState);
 
-        final PreferenceScreen preferenceScreen = getPreferenceScreen();
-        if ( preferenceScreen != null ) {
-            final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
-            if (fragmentTitle != null) {
-                fragmentTitle.setText(preferenceScreen.getTitle());
-            }
-        }
+		final PreferenceScreen preferenceScreen = getPreferenceScreen();
+		if (preferenceScreen != null) {
+			final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
+			if (fragmentTitle != null) {
+				fragmentTitle.setText(preferenceScreen.getTitle());
+			}
+		}
 
-        multiPaneManager.onPaneCreated(getActivity(), root);
-    }
+		multiPaneManager.onPaneCreated(getActivity(), root);
+	}
 }

@@ -22,45 +22,45 @@ import java.util.concurrent.Executors;
  */
 public class MessengerTestActivity extends RoboSherlockActivity {
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
-    @Nonnull
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+	@Nonnull
+	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    @Nonnull
-    private TextView console;
+	@Nonnull
+	private TextView console;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.mpp_test_activity);
+		setContentView(R.layout.mpp_test_activity);
 
-        console = (TextView) findViewById(R.id.mpp_test_console_textview);
+		console = (TextView) findViewById(R.id.mpp_test_console_textview);
 
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (Realm realm : realmService.getRealms()) {
-                    try {
-                        final User user = realm.getRealmUserService().getUserById("se.solovyev@gmail.com");
-                        Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
-                            @Override
-                            public void run() {
-                                if (user == null) {
-                                    console.setText("null");
-                                } else {
-                                    console.setText(user.getDisplayName());
-                                }
-                            }
-                        });
-                    } catch (RealmException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
+		executorService.execute(new Runnable() {
+			@Override
+			public void run() {
+				for (Realm realm : realmService.getRealms()) {
+					try {
+						final User user = realm.getRealmUserService().getUserById("se.solovyev@gmail.com");
+						Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
+							@Override
+							public void run() {
+								if (user == null) {
+									console.setText("null");
+								} else {
+									console.setText(user.getDisplayName());
+								}
+							}
+						});
+					} catch (RealmException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+	}
 }

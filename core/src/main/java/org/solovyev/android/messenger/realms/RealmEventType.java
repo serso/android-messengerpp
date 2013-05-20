@@ -10,34 +10,34 @@ import javax.annotation.Nullable;
  */
 public enum RealmEventType {
 
-    /**
-     * Fires when realm is created
-     */
-    created,
+	/**
+	 * Fires when realm is created
+	 */
+	created,
 
-    /**
-     * Fires when realm is changed
-     */
-    changed,
+	/**
+	 * Fires when realm is changed
+	 */
+	changed,
 
-    /**
-     * Fires when realm state is changed
-     */
-    state_changed,
+	/**
+	 * Fires when realm state is changed
+	 */
+	state_changed,
 
-    /**
-     * Fires when realm connection should be stopped for realm
-     */
-    stop,
+	/**
+	 * Fires when realm connection should be stopped for realm
+	 */
+	stop,
 
-    /**
-     * Fires when realm connection should be started for realm
-     */
-    start;
+	/**
+	 * Fires when realm connection should be started for realm
+	 */
+	start;
 
-    @Nonnull
-    RealmEvent newEvent(@Nonnull Realm realm, @Nullable Object data) {
-        assert data == null;
-        return new RealmEvent(realm, this, null);
-    }
+	@Nonnull
+	RealmEvent newEvent(@Nonnull Realm realm, @Nullable Object data) {
+		assert data == null;
+		return new RealmEvent(realm, this, null);
+	}
 }

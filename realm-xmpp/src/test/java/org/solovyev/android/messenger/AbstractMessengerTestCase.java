@@ -19,43 +19,43 @@ import javax.annotation.Nonnull;
 @RunWith(MessengerRobolectricTestRunner.class)
 public abstract class AbstractMessengerTestCase {
 
-    @Nonnull
-    private Application application = Robolectric.application;
+	@Nonnull
+	private Application application = Robolectric.application;
 
-    @Nonnull
-    @Inject
-    private RealmService realmService;
+	@Nonnull
+	@Inject
+	private RealmService realmService;
 
-    @Nonnull
-    private TestMessengerModule module;
+	@Nonnull
+	private TestMessengerModule module;
 
-    @Inject
-    @Nonnull
-    private XmppRealmDef xmppRealmDef;
+	@Inject
+	@Nonnull
+	private XmppRealmDef xmppRealmDef;
 
-    @Before
-    public void setUp() throws Exception {
-        module = new TestMessengerModule(application);
-        module.setUp(this, module);
-    }
+	@Before
+	public void setUp() throws Exception {
+		module = new TestMessengerModule(application);
+		module.setUp(this, module);
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        module.tearDown();
-    }
+	@After
+	public void tearDown() throws Exception {
+		module.tearDown();
+	}
 
-    @Nonnull
-    public Application getApplication() {
-        return application;
-    }
+	@Nonnull
+	public Application getApplication() {
+		return application;
+	}
 
-    @Nonnull
-    public RealmService getRealmService() {
-        return realmService;
-    }
+	@Nonnull
+	public RealmService getRealmService() {
+		return realmService;
+	}
 
-    @Nonnull
-    public XmppRealmDef getXmppRealmDef() {
-        return xmppRealmDef;
-    }
+	@Nonnull
+	public XmppRealmDef getXmppRealmDef() {
+		return xmppRealmDef;
+	}
 }

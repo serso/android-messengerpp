@@ -12,23 +12,23 @@ import javax.annotation.Nullable;
  */
 public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragment<TestRealm> {
 
-    @Inject
-    @Nonnull
-    private TestRealmDef realmDef;
+	@Inject
+	@Nonnull
+	private TestRealmDef realmDef;
 
-    public TestRealmConfigurationFragment() {
-        super(0);
-    }
+	public TestRealmConfigurationFragment() {
+		super(0);
+	}
 
-    @Nullable
-    @Override
-    protected RealmConfiguration validateData() {
-        return new TestRealmConfiguration("test", 42);
-    }
+	@Nullable
+	@Override
+	protected RealmConfiguration validateData() {
+		return new TestRealmConfiguration("test", 42);
+	}
 
-    @Nonnull
-    @Override
-    public RealmDef getRealmDef() {
-        return realmDef;
-    }
+	@Nonnull
+	@Override
+	public RealmDef getRealmDef() {
+		return realmDef;
+	}
 }

@@ -19,34 +19,34 @@ import javax.annotation.Nonnull;
  */
 public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
 
-    @Nonnull
-    private final UserService userService;
+	@Nonnull
+	private final UserService userService;
 
-    public ChatMessageMapper(@Nonnull UserService userService) {
-        this.userService = userService;
-    }
+	public ChatMessageMapper(@Nonnull UserService userService) {
+		this.userService = userService;
+	}
 
-    @Nonnull
-    @Override
-    public ChatMessage convert(@Nonnull Cursor c) {
-        final Entity messageEntity = EntityMapper.newInstanceFor(0).convert(c);
+	@Nonnull
+	@Override
+	public ChatMessage convert(@Nonnull Cursor c) {
+		final Entity messageEntity = EntityMapper.newInstanceFor(0).convert(c);
 
-        final String chatId = c.getString(3);
+		final String chatId = c.getString(3);
 
-        final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageEntity);
-        liteChatMessage.setAuthor(EntityImpl.fromEntityId(c.getString(4)));
-        if (!c.isNull(5)) {
-            final String recipientId = c.getString(5);
-            liteChatMessage.setRecipient(EntityImpl.fromEntityId(recipientId));
-        }
-        final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
+		final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageEntity);
+		liteChatMessage.setAuthor(EntityImpl.fromEntityId(c.getString(4)));
+		if (!c.isNull(5)) {
+			final String recipientId = c.getString(5);
+			liteChatMessage.setRecipient(EntityImpl.fromEntityId(recipientId));
+		}
+		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
-        liteChatMessage.setSendDate(dateTimeFormatter.parseDateTime(c.getString(6)));
-        final Long sendTime = c.getLong(7);
-        liteChatMessage.setTitle(c.getString(8));
-        liteChatMessage.setBody(c.getString(9));
-        final boolean read = c.getInt(10) == 1;
+		liteChatMessage.setSendDate(dateTimeFormatter.parseDateTime(c.getString(6)));
+		final Long sendTime = c.getLong(7);
+		liteChatMessage.setTitle(c.getString(8));
+		liteChatMessage.setBody(c.getString(9));
+		final boolean read = c.getInt(10) == 1;
 
-        return Messages.newInstance(liteChatMessage, read);
-    }
+		return Messages.newInstance(liteChatMessage, read);
+	}
 }

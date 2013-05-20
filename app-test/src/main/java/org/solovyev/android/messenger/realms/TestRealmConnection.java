@@ -12,17 +12,17 @@ import javax.annotation.Nonnull;
  */
 public class TestRealmConnection extends AbstractRealmConnection<TestRealm> {
 
-    public TestRealmConnection(@Nonnull TestRealm realm, @Nonnull Context context) {
-        super(realm, context);
-    }
+	public TestRealmConnection(@Nonnull TestRealm realm, @Nonnull Context context) {
+		super(realm, context);
+	}
 
-    @Override
-    protected void doWork() {
+	@Override
+	protected void doWork() {
 
-    }
+	}
 
-    @Override
-    protected void stopWork() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+	@Override
+	protected void stopWork() {
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
 }

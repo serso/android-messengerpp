@@ -18,84 +18,83 @@ import java.util.List;
  */
 public interface RealmService {
 
-    @Nonnull
-    static String TAG = "RealmService";
+	@Nonnull
+	static String TAG = "RealmService";
 
-    /**
-     * Method initializes service, must be called once before any other operations with current service
-     */
-    void init();
+	/**
+	 * Method initializes service, must be called once before any other operations with current service
+	 */
+	void init();
 
-    /**
-     * Method restores service state (e.g. loads persistence data from database)
-     */
-    void load();
+	/**
+	 * Method restores service state (e.g. loads persistence data from database)
+	 */
+	void load();
 
 
-    /**
-     * @return collection of all configured realms in application
-     */
-    @Nonnull
-    Collection<RealmDef> getRealmDefs();
+	/**
+	 * @return collection of all configured realms in application
+	 */
+	@Nonnull
+	Collection<RealmDef> getRealmDefs();
 
-    @Nonnull
-    Collection<Realm> getRealms();
+	@Nonnull
+	Collection<Realm> getRealms();
 
-    @Nonnull
-    Collection<Realm> getEnabledRealms();
+	@Nonnull
+	Collection<Realm> getEnabledRealms();
 
-    /**
-     *
-     * @return collection of users in all configured realms
-     */
-    @Nonnull
-    Collection<User> getRealmUsers();
+	/**
+	 * @return collection of users in all configured realms
+	 */
+	@Nonnull
+	Collection<User> getRealmUsers();
 
-    /**
-     *
-     * @return collection of users in all configured ENABLED realms
-     */
-    @Nonnull
-    Collection<User> getEnabledRealmUsers();
+	/**
+	 * @return collection of users in all configured ENABLED realms
+	 */
+	@Nonnull
+	Collection<User> getEnabledRealmUsers();
 
-    /**
-     * Method returns the realm which previously has been registered in this service
-     * @param realmDefId id of realm def
-     * @return realm
-     * @throws UnsupportedRealmException if realm hasn't been registered in this service
-     */
-    @Nonnull
-    RealmDef getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
+	/**
+	 * Method returns the realm which previously has been registered in this service
+	 *
+	 * @param realmDefId id of realm def
+	 * @return realm
+	 * @throws UnsupportedRealmException if realm hasn't been registered in this service
+	 */
+	@Nonnull
+	RealmDef getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
 
-    @Nonnull
-    Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
+	@Nonnull
+	Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
 
-    @Nonnull
-    Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
+	@Nonnull
+	Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
 
-    @Nonnull
-    Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+	@Nonnull
+	Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
-    @Nonnull
-    Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState);
+	@Nonnull
+	Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState);
 
-    void removeRealm(@Nonnull String realmId);
+	void removeRealm(@Nonnull String realmId);
 
-    boolean isOneRealm();
+	boolean isOneRealm();
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           LISTENERS
     *
     **********************************************************************
     */
 
-    void addListener(@Nonnull JEventListener<RealmEvent> listener);
+	void addListener(@Nonnull JEventListener<RealmEvent> listener);
 
-    void removeListener(@Nonnull JEventListener<RealmEvent> listener);
+	void removeListener(@Nonnull JEventListener<RealmEvent> listener);
 
-    void stopAllRealmConnections();
+	void stopAllRealmConnections();
 
-    List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
+	List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
 }

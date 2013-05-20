@@ -28,54 +28,54 @@ import java.util.UUID;
 @Singleton
 public final class MessengerSecurityService {
 
-    @Nonnull
-    private static final String TAG = MessengerSecurityService.class.getSimpleName();
+	@Nonnull
+	private static final String TAG = MessengerSecurityService.class.getSimpleName();
 
-    @Nonnull
-    private final SecurityService<byte[], byte[], byte[]> securityService;
+	@Nonnull
+	private final SecurityService<byte[], byte[], byte[]> securityService;
 
-    @Nonnull
-    private final SecurityService<String, String, String> stringSecurityService;
+	@Nonnull
+	private final SecurityService<String, String, String> stringSecurityService;
 
-    @Nonnull
-    private final Application context;
+	@Nonnull
+	private final Application context;
 
-    @Inject
-    public MessengerSecurityService(@Nonnull Application context) {
-        this.context = context;
-        this.securityService = Security.newAndroidAesByteSecurityService();
-        this.stringSecurityService = Security.newAndroidStringSecurityService(securityService);
-    }
+	@Inject
+	public MessengerSecurityService(@Nonnull Application context) {
+		this.context = context;
+		this.securityService = Security.newAndroidAesByteSecurityService();
+		this.stringSecurityService = Security.newAndroidStringSecurityService(securityService);
+	}
 
-    @Nonnull
-    public SecurityService<byte[], byte[], byte[]> getSecurityService() {
-        return securityService;
-    }
+	@Nonnull
+	public SecurityService<byte[], byte[], byte[]> getSecurityService() {
+		return securityService;
+	}
 
-    @Nonnull
-    public SecurityService<String, String, String> getStringSecurityService() {
-        return stringSecurityService;
-    }
+	@Nonnull
+	public SecurityService<String, String, String> getStringSecurityService() {
+		return stringSecurityService;
+	}
 
-    @Nullable
-    public synchronized SecretKey getSecretKey() {
-        try {
-            final SaltGenerator saltGenerator = securityService.getSaltGenerator();
+	@Nullable
+	public synchronized SecretKey getSecretKey() {
+		try {
+			final SaltGenerator saltGenerator = securityService.getSaltGenerator();
 
-            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            String uuid = MessengerPreferences.Security.uuid.getPreference(preferences);
-            String salt = MessengerPreferences.Security.salt.getPreference(preferences);
-            if (uuid == null || salt == null) {
-                uuid = UUID.randomUUID().toString();
-                MessengerPreferences.Security.uuid.putPreference(preferences, uuid);
-                salt = ABase64StringEncoder.getInstance().convert(saltGenerator.generateSalt());
-                MessengerPreferences.Security.salt.putPreference(preferences, salt);
-            }
+			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+			String uuid = MessengerPreferences.Security.uuid.getPreference(preferences);
+			String salt = MessengerPreferences.Security.salt.getPreference(preferences);
+			if (uuid == null || salt == null) {
+				uuid = UUID.randomUUID().toString();
+				MessengerPreferences.Security.uuid.putPreference(preferences, uuid);
+				salt = ABase64StringEncoder.getInstance().convert(saltGenerator.generateSalt());
+				MessengerPreferences.Security.salt.putPreference(preferences, salt);
+			}
 
-            return securityService.getSecretKeyProvider().getSecretKey(uuid + Build.DEVICE + "Messenger++", ABase64StringDecoder.getInstance().convert(salt));
-        } catch (CiphererException e) {
-            Log.e(TAG, e.getMessage(), e);
-            return null;
-        }
-    }
+			return securityService.getSecretKeyProvider().getSecretKey(uuid + Build.DEVICE + "Messenger++", ABase64StringDecoder.getInstance().convert(salt));
+		} catch (CiphererException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		}
+	}
 }

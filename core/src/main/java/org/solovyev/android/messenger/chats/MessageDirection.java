@@ -6,6 +6,6 @@ package org.solovyev.android.messenger.chats;
  * Time: 12:59 PM
  */
 public enum MessageDirection {
-    in,
-    out
+	in,
+	out
 }

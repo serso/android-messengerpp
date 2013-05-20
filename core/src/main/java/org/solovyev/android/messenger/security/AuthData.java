@@ -9,12 +9,12 @@ import javax.annotation.Nonnull;
  */
 public interface AuthData {
 
-    @Nonnull
-    String getAccessToken();
+	@Nonnull
+	String getAccessToken();
 
-    @Nonnull
-    String getRealmUserId();
+	@Nonnull
+	String getRealmUserId();
 
-    @Nonnull
-    String getRealmUserLogin();
+	@Nonnull
+	String getRealmUserLogin();
 }

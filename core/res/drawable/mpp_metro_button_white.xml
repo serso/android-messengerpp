@@ -2,9 +2,8 @@
 
 <selector xmlns:a="http://schemas.android.com/apk/res/android">
 
-	<item a:state_pressed="true"
-		  a:drawable="@drawable/mpp_metro_button_white_pressed"/>
+	<item a:state_pressed="true" a:drawable="@drawable/mpp_metro_button_white_pressed" />
 
-	<item a:drawable="@drawable/mpp_metro_button_white_shape"/>
+	<item a:drawable="@drawable/mpp_metro_button_white_shape" />
 
 </selector>

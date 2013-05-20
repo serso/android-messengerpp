@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.realms.vk.messages;
 
 import com.google.gson.*;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
 /**
@@ -12,41 +12,41 @@ import java.lang.reflect.Type;
  */
 public class JsonMessageTypedAttachment {
 
-    @Nullable
-    private String type;
+	@Nullable
+	private String type;
 
-    @Nullable
-    private JsonMessageAttachment attachment;
+	@Nullable
+	private JsonMessageAttachment attachment;
 
-    public static class Adapter implements JsonDeserializer<JsonMessageTypedAttachment> {
+	public static class Adapter implements JsonDeserializer<JsonMessageTypedAttachment> {
 
-        @Override
-        public JsonMessageTypedAttachment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            final JsonMessageTypedAttachment result = new JsonMessageTypedAttachment();
+		@Override
+		public JsonMessageTypedAttachment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			final JsonMessageTypedAttachment result = new JsonMessageTypedAttachment();
 
-            if (json.isJsonObject()) {
-                final JsonObject typedAttachment = json.getAsJsonObject();
+			if (json.isJsonObject()) {
+				final JsonObject typedAttachment = json.getAsJsonObject();
 
-                final String type = typedAttachment.getAsJsonPrimitive("type").getAsString();
+				final String type = typedAttachment.getAsJsonPrimitive("type").getAsString();
 
-                if ("photo".equals(type)) {
+				if ("photo".equals(type)) {
 
-                } else if ("audio".equals(type)) {
+				} else if ("audio".equals(type)) {
 
-                } else if ("video".equals(type)) {
+				} else if ("video".equals(type)) {
 
-                } else if ("doc".equals(type)) {
+				} else if ("doc".equals(type)) {
 
-                } else {
+				} else {
 
-                }
+				}
 
-            } else {
-                throw new JsonParseException("Unexpected JSON type: " + json.getClass());
-            }
+			} else {
+				throw new JsonParseException("Unexpected JSON type: " + json.getClass());
+			}
 
-            return result;
-        }
-    }
+			return result;
+		}
+	}
 
 }

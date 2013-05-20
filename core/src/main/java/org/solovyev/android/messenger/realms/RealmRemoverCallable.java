@@ -12,20 +12,20 @@ import java.util.concurrent.Callable;
  */
 final class RealmRemoverCallable implements Callable<Realm> {
 
-    @Nonnull
-    static final String TASK_NAME = "realm-remove";
+	@Nonnull
+	static final String TASK_NAME = "realm-remove";
 
-    @Nonnull
-    private final Realm realm;
+	@Nonnull
+	private final Realm realm;
 
-    RealmRemoverCallable(@Nonnull Realm realm) {
-        this.realm = realm;
-    }
+	RealmRemoverCallable(@Nonnull Realm realm) {
+		this.realm = realm;
+	}
 
-    @Override
-    public Realm call() {
-        MessengerApplication.getServiceLocator().getRealmService().removeRealm(realm.getId());
+	@Override
+	public Realm call() {
+		MessengerApplication.getServiceLocator().getRealmService().removeRealm(realm.getId());
 
-        return realm;
-    }
+		return realm;
+	}
 }

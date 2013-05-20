@@ -22,52 +22,52 @@ import java.util.List;
 
 public class VkRealmBuilder extends AbstractRealmBuilder<VkRealmConfiguration> {
 
-    protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm, @Nonnull VkRealmConfiguration configuration) {
-        super(realmDef, editedRealm, configuration);
-    }
+	protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm, @Nonnull VkRealmConfiguration configuration) {
+		super(realmDef, editedRealm, configuration);
+	}
 
-    @Nonnull
-    @Override
-    protected User getRealmUser(@Nonnull String realmId) {
-        final String userId = getConfiguration().getUserId();
-        final User defaultUser = Users.newEmptyUser(EntityImpl.newInstance(realmId, userId));
+	@Nonnull
+	@Override
+	protected User getRealmUser(@Nonnull String realmId) {
+		final String userId = getConfiguration().getUserId();
+		final User defaultUser = Users.newEmptyUser(EntityImpl.newInstance(realmId, userId));
 
-        User result;
-        try {
-            final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkRealm(realmId, getRealmDef(), defaultUser, getConfiguration(), RealmState.removed), userId, null));
-            if (users.isEmpty()) {
-                result = defaultUser;
-            } else {
-                result = users.get(0);
-            }
-        } catch (IOException e) {
-            Log.e("VkRealmBuilder", e.getMessage(), e);
-            result = defaultUser;
-        }
+		User result;
+		try {
+			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkRealm(realmId, getRealmDef(), defaultUser, getConfiguration(), RealmState.removed), userId, null));
+			if (users.isEmpty()) {
+				result = defaultUser;
+			} else {
+				result = users.get(0);
+			}
+		} catch (IOException e) {
+			Log.e("VkRealmBuilder", e.getMessage(), e);
+			result = defaultUser;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Nonnull
-    @Override
-    protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state) {
-        return new VkRealm(id, getRealmDef(), user, getConfiguration(), state);
-    }
+	@Nonnull
+	@Override
+	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state) {
+		return new VkRealm(id, getRealmDef(), user, getConfiguration(), state);
+	}
 
-    @Override
-    public void connect() throws ConnectionException {
-    }
+	@Override
+	public void connect() throws ConnectionException {
+	}
 
-    @Override
-    public void disconnect() throws ConnectionException {
-    }
+	@Override
+	public void disconnect() throws ConnectionException {
+	}
 
-    @Override
-    public void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
-        final VkRealmConfiguration configuration = getConfiguration();
+	@Override
+	public void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
+		final VkRealmConfiguration configuration = getConfiguration();
 
-        final JsonAuthResult result = VkAuth.doOauth2Authorization(configuration.getLogin(), configuration.getPassword());
-        configuration.setAccessParameters(result.getAccessToken(), result.getUserId());
-    }
+		final JsonAuthResult result = VkAuth.doOauth2Authorization(configuration.getLogin(), configuration.getPassword());
+		configuration.setAccessParameters(result.getAccessToken(), result.getUserId());
+	}
 
 }

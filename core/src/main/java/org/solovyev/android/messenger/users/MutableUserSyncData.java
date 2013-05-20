@@ -9,16 +9,16 @@ import javax.annotation.Nonnull;
  */
 public interface MutableUserSyncData {
 
-    @Nonnull
-    MutableUserSyncData updateChatsSyncDate();
+	@Nonnull
+	MutableUserSyncData updateChatsSyncDate();
 
-    @Nonnull
-    MutableUserSyncData updatePropertiesSyncDate();
+	@Nonnull
+	MutableUserSyncData updatePropertiesSyncDate();
 
-    @Nonnull
-    MutableUserSyncData updateContactsSyncDate();
+	@Nonnull
+	MutableUserSyncData updateContactsSyncDate();
 
-    @Nonnull
-    MutableUserSyncData updateUserIconsSyncDate();
+	@Nonnull
+	MutableUserSyncData updateUserIconsSyncDate();
 
 }

@@ -19,30 +19,30 @@ import java.util.List;
 @Singleton
 public class MessengerConfigurationImpl implements MessengerConfiguration {
 
-    @Nonnull
-    private final List<RealmDef> realmDefs = new ArrayList<RealmDef>();
+	@Nonnull
+	private final List<RealmDef> realmDefs = new ArrayList<RealmDef>();
 
-    @Inject
-    @Nonnull
-    private XmppRealmDef xmppRealmDef;
+	@Inject
+	@Nonnull
+	private XmppRealmDef xmppRealmDef;
 
-    @Inject
-    @Nonnull
-    private VkRealmDef mVkRealmDef;
+	@Inject
+	@Nonnull
+	private VkRealmDef mVkRealmDef;
 
-    public MessengerConfigurationImpl() {
-    }
+	public MessengerConfigurationImpl() {
+	}
 
-    @Nonnull
-    @Override
-    public Collection<RealmDef> getRealmDefs() {
-        synchronized (realmDefs) {
-            if (realmDefs.isEmpty()) {
-                realmDefs.add(xmppRealmDef);
-                realmDefs.add(mVkRealmDef);
-            }
-        }
+	@Nonnull
+	@Override
+	public Collection<RealmDef> getRealmDefs() {
+		synchronized (realmDefs) {
+			if (realmDefs.isEmpty()) {
+				realmDefs.add(xmppRealmDef);
+				realmDefs.add(mVkRealmDef);
+			}
+		}
 
-        return this.realmDefs;
-    }
+		return this.realmDefs;
+	}
 }

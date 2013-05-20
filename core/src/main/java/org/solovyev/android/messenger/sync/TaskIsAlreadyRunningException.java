@@ -2,8 +2,9 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.widget.Toast;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.core.R;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -12,19 +13,19 @@ import org.solovyev.android.messenger.core.R;
  */
 public class TaskIsAlreadyRunningException extends Exception {
 
-    @Nonnull
-    private SyncTask syncTask;
+	@Nonnull
+	private SyncTask syncTask;
 
-    public TaskIsAlreadyRunningException(@Nonnull SyncTask syncTask) {
-        this.syncTask = syncTask;
-    }
+	public TaskIsAlreadyRunningException(@Nonnull SyncTask syncTask) {
+		this.syncTask = syncTask;
+	}
 
-    @Nonnull
-    public SyncTask getSyncTask() {
-        return syncTask;
-    }
+	@Nonnull
+	public SyncTask getSyncTask() {
+		return syncTask;
+	}
 
-    public void showMessage(@Nonnull Context c) {
-        Toast.makeText(c, R.string.c_task_is_already_running, Toast.LENGTH_SHORT).show();
-    }
+	public void showMessage(@Nonnull Context c) {
+		Toast.makeText(c, R.string.c_task_is_already_running, Toast.LENGTH_SHORT).show();
+	}
 }

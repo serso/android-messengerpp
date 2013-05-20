@@ -24,50 +24,50 @@ import java.util.List;
  */
 public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransaction<R> {
 
-    private static final String URI = "https://api.vkontakte.ru/method/";
+	private static final String URI = "https://api.vkontakte.ru/method/";
 
-    @Nonnull
-    private final VkRealm realm;
+	@Nonnull
+	private final VkRealm realm;
 
-    protected AbstractVkHttpTransaction(@Nonnull VkRealm realm, @Nonnull String method) {
-        this(realm, method, HttpMethod.GET);
-    }
+	protected AbstractVkHttpTransaction(@Nonnull VkRealm realm, @Nonnull String method) {
+		this(realm, method, HttpMethod.GET);
+	}
 
-    protected AbstractVkHttpTransaction(@Nonnull VkRealm realm, @Nonnull String method, @Nonnull HttpMethod httpMethod) {
-        super(URI + method, httpMethod);
-        this.realm = realm;
-    }
+	protected AbstractVkHttpTransaction(@Nonnull VkRealm realm, @Nonnull String method, @Nonnull HttpMethod httpMethod) {
+		super(URI + method, httpMethod);
+		this.realm = realm;
+	}
 
-    @Nonnull
-    protected VkRealm getRealm() {
-        return realm;
-    }
+	@Nonnull
+	protected VkRealm getRealm() {
+		return realm;
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> result = new ArrayList<NameValuePair>();
-        result.add(new BasicNameValuePair("access_token", getRealm().getConfiguration().getAccessToken()));
-        return result;
-    }
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> result = new ArrayList<NameValuePair>();
+		result.add(new BasicNameValuePair("access_token", getRealm().getConfiguration().getAccessToken()));
+		return result;
+	}
 
-    @Override
-    public R getResponse(@Nonnull HttpResponse response) {
-        try {
-            final HttpEntity httpEntity = response.getEntity();
-            final String json = EntityUtils.toString(httpEntity);
+	@Override
+	public R getResponse(@Nonnull HttpResponse response) {
+		try {
+			final HttpEntity httpEntity = response.getEntity();
+			final String json = EntityUtils.toString(httpEntity);
 
-            Log.d(AbstractVkHttpTransaction.class.getSimpleName(), "Json: " + json);
+			Log.d(AbstractVkHttpTransaction.class.getSimpleName(), "Json: " + json);
 
-            try {
-                return getResponseFromJson(json);
-            } catch (IllegalJsonException e) {
-                throw VkResponseErrorException.newInstance(json, this);
-            }
-        } catch (IOException e) {
-            throw new HttpRuntimeIoException(e);
-        }
-    }
+			try {
+				return getResponseFromJson(json);
+			} catch (IllegalJsonException e) {
+				throw VkResponseErrorException.newInstance(json, this);
+			}
+		} catch (IOException e) {
+			throw new HttpRuntimeIoException(e);
+		}
+	}
 
-    protected abstract R getResponseFromJson(@Nonnull String json) throws IllegalJsonException;
+	protected abstract R getResponseFromJson(@Nonnull String json) throws IllegalJsonException;
 }

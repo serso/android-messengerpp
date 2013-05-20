@@ -18,32 +18,32 @@ import javax.annotation.Nonnull;
 @Singleton
 public final class DefaultMessengerExceptionHandler implements MessengerExceptionHandler {
 
-    @Inject
-    @Nonnull
-    private NotificationService notificationService;
+	@Inject
+	@Nonnull
+	private NotificationService notificationService;
 
 
-    public DefaultMessengerExceptionHandler() {
-    }
+	public DefaultMessengerExceptionHandler() {
+	}
 
-    @Override
-    public void handleException(@Nonnull final Throwable e) {
-        if (e instanceof UnsupportedRealmException) {
-            notificationService.addNotification(R.string.mpp_notification_realm_unsupported_exception, MessageType.error);
-        } else if (e instanceof RealmConnectionException) {
-            notificationService.addNotification(R.string.mpp_notification_realm_connection_exception, MessageType.error);
-        } else if (e instanceof RealmException) {
-            notificationService.addNotification(R.string.mpp_notification_realm_exception, MessageType.error);
-        } else if (e instanceof HttpRuntimeIoException) {
-            notificationService.addNotification(R.string.mpp_notification_network_problem, MessageType.warning);
-        } else if (e instanceof IllegalJsonRuntimeException) {
-            notificationService.addNotification(R.string.mpp_notification_invalid_response, MessageType.error);
-        } else if (e instanceof RealmRuntimeException) {
-            handleException(new RealmException(e));
-        } else {
-            notificationService.addNotification(R.string.mpp_notification_undefined_error, MessageType.error);
-        }
+	@Override
+	public void handleException(@Nonnull final Throwable e) {
+		if (e instanceof UnsupportedRealmException) {
+			notificationService.addNotification(R.string.mpp_notification_realm_unsupported_exception, MessageType.error);
+		} else if (e instanceof RealmConnectionException) {
+			notificationService.addNotification(R.string.mpp_notification_realm_connection_exception, MessageType.error);
+		} else if (e instanceof RealmException) {
+			notificationService.addNotification(R.string.mpp_notification_realm_exception, MessageType.error);
+		} else if (e instanceof HttpRuntimeIoException) {
+			notificationService.addNotification(R.string.mpp_notification_network_problem, MessageType.warning);
+		} else if (e instanceof IllegalJsonRuntimeException) {
+			notificationService.addNotification(R.string.mpp_notification_invalid_response, MessageType.error);
+		} else if (e instanceof RealmRuntimeException) {
+			handleException(new RealmException(e));
+		} else {
+			notificationService.addNotification(R.string.mpp_notification_undefined_error, MessageType.error);
+		}
 
-        Log.e(MessengerApplication.TAG, e.getMessage(), e);
-    }
+		Log.e(MessengerApplication.TAG, e.getMessage(), e);
+	}
 }

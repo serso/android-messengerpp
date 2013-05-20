@@ -16,17 +16,17 @@ import javax.annotation.Nonnull;
  */
 final class RealmRemoverListener extends MessengerContextCallback<Activity, Realm> {
 
-    private RealmRemoverListener() {
-    }
+	private RealmRemoverListener() {
+	}
 
-    @Nonnull
-    static FutureCallback<Realm> newInstance(@Nonnull Activity activity) {
-        return Tasks.toUiThreadFutureCallback(activity, new RealmRemoverListener());
-    }
+	@Nonnull
+	static FutureCallback<Realm> newInstance(@Nonnull Activity activity) {
+		return Tasks.toUiThreadFutureCallback(activity, new RealmRemoverListener());
+	}
 
-    @Override
-    public void onSuccess(@Nonnull Activity activity, Realm realm) {
-        final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
-        eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.removed));
-    }
+	@Override
+	public void onSuccess(@Nonnull Activity activity, Realm realm) {
+		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
+		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.removed));
+	}
 }

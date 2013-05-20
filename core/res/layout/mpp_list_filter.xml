@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:id="@+id/mpp_list_filter"
-              style="?mpp_list_item_filter">
+	a:id="@+id/mpp_list_filter"
+	style="?mpp_list_item_filter">
 
-    <ImageView a:id="@+id/mpp_filter_icon_imageview"
-               style="?mpp_list_item_filter_icon"/>
+	<ImageView
+		a:id="@+id/mpp_filter_icon_imageview"
+		style="?mpp_list_item_filter_icon" />
 
-    <EditText
-            a:id="@+id/mpp_filter_edittext"
-            style="?mpp_list_item_filter_text"/>
+	<EditText
+		a:id="@+id/mpp_filter_edittext"
+		style="?mpp_list_item_filter_text" />
 
 </LinearLayout>

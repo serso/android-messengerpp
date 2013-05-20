@@ -4,9 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import javax.annotation.Nonnull;
 import org.solovyev.android.db.CommonSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -16,14 +17,14 @@ import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 @Singleton
 public class MessengerSQLiteOpenHelper extends CommonSQLiteOpenHelper {
 
-    @Inject
-    public MessengerSQLiteOpenHelper(@Nonnull Application context,
-                                     @Nonnull SQLiteOpenHelperConfiguration configuration) {
-        super(context, configuration);
-    }
+	@Inject
+	public MessengerSQLiteOpenHelper(@Nonnull Application context,
+									 @Nonnull SQLiteOpenHelperConfiguration configuration) {
+		super(context, configuration);
+	}
 
-    public MessengerSQLiteOpenHelper(@Nonnull Context context,
-                                     @Nonnull SQLiteOpenHelperConfiguration configuration) {
-        super(context, configuration);
-    }
+	public MessengerSQLiteOpenHelper(@Nonnull Context context,
+									 @Nonnull SQLiteOpenHelperConfiguration configuration) {
+		super(context, configuration);
+	}
 }

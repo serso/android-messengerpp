@@ -17,13 +17,13 @@ import java.util.Collection;
 @Singleton
 public class TestMessengerConfiguration implements MessengerConfiguration {
 
-    @Inject
-    @Nonnull
-    private XmppRealmDef xmppRealmDef;
+	@Inject
+	@Nonnull
+	private XmppRealmDef xmppRealmDef;
 
-    @Nonnull
-    @Override
-    public Collection<RealmDef> getRealmDefs() {
-        return Arrays.<RealmDef>asList(xmppRealmDef);
-    }
+	@Nonnull
+	@Override
+	public Collection<RealmDef> getRealmDefs() {
+		return Arrays.<RealmDef>asList(xmppRealmDef);
+	}
 }

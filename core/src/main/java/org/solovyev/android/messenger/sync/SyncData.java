@@ -9,6 +9,6 @@ import javax.annotation.Nonnull;
  */
 public interface SyncData {
 
-    @Nonnull
-    String getRealmId();
+	@Nonnull
+	String getRealmId();
 }

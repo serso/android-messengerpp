@@ -12,16 +12,16 @@ import javax.annotation.Nonnull;
  */
 public abstract class MessengerContextTask<C extends Context, V> extends MessengerContextCallback<C, V> implements NamedContextTask<C, V> {
 
-    @Nonnull
-    private final String name;
+	@Nonnull
+	private final String name;
 
-    protected MessengerContextTask(@Nonnull String name) {
-        this.name = name;
-    }
+	protected MessengerContextTask(@Nonnull String name) {
+		this.name = name;
+	}
 
-    @Nonnull
-    @Override
-    public final String getName() {
-        return name;
-    }
+	@Nonnull
+	@Override
+	public final String getName() {
+		return name;
+	}
 }

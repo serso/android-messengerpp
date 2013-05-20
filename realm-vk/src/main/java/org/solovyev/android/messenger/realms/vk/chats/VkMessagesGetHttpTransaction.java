@@ -22,39 +22,39 @@ import java.util.List;
  */
 public class VkMessagesGetHttpTransaction extends AbstractVkHttpTransaction<List<ChatMessage>> {
 
-    @Nullable
-    private Integer count;
+	@Nullable
+	private Integer count;
 
-    @Nonnull
-    private User user;
+	@Nonnull
+	private User user;
 
-    protected VkMessagesGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull User user) {
-        super(realm, "messages.get");
-        this.user = user;
-    }
+	protected VkMessagesGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull User user) {
+		super(realm, "messages.get");
+		this.user = user;
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> requestParameters = super.getRequestParameters();
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> requestParameters = super.getRequestParameters();
 
-        if (count != null) {
-            requestParameters.add(new BasicNameValuePair("count", String.valueOf(count)));
-        }
+		if (count != null) {
+			requestParameters.add(new BasicNameValuePair("count", String.valueOf(count)));
+		}
 
-        return requestParameters;
-    }
+		return requestParameters;
+	}
 
-    @Override
-    protected List<ChatMessage> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-        final List<ApiChat> chats = new JsonChatConverter(user, null, null, MessengerApplication.getServiceLocator().getUserService(), getRealm()).convert(json);
+	@Override
+	protected List<ChatMessage> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+		final List<ApiChat> chats = new JsonChatConverter(user, null, null, MessengerApplication.getServiceLocator().getUserService(), getRealm()).convert(json);
 
-        // todo serso: optimize - convert json to the messages directly
-        final List<ChatMessage> messages = new ArrayList<ChatMessage>(chats.size() * 10);
-        for (ApiChat chat : chats) {
-            messages.addAll(chat.getMessages());
-        }
+		// todo serso: optimize - convert json to the messages directly
+		final List<ChatMessage> messages = new ArrayList<ChatMessage>(chats.size() * 10);
+		for (ApiChat chat : chats) {
+			messages.addAll(chat.getMessages());
+		}
 
-        return messages;
-    }
+		return messages;
+	}
 }

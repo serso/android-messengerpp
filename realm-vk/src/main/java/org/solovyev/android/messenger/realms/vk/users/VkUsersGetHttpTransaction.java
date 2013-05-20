@@ -25,72 +25,72 @@ import java.util.List;
  */
 public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<User>> {
 
-    @Nonnull
-    private static final Integer MAX_CHUNK = 1000;
+	@Nonnull
+	private static final Integer MAX_CHUNK = 1000;
 
-    @Nonnull
-    private final List<String> userIds;
+	@Nonnull
+	private final List<String> userIds;
 
-    @javax.annotation.Nullable
-    private final List<ApiUserField> apiUserFields;
+	@javax.annotation.Nullable
+	private final List<ApiUserField> apiUserFields;
 
-    private VkUsersGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
-        super(realm, "users.get");
-        this.apiUserFields = apiUserFields;
-        assert !userIds.isEmpty();
-        assert userIds.size() <= 1000;
-        this.userIds = userIds;
-    }
+	private VkUsersGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+		super(realm, "users.get");
+		this.apiUserFields = apiUserFields;
+		assert !userIds.isEmpty();
+		assert userIds.size() <= 1000;
+		this.userIds = userIds;
+	}
 
-    @Nonnull
-    public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@Nonnull VkRealm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
-        final List<VkUsersGetHttpTransaction> result = new ArrayList<VkUsersGetHttpTransaction>();
+	@Nonnull
+	public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@Nonnull VkRealm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+		final List<VkUsersGetHttpTransaction> result = new ArrayList<VkUsersGetHttpTransaction>();
 
-        for (List<String> userIdsChunk : Collections.split(userIds, MAX_CHUNK)) {
-            result.add(new VkUsersGetHttpTransaction(realm, userIdsChunk, apiUserFields));
-        }
+		for (List<String> userIdsChunk : Collections.split(userIds, MAX_CHUNK)) {
+			result.add(new VkUsersGetHttpTransaction(realm, userIdsChunk, apiUserFields));
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Nonnull
-    public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull VkRealm realm, @Nonnull List<User> users, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
-        return newInstancesForUserIds(realm, Lists.transform(users, new Function<User, String>() {
-            @Override
-            public String apply(@Nullable User user) {
-                assert user != null;
-                return user.getEntity().getEntityId();
-            }
-        }), apiUserFields);
-    }
+	@Nonnull
+	public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull VkRealm realm, @Nonnull List<User> users, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+		return newInstancesForUserIds(realm, Lists.transform(users, new Function<User, String>() {
+			@Override
+			public String apply(@Nullable User user) {
+				assert user != null;
+				return user.getEntity().getEntityId();
+			}
+		}), apiUserFields);
+	}
 
-    @Nonnull
-    public static VkUsersGetHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull String userId, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
-        return new VkUsersGetHttpTransaction(realm, Arrays.asList(userId), apiUserFields);
-    }
+	@Nonnull
+	public static VkUsersGetHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull String userId, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+		return new VkUsersGetHttpTransaction(realm, Arrays.asList(userId), apiUserFields);
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> result = new ArrayList<NameValuePair>();
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-        result.add(new BasicNameValuePair("uids", Strings.getAllValues(userIds)));
-        if (Collections.isEmpty(apiUserFields)) {
-            result.add(new BasicNameValuePair("fields", ApiUserField.getAllFieldsRequestParameter()));
-        } else {
-            result.add(new BasicNameValuePair("fields", Strings.getAllValues(apiUserFields)));
-        }
+		result.add(new BasicNameValuePair("uids", Strings.getAllValues(userIds)));
+		if (Collections.isEmpty(apiUserFields)) {
+			result.add(new BasicNameValuePair("fields", ApiUserField.getAllFieldsRequestParameter()));
+		} else {
+			result.add(new BasicNameValuePair("fields", Strings.getAllValues(apiUserFields)));
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    protected List<User> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-        try {
-            return JsonUserConverter.newInstance(getRealm()).convert(json);
-        } catch (IllegalJsonRuntimeException e) {
-            throw e.getIllegalJsonException();
-        }
-    }
+	@Override
+	protected List<User> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+		try {
+			return JsonUserConverter.newInstance(getRealm()).convert(json);
+		} catch (IllegalJsonRuntimeException e) {
+			throw e.getIllegalJsonException();
+		}
+	}
 
 }

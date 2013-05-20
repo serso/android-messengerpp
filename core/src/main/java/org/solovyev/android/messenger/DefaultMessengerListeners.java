@@ -16,29 +16,29 @@ import java.util.Collection;
 @Singleton
 public final class DefaultMessengerListeners implements MessengerListeners {
 
-    @Nonnull
-    private final JEventListeners<JEventListener<? extends MessengerEvent>, MessengerEvent> listeners = Listeners.newEventBusFor(MessengerEvent.class);
+	@Nonnull
+	private final JEventListeners<JEventListener<? extends MessengerEvent>, MessengerEvent> listeners = Listeners.newEventBusFor(MessengerEvent.class);
 
-    @Override
-    public void fireEvent(@Nonnull MessengerEvent event) {
-        listeners.fireEvent(event);
-    }
+	@Override
+	public void fireEvent(@Nonnull MessengerEvent event) {
+		listeners.fireEvent(event);
+	}
 
-    @Override
-    public void fireEvents(@Nonnull Collection<MessengerEvent> events) {
-        listeners.fireEvents(events);
-    }
+	@Override
+	public void fireEvents(@Nonnull Collection<MessengerEvent> events) {
+		listeners.fireEvents(events);
+	}
 
-    public boolean addListener(@Nonnull JEventListener<MessengerEvent> listener) {
-        return listeners.addListener(listener);
-    }
+	public boolean addListener(@Nonnull JEventListener<MessengerEvent> listener) {
+		return listeners.addListener(listener);
+	}
 
-    public boolean removeListener(@Nonnull JEventListener<MessengerEvent> listener) {
-        return listeners.removeListener(listener);
-    }
+	public boolean removeListener(@Nonnull JEventListener<MessengerEvent> listener) {
+		return listeners.removeListener(listener);
+	}
 
-    @Override
-    public void removeListeners() {
-        listeners.removeListeners();
-    }
+	@Override
+	public void removeListeners() {
+		listeners.removeListeners();
+	}
 }

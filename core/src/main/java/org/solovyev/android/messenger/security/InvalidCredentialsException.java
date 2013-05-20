@@ -7,18 +7,18 @@ package org.solovyev.android.messenger.security;
  */
 public class InvalidCredentialsException extends Exception {
 
-    public InvalidCredentialsException() {
-    }
+	public InvalidCredentialsException() {
+	}
 
-    public InvalidCredentialsException(String detailMessage) {
-        super(detailMessage);
-    }
+	public InvalidCredentialsException(String detailMessage) {
+		super(detailMessage);
+	}
 
-    public InvalidCredentialsException(String detailMessage, Throwable throwable) {
-        super(detailMessage, throwable);
-    }
+	public InvalidCredentialsException(String detailMessage, Throwable throwable) {
+		super(detailMessage, throwable);
+	}
 
-    public InvalidCredentialsException(Throwable throwable) {
-        super(throwable);
-    }
+	public InvalidCredentialsException(Throwable throwable) {
+		super(throwable);
+	}
 }

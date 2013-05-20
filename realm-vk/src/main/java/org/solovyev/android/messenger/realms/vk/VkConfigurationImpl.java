@@ -9,41 +9,41 @@ import javax.annotation.Nonnull;
  */
 public class VkConfigurationImpl implements VkConfiguration {
 
-    @Nonnull
-    private String clientId;
+	@Nonnull
+	private String clientId;
 
-    @Nonnull
-    private String clientSecret;
+	@Nonnull
+	private String clientSecret;
 
-    @Nonnull
-    private static final VkConfigurationImpl instance = new VkConfigurationImpl();
+	@Nonnull
+	private static final VkConfigurationImpl instance = new VkConfigurationImpl();
 
-    private VkConfigurationImpl() {
-    }
+	private VkConfigurationImpl() {
+	}
 
-    @Nonnull
-    public static VkConfigurationImpl getInstance() {
-        return instance;
-    }
+	@Nonnull
+	public static VkConfigurationImpl getInstance() {
+		return instance;
+	}
 
 
-    @Nonnull
-    @Override
-    public String getClientId() {
-        return this.clientId;
-    }
+	@Nonnull
+	@Override
+	public String getClientId() {
+		return this.clientId;
+	}
 
-    @Nonnull
-    @Override
-    public String getClientSecret() {
-        return this.clientSecret;
-    }
+	@Nonnull
+	@Override
+	public String getClientSecret() {
+		return this.clientSecret;
+	}
 
-    public void setClientId(@Nonnull String clientId) {
-        this.clientId = clientId;
-    }
+	public void setClientId(@Nonnull String clientId) {
+		this.clientId = clientId;
+	}
 
-    public void setClientSecret(@Nonnull String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
+	public void setClientSecret(@Nonnull String clientSecret) {
+		this.clientSecret = clientSecret;
+	}
 }

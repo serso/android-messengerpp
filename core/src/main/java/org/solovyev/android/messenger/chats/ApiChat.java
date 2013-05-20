@@ -14,21 +14,21 @@ import java.util.List;
  */
 public interface ApiChat {
 
-    @Nonnull
-    List<ChatMessage> getMessages();
+	@Nonnull
+	List<ChatMessage> getMessages();
 
-    @Nullable
-    ChatMessage getLastMessage();
+	@Nullable
+	ChatMessage getLastMessage();
 
-    @Nonnull
-    List<User> getParticipants();
+	@Nonnull
+	List<User> getParticipants();
 
-    @Nonnull
-    List<User> getParticipantsExcept(@Nonnull User user);
+	@Nonnull
+	List<User> getParticipantsExcept(@Nonnull User user);
 
-    @Nonnull
-    Chat getChat();
+	@Nonnull
+	Chat getChat();
 
-    @Nonnull
-    ApiChat copyWithNew(@Nonnull Entity newRealmChat);
+	@Nonnull
+	ApiChat copyWithNew(@Nonnull Entity newRealmChat);
 }

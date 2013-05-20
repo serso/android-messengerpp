@@ -18,51 +18,51 @@ import javax.annotation.Nonnull;
  */
 public enum MessengerPrimaryFragment implements FragmentDef {
 
-    contacts(MessengerContactsFragment.class, MessengerContactsFragment.FRAGMENT_TAG, R.string.mpp_tab_contacts),
-    messages(MessengerChatsFragment.class, MessengerChatsFragment.FRAGMENT_TAG, R.string.mpp_tab_messages),
-    realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms),
-    realm_defs(MessengerRealmDefsFragment.class, MessengerRealmDefsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms, true),
-    settings(MessengerPreferenceGroupsFragment.class, MessengerPreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences);
+	contacts(MessengerContactsFragment.class, MessengerContactsFragment.FRAGMENT_TAG, R.string.mpp_tab_contacts),
+	messages(MessengerChatsFragment.class, MessengerChatsFragment.FRAGMENT_TAG, R.string.mpp_tab_messages),
+	realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms),
+	realm_defs(MessengerRealmDefsFragment.class, MessengerRealmDefsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms, true),
+	settings(MessengerPreferenceGroupsFragment.class, MessengerPreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences);
 
-    @Nonnull
-    private final Class<? extends Fragment> fragmentClass;
+	@Nonnull
+	private final Class<? extends Fragment> fragmentClass;
 
-    @Nonnull
-    private final String fragmentTag;
+	@Nonnull
+	private final String fragmentTag;
 
-    private final int titleResId;
+	private final int titleResId;
 
-    private final boolean addToBackStack;
+	private final boolean addToBackStack;
 
-    MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId) {
-        this(fragmentClass, fragmentTag, titleResId, false);
-    }
+	MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId) {
+		this(fragmentClass, fragmentTag, titleResId, false);
+	}
 
-    private MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId, boolean addToBackStack) {
-        this.fragmentClass = fragmentClass;
-        this.fragmentTag = fragmentTag;
-        this.titleResId = titleResId;
-        this.addToBackStack = addToBackStack;
-    }
+	private MessengerPrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId, boolean addToBackStack) {
+		this.fragmentClass = fragmentClass;
+		this.fragmentTag = fragmentTag;
+		this.titleResId = titleResId;
+		this.addToBackStack = addToBackStack;
+	}
 
-    @Override
-    @Nonnull
-    public String getFragmentTag() {
-        return this.fragmentTag;
-    }
+	@Override
+	@Nonnull
+	public String getFragmentTag() {
+		return this.fragmentTag;
+	}
 
-    @Override
-    @Nonnull
-    public Class<? extends Fragment> getFragmentClass() {
-        return fragmentClass;
-    }
+	@Override
+	@Nonnull
+	public Class<? extends Fragment> getFragmentClass() {
+		return fragmentClass;
+	}
 
-    public int getTitleResId() {
-        return titleResId;
-    }
+	public int getTitleResId() {
+		return titleResId;
+	}
 
-    @Override
-    public boolean isAddToBackStack() {
-        return addToBackStack;
-    }
+	@Override
+	public boolean isAddToBackStack() {
+		return addToBackStack;
+	}
 }

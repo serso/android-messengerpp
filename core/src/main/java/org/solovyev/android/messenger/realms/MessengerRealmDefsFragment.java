@@ -15,48 +15,48 @@ import java.util.List;
 
 public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<RealmDef, RealmDefListItem> implements DetachableFragment {
 
-    @Nonnull
-    public static final String FRAGMENT_TAG = "realms-defs";
+	@Nonnull
+	public static final String FRAGMENT_TAG = "realms-defs";
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
-    public MessengerRealmDefsFragment() {
-        super("RealmDefs", false, true);
-    }
+	public MessengerRealmDefsFragment() {
+		super("RealmDefs", false, true);
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
-    @Nullable
-    @Override
-    protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-        return null;
-    }
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return null;
+	}
 
-    @Nullable
-    @Override
-    protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
-        return null;
-    }
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
+		return null;
+	}
 
-    @Nonnull
-    @Override
-    protected MessengerListItemAdapter<RealmDefListItem> createAdapter() {
-        final List<RealmDefListItem> listItems = new ArrayList<RealmDefListItem>();
-        for (RealmDef realmDef : realmService.getRealmDefs()) {
-            listItems.add(new RealmDefListItem(realmDef));
-        }
-        return new MessengerListItemAdapter<RealmDefListItem>(getActivity(), listItems);
-    }
+	@Nonnull
+	@Override
+	protected MessengerListItemAdapter<RealmDefListItem> createAdapter() {
+		final List<RealmDefListItem> listItems = new ArrayList<RealmDefListItem>();
+		for (RealmDef realmDef : realmService.getRealmDefs()) {
+			listItems.add(new RealmDefListItem(realmDef));
+		}
+		return new MessengerListItemAdapter<RealmDefListItem>(getActivity(), listItems);
+	}
 
-    @Nullable
-    @Override
-    protected MessengerAsyncTask<Void, Void, List<RealmDef>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmDefListItem> adapter, @Nonnull Runnable onPostExecute) {
-        return null;
-    }
+	@Nullable
+	@Override
+	protected MessengerAsyncTask<Void, Void, List<RealmDef>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmDefListItem> adapter, @Nonnull Runnable onPostExecute) {
+		return null;
+	}
 
 }

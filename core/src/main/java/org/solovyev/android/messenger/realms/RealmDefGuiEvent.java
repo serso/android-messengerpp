@@ -12,13 +12,13 @@ import javax.annotation.Nullable;
  */
 public final class RealmDefGuiEvent extends AbstractTypedJEvent<RealmDef, RealmDefGuiEventType> {
 
-    public RealmDefGuiEvent(@Nonnull RealmDef realmDef, @Nonnull RealmDefGuiEventType type, @Nullable Object data) {
-        super(realmDef, type, data);
-    }
+	public RealmDefGuiEvent(@Nonnull RealmDef realmDef, @Nonnull RealmDefGuiEventType type, @Nullable Object data) {
+		super(realmDef, type, data);
+	}
 
-    @Nonnull
-    public RealmDef getRealmDef() {
-        return getEventObject();
-    }
+	@Nonnull
+	public RealmDef getRealmDef() {
+		return getEventObject();
+	}
 
 }

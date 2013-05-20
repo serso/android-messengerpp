@@ -1,8 +1,9 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
+import org.solovyev.android.messenger.http.IllegalJsonException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.solovyev.android.messenger.http.IllegalJsonException;
 
 /**
  * User: serso
@@ -11,24 +12,24 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
  */
 public class JsonLongPollResponse {
 
-    @Nullable
-    private JsonLongPollServerData response;
+	@Nullable
+	private JsonLongPollServerData response;
 
-    @Nullable
-    public JsonLongPollServerData getResponse() {
-        return response;
-    }
+	@Nullable
+	public JsonLongPollServerData getResponse() {
+		return response;
+	}
 
-    @Nonnull
-    public LongPollServerData toLongPollServerData() throws IllegalJsonException {
-        if ( response == null ) {
-            throw new IllegalJsonException();
-        }
+	@Nonnull
+	public LongPollServerData toLongPollServerData() throws IllegalJsonException {
+		if (response == null) {
+			throw new IllegalJsonException();
+		}
 
-        if ( response.getKey() == null || response.getServer() == null || response.getTs() == null ) {
-            throw new IllegalJsonException();
-        }
+		if (response.getKey() == null || response.getServer() == null || response.getTs() == null) {
+			throw new IllegalJsonException();
+		}
 
-        return new LongPollServerData(response.getKey(), response.getServer(), response.getTs());
-    }
+		return new LongPollServerData(response.getKey(), response.getServer(), response.getTs());
+	}
 }

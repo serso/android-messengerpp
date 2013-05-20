@@ -28,115 +28,115 @@ import java.util.List;
  */
 public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
 
-    @Nonnull
-    private static final String TAG = ChatGuiEventListener.class.getSimpleName();
+	@Nonnull
+	private static final String TAG = ChatGuiEventListener.class.getSimpleName();
 
-    @Nonnull
-    private final MessengerFragmentActivity activity;
+	@Nonnull
+	private final MessengerFragmentActivity activity;
 
-    @Nonnull
-    private final ChatService chatService;
+	@Nonnull
+	private final ChatService chatService;
 
-    public ChatGuiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull ChatService chatService) {
-        this.activity = activity;
-        this.chatService = chatService;
-    }
+	public ChatGuiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull ChatService chatService) {
+		this.activity = activity;
+		this.chatService = chatService;
+	}
 
-    @Override
-    public void onEvent(ChatGuiEvent event) {
-        final Chat chat = event.getChat();
-        final ChatGuiEventType type = event.getType();
+	@Override
+	public void onEvent(ChatGuiEvent event) {
+		final Chat chat = event.getChat();
+		final ChatGuiEventType type = event.getType();
 
-        switch (type) {
-            case chat_open_requested:
-                handleChatOpenRequestedEvent(chat);
-                break;
-            case chat_clicked:
-                handleChatClickedEvent(chat);
-                break;
-            case chat_message_read:
-                handleMessageReadEvent(chat, event.getDataAsChatMessage());
-                break;
-        }
-    }
+		switch (type) {
+			case chat_open_requested:
+				handleChatOpenRequestedEvent(chat);
+				break;
+			case chat_clicked:
+				handleChatClickedEvent(chat);
+				break;
+			case chat_message_read:
+				handleMessageReadEvent(chat, event.getDataAsChatMessage());
+				break;
+		}
+	}
 
-    private void handleChatOpenRequestedEvent(@Nonnull final Chat chat) {
-        final MultiPaneFragmentManager fragmentService = activity.getMultiPaneFragmentManager();
-        if (activity.getMultiPaneManager().isDualPane(activity)) {
-            if (!fragmentService.isFragmentShown(MessengerChatsFragment.FRAGMENT_TAG)) {
-                final ActionBar.Tab tab = activity.findTabByTag(MessengerChatsFragment.FRAGMENT_TAG);
-                if ( tab != null ) {
-                    tab.select();
-                }
-            }
+	private void handleChatOpenRequestedEvent(@Nonnull final Chat chat) {
+		final MultiPaneFragmentManager fragmentService = activity.getMultiPaneFragmentManager();
+		if (activity.getMultiPaneManager().isDualPane(activity)) {
+			if (!fragmentService.isFragmentShown(MessengerChatsFragment.FRAGMENT_TAG)) {
+				final ActionBar.Tab tab = activity.findTabByTag(MessengerChatsFragment.FRAGMENT_TAG);
+				if (tab != null) {
+					tab.select();
+				}
+			}
 
-            final MessengerChatsFragment fragment = fragmentService.getFragment(MessengerChatsFragment.FRAGMENT_TAG);
-            if (fragment != null) {
-                fragment.selectListItem(chat.getId());
-            }
-        } else {
-            fragmentService.goBackTillStart();
-            fragmentService.setMainFragment(MultiPaneFragmentDef.newInstance(MessengerMessagesFragment.FRAGMENT_TAG, true, new Builder<Fragment>() {
-                @Nonnull
-                @Override
-                public Fragment build() {
-                    return new MessengerMessagesFragment(chat);
-                }
-            }, MessagesFragmentReuseCondition.forChat(chat)));
-        }
-    }
+			final MessengerChatsFragment fragment = fragmentService.getFragment(MessengerChatsFragment.FRAGMENT_TAG);
+			if (fragment != null) {
+				fragment.selectListItem(chat.getId());
+			}
+		} else {
+			fragmentService.goBackTillStart();
+			fragmentService.setMainFragment(MultiPaneFragmentDef.newInstance(MessengerMessagesFragment.FRAGMENT_TAG, true, new Builder<Fragment>() {
+				@Nonnull
+				@Override
+				public Fragment build() {
+					return new MessengerMessagesFragment(chat);
+				}
+			}, MessagesFragmentReuseCondition.forChat(chat)));
+		}
+	}
 
-    private void handleMessageReadEvent(@Nonnull Chat chat, @Nonnull ChatMessage message) {
-        chatService.onChatMessageRead(chat, message);
-    }
+	private void handleMessageReadEvent(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+		chatService.onChatMessageRead(chat, message);
+	}
 
-    private void handleChatClickedEvent(@Nonnull final Chat chat) {
-        final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
+	private void handleChatClickedEvent(@Nonnull final Chat chat) {
+		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 
-        if (activity.isDualPane()) {
-            fm.setSecondFragment(new Builder<Fragment>() {
-                @Nonnull
-                @Override
-                public Fragment build() {
-                    return new MessengerMessagesFragment(chat);
-                }
-            }, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG);
+		if (activity.isDualPane()) {
+			fm.setSecondFragment(new Builder<Fragment>() {
+				@Nonnull
+				@Override
+				public Fragment build() {
+					return new MessengerMessagesFragment(chat);
+				}
+			}, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG);
 
-            if (activity.isTriplePane()) {
-                if (chat.isPrivate()) {
-                    fm.setThirdFragment(new Builder<Fragment>() {
-                        @Nonnull
-                        @Override
-                        public Fragment build() {
-                            return MessengerContactFragment.newForContact(chat.getSecondUser());
-                        }
-                    }, ContactFragmentReuseCondition.forContact(chat.getSecondUser()), MessengerContactFragment.FRAGMENT_TAG);
-                } else {
-                    fm.setThirdFragment(new Builder<Fragment>() {
-                        @Nonnull
-                        @Override
-                        public Fragment build() {
-                            final List<User> participants = new ArrayList<User>();
-                            try {
-                                final Realm realm = activity.getRealmService().getRealmByEntity(chat.getEntity());
-                                participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity()));
-                            } catch (UnsupportedRealmException e) {
-                                MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
-                            }
-                            return new MessengerContactsInfoFragment(participants);
-                        }
-                    }, null, MessengerContactsInfoFragment.FRAGMENT_TAG);
-                }
-            }
+			if (activity.isTriplePane()) {
+				if (chat.isPrivate()) {
+					fm.setThirdFragment(new Builder<Fragment>() {
+						@Nonnull
+						@Override
+						public Fragment build() {
+							return MessengerContactFragment.newForContact(chat.getSecondUser());
+						}
+					}, ContactFragmentReuseCondition.forContact(chat.getSecondUser()), MessengerContactFragment.FRAGMENT_TAG);
+				} else {
+					fm.setThirdFragment(new Builder<Fragment>() {
+						@Nonnull
+						@Override
+						public Fragment build() {
+							final List<User> participants = new ArrayList<User>();
+							try {
+								final Realm realm = activity.getRealmService().getRealmByEntity(chat.getEntity());
+								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity()));
+							} catch (UnsupportedRealmException e) {
+								MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+							}
+							return new MessengerContactsInfoFragment(participants);
+						}
+					}, null, MessengerContactsInfoFragment.FRAGMENT_TAG);
+				}
+			}
 
-        } else {
-            fm.setMainFragment(new Builder<Fragment>() {
-                @Nonnull
-                @Override
-                public Fragment build() {
-                    return new MessengerMessagesFragment(chat);
-                }
-            }, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG, true);
-        }
-    }
+		} else {
+			fm.setMainFragment(new Builder<Fragment>() {
+				@Nonnull
+				@Override
+				public Fragment build() {
+					return new MessengerMessagesFragment(chat);
+				}
+			}, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG, true);
+		}
+	}
 }

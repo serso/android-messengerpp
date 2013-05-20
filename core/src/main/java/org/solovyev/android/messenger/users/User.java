@@ -16,7 +16,7 @@ import java.util.Collection;
 public interface User extends MutableUserSyncData, MessengerEntity {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTANTS
     *
@@ -24,30 +24,30 @@ public interface User extends MutableUserSyncData, MessengerEntity {
     */
 
 
-    @Nonnull
-    static final String PROPERTY_ONLINE = "online";
+	@Nonnull
+	static final String PROPERTY_ONLINE = "online";
 
-    @Nonnull
-    static final String PROPERTY_FIRST_NAME = "first_name";
+	@Nonnull
+	static final String PROPERTY_FIRST_NAME = "first_name";
 
-    @Nonnull
-    static final String PROPERTY_LAST_NAME = "last_name";
+	@Nonnull
+	static final String PROPERTY_LAST_NAME = "last_name";
 
-    @Nonnull
-    static final String PROPERTY_NICKNAME = "nick_name";
+	@Nonnull
+	static final String PROPERTY_NICKNAME = "nick_name";
 
 
-    /**
-     * Property 'sex' must contain only string representations of enum {@link Gender}
-     */
-    @Nonnull
-    static final String PROPERTY_SEX = "sex";
+	/**
+	 * Property 'sex' must contain only string representations of enum {@link Gender}
+	 */
+	@Nonnull
+	static final String PROPERTY_SEX = "sex";
 
-    @Nonnull
-    static final String PROPERTY_PHONE = "phone";
+	@Nonnull
+	static final String PROPERTY_PHONE = "phone";
 
-    @Nonnull
-    static final String PROPERTY_EMAIL = "email";
+	@Nonnull
+	static final String PROPERTY_EMAIL = "email";
 
 
     /*
@@ -58,34 +58,34 @@ public interface User extends MutableUserSyncData, MessengerEntity {
     **********************************************************************
     */
 
-    @Nonnull
-    String getLogin();
+	@Nonnull
+	String getLogin();
 
-    @Nullable
-    Gender getGender();
+	@Nullable
+	Gender getGender();
 
-    boolean isOnline();
+	boolean isOnline();
 
-    @Nonnull
-    Collection<AProperty> getProperties();
+	@Nonnull
+	Collection<AProperty> getProperties();
 
-    @Nonnull
-    Entity getEntity();
+	@Nonnull
+	Entity getEntity();
 
-    @Nullable
-    String getPropertyValueByName(@Nonnull String name);
+	@Nullable
+	String getPropertyValueByName(@Nonnull String name);
 
-    @Nonnull
-    UserSyncData getUserSyncData();
+	@Nonnull
+	UserSyncData getUserSyncData();
 
-    @Nonnull
-    String getDisplayName();
+	@Nonnull
+	String getDisplayName();
 
-    @Nonnull
-    User clone();
+	@Nonnull
+	User clone();
 
-    @Nonnull
-    User cloneWithNewStatus(boolean online);
+	@Nonnull
+	User cloneWithNewStatus(boolean online);
 
     /*
     **********************************************************************
@@ -95,15 +95,15 @@ public interface User extends MutableUserSyncData, MessengerEntity {
     **********************************************************************
     */
 
-    @Nonnull
-    User updateChatsSyncDate();
+	@Nonnull
+	User updateChatsSyncDate();
 
-    @Nonnull
-    User updatePropertiesSyncDate();
+	@Nonnull
+	User updatePropertiesSyncDate();
 
-    @Nonnull
-    User updateContactsSyncDate();
+	@Nonnull
+	User updateContactsSyncDate();
 
-    @Nonnull
-    User updateUserIconsSyncDate();
+	@Nonnull
+	User updateUserIconsSyncDate();
 }

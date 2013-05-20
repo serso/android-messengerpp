@@ -8,18 +8,18 @@ import javax.annotation.Nonnull;
  * Time: 10:29 PM
  */
 public enum GuiEventType {
-    show_realm_defs,
-    app_exit;
+	show_realm_defs,
+	app_exit;
 
-    @Nonnull
-    private GuiEvent guiEvent;
+	@Nonnull
+	private GuiEvent guiEvent;
 
-    private GuiEventType() {
-        this.guiEvent = new GuiEvent(this, null);
-    }
+	private GuiEventType() {
+		this.guiEvent = new GuiEvent(this, null);
+	}
 
-    @Nonnull
-    public GuiEvent newEvent() {
-        return guiEvent;
-    }
+	@Nonnull
+	public GuiEvent newEvent() {
+		return guiEvent;
+	}
 }

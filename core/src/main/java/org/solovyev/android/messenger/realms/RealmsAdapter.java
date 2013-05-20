@@ -9,57 +9,57 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem>  {
+public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> {
 
-    public RealmsAdapter(@Nonnull Context context, @Nonnull List<? extends RealmListItem> listItems) {
-        super(context, listItems);
-    }
+	public RealmsAdapter(@Nonnull Context context, @Nonnull List<? extends RealmListItem> listItems) {
+		super(context, listItems);
+	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           REALM LISTENERS
     *
     **********************************************************************
     */
 
-    public void onRealmEvent(@Nonnull RealmEvent realmEvent) {
-        final Realm realm = realmEvent.getRealm();
-        switch (realmEvent.getType()) {
-            case created:
-                addListItem(createListItem(realm));
-                break;
-            case changed:
-                final RealmListItem listItem = findInAllElements(realm);
-                if (listItem != null) {
-                    listItem.onRealmChangedEvent(realm);
-                }
-                break;
-            case state_changed:
-                switch (realm.getState()) {
-                    case enabled:
-                    case disabled_by_user:
-                    case disabled_by_app:
-                        final RealmListItem realmListItem = findInAllElements(realm);
-                        if ( realmListItem != null ) {
-                            realmListItem.onRealmChangedEvent(realm);
-                        }
-                        break;
-                    case removed:
-                        removeListItem(createListItem(realm));
-                        break;
-                }
-                break;
-        }
-    }
+	public void onRealmEvent(@Nonnull RealmEvent realmEvent) {
+		final Realm realm = realmEvent.getRealm();
+		switch (realmEvent.getType()) {
+			case created:
+				addListItem(createListItem(realm));
+				break;
+			case changed:
+				final RealmListItem listItem = findInAllElements(realm);
+				if (listItem != null) {
+					listItem.onRealmChangedEvent(realm);
+				}
+				break;
+			case state_changed:
+				switch (realm.getState()) {
+					case enabled:
+					case disabled_by_user:
+					case disabled_by_app:
+						final RealmListItem realmListItem = findInAllElements(realm);
+						if (realmListItem != null) {
+							realmListItem.onRealmChangedEvent(realm);
+						}
+						break;
+					case removed:
+						removeListItem(createListItem(realm));
+						break;
+				}
+				break;
+		}
+	}
 
-    @Nullable
-    protected RealmListItem findInAllElements(@Nonnull Realm realm) {
-        return Iterables.find(getAllElements(), Predicates.<RealmListItem>equalTo(createListItem(realm)), null);
-    }
+	@Nullable
+	protected RealmListItem findInAllElements(@Nonnull Realm realm) {
+		return Iterables.find(getAllElements(), Predicates.<RealmListItem>equalTo(createListItem(realm)), null);
+	}
 
-    @Nonnull
-    private RealmListItem createListItem(@Nonnull Realm realm) {
-        return new RealmListItem(realm);
-    }
+	@Nonnull
+	private RealmListItem createListItem(@Nonnull Realm realm) {
+		return new RealmListItem(realm);
+	}
 }

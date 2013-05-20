@@ -9,10 +9,10 @@ import javax.annotation.Nonnull;
  */
 public enum ContactGuiEventType {
 
-    contact_clicked;
+	contact_clicked;
 
-    @Nonnull
-    public static ContactGuiEvent newContactClicked(@Nonnull User contact) {
-        return new ContactGuiEvent(contact, contact_clicked);
-    }
+	@Nonnull
+	public static ContactGuiEvent newContactClicked(@Nonnull User contact) {
+		return new ContactGuiEvent(contact, contact_clicked);
+	}
 }

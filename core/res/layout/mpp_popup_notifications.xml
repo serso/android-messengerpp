@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<HorizontalScrollView
-            xmlns:a="http://schemas.android.com/apk/res/android"
-            a:layout_width="wrap_content"
-            a:layout_height="wrap_content">
+<HorizontalScrollView xmlns:a="http://schemas.android.com/apk/res/android"
+	a:layout_width="wrap_content"
+	a:layout_height="wrap_content">
 
-    <ListView
-            a:id="@android:id/list"
-            a:background="@drawable/mpp_notification_bubble_white"
-            a:paddingLeft="5dp"
-            a:paddingRight="5dp"
-            a:paddingBottom="5dp"
-            a:paddingTop="15dp"
-            a:orientation="vertical"
-            a:layout_width="@dimen/mpp_popup_notification_width"
-            a:layout_height="wrap_content">
+	<ListView
+		a:id="@android:id/list"
+		a:background="@drawable/mpp_notification_bubble_white"
+		a:paddingLeft="5dp"
+		a:paddingRight="5dp"
+		a:paddingBottom="5dp"
+		a:paddingTop="15dp"
+		a:orientation="vertical"
+		a:layout_width="@dimen/mpp_popup_notification_width"
+		a:layout_height="wrap_content">
 
-    </ListView>
+	</ListView>
 </HorizontalScrollView>

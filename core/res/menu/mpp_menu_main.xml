@@ -2,18 +2,21 @@
 
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
-    <item a:id="@+id/mpp_menu_notifications"
-          a:title="@string/mpp_menu_notifications"
-          a:icon="@drawable/mpp_ab_notification"
-          a:showAsAction="always"/>
+	<item
+		a:id="@+id/mpp_menu_notifications"
+		a:title="@string/mpp_menu_notifications"
+		a:icon="@drawable/mpp_ab_notification"
+		a:showAsAction="always" />
 
-    <item a:id="@+id/mpp_menu_unread_messages_counter"
-        a:title="@string/mpp_menu_unread_messages_counter"
-        a:icon="@drawable/mpp_ab_unread_messages_counter"
-        a:showAsAction="always|withText"/>
+	<item
+		a:id="@+id/mpp_menu_unread_messages_counter"
+		a:title="@string/mpp_menu_unread_messages_counter"
+		a:icon="@drawable/mpp_ab_unread_messages_counter"
+		a:showAsAction="always|withText" />
 
-    <item a:id="@+id/mpp_menu_app_exit"
-          a:title="@string/mpp_menu_app_exit"
-          a:icon="@drawable/mpp_ab_exit"
-          a:showAsAction="never"/>
+	<item
+		a:id="@+id/mpp_menu_app_exit"
+		a:title="@string/mpp_menu_app_exit"
+		a:icon="@drawable/mpp_ab_exit"
+		a:showAsAction="never" />
 </menu>

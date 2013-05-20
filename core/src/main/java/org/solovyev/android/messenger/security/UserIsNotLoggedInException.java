@@ -7,18 +7,18 @@ package org.solovyev.android.messenger.security;
  */
 public class UserIsNotLoggedInException extends Exception {
 
-    public UserIsNotLoggedInException() {
-    }
+	public UserIsNotLoggedInException() {
+	}
 
-    public UserIsNotLoggedInException(String detailMessage) {
-        super(detailMessage);
-    }
+	public UserIsNotLoggedInException(String detailMessage) {
+		super(detailMessage);
+	}
 
-    public UserIsNotLoggedInException(String detailMessage, Throwable throwable) {
-        super(detailMessage, throwable);
-    }
+	public UserIsNotLoggedInException(String detailMessage, Throwable throwable) {
+		super(detailMessage, throwable);
+	}
 
-    public UserIsNotLoggedInException(Throwable throwable) {
-        super(throwable);
-    }
+	public UserIsNotLoggedInException(Throwable throwable) {
+		super(throwable);
+	}
 }

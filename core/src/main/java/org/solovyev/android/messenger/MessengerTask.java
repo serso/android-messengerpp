@@ -11,22 +11,22 @@ import javax.annotation.Nonnull;
  */
 public abstract class MessengerTask<V> implements NamedTask<V> {
 
-    @Nonnull
-    private final String name;
+	@Nonnull
+	private final String name;
 
-    protected MessengerTask(@Nonnull String name) {
-        this.name = name;
-    }
+	protected MessengerTask(@Nonnull String name) {
+		this.name = name;
+	}
 
-    @Override
-    public void onFailure(Throwable t) {
-        MessengerApplication.getServiceLocator().getExceptionHandler().handleException(t);
-    }
+	@Override
+	public void onFailure(Throwable t) {
+		MessengerApplication.getServiceLocator().getExceptionHandler().handleException(t);
+	}
 
-    @Nonnull
-    @Override
-    public final String getName() {
-        return name;
-    }
+	@Nonnull
+	@Override
+	public final String getName() {
+		return name;
+	}
 
 }

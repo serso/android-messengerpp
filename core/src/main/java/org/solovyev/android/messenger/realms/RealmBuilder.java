@@ -9,43 +9,43 @@ import javax.annotation.Nullable;
 
 public interface RealmBuilder extends BuilderWithData<Realm, RealmBuilder.Data> {
 
-    @Nonnull
-    RealmDef getRealmDef();
+	@Nonnull
+	RealmDef getRealmDef();
 
-    @Nullable
-    Realm getEditedRealm();
+	@Nullable
+	Realm getEditedRealm();
 
-    void connect() throws ConnectionException;
+	void connect() throws ConnectionException;
 
-    void disconnect()throws ConnectionException;
+	void disconnect() throws ConnectionException;
 
-    void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
+	void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
 
-    @Nonnull
-    RealmConfiguration getConfiguration();
+	@Nonnull
+	RealmConfiguration getConfiguration();
 
-    public static final class Data {
+	public static final class Data {
 
-        @Nonnull
-        private final String realmId;
+		@Nonnull
+		private final String realmId;
 
-        public Data( @Nonnull String realmId) {
-            this.realmId = realmId;
-        }
+		public Data(@Nonnull String realmId) {
+			this.realmId = realmId;
+		}
 
-        @Nonnull
-        public String getRealmId() {
-            return realmId;
-        }
-    }
+		@Nonnull
+		public String getRealmId() {
+			return realmId;
+		}
+	}
 
-    public static class ConnectionException extends Exception {
+	public static class ConnectionException extends Exception {
 
-        public ConnectionException() {
-        }
+		public ConnectionException() {
+		}
 
-        public ConnectionException(Throwable throwable) {
-            super(throwable);
-        }
-    }
+		public ConnectionException(Throwable throwable) {
+			super(throwable);
+		}
+	}
 }

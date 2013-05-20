@@ -16,17 +16,17 @@ import javax.annotation.Nonnull;
  */
 final class RealmChangeStateListener extends MessengerContextCallback<Activity, Realm> {
 
-    private RealmChangeStateListener() {
-    }
+	private RealmChangeStateListener() {
+	}
 
-    @Nonnull
-    static FutureCallback<Realm> newInstance(@Nonnull Activity activity) {
-        return Tasks.toUiThreadFutureCallback(activity, new RealmChangeStateListener());
-    }
+	@Nonnull
+	static FutureCallback<Realm> newInstance(@Nonnull Activity activity) {
+		return Tasks.toUiThreadFutureCallback(activity, new RealmChangeStateListener());
+	}
 
-    @Override
-    public void onSuccess(@Nonnull Activity context, Realm realm) {
-        final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-        eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.status_changed));
-    }
+	@Override
+	public void onSuccess(@Nonnull Activity context, Realm realm) {
+		final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.status_changed));
+	}
 }

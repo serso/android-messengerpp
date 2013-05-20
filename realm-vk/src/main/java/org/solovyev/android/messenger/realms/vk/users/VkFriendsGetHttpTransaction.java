@@ -18,37 +18,37 @@ import java.util.List;
  */
 public class VkFriendsGetHttpTransaction extends AbstractVkHttpTransaction<List<User>> {
 
-    @Nonnull
-    private final String userId;
+	@Nonnull
+	private final String userId;
 
-    private VkFriendsGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull String userId) {
-        super(realm, "friends.get");
-        this.userId = userId;
-    }
+	private VkFriendsGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull String userId) {
+		super(realm, "friends.get");
+		this.userId = userId;
+	}
 
-    @Nonnull
-    public static VkFriendsGetHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull String userId) {
-        return new VkFriendsGetHttpTransaction(realm, userId);
-    }
+	@Nonnull
+	public static VkFriendsGetHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull String userId) {
+		return new VkFriendsGetHttpTransaction(realm, userId);
+	}
 
-    @Override
-    protected List<User> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-        try {
-            return JsonUserConverter.newInstance(getRealm()).convert(json);
-        } catch (IllegalJsonRuntimeException e) {
-            throw e.getIllegalJsonException();
-        }
-    }
+	@Override
+	protected List<User> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+		try {
+			return JsonUserConverter.newInstance(getRealm()).convert(json);
+		} catch (IllegalJsonRuntimeException e) {
+			throw e.getIllegalJsonException();
+		}
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> result = super.getRequestParameters();
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> result = super.getRequestParameters();
 
-        result.add(new BasicNameValuePair("uid", userId));
-        result.add(new BasicNameValuePair("fields", ApiUserField.getAllFieldsRequestParameter()));
-        //result.add(new BasicNameValuePair("fields", ApiUserField.uid + "," + ApiUserField.first_name + "," + ApiUserField.last_name));
+		result.add(new BasicNameValuePair("uid", userId));
+		result.add(new BasicNameValuePair("fields", ApiUserField.getAllFieldsRequestParameter()));
+		//result.add(new BasicNameValuePair("fields", ApiUserField.uid + "," + ApiUserField.first_name + "," + ApiUserField.last_name));
 
-        return result;
-    }
+		return result;
+	}
 }

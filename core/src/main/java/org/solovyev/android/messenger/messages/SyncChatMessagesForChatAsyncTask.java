@@ -19,73 +19,73 @@ import java.util.List;
  */
 public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncChatMessagesForChatAsyncTask.Input, Void, SyncChatMessagesForChatAsyncTask.Input> {
 
-    @Nullable
-    private PullToRefreshListViewProvider listViewProvider;
+	@Nullable
+	private PullToRefreshListViewProvider listViewProvider;
 
-    public SyncChatMessagesForChatAsyncTask(@Nullable PullToRefreshListViewProvider listViewProvider,
-                                            @Nonnull Context context) {
-        super(context);
-        this.listViewProvider = listViewProvider;
-    }
+	public SyncChatMessagesForChatAsyncTask(@Nullable PullToRefreshListViewProvider listViewProvider,
+											@Nonnull Context context) {
+		super(context);
+		this.listViewProvider = listViewProvider;
+	}
 
-    @Override
-    protected Input doWork(@Nonnull List<Input> inputs) {
-        assert inputs.size() == 1;
-        final Input input = inputs.get(0);
+	@Override
+	protected Input doWork(@Nonnull List<Input> inputs) {
+		assert inputs.size() == 1;
+		final Input input = inputs.get(0);
 
-        final Context context = getContext();
-        if (context != null) {
-            try {
-                if (!input.older) {
-                    MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat);
-                } else {
-                    MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
-                }
-            } catch (RealmException e) {
-                throwException(e);
-            }
+		final Context context = getContext();
+		if (context != null) {
+			try {
+				if (!input.older) {
+					MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat);
+				} else {
+					MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
+				}
+			} catch (RealmException e) {
+				throwException(e);
+			}
 
-        }
+		}
 
-        return input;
-    }
+		return input;
+	}
 
-    @Override
-    protected void onSuccessPostExecute(@Nonnull Input result) {
-        completeRefreshForListView();
-    }
+	@Override
+	protected void onSuccessPostExecute(@Nonnull Input result) {
+		completeRefreshForListView();
+	}
 
-    @Override
-    protected void onFailurePostExecute(@Nonnull Exception e) {
-        completeRefreshForListView();
-        super.onFailurePostExecute(e);
-    }
+	@Override
+	protected void onFailurePostExecute(@Nonnull Exception e) {
+		completeRefreshForListView();
+		super.onFailurePostExecute(e);
+	}
 
-    private void completeRefreshForListView() {
-        if (listViewProvider != null) {
-            final PullToRefreshListView ptrlv = listViewProvider.getPullToRefreshListView();
-            if (ptrlv != null) {
-                ptrlv.onRefreshComplete();
-            }
-        }
-    }
+	private void completeRefreshForListView() {
+		if (listViewProvider != null) {
+			final PullToRefreshListView ptrlv = listViewProvider.getPullToRefreshListView();
+			if (ptrlv != null) {
+				ptrlv.onRefreshComplete();
+			}
+		}
+	}
 
-    public static class Input {
+	public static class Input {
 
-        @Nonnull
-        private Entity realmUser;
+		@Nonnull
+		private Entity realmUser;
 
-        @Nonnull
-        private Entity realmChat;
+		@Nonnull
+		private Entity realmChat;
 
-        private boolean older;
+		private boolean older;
 
-        public Input(@Nonnull Entity realmUser,
-                     @Nonnull Entity realmChat,
-                     boolean older) {
-            this.realmUser = realmUser;
-            this.realmChat = realmChat;
-            this.older = older;
-        }
-    }
+		public Input(@Nonnull Entity realmUser,
+					 @Nonnull Entity realmChat,
+					 boolean older) {
+			this.realmUser = realmUser;
+			this.realmChat = realmChat;
+			this.older = older;
+		}
+	}
 }

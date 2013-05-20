@@ -14,48 +14,48 @@ import javax.annotation.Nullable;
  */
 public class DeleteAllRowsInRealmDbExec implements DbExec {
 
-    @Nonnull
-    private final String tableName;
+	@Nonnull
+	private final String tableName;
 
-    @Nullable
-    private final String realmColumnName;
+	@Nullable
+	private final String realmColumnName;
 
-    @Nullable
-    private final String foreignKeyColumnName;
+	@Nullable
+	private final String foreignKeyColumnName;
 
-    @Nonnull
-    private final String realmId;
+	@Nonnull
+	private final String realmId;
 
-    private DeleteAllRowsInRealmDbExec(@Nonnull String tableName,
-                                       @Nullable String realmColumnName,
-                                       @Nullable String foreignKeyColumnName,
-                                       @Nonnull String realmId) {
-        this.tableName = tableName;
-        this.realmColumnName = realmColumnName;
-        this.foreignKeyColumnName = foreignKeyColumnName;
-        this.realmId = realmId;
-    }
+	private DeleteAllRowsInRealmDbExec(@Nonnull String tableName,
+									   @Nullable String realmColumnName,
+									   @Nullable String foreignKeyColumnName,
+									   @Nonnull String realmId) {
+		this.tableName = tableName;
+		this.realmColumnName = realmColumnName;
+		this.foreignKeyColumnName = foreignKeyColumnName;
+		this.realmId = realmId;
+	}
 
-    @Nonnull
-    public static DeleteAllRowsInRealmDbExec newInstance(@Nonnull String tableName, @Nonnull String realmColumnName, @Nonnull String realmId) {
-        return new DeleteAllRowsInRealmDbExec(tableName, realmColumnName, null, realmId);
-    }
+	@Nonnull
+	public static DeleteAllRowsInRealmDbExec newInstance(@Nonnull String tableName, @Nonnull String realmColumnName, @Nonnull String realmId) {
+		return new DeleteAllRowsInRealmDbExec(tableName, realmColumnName, null, realmId);
+	}
 
-    @Nonnull
-    public static DeleteAllRowsInRealmDbExec newStartsWith(@Nonnull String tableName, @Nonnull String foreignKeyColumnName, @Nonnull String realmId) {
-        return new DeleteAllRowsInRealmDbExec(tableName, null, foreignKeyColumnName, realmId);
-    }
+	@Nonnull
+	public static DeleteAllRowsInRealmDbExec newStartsWith(@Nonnull String tableName, @Nonnull String foreignKeyColumnName, @Nonnull String realmId) {
+		return new DeleteAllRowsInRealmDbExec(tableName, null, foreignKeyColumnName, realmId);
+	}
 
 
-    @Override
-    public long exec(@Nonnull SQLiteDatabase db) {
-        if (realmColumnName != null) {
-            return db.delete(tableName, realmColumnName + " = ?", new String[]{realmId});
-        } else if (foreignKeyColumnName != null) {
-            // todo serso: use ?
-            return db.delete(tableName, foreignKeyColumnName + " like '" + realmId + EntityImpl.DELIMITER + "%'", null);
-        }
+	@Override
+	public long exec(@Nonnull SQLiteDatabase db) {
+		if (realmColumnName != null) {
+			return db.delete(tableName, realmColumnName + " = ?", new String[]{realmId});
+		} else if (foreignKeyColumnName != null) {
+			// todo serso: use ?
+			return db.delete(tableName, foreignKeyColumnName + " like '" + realmId + EntityImpl.DELIMITER + "%'", null);
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 }

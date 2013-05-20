@@ -26,66 +26,66 @@ import java.util.List;
  */
 public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<String> {
 
-    @Nonnull
-    private final ChatMessage chatMessage;
+	@Nonnull
+	private final ChatMessage chatMessage;
 
-    @Nonnull
-    private final Chat chat;
+	@Nonnull
+	private final Chat chat;
 
-    public VkMessagesSendHttpTransaction(@Nonnull VkRealm realm, @Nonnull ChatMessage chatMessage, @Nonnull Chat chat) {
-        super(realm, "messages.send");
-        this.chatMessage = chatMessage;
-        this.chat = chat;
-    }
+	public VkMessagesSendHttpTransaction(@Nonnull VkRealm realm, @Nonnull ChatMessage chatMessage, @Nonnull Chat chat) {
+		super(realm, "messages.send");
+		this.chatMessage = chatMessage;
+		this.chat = chat;
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> result = super.getRequestParameters();
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> result = super.getRequestParameters();
 
-        try {
+		try {
 
-            if (chat.isPrivate()) {
-                result.add(new BasicNameValuePair("uid", chat.getSecondUser().getRealmEntityId()));
-            }
+			if (chat.isPrivate()) {
+				result.add(new BasicNameValuePair("uid", chat.getSecondUser().getRealmEntityId()));
+			}
 
-            if (!chat.isPrivate()) {
-                result.add(new BasicNameValuePair("chat_id", chat.getEntity().getRealmEntityId()));
-            }
+			if (!chat.isPrivate()) {
+				result.add(new BasicNameValuePair("chat_id", chat.getEntity().getRealmEntityId()));
+			}
 
-            result.add(new BasicNameValuePair("message", URLEncoder.encode(chatMessage.getBody(), "utf-8")));
+			result.add(new BasicNameValuePair("message", URLEncoder.encode(chatMessage.getBody(), "utf-8")));
 
-            result.add(new BasicNameValuePair("title", URLEncoder.encode(chatMessage.getTitle(), "utf-8")));
-            result.add(new BasicNameValuePair("type", chatMessage.isPrivate() ? "0" : "1"));
+			result.add(new BasicNameValuePair("title", URLEncoder.encode(chatMessage.getTitle(), "utf-8")));
+			result.add(new BasicNameValuePair("type", chatMessage.isPrivate() ? "0" : "1"));
 
-            final List<LiteChatMessage> fwdMessages = chatMessage.getFwdMessages();
-            if (!fwdMessages.isEmpty()) {
-                final String fwdMessagesParam = Strings.getAllValues(Lists.transform(fwdMessages, new Function<LiteChatMessage, String>() {
-                    @Override
-                    public String apply(@Nullable LiteChatMessage fwdMessage) {
-                        assert fwdMessage != null;
-                        return fwdMessage.getEntity().getRealmEntityId();
-                    }
-                }));
+			final List<LiteChatMessage> fwdMessages = chatMessage.getFwdMessages();
+			if (!fwdMessages.isEmpty()) {
+				final String fwdMessagesParam = Strings.getAllValues(Lists.transform(fwdMessages, new Function<LiteChatMessage, String>() {
+					@Override
+					public String apply(@Nullable LiteChatMessage fwdMessage) {
+						assert fwdMessage != null;
+						return fwdMessage.getEntity().getRealmEntityId();
+					}
+				}));
 
-                result.add(new BasicNameValuePair("forward_messages", fwdMessagesParam));
-            }
+				result.add(new BasicNameValuePair("forward_messages", fwdMessagesParam));
+			}
 
-        } catch (UnsupportedEncodingException e) {
-            throw new AssertionError(e);
-        }
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    protected String getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-        return new Gson().fromJson(json, JsonResult.class).response;
-    }
+	@Override
+	protected String getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+		return new Gson().fromJson(json, JsonResult.class).response;
+	}
 
-    public static class JsonResult {
+	public static class JsonResult {
 
-        @Nullable
-        private String response;
-    }
+		@Nullable
+		private String response;
+	}
 }

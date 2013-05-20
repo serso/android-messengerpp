@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  */
 public class UnsupportedRealmException extends RealmException {
 
-    public UnsupportedRealmException(@Nonnull String realm) {
-        super("Realm " + realm + " is not supported!");
-    }
+	public UnsupportedRealmException(@Nonnull String realm) {
+		super("Realm " + realm + " is not supported!");
+	}
 }

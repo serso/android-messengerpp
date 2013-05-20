@@ -41,60 +41,60 @@ import java.util.Set;
 
 public class TestMessengerModule extends AbstractModule {
 
-    private final Map<Class<?>, Object> bindings = new HashMap<Class<?>, Object>();
+	private final Map<Class<?>, Object> bindings = new HashMap<Class<?>, Object>();
 
-    @Nonnull
-    private final Application application;
+	@Nonnull
+	private final Application application;
 
-    public TestMessengerModule(@Nonnull Application application) {
-        this.application = application;
-    }
+	public TestMessengerModule(@Nonnull Application application) {
+		this.application = application;
+	}
 
-    @Override
-    protected void configure() {
-        bind(SQLiteOpenHelperConfiguration.class).to(TestMessengerDbConfiguration.class);
-        bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
+	@Override
+	protected void configure() {
+		bind(SQLiteOpenHelperConfiguration.class).to(TestMessengerDbConfiguration.class);
+		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 
-        bind(RealmService.class).to(DefaultRealmService.class);
-        bind(RealmDao.class).to(SqliteRealmDao.class);
+		bind(RealmService.class).to(DefaultRealmService.class);
+		bind(RealmDao.class).to(SqliteRealmDao.class);
 
-        bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
-        bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
-        bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
+		bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
+		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
+		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
-        bind(UserDao.class).to(SqliteUserDao.class);
-        bind(UserService.class).to(DefaultUserService.class);
+		bind(UserDao.class).to(SqliteUserDao.class);
+		bind(UserService.class).to(DefaultUserService.class);
 
-        bind(ChatDao.class).to(SqliteChatDao.class);
-        bind(ChatService.class).to(DefaultChatService.class);
+		bind(ChatDao.class).to(SqliteChatDao.class);
+		bind(ChatService.class).to(DefaultChatService.class);
 
-        bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
-        bind(ChatMessageService.class).to(DefaultChatMessageService.class);
+		bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
+		bind(ChatMessageService.class).to(DefaultChatMessageService.class);
 
-        bind(SyncService.class).to(DefaultSyncService.class);
+		bind(SyncService.class).to(DefaultSyncService.class);
 
-        bind(Context.class).toInstance(application);
+		bind(Context.class).toInstance(application);
 
-        Set<Map.Entry<Class<?>, Object>> entries = bindings.entrySet();
-        for (Map.Entry<Class<?>, Object> entry : entries) {
-            bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
-        }
-    }
+		Set<Map.Entry<Class<?>, Object>> entries = bindings.entrySet();
+		for (Map.Entry<Class<?>, Object> entry : entries) {
+			bind((Class<Object>) entry.getKey()).toInstance(entry.getValue());
+		}
+	}
 
-    public void addBinding(Class<?> type, Object object) {
-        bindings.put(type, object);
-    }
+	public void addBinding(Class<?> type, Object object) {
+		bindings.put(type, object);
+	}
 
-    public void setUp(@Nonnull Object testObject,
-                      @Nonnull TestMessengerModule module) {
-        Module roboGuiceModule = RoboGuice.newDefaultRoboModule(application);
-        Module testModule = Modules.override(roboGuiceModule).with(module);
-        RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE, testModule);
-        RoboInjector injector = RoboGuice.getInjector(application);
-        injector.injectMembers(testObject);
-    }
+	public void setUp(@Nonnull Object testObject,
+					  @Nonnull TestMessengerModule module) {
+		Module roboGuiceModule = RoboGuice.newDefaultRoboModule(application);
+		Module testModule = Modules.override(roboGuiceModule).with(module);
+		RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE, testModule);
+		RoboInjector injector = RoboGuice.getInjector(application);
+		injector.injectMembers(testObject);
+	}
 
-    public void tearDown() {
-        RoboGuice.util.reset();
-    }
+	public void tearDown() {
+		RoboGuice.util.reset();
+	}
 }

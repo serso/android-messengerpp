@@ -2,18 +2,16 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- list item pressed-->
-    <item android:state_pressed="true"
-          android:color="@color/mpp_text_selected"/>
+	<!-- list item pressed-->
+	<item android:state_pressed="true" android:color="@color/mpp_text_selected" />
 
-    <!--
-    For normal size screens selected and not selected states must be the same
-    as there is no second pane on which additional content is shown
-    -->
-    <!-- list item selected-->
-    <item android:state_activated="true"
-        android:color="@color/mpp_text_secondary"/>
+	<!--
+	For normal size screens selected and not selected states must be the same
+	as there is no second pane on which additional content is shown
+	-->
+	<!-- list item selected-->
+	<item android:state_activated="true" android:color="@color/mpp_text_secondary" />
 
-    <!-- default, list item not selected -->
-    <item android:color="@color/mpp_text_secondary"/>
+	<!-- default, list item not selected -->
+	<item android:color="@color/mpp_text_secondary" />
 </selector>

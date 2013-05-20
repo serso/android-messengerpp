@@ -12,17 +12,17 @@ import javax.annotation.Nullable;
  */
 public final class ChatGuiEvent extends AbstractTypedJEvent<Chat, ChatGuiEventType> {
 
-    public ChatGuiEvent(@Nonnull Chat chat, @Nonnull ChatGuiEventType type, @Nullable Object data) {
-        super(chat, type, data);
-    }
+	public ChatGuiEvent(@Nonnull Chat chat, @Nonnull ChatGuiEventType type, @Nullable Object data) {
+		super(chat, type, data);
+	}
 
-    @Nonnull
-    public Chat getChat() {
-        return getEventObject();
-    }
+	@Nonnull
+	public Chat getChat() {
+		return getEventObject();
+	}
 
-    @Nonnull
-    public ChatMessage getDataAsChatMessage() {
-        return (ChatMessage) getData();
-    }
+	@Nonnull
+	public ChatMessage getDataAsChatMessage() {
+		return (ChatMessage) getData();
+	}
 }

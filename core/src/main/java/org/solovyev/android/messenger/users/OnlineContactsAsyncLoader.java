@@ -20,40 +20,40 @@ import java.util.List;
  */
 public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
 
-    @Nonnull
-    private final RealmService realmService;
+	@Nonnull
+	private final RealmService realmService;
 
-    OnlineContactsAsyncLoader(@Nonnull Context context,
-                              @Nonnull ListAdapter<ContactListItem> adapter,
-                              @Nullable Runnable onPostExecute,
-                              @Nonnull RealmService realmService) {
-        super(context, adapter, onPostExecute);
-        this.realmService = realmService;
-    }
+	OnlineContactsAsyncLoader(@Nonnull Context context,
+							  @Nonnull ListAdapter<ContactListItem> adapter,
+							  @Nullable Runnable onPostExecute,
+							  @Nonnull RealmService realmService) {
+		super(context, adapter, onPostExecute);
+		this.realmService = realmService;
+	}
 
-    @Nonnull
-    protected List<UiContact> getElements(@Nonnull Context context) {
-        final List<UiContact> result = new ArrayList<UiContact>();
+	@Nonnull
+	protected List<UiContact> getElements(@Nonnull Context context) {
+		final List<UiContact> result = new ArrayList<UiContact>();
 
-        final UserService userService = MessengerApplication.getServiceLocator().getUserService();
+		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 
-        for (User user : realmService.getEnabledRealmUsers()) {
-            for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
-                result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
-            }
-        }
+		for (User user : realmService.getEnabledRealmUsers()) {
+			for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
+				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    protected Comparator<? super ContactListItem> getComparator() {
-        return MessengerListItemAdapter.ListItemComparator.getInstance();
-    }
+	@Override
+	protected Comparator<? super ContactListItem> getComparator() {
+		return MessengerListItemAdapter.ListItemComparator.getInstance();
+	}
 
-    @Nonnull
-    @Override
-    protected ContactListItem createListItem(@Nonnull UiContact contact) {
-        return ContactListItem.newInstance(contact);
-    }
+	@Nonnull
+	@Override
+	protected ContactListItem createListItem(@Nonnull UiContact contact) {
+		return ContactListItem.newInstance(contact);
+	}
 }

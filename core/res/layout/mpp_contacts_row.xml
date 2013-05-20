@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:layout_width="match_parent"
-              a:layout_height="wrap_content"
-              a:padding="5dp"
-              a:gravity="center"
-              a:orientation="horizontal">
+	a:layout_width="match_parent"
+	a:layout_height="wrap_content"
+	a:padding="5dp"
+	a:gravity="center"
+	a:orientation="horizontal">
 
-    <LinearLayout a:id="@+id/left_contact_container"
-                  a:layout_width="0dp"
-                  a:gravity="top|center_horizontal"
-                  a:layout_weight="1"
-                  a:layout_height="wrap_content">
+	<LinearLayout
+		a:id="@+id/left_contact_container"
+		a:layout_width="0dp"
+		a:gravity="top|center_horizontal"
+		a:layout_weight="1"
+		a:layout_height="wrap_content">
 
-        <ImageView a:id="@+id/mpp_contact_icon_imageview"
-                   a:layout_height="50dp"
-                   a:layout_width="50dp"
-                   a:contentDescription="@string/contact_icon"/>
+		<ImageView
+			a:id="@+id/mpp_contact_icon_imageview"
+			a:layout_height="50dp"
+			a:layout_width="50dp"
+			a:contentDescription="@string/contact_icon" />
 
-        <TextView a:id="@+id/mpp_contact_name_textview"
-                  a:textColor="@color/mpp_text"
-                  a:layout_height="wrap_content"
-                  a:layout_gravity="center"
-                  a:gravity="center"
-                  a:layout_width="match_parent"/>
-    </LinearLayout>
+		<TextView
+			a:id="@+id/mpp_contact_name_textview"
+			a:textColor="@color/mpp_text"
+			a:layout_height="wrap_content"
+			a:layout_gravity="center"
+			a:gravity="center"
+			a:layout_width="match_parent" />
+	</LinearLayout>
 
-    <LinearLayout a:id="@+id/right_contact_container"
-                  a:layout_width="0dp"
-                  a:gravity="top|center_horizontal"
-                  a:layout_weight="1"
-                  a:layout_height="wrap_content">
+	<LinearLayout
+		a:id="@+id/right_contact_container"
+		a:layout_width="0dp"
+		a:gravity="top|center_horizontal"
+		a:layout_weight="1"
+		a:layout_height="wrap_content">
 
-        <ImageView a:id="@+id/mpp_contact_icon_imageview"
-                   a:layout_height="50dp"
-                   a:layout_width="50dp"
-                   a:contentDescription="@string/contact_icon"/>
+		<ImageView
+			a:id="@+id/mpp_contact_icon_imageview"
+			a:layout_height="50dp"
+			a:layout_width="50dp"
+			a:contentDescription="@string/contact_icon" />
 
-        <TextView a:id="@+id/mpp_contact_name_textview"
-                  a:textColor="@color/mpp_text"
-                  a:layout_height="wrap_content"
-                  a:layout_gravity="center"
-                  a:gravity="center"
-                  a:layout_width="match_parent"/>
-    </LinearLayout>
+		<TextView
+			a:id="@+id/mpp_contact_name_textview"
+			a:textColor="@color/mpp_text"
+			a:layout_height="wrap_content"
+			a:layout_gravity="center"
+			a:gravity="center"
+			a:layout_width="match_parent" />
+	</LinearLayout>
 
 
 </LinearLayout>

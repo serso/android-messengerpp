@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    style="?mpp_list_item">
+	style="?mpp_list_item">
 
-    <ImageView
-        a:id="@+id/mpp_li_contact_icon_imageview"
-        a:src="@drawable/mpp_app_icon"
-        style="?mpp_list_item_icon"
-        a:layout_centerInParent="true"
-        a:layout_alignParentLeft="true" />
+	<ImageView
+		a:id="@+id/mpp_li_contact_icon_imageview"
+		a:src="@drawable/mpp_app_icon"
+		style="?mpp_list_item_icon"
+		a:layout_centerInParent="true"
+		a:layout_alignParentLeft="true" />
 
-    <ImageView
-        a:id="@+id/mpp_li_contact_online_view"
-        style="?mpp_list_item_contact_online"
-        a:layout_centerInParent="true"
-        a:layout_alignParentRight="true" />
+	<ImageView
+		a:id="@+id/mpp_li_contact_online_view"
+		style="?mpp_list_item_contact_online"
+		a:layout_centerInParent="true"
+		a:layout_alignParentRight="true" />
 
-    <LinearLayout
-        a:orientation="vertical"
-        a:layout_width="match_parent"
-        a:layout_height="wrap_content"
-        a:layout_toRightOf="@id/mpp_li_contact_icon_imageview"
-        a:layout_toLeftOf="@id/mpp_li_contact_online_view"
-        a:layout_centerInParent="true">
+	<LinearLayout
+		a:orientation="vertical"
+		a:layout_width="match_parent"
+		a:layout_height="wrap_content"
+		a:layout_toRightOf="@id/mpp_li_contact_icon_imageview"
+		a:layout_toLeftOf="@id/mpp_li_contact_online_view"
+		a:layout_centerInParent="true">
 
-        <TextView
-            a:id="@+id/mpp_li_contact_name_textview"
-            style="?mpp_list_item_name" />
+		<TextView
+			a:id="@+id/mpp_li_contact_name_textview"
+			style="?mpp_list_item_name" />
 
-        <TextView
-            a:id="@+id/mpp_li_contact_account_textview"
-            a:visibility="gone"
-            style="?mpp_list_item_text_secondary" />
+		<TextView
+			a:id="@+id/mpp_li_contact_account_textview"
+			a:visibility="gone"
+			style="?mpp_list_item_text_secondary" />
 
-    </LinearLayout>
+	</LinearLayout>
 
 </RelativeLayout>

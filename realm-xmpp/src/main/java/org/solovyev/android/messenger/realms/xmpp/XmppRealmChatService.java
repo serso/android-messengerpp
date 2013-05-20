@@ -25,100 +25,100 @@ import java.util.List;
  */
 class XmppRealmChatService extends AbstractXmppRealmService implements RealmChatService {
 
-    public XmppRealmChatService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
-        super(realm, connectionAware);
-    }
+	public XmppRealmChatService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+		super(realm, connectionAware);
+	}
 
-    @Nonnull
-    @Override
-    public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws RealmConnectionException {
-        return doOnConnection(new XmppConnectedCallable<List<ChatMessage>>() {
-            @Override
-            public List<ChatMessage> call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
-                final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
-                try {
-                    if (offlineManager.supportsFlexibleRetrieval()) {
-                        return XmppRealm.toMessages(getRealm(), offlineManager.getMessages());
-                    }
-                } catch (XMPPException e) {
-                    // ok, not supported by server
-                }
+	@Nonnull
+	@Override
+	public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws RealmConnectionException {
+		return doOnConnection(new XmppConnectedCallable<List<ChatMessage>>() {
+			@Override
+			public List<ChatMessage> call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
+				final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
+				try {
+					if (offlineManager.supportsFlexibleRetrieval()) {
+						return XmppRealm.toMessages(getRealm(), offlineManager.getMessages());
+					}
+				} catch (XMPPException e) {
+					// ok, not supported by server
+				}
 
-                return Collections.emptyList();
-            }
-        });
-    }
+				return Collections.emptyList();
+			}
+		});
+	}
 
-    @Nonnull
-    @Override
-    public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
-        return Collections.emptyList();
-    }
+	@Nonnull
+	@Override
+	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
+		return Collections.emptyList();
+	}
 
-    @Nonnull
-    @Override
-    public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) {
-        return Collections.emptyList();
-    }
+	@Nonnull
+	@Override
+	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) {
+		return Collections.emptyList();
+	}
 
-    @Nonnull
-    @Override
-    public List<ApiChat> getUserChats(@Nonnull String realmUserId) {
-        return Collections.emptyList();
-    }
+	@Nonnull
+	@Override
+	public List<ApiChat> getUserChats(@Nonnull String realmUserId) {
+		return Collections.emptyList();
+	}
 
-    @Nullable
-    @Override
-    public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws RealmConnectionException {
-        return doOnConnection(new MessengerSender(chat, message, getRealm()));
-    }
+	@Nullable
+	@Override
+	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws RealmConnectionException {
+		return doOnConnection(new MessengerSender(chat, message, getRealm()));
+	}
 
-    @Nonnull
-    @Override
-    public Chat newPrivateChat(@Nonnull final Entity realmChat, @Nonnull String realmUserId1, @Nonnull final String realmUserId2) throws RealmConnectionException {
-        return doOnConnection(new XmppConnectedCallable<Chat>() {
-            @Override
-            public Chat call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
-                org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getRealm(), realmChat));
-                return XmppRealm.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
-            }
-        });
-    }
+	@Nonnull
+	@Override
+	public Chat newPrivateChat(@Nonnull final Entity realmChat, @Nonnull String realmUserId1, @Nonnull final String realmUserId2) throws RealmConnectionException {
+		return doOnConnection(new XmppConnectedCallable<Chat>() {
+			@Override
+			public Chat call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
+				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getRealm(), realmChat));
+				return XmppRealm.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
+			}
+		});
+	}
 
-    private static final class MessengerSender implements XmppConnectedCallable<String> {
+	private static final class MessengerSender implements XmppConnectedCallable<String> {
 
-        @Nonnull
-        private final Chat chat;
+		@Nonnull
+		private final Chat chat;
 
-        @Nonnull
-        private final ChatMessage message;
+		@Nonnull
+		private final ChatMessage message;
 
-        @Nonnull
-        private final Realm realm;
+		@Nonnull
+		private final Realm realm;
 
-        private MessengerSender(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull Realm realm) {
-            this.chat = chat;
-            this.message = message;
-            this.realm = realm;
-        }
+		private MessengerSender(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull Realm realm) {
+			this.chat = chat;
+			this.message = message;
+			this.realm = realm;
+		}
 
-        @Override
-        public String call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
-            final ChatManager chatManager = connection.getChatManager();
+		@Override
+		public String call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
+			final ChatManager chatManager = connection.getChatManager();
 
-            final Entity realmChat = chat.getEntity();
-            org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getRealmEntityId());
-            if ( smackChat == null ) {
-                // smack forget about chat ids after restart => need to create chat here
-                smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), realmChat.getRealmEntityId(), new XmppMessageListener(realm, realmChat));
-            } else {
-                // todo serso: remove if unnecessary
-                smackChat.addMessageListener(new XmppMessageListener(realm, realmChat));
-            }
+			final Entity realmChat = chat.getEntity();
+			org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getRealmEntityId());
+			if (smackChat == null) {
+				// smack forget about chat ids after restart => need to create chat here
+				smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), realmChat.getRealmEntityId(), new XmppMessageListener(realm, realmChat));
+			} else {
+				// todo serso: remove if unnecessary
+				smackChat.addMessageListener(new XmppMessageListener(realm, realmChat));
+			}
 
-            smackChat.sendMessage(message.getBody());
+			smackChat.sendMessage(message.getBody());
 
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 }

@@ -41,37 +41,37 @@ import java.util.concurrent.Executors;
  */
 public class MessengerModule extends AbstractModule {
 
-    @Override
-    protected void configure() {
-        bind(ExecutorService.class).toInstance(Executors.newSingleThreadExecutor());
-        bind(TaskService.class).toInstance(Tasks.newTaskService());
+	@Override
+	protected void configure() {
+		bind(ExecutorService.class).toInstance(Executors.newSingleThreadExecutor());
+		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
-        bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
-        bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
-        bind(NotificationService.class).to(DefaultNotificationService.class);
-        bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
-        bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
+		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
+		bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
+		bind(NotificationService.class).to(DefaultNotificationService.class);
+		bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
+		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 
-        bind(RealmService.class).to(DefaultRealmService.class);
-        bind(RealmDao.class).to(SqliteRealmDao.class);
+		bind(RealmService.class).to(DefaultRealmService.class);
+		bind(RealmDao.class).to(SqliteRealmDao.class);
 
-        bind(RealmConnectionsService.class).to(RealmConnectionsServiceImpl.class);
-        bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
-        bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
-        bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
+		bind(RealmConnectionsService.class).to(RealmConnectionsServiceImpl.class);
+		bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
+		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
+		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
-        bind(UserDao.class).to(SqliteUserDao.class);
-        bind(UserService.class).to(DefaultUserService.class);
+		bind(UserDao.class).to(SqliteUserDao.class);
+		bind(UserService.class).to(DefaultUserService.class);
 
-        bind(ChatDao.class).to(SqliteChatDao.class);
-        bind(ChatService.class).to(DefaultChatService.class);
+		bind(ChatDao.class).to(SqliteChatDao.class);
+		bind(ChatService.class).to(DefaultChatService.class);
 
-        bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
-        bind(ChatMessageService.class).to(DefaultChatMessageService.class);
+		bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
+		bind(ChatMessageService.class).to(DefaultChatMessageService.class);
 
-        bind(SyncService.class).to(DefaultSyncService.class);
-        bind(RegistrationService.class).to(DummyRegistrationService.class);
+		bind(SyncService.class).to(DefaultSyncService.class);
+		bind(RegistrationService.class).to(DummyRegistrationService.class);
 
-        bind(MessengerMultiPaneManager.class).to(MessengerMultiPaneManagerImpl.class);
-    }
+		bind(MessengerMultiPaneManager.class).to(MessengerMultiPaneManagerImpl.class);
+	}
 }

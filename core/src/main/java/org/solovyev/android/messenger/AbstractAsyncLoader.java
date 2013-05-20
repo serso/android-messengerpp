@@ -18,61 +18,61 @@ import java.util.List;
  */
 public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends MessengerAsyncTask<Void, Void, List<R>> {
 
-    @Nonnull
-    private ListAdapter<LI> adapter;
+	@Nonnull
+	private ListAdapter<LI> adapter;
 
-    @Nullable
-    private Runnable onPostExecute;
+	@Nullable
+	private Runnable onPostExecute;
 
-    public AbstractAsyncLoader(@Nonnull Context context,
-                               @Nonnull ListAdapter<LI> adapter,
-                               @Nullable Runnable onPostExecute) {
-        super(context);
-        this.adapter = adapter;
-        this.onPostExecute = onPostExecute;
-    }
+	public AbstractAsyncLoader(@Nonnull Context context,
+							   @Nonnull ListAdapter<LI> adapter,
+							   @Nullable Runnable onPostExecute) {
+		super(context);
+		this.adapter = adapter;
+		this.onPostExecute = onPostExecute;
+	}
 
 
-    @Override
-    protected List<R> doWork(@Nonnull List<Void> voids) {
-        final Context context = getContext();
-        if (context != null) {
-            return getElements(context);
-        }
+	@Override
+	protected List<R> doWork(@Nonnull List<Void> voids) {
+		final Context context = getContext();
+		if (context != null) {
+			return getElements(context);
+		}
 
-        return Collections.emptyList();
-    }
+		return Collections.emptyList();
+	}
 
-    @Nonnull
-    protected abstract List<R> getElements(@Nonnull Context context);
+	@Nonnull
+	protected abstract List<R> getElements(@Nonnull Context context);
 
-    @Override
-    protected void onSuccessPostExecute(@Nullable final List<R> elements) {
+	@Override
+	protected void onSuccessPostExecute(@Nullable final List<R> elements) {
 
-        if (elements != null) {
-            adapter.doWork(new Runnable() {
-                @Override
-                public void run() {
-                    for (R element : elements) {
-                        adapter.add(createListItem(element));
-                    }
-                }
-            });
+		if (elements != null) {
+			adapter.doWork(new Runnable() {
+				@Override
+				public void run() {
+					for (R element : elements) {
+						adapter.add(createListItem(element));
+					}
+				}
+			});
 
-            final Comparator<? super LI> comparator = getComparator();
-            if (comparator != null) {
-                adapter.sort(comparator);
-            }
-        }
+			final Comparator<? super LI> comparator = getComparator();
+			if (comparator != null) {
+				adapter.sort(comparator);
+			}
+		}
 
-        if (onPostExecute != null) {
-            onPostExecute.run();
-        }
-    }
+		if (onPostExecute != null) {
+			onPostExecute.run();
+		}
+	}
 
-    @Nullable
-    protected abstract Comparator<? super LI> getComparator();
+	@Nullable
+	protected abstract Comparator<? super LI> getComparator();
 
-    @Nonnull
-    protected abstract LI createListItem(@Nonnull R element);
+	@Nonnull
+	protected abstract LI createListItem(@Nonnull R element);
 }

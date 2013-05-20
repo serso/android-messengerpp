@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.fragments.DetachableFragment;
+import org.solovyev.android.messenger.MessengerMultiPaneManager;
 
 import javax.annotation.Nonnull;
 
@@ -19,21 +19,21 @@ import javax.annotation.Nonnull;
  */
 public class MessengerEmptyFragment extends RoboSherlockFragment implements DetachableFragment {
 
-    @Nonnull
-    public static final String FRAGMENT_TAG = "empty";
+	@Nonnull
+	public static final String FRAGMENT_TAG = "empty";
 
-    @Inject
-    @Nonnull
-    private MessengerMultiPaneManager multiPaneManager;
+	@Inject
+	@Nonnull
+	private MessengerMultiPaneManager multiPaneManager;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final LinearLayout root = new LinearLayout(this.getActivity());
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		final LinearLayout root = new LinearLayout(this.getActivity());
 
-        root.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+		root.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
-        multiPaneManager.onCreatePane(this.getActivity(), container, root);
+		multiPaneManager.onCreatePane(this.getActivity(), container, root);
 
-        return root;
-    }
+		return root;
+	}
 }

@@ -14,14 +14,14 @@ import javax.annotation.Nonnull;
  */
 public class VkGetLongPollServerHttpTransaction extends AbstractVkHttpTransaction<LongPollServerData> {
 
-    public VkGetLongPollServerHttpTransaction(@Nonnull VkRealm realm) {
-        super(realm, "messages.getLongPollServer");
-    }
+	public VkGetLongPollServerHttpTransaction(@Nonnull VkRealm realm) {
+		super(realm, "messages.getLongPollServer");
+	}
 
-    @Override
-    protected LongPollServerData getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-        final Gson gson = new Gson();
-        final JsonLongPollResponse jsonLongPollResponse = gson.fromJson(json, JsonLongPollResponse.class);
-        return jsonLongPollResponse.toLongPollServerData();
-    }
+	@Override
+	protected LongPollServerData getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+		final Gson gson = new Gson();
+		final JsonLongPollResponse jsonLongPollResponse = gson.fromJson(json, JsonLongPollResponse.class);
+		return jsonLongPollResponse.toLongPollServerData();
+	}
 }

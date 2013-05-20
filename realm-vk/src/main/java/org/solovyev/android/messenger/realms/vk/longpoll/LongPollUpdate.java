@@ -22,49 +22,49 @@ import java.lang.reflect.Type;
  */
 public interface LongPollUpdate {
 
-    void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException;
+	void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException;
 
-    public static class Adapter implements JsonDeserializer<LongPollUpdate> {
+	public static class Adapter implements JsonDeserializer<LongPollUpdate> {
 
-        @Override
-        public LongPollUpdate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		@Override
+		public LongPollUpdate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
-            if (json.isJsonArray()) {
+			if (json.isJsonArray()) {
 
-                final JsonArray jsonArray = json.getAsJsonArray();
+				final JsonArray jsonArray = json.getAsJsonArray();
 
-                switch (jsonArray.get(0).getAsInt()) {
-                    case 0:
-                        return new RemoveMessage(jsonArray.get(1).getAsInt());
-                    //case 3: todo serso: implement ONE message update
-                    case 4:
-                        int flags = jsonArray.get(2).getAsInt();
-                        int chatUserId = jsonArray.get(3).getAsInt();
-                        // todo serso: uncomment after answer
-                        if (/*MessageFlag.chat.isApplied(flags) && */chatUserId >= 2000000000) {
+				switch (jsonArray.get(0).getAsInt()) {
+					case 0:
+						return new RemoveMessage(jsonArray.get(1).getAsInt());
+					//case 3: todo serso: implement ONE message update
+					case 4:
+						int flags = jsonArray.get(2).getAsInt();
+						int chatUserId = jsonArray.get(3).getAsInt();
+						// todo serso: uncomment after answer
+						if (/*MessageFlag.chat.isApplied(flags) && */chatUserId >= 2000000000) {
 
-                            // MAGIC MAGIC MAGIC
-                            int chatId = chatUserId - 2000000000;
+							// MAGIC MAGIC MAGIC
+							int chatId = chatUserId - 2000000000;
 
-                            return MessageAdded.forChat(String.valueOf(chatId));
+							return MessageAdded.forChat(String.valueOf(chatId));
 
-                        } else {
-                            int userId = chatUserId;
-                            return MessageAdded.forFriend(String.valueOf(userId));
-                        }
-                    case 8:
-                        return new FriendOnline(String.valueOf(-jsonArray.get(1).getAsInt()), true);
-                    case 9:
-                        return new FriendOnline(String.valueOf(-jsonArray.get(1).getAsInt()), false);
-                    case 51:
-                        return new ChatChanged(jsonArray.get(1).getAsString());
-                    case 61:
-                        return new UserStartTypingInPrivateChat(jsonArray.get(1).getAsString());
-                    case 62:
-                        return new UserStartTypingInChat(jsonArray.get(1).getAsString(), jsonArray.get(2).getAsString());
-                }
+						} else {
+							int userId = chatUserId;
+							return MessageAdded.forFriend(String.valueOf(userId));
+						}
+					case 8:
+						return new FriendOnline(String.valueOf(-jsonArray.get(1).getAsInt()), true);
+					case 9:
+						return new FriendOnline(String.valueOf(-jsonArray.get(1).getAsInt()), false);
+					case 51:
+						return new ChatChanged(jsonArray.get(1).getAsString());
+					case 61:
+						return new UserStartTypingInPrivateChat(jsonArray.get(1).getAsString());
+					case 62:
+						return new UserStartTypingInChat(jsonArray.get(1).getAsString(), jsonArray.get(2).getAsString());
+				}
 
-                return new EmptyLongPollUpdate();
+				return new EmptyLongPollUpdate();
 
 
                 /*final JsonArray responseArray = response.getAsJsonArray("response");
@@ -81,188 +81,188 @@ public interface LongPollUpdate {
                     }
                 }*/
 
-            } else {
-                throw new JsonParseException("Unexpected JSON type: " + json.getClass());
-            }
-        }
-    }
+			} else {
+				throw new JsonParseException("Unexpected JSON type: " + json.getClass());
+			}
+		}
+	}
 
-    static class UserStartTypingInChat implements LongPollUpdate {
+	static class UserStartTypingInChat implements LongPollUpdate {
 
-        @Nonnull
-        private final String realmUserId;
+		@Nonnull
+		private final String realmUserId;
 
-        @Nonnull
-        private final String realmChatId;
+		@Nonnull
+		private final String realmChatId;
 
-        public UserStartTypingInChat(@Nonnull String realmUserId, @Nonnull String realmChatId) {
-            this.realmUserId = realmUserId;
-            this.realmChatId = realmChatId;
-        }
+		public UserStartTypingInChat(@Nonnull String realmUserId, @Nonnull String realmChatId) {
+			this.realmUserId = realmUserId;
+			this.realmChatId = realmChatId;
+		}
 
-        @Override
-        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            // not self
-            if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
-                Chat chat = getChatService().getChatById(realm.newChatEntity(realmChatId));
-                if (chat != null) {
-                    getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, realm.newUserEntity(realmUserId)));
-                }
-            }
-        }
-
-
-        @Nonnull
-        private static ChatService getChatService() {
-            return MessengerApplication.getServiceLocator().getChatService();
-        }
-    }
-
-    static class UserStartTypingInPrivateChat implements LongPollUpdate {
-
-        @Nonnull
-        private String realmUserId;
-
-        public UserStartTypingInPrivateChat(@Nonnull String realmUserId) {
-            this.realmUserId = realmUserId;
-        }
-
-        @Override
-        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            // not self
-            if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
-                final Entity secondRealmUser = realm.newUserEntity(realmUserId);
-
-                final Entity realmChat = getChatService().getPrivateChatId(user.getEntity(), secondRealmUser);
-                Chat chat = getChatService().getChatById(realmChat);
-                if (chat != null) {
-                    getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, secondRealmUser));
-                }
-            }
-        }
+		@Override
+		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+			// not self
+			if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
+				Chat chat = getChatService().getChatById(realm.newChatEntity(realmChatId));
+				if (chat != null) {
+					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, realm.newUserEntity(realmUserId)));
+				}
+			}
+		}
 
 
-        @Nonnull
-        private static ChatService getChatService() {
-            return MessengerApplication.getServiceLocator().getChatService();
-        }
-    }
+		@Nonnull
+		private static ChatService getChatService() {
+			return MessengerApplication.getServiceLocator().getChatService();
+		}
+	}
 
-    static class ChatChanged implements LongPollUpdate {
+	static class UserStartTypingInPrivateChat implements LongPollUpdate {
 
-        @Nonnull
-        private final String realmChatId;
+		@Nonnull
+		private String realmUserId;
 
-        public ChatChanged(@Nonnull String realmChatId) {
-            this.realmChatId = realmChatId;
-        }
+		public UserStartTypingInPrivateChat(@Nonnull String realmUserId) {
+			this.realmUserId = realmUserId;
+		}
 
-        @Override
-        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException {
-            getChatService().syncChat(realm.newChatEntity(realmChatId), user.getEntity());
-        }
+		@Override
+		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+			// not self
+			if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
+				final Entity secondRealmUser = realm.newUserEntity(realmUserId);
 
-
-        @Nonnull
-        private ChatService getChatService() {
-            return MessengerApplication.getServiceLocator().getChatService();
-        }
-    }
-
-    static class EmptyLongPollUpdate implements LongPollUpdate {
-
-        @Override
-        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            // do nothing
-        }
+				final Entity realmChat = getChatService().getPrivateChatId(user.getEntity(), secondRealmUser);
+				Chat chat = getChatService().getChatById(realmChat);
+				if (chat != null) {
+					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, secondRealmUser));
+				}
+			}
+		}
 
 
-    }
+		@Nonnull
+		private static ChatService getChatService() {
+			return MessengerApplication.getServiceLocator().getChatService();
+		}
+	}
 
-    static class MessageAdded implements LongPollUpdate {
+	static class ChatChanged implements LongPollUpdate {
 
-        @Nullable
-        private String realmFriendId;
+		@Nonnull
+		private final String realmChatId;
 
-        @Nullable
-        private String realmChatId;
+		public ChatChanged(@Nonnull String realmChatId) {
+			this.realmChatId = realmChatId;
+		}
 
-        private MessageAdded() {
-        }
+		@Override
+		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException {
+			getChatService().syncChat(realm.newChatEntity(realmChatId), user.getEntity());
+		}
 
-        public static MessageAdded forChat(@Nonnull String realmChatId) {
-            final MessageAdded result = new MessageAdded();
 
-            result.realmFriendId = null;
-            result.realmChatId = realmChatId;
+		@Nonnull
+		private ChatService getChatService() {
+			return MessengerApplication.getServiceLocator().getChatService();
+		}
+	}
 
-            return result;
-        }
+	static class EmptyLongPollUpdate implements LongPollUpdate {
 
-        public static MessageAdded forFriend(@Nonnull String realmFriendId) {
-            final MessageAdded result = new MessageAdded();
+		@Override
+		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+			// do nothing
+		}
 
-            result.realmFriendId = realmFriendId;
-            result.realmChatId = null;
 
-            return result;
-        }
+	}
 
-        @Override
-        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException {
-            final Entity realmChat;
-            if (this.realmChatId != null) {
-                realmChat = realm.newChatEntity(this.realmChatId);
-            } else {
-                assert realmFriendId != null;
-                realmChat = getChatService().getPrivateChatId(user.getEntity(), realm.newUserEntity(realmFriendId));
-            }
+	static class MessageAdded implements LongPollUpdate {
 
-            getChatService().syncNewerChatMessagesForChat(realmChat);
-        }
+		@Nullable
+		private String realmFriendId;
 
-        @Nonnull
-        private ChatService getChatService() {
-            return MessengerApplication.getServiceLocator().getChatService();
-        }
-    }
+		@Nullable
+		private String realmChatId;
 
-    static class FriendOnline implements LongPollUpdate {
+		private MessageAdded() {
+		}
 
-        @Nonnull
-        private final String realmFriendId;
+		public static MessageAdded forChat(@Nonnull String realmChatId) {
+			final MessageAdded result = new MessageAdded();
 
-        private final boolean online;
+			result.realmFriendId = null;
+			result.realmChatId = realmChatId;
 
-        public FriendOnline(@Nonnull String realmFriendId, boolean online) {
-            this.realmFriendId = realmFriendId;
-            this.online = online;
-        }
+			return result;
+		}
 
-        @Override
-        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            final User contact = getUserService().getUserById(realm.newUserEntity(realmFriendId)).cloneWithNewStatus(online);
-            getUserService().onContactPresenceChanged(user, contact, online);
-        }
+		public static MessageAdded forFriend(@Nonnull String realmFriendId) {
+			final MessageAdded result = new MessageAdded();
 
-        private UserService getUserService() {
-            return MessengerApplication.getServiceLocator().getUserService();
-        }
-    }
+			result.realmFriendId = realmFriendId;
+			result.realmChatId = null;
 
-    static class RemoveMessage implements LongPollUpdate {
+			return result;
+		}
 
-        @Nonnull
-        private final Integer messageId;
+		@Override
+		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException {
+			final Entity realmChat;
+			if (this.realmChatId != null) {
+				realmChat = realm.newChatEntity(this.realmChatId);
+			} else {
+				assert realmFriendId != null;
+				realmChat = getChatService().getPrivateChatId(user.getEntity(), realm.newUserEntity(realmFriendId));
+			}
 
-        public RemoveMessage(@Nonnull Integer messageId) {
-            this.messageId = messageId;
-        }
+			getChatService().syncNewerChatMessagesForChat(realmChat);
+		}
 
-        @Override
-        public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-            // todo serso: implement
-        }
-    }
+		@Nonnull
+		private ChatService getChatService() {
+			return MessengerApplication.getServiceLocator().getChatService();
+		}
+	}
+
+	static class FriendOnline implements LongPollUpdate {
+
+		@Nonnull
+		private final String realmFriendId;
+
+		private final boolean online;
+
+		public FriendOnline(@Nonnull String realmFriendId, boolean online) {
+			this.realmFriendId = realmFriendId;
+			this.online = online;
+		}
+
+		@Override
+		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+			final User contact = getUserService().getUserById(realm.newUserEntity(realmFriendId)).cloneWithNewStatus(online);
+			getUserService().onContactPresenceChanged(user, contact, online);
+		}
+
+		private UserService getUserService() {
+			return MessengerApplication.getServiceLocator().getUserService();
+		}
+	}
+
+	static class RemoveMessage implements LongPollUpdate {
+
+		@Nonnull
+		private final Integer messageId;
+
+		public RemoveMessage(@Nonnull Integer messageId) {
+			this.messageId = messageId;
+		}
+
+		@Override
+		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+			// todo serso: implement
+		}
+	}
 
 }

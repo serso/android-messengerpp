@@ -16,35 +16,35 @@ import javax.annotation.Nullable;
  */
 public enum MessengerEventType {
 
-    // data == number of unread messages
-    unread_messages_count_changed {
-        @Override
-        protected void checkData(@Nullable Object data) {
-            assert data instanceof Integer;
-        }
-    },
+	// data == number of unread messages
+	unread_messages_count_changed {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof Integer;
+		}
+	},
 
-    notification_removed {
-        @Override
-        protected void checkData(@Nullable Object data) {
-            assert data instanceof Message;
-        }
-    },
+	notification_removed {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof Message;
+		}
+	},
 
-    notification_added {
-        @Override
-        protected void checkData(@Nullable Object data) {
-            assert data instanceof Message;
-        }
-    };
+	notification_added {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof Message;
+		}
+	};
 
-    @Nonnull
-    public final MessengerEvent newEvent(@Nullable Object data) {
-        checkData(data);
-        return new MessengerEvent(this, data);
-    }
+	@Nonnull
+	public final MessengerEvent newEvent(@Nullable Object data) {
+		checkData(data);
+		return new MessengerEvent(this, data);
+	}
 
-    protected void checkData(@Nullable Object data) {
-        assert data == null;
-    }
+	protected void checkData(@Nullable Object data) {
+		assert data == null;
+	}
 }

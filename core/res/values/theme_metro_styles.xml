@@ -2,231 +2,231 @@
 
 <resources>
 
-    <!--
-        Base style for all text containing views
-    -->
-    <style name="mpp_text">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:textCursorDrawable">@null</item>
-    </style>
+	<!--
+		Base style for all text containing views
+	-->
+	<style name="mpp_text">
+		<item name="android:textSize">18sp</item>
+		<item name="android:textColor">@color/mpp_text</item>
+		<item name="android:textCursorDrawable">@null</item>
+	</style>
 
 
-    <!--
-        List item style (whole object)
-        Note: you should not inherit from this style but use at as is
-        If you want to customize list item contents use children of 'list_item_block'
-    -->
-    <style name="mpp_list_item" parent="mpp_text">
-        <!-- selected state -->
-        <item name="android:background">@drawable/mpp_li_states</item>
+	<!--
+		List item style (whole object)
+		Note: you should not inherit from this style but use at as is
+		If you want to customize list item contents use children of 'list_item_block'
+	-->
+	<style name="mpp_list_item" parent="mpp_text">
+		<!-- selected state -->
+		<item name="android:background">@drawable/mpp_li_states</item>
 
-        <!--NOTE: separate definition in order to override them-->
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
+		<!--NOTE: separate definition in order to override them-->
+		<item name="android:paddingTop">5dp</item>
+		<item name="android:paddingBottom">5dp</item>
+		<item name="android:paddingLeft">5dp</item>
+		<item name="android:paddingRight">5dp</item>
 
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
-    <!--
-        Base style for using inside list view
-    -->
+	<!--
+		Base style for using inside list view
+	-->
 
-    <style name="mpp_list_item_block" parent="mpp_text">
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+	<style name="mpp_list_item_block" parent="mpp_text">
+		<item name="android:layout_gravity">center_vertical</item>
+		<item name="android:background">@android:color/transparent</item>
+		<item name="android:layout_marginRight">10dp</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
-    <!--
-        Block of text in list item
-    -->
+	<!--
+		Block of text in list item
+	-->
 
-    <style name="mpp_list_item_text" parent="mpp_list_item_block">
-        <item name="android:textColor">@color/mpp_list_item_text_states</item>
-        <item name="android:lines">1</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
+	<style name="mpp_list_item_text" parent="mpp_list_item_block">
+		<item name="android:textColor">@color/mpp_list_item_text_states</item>
+		<item name="android:lines">1</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:ellipsize">end</item>
+	</style>
 
-    <style name="mpp_list_item_text_secondary" parent="mpp_list_item_text">
-        <item name="android:textColor">@color/mpp_list_item_text_secondary_states</item>
-        <item name="android:textSize">14sp</item>
-    </style>
+	<style name="mpp_list_item_text_secondary" parent="mpp_list_item_text">
+		<item name="android:textColor">@color/mpp_list_item_text_secondary_states</item>
+		<item name="android:textSize">14sp</item>
+	</style>
 
-    <!--
-        Icon in list item
-    -->
+	<!--
+		Icon in list item
+	-->
 
-    <style name="mpp_list_item_icon" parent="mpp_list_item_block">
-        <item name="android:layout_width">@dimen/mpp_list_item_icon_size</item>
-        <item name="android:layout_height">@dimen/mpp_list_item_icon_size</item>
-        <item name="android:contentDescription">@string/mpp_icon</item>
-    </style>
+	<style name="mpp_list_item_icon" parent="mpp_list_item_block">
+		<item name="android:layout_width">@dimen/mpp_list_item_icon_size</item>
+		<item name="android:layout_height">@dimen/mpp_list_item_icon_size</item>
+		<item name="android:contentDescription">@string/mpp_icon</item>
+	</style>
 
-    <!--
-        Style for highlighted text in list item
-    -->
+	<!--
+		Style for highlighted text in list item
+	-->
 
-    <style name="mpp_list_item_name" parent="mpp_list_item_text">
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:lines">1</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">none</item>
-        <item name="android:scrollHorizontally">false</item>
-    </style>
+	<style name="mpp_list_item_name" parent="mpp_list_item_text">
+		<item name="android:gravity">center_vertical</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:lines">1</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:ellipsize">none</item>
+		<item name="android:scrollHorizontally">false</item>
+	</style>
 
-    <!--FILTER-->
+	<!--FILTER-->
 
-    <!--
-        Filter icon in list item
-    -->
+	<!--
+		Filter icon in list item
+	-->
 
-    <style name="mpp_list_item_filter_icon" parent="mpp_list_item_icon">
-        <item name="android:src">@drawable/mpp_li_icon_filter</item>
-    </style>
+	<style name="mpp_list_item_filter_icon" parent="mpp_list_item_icon">
+		<item name="android:src">@drawable/mpp_li_icon_filter</item>
+	</style>
 
-    <style name="mpp_list_item_filter">
-        <item name="android:background">@drawable/mpp_list_filter_background</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:imeOptions">actionSearch</item>
-    </style>
+	<style name="mpp_list_item_filter">
+		<item name="android:background">@drawable/mpp_list_filter_background</item>
+		<item name="android:paddingLeft">5dp</item>
+		<item name="android:paddingRight">5dp</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:orientation">horizontal</item>
+		<item name="android:imeOptions">actionSearch</item>
+	</style>
 
-    <style name="mpp_list_item_filter_text" parent="mpp_list_item_block">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:layout_gravity">center_vertical|left</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:hint">@string/mpp_search_hint</item>
-    </style>
+	<style name="mpp_list_item_filter_text" parent="mpp_list_item_block">
+		<item name="android:background">@android:color/transparent</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:paddingLeft">5dp</item>
+		<item name="android:layout_gravity">center_vertical|left</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:hint">@string/mpp_search_hint</item>
+	</style>
 
-    <style name="mpp_list_item_last_message_time" parent="mpp_list_item_text_secondary">
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">left</item>
-    </style>
+	<style name="mpp_list_item_last_message_time" parent="mpp_list_item_text_secondary">
+		<item name="android:singleLine">true</item>
+		<item name="android:ellipsize">end</item>
+		<item name="android:gravity">left</item>
+	</style>
 
-    <style name="mpp_list_item_message_text" parent="mpp_list_item_block">
-        <item name="android:layout_gravity">top</item>
-        <item name="android:gravity">top</item>
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:textSize">14sp</item>
-    </style>
+	<style name="mpp_list_item_message_text" parent="mpp_list_item_block">
+		<item name="android:layout_gravity">top</item>
+		<item name="android:gravity">top</item>
+		<item name="android:textColor">@color/mpp_text</item>
+		<item name="android:textSize">14sp</item>
+	</style>
 
-    <style name="mpp_list_item_message_date" parent="mpp_list_item_message_text">
-        <item name="android:lines">1</item>
-        <item name="android:maxLines">1</item>
-    </style>
+	<style name="mpp_list_item_message_date" parent="mpp_list_item_message_text">
+		<item name="android:lines">1</item>
+		<item name="android:maxLines">1</item>
+	</style>
 
-    <style name="mpp_list_item_message_text_editor" parent="mpp_list_item_message_text">
-        <item name="android:hint">@string/type_message</item>
-        <item name="android:minLines">2</item>
-    </style>
+	<style name="mpp_list_item_message_text_editor" parent="mpp_list_item_message_text">
+		<item name="android:hint">@string/type_message</item>
+		<item name="android:minLines">2</item>
+	</style>
 
-    <style name="mpp_list_item_contact_online" parent="mpp_list_item_block">
-        <item name="android:src">@drawable/mpp_li_contact_online_states</item>
-        <item name="android:layout_width">20dp</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+	<style name="mpp_list_item_contact_online" parent="mpp_list_item_block">
+		<item name="android:src">@drawable/mpp_li_contact_online_states</item>
+		<item name="android:layout_width">20dp</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
-    <style name="mpp_button">
-        <item name="android:gravity">top|left</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:focusable">true</item>
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">45dp</item>
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:textSize">15sp</item>
+	<style name="mpp_button">
+		<item name="android:gravity">top|left</item>
+		<item name="android:layout_margin">2dp</item>
+		<item name="android:focusable">true</item>
+		<item name="android:layout_width">80dp</item>
+		<item name="android:layout_height">45dp</item>
+		<item name="android:textColor">@color/mpp_text</item>
+		<item name="android:textSize">15sp</item>
 
-        <item name="android:ellipsize">none</item>
+		<item name="android:ellipsize">none</item>
 
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingRight">25dp</item>
-        <item name="android:paddingTop">5dp</item>
+		<item name="android:paddingLeft">5dp</item>
+		<item name="android:paddingBottom">0dp</item>
+		<item name="android:paddingRight">25dp</item>
+		<item name="android:paddingTop">5dp</item>
 
-        <item name="android:background">@drawable/mpp_metro_button_gray</item>
-    </style>
+		<item name="android:background">@drawable/mpp_metro_button_gray</item>
+	</style>
 
-    <style name="mpp_button_bright" parent="mpp_button">
-        <item name="android:background">@drawable/mpp_metro_button_blue</item>
-        <item name="android:textColor">@color/mpp_bg</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+	<style name="mpp_button_bright" parent="mpp_button">
+		<item name="android:background">@drawable/mpp_metro_button_blue</item>
+		<item name="android:textColor">@color/mpp_bg</item>
+		<item name="android:textStyle">bold</item>
+	</style>
 
-    <style name="mpp_form_label">
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+	<style name="mpp_form_label">
+		<item name="android:textColor">@color/mpp_text</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
-    <style name="mpp_form_textview">
-        <item name="android:textColor">@color/mpp_text</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+	<style name="mpp_form_textview">
+		<item name="android:textColor">@color/mpp_text</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
-    <style name="mpp_form_edittext" parent="mpp_form_label">
-        <item name="android:textStyle">normal</item>
-    </style>
+	<style name="mpp_form_edittext" parent="mpp_form_label">
+		<item name="android:textStyle">normal</item>
+	</style>
 
-    <style name="mpp_form_buttons">
-        <item name="android:orientation">horizontal</item>
-        <item name="android:baselineAligned">false</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+	<style name="mpp_form_buttons">
+		<item name="android:orientation">horizontal</item>
+		<item name="android:baselineAligned">false</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
-    <style name="mpp_form_button" parent="mpp_button">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-    </style>
+	<style name="mpp_form_button" parent="mpp_button">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_weight">1</item>
+	</style>
 
-    <style name="mpp_list_fragment" parent="mpp_fragment">
-        <!--NOTE: separate definition in order to override them-->
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-    </style>
+	<style name="mpp_list_fragment" parent="mpp_fragment">
+		<!--NOTE: separate definition in order to override them-->
+		<item name="android:paddingTop">0dp</item>
+		<item name="android:paddingBottom">0dp</item>
+		<item name="android:paddingLeft">0dp</item>
+		<item name="android:paddingRight">0dp</item>
+	</style>
 
-    <style name="mpp_fragment">
-        <!--NOTE: separate definition in order to override them-->
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
+	<style name="mpp_fragment">
+		<!--NOTE: separate definition in order to override them-->
+		<item name="android:paddingTop">5dp</item>
+		<item name="android:paddingBottom">5dp</item>
+		<item name="android:paddingLeft">5dp</item>
+		<item name="android:paddingRight">5dp</item>
 
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:gravity">top|center_horizontal</item>
-    </style>
+		<item name="android:orientation">vertical</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">match_parent</item>
+		<item name="android:gravity">top|center_horizontal</item>
+	</style>
 
-    <style name="mpp_fragment_icon">
-        <item name="android:layout_width">@dimen/mpp_fragment_icon_size</item>
-        <item name="android:layout_height">@dimen/mpp_fragment_icon_size</item>
-        <item name="android:contentDescription">@string/mpp_icon</item>
-    </style>
+	<style name="mpp_fragment_icon">
+		<item name="android:layout_width">@dimen/mpp_fragment_icon_size</item>
+		<item name="android:layout_height">@dimen/mpp_fragment_icon_size</item>
+		<item name="android:contentDescription">@string/mpp_icon</item>
+	</style>
 
-    <style name="mpp_fragment_title" parent="mpp_text">
-        <item name="android:textSize">@dimen/mpp_fragment_title_text_size</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+	<style name="mpp_fragment_title" parent="mpp_text">
+		<item name="android:textSize">@dimen/mpp_fragment_title_text_size</item>
+		<item name="android:gravity">center</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
 
 </resources>

@@ -18,46 +18,46 @@ import java.util.List;
  */
 public final class Chats {
 
-    private Chats() {
-        throw new AssertionError();
-    }
+	private Chats() {
+		throw new AssertionError();
+	}
 
-    @Nonnull
-    static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage message, @Nonnull User user) {
-        final String title = message != null ? message.getTitle() : null;
-        if (Strings.isEmpty(title) || title.equals(" ... ")) {
+	@Nonnull
+	static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage message, @Nonnull User user) {
+		final String title = message != null ? message.getTitle() : null;
+		if (Strings.isEmpty(title) || title.equals(" ... ")) {
 
-            if (chat.isPrivate()) {
-                return Users.getDisplayNameFor(chat.getSecondUser());
-            } else {
-                return "";
-            }
-        } else {
-            return title;
-        }
-    }
+			if (chat.isPrivate()) {
+				return Users.getDisplayNameFor(chat.getSecondUser());
+			} else {
+				return "";
+			}
+		} else {
+			return title;
+		}
+	}
 
-    @Nonnull
-    public static Chat newPrivateChat(@Nonnull Entity chat) {
-        return ChatImpl.newPrivate(chat);
-    }
+	@Nonnull
+	public static Chat newPrivateChat(@Nonnull Entity chat) {
+		return ChatImpl.newPrivate(chat);
+	}
 
-    @Nonnull
-    public static ApiChat newPrivateApiChat(@Nonnull Entity chat,
-                                            @Nonnull Collection<User> participants,
-                                            @Nonnull Collection<ChatMessage> messages) {
-        final ApiChatImpl result = ApiChatImpl.newInstance(chat, messages.size(), true);
-        for (User participant : participants) {
-            result.addParticipant(participant);
-        }
-        for (ChatMessage message : messages) {
-            result.addMessage(message);
-        }
-        return result;
-    }
+	@Nonnull
+	public static ApiChat newPrivateApiChat(@Nonnull Entity chat,
+											@Nonnull Collection<User> participants,
+											@Nonnull Collection<ChatMessage> messages) {
+		final ApiChatImpl result = ApiChatImpl.newInstance(chat, messages.size(), true);
+		for (User participant : participants) {
+			result.addParticipant(participant);
+		}
+		for (ChatMessage message : messages) {
+			result.addMessage(message);
+		}
+		return result;
+	}
 
-    @Nonnull
-    public static ApiChat newEmptyApiChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
-        return ApiChatImpl.newInstance(chat, Collections.<ChatMessage>emptyList(), participants);
-    }
+	@Nonnull
+	public static ApiChat newEmptyApiChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
+		return ApiChatImpl.newInstance(chat, Collections.<ChatMessage>emptyList(), participants);
+	}
 }

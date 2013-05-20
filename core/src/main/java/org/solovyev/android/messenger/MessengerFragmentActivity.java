@@ -33,16 +33,16 @@ import javax.annotation.Nullable;
 public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActivity {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTANTS
     *
     **********************************************************************
     */
 
-    private static final String SELECTED_NAV = "selected_nav";
+	private static final String SELECTED_NAV = "selected_nav";
 
-    protected final String TAG = this.getClass().getSimpleName();
+	protected final String TAG = this.getClass().getSimpleName();
 
     /*
     **********************************************************************
@@ -52,37 +52,37 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private UserService userService;
+	@Inject
+	@Nonnull
+	private UserService userService;
 
-    @Inject
-    @Nonnull
-    private ChatService chatService;
+	@Inject
+	@Nonnull
+	private ChatService chatService;
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
-    @Inject
-    @Nonnull
-    private MessengerMultiPaneManager multiPaneManager;
+	@Inject
+	@Nonnull
+	private MessengerMultiPaneManager multiPaneManager;
 
-    @Inject
-    @Nonnull
-    private MessengerListeners messengerListeners;
+	@Inject
+	@Nonnull
+	private MessengerListeners messengerListeners;
 
-    @Inject
-    @Nonnull
-    private UnreadMessagesCounter unreadMessagesCounter;
+	@Inject
+	@Nonnull
+	private UnreadMessagesCounter unreadMessagesCounter;
 
-    @Inject
-    @Nonnull
-    private NotificationService notificationService;
+	@Inject
+	@Nonnull
+	private NotificationService notificationService;
 
-    @Inject
-    @Nonnull
-    private EventManager eventManager;
+	@Inject
+	@Nonnull
+	private EventManager eventManager;
 
 
     /*
@@ -93,26 +93,26 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    private int layoutId;
+	private int layoutId;
 
-    private boolean showActionBarTabs = true;
+	private boolean showActionBarTabs = true;
 
-    private boolean actionBarIconAsUp = true;
+	private boolean actionBarIconAsUp = true;
 
-    @Nullable
-    private ViewGroup secondPane;
+	@Nullable
+	private ViewGroup secondPane;
 
-    @Nullable
-    private ViewGroup thirdPane;
+	@Nullable
+	private ViewGroup thirdPane;
 
-    @Nonnull
-    private final MessengerMultiPaneFragmentManager multiPaneFragmentManager;
+	@Nonnull
+	private final MessengerMultiPaneFragmentManager multiPaneFragmentManager;
 
-    @Nonnull
-    private ActivityMenu<Menu, MenuItem> menu;
+	@Nonnull
+	private ActivityMenu<Menu, MenuItem> menu;
 
-    @Nullable
-    private JEventListener<MessengerEvent> messengerEventListener;
+	@Nullable
+	private JEventListener<MessengerEvent> messengerEventListener;
 
     /*
     **********************************************************************
@@ -122,17 +122,17 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    protected MessengerFragmentActivity(int layoutId) {
-        this.layoutId = layoutId;
-        this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
-    }
+	protected MessengerFragmentActivity(int layoutId) {
+		this.layoutId = layoutId;
+		this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
+	}
 
-    protected MessengerFragmentActivity(int layoutId, boolean showActionBarTabs, boolean actionBarIconAsUp) {
-        this.layoutId = layoutId;
-        this.showActionBarTabs = showActionBarTabs;
-        this.actionBarIconAsUp = actionBarIconAsUp;
-        this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
-    }
+	protected MessengerFragmentActivity(int layoutId, boolean showActionBarTabs, boolean actionBarIconAsUp) {
+		this.layoutId = layoutId;
+		this.showActionBarTabs = showActionBarTabs;
+		this.actionBarIconAsUp = actionBarIconAsUp;
+		this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
+	}
 
     /*
     **********************************************************************
@@ -142,53 +142,53 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    @Nonnull
-    protected UserService getUserService() {
-        return userService;
-    }
+	@Nonnull
+	protected UserService getUserService() {
+		return userService;
+	}
 
-    @Nonnull
-    public ChatService getChatService() {
-        return chatService;
-    }
+	@Nonnull
+	public ChatService getChatService() {
+		return chatService;
+	}
 
-    @Nonnull
-    public EventManager getEventManager() {
-        return eventManager;
-    }
+	@Nonnull
+	public EventManager getEventManager() {
+		return eventManager;
+	}
 
-    @Nonnull
-    public RealmService getRealmService() {
-        return realmService;
-    }
+	@Nonnull
+	public RealmService getRealmService() {
+		return realmService;
+	}
 
-    @Nonnull
-    public MessengerListeners getMessengerListeners() {
-        return messengerListeners;
-    }
+	@Nonnull
+	public MessengerListeners getMessengerListeners() {
+		return messengerListeners;
+	}
 
-    @Nonnull
-    public UnreadMessagesCounter getUnreadMessagesCounter() {
-        return unreadMessagesCounter;
-    }
+	@Nonnull
+	public UnreadMessagesCounter getUnreadMessagesCounter() {
+		return unreadMessagesCounter;
+	}
 
-    @Nonnull
-    public MessengerMultiPaneManager getMultiPaneManager() {
-        return multiPaneManager;
-    }
+	@Nonnull
+	public MessengerMultiPaneManager getMultiPaneManager() {
+		return multiPaneManager;
+	}
 
-    public boolean isDualPane() {
-        return this.secondPane != null;
-    }
+	public boolean isDualPane() {
+		return this.secondPane != null;
+	}
 
-    public boolean isTriplePane() {
-        return this.thirdPane != null;
-    }
+	public boolean isTriplePane() {
+		return this.thirdPane != null;
+	}
 
-    @Nonnull
-    public MessengerMultiPaneFragmentManager getMultiPaneFragmentManager() {
-        return multiPaneFragmentManager;
-    }
+	@Nonnull
+	public MessengerMultiPaneFragmentManager getMultiPaneFragmentManager() {
+		return multiPaneFragmentManager;
+	}
 
     /*
     **********************************************************************
@@ -198,112 +198,112 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        FragmentManager.enableDebugLogging(true);
+		FragmentManager.enableDebugLogging(true);
 
-        setContentView(layoutId);
+		setContentView(layoutId);
 
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayUseLogoEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(actionBarIconAsUp);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(actionBarIconAsUp);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
 
-        if (showActionBarTabs) {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		if (showActionBarTabs) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-            addTab(MessengerPrimaryFragment.contacts);
-            addTab(MessengerPrimaryFragment.messages);
-            addTab(MessengerPrimaryFragment.realms);
-            addTab(MessengerPrimaryFragment.settings);
+			addTab(MessengerPrimaryFragment.contacts);
+			addTab(MessengerPrimaryFragment.messages);
+			addTab(MessengerPrimaryFragment.realms);
+			addTab(MessengerPrimaryFragment.settings);
 
-            int navPosition = -1;
-            if (savedInstanceState != null) {
-                navPosition = savedInstanceState.getInt(SELECTED_NAV, -1);
-            }
+			int navPosition = -1;
+			if (savedInstanceState != null) {
+				navPosition = savedInstanceState.getInt(SELECTED_NAV, -1);
+			}
 
-            if (navPosition >= 0) {
-                getSupportActionBar().setSelectedNavigationItem(navPosition);
-            }
-        }
+			if (navPosition >= 0) {
+				getSupportActionBar().setSelectedNavigationItem(navPosition);
+			}
+		}
 
-        this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
-        this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
+		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
+		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
 
-        this.menu = new MessengerMenu(new Runnable() {
-            @Override
-            public void run() {
-                if (actionBarIconAsUp) {
-                    if ( !multiPaneFragmentManager.goBackImmediately() ) {
-                        final ActionBar.Tab tab = findTabByTag(MessengerPrimaryFragment.contacts.getFragmentTag());
-                        if ( tab != null ) {
-                            tab.select();
-                        }
-                    }
-                }
-            }
-        });
+		this.menu = new MessengerMenu(new Runnable() {
+			@Override
+			public void run() {
+				if (actionBarIconAsUp) {
+					if (!multiPaneFragmentManager.goBackImmediately()) {
+						final ActionBar.Tab tab = findTabByTag(MessengerPrimaryFragment.contacts.getFragmentTag());
+						if (tab != null) {
+							tab.select();
+						}
+					}
+				}
+			}
+		});
 
-        this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
-        this.messengerListeners.addListener(messengerEventListener);
-    }
+		this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
+		this.messengerListeners.addListener(messengerEventListener);
+	}
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 
-        outState.putInt(SELECTED_NAV, getSupportActionBar().getSelectedNavigationIndex());
-    }
+		outState.putInt(SELECTED_NAV, getSupportActionBar().getSelectedNavigationIndex());
+	}
 
 
-    private void addTab(@Nonnull final MessengerPrimaryFragment messengerPrimaryFragment) {
-        final String fragmentTag = messengerPrimaryFragment.getFragmentTag();
+	private void addTab(@Nonnull final MessengerPrimaryFragment messengerPrimaryFragment) {
+		final String fragmentTag = messengerPrimaryFragment.getFragmentTag();
 
-        final ActionBar actionBar = getSupportActionBar();
-        final ActionBar.Tab tab = actionBar.newTab();
-        tab.setTag(fragmentTag);
-        tab.setText(messengerPrimaryFragment.getTitleResId());
-        tab.setTabListener(new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                emptifyNotPrimaryPanes();
-                getMultiPaneFragmentManager().setMainFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
-            }
+		final ActionBar actionBar = getSupportActionBar();
+		final ActionBar.Tab tab = actionBar.newTab();
+		tab.setTag(fragmentTag);
+		tab.setText(messengerPrimaryFragment.getTitleResId());
+		tab.setTabListener(new ActionBar.TabListener() {
+			@Override
+			public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+				emptifyNotPrimaryPanes();
+				getMultiPaneFragmentManager().setMainFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
+			}
 
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            }
+			@Override
+			public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+			}
 
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                emptifyNotPrimaryPanes();
-                // in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
-                getMultiPaneFragmentManager().setMainFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
-            }
-        });
-        actionBar.addTab(tab);
-    }
+			@Override
+			public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+				emptifyNotPrimaryPanes();
+				// in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
+				getMultiPaneFragmentManager().setMainFragment(messengerPrimaryFragment, getSupportFragmentManager(), ft);
+			}
+		});
+		actionBar.addTab(tab);
+	}
 
-    private void emptifyNotPrimaryPanes() {
-        if (isDualPane()) {
-            getMultiPaneFragmentManager().emptifySecondFragment();
-            if (isTriplePane()) {
-                getMultiPaneFragmentManager().emptifyThirdFragment();
-            }
-        }
-    }
+	private void emptifyNotPrimaryPanes() {
+		if (isDualPane()) {
+			getMultiPaneFragmentManager().emptifySecondFragment();
+			if (isTriplePane()) {
+				getMultiPaneFragmentManager().emptifyThirdFragment();
+			}
+		}
+	}
 
-    @Override
-    protected void onDestroy() {
-        if ( this.messengerEventListener != null ) {
-            this.messengerListeners.removeListener(messengerEventListener);
-        }
+	@Override
+	protected void onDestroy() {
+		if (this.messengerEventListener != null) {
+			this.messengerListeners.removeListener(messengerEventListener);
+		}
 
-        super.onDestroy();
-    }
+		super.onDestroy();
+	}
 
     /*
     **********************************************************************
@@ -313,54 +313,54 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
     **********************************************************************
     */
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return this.menu.onPrepareOptionsMenu(this, menu);
-    }
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		return this.menu.onPrepareOptionsMenu(this, menu);
+	}
 
 
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        return this.menu.onCreateOptionsMenu(this, menu);
-    }
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		return this.menu.onCreateOptionsMenu(this, menu);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return this.menu.onOptionsItemSelected(this, item);
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return this.menu.onOptionsItemSelected(this, item);
+	}
 
-    /*@Nullable*/
-    public ActionBar.Tab findTabByTag(/*@NotNull*/ String tag) {
-        final ActionBar actionBar = getSupportActionBar();
-        if ( actionBar != null ) {
-            for ( int i = 0; i < actionBar.getTabCount(); i++ ) {
-                final ActionBar.Tab tab = actionBar.getTabAt(i);
-                if ( tab != null && tag.equals(tab.getTag()) ) {
-                    return tab;
-                }
-            }
-        }
+	/*@Nullable*/
+	public ActionBar.Tab findTabByTag(/*@NotNull*/ String tag) {
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			for (int i = 0; i < actionBar.getTabCount(); i++) {
+				final ActionBar.Tab tab = actionBar.getTabAt(i);
+				if (tab != null && tag.equals(tab.getTag())) {
+					return tab;
+				}
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    private class MessengerEventListener extends AbstractJEventListener<MessengerEvent> {
+	private class MessengerEventListener extends AbstractJEventListener<MessengerEvent> {
 
-        protected MessengerEventListener() {
-            super(MessengerEvent.class);
-        }
+		protected MessengerEventListener() {
+			super(MessengerEvent.class);
+		}
 
-        @Override
-        public void onEvent(@Nonnull MessengerEvent event) {
-            switch (event.getType()) {
-                case unread_messages_count_changed:
-                    invalidateOptionsMenu();
-                    break;
-                case notification_removed:
-                case notification_added:
-                    invalidateOptionsMenu();
-                    break;
-            }
-        }
-    }
+		@Override
+		public void onEvent(@Nonnull MessengerEvent event) {
+			switch (event.getType()) {
+				case unread_messages_count_changed:
+					invalidateOptionsMenu();
+					break;
+				case notification_removed:
+				case notification_added:
+					invalidateOptionsMenu();
+					break;
+			}
+		}
+	}
 }

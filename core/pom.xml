@@ -1,202 +1,201 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>org.solovyev.android.messenger</groupId>
-        <artifactId>android-messenger</artifactId>
-        <version>1.0</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>org.solovyev.android.messenger</groupId>
+		<artifactId>android-messenger</artifactId>
+		<version>1.0</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
 
-    <packaging>apklib</packaging>
+	<packaging>apklib</packaging>
 
-    <artifactId>android-messenger-core</artifactId>
-    <name>Android Messenger Core</name>
-    <version>1.0</version>
+	<artifactId>android-messenger-core</artifactId>
+	<name>Android Messenger Core</name>
+	<version>1.0</version>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 
-    <dependencies>
+	<dependencies>
 
-        <!-- OWN -->
+		<!-- OWN -->
 
-        <dependency>
-            <groupId>org.solovyev</groupId>
-            <artifactId>common-core</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev</groupId>
+			<artifactId>common-core</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev</groupId>
-            <artifactId>common-msg</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev</groupId>
+			<artifactId>common-msg</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev</groupId>
-            <artifactId>common-core-jodatime</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev</groupId>
+			<artifactId>common-core-jodatime</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-ads</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-ads</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-http</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-http</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-views</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-views</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-sherlock</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-sherlock</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-networks</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-networks</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-fragments</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-fragments</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>org.solovyev.android</groupId>
-            <artifactId>android-common-tasks</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-tasks</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <!-- OTHER -->
+		<!-- OTHER -->
 
-        <!-- Pull-to-Refresh -->
-        <dependency>
-            <groupId>com.github.handmark.pulltorefresh</groupId>
-            <artifactId>pulltorefresh-library</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<!-- Pull-to-Refresh -->
+		<dependency>
+			<groupId>com.github.handmark.pulltorefresh</groupId>
+			<artifactId>pulltorefresh-library</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>com.actionbarsherlock</groupId>
-            <artifactId>library</artifactId>
-            <type>apklib</type>
-        </dependency>
+		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
+			<artifactId>library</artifactId>
+			<type>apklib</type>
+		</dependency>
 
-        <dependency>
-            <groupId>org.roboguice</groupId>
-            <artifactId>roboguice</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.roboguice</groupId>
+			<artifactId>roboguice</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>com.github.rtyley</groupId>
-            <artifactId>roboguice-sherlock</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.github.rtyley</groupId>
+			<artifactId>roboguice-sherlock</artifactId>
+		</dependency>
 
-        <!--  Gson: Java to Json conversion -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
+		<!--  Gson: Java to Json conversion -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
 
-        <!-- Joda time -->
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
+		<!-- Joda time -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>annotations</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
 
-        <!--OTHER-->
-        <dependency>
-            <groupId>ch.acra</groupId>
-            <artifactId>acra</artifactId>
-            <version>4.3.0</version>
-        </dependency>
+		<!--OTHER-->
+		<dependency>
+			<groupId>ch.acra</groupId>
+			<artifactId>acra</artifactId>
+			<version>4.3.0</version>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 
-    <build>
+	<build>
 
-        <extensions>
-            <extension>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>android-maven-plugin</artifactId>
-                <version>3.5.1</version>
-            </extension>
-        </extensions>
+		<extensions>
+			<extension>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<version>3.5.1</version>
+			</extension>
+		</extensions>
 
-    </build>
+	</build>
 
-    <profiles>
-        <!-- runs emma coverage tool -->
-        <profile>
-            <id>with-tests</id>
+	<profiles>
+		<!-- runs emma coverage tool -->
+		<profile>
+			<id>with-tests</id>
 
-            <properties>
-                <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-                <sonar.emma.reportPath>${project.build.directory}/emma/</sonar.emma.reportPath>
-                <sonar.surefire.reportsPath>app-test/target/surefire-reports</sonar.surefire.reportsPath>
-                <sonar.core.codeCoveragePlugin>emma</sonar.core.codeCoveragePlugin>
-            </properties>
+			<properties>
+				<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+				<sonar.emma.reportPath>${project.build.directory}/emma/</sonar.emma.reportPath>
+				<sonar.surefire.reportsPath>app-test/target/surefire-reports</sonar.surefire.reportsPath>
+				<sonar.core.codeCoveragePlugin>emma</sonar.core.codeCoveragePlugin>
+			</properties>
 
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                        <artifactId>android-maven-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <configuration>
-                            <!-- emma start -->
-                            <emma>
-                                <enable>true</enable>
-                                <classFolders>${project.basedir}/target/classes/</classFolders>
-                                <outputMetaFile>${project.basedir}/target/emma/coverage.em</outputMetaFile>
-                            </emma>
-                            <!-- emma stop -->
-                            <dex>
-                                <noLocals>true</noLocals> <!--  must be set for emma -->
-                            </dex>
-                        </configuration>
-                        <extensions>true</extensions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
+						<version>3.5.1</version>
+						<configuration>
+							<!-- emma start -->
+							<emma>
+								<enable>true</enable>
+								<classFolders>${project.basedir}/target/classes/</classFolders>
+								<outputMetaFile>${project.basedir}/target/emma/coverage.em</outputMetaFile>
+							</emma>
+							<!-- emma stop -->
+							<dex>
+								<noLocals>true</noLocals>
+								<!--  must be set for emma -->
+							</dex>
+						</configuration>
+						<extensions>true</extensions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 
 </project>

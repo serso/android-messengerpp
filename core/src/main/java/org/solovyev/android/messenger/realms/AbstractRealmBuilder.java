@@ -7,52 +7,52 @@ import javax.annotation.Nullable;
 
 public abstract class AbstractRealmBuilder<C extends RealmConfiguration> implements RealmBuilder {
 
-    @Nonnull
-    private RealmDef realmDef;
+	@Nonnull
+	private RealmDef realmDef;
 
-    @Nullable
-    private Realm editedRealm;
+	@Nullable
+	private Realm editedRealm;
 
-    @Nonnull
-    private C configuration;
+	@Nonnull
+	private C configuration;
 
-    protected AbstractRealmBuilder(@Nonnull RealmDef realmDef,
-                                   @Nullable Realm editedRealm,
-                                   @Nonnull C configuration) {
-        this.realmDef = realmDef;
-        this.editedRealm = editedRealm;
-        this.configuration = configuration;
-    }
+	protected AbstractRealmBuilder(@Nonnull RealmDef realmDef,
+								   @Nullable Realm editedRealm,
+								   @Nonnull C configuration) {
+		this.realmDef = realmDef;
+		this.editedRealm = editedRealm;
+		this.configuration = configuration;
+	}
 
-    @Nonnull
-    public C getConfiguration() {
-        return configuration;
-    }
+	@Nonnull
+	public C getConfiguration() {
+		return configuration;
+	}
 
-    @Nonnull
-    @Override
-    public final Realm build(@Nonnull Data data) {
-        final String realmId = data.getRealmId();
+	@Nonnull
+	@Override
+	public final Realm build(@Nonnull Data data) {
+		final String realmId = data.getRealmId();
 
-        final User user = getRealmUser(realmId);
+		final User user = getRealmUser(realmId);
 
-        return newRealm(realmId, user, RealmState.enabled);
-    }
+		return newRealm(realmId, user, RealmState.enabled);
+	}
 
-    @Nonnull
-    protected abstract User getRealmUser(@Nonnull String realmId);
+	@Nonnull
+	protected abstract User getRealmUser(@Nonnull String realmId);
 
-    @Nonnull
-    public RealmDef getRealmDef() {
-        return realmDef;
-    }
+	@Nonnull
+	public RealmDef getRealmDef() {
+		return realmDef;
+	}
 
-    @Nullable
-    @Override
-    public Realm getEditedRealm() {
-        return this.editedRealm;
-    }
+	@Nullable
+	@Override
+	public Realm getEditedRealm() {
+		return this.editedRealm;
+	}
 
-    @Nonnull
-    protected abstract Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state);
+	@Nonnull
+	protected abstract Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state);
 }

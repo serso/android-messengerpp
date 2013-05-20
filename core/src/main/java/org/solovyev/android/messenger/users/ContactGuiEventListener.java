@@ -19,44 +19,44 @@ import java.util.List;
  */
 public final class ContactGuiEventListener implements EventListener<ContactGuiEvent> {
 
-    @Nonnull
-    private final MessengerFragmentActivity activity;
+	@Nonnull
+	private final MessengerFragmentActivity activity;
 
-    public ContactGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
-        this.activity = activity;
-    }
+	public ContactGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+		this.activity = activity;
+	}
 
-    @Override
-    public void onEvent(@Nonnull ContactGuiEvent event) {
-        final User contact = event.getContact();
-        final ContactGuiEventType type = event.getType();
+	@Override
+	public void onEvent(@Nonnull ContactGuiEvent event) {
+		final User contact = event.getContact();
+		final ContactGuiEventType type = event.getType();
 
-        if (type == ContactGuiEventType.contact_clicked) {
+		if (type == ContactGuiEventType.contact_clicked) {
 
-            new MessengerAsyncTask<Void, Void, Chat>() {
+			new MessengerAsyncTask<Void, Void, Chat>() {
 
-                @Override
-                protected Chat doWork(@Nonnull List<Void> params) {
-                    Chat result = null;
+				@Override
+				protected Chat doWork(@Nonnull List<Void> params) {
+					Chat result = null;
 
-                    try {
-                        final User user = activity.getRealmService().getRealmById(contact.getEntity().getRealmId()).getUser();
-                        result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
-                    } catch (RealmException e) {
-                        throwException(e);
-                    }
+					try {
+						final User user = activity.getRealmService().getRealmById(contact.getEntity().getRealmId()).getUser();
+						result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
+					} catch (RealmException e) {
+						throwException(e);
+					}
 
-                    return result;
-                }
+					return result;
+				}
 
-                @Override
-                protected void onSuccessPostExecute(@Nullable Chat chat) {
-                    if (chat != null) {
-                        activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
-                    }
-                }
+				@Override
+				protected void onSuccessPostExecute(@Nullable Chat chat) {
+					if (chat != null) {
+						activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
+					}
+				}
 
-            }.execute(null, null);
-        }
-    }
+			}.execute(null, null);
+		}
+	}
 }

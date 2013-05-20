@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    style="?mpp_list_fragment">
+	style="?mpp_list_fragment">
 
-    <TextView
-        a:id="@+id/mpp_fragment_title"
-        style="?mpp_fragment_title" />
+	<TextView
+		a:id="@+id/mpp_fragment_title"
+		style="?mpp_fragment_title" />
 
-    <ListView
-        a:id="@android:id/list"
-        a:layout_height="match_parent"
-        a:layout_width="match_parent"/>
+	<ListView
+		a:id="@android:id/list"
+		a:layout_height="match_parent"
+		a:layout_width="match_parent" />
 
 </LinearLayout>

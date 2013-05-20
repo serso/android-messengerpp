@@ -20,69 +20,69 @@ import java.util.List;
 @Singleton
 public class TestRealmDef extends AbstractRealmDef {
 
-    @Nonnull
-    public static final String REALM_ID = "test";
+	@Nonnull
+	public static final String REALM_ID = "test";
 
-    public TestRealmDef() {
-        super(REALM_ID, R.string.mpp_test_realm_name, R.drawable.mpp_test_icon, TestRealmConfigurationFragment.class, TestRealmConfiguration.class, false);
-    }
+	public TestRealmDef() {
+		super(REALM_ID, R.string.mpp_test_realm_name, R.drawable.mpp_test_icon, TestRealmConfigurationFragment.class, TestRealmConfiguration.class, false);
+	}
 
-    @Nonnull
-    public RealmConnection createRealmConnection(@Nonnull Context context, @Nonnull Realm realm) {
-        return null;
-    }
+	@Nonnull
+	public RealmConnection createRealmConnection(@Nonnull Context context, @Nonnull Realm realm) {
+		return null;
+	}
 
-    @Nonnull
-    public static Entity newEntity(@Nonnull String realmEntityId) {
-       return EntityImpl.newInstance(REALM_ID, realmEntityId);
-    }
+	@Nonnull
+	public static Entity newEntity(@Nonnull String realmEntityId) {
+		return EntityImpl.newInstance(REALM_ID, realmEntityId);
+	}
 
-    @Nonnull
-    @Override
-    public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, RealmState state) {
-        return new TestRealm(realmId, this, user, (TestRealmConfiguration) configuration);
-    }
+	@Nonnull
+	@Override
+	public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, RealmState state) {
+		return new TestRealm(realmId, this, user, (TestRealmConfiguration) configuration);
+	}
 
-    @Nonnull
-    @Override
-    public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
-        return null;
-    }
+	@Nonnull
+	@Override
+	public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
+		return null;
+	}
 
-    @Nonnull
-    @Override
-    public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
-        return Collections.emptyList();
-    }
+	@Nonnull
+	@Override
+	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
+		return Collections.emptyList();
+	}
 
-    @Nonnull
-    @Override
-    public RealmIconService getRealmIconService() {
-        return new RealmIconService() {
-            @Override
-            public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
+	@Nonnull
+	@Override
+	public RealmIconService getRealmIconService() {
+		return new RealmIconService() {
+			@Override
+			public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
 
-            }
+			}
 
-            @Override
-            public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-            }
+			@Override
+			public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
+			}
 
-            @Override
-            public void fetchUsersIcons(@Nonnull List<User> users) {
-            }
+			@Override
+			public void fetchUsersIcons(@Nonnull List<User> users) {
+			}
 
-            @Override
-            public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        };
-    }
+			@Override
+			public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
+				//To change body of implemented methods use File | Settings | File Templates.
+			}
+		};
+	}
 
-    @Nullable
-    @Override
-    public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
-        return null;
-    }
+	@Nullable
+	@Override
+	public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
+		return null;
+	}
 
 }

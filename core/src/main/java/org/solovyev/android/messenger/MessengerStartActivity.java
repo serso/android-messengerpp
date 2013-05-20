@@ -24,78 +24,78 @@ import java.util.List;
  */
 public class MessengerStartActivity extends RoboActivity {
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
-    @Inject
-    @Nonnull
-    private SyncService syncService;
+	@Inject
+	@Nonnull
+	private SyncService syncService;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        final Collection<Realm> realms = realmService.getEnabledRealms();
-        // todo serso: maybe move to Application or Service?
-        // prefetch data and do synchronization
+		final Collection<Realm> realms = realmService.getEnabledRealms();
+		// todo serso: maybe move to Application or Service?
+		// prefetch data and do synchronization
 
-        boolean syncDone = true;
+		boolean syncDone = true;
 
-        for (Realm realm : realms) {
-            final User user = realm.getUser();
+		for (Realm realm : realms) {
+			final User user = realm.getUser();
 
-            if (!user.getUserSyncData().isFirstSyncDone()) {
-                syncDone = false;
-            } else {
-                // prefetch data
-                new PreloadCachedData(this).execute(user);
-            }
-        }
+			if (!user.getUserSyncData().isFirstSyncDone()) {
+				syncDone = false;
+			} else {
+				// prefetch data
+				new PreloadCachedData(this).execute(user);
+			}
+		}
 
-        if (!syncDone) {
-            // todo serso: actually synchronization must be done only for not synced realms (NOT for all as it is now)
-            // user is logged first time => sync all data
-            try {
-                syncService.syncAll(syncDone);
-            } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
-                // do not care
-            }
-        }
+		if (!syncDone) {
+			// todo serso: actually synchronization must be done only for not synced realms (NOT for all as it is now)
+			// user is logged first time => sync all data
+			try {
+				syncService.syncAll(syncDone);
+			} catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+				// do not care
+			}
+		}
 
-        // we must start service from here because Android can cache application
-        // and Application#onCreate() is never called!
-        final Intent serviceIntent = new Intent();
-        serviceIntent.setClass(this, OngoingNotificationService.class);
-        startService(serviceIntent);
+		// we must start service from here because Android can cache application
+		// and Application#onCreate() is never called!
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(this, OngoingNotificationService.class);
+		startService(serviceIntent);
 
-        MessengerMainActivity.startActivity(this);
-        this.finish();
-    }
+		MessengerMainActivity.startActivity(this);
+		this.finish();
+	}
 
-    private static final class PreloadCachedData extends MessengerAsyncTask<User, Void, Void> {
+	private static final class PreloadCachedData extends MessengerAsyncTask<User, Void, Void> {
 
-        private PreloadCachedData(@Nonnull Context context) {
-            super(context);
-        }
+		private PreloadCachedData(@Nonnull Context context) {
+			super(context);
+		}
 
-        @Override
-        protected Void doWork(@Nonnull List<User> users) {
-            Context context = getContext();
-            if (context != null) {
-                for (User user : users) {
-                    MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getEntity());
-                    MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity());
-                }
-            }
+		@Override
+		protected Void doWork(@Nonnull List<User> users) {
+			Context context = getContext();
+			if (context != null) {
+				for (User user : users) {
+					MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getEntity());
+					MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity());
+				}
+			}
 
-            return null;
-        }
+			return null;
+		}
 
-        @Override
-        protected void onSuccessPostExecute(@Nullable Void result) {
+		@Override
+		protected void onSuccessPostExecute(@Nullable Void result) {
 
-        }
-    }
+		}
+	}
 }

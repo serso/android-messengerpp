@@ -20,53 +20,53 @@ import java.util.List;
  */
 public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransaction<List<ApiChat>> {
 
-    @Nonnull
-    private static final Integer MAX_COUNT = 100;
+	@Nonnull
+	private static final Integer MAX_COUNT = 100;
 
-    @Nonnull
-    private final Integer count;
+	@Nonnull
+	private final Integer count;
 
-    @Nonnull
-    private final User user;
+	@Nonnull
+	private final User user;
 
-    private VkMessagesGetDialogsHttpTransaction(@Nonnull VkRealm realm, @Nonnull Integer count, @Nonnull User user) {
-        super(realm, "messages.getDialogs");
-        this.count = count;
-        this.user = user;
-    }
+	private VkMessagesGetDialogsHttpTransaction(@Nonnull VkRealm realm, @Nonnull Integer count, @Nonnull User user) {
+		super(realm, "messages.getDialogs");
+		this.count = count;
+		this.user = user;
+	}
 
-    @Nonnull
-    public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull User user) {
-        return new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user);
-    }
+	@Nonnull
+	public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull User user) {
+		return new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user);
+	}
 
-    @Nonnull
-    public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@Nonnull VkRealm realm, @Nonnull Integer count, @Nonnull User user) {
-        final List<VkMessagesGetDialogsHttpTransaction> result = new ArrayList<VkMessagesGetDialogsHttpTransaction>();
+	@Nonnull
+	public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@Nonnull VkRealm realm, @Nonnull Integer count, @Nonnull User user) {
+		final List<VkMessagesGetDialogsHttpTransaction> result = new ArrayList<VkMessagesGetDialogsHttpTransaction>();
 
-        for (int i = 0; i < count / MAX_COUNT; i++) {
-            result.add(new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user));
-        }
+		for (int i = 0; i < count / MAX_COUNT; i++) {
+			result.add(new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user));
+		}
 
-        if (count % MAX_COUNT != 0) {
-            result.add(new VkMessagesGetDialogsHttpTransaction(realm, count % MAX_COUNT, user));
-        }
+		if (count % MAX_COUNT != 0) {
+			result.add(new VkMessagesGetDialogsHttpTransaction(realm, count % MAX_COUNT, user));
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Nonnull
-    @Override
-    public List<NameValuePair> getRequestParameters() {
-        final List<NameValuePair> result = super.getRequestParameters();
+	@Nonnull
+	@Override
+	public List<NameValuePair> getRequestParameters() {
+		final List<NameValuePair> result = super.getRequestParameters();
 
-        result.add(new BasicNameValuePair("count", String.valueOf(count)));
+		result.add(new BasicNameValuePair("count", String.valueOf(count)));
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    protected List<ApiChat> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-        return new JsonChatConverter(user, null, null, MessengerApplication.getServiceLocator().getUserService(), getRealm()).convert(json);
-    }
+	@Override
+	protected List<ApiChat> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+		return new JsonChatConverter(user, null, null, MessengerApplication.getServiceLocator().getUserService(), getRealm()).convert(json);
+	}
 }

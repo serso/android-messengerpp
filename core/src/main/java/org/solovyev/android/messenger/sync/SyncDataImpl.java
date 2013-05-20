@@ -9,16 +9,16 @@ import javax.annotation.Nonnull;
  */
 public class SyncDataImpl implements SyncData {
 
-    @Nonnull
-    private final String realmId;
+	@Nonnull
+	private final String realmId;
 
-    public SyncDataImpl(@Nonnull String realmId) {
-        this.realmId = realmId;
-    }
+	public SyncDataImpl(@Nonnull String realmId) {
+		this.realmId = realmId;
+	}
 
-    @Nonnull
-    @Override
-    public String getRealmId() {
-        return this.realmId;
-    }
+	@Nonnull
+	@Override
+	public String getRealmId() {
+		return this.realmId;
+	}
 }

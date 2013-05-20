@@ -12,27 +12,27 @@ import javax.annotation.Nonnull;
  */
 public abstract class AbstractXmppRealmService {
 
-    @Nonnull
-    private final XmppRealm realm;
+	@Nonnull
+	private final XmppRealm realm;
 
-    @Nonnull
-    private final XmppConnectionAware connectionAware;
+	@Nonnull
+	private final XmppConnectionAware connectionAware;
 
-    protected AbstractXmppRealmService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
-        this.realm = realm;
-        this.connectionAware = connectionAware;
-    }
+	protected AbstractXmppRealmService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+		this.realm = realm;
+		this.connectionAware = connectionAware;
+	}
 
-    @Nonnull
-    public XmppRealm getRealm() {
-        return realm;
-    }
+	@Nonnull
+	public XmppRealm getRealm() {
+		return realm;
+	}
 
-    protected <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws RealmConnectionException {
-        try {
-            return connectionAware.doOnConnection(callable);
-        } catch (XMPPException e) {
-            throw new RealmConnectionException(e);
-        }
-    }
+	protected <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws RealmConnectionException {
+		try {
+			return connectionAware.doOnConnection(callable);
+		} catch (XMPPException e) {
+			throw new RealmConnectionException(e);
+		}
+	}
 }

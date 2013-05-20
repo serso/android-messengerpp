@@ -11,50 +11,50 @@ import javax.annotation.Nonnull;
  */
 public final class PreferenceGroup implements MessengerEntity {
 
-    private static final int NO_ICON = -1;
+	private static final int NO_ICON = -1;
 
-    @Nonnull
-    private final String id;
+	@Nonnull
+	private final String id;
 
-    private final int nameResId;
+	private final int nameResId;
 
-    private final int preferencesResId;
+	private final int preferencesResId;
 
-    private final int iconResId;
+	private final int iconResId;
 
-    public PreferenceGroup(@Nonnull String id, int nameResId, int preferencesResId) {
-        this.id = id;
-        this.nameResId = nameResId;
-        this.preferencesResId = preferencesResId;
-        this.iconResId = NO_ICON;
-    }
+	public PreferenceGroup(@Nonnull String id, int nameResId, int preferencesResId) {
+		this.id = id;
+		this.nameResId = nameResId;
+		this.preferencesResId = preferencesResId;
+		this.iconResId = NO_ICON;
+	}
 
-    public PreferenceGroup(@Nonnull String id, int nameResId, int preferencesResId, int iconResId) {
-        this.id = id;
-        this.nameResId = nameResId;
-        this.preferencesResId = preferencesResId;
-        this.iconResId = iconResId;
-    }
+	public PreferenceGroup(@Nonnull String id, int nameResId, int preferencesResId, int iconResId) {
+		this.id = id;
+		this.nameResId = nameResId;
+		this.preferencesResId = preferencesResId;
+		this.iconResId = iconResId;
+	}
 
-    @Nonnull
-    @Override
-    public String getId() {
-        return this.id;
-    }
+	@Nonnull
+	@Override
+	public String getId() {
+		return this.id;
+	}
 
-    public int getNameResId() {
-        return nameResId;
-    }
+	public int getNameResId() {
+		return nameResId;
+	}
 
-    public int getPreferencesResId() {
-        return preferencesResId;
-    }
+	public int getPreferencesResId() {
+		return preferencesResId;
+	}
 
-    public boolean hasIcon() {
-        return iconResId != NO_ICON;
-    }
+	public boolean hasIcon() {
+		return iconResId != NO_ICON;
+	}
 
-    public int getIconResId() {
-        return iconResId;
-    }
+	public int getIconResId() {
+		return iconResId;
+	}
 }

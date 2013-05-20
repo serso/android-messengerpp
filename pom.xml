@@ -1,379 +1,377 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.solovyev.android.messenger</groupId>
-    <artifactId>android-messenger</artifactId>
-    <version>1.0</version>
-    <name>Android Messenger</name>
-
-    <modules>
-        <module>core</module>
-        <module>realm-vk</module>
-        <module>realm-xmpp</module>
-        <module>app</module>
-        <module>app-test</module>
-    </modules>
-
-    <packaging>pom</packaging>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.version>1.0.4-SNAPSHOT</common.version>
-        <android.common.version>1.1.0-SNAPSHOT</android.common.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-
-            <!-- OWN -->
-
-            <dependency>
-                <groupId>org.solovyev.android.messenger</groupId>
-                <artifactId>android-messenger-app</artifactId>
-                <version>1.0</version>
-                <type>apk</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android.messenger</groupId>
-                <artifactId>android-messenger-app</artifactId>
-                <version>1.0</version>
-                <type>jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android.messenger</groupId>
-                <artifactId>android-messenger-core</artifactId>
-                <version>1.0</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android.messenger</groupId>
-                <artifactId>android-messenger-realm-vk</artifactId>
-                <version>1.0</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android.messenger</groupId>
-                <artifactId>android-messenger-realm-xmpp</artifactId>
-                <version>1.0</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.android</groupId>
-                <artifactId>android</artifactId>
-                <version>4.0.1.2</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.android</groupId>
-                <artifactId>support-v4</artifactId>
-                <version>r7</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.android</groupId>
-                <artifactId>android-test</artifactId>
-                <scope>provided</scope>
-                <version>4.0.1.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>1.5</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
-                <version>1.5</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.8.2</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.pivotallabs</groupId>
-                <artifactId>robolectric</artifactId>
-                <version>1.1</version>
-                <scope>test</scope>
-            </dependency>
-
-            <!--
-                FindBugs Annotations
-            -->
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>annotations</artifactId>
-                <version>2.0.1</version>
-            </dependency>
-
-            <!-- OWN -->
-
-            <dependency>
-                <groupId>org.solovyev</groupId>
-                <artifactId>common-core</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev</groupId>
-                <artifactId>common-msg</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev</groupId>
-                <artifactId>common-core-jodatime</artifactId>
-                <version>${common.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-ads</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-http</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-db</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-views</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-sherlock</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-networks</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-fragments</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.solovyev.android</groupId>
-                <artifactId>android-common-tasks</artifactId>
-                <version>${android.common.version}</version>
-                <type>apklib</type>
-            </dependency>
-
-            <!-- OTHER -->
-
-            <!-- Pull-to-Refresh -->
-            <dependency>
-                <groupId>com.github.handmark.pulltorefresh</groupId>
-                <artifactId>pulltorefresh-library</artifactId>
-                <version>1.3.0</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.actionbarsherlock</groupId>
-                <artifactId>library</artifactId>
-                <version>4.2.0</version>
-                <type>apklib</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.roboguice</groupId>
-                <artifactId>roboguice</artifactId>
-                <version>2.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.rtyley</groupId>
-                <artifactId>roboguice-sherlock</artifactId>
-                <version>1.5-SNAPSHOT</version>
-            </dependency>
-
-            <!--  Gson: Java to Json conversion -->
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.2.1</version>
-            </dependency>
-
-            <!-- Joda time -->
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>2.1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>11.0.2</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.google.code.findbugs</groupId>
-                        <artifactId>jsr305</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-        </dependencies>
-
-    </dependencyManagement>
-
-    <build>
-
-        <plugins>
-
-            <plugin>
-                <groupId>com.electriccloud</groupId>
-                <artifactId>javac2-maven-plugin</artifactId>
-                <version>1.0.2</version>
-                <executions>
-                    <execution>
-                        <id>instrument-notnull-src</id>
-                        <!--compile phase instead of process-classes because of proguard.
-                            @NotNull instrumentation will be done now after compilation and before proguard-->
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>instrument</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>instrument-notnull-test</id>
-                        <phase>process-test-classes</phase>
-                        <goals>
-                            <goal>testInstrument</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <tagNameFormat>release-@{project.version}</tagNameFormat>
-                </configuration>
-            </plugin>
-
-        </plugins>
-
-        <pluginManagement>
-            <plugins>
-
-                <plugin>
-                    <artifactId>maven-jarsigner-plugin</artifactId>
-                    <version>1.2</version>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.4.3</version>
-                    <configuration>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                    <artifactId>android-maven-plugin</artifactId>
-                    <version>3.5.1</version>
-                    <configuration>
-
-                        <sourceDirectories>
-                            <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-                        </sourceDirectories>
-
-                        <sdk>
-                            <platform>15</platform>
-                        </sdk>
-
-                        <zipalign>
-                            <verbose>true</verbose>
-                        </zipalign>
-
-                        <undeployBeforeDeploy>true</undeployBeforeDeploy>
-
-                    </configuration>
-
-                </plugin>
-
-                <plugin>
-                    <groupId>com.pyx4me</groupId>
-                    <artifactId>proguard-maven-plugin</artifactId>
-                    <version>2.0.4</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.5</version>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <profiles>
-
-        <profile>
-            <!-- profile which runs the instrumentation tests -->
-            <id>with-tests</id>
-
-        </profile>
-
-        <profile>
-            <!-- the release profile does sign, proguard, zipalign  -->
-            <id>release</id>
-            <!-- via this activation the profile is automatically used when the release is done with the maven release
-            plugin -->
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
-        </profile>
-    </profiles>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.solovyev.android.messenger</groupId>
+	<artifactId>android-messenger</artifactId>
+	<version>1.0</version>
+	<name>Android Messenger</name>
+
+	<modules>
+		<module>core</module>
+		<module>realm-vk</module>
+		<module>realm-xmpp</module>
+		<module>app</module>
+		<module>app-test</module>
+	</modules>
+
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<common.version>1.0.4-SNAPSHOT</common.version>
+		<android.common.version>1.1.0-SNAPSHOT</android.common.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- OWN -->
+
+			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-app</artifactId>
+				<version>1.0</version>
+				<type>apk</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-app</artifactId>
+				<version>1.0</version>
+				<type>jar</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-core</artifactId>
+				<version>1.0</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-realm-vk</artifactId>
+				<version>1.0</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-realm-xmpp</artifactId>
+				<version>1.0</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.android</groupId>
+				<artifactId>android</artifactId>
+				<version>4.0.1.2</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.android</groupId>
+				<artifactId>support-v4</artifactId>
+				<version>r7</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.android</groupId>
+				<artifactId>android-test</artifactId>
+				<scope>provided</scope>
+				<version>4.0.1.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-module-junit4</artifactId>
+				<version>1.5</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-api-mockito</artifactId>
+				<version>1.5</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.2</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.pivotallabs</groupId>
+				<artifactId>robolectric</artifactId>
+				<version>1.1</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!--
+				FindBugs Annotations
+			-->
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>annotations</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+
+			<!-- OWN -->
+
+			<dependency>
+				<groupId>org.solovyev</groupId>
+				<artifactId>common-core</artifactId>
+				<version>${common.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev</groupId>
+				<artifactId>common-msg</artifactId>
+				<version>${common.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev</groupId>
+				<artifactId>common-core-jodatime</artifactId>
+				<version>${common.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-ads</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-http</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-db</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-views</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-sherlock</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-networks</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-fragments</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-tasks</artifactId>
+				<version>${android.common.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<!-- OTHER -->
+
+			<!-- Pull-to-Refresh -->
+			<dependency>
+				<groupId>com.github.handmark.pulltorefresh</groupId>
+				<artifactId>pulltorefresh-library</artifactId>
+				<version>1.3.0</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>com.actionbarsherlock</groupId>
+				<artifactId>library</artifactId>
+				<version>4.2.0</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.roboguice</groupId>
+				<artifactId>roboguice</artifactId>
+				<version>2.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.rtyley</groupId>
+				<artifactId>roboguice-sherlock</artifactId>
+				<version>1.5-SNAPSHOT</version>
+			</dependency>
+
+			<!--  Gson: Java to Json conversion -->
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>2.2.1</version>
+			</dependency>
+
+			<!-- Joda time -->
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>2.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>11.0.2</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.code.findbugs</groupId>
+						<artifactId>jsr305</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
+
+	<build>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.solovyev.external.com.electriccloud</groupId>
+				<artifactId>org.solovyev.external.javac2-maven-plugin</artifactId>
+				<version>1.0.3</version>
+				<executions>
+					<execution>
+						<id>instrument-notnull-src</id>
+						<!--compile phase instead of process-classes because of proguard.
+							@NotNull instrumentation will be done now after compilation and before proguard-->
+						<phase>compile</phase>
+						<goals>
+							<goal>instrument</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>instrument-notnull-test</id>
+						<phase>process-test-classes</phase>
+						<goals>
+							<goal>testInstrument</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<tagNameFormat>release-@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<artifactId>maven-jarsigner-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.4.3</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>3.5.1</version>
+					<configuration>
+
+						<sourceDirectories>
+							<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+						</sourceDirectories>
+
+						<sdk>
+							<platform>15</platform>
+						</sdk>
+
+						<zipalign>
+							<verbose>true</verbose>
+						</zipalign>
+
+						<undeployBeforeDeploy>true</undeployBeforeDeploy>
+
+					</configuration>
+
+				</plugin>
+
+				<plugin>
+					<groupId>com.pyx4me</groupId>
+					<artifactId>proguard-maven-plugin</artifactId>
+					<version>2.0.4</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.5</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<profiles>
+
+		<profile>
+			<!-- profile which runs the instrumentation tests -->
+			<id>with-tests</id>
+
+		</profile>
+
+		<profile>
+			<!-- the release profile does sign, proguard, zipalign  -->
+			<id>release</id>
+			<!-- via this activation the profile is automatically used when the release is done with the maven release
+			plugin -->
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+
+		</profile>
+	</profiles>
 
 
 </project>

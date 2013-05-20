@@ -2,11 +2,11 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.util.Log;
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import roboguice.RoboGuice;
 
+import javax.annotation.Nonnull;
 import java.lang.ref.WeakReference;
 import java.util.TimerTask;
 
@@ -17,29 +17,29 @@ import java.util.TimerTask;
  */
 public class SyncTimerTask extends TimerTask {
 
-    @Nonnull
-    private final WeakReference<Context> contextRef;
+	@Nonnull
+	private final WeakReference<Context> contextRef;
 
-    public SyncTimerTask(@Nonnull Context context) {
-        this.contextRef = new WeakReference<Context>(context);
-    }
+	public SyncTimerTask(@Nonnull Context context) {
+		this.contextRef = new WeakReference<Context>(context);
+	}
 
-    @Override
-    public void run() {
-        final Context context = this.contextRef.get();
-        if (context != null) {
-            for (RealmDef realm : RoboGuice.getInjector(context).getInstance(RealmService.class).getRealmDefs()) {
-                final SyncData syncData = new SyncDataImpl(realm.getId());
+	@Override
+	public void run() {
+		final Context context = this.contextRef.get();
+		if (context != null) {
+			for (RealmDef realm : RoboGuice.getInjector(context).getInstance(RealmService.class).getRealmDefs()) {
+				final SyncData syncData = new SyncDataImpl(realm.getId());
 
-                for (SyncTask syncTask : SyncTask.values()) {
-                    if (syncTask.isTime(syncData)) {
-                        Log.i("SyncTask", "Sync task started: " + syncTask);
-                        syncTask.doTask(syncData);
-                        Log.i("SyncTask", "Sync task ended: " + syncTask);
-                    }
-                }
+				for (SyncTask syncTask : SyncTask.values()) {
+					if (syncTask.isTime(syncData)) {
+						Log.i("SyncTask", "Sync task started: " + syncTask);
+						syncTask.doTask(syncData);
+						Log.i("SyncTask", "Sync task ended: " + syncTask);
+					}
+				}
 
-            }
-        }
-    }
+			}
+		}
+	}
 }

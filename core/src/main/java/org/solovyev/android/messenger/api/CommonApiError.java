@@ -2,10 +2,11 @@ package org.solovyev.android.messenger.api;
 
 import android.os.Parcel;
 import com.google.gson.Gson;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -14,106 +15,106 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
  */
 public class CommonApiError implements ApiError {
 
-    @Nonnull
-    private String errorId;
+	@Nonnull
+	private String errorId;
 
-    @Nullable
-    private String errorDescription;
+	@Nullable
+	private String errorDescription;
 
-    @Nullable
-    private Captcha captcha;
+	@Nullable
+	private Captcha captcha;
 
-    @Nonnull
-    public static CommonApiError newInstance(@Nonnull String errorId, @Nullable String errorDescription) {
-        final CommonApiError result = new CommonApiError();
+	@Nonnull
+	public static CommonApiError newInstance(@Nonnull String errorId, @Nullable String errorDescription) {
+		final CommonApiError result = new CommonApiError();
 
-        result.errorId = errorId;
-        result.errorDescription = errorDescription;
+		result.errorId = errorId;
+		result.errorDescription = errorDescription;
 
-        return result;
-    }
+		return result;
+	}
 
-    @Nonnull
-    public static CommonApiError fromJson(@Nonnull String json) throws IllegalJsonException {
-        final Gson gson = new Gson();
-        final CommonErrorJson commonJsonError = gson.fromJson(json, CommonErrorJson.class);
-        if (commonJsonError.error == null) {
-            throw new IllegalJsonException();
-        }
-        return fromJson(commonJsonError);
-    }
+	@Nonnull
+	public static CommonApiError fromJson(@Nonnull String json) throws IllegalJsonException {
+		final Gson gson = new Gson();
+		final CommonErrorJson commonJsonError = gson.fromJson(json, CommonErrorJson.class);
+		if (commonJsonError.error == null) {
+			throw new IllegalJsonException();
+		}
+		return fromJson(commonJsonError);
+	}
 
-    @Nonnull
-    private static CommonApiError fromJson(@Nonnull CommonErrorJson json) throws IllegalJsonException {
-        final CommonApiError result = new CommonApiError();
+	@Nonnull
+	private static CommonApiError fromJson(@Nonnull CommonErrorJson json) throws IllegalJsonException {
+		final CommonApiError result = new CommonApiError();
 
-        result.errorId = json.error;
-        result.errorDescription = json.error_description;
-        if (json.captcha_sid != null) {
-            if (json.captcha_img == null) {
-                throw new IllegalJsonException();
-            }
-            result.captcha = new Captcha(json.captcha_sid, json.captcha_img);
-        }
+		result.errorId = json.error;
+		result.errorDescription = json.error_description;
+		if (json.captcha_sid != null) {
+			if (json.captcha_img == null) {
+				throw new IllegalJsonException();
+			}
+			result.captcha = new Captcha(json.captcha_sid, json.captcha_img);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Nonnull
-    public static CommonApiError fromParcel(@Nonnull Parcel in) {
-        final CommonApiError result = new CommonApiError();
+	@Nonnull
+	public static CommonApiError fromParcel(@Nonnull Parcel in) {
+		final CommonApiError result = new CommonApiError();
 
-        result.errorId = in.readString();
-        result.errorDescription = in.readString();
-        result.captcha = in.readParcelable(Thread.currentThread().getContextClassLoader());
+		result.errorId = in.readString();
+		result.errorDescription = in.readString();
+		result.captcha = in.readParcelable(Thread.currentThread().getContextClassLoader());
 
-        return result;
-    }
+		return result;
+	}
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-    @Override
-    public void writeToParcel(Parcel out, int i) {
-        out.writeString(errorId);
-        out.writeString(errorDescription);
-        out.writeParcelable(captcha, i);
-    }
+	@Override
+	public void writeToParcel(Parcel out, int i) {
+		out.writeString(errorId);
+		out.writeString(errorDescription);
+		out.writeParcelable(captcha, i);
+	}
 
-    private static class CommonErrorJson {
+	private static class CommonErrorJson {
 
-        @Nullable
-        private String error;
+		@Nullable
+		private String error;
 
-        @Nullable
-        private String error_description;
+		@Nullable
+		private String error_description;
 
-        @Nullable
-        private String captcha_sid;
+		@Nullable
+		private String captcha_sid;
 
-        @Nullable
-        private String captcha_img;
+		@Nullable
+		private String captcha_img;
 
-    }
+	}
 
-    @Override
-    @Nonnull
-    public String getErrorId() {
-        return errorId;
-    }
+	@Override
+	@Nonnull
+	public String getErrorId() {
+		return errorId;
+	}
 
-    @Override
-    @Nullable
-    public String getErrorDescription() {
-        return errorDescription;
-    }
+	@Override
+	@Nullable
+	public String getErrorDescription() {
+		return errorDescription;
+	}
 
-    @Override
-    @Nullable
-    public Captcha getCaptcha() {
-        return captcha;
-    }
+	@Override
+	@Nullable
+	public Captcha getCaptcha() {
+		return captcha;
+	}
 }

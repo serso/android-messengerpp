@@ -11,10 +11,10 @@ import javax.annotation.Nonnull;
  */
 public interface MessengerListItem extends ListItem {
 
-    @Nonnull
-    String getId();
+	@Nonnull
+	String getId();
 
-    @Nonnull
-    CharSequence getDisplayName();
+	@Nonnull
+	CharSequence getDisplayName();
 
 }

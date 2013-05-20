@@ -37,137 +37,137 @@ import java.util.Map;
  */
 public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
-    @Nonnull
-    private final User user;
+	@Nonnull
+	private final User user;
 
-    @Nullable
-    private final String explicitChatId;
+	@Nullable
+	private final String explicitChatId;
 
-    @Nullable
-    private final String explicitUserId;
-    
-    @Nonnull
-    private final UserService userService;
+	@Nullable
+	private final String explicitUserId;
 
-    @Nonnull
-    private final Realm realm;
+	@Nonnull
+	private final UserService userService;
 
-    public JsonChatConverter(@Nonnull User user,
-                             @Nullable String explicitChatId,
-                             @Nullable String explicitUserId,
-                             @Nonnull UserService userService,
-                             @Nonnull Realm realm) {
-        this.user = user;
-        this.explicitChatId = explicitChatId;
-        this.explicitUserId = explicitUserId;
-        this.userService = userService;
-        this.realm = realm;
-    }
+	@Nonnull
+	private final Realm realm;
 
-    @Nonnull
-    @Override
-    public List<ApiChat> convert(@Nonnull String json) {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(JsonMessages.class, new JsonMessages.Adapter())
-                .registerTypeAdapter(JsonMessageTypedAttachment.class, new JsonMessageTypedAttachment.Adapter())
-                .create();
+	public JsonChatConverter(@Nonnull User user,
+							 @Nullable String explicitChatId,
+							 @Nullable String explicitUserId,
+							 @Nonnull UserService userService,
+							 @Nonnull Realm realm) {
+		this.user = user;
+		this.explicitChatId = explicitChatId;
+		this.explicitUserId = explicitUserId;
+		this.userService = userService;
+		this.realm = realm;
+	}
 
-        final JsonMessages jsonMessagesResult = gson.fromJson(json, JsonMessages.class);
+	@Nonnull
+	@Override
+	public List<ApiChat> convert(@Nonnull String json) {
+		final Gson gson = new GsonBuilder()
+				.registerTypeAdapter(JsonMessages.class, new JsonMessages.Adapter())
+				.registerTypeAdapter(JsonMessageTypedAttachment.class, new JsonMessageTypedAttachment.Adapter())
+				.create();
 
-        final List<JsonMessage> jsonMessages = jsonMessagesResult.getResponse();
+		final JsonMessages jsonMessagesResult = gson.fromJson(json, JsonMessages.class);
 
-        // key: chat id, value: chat
-        final Map<String, ApiChatImpl> chats = new HashMap<String, ApiChatImpl>();
+		final List<JsonMessage> jsonMessages = jsonMessagesResult.getResponse();
 
-        // key: id of second user, value: chat
-        final Map<String, ApiChatImpl> fakeChats = new HashMap<String, ApiChatImpl>();
+		// key: chat id, value: chat
+		final Map<String, ApiChatImpl> chats = new HashMap<String, ApiChatImpl>();
 
-        try {
-            final Splitter splitter = Splitter.on(",");
+		// key: id of second user, value: chat
+		final Map<String, ApiChatImpl> fakeChats = new HashMap<String, ApiChatImpl>();
 
-            if (!Collections.isEmpty(jsonMessages)) {
-                for (JsonMessage jsonMessage : jsonMessages) {
-                    final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, realm);
+		try {
+			final Splitter splitter = Splitter.on(",");
 
-                    final Integer apiChatId = jsonMessage.getChat_id();
-                    if (apiChatId == null && explicitChatId == null) {
+			if (!Collections.isEmpty(jsonMessages)) {
+				for (JsonMessage jsonMessage : jsonMessages) {
+					final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, realm);
 
-                        // fake chat (message from user to another without explicitly created chat)
-                        final Entity secondUser = message.getSecondUser(user.getEntity());
+					final Integer apiChatId = jsonMessage.getChat_id();
+					if (apiChatId == null && explicitChatId == null) {
 
-                        if (secondUser != null) {
-                            // vk allows to have messages sent to person self himself - we don't
-                            if (!secondUser.getRealmEntityId().equals(user.getEntity().getRealmEntityId())) {
-                                final Entity realmUser = user.getEntity();
-                                final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().getPrivateChatId(realmUser, secondUser);
+						// fake chat (message from user to another without explicitly created chat)
+						final Entity secondUser = message.getSecondUser(user.getEntity());
 
-                                ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
-                                if (chat == null) {
-                                    chat = ApiChatImpl.newInstance(realmChat, jsonMessagesResult.getCount(), true);
+						if (secondUser != null) {
+							// vk allows to have messages sent to person self himself - we don't
+							if (!secondUser.getRealmEntityId().equals(user.getEntity().getRealmEntityId())) {
+								final Entity realmUser = user.getEntity();
+								final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().getPrivateChatId(realmUser, secondUser);
 
-                                    chat.addParticipant(user);
-                                    chat.addParticipant(userService.getUserById(secondUser));
+								ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
+								if (chat == null) {
+									chat = ApiChatImpl.newInstance(realmChat, jsonMessagesResult.getCount(), true);
 
-                                    fakeChats.put(realmChat.getEntityId(), chat);
-                                }
+									chat.addParticipant(user);
+									chat.addParticipant(userService.getUserById(secondUser));
 
-                                chat.addMessage(message);
-                            }
-                        } else {
-                            Log.e(this.getClass().getSimpleName(), "Recipient is null for message " + message);
-                        }
+									fakeChats.put(realmChat.getEntityId(), chat);
+								}
 
-                    } else {
-                        // real chat
-                        final String realmChatId = apiChatId == null ? explicitChatId : String.valueOf(apiChatId);
+								chat.addMessage(message);
+							}
+						} else {
+							Log.e(this.getClass().getSimpleName(), "Recipient is null for message " + message);
+						}
 
-                        ApiChatImpl chat = chats.get(realmChatId);
-                        if (chat == null) {
-                            // create new chat object
-                            chat = ApiChatImpl.newInstance(realm.newChatEntity(realmChatId), jsonMessagesResult.getCount(), false);
+					} else {
+						// real chat
+						final String realmChatId = apiChatId == null ? explicitChatId : String.valueOf(apiChatId);
 
-                            final String participantsStr = jsonMessage.getChat_active();
-                            if (!Strings.isEmpty(participantsStr)) {
-                                for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
-                                    chat.addParticipant(userService.getUserById(realm.newUserEntity(String.valueOf(participantId))));
-                                }
-                            }
+						ApiChatImpl chat = chats.get(realmChatId);
+						if (chat == null) {
+							// create new chat object
+							chat = ApiChatImpl.newInstance(realm.newChatEntity(realmChatId), jsonMessagesResult.getCount(), false);
 
-                            chat.addParticipant(user);
+							final String participantsStr = jsonMessage.getChat_active();
+							if (!Strings.isEmpty(participantsStr)) {
+								for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
+									chat.addParticipant(userService.getUserById(realm.newUserEntity(String.valueOf(participantId))));
+								}
+							}
 
-                            chats.put(realmChatId, chat);
-                        }
+							chat.addParticipant(user);
 
-                        chat.addMessage(message);
-                    }
-                }
-            }
-        } catch (IllegalJsonException e) {
-            throw new IllegalJsonRuntimeException(e);
-        }
+							chats.put(realmChatId, chat);
+						}
 
-        final List<ApiChat> result = new ArrayList<ApiChat>(chats.size() + fakeChats.size());
-        result.addAll(chats.values());
-        result.addAll(fakeChats.values());
-        return result;
-    }
+						chat.addMessage(message);
+					}
+				}
+			}
+		} catch (IllegalJsonException e) {
+			throw new IllegalJsonRuntimeException(e);
+		}
 
-    private static class ToIntFunction implements Function<String, Integer> {
+		final List<ApiChat> result = new ArrayList<ApiChat>(chats.size() + fakeChats.size());
+		result.addAll(chats.values());
+		result.addAll(fakeChats.values());
+		return result;
+	}
 
-        @Nonnull
-        private static final ToIntFunction instance = new ToIntFunction();
+	private static class ToIntFunction implements Function<String, Integer> {
 
-        private ToIntFunction() {
-        }
+		@Nonnull
+		private static final ToIntFunction instance = new ToIntFunction();
 
-        @Nonnull
-        public static ToIntFunction getInstance() {
-            return instance;
-        }
+		private ToIntFunction() {
+		}
 
-        @Override
-        public Integer apply(@Nullable String input) {
-            return Integer.valueOf(input);
-        }
-    }
+		@Nonnull
+		public static ToIntFunction getInstance() {
+			return instance;
+		}
+
+		@Override
+		public Integer apply(@Nullable String input) {
+			return Integer.valueOf(input);
+		}
+	}
 }

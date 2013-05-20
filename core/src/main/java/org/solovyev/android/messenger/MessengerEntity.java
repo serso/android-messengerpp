@@ -10,10 +10,10 @@ import javax.annotation.Nonnull;
 
 public interface MessengerEntity {
 
-    @Nonnull
-    String getId();
+	@Nonnull
+	String getId();
 
-    boolean equals(Object o);
+	boolean equals(Object o);
 
-    int hashCode();
+	int hashCode();
 }

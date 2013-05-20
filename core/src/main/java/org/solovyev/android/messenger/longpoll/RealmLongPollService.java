@@ -11,10 +11,10 @@ import javax.annotation.Nullable;
  */
 public interface RealmLongPollService {
 
-    @Nullable
-    Object startLongPolling() throws RealmException;
+	@Nullable
+	Object startLongPolling() throws RealmException;
 
 
-    @Nullable
-    LongPollResult waitForResult(@Nullable Object longPollingData) throws RealmException;
+	@Nullable
+	LongPollResult waitForResult(@Nullable Object longPollingData) throws RealmException;
 }

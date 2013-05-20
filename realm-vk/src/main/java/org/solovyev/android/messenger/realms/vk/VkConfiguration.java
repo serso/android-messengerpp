@@ -9,9 +9,9 @@ import javax.annotation.Nonnull;
  */
 public interface VkConfiguration {
 
-    @Nonnull
-    String getClientId();
+	@Nonnull
+	String getClientId();
 
-    @Nonnull
-    String getClientSecret();
+	@Nonnull
+	String getClientSecret();
 }

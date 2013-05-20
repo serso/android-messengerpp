@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  */
 public final class GuiEvent extends AbstractTypedJEvent<Integer, GuiEventType> {
 
-    public GuiEvent(@Nonnull GuiEventType type, @Nullable Object data) {
-        super(0, type, data);
-    }
+	public GuiEvent(@Nonnull GuiEventType type, @Nullable Object data) {
+		super(0, type, data);
+	}
 }

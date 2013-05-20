@@ -18,28 +18,28 @@ import javax.annotation.Nonnull;
  */
 final class RealmSaverListener extends MessengerContextCallback<Activity, Realm> {
 
-    private RealmSaverListener() {
-    }
+	private RealmSaverListener() {
+	}
 
-    @Nonnull
-    static FutureCallback<Realm> newInstance(@Nonnull Activity activity) {
-        return Tasks.toUiThreadFutureCallback(activity, new RealmSaverListener());
-    }
+	@Nonnull
+	static FutureCallback<Realm> newInstance(@Nonnull Activity activity) {
+		return Tasks.toUiThreadFutureCallback(activity, new RealmSaverListener());
+	}
 
-    @Override
-    public void onSuccess(@Nonnull Activity context, Realm realm) {
-        final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-        eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.saved));
-    }
+	@Override
+	public void onSuccess(@Nonnull Activity context, Realm realm) {
+		final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.saved));
+	}
 
-    @Override
-    public void onFailure(@Nonnull Activity context, Throwable e) {
-        if (e instanceof InvalidCredentialsException) {
-            Toast.makeText(context, "Invalid credentials!", Toast.LENGTH_SHORT).show();
-        } else if (e instanceof RealmAlreadyExistsException) {
-            Toast.makeText(context, "Same account already configured!", Toast.LENGTH_SHORT).show();
-        } else {
-            super.onFailure(context, e);
-        }
-    }
+	@Override
+	public void onFailure(@Nonnull Activity context, Throwable e) {
+		if (e instanceof InvalidCredentialsException) {
+			Toast.makeText(context, "Invalid credentials!", Toast.LENGTH_SHORT).show();
+		} else if (e instanceof RealmAlreadyExistsException) {
+			Toast.makeText(context, "Same account already configured!", Toast.LENGTH_SHORT).show();
+		} else {
+			super.onFailure(context, e);
+		}
+	}
 }

@@ -9,22 +9,22 @@ import javax.annotation.Nullable;
  */
 public class JsonMessageAttachmentAudio implements JsonMessageAttachment {
 
-    @Nullable
-    private Integer aid;
+	@Nullable
+	private Integer aid;
 
-    @Nullable
-    private Integer owner_id;
+	@Nullable
+	private Integer owner_id;
 
-    @Nullable
-    private String performer;
+	@Nullable
+	private String performer;
 
-    @Nullable
-    private String title;
+	@Nullable
+	private String title;
 
-    @Nullable
-    private Integer duration;
+	@Nullable
+	private Integer duration;
 
-    @Nullable
-    private String url;
+	@Nullable
+	private String url;
 
 }

@@ -7,7 +7,7 @@ package org.solovyev.android.messenger.realms;
  */
 public final class Realms {
 
-    private Realms() {
-        throw new AssertionError();
-    }
+	private Realms() {
+		throw new AssertionError();
+	}
 }

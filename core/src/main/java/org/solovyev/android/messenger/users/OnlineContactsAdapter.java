@@ -12,37 +12,37 @@ import javax.annotation.Nonnull;
  */
 public class OnlineContactsAdapter extends AbstractContactsAdapter {
 
-    public OnlineContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
-        super(context);
-    }
+	public OnlineContactsAdapter(@Nonnull Context context, @Nonnull RealmService realmService) {
+		super(context);
+	}
 
-    @Override
-    public void onEvent(@Nonnull UserEvent event) {
-        super.onEvent(event);
+	@Override
+	public void onEvent(@Nonnull UserEvent event) {
+		super.onEvent(event);
 
-        if (event.isOfType(UserEventType.contact_offline)) {
-            final User offlineContact = event.getDataAsUser();
-            removeListItem(offlineContact);
-        }
+		if (event.isOfType(UserEventType.contact_offline)) {
+			final User offlineContact = event.getDataAsUser();
+			removeListItem(offlineContact);
+		}
 
-        if (event.isOfType(UserEventType.contact_online)) {
-            final User onlineContact = event.getDataAsUser();
-            final ContactListItem listItem = findInAllElements(onlineContact);
-            if (listItem == null) {
-                addListItem(onlineContact);
-            }
-        }
-    }
+		if (event.isOfType(UserEventType.contact_online)) {
+			final User onlineContact = event.getDataAsUser();
+			final ContactListItem listItem = findInAllElements(onlineContact);
+			if (listItem == null) {
+				addListItem(onlineContact);
+			}
+		}
+	}
 
-    @Override
-    protected void onListItemChanged(@Nonnull User contact) {
-        if (!contact.isOnline()) {
-            removeListItem(contact);
-        }
-    }
+	@Override
+	protected void onListItemChanged(@Nonnull User contact) {
+		if (!contact.isOnline()) {
+			removeListItem(contact);
+		}
+	}
 
-    @Override
-    protected boolean canAddContact(@Nonnull User contact) {
-        return contact.isOnline();
-    }
+	@Override
+	protected boolean canAddContact(@Nonnull User contact) {
+		return contact.isOnline();
+	}
 }

@@ -16,35 +16,35 @@ import java.util.List;
  */
 public interface Chat extends MessengerEntity {
 
-    String PROPERTY_PRIVATE = "private";
+	String PROPERTY_PRIVATE = "private";
 
-    @Nonnull
-    Entity getEntity();
+	@Nonnull
+	Entity getEntity();
 
-    boolean isPrivate();
+	boolean isPrivate();
 
-    // must be called only after isPrivate() check
-    @Nonnull
-    Entity getSecondUser();
+	// must be called only after isPrivate() check
+	@Nonnull
+	Entity getSecondUser();
 
-    @Nullable
-    DateTime getLastMessagesSyncDate();
+	@Nullable
+	DateTime getLastMessagesSyncDate();
 
-    @Nonnull
-    List<AProperty> getProperties();
+	@Nonnull
+	List<AProperty> getProperties();
 
-    @Nonnull
-    Chat updateMessagesSyncDate();
+	@Nonnull
+	Chat updateMessagesSyncDate();
 
-    /**
-     * Method creates copy of this object with new realm id
-     *
-     * @param realmChat new chat id
-     * @return chat copy with updated properties
-     */
-    @Nonnull
-    Chat copyWithNew(@Nonnull Entity realmChat);
+	/**
+	 * Method creates copy of this object with new realm id
+	 *
+	 * @param realmChat new chat id
+	 * @return chat copy with updated properties
+	 */
+	@Nonnull
+	Chat copyWithNew(@Nonnull Entity realmChat);
 
-    @Nullable
-    String getPropertyValueByName(@Nonnull String name);
+	@Nullable
+	String getPropertyValueByName(@Nonnull String name);
 }

@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  */
 public interface RegistrationService {
 
-    void requestVerificationCode(@Nonnull String phoneNumber, @Nonnull String firstName, @Nonnull String lastName);
+	void requestVerificationCode(@Nonnull String phoneNumber, @Nonnull String firstName, @Nonnull String lastName);
 
-    boolean checkVerificationCode(@Nonnull String verificationCode);
+	boolean checkVerificationCode(@Nonnull String verificationCode);
 }

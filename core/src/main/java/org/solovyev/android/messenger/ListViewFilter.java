@@ -25,156 +25,156 @@ import javax.annotation.Nullable;
  */
 public class ListViewFilter {
 
-    /*
-    **********************************************************************
-    *
-    *                           CONSTANTS
-    *
-    **********************************************************************
-    */
-    @Nonnull
-    private static final String FILTER = "filter";
+	/*
+	**********************************************************************
+	*
+	*                           CONSTANTS
+	*
+	**********************************************************************
+	*/
+	@Nonnull
+	private static final String FILTER = "filter";
 
-    @Nonnull
-    private static final String TAG = "ListViewFilter";
+	@Nonnull
+	private static final String TAG = "ListViewFilter";
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           FIELDS
     *
     **********************************************************************
     */
 
-    @Nonnull
-    private final ListFragment fragment;
+	@Nonnull
+	private final ListFragment fragment;
 
-    @Nonnull
-    private final FilterableListView filterableListView;
+	@Nonnull
+	private final FilterableListView filterableListView;
 
-    /**
-     * <var>filterEditText</var> might be null if view has not been created yet (i.e. {@link ListViewFilter#createView(android.os.Bundle)} method has not been called )
-     */
-    private EditText filterEditText;
+	/**
+	 * <var>filterEditText</var> might be null if view has not been created yet (i.e. {@link ListViewFilter#createView(android.os.Bundle)} method has not been called )
+	 */
+	private EditText filterEditText;
 
-    public ListViewFilter(@Nonnull ListFragment fragment, @Nonnull FilterableListView filterableListView) {
-        this.fragment = fragment;
-        this.filterableListView = filterableListView;
-    }
+	public ListViewFilter(@Nonnull ListFragment fragment, @Nonnull FilterableListView filterableListView) {
+		this.fragment = fragment;
+		this.filterableListView = filterableListView;
+	}
 
-    @Nonnull
-    public View createView(@Nullable Bundle savedInstanceState) {
-        final FragmentActivity activity = fragment.getActivity();
-        if (activity != null) {
-            final ViewGroup result = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_list_filter).build(activity);
+	@Nonnull
+	public View createView(@Nullable Bundle savedInstanceState) {
+		final FragmentActivity activity = fragment.getActivity();
+		if (activity != null) {
+			final ViewGroup result = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_list_filter).build(activity);
 
-            filterEditText = (EditText) result.findViewById(R.id.mpp_filter_edittext);
-            if (savedInstanceState != null) {
-                final String filter = savedInstanceState.getString(FILTER);
-                filterEditText.setText(filter);
-            }
-            filterEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+			filterEditText = (EditText) result.findViewById(R.id.mpp_filter_edittext);
+			if (savedInstanceState != null) {
+				final String filter = savedInstanceState.getString(FILTER);
+				filterEditText.setText(filter);
+			}
+			filterEditText.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				}
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    /**
-                     *  Fragment's {@link android.support.v4.app.Fragment#restoreViewState()} is called after {@link android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)} =>
-                     *  => we need to update view visibility according to restored values
-                     */
-                    if (!Strings.isEmpty(s)) {
-                        setFilterBoxVisible(true);
-                    }
-                    filterableListView.filter(s);
-                }
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					/**
+					 *  Fragment's {@link android.support.v4.app.Fragment#restoreViewState()} is called after {@link android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)} =>
+					 *  => we need to update view visibility according to restored values
+					 */
+					if (!Strings.isEmpty(s)) {
+						setFilterBoxVisible(true);
+					}
+					filterableListView.filter(s);
+				}
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
+				@Override
+				public void afterTextChanged(Editable s) {
+				}
+			});
 
-            return result;
-        } else {
-            throw new IllegalStateException("Activity must be attached to fragment before creating filter!");
-        }
-    }
+			return result;
+		} else {
+			throw new IllegalStateException("Activity must be attached to fragment before creating filter!");
+		}
+	}
 
-    public void onViewCreated() {
-        if (Strings.isEmpty(getFilterText())) {
-            setFilterBoxVisible(false);
-        } else {
-            setFilterBoxVisible(true);
-        }
-    }
+	public void onViewCreated() {
+		if (Strings.isEmpty(getFilterText())) {
+			setFilterBoxVisible(false);
+		} else {
+			setFilterBoxVisible(true);
+		}
+	}
 
-    public void toggleView() {
-        final View view = fragment.getView();
-        final FragmentActivity activity = fragment.getActivity();
+	public void toggleView() {
+		final View view = fragment.getView();
+		final FragmentActivity activity = fragment.getActivity();
 
-        if (view != null && activity != null && filterEditText != null) {
-            final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.mpp_list_filter);
-            if (filterBox != null) {
-                int visibility = filterBox.getVisibility();
+		if (view != null && activity != null && filterEditText != null) {
+			final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.mpp_list_filter);
+			if (filterBox != null) {
+				int visibility = filterBox.getVisibility();
 
-                final InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				final InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                if (visibility != View.VISIBLE) {
-                    filterBox.setVisibility(View.VISIBLE);
-                    filterEditText.requestFocus();
+				if (visibility != View.VISIBLE) {
+					filterBox.setVisibility(View.VISIBLE);
+					filterEditText.requestFocus();
 
-                    manager.showSoftInput(filterEditText, InputMethodManager.SHOW_IMPLICIT);
+					manager.showSoftInput(filterEditText, InputMethodManager.SHOW_IMPLICIT);
 
-                } else if (visibility != View.GONE) {
-                    // if filter box is visible before hiding it clear filter query
-                    filterEditText.getText().clear();
-                    filterEditText.clearFocus();
+				} else if (visibility != View.GONE) {
+					// if filter box is visible before hiding it clear filter query
+					filterEditText.getText().clear();
+					filterEditText.clearFocus();
 
-                    manager.hideSoftInputFromWindow(filterEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+					manager.hideSoftInputFromWindow(filterEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-                    filterBox.setVisibility(View.GONE);
-                }
-            }
-        } else {
-            Log.e(TAG, "toggleView() is called when view or activity is detached from fragment!");
-        }
-    }
+					filterBox.setVisibility(View.GONE);
+				}
+			}
+		} else {
+			Log.e(TAG, "toggleView() is called when view or activity is detached from fragment!");
+		}
+	}
 
-    public void setFilterBoxVisible(boolean visible) {
-        final View view = this.fragment.getView();
-        if (view != null && filterEditText != null) {
-            final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.mpp_list_filter);
-            if (filterBox != null) {
-                setFilterBoxVisible(visible, filterBox);
-            }
-        } else {
-            Log.e(TAG, "setFilterBoxVisible(boolean) is called when view is detached from fragment!");
-        }
-    }
+	public void setFilterBoxVisible(boolean visible) {
+		final View view = this.fragment.getView();
+		if (view != null && filterEditText != null) {
+			final ViewGroup filterBox = (ViewGroup) view.findViewById(R.id.mpp_list_filter);
+			if (filterBox != null) {
+				setFilterBoxVisible(visible, filterBox);
+			}
+		} else {
+			Log.e(TAG, "setFilterBoxVisible(boolean) is called when view is detached from fragment!");
+		}
+	}
 
-    private void setFilterBoxVisible(boolean visible, @Nonnull ViewGroup filterBox) {
-        if (visible) {
-            filterBox.setVisibility(View.VISIBLE);
-        } else {
-            filterBox.setVisibility(View.GONE);
-        }
-    }
+	private void setFilterBoxVisible(boolean visible, @Nonnull ViewGroup filterBox) {
+		if (visible) {
+			filterBox.setVisibility(View.VISIBLE);
+		} else {
+			filterBox.setVisibility(View.GONE);
+		}
+	}
 
-    public void saveState(Bundle outState) {
-        if (filterEditText != null) {
-            outState.putString(FILTER, filterEditText.getText().toString());
-        }
-    }
+	public void saveState(Bundle outState) {
+		if (filterEditText != null) {
+			outState.putString(FILTER, filterEditText.getText().toString());
+		}
+	}
 
-    @Nonnull
-    public CharSequence getFilterText() {
-        if (filterEditText != null) {
-            return filterEditText.getText();
-        } else {
-            return "";
-        }
-    }
+	@Nonnull
+	public CharSequence getFilterText() {
+		if (filterEditText != null) {
+			return filterEditText.getText();
+		} else {
+			return "";
+		}
+	}
 
     /*
     **********************************************************************
@@ -184,13 +184,13 @@ public class ListViewFilter {
     **********************************************************************
     */
 
-    public static interface FilterableListView {
+	public static interface FilterableListView {
 
-        /**
-         * Method called when text in filter box is changed
-         *
-         * @param filterText new value of text in filter box (=> list view must filtered with this text)
-         */
-        void filter(@Nonnull CharSequence filterText);
-    }
+		/**
+		 * Method called when text in filter box is changed
+		 *
+		 * @param filterText new value of text in filter box (=> list view must filtered with this text)
+		 */
+		void filter(@Nonnull CharSequence filterText);
+	}
 }

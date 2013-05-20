@@ -16,52 +16,52 @@ import javax.crypto.SecretKey;
 
 public class RealmMapper implements Converter<Cursor, Realm> {
 
-    @Nullable
-    private final SecretKey secret;
+	@Nullable
+	private final SecretKey secret;
 
-    public RealmMapper(@Nullable SecretKey secret) {
-        this.secret = secret;
-    }
+	public RealmMapper(@Nullable SecretKey secret) {
+		this.secret = secret;
+	}
 
-    @Nonnull
-    @Override
-    public Realm convert(@Nonnull Cursor cursor) {
-        final String realmId = cursor.getString(0);
-        final String realmDefId = cursor.getString(1);
-        final String userId = cursor.getString(2);
-        final String configuration = cursor.getString(3);
-        final String state = cursor.getString(4);
+	@Nonnull
+	@Override
+	public Realm convert(@Nonnull Cursor cursor) {
+		final String realmId = cursor.getString(0);
+		final String realmDefId = cursor.getString(1);
+		final String userId = cursor.getString(2);
+		final String configuration = cursor.getString(3);
+		final String state = cursor.getString(4);
 
-        try {
-            final RealmDef realmDef = MessengerApplication.getServiceLocator().getRealmService().getRealmDefById(realmDefId);
-            // realm is not loaded => no way we can find user in realm services
-            final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
+		try {
+			final RealmDef realmDef = MessengerApplication.getServiceLocator().getRealmService().getRealmDefById(realmDefId);
+			// realm is not loaded => no way we can find user in realm services
+			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
 
-            final RealmConfiguration encryptedConfiguration = new Gson().fromJson(configuration, realmDef.getConfigurationClass());
+			final RealmConfiguration encryptedConfiguration = new Gson().fromJson(configuration, realmDef.getConfigurationClass());
 
-            final RealmConfiguration decryptedConfiguration = decryptConfiguration(realmDef, encryptedConfiguration);
+			final RealmConfiguration decryptedConfiguration = decryptConfiguration(realmDef, encryptedConfiguration);
 
-            return realmDef.newRealm(realmId, user, decryptedConfiguration, RealmState.valueOf(state));
-        } catch (UnsupportedRealmException e) {
-            throw new RealmRuntimeException(e);
-        }
-    }
+			return realmDef.newRealm(realmId, user, decryptedConfiguration, RealmState.valueOf(state));
+		} catch (UnsupportedRealmException e) {
+			throw new RealmRuntimeException(e);
+		}
+	}
 
-    @Nonnull
-    private RealmConfiguration decryptConfiguration(@Nonnull RealmDef realmDef, @Nonnull RealmConfiguration encryptedConfiguration) {
-        try {
-            final RealmConfiguration decryptedConfiguration;
-            final Cipherer<RealmConfiguration, RealmConfiguration> cipherer = realmDef.getCipherer();
-            if (secret != null && cipherer != null) {
-                decryptedConfiguration = cipherer.decrypt(secret, encryptedConfiguration);
-            } else {
-                decryptedConfiguration = encryptedConfiguration;
-            }
-            return decryptedConfiguration;
-        } catch (CiphererException e) {
-            Log.e("Realm", e.getMessage(), e);
-            // user will see an error notification later when realm will try to connect to remote server
-            return encryptedConfiguration;
-        }
-    }
+	@Nonnull
+	private RealmConfiguration decryptConfiguration(@Nonnull RealmDef realmDef, @Nonnull RealmConfiguration encryptedConfiguration) {
+		try {
+			final RealmConfiguration decryptedConfiguration;
+			final Cipherer<RealmConfiguration, RealmConfiguration> cipherer = realmDef.getCipherer();
+			if (secret != null && cipherer != null) {
+				decryptedConfiguration = cipherer.decrypt(secret, encryptedConfiguration);
+			} else {
+				decryptedConfiguration = encryptedConfiguration;
+			}
+			return decryptedConfiguration;
+		} catch (CiphererException e) {
+			Log.e("Realm", e.getMessage(), e);
+			// user will see an error notification later when realm will try to connect to remote server
+			return encryptedConfiguration;
+		}
+	}
 }

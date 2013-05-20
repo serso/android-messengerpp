@@ -12,5 +12,5 @@ import javax.annotation.Nonnull;
  */
 public interface XmppConnectionAware {
 
-    <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException;
+	<R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException;
 }

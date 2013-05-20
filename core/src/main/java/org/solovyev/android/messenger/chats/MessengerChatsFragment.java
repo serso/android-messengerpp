@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.Threads;
+import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
@@ -14,7 +15,6 @@ import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
@@ -35,150 +35,150 @@ import java.util.List;
  */
 public final class MessengerChatsFragment extends AbstractMessengerListFragment<UiChat, ChatListItem> implements DetachableFragment {
 
-    @Nonnull
-    public static final String FRAGMENT_TAG = "chats";
+	@Nonnull
+	public static final String FRAGMENT_TAG = "chats";
 
-    @Nonnull
-    private static final String TAG = "ChatsFragment";
+	@Nonnull
+	private static final String TAG = "ChatsFragment";
 
-    @Nullable
-    private JEventListener<ChatEvent> chatEventListener;
+	@Nullable
+	private JEventListener<ChatEvent> chatEventListener;
 
-    public MessengerChatsFragment() {
-        super(TAG, true, true);
-    }
+	public MessengerChatsFragment() {
+		super(TAG, true, true);
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(true);
-    }
+		setHasOptionsMenu(true);
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-        chatEventListener = new UiThreadUserChatListener();
-        getChatService().addListener(chatEventListener);
-    }
+		chatEventListener = new UiThreadUserChatListener();
+		getChatService().addListener(chatEventListener);
+	}
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
 
-        if (chatEventListener != null) {
-            getChatService().removeListener(chatEventListener);
-        }
-    }
+		if (chatEventListener != null) {
+			getChatService().removeListener(chatEventListener);
+		}
+	}
 
-    @Override
-    protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-        return new AbstractOnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                try {
-                    getSyncService().sync(SyncTask.user_chats, new Runnable() {
-                        @Override
-                        public void run() {
-                            completeRefresh();
-                        }
-                    });
-                    Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
-                } catch (TaskIsAlreadyRunningException e) {
-                    e.showMessage(getActivity());
-                }
-            }
-        };
-    }
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return new AbstractOnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				try {
+					getSyncService().sync(SyncTask.user_chats, new Runnable() {
+						@Override
+						public void run() {
+							completeRefresh();
+						}
+					});
+					Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
+				} catch (TaskIsAlreadyRunningException e) {
+					e.showMessage(getActivity());
+				}
+			}
+		};
+	}
 
-    @Override
-    protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
-        return new AbstractOnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                try {
-                    getSyncService().sync(SyncTask.user_chats, new Runnable() {
-                        @Override
-                        public void run() {
-                            completeRefresh();
-                        }
-                    });
-                    Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
-                } catch (TaskIsAlreadyRunningException e) {
-                    e.showMessage(getActivity());
-                }
-            }
-        };
-    }
+	@Override
+	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
+		return new AbstractOnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				try {
+					getSyncService().sync(SyncTask.user_chats, new Runnable() {
+						@Override
+						public void run() {
+							completeRefresh();
+						}
+					});
+					Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
+				} catch (TaskIsAlreadyRunningException e) {
+					e.showMessage(getActivity());
+				}
+			}
+		};
+	}
 
-    @Nonnull
-    @Override
-    protected ChatsAdapter createAdapter() {
-        return new ChatsAdapter(getActivity());
-    }
+	@Nonnull
+	@Override
+	protected ChatsAdapter createAdapter() {
+		return new ChatsAdapter(getActivity());
+	}
 
-    @Nonnull
-    @Override
-    protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
-        return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute);
-    }
+	@Nonnull
+	@Override
+	protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
+		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute);
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
 
-    private class UiThreadUserChatListener extends AbstractJEventListener<ChatEvent> {
+	private class UiThreadUserChatListener extends AbstractJEventListener<ChatEvent> {
 
-        private UiThreadUserChatListener() {
-            super(ChatEvent.class);
-        }
+		private UiThreadUserChatListener() {
+			super(ChatEvent.class);
+		}
 
-        @Override
-        public void onEvent(@Nonnull final ChatEvent event) {
-            Threads.tryRunOnUiThread(getActivity(), new Runnable() {
-                @Override
-                public void run() {
-                    getAdapter().onEvent(event);
-                }
-            });
-        }
-    }
+		@Override
+		public void onEvent(@Nonnull final ChatEvent event) {
+			Threads.tryRunOnUiThread(getActivity(), new Runnable() {
+				@Override
+				public void run() {
+					getAdapter().onEvent(event);
+				}
+			});
+		}
+	}
 
-    @Nonnull
-    protected ChatsAdapter getAdapter() {
-        return (ChatsAdapter) super.getAdapter();
-    }
+	@Nonnull
+	protected ChatsAdapter getAdapter() {
+		return (ChatsAdapter) super.getAdapter();
+	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           MENU
     *
     **********************************************************************
     */
 
-    private ActivityMenu<Menu, MenuItem> menu;
+	private ActivityMenu<Menu, MenuItem> menu;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return this.menu.onOptionsItemSelected(this.getActivity(), item);
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return this.menu.onOptionsItemSelected(this.getActivity(), item);
+	}
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
-    }
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
+	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 
-        menuItems.add(new ToggleFilterInputMenuItem(this));
+		menuItems.add(new ToggleFilterInputMenuItem(this));
 
-        this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
-        this.menu.onCreateOptionsMenu(this.getActivity(), menu);
-    }
+		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
+		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+	}
 
 }

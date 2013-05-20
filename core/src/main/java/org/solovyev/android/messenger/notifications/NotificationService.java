@@ -9,16 +9,16 @@ import java.util.List;
 
 public interface NotificationService {
 
-    void addNotification(int messageResId, @Nonnull MessageLevel level, @Nullable Object... parameters);
+	void addNotification(int messageResId, @Nonnull MessageLevel level, @Nullable Object... parameters);
 
-    void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull List<Object> parameters);
+	void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull List<Object> parameters);
 
-    @Nonnull
-    List<Message> getNotifications();
+	@Nonnull
+	List<Message> getNotifications();
 
-    boolean existNotifications();
+	boolean existNotifications();
 
-    void removeNotification(@Nonnull Message notification);
+	void removeNotification(@Nonnull Message notification);
 
-    void removeNotification(int notificationId);
+	void removeNotification(int notificationId);
 }

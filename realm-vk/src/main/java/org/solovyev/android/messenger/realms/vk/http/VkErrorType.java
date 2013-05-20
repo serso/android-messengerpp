@@ -6,6 +6,6 @@ package org.solovyev.android.messenger.realms.vk.http;
  * Time: 11:05 PM
  */
 public enum VkErrorType {
-    invalid_client,
-    need_captcha;
+	invalid_client,
+	need_captcha;
 }

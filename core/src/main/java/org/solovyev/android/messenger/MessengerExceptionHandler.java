@@ -9,5 +9,5 @@ import javax.annotation.Nonnull;
  */
 public interface MessengerExceptionHandler {
 
-    void handleException(@Nonnull Throwable e);
+	void handleException(@Nonnull Throwable e);
 }

@@ -1,12 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
 import android.database.Cursor;
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -15,17 +15,17 @@ import org.solovyev.common.Converter;
  */
 public class ChatParticipantMapper implements Converter<Cursor, User> {
 
-    @Nonnull
-    private final UserService userService;
+	@Nonnull
+	private final UserService userService;
 
-    public ChatParticipantMapper(@Nonnull UserService userService) {
-        this.userService = userService;
-    }
+	public ChatParticipantMapper(@Nonnull UserService userService) {
+		this.userService = userService;
+	}
 
-    @Nonnull
-    @Override
-    public User convert(@Nonnull Cursor cursor) {
-        final String userId = cursor.getString(0);
-        return userService.getUserById(EntityImpl.fromEntityId(userId));
-    }
+	@Nonnull
+	@Override
+	public User convert(@Nonnull Cursor cursor) {
+		final String userId = cursor.getString(0);
+		return userService.getUserById(EntityImpl.fromEntityId(userId));
+	}
 }

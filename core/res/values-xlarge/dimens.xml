@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="mpp_fragment_title_text_size">26sp</dimen>
-    <dimen name="mpp_fragment_icon_size">150dp</dimen>
-    <dimen name="mpp_list_item_icon_size">65dp</dimen>
+	<dimen name="mpp_fragment_title_text_size">26sp</dimen>
+	<dimen name="mpp_fragment_icon_size">150dp</dimen>
+	<dimen name="mpp_list_item_icon_size">65dp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package org.solovyev.android.view;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import javax.annotation.Nullable;
 
 /**
@@ -10,6 +11,6 @@ import javax.annotation.Nullable;
  */
 public interface PullToRefreshListViewProvider {
 
-    @Nullable
-    PullToRefreshListView getPullToRefreshListView();
+	@Nullable
+	PullToRefreshListView getPullToRefreshListView();
 }

@@ -18,36 +18,36 @@ import java.io.IOException;
  */
 public class VkRealmLongPollService implements RealmLongPollService {
 
-    @Nonnull
-    private final VkRealm realm;
+	@Nonnull
+	private final VkRealm realm;
 
-    public VkRealmLongPollService(@Nonnull VkRealm realm) {
-        this.realm = realm;
-    }
+	public VkRealmLongPollService(@Nonnull VkRealm realm) {
+		this.realm = realm;
+	}
 
-    @Override
-    public Object startLongPolling() throws RealmException {
-        try {
-            return HttpTransactions.execute(new VkGetLongPollServerHttpTransaction(realm));
-        } catch (HttpRuntimeIoException e) {
-            throw new RealmException(e);
-        } catch (IOException e) {
-            throw new RealmException(e);
-        }
-    }
+	@Override
+	public Object startLongPolling() throws RealmException {
+		try {
+			return HttpTransactions.execute(new VkGetLongPollServerHttpTransaction(realm));
+		} catch (HttpRuntimeIoException e) {
+			throw new RealmException(e);
+		} catch (IOException e) {
+			throw new RealmException(e);
+		}
+	}
 
-    @Override
-    public LongPollResult waitForResult(@Nullable Object longPollingData) throws RealmException {
-        try {
-            if (longPollingData instanceof LongPollServerData) {
-                return HttpTransactions.execute(new VkGetLongPollingDataHttpTransaction((LongPollServerData) longPollingData));
-            } else {
-                return null;
-            }
-        } catch (HttpRuntimeIoException e) {
-            throw new RealmException(e);
-        } catch (IOException e) {
-            throw new RealmException(e);
-        }
-    }
+	@Override
+	public LongPollResult waitForResult(@Nullable Object longPollingData) throws RealmException {
+		try {
+			if (longPollingData instanceof LongPollServerData) {
+				return HttpTransactions.execute(new VkGetLongPollingDataHttpTransaction((LongPollServerData) longPollingData));
+			} else {
+				return null;
+			}
+		} catch (HttpRuntimeIoException e) {
+			throw new RealmException(e);
+		} catch (IOException e) {
+			throw new RealmException(e);
+		}
+	}
 }

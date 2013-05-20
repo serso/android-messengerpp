@@ -4,7 +4,7 @@ import org.solovyev.common.JCloneable;
 
 public interface RealmConfiguration extends JCloneable<RealmConfiguration> {
 
-    int hashCode();
+	int hashCode();
 
-    boolean equals(Object o);
+	boolean equals(Object o);
 }

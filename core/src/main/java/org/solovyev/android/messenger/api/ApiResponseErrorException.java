@@ -1,8 +1,9 @@
 package org.solovyev.android.messenger.api;
 
+import org.solovyev.android.http.HttpTransaction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.solovyev.android.http.HttpTransaction;
 
 /**
  * User: serso
@@ -11,19 +12,19 @@ import org.solovyev.android.http.HttpTransaction;
  */
 public class ApiResponseErrorException extends RuntimeException {
 
-    @Nonnull
-    private final ApiError apiError;
+	@Nonnull
+	private final ApiError apiError;
 
-    @Nullable
-    private final HttpTransaction<?> httpTransaction;
+	@Nullable
+	private final HttpTransaction<?> httpTransaction;
 
-    public ApiResponseErrorException(@Nonnull ApiError apiError, @Nullable HttpTransaction<?> httpTransaction) {
-        this.apiError = apiError;
-        this.httpTransaction = httpTransaction;
-    }
+	public ApiResponseErrorException(@Nonnull ApiError apiError, @Nullable HttpTransaction<?> httpTransaction) {
+		this.apiError = apiError;
+		this.httpTransaction = httpTransaction;
+	}
 
-    @Nonnull
-    public ApiError getApiError() {
-        return apiError;
-    }
+	@Nonnull
+	public ApiError getApiError() {
+		return apiError;
+	}
 }

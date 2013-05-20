@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.security;
 
-import javax.annotation.Nonnull;
 import org.junit.Before;
 import org.junit.Test;
 import org.solovyev.android.messenger.realms.vk.VkConfigurationImpl;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -12,21 +13,21 @@ import org.solovyev.android.messenger.realms.vk.VkConfigurationImpl;
  */
 public class VkAuthenticationHttpTransactionTest {
 
-    @Nonnull
-    private static final String CLIENT_ID = "2970921";
+	@Nonnull
+	private static final String CLIENT_ID = "2970921";
 
-    @Nonnull
-    private static final String CLIENT_SECRET = "Scm7M1vxOdDjpeVj81jw";
+	@Nonnull
+	private static final String CLIENT_SECRET = "Scm7M1vxOdDjpeVj81jw";
 
-    @Before
-    public void setUp() throws Exception {
-        VkConfigurationImpl.getInstance().setClientId(CLIENT_ID);
-        VkConfigurationImpl.getInstance().setClientSecret(CLIENT_SECRET);
-    }
+	@Before
+	public void setUp() throws Exception {
+		VkConfigurationImpl.getInstance().setClientId(CLIENT_ID);
+		VkConfigurationImpl.getInstance().setClientSecret(CLIENT_SECRET);
+	}
 
-    @Test
-    public void testErrorResult() throws Exception {
-        /*try {
+	@Test
+	public void testErrorResult() throws Exception {
+		/*try {
             HttpTransactions.execute(new VkAuthenticationHttpTransaction("test", "test"));
             Assert.fail();
         } catch (VkResponseErrorException e) {
@@ -45,5 +46,5 @@ public class VkAuthenticationHttpTransactionTest {
                     break;
             }
         }*/
-    }
+	}
 }

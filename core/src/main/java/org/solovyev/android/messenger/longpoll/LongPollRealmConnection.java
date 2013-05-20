@@ -17,51 +17,51 @@ import javax.annotation.Nonnull;
  */
 public abstract class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
 
-    public static final String TAG = "LongPolling";
-    @Nonnull
-    private final RealmLongPollService realmLongPollService;
+	public static final String TAG = "LongPolling";
+	@Nonnull
+	private final RealmLongPollService realmLongPollService;
 
-    protected LongPollRealmConnection(@Nonnull Realm realm,
-                                      @Nonnull Context context,
-                                      @Nonnull RealmLongPollService realmLongPollService) {
-        super(realm, context);
-        this.realmLongPollService = realmLongPollService;
-    }
+	protected LongPollRealmConnection(@Nonnull Realm realm,
+									  @Nonnull Context context,
+									  @Nonnull RealmLongPollService realmLongPollService) {
+		super(realm, context);
+		this.realmLongPollService = realmLongPollService;
+	}
 
-    @Override
-    public void doWork() throws RealmConnectionException {
-        // first loop guarantees that if something gone wrong we will initiate new long polling session
-        while (!isStopped()) {
-            try {
+	@Override
+	public void doWork() throws RealmConnectionException {
+		// first loop guarantees that if something gone wrong we will initiate new long polling session
+		while (!isStopped()) {
+			try {
 
-                Log.i(TAG, "Long polling initiated!");
-                Object longPollingData = realmLongPollService.startLongPolling();
+				Log.i(TAG, "Long polling initiated!");
+				Object longPollingData = realmLongPollService.startLongPolling();
 
-                // second loop do long poll job for one session
-                while (!isStopped()) {
-                    Log.i(TAG, "Long polling started!");
+				// second loop do long poll job for one session
+				while (!isStopped()) {
+					Log.i(TAG, "Long polling started!");
 
-                    final User user = getRealm().getUser();
-                    final LongPollResult longPollResult = realmLongPollService.waitForResult(longPollingData);
-                    if (longPollResult != null) {
-                        longPollingData = longPollResult.updateLongPollServerData(longPollingData);
-                        longPollResult.doUpdates(user, getRealm());
-                    }
+					final User user = getRealm().getUser();
+					final LongPollResult longPollResult = realmLongPollService.waitForResult(longPollingData);
+					if (longPollResult != null) {
+						longPollingData = longPollResult.updateLongPollServerData(longPollingData);
+						longPollResult.doUpdates(user, getRealm());
+					}
 
-                    Log.i(TAG, "Long polling ended!");
+					Log.i(TAG, "Long polling ended!");
 
-                }
+				}
 
-            } catch (RuntimeException e) {
-                throw new RealmConnectionException(e);
-            } catch (RealmException e) {
-                throw new RealmConnectionException(e);
-            }
-        }
-    }
+			} catch (RuntimeException e) {
+				throw new RealmConnectionException(e);
+			} catch (RealmException e) {
+				throw new RealmConnectionException(e);
+			}
+		}
+	}
 
-    @Override
-    protected void stopWork() {
-    }
+	@Override
+	protected void stopWork() {
+	}
 
 }

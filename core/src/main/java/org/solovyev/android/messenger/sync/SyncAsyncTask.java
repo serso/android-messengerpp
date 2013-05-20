@@ -15,29 +15,29 @@ import java.util.List;
  */
 class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
-    @Nonnull
-    private final List<SyncTask> syncTasks;
+	@Nonnull
+	private final List<SyncTask> syncTasks;
 
-    public SyncAsyncTask(@Nonnull List<SyncTask> syncTasks) {
-        super();
-        this.syncTasks = syncTasks;
-    }
+	public SyncAsyncTask(@Nonnull List<SyncTask> syncTasks) {
+		super();
+		this.syncTasks = syncTasks;
+	}
 
 
-    @Override
-    protected Void doWork(@Nonnull List<Void> voids) {
-        for (Realm realm : MessengerApplication.getServiceLocator().getRealmService().getEnabledRealms()) {
-            final SyncData syncData = new SyncDataImpl(realm.getId());
+	@Override
+	protected Void doWork(@Nonnull List<Void> voids) {
+		for (Realm realm : MessengerApplication.getServiceLocator().getRealmService().getEnabledRealms()) {
+			final SyncData syncData = new SyncDataImpl(realm.getId());
 
-            for (SyncTask syncTask : syncTasks) {
-                syncTask.doTask(syncData);
-            }
-        }
+			for (SyncTask syncTask : syncTasks) {
+				syncTask.doTask(syncData);
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    protected void onSuccessPostExecute(@Nullable Void result) {
-    }
+	@Override
+	protected void onSuccessPostExecute(@Nullable Void result) {
+	}
 }

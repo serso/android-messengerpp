@@ -26,121 +26,121 @@ import javax.annotation.Nonnull;
  */
 public final class ContactListItem extends AbstractMessengerListItem<UiContact> /*implements UserEventListener*/ {
 
-    @Nonnull
-    private static final String TAG_PREFIX = "contact_list_item_";
+	@Nonnull
+	private static final String TAG_PREFIX = "contact_list_item_";
 
-    private ContactListItem(@Nonnull UiContact contact) {
-        super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
-    }
+	private ContactListItem(@Nonnull UiContact contact) {
+		super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
+	}
 
-    private static int getUnreadMessagesCount(@Nonnull User contact) {
-        return MessengerApplication.getServiceLocator().getUserService().getUnreadMessagesCount(contact.getEntity());
-    }
+	private static int getUnreadMessagesCount(@Nonnull User contact) {
+		return MessengerApplication.getServiceLocator().getUserService().getUnreadMessagesCount(contact.getEntity());
+	}
 
-    @Nonnull
-    public static ContactListItem newEmpty(User contact) {
-        return newInstance(UiContact.newInstance(contact, 0));
-    }
+	@Nonnull
+	public static ContactListItem newEmpty(User contact) {
+		return newInstance(UiContact.newInstance(contact, 0));
+	}
 
-    @Nonnull
-    public static ContactListItem newInstance(@Nonnull User contact) {
-        return new ContactListItem(UiContact.newInstance(contact, getUnreadMessagesCount(contact)));
-    }
+	@Nonnull
+	public static ContactListItem newInstance(@Nonnull User contact) {
+		return new ContactListItem(UiContact.newInstance(contact, getUnreadMessagesCount(contact)));
+	}
 
-    @Nonnull
-    public static ContactListItem newInstance(@Nonnull UiContact contact) {
-        return new ContactListItem(contact);
-    }
+	@Nonnull
+	public static ContactListItem newInstance(@Nonnull UiContact contact) {
+		return new ContactListItem(contact);
+	}
 
-    @Override
-    public OnClickAction getOnClickAction() {
-        return new OnClickAction() {
-            @Override
-            public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(ContactGuiEventType.newContactClicked(getContact()));
+	@Override
+	public OnClickAction getOnClickAction() {
+		return new OnClickAction() {
+			@Override
+			public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
+				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+				eventManager.fire(ContactGuiEventType.newContactClicked(getContact()));
 
-            }
-        };
-    }
+			}
+		};
+	}
 
-    @Override
-    public OnClickAction getOnLongClickAction() {
-        return null;
-    }
+	@Override
+	public OnClickAction getOnLongClickAction() {
+		return null;
+	}
 
-    /*@Override*/
-    public void onEvent(@Nonnull UserEvent event) {
-        final User contact = getContact();
+	/*@Override*/
+	public void onEvent(@Nonnull UserEvent event) {
+		final User contact = getContact();
 
-        final UserEventType type = event.getType();
-        final User eventUser = event.getUser();
+		final UserEventType type = event.getType();
+		final User eventUser = event.getUser();
 
-        switch (type) {
-            case changed:
-                if (contact.equals(eventUser)) {
-                    setData(getData().copyForNewUser(eventUser));
-                }
-                break;
-            case contact_offline:
-            case contact_online:
-                final User eventContact = event.getDataAsUser();
-                if (contact.equals(eventContact)) {
-                    setData(getData().copyForNewUser(eventContact));
-                }
-                break;
-            case unread_messages_count_changed:
-                if (contact.equals(eventUser)) {
-                    setData(getData().copyForNewUnreadMessagesCount(event.getDataAsInteger()));
-                }
-                break;
-        }
-    }
+		switch (type) {
+			case changed:
+				if (contact.equals(eventUser)) {
+					setData(getData().copyForNewUser(eventUser));
+				}
+				break;
+			case contact_offline:
+			case contact_online:
+				final User eventContact = event.getDataAsUser();
+				if (contact.equals(eventContact)) {
+					setData(getData().copyForNewUser(eventContact));
+				}
+				break;
+			case unread_messages_count_changed:
+				if (contact.equals(eventUser)) {
+					setData(getData().copyForNewUnreadMessagesCount(event.getDataAsInteger()));
+				}
+				break;
+		}
+	}
 
-    @Nonnull
-    public User getContact() {
-        return getData().getContact();
-    }
+	@Nonnull
+	public User getContact() {
+		return getData().getContact();
+	}
 
-    @Nonnull
-    @Override
-    protected CharSequence getDisplayName(@Nonnull UiContact contact, @Nonnull Context context) {
-        String displayName = contact.getContact().getDisplayName();
-        if ( contact.getUnreadMessagesCount() > 0 ) {
-            displayName += " (" + contact.getUnreadMessagesCount() + ")";
-        }
-        return displayName;
-    }
+	@Nonnull
+	@Override
+	protected CharSequence getDisplayName(@Nonnull UiContact contact, @Nonnull Context context) {
+		String displayName = contact.getContact().getDisplayName();
+		if (contact.getUnreadMessagesCount() > 0) {
+			displayName += " (" + contact.getUnreadMessagesCount() + ")";
+		}
+		return displayName;
+	}
 
-    @Override
-    protected void fillView(@Nonnull UiContact contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
-        MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact.getContact(), contactIcon);
+	@Override
+	protected void fillView(@Nonnull UiContact contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+		final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
+		MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact.getContact(), contactIcon);
 
-        final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
-        contactName.setText(getDisplayName());
+		final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
+		contactName.setText(getDisplayName());
 
-        final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
+		final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
 
-        final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
-        if (realmService.isOneRealm()) {
-            accountName.setVisibility(View.GONE);
-        } else {
-            accountName.setVisibility(View.VISIBLE);
-            try {
-                final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
-                accountName.setText("[" + realm.getUser().getDisplayName() + "]");
-            } catch (UnsupportedRealmException e) {
-                // cannot do anything => just handle exception
-                MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
-            }
-        }
+		final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
+		if (realmService.isOneRealm()) {
+			accountName.setVisibility(View.GONE);
+		} else {
+			accountName.setVisibility(View.VISIBLE);
+			try {
+				final Realm realm = realmService.getRealmById(getContact().getEntity().getRealmId());
+				accountName.setText("[" + realm.getUser().getDisplayName() + "]");
+			} catch (UnsupportedRealmException e) {
+				// cannot do anything => just handle exception
+				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+			}
+		}
 
-        final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
-        if (contact.getContact().isOnline()) {
-            contactOnline.setVisibility(View.VISIBLE);
-        } else {
-            contactOnline.setVisibility(View.INVISIBLE);
-        }
-    }
+		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
+		if (contact.getContact().isOnline()) {
+			contactOnline.setVisibility(View.VISIBLE);
+		} else {
+			contactOnline.setVisibility(View.INVISIBLE);
+		}
+	}
 }

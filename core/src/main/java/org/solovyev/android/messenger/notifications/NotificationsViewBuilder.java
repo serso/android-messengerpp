@@ -15,28 +15,28 @@ import java.util.List;
 
 public final class NotificationsViewBuilder implements ViewBuilder<View> {
 
-    @Nonnull
-    private final List<Message> notifications;
+	@Nonnull
+	private final List<Message> notifications;
 
-    public NotificationsViewBuilder(@Nonnull List<Message> notifications) {
-        this.notifications = notifications;
-    }
+	public NotificationsViewBuilder(@Nonnull List<Message> notifications) {
+		this.notifications = notifications;
+	}
 
-    @Nonnull
-    @Override
-    public View build(@Nonnull Context context) {
-        final LayoutInflater li = LayoutInflater.from(context);
-        final View root = li.inflate(R.layout.mpp_popup_notifications, null);
+	@Nonnull
+	@Override
+	public View build(@Nonnull Context context) {
+		final LayoutInflater li = LayoutInflater.from(context);
+		final View root = li.inflate(R.layout.mpp_popup_notifications, null);
 
-        final ListView listView = (ListView) root.findViewById(android.R.id.list);
+		final ListView listView = (ListView) root.findViewById(android.R.id.list);
 
-        final List<NotificationListItem> notificationListItems = new ArrayList<NotificationListItem>();
-        for (Message notification : notifications) {
-            notificationListItems.add(new NotificationListItem(notification));
-        }
+		final List<NotificationListItem> notificationListItems = new ArrayList<NotificationListItem>();
+		for (Message notification : notifications) {
+			notificationListItems.add(new NotificationListItem(notification));
+		}
 
-        ListItemAdapter.attach(listView, ListItemAdapter.newInstance(context, notificationListItems), context);
+		ListItemAdapter.attach(listView, ListItemAdapter.newInstance(context, notificationListItems), context);
 
-        return root;
-    }
+		return root;
+	}
 }

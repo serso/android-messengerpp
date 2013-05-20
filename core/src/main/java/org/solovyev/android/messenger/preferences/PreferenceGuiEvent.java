@@ -12,12 +12,12 @@ import javax.annotation.Nullable;
  */
 public final class PreferenceGuiEvent extends AbstractTypedJEvent<PreferenceGroup, PreferenceGuiEventType> {
 
-    public PreferenceGuiEvent(@Nonnull PreferenceGroup eventObject, @Nonnull PreferenceGuiEventType type, @Nullable Object data) {
-        super(eventObject, type, data);
-    }
+	public PreferenceGuiEvent(@Nonnull PreferenceGroup eventObject, @Nonnull PreferenceGuiEventType type, @Nullable Object data) {
+		super(eventObject, type, data);
+	}
 
-    @Nonnull
-    public PreferenceGroup getPreferenceScreen() {
-        return getEventObject();
-    }
+	@Nonnull
+	public PreferenceGroup getPreferenceScreen() {
+		return getEventObject();
+	}
 }

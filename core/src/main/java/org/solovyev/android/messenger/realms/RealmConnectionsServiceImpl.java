@@ -28,126 +28,126 @@ import java.util.Collection;
 public final class RealmConnectionsServiceImpl implements RealmConnectionsService, NetworkStateListener {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
-    @Inject
-    @Nonnull
-    private NetworkStateService networkStateService;
+	@Inject
+	@Nonnull
+	private NetworkStateService networkStateService;
 
-    @Inject
-    @Nonnull
-    private MessengerListeners messengerListeners;
+	@Inject
+	@Nonnull
+	private MessengerListeners messengerListeners;
 
-    @Inject
-    @Nonnull
-    private NotificationService notificationService;
+	@Inject
+	@Nonnull
+	private NotificationService notificationService;
 
-    @Nonnull
-    private final Application context;
+	@Nonnull
+	private final Application context;
 
-    /*
-    **********************************************************************
-    *
-    *                           OWN FIELDS
-    *
-    **********************************************************************
-    */
-    @Nonnull
-    private RealmConnections realmConnections;
+	/*
+	**********************************************************************
+	*
+	*                           OWN FIELDS
+	*
+	**********************************************************************
+	*/
+	@Nonnull
+	private RealmConnections realmConnections;
 
-    @Nullable
-    private RealmEventListener realmEventListener;
+	@Nullable
+	private RealmEventListener realmEventListener;
 
-    @Inject
-    public RealmConnectionsServiceImpl(@Nonnull Application context) {
-        this.context = context;
-    }
+	@Inject
+	public RealmConnectionsServiceImpl(@Nonnull Application context) {
+		this.context = context;
+	}
 
-    @Override
-    public void init() {
-        realmConnections = new RealmConnections(context);
+	@Override
+	public void init() {
+		realmConnections = new RealmConnections(context);
 
-        networkStateService.addListener(this);
+		networkStateService.addListener(this);
 
-        realmEventListener = new RealmEventListener();
-        realmService.addListener(realmEventListener);
+		realmEventListener = new RealmEventListener();
+		realmService.addListener(realmEventListener);
 
-        tryStartConnectionsFor(realmService.getEnabledRealms());
-    }
+		tryStartConnectionsFor(realmService.getEnabledRealms());
+	}
 
-    private void tryStartConnectionsFor(@Nonnull Collection<Realm> realms) {
-        final boolean start = canStartConnection();
-        realmConnections.startConnectionsFor(realms, start);
-    }
+	private void tryStartConnectionsFor(@Nonnull Collection<Realm> realms) {
+		final boolean start = canStartConnection();
+		realmConnections.startConnectionsFor(realms, start);
+	}
 
-    private boolean canStartConnection() {
-        final NetworkData networkData = networkStateService.getNetworkData();
-        return networkData.getState() == NetworkState.CONNECTED;
-    }
+	private boolean canStartConnection() {
+		final NetworkData networkData = networkStateService.getNetworkData();
+		return networkData.getState() == NetworkState.CONNECTED;
+	}
 
-    @Override
-    public void onNetworkEvent(@Nonnull NetworkData networkData) {
-        switch (networkData.getState()) {
-            case UNKNOWN:
-                break;
-            case CONNECTED:
-                notificationService.removeNotification(R.string.mpp_notification_network_problem);
-                notificationService.removeNotification(R.string.mpp_notification_realm_connection_exception);
-                realmConnections.tryStartAll();
-                break;
-            case NOT_CONNECTED:
-                notificationService.addNotification(R.string.mpp_notification_network_problem, MessageType.warning);
-                realmConnections.tryStopAll();
-                break;
-        }
-    }
+	@Override
+	public void onNetworkEvent(@Nonnull NetworkData networkData) {
+		switch (networkData.getState()) {
+			case UNKNOWN:
+				break;
+			case CONNECTED:
+				notificationService.removeNotification(R.string.mpp_notification_network_problem);
+				notificationService.removeNotification(R.string.mpp_notification_realm_connection_exception);
+				realmConnections.tryStartAll();
+				break;
+			case NOT_CONNECTED:
+				notificationService.addNotification(R.string.mpp_notification_network_problem, MessageType.warning);
+				realmConnections.tryStopAll();
+				break;
+		}
+	}
 
-    private final class RealmEventListener extends AbstractJEventListener<RealmEvent> implements JEventListener<RealmEvent> {
+	private final class RealmEventListener extends AbstractJEventListener<RealmEvent> implements JEventListener<RealmEvent> {
 
-        private RealmEventListener() {
-            super(RealmEvent.class);
-        }
+		private RealmEventListener() {
+			super(RealmEvent.class);
+		}
 
-        @Override
-        public void onEvent(@Nonnull RealmEvent event) {
-            final Realm realm = event.getRealm();
-            switch (event.getType()) {
-                case created:
-                    tryStartConnectionsFor(Arrays.asList(realm));
-                    break;
-                case changed:
-                    realmConnections.updateRealm(realm, canStartConnection());
-                    break;
-                case state_changed:
-                    switch (realm.getState()) {
-                        case removed:
-                            realmConnections.removeConnectionFor(realm);
-                            break;
-                        default:
-                            if (realm.isEnabled()) {
-                                tryStartConnectionsFor(Arrays.asList(realm));
-                            } else {
-                                realmConnections.tryStopFor(realm);
-                            }
-                            break;
-                    }
-                    break;
-                case stop:
-                    realmConnections.tryStopFor(realm);
-                    break;
-                case start:
-                    tryStartConnectionsFor(Arrays.asList(realm));
-                    break;
-            }
-        }
-    }
+		@Override
+		public void onEvent(@Nonnull RealmEvent event) {
+			final Realm realm = event.getRealm();
+			switch (event.getType()) {
+				case created:
+					tryStartConnectionsFor(Arrays.asList(realm));
+					break;
+				case changed:
+					realmConnections.updateRealm(realm, canStartConnection());
+					break;
+				case state_changed:
+					switch (realm.getState()) {
+						case removed:
+							realmConnections.removeConnectionFor(realm);
+							break;
+						default:
+							if (realm.isEnabled()) {
+								tryStartConnectionsFor(Arrays.asList(realm));
+							} else {
+								realmConnections.tryStopFor(realm);
+							}
+							break;
+					}
+					break;
+				case stop:
+					realmConnections.tryStopFor(realm);
+					break;
+				case start:
+					tryStartConnectionsFor(Arrays.asList(realm));
+					break;
+			}
+		}
+	}
 }

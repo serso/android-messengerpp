@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:layout_width="wrap_content"
-              style="?mpp_list_item">
+	a:layout_width="wrap_content"
+	style="?mpp_list_item">
 
-    <ImageView
-            a:id="@+id/mpp_li_notification_icon_imageview"
-            style="?mpp_list_item_icon"/>
+	<ImageView
+		a:id="@+id/mpp_li_notification_icon_imageview"
+		style="?mpp_list_item_icon" />
 
-    <TextView
-            a:id="@+id/mpp_li_notification_text_textview"
-            a:singleLine="false"
-            a:lines="3"
-            a:ellipsize="end"
-            a:layout_width="150dp"
-            style="?mpp_list_item_text_secondary"/>
+	<TextView
+		a:id="@+id/mpp_li_notification_text_textview"
+		a:singleLine="false"
+		a:lines="3"
+		a:ellipsize="end"
+		a:layout_width="150dp"
+		style="?mpp_list_item_text_secondary" />
 
 </LinearLayout>

@@ -9,15 +9,15 @@ import javax.annotation.Nullable;
  */
 public class JsonMessageAttachmentPhoto implements JsonMessageAttachment {
 
-    @Nullable
-    private Integer pid;
+	@Nullable
+	private Integer pid;
 
-    @Nullable
-    private Integer owner_id;
+	@Nullable
+	private Integer owner_id;
 
-    @Nullable
-    private String src;
+	@Nullable
+	private String src;
 
-    @Nullable
-    private String src_big;
+	@Nullable
+	private String src_big;
 }

@@ -17,72 +17,72 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
-* User: serso
-* Date: 3/12/13
-* Time: 8:11 PM
-*/
+ * User: serso
+ * Date: 3/12/13
+ * Time: 8:11 PM
+ */
 final class XmppMessageListener implements ChatStateListener {
 
-    @Nonnull
-    private Realm realm;
+	@Nonnull
+	private Realm realm;
 
-    @Nonnull
-    private final Entity chat;
+	@Nonnull
+	private final Entity chat;
 
-    XmppMessageListener(@Nonnull Realm realm, @Nonnull Entity chat) {
-        this.realm = realm;
-        this.chat = chat;
-    }
+	XmppMessageListener(@Nonnull Realm realm, @Nonnull Entity chat) {
+		this.realm = realm;
+		this.chat = chat;
+	}
 
-    @Override
-    public void processMessage(Chat chat, Message message) {
-        Log.i("M++/Xmpp", "Message created: " + message.getBody());
-        final List<ChatMessage> messages = XmppRealm.toMessages(realm, Arrays.asList(message));
-        if (!messages.isEmpty()) {
-            getChatService().saveChatMessages(this.chat, messages, false);
-        } else {
-            /**
-             * Some special messages sent by another client like 'Composing' and 'Pausing'.
-             * 'Composing' message will be processed in {@link XmppMessageListener#stateChanged(org.jivesoftware.smack.Chat, org.jivesoftware.smackx.ChatState)} method
-             */
-        }
-    }
+	@Override
+	public void processMessage(Chat chat, Message message) {
+		Log.i("M++/Xmpp", "Message created: " + message.getBody());
+		final List<ChatMessage> messages = XmppRealm.toMessages(realm, Arrays.asList(message));
+		if (!messages.isEmpty()) {
+			getChatService().saveChatMessages(this.chat, messages, false);
+		} else {
+			/**
+			 * Some special messages sent by another client like 'Composing' and 'Pausing'.
+			 * 'Composing' message will be processed in {@link XmppMessageListener#stateChanged(org.jivesoftware.smack.Chat, org.jivesoftware.smackx.ChatState)} method
+			 */
+		}
+	}
 
-    @Override
-    public void stateChanged(Chat smackChat, ChatState state) {
-        Log.i("M++/Xmpp", "Chat state changed: " + state);
-        if (state == ChatState.composing || state == ChatState.paused) {
-            final org.solovyev.android.messenger.chats.Chat chat = getChatService().getChatById(this.chat);
-            if (chat != null && chat.isPrivate()) {
-                final Entity participant = chat.getSecondUser();
-                if (state == ChatState.composing) {
-                    getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, participant));
-                } else {
-                    getChatService().fireEvent(ChatEventType.user_stops_typing.newEvent(chat, participant));
-                }
-            }
-        }
-    }
+	@Override
+	public void stateChanged(Chat smackChat, ChatState state) {
+		Log.i("M++/Xmpp", "Chat state changed: " + state);
+		if (state == ChatState.composing || state == ChatState.paused) {
+			final org.solovyev.android.messenger.chats.Chat chat = getChatService().getChatById(this.chat);
+			if (chat != null && chat.isPrivate()) {
+				final Entity participant = chat.getSecondUser();
+				if (state == ChatState.composing) {
+					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, participant));
+				} else {
+					getChatService().fireEvent(ChatEventType.user_stops_typing.newEvent(chat, participant));
+				}
+			}
+		}
+	}
 
-    @Nonnull
-    private static ChatService getChatService() {
-        return MessengerApplication.getServiceLocator().getChatService();
-    }
+	@Nonnull
+	private static ChatService getChatService() {
+		return MessengerApplication.getServiceLocator().getChatService();
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        XmppMessageListener that = (XmppMessageListener) o;
+		XmppMessageListener that = (XmppMessageListener) o;
 
-        if (!chat.equals(that.chat)) return false;
+		if (!chat.equals(that.chat)) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return chat.hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return chat.hashCode();
+	}
 }

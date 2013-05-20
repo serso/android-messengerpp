@@ -12,63 +12,63 @@ import javax.annotation.Nonnull;
 
 public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
 
-    @Nonnull
-    String getId();
+	@Nonnull
+	String getId();
 
-    @Nonnull
-    RealmDef getRealmDef();
+	@Nonnull
+	RealmDef getRealmDef();
 
-    @Nonnull
-    User getUser();
+	@Nonnull
+	User getUser();
 
-    @Nonnull
-    C getConfiguration();
+	@Nonnull
+	C getConfiguration();
 
-    @Nonnull
-    RealmState getState();
+	@Nonnull
+	RealmState getState();
 
-    boolean isEnabled();
+	boolean isEnabled();
 
-    @Nonnull
-    Entity newRealmEntity(@Nonnull String realmEntityId);
+	@Nonnull
+	Entity newRealmEntity(@Nonnull String realmEntityId);
 
-    @Nonnull
-    Entity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId);
+	@Nonnull
+	Entity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId);
 
-    @Nonnull
-    Entity newUserEntity(@Nonnull String realmUserId);
+	@Nonnull
+	Entity newUserEntity(@Nonnull String realmUserId);
 
-    @Nonnull
-    Entity newChatEntity(@Nonnull String realmUserId);
+	@Nonnull
+	Entity newChatEntity(@Nonnull String realmUserId);
 
-    @Nonnull
-    Entity newMessageEntity(@Nonnull String realmMessageId);
+	@Nonnull
+	Entity newMessageEntity(@Nonnull String realmMessageId);
 
-    @Nonnull
-    Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId);
+	@Nonnull
+	Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId);
 
-    boolean same(@Nonnull Realm that);
+	boolean same(@Nonnull Realm that);
 
-    @Nonnull
-    String getDisplayName(@Nonnull Context context);
+	@Nonnull
+	String getDisplayName(@Nonnull Context context);
 
-    @Nonnull
-    Realm copyForNewState(@Nonnull RealmState newState);
+	@Nonnull
+	Realm copyForNewState(@Nonnull RealmState newState);
 
-    /*
-    **********************************************************************
-    *
-    *                           Realm Services
-    *
-    **********************************************************************
-    */
-    @Nonnull
-    RealmUserService getRealmUserService();
+	/*
+	**********************************************************************
+	*
+	*                           Realm Services
+	*
+	**********************************************************************
+	*/
+	@Nonnull
+	RealmUserService getRealmUserService();
 
-    @Nonnull
-    RealmChatService getRealmChatService();
+	@Nonnull
+	RealmChatService getRealmChatService();
 
-    @Nonnull
-    RealmConnection newRealmConnection(@Nonnull Context context);
+	@Nonnull
+	RealmConnection newRealmConnection(@Nonnull Context context);
 
 }

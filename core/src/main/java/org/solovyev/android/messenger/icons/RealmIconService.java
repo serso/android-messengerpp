@@ -13,15 +13,16 @@ import java.util.List;
  */
 public interface RealmIconService {
 
-    void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);
+	void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);
 
-    void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView);
+	void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView);
 
-    /**
-     * Method fetches user icons for specified <var>users</var>
-     * @param users for which icon fetching must be done
-     */
-    void fetchUsersIcons(@Nonnull List<User> users);
+	/**
+	 * Method fetches user icons for specified <var>users</var>
+	 *
+	 * @param users for which icon fetching must be done
+	 */
+	void fetchUsersIcons(@Nonnull List<User> users);
 
-    void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView);
+	void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView);
 }

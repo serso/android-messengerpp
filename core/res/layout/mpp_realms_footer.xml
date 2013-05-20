@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Button xmlns:a="http://schemas.android.com/apk/res/android"
-    a:id="@+id/mpp_add_realm_button"
-    a:text="@string/mpp_realm_add"
-    style="?mpp_button_bright"
-    a:layout_width="match_parent" />
+	a:id="@+id/mpp_add_realm_button"
+	a:text="@string/mpp_realm_add"
+	style="?mpp_button_bright"
+	a:layout_width="match_parent" />

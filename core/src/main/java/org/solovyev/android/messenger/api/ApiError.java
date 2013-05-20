@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.api;
 
 import android.os.Parcelable;
+import org.solovyev.android.captcha.Captcha;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.solovyev.android.captcha.Captcha;
 
 /**
  * User: serso
@@ -12,15 +13,15 @@ import org.solovyev.android.captcha.Captcha;
  */
 public interface ApiError extends Parcelable {
 
-    @Nonnull
-    public static final Parcelable.Creator<ApiError> CREATOR = new ApiErrorParcelableCreator();
+	@Nonnull
+	public static final Parcelable.Creator<ApiError> CREATOR = new ApiErrorParcelableCreator();
 
-    @Nonnull
-    String getErrorId();
+	@Nonnull
+	String getErrorId();
 
-    @Nullable
-    String getErrorDescription();
+	@Nullable
+	String getErrorDescription();
 
-    @Nullable
-    Captcha getCaptcha();
+	@Nullable
+	Captcha getCaptcha();
 }

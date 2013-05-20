@@ -1,4 +1,4 @@
 <resources>
-    <string name="mpp_app_name">Messenger++</string>
-    <string name="mpp_app_icon_name">Messenger++</string>
+	<string name="mpp_app_name">Messenger++</string>
+	<string name="mpp_app_icon_name">Messenger++</string>
 </resources>

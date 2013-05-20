@@ -17,31 +17,32 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
+
 /**
  * Implementation of this class must provide thread safeness
  */
 @ThreadSafe
 public interface ChatMessageService {
 
-    final String NO_REALM_MESSAGE_ID = "empty";
+	final String NO_REALM_MESSAGE_ID = "empty";
 
-    void init();
+	void init();
 
-    @Nonnull
-    Entity generateEntity(@Nonnull Realm realm);
+	@Nonnull
+	Entity generateEntity(@Nonnull Realm realm);
 
-    @Nonnull
-    List<ChatMessage> getChatMessages(@Nonnull Entity realmChat);
+	@Nonnull
+	List<ChatMessage> getChatMessages(@Nonnull Entity realmChat);
 
-    void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView);
+	void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView);
 
-    @Nullable
-    ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws RealmException;
+	@Nullable
+	ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws RealmException;
 
-    /**
-     * @return total number of unread messages in the application
-     */
-    int getUnreadMessagesCount();
+	/**
+	 * @return total number of unread messages in the application
+	 */
+	int getUnreadMessagesCount();
 
-    void removeAllMessagesInRealm(@Nonnull String realmId);
+	void removeAllMessagesInRealm(@Nonnull String realmId);
 }

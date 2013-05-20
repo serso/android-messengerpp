@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger;
 
-import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.realms.RealmDef;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 public interface MessengerConfiguration {
 
-    @Nonnull
-    Collection<RealmDef> getRealmDefs();
+	@Nonnull
+	Collection<RealmDef> getRealmDefs();
 
 }

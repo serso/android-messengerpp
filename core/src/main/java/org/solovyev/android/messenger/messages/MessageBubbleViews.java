@@ -20,103 +20,103 @@ import javax.annotation.Nullable;
 
 final class MessageBubbleViews {
 
-    private MessageBubbleViews() {
-    }
+	private MessageBubbleViews() {
+	}
 
-    static void fillMessageBubbleViews(@Nonnull Context context,
-                                       @Nonnull View messageLayoutParent,
-                                       @Nonnull View messageLayout,
-                                       @Nonnull TextView messageText,
-                                       @Nullable TextView messageDate,
-                                       boolean userMessage,
-                                       boolean processButtons) {
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        final MessageListItemStyle style = MessageListItemStyle.newFromPreferences(preferences);
-        fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, messageDate, userMessage, processButtons, style);
-    }
+	static void fillMessageBubbleViews(@Nonnull Context context,
+									   @Nonnull View messageLayoutParent,
+									   @Nonnull View messageLayout,
+									   @Nonnull TextView messageText,
+									   @Nullable TextView messageDate,
+									   boolean userMessage,
+									   boolean processButtons) {
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		final MessageListItemStyle style = MessageListItemStyle.newFromPreferences(preferences);
+		fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, messageDate, userMessage, processButtons, style);
+	}
 
-    static void fillMessageBubbleViews(@Nonnull Context context,
-                                               @Nonnull View messageLayoutParent,
-                                               @Nonnull View messageLayout,
-                                               @Nonnull TextView messageText,
-                                               @Nullable TextView messageDate,
-                                               boolean userMessage,
-                                               boolean processButtons,
-                                               @Nonnull MessageListItemStyle style) {
-        applyMessageBubblePaddings(context, messageLayoutParent, messageLayout, userMessage);
-        applyMessageBubbleStyles(context, messageLayout, messageText, messageDate, userMessage, processButtons, style);
-    }
+	static void fillMessageBubbleViews(@Nonnull Context context,
+									   @Nonnull View messageLayoutParent,
+									   @Nonnull View messageLayout,
+									   @Nonnull TextView messageText,
+									   @Nullable TextView messageDate,
+									   boolean userMessage,
+									   boolean processButtons,
+									   @Nonnull MessageListItemStyle style) {
+		applyMessageBubblePaddings(context, messageLayoutParent, messageLayout, userMessage);
+		applyMessageBubbleStyles(context, messageLayout, messageText, messageDate, userMessage, processButtons, style);
+	}
 
-    private static void applyMessageBubbleStyles(@Nonnull Context context,
-                                                 @Nonnull View messageLayout,
-                                                 @Nonnull TextView messageText,
-                                                 @Nullable TextView messageDate,
-                                                 final boolean userMessage,
-                                                 boolean processButtons,
-                                                 @Nonnull final MessageListItemStyle style) {
-        final Resources resources = context.getResources();
+	private static void applyMessageBubbleStyles(@Nonnull Context context,
+												 @Nonnull View messageLayout,
+												 @Nonnull TextView messageText,
+												 @Nullable TextView messageDate,
+												 final boolean userMessage,
+												 boolean processButtons,
+												 @Nonnull final MessageListItemStyle style) {
+		final Resources resources = context.getResources();
 
-        messageLayout.setBackgroundDrawable(resources.getDrawable(style.getMessageBackground(userMessage)));
-        final int textColor = resources.getColor(style.getTextColorResId(userMessage));
-        messageText.setTextColor(textColor);
-        messageText.setHintTextColor(textColor);
-        messageText.setLinkTextColor(textColor);
-        messageText.setHighlightColor(textColor);
-        if (messageDate != null) {
-            messageDate.setTextColor(textColor);
-            messageDate.setHintTextColor(textColor);
-            messageDate.setLinkTextColor(textColor);
-            messageDate.setHighlightColor(textColor);
-        }
+		messageLayout.setBackgroundDrawable(resources.getDrawable(style.getMessageBackground(userMessage)));
+		final int textColor = resources.getColor(style.getTextColorResId(userMessage));
+		messageText.setTextColor(textColor);
+		messageText.setHintTextColor(textColor);
+		messageText.setLinkTextColor(textColor);
+		messageText.setHighlightColor(textColor);
+		if (messageDate != null) {
+			messageDate.setTextColor(textColor);
+			messageDate.setHintTextColor(textColor);
+			messageDate.setLinkTextColor(textColor);
+			messageDate.setHighlightColor(textColor);
+		}
 
-        if ( processButtons ) {
-            Views.processViewsOfType(messageLayout, Button.class, new Views.ViewProcessor<Button>() {
-                @Override
-                public void process(@Nonnull Button button) {
-                    button.setBackgroundDrawable(resources.getDrawable(style.getButtonDrawableResId(userMessage)));
-                    button.setTextColor(resources.getColor(style.getButtonTextColorResId(userMessage)));
-                }
-            });
-        }
-    }
+		if (processButtons) {
+			Views.processViewsOfType(messageLayout, Button.class, new Views.ViewProcessor<Button>() {
+				@Override
+				public void process(@Nonnull Button button) {
+					button.setBackgroundDrawable(resources.getDrawable(style.getButtonDrawableResId(userMessage)));
+					button.setTextColor(resources.getColor(style.getButtonTextColorResId(userMessage)));
+				}
+			});
+		}
+	}
 
-    private static void applyMessageBubblePaddings(@Nonnull Context context,
-                                           @Nonnull View messageLayoutParent,
-                                           @Nonnull View messageLayout,
-                                           boolean userMessage) {
-        final Resources resources = context.getResources();
-        final DisplayMetrics dm = resources.getDisplayMetrics();
+	private static void applyMessageBubblePaddings(@Nonnull Context context,
+												   @Nonnull View messageLayoutParent,
+												   @Nonnull View messageLayout,
+												   boolean userMessage) {
+		final Resources resources = context.getResources();
+		final DisplayMetrics dm = resources.getDisplayMetrics();
 
-        final int outerPaddingDps = Views.toPixels(dm, 2);
-        final int outerSidePaddingDps = Views.toPixels(dm, 14);
-        final int innerPaddingDps = Views.toPixels(dm, 5);
-        final int innerSidePaddingDps = Views.toPixels(dm, 25);
-        if (userMessage) {
-            messageLayoutParent.setPadding(outerPaddingDps, outerPaddingDps, outerSidePaddingDps, outerPaddingDps);
-            messageLayout.setPadding(innerSidePaddingDps, innerPaddingDps, innerPaddingDps, innerPaddingDps);
-        } else {
-            messageLayoutParent.setPadding(outerSidePaddingDps, outerPaddingDps, outerPaddingDps, outerPaddingDps);
-            messageLayout.setPadding(innerPaddingDps, innerPaddingDps, innerSidePaddingDps, innerPaddingDps);
-        }
-    }
+		final int outerPaddingDps = Views.toPixels(dm, 2);
+		final int outerSidePaddingDps = Views.toPixels(dm, 14);
+		final int innerPaddingDps = Views.toPixels(dm, 5);
+		final int innerSidePaddingDps = Views.toPixels(dm, 25);
+		if (userMessage) {
+			messageLayoutParent.setPadding(outerPaddingDps, outerPaddingDps, outerSidePaddingDps, outerPaddingDps);
+			messageLayout.setPadding(innerSidePaddingDps, innerPaddingDps, innerPaddingDps, innerPaddingDps);
+		} else {
+			messageLayoutParent.setPadding(outerSidePaddingDps, outerPaddingDps, outerPaddingDps, outerPaddingDps);
+			messageLayout.setPadding(innerPaddingDps, innerPaddingDps, innerSidePaddingDps, innerPaddingDps);
+		}
+	}
 
-    static void setMessageBubbleMessageIcon(@Nonnull Context context, @Nonnull ChatMessage message, @Nonnull ImageView messageIcon) {
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
-            messageIcon.setVisibility(View.VISIBLE);
-            MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(message, messageIcon);
-        } else {
-            messageIcon.setVisibility(View.GONE);
-        }
-    }
+	static void setMessageBubbleMessageIcon(@Nonnull Context context, @Nonnull ChatMessage message, @Nonnull ImageView messageIcon) {
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
+			messageIcon.setVisibility(View.VISIBLE);
+			MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(message, messageIcon);
+		} else {
+			messageIcon.setVisibility(View.GONE);
+		}
+	}
 
-    static void setMessageBubbleUserIcon(@Nonnull Context context, @Nonnull User user, @Nonnull ImageView userIconImageView) {
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
-            userIconImageView.setVisibility(View.VISIBLE);
-            MessengerApplication.getServiceLocator().getUserService().setUserIcon(user, userIconImageView);
-        } else {
-            userIconImageView.setVisibility(View.GONE);
-        }
-    }
+	static void setMessageBubbleUserIcon(@Nonnull Context context, @Nonnull User user, @Nonnull ImageView userIconImageView) {
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
+			userIconImageView.setVisibility(View.VISIBLE);
+			MessengerApplication.getServiceLocator().getUserService().setUserIcon(user, userIconImageView);
+		} else {
+			userIconImageView.setVisibility(View.GONE);
+		}
+	}
 }

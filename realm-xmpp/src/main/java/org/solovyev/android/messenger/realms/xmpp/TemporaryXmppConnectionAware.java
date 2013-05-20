@@ -18,22 +18,22 @@ import javax.annotation.Nonnull;
  */
 class TemporaryXmppConnectionAware implements XmppConnectionAware {
 
-    @Nonnull
-    private final XmppRealm realm;
+	@Nonnull
+	private final XmppRealm realm;
 
-    private TemporaryXmppConnectionAware(@Nonnull XmppRealm realm) {
-        this.realm = realm;
-    }
+	private TemporaryXmppConnectionAware(@Nonnull XmppRealm realm) {
+		this.realm = realm;
+	}
 
-    @Nonnull
-    static XmppConnectionAware newInstance(@Nonnull XmppRealm realm) {
-        return new TemporaryXmppConnectionAware(realm);
-    }
+	@Nonnull
+	static XmppConnectionAware newInstance(@Nonnull XmppRealm realm) {
+		return new TemporaryXmppConnectionAware(realm);
+	}
 
-    @Override
-    public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException {
-        final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
-        XmppRealmConnection.checkConnectionStatus(connection, realm);
-        return callable.call(connection);
-    }
+	@Override
+	public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException {
+		final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
+		XmppRealmConnection.checkConnectionStatus(connection, realm);
+		return callable.call(connection);
+	}
 }

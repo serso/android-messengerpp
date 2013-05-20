@@ -15,41 +15,41 @@ import javax.annotation.Nonnull;
  */
 public final class PreferenceGuiEventListener implements EventListener<PreferenceGuiEvent> {
 
-    @Nonnull
-    private final MessengerFragmentActivity activity;
+	@Nonnull
+	private final MessengerFragmentActivity activity;
 
-    public PreferenceGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
-        this.activity = activity;
-    }
+	public PreferenceGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+		this.activity = activity;
+	}
 
-    @Override
-    public void onEvent(@Nonnull PreferenceGuiEvent event) {
-        final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
-        final PreferenceGroup preferenceGroup = event.getPreferenceScreen();
+	@Override
+	public void onEvent(@Nonnull PreferenceGuiEvent event) {
+		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
+		final PreferenceGroup preferenceGroup = event.getPreferenceScreen();
 
-        if (event.isOfType(PreferenceGuiEventType.preference_group_clicked)) {
-            final int preferencesResId = preferenceGroup.getPreferencesResId();
+		if (event.isOfType(PreferenceGuiEventType.preference_group_clicked)) {
+			final int preferencesResId = preferenceGroup.getPreferencesResId();
 
-            if (activity.isDualPane()) {
-                fm.setSecondFragment(new Builder<Fragment>() {
-                    @Nonnull
-                    @Override
-                    public Fragment build() {
-                        return new MessengerPreferenceListFragment(preferencesResId);
-                    }
-                }, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG);
-                if ( activity.isTriplePane() ) {
-                    fm.emptifyThirdFragment();
-                }
-            } else {
-                fm.setMainFragment(new Builder<Fragment>() {
-                    @Nonnull
-                    @Override
-                    public Fragment build() {
-                        return new MessengerPreferenceListFragment(preferencesResId);
-                    }
-                }, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG, true);
-            }
-        }
-    }
+			if (activity.isDualPane()) {
+				fm.setSecondFragment(new Builder<Fragment>() {
+					@Nonnull
+					@Override
+					public Fragment build() {
+						return new MessengerPreferenceListFragment(preferencesResId);
+					}
+				}, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG);
+				if (activity.isTriplePane()) {
+					fm.emptifyThirdFragment();
+				}
+			} else {
+				fm.setMainFragment(new Builder<Fragment>() {
+					@Nonnull
+					@Override
+					public Fragment build() {
+						return new MessengerPreferenceListFragment(preferencesResId);
+					}
+				}, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG, true);
+			}
+		}
+	}
 }

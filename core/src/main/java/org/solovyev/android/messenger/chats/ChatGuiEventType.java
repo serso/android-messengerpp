@@ -10,27 +10,27 @@ import javax.annotation.Nullable;
  */
 public enum ChatGuiEventType {
 
-    chat_open_requested,
-    chat_clicked,
-    chat_message_read {
-        @Override
-        protected void checkData(@Nullable Object data) {
-            assert data instanceof ChatMessage;
-        }
-    };
+	chat_open_requested,
+	chat_clicked,
+	chat_message_read {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof ChatMessage;
+		}
+	};
 
-    @Nonnull
-    public final ChatGuiEvent newEvent(@Nonnull Chat chat) {
-        return newEvent(chat, null);
-    }
+	@Nonnull
+	public final ChatGuiEvent newEvent(@Nonnull Chat chat) {
+		return newEvent(chat, null);
+	}
 
-    @Nonnull
-    public final ChatGuiEvent newEvent(@Nonnull Chat chat, @Nullable Object data) {
-        checkData(data);
-        return new ChatGuiEvent(chat, this, data);
-    }
+	@Nonnull
+	public final ChatGuiEvent newEvent(@Nonnull Chat chat, @Nullable Object data) {
+		checkData(data);
+		return new ChatGuiEvent(chat, this, data);
+	}
 
-    protected void checkData(@Nullable Object data) {
-        assert data == null;
-    }
+	protected void checkData(@Nullable Object data) {
+		assert data == null;
+	}
 }

@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  */
 public class VkLongPollRealmConnection extends LongPollRealmConnection {
 
-    public VkLongPollRealmConnection(@Nonnull VkRealm realm, @Nonnull Context context) {
-        super(realm, context, new VkRealmLongPollService(realm));
-    }
+	public VkLongPollRealmConnection(@Nonnull VkRealm realm, @Nonnull Context context) {
+		super(realm, context, new VkRealmLongPollService(realm));
+	}
 }

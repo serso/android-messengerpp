@@ -29,35 +29,35 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 /**
- *  Fix for missing hash
+ * Fix for missing hash
  */
 public class MessengerCapsExtensionProvider implements PacketExtensionProvider {
 
-    public PacketExtension parseExtension(XmlPullParser parser) throws XmlPullParserException, IOException,
-            XMPPException {
-        String hash = null;
-        String version = null;
-        String node = null;
-        if (parser.getEventType() == XmlPullParser.START_TAG
-                && parser.getName().equalsIgnoreCase(EntityCapsManager.ELEMENT)) {
-            hash = parser.getAttributeValue(null, "hash");
-            version = parser.getAttributeValue(null, "ver");
-            node = parser.getAttributeValue(null, "node");
-        } else {
-            throw new XMPPException("Malformed Caps element");
-        }
+	public PacketExtension parseExtension(XmlPullParser parser) throws XmlPullParserException, IOException,
+			XMPPException {
+		String hash = null;
+		String version = null;
+		String node = null;
+		if (parser.getEventType() == XmlPullParser.START_TAG
+				&& parser.getName().equalsIgnoreCase(EntityCapsManager.ELEMENT)) {
+			hash = parser.getAttributeValue(null, "hash");
+			version = parser.getAttributeValue(null, "ver");
+			node = parser.getAttributeValue(null, "node");
+		} else {
+			throw new XMPPException("Malformed Caps element");
+		}
 
-        parser.next();
+		parser.next();
 
-        if (!(parser.getEventType() == XmlPullParser.END_TAG
-                && parser.getName().equalsIgnoreCase(EntityCapsManager.ELEMENT))) {
-            throw new XMPPException("Malformed nested Caps element");
-        }
+		if (!(parser.getEventType() == XmlPullParser.END_TAG
+				&& parser.getName().equalsIgnoreCase(EntityCapsManager.ELEMENT))) {
+			throw new XMPPException("Malformed nested Caps element");
+		}
 
-        if (version != null && node != null) {
-            return new CapsExtension(node, version, Strings.getNotEmpty(hash, ""));
-        } else {
-            throw new XMPPException("Caps elment with missing attributes");
-        }
-    }
+		if (version != null && node != null) {
+			return new CapsExtension(node, version, Strings.getNotEmpty(hash, ""));
+		} else {
+			throw new XMPPException("Caps elment with missing attributes");
+		}
+	}
 }

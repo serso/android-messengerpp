@@ -17,111 +17,111 @@ import java.util.List;
  */
 public final class HttpRealmIconService implements RealmIconService {
 
-    @Nonnull
-    private final Context context;
+	@Nonnull
+	private final Context context;
 
-    @Nonnull
-    private final ImageLoader imageLoader;
+	@Nonnull
+	private final ImageLoader imageLoader;
 
-    private final int defaultUserIconResId;
+	private final int defaultUserIconResId;
 
-    private final int defaultUsersIconResId;
+	private final int defaultUsersIconResId;
 
-    @Nonnull
-    private final UrlGetter iconUrlGetter;
+	@Nonnull
+	private final UrlGetter iconUrlGetter;
 
-    @Nonnull
-    private final UrlGetter photoUrlGetter;
+	@Nonnull
+	private final UrlGetter photoUrlGetter;
 
-    public HttpRealmIconService(@Nonnull Context context,
-                                @Nonnull ImageLoader imageLoader,
-                                int defaultUserIconResId,
-                                int defaultUsersIconResId,
-                                @Nonnull UrlGetter iconUrlGetter,
-                                @Nonnull UrlGetter photoUrlGetter) {
-        this.context = context;
-        this.imageLoader = imageLoader;
-        this.defaultUserIconResId = defaultUserIconResId;
-        this.defaultUsersIconResId = defaultUsersIconResId;
-        this.iconUrlGetter = iconUrlGetter;
-        this.photoUrlGetter = photoUrlGetter;
-    }
+	public HttpRealmIconService(@Nonnull Context context,
+								@Nonnull ImageLoader imageLoader,
+								int defaultUserIconResId,
+								int defaultUsersIconResId,
+								@Nonnull UrlGetter iconUrlGetter,
+								@Nonnull UrlGetter photoUrlGetter) {
+		this.context = context;
+		this.imageLoader = imageLoader;
+		this.defaultUserIconResId = defaultUserIconResId;
+		this.defaultUsersIconResId = defaultUsersIconResId;
+		this.iconUrlGetter = iconUrlGetter;
+		this.photoUrlGetter = photoUrlGetter;
+	}
 
-    @Override
-    public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-        final String userIconUrl = iconUrlGetter.getUrl(user);
-        if (!Strings.isEmpty(userIconUrl)) {
-            assert userIconUrl != null;
-            this.imageLoader.loadImage(userIconUrl, imageView, defaultUserIconResId);
-        } else {
-            imageView.setImageDrawable(context.getResources().getDrawable(defaultUserIconResId));
-        }
-    }
+	@Override
+	public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
+		final String userIconUrl = iconUrlGetter.getUrl(user);
+		if (!Strings.isEmpty(userIconUrl)) {
+			assert userIconUrl != null;
+			this.imageLoader.loadImage(userIconUrl, imageView, defaultUserIconResId);
+		} else {
+			imageView.setImageDrawable(context.getResources().getDrawable(defaultUserIconResId));
+		}
+	}
 
-    @Override
-    public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-        final String userPhotoUrl = photoUrlGetter.getUrl(user);
-        if (!Strings.isEmpty(userPhotoUrl)) {
-            assert userPhotoUrl != null;
-            this.imageLoader.loadImage(userPhotoUrl, imageView, defaultUserIconResId);
-        } else {
-            imageView.setImageDrawable(context.getResources().getDrawable(defaultUserIconResId));
-        }
-    }
+	@Override
+	public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
+		final String userPhotoUrl = photoUrlGetter.getUrl(user);
+		if (!Strings.isEmpty(userPhotoUrl)) {
+			assert userPhotoUrl != null;
+			this.imageLoader.loadImage(userPhotoUrl, imageView, defaultUserIconResId);
+		} else {
+			imageView.setImageDrawable(context.getResources().getDrawable(defaultUserIconResId));
+		}
+	}
 
-    @Override
-    public void fetchUsersIcons(@Nonnull List<User> users) {
-        for (User contact : users) {
-            fetchUserIcon(contact);
-        }
-    }
+	@Override
+	public void fetchUsersIcons(@Nonnull List<User> users) {
+		for (User contact : users) {
+			fetchUserIcon(contact);
+		}
+	}
 
-    @Override
-    public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
-        imageView.setImageDrawable(context.getResources().getDrawable(defaultUsersIconResId));
-    }
+	@Override
+	public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
+		imageView.setImageDrawable(context.getResources().getDrawable(defaultUsersIconResId));
+	}
 
-    public void fetchUserIcon(@Nonnull User user) {
-        final String userIconUrl = iconUrlGetter.getUrl(user);
-        if (!Strings.isEmpty(userIconUrl)) {
-            assert userIconUrl != null;
-            this.imageLoader.loadImage(userIconUrl);
-        }
-    }
+	public void fetchUserIcon(@Nonnull User user) {
+		final String userIconUrl = iconUrlGetter.getUrl(user);
+		if (!Strings.isEmpty(userIconUrl)) {
+			assert userIconUrl != null;
+			this.imageLoader.loadImage(userIconUrl);
+		}
+	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           STATIC
     *
     **********************************************************************
     */
 
-    public static interface UrlGetter {
+	public static interface UrlGetter {
 
-        @Nullable
-        String getUrl(@Nonnull User user);
+		@Nullable
+		String getUrl(@Nonnull User user);
 
-    }
+	}
 
-    private static final class UrlFromPropertyGetter implements UrlGetter {
+	private static final class UrlFromPropertyGetter implements UrlGetter {
 
-        @Nonnull
-        private final String propertyName;
+		@Nonnull
+		private final String propertyName;
 
-        private UrlFromPropertyGetter(@Nonnull String propertyName) {
-            this.propertyName = propertyName;
-        }
+		private UrlFromPropertyGetter(@Nonnull String propertyName) {
+			this.propertyName = propertyName;
+		}
 
-        @Nullable
-        @Override
-        public String getUrl(@Nonnull User user) {
-            return user.getPropertyValueByName(propertyName);
-        }
-    }
+		@Nullable
+		@Override
+		public String getUrl(@Nonnull User user) {
+			return user.getPropertyValueByName(propertyName);
+		}
+	}
 
-    @Nonnull
-    public static UrlGetter newUrlFromPropertyGetter(@Nonnull String propertyName) {
-        return new UrlFromPropertyGetter(propertyName);
-    }
+	@Nonnull
+	public static UrlGetter newUrlFromPropertyGetter(@Nonnull String propertyName) {
+		return new UrlFromPropertyGetter(propertyName);
+	}
 }

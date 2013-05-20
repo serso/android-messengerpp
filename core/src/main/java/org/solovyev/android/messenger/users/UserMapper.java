@@ -18,27 +18,27 @@ import java.util.List;
  */
 public class UserMapper implements Converter<Cursor, User> {
 
-    @Nullable
-    private final UserDao userDao;
+	@Nullable
+	private final UserDao userDao;
 
-    public UserMapper(@Nullable UserDao userDao) {
-        this.userDao = userDao;
-    }
+	public UserMapper(@Nullable UserDao userDao) {
+		this.userDao = userDao;
+	}
 
-    @Nonnull
-    @Override
-    public User convert(@Nonnull Cursor c) {
-        final Entity realmUser = EntityMapper.newInstanceFor(0).convert(c);
+	@Nonnull
+	@Override
+	public User convert(@Nonnull Cursor c) {
+		final Entity realmUser = EntityMapper.newInstanceFor(0).convert(c);
 
-        final UserSyncData userSyncData = Users.newUserSyncData(c.getString(3), c.getString(4), c.getString(5), c.getString(6));
+		final UserSyncData userSyncData = Users.newUserSyncData(c.getString(3), c.getString(4), c.getString(5), c.getString(6));
 
-        final List<AProperty> properties;
-        if (userDao != null) {
-            properties = userDao.loadUserPropertiesById(realmUser.getEntityId());
-        } else {
-            properties = Collections.emptyList();
-        }
+		final List<AProperty> properties;
+		if (userDao != null) {
+			properties = userDao.loadUserPropertiesById(realmUser.getEntityId());
+		} else {
+			properties = Collections.emptyList();
+		}
 
-        return Users.newUser(realmUser, userSyncData, properties);
-    }
+		return Users.newUser(realmUser, userSyncData, properties);
+	}
 }

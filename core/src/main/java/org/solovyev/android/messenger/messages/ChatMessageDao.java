@@ -15,29 +15,29 @@ import java.util.List;
  */
 public interface ChatMessageDao {
 
-    @Nonnull
-    List<ChatMessage> loadChatMessages(@Nonnull String chatId);
+	@Nonnull
+	List<ChatMessage> loadChatMessages(@Nonnull String chatId);
 
-    @Nonnull
-    MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete);
+	@Nonnull
+	MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete);
 
-    @Nonnull
-    List<String> loadChatMessageIds(@Nonnull String chatId);
+	@Nonnull
+	List<String> loadChatMessageIds(@Nonnull String chatId);
 
-    @Nonnull
-    String getOldestMessageForChat(@Nonnull String chatId);
+	@Nonnull
+	String getOldestMessageForChat(@Nonnull String chatId);
 
-    @Nullable
-    ChatMessage loadLastChatMessage(@Nonnull String chatId);
+	@Nullable
+	ChatMessage loadLastChatMessage(@Nonnull String chatId);
 
-    /**
-     * @return total number of unread messages in the application
-     */
-    int getUnreadMessagesCount();
+	/**
+	 * @return total number of unread messages in the application
+	 */
+	int getUnreadMessagesCount();
 
-    boolean changeReadStatus(@Nonnull String messageId, boolean read);
+	boolean changeReadStatus(@Nonnull String messageId, boolean read);
 
-    void deleteAllMessages();
+	void deleteAllMessages();
 
-    void deleteAllMessagesInRealm(@Nonnull String realmId);
+	void deleteAllMessagesInRealm(@Nonnull String realmId);
 }

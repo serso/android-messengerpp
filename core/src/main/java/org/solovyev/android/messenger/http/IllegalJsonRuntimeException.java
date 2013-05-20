@@ -9,16 +9,16 @@ import javax.annotation.Nonnull;
  */
 public class IllegalJsonRuntimeException extends RuntimeException {
 
-    @Nonnull
-    private final IllegalJsonException illegalJsonException;
+	@Nonnull
+	private final IllegalJsonException illegalJsonException;
 
-    public IllegalJsonRuntimeException(@Nonnull IllegalJsonException e) {
-        super(e);
-        illegalJsonException = e;
-    }
+	public IllegalJsonRuntimeException(@Nonnull IllegalJsonException e) {
+		super(e);
+		illegalJsonException = e;
+	}
 
-    @Nonnull
-    public IllegalJsonException getIllegalJsonException() {
-        return illegalJsonException;
-    }
+	@Nonnull
+	public IllegalJsonException getIllegalJsonException() {
+		return illegalJsonException;
+	}
 }

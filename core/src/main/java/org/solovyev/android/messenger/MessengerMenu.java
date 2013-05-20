@@ -36,190 +36,190 @@ import java.util.List;
  */
 final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 
-    @Nonnull
-    private final Runnable onHomeClickListener;
+	@Nonnull
+	private final Runnable onHomeClickListener;
 
-    private ListActivityMenu<Menu, MenuItem> menu;
+	private ListActivityMenu<Menu, MenuItem> menu;
 
-    MessengerMenu(@Nonnull Runnable onHomeClickListener) {
-        this.onHomeClickListener = onHomeClickListener;
-    }
+	MessengerMenu(@Nonnull Runnable onHomeClickListener) {
+		this.onHomeClickListener = onHomeClickListener;
+	}
 
-    @Override
-    public boolean onPrepareOptionsMenu(@Nonnull Activity activity, @Nonnull Menu menu) {
-        boolean result = this.menu.onPrepareOptionsMenu(activity, menu);
+	@Override
+	public boolean onPrepareOptionsMenu(@Nonnull Activity activity, @Nonnull Menu menu) {
+		boolean result = this.menu.onPrepareOptionsMenu(activity, menu);
 
-        onUnreadMessagesCountChanged(menu, MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadMessagesCount());
-        onNewNotificationsAdded(menu, MessengerApplication.getServiceLocator().getNotificationService().existNotifications());
+		onUnreadMessagesCountChanged(menu, MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadMessagesCount());
+		onNewNotificationsAdded(menu, MessengerApplication.getServiceLocator().getNotificationService().existNotifications());
 
-        return result;
-    }
+		return result;
+	}
 
-    private void onNewNotificationsAdded(@Nonnull Menu menu, boolean existNotifications) {
-        final MenuItem menuItem = menu.findItem(R.id.mpp_menu_notifications);
-        final AMenuItem<MenuItem> aMenuItem = this.menu.findMenuItemById(R.id.mpp_menu_notifications);
-        if (existNotifications) {
-            menuItem.setVisible(true);
-            menuItem.setEnabled(true);
-            if ( aMenuItem instanceof NotificationsMenuItem ) {
-                ((NotificationsMenuItem) aMenuItem).onNotificationsChanged();
-            }
-        } else {
-            menuItem.setVisible(false);
-            menuItem.setEnabled(false);
-            if ( aMenuItem instanceof NotificationsMenuItem ) {
-                ((NotificationsMenuItem) aMenuItem).dismissPopup();
-            }
-        }
-    }
+	private void onNewNotificationsAdded(@Nonnull Menu menu, boolean existNotifications) {
+		final MenuItem menuItem = menu.findItem(R.id.mpp_menu_notifications);
+		final AMenuItem<MenuItem> aMenuItem = this.menu.findMenuItemById(R.id.mpp_menu_notifications);
+		if (existNotifications) {
+			menuItem.setVisible(true);
+			menuItem.setEnabled(true);
+			if (aMenuItem instanceof NotificationsMenuItem) {
+				((NotificationsMenuItem) aMenuItem).onNotificationsChanged();
+			}
+		} else {
+			menuItem.setVisible(false);
+			menuItem.setEnabled(false);
+			if (aMenuItem instanceof NotificationsMenuItem) {
+				((NotificationsMenuItem) aMenuItem).dismissPopup();
+			}
+		}
+	}
 
-    private void onUnreadMessagesCountChanged(@Nonnull Menu menu, int unreadMessagesCount) {
-        final MenuItem menuItem = menu.findItem(R.id.mpp_menu_unread_messages_counter);
-        if (unreadMessagesCount == 0) {
-            menuItem.setVisible(false);
-            menuItem.setEnabled(false);
-        } else {
-            menuItem.setTitle(String.valueOf(unreadMessagesCount));
-            menuItem.setVisible(true);
-            menuItem.setEnabled(true);
-        }
-    }
+	private void onUnreadMessagesCountChanged(@Nonnull Menu menu, int unreadMessagesCount) {
+		final MenuItem menuItem = menu.findItem(R.id.mpp_menu_unread_messages_counter);
+		if (unreadMessagesCount == 0) {
+			menuItem.setVisible(false);
+			menuItem.setEnabled(false);
+		} else {
+			menuItem.setTitle(String.valueOf(unreadMessagesCount));
+			menuItem.setVisible(true);
+			menuItem.setEnabled(true);
+		}
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(@Nonnull Activity activity, @Nonnull Menu menu) {
-        if ( this.menu == null ) {
-            final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>(1);
-            menuItems.add(new NotificationsMenuItem(activity));
-            menuItems.add(new UnreadMessagesCounterMenuItem());
-            menuItems.add(new MenuItemAppExitMenuItem(activity));
+	@Override
+	public boolean onCreateOptionsMenu(@Nonnull Activity activity, @Nonnull Menu menu) {
+		if (this.menu == null) {
+			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>(1);
+			menuItems.add(new NotificationsMenuItem(activity));
+			menuItems.add(new UnreadMessagesCounterMenuItem());
+			menuItems.add(new MenuItemAppExitMenuItem(activity));
 
-            this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
-        }
-        return this.menu.onCreateOptionsMenu(activity, menu);
-    }
+			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
+		}
+		return this.menu.onCreateOptionsMenu(activity, menu);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(@Nonnull Activity activity, @Nonnull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onHomeClickListener.run();
-                return true;
-            default:
-                return this.menu.onOptionsItemSelected(activity, item);
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(@Nonnull Activity activity, @Nonnull MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onHomeClickListener.run();
+				return true;
+			default:
+				return this.menu.onOptionsItemSelected(activity, item);
+		}
+	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           STATIC
     *
     **********************************************************************
     */
 
-    private static final class MenuItemAppExitMenuItem implements IdentifiableMenuItem<MenuItem> {
+	private static final class MenuItemAppExitMenuItem implements IdentifiableMenuItem<MenuItem> {
 
-        @Nonnull
-        private final Activity activity;
+		@Nonnull
+		private final Activity activity;
 
-        private MenuItemAppExitMenuItem(@Nonnull Activity activity) {
-            this.activity = activity;
-        }
+		private MenuItemAppExitMenuItem(@Nonnull Activity activity) {
+			this.activity = activity;
+		}
 
-        @Nonnull
-        @Override
-        public Integer getItemId() {
-            return R.id.mpp_menu_app_exit;
-        }
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_app_exit;
+		}
 
-        @Override
-        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-            MessengerApplication.getApp().exit(activity);
-        }
-    }
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			MessengerApplication.getApp().exit(activity);
+		}
+	}
 
-    private static final class UnreadMessagesCounterMenuItem implements IdentifiableMenuItem<MenuItem> {
+	private static final class UnreadMessagesCounterMenuItem implements IdentifiableMenuItem<MenuItem> {
 
-        private UnreadMessagesCounterMenuItem() {
-        }
+		private UnreadMessagesCounterMenuItem() {
+		}
 
-        @Nonnull
-        @Override
-        public Integer getItemId() {
-            return R.id.mpp_menu_unread_messages_counter;
-        }
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_unread_messages_counter;
+		}
 
-        @Override
-        public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-            final Entity chatEntity = MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadChat();
-            if (chatEntity != null) {
-                final Chat chat = MessengerApplication.getServiceLocator().getChatService().getChatById(chatEntity);
-                if (chat != null) {
-                    final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                    eventManager.fire(ChatGuiEventType.chat_open_requested.newEvent(chat));
-                }
-            }
-        }
-    }
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			final Entity chatEntity = MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadChat();
+			if (chatEntity != null) {
+				final Chat chat = MessengerApplication.getServiceLocator().getChatService().getChatById(chatEntity);
+				if (chat != null) {
+					final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+					eventManager.fire(ChatGuiEventType.chat_open_requested.newEvent(chat));
+				}
+			}
+		}
+	}
 
-    private static final class NotificationsMenuItem implements IdentifiableMenuItem<MenuItem>,PopupWindow.OnDismissListener {
+	private static final class NotificationsMenuItem implements IdentifiableMenuItem<MenuItem>, PopupWindow.OnDismissListener {
 
-        @Nullable
-        private APopupWindow notificationPopupWindow;
+		@Nullable
+		private APopupWindow notificationPopupWindow;
 
-        @Nonnull
-        private final Activity activity;
+		@Nonnull
+		private final Activity activity;
 
-        private NotificationsMenuItem(@Nonnull Activity activity) {
-            this.activity = activity;
-        }
+		private NotificationsMenuItem(@Nonnull Activity activity) {
+			this.activity = activity;
+		}
 
-        @Nonnull
-        @Override
-        public Integer getItemId() {
-            return R.id.mpp_menu_notifications;
-        }
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_notifications;
+		}
 
-        @Override
-        public void onClick(@Nonnull final MenuItem menuItem, @Nonnull Context context) {
-            if (notificationPopupWindow == null) {
-                final List<Message> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
-                if (!notifications.isEmpty()) {
-                    final NotificationsViewBuilder viewBuilder = new NotificationsViewBuilder(notifications);
+		@Override
+		public void onClick(@Nonnull final MenuItem menuItem, @Nonnull Context context) {
+			if (notificationPopupWindow == null) {
+				final List<Message> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
+				if (!notifications.isEmpty()) {
+					final NotificationsViewBuilder viewBuilder = new NotificationsViewBuilder(notifications);
 
-                    final View menuItemView = activity.findViewById(menuItem.getItemId());
-                    if (menuItemView == null) {
-                        final AbsoluteAPopupWindow notificationPopupWindow = new AbsoluteAPopupWindow(activity, viewBuilder);
-                        notificationPopupWindow.showLikePopDownMenu(activity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
-                        this.notificationPopupWindow = notificationPopupWindow;
-                    } else {
-                        final AnchorAPopupWindow notificationPopupWindow = new AnchorAPopupWindow(menuItemView, viewBuilder);
-                        final int popupWidth = activity.getResources().getDimensionPixelSize(R.dimen.mpp_popup_notification_width);
-                        final int popupXOffset = -popupWidth / 2 + menuItemView.getWidth() / 2;
-                        notificationPopupWindow.showLikePopDownMenu(popupXOffset, 0);
-                        this.notificationPopupWindow = notificationPopupWindow;
-                    }
-                    this.notificationPopupWindow.setOnDismissListener(this);
-                }
-            } else {
-                dismissPopup();
-            }
-        }
+					final View menuItemView = activity.findViewById(menuItem.getItemId());
+					if (menuItemView == null) {
+						final AbsoluteAPopupWindow notificationPopupWindow = new AbsoluteAPopupWindow(activity, viewBuilder);
+						notificationPopupWindow.showLikePopDownMenu(activity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+						this.notificationPopupWindow = notificationPopupWindow;
+					} else {
+						final AnchorAPopupWindow notificationPopupWindow = new AnchorAPopupWindow(menuItemView, viewBuilder);
+						final int popupWidth = activity.getResources().getDimensionPixelSize(R.dimen.mpp_popup_notification_width);
+						final int popupXOffset = -popupWidth / 2 + menuItemView.getWidth() / 2;
+						notificationPopupWindow.showLikePopDownMenu(popupXOffset, 0);
+						this.notificationPopupWindow = notificationPopupWindow;
+					}
+					this.notificationPopupWindow.setOnDismissListener(this);
+				}
+			} else {
+				dismissPopup();
+			}
+		}
 
-        private void dismissPopup() {
-            if (notificationPopupWindow != null) {
-                notificationPopupWindow.dismiss();
-                notificationPopupWindow = null;
-            }
-        }
+		private void dismissPopup() {
+			if (notificationPopupWindow != null) {
+				notificationPopupWindow.dismiss();
+				notificationPopupWindow = null;
+			}
+		}
 
-        public void onNotificationsChanged() {
-            dismissPopup();
-        }
+		public void onNotificationsChanged() {
+			dismissPopup();
+		}
 
-        @Override
-        public void onDismiss() {
-            notificationPopupWindow = null;
-        }
-    }
+		@Override
+		public void onDismiss() {
+			notificationPopupWindow = null;
+		}
+	}
 }

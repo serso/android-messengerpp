@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -13,9 +14,9 @@ import javax.annotation.Nonnull;
  */
 public interface MessengerCommonFragment {
 
-    @Nonnull
-    Button createFooterButton(int captionResId, @Nonnull Activity activity);
+	@Nonnull
+	Button createFooterButton(int captionResId, @Nonnull Activity activity);
 
-    @Nonnull
-    ViewGroup getFooter(@Nonnull Fragment fragment);
+	@Nonnull
+	ViewGroup getFooter(@Nonnull Fragment fragment);
 }

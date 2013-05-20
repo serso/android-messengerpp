@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <array name="mpp_message_style_ids">
-        <item>metro_blue</item>
-        <item>metro_gray</item>
-        <item>metro_gray_light</item>
-    </array>
+	<array name="mpp_message_style_ids">
+		<item>metro_blue</item>
+		<item>metro_gray</item>
+		<item>metro_gray_light</item>
+	</array>
 
-    <array name="mpp_message_style_names">
-        <item>Blue</item>
-        <item>Gray</item>
-        <item>Light Gray</item>
-    </array>
+	<array name="mpp_message_style_names">
+		<item>Blue</item>
+		<item>Gray</item>
+		<item>Light Gray</item>
+	</array>
 
 </resources>

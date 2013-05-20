@@ -17,14 +17,14 @@ import javax.annotation.Nullable;
 public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragment<XmppRealm> {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTANTS
     *
     **********************************************************************
     */
 
-    // todo serso: save instance state
+	// todo serso: save instance state
 
     /*
     **********************************************************************
@@ -34,13 +34,13 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private XmppRealmDef realmDef;
+	@Inject
+	@Nonnull
+	private XmppRealmDef realmDef;
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
     /*
     **********************************************************************
@@ -50,90 +50,90 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
     **********************************************************************
     */
 
-    @Nonnull
-    private EditText serverEditText;
+	@Nonnull
+	private EditText serverEditText;
 
-    @Nonnull
-    private EditText loginEditText;
+	@Nonnull
+	private EditText loginEditText;
 
-    @Nonnull
-    private EditText passwordEditText;
+	@Nonnull
+	private EditText passwordEditText;
 
-    @Nonnull
-    private EditText resourceEditText;
+	@Nonnull
+	private EditText resourceEditText;
 
-    public XmppRealmConfigurationFragment() {
-        super(R.layout.mpp_realm_conf_xmpp);
-    }
+	public XmppRealmConfigurationFragment() {
+		super(R.layout.mpp_realm_conf_xmpp);
+	}
 
-    @Override
-    public void onViewCreated(View root, Bundle savedInstanceState) {
-        super.onViewCreated(root, savedInstanceState);
+	@Override
+	public void onViewCreated(View root, Bundle savedInstanceState) {
+		super.onViewCreated(root, savedInstanceState);
 
-        serverEditText = (EditText) root.findViewById(R.id.mpp_xmpp_server_edittext);
-        loginEditText = (EditText) root.findViewById(R.id.mpp_xmpp_login_edittext);
-        passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
-        resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
+		serverEditText = (EditText) root.findViewById(R.id.mpp_xmpp_server_edittext);
+		loginEditText = (EditText) root.findViewById(R.id.mpp_xmpp_login_edittext);
+		passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
+		resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
 
-        if (!isNewRealm()) {
-            final XmppRealm realm = getEditedRealm();
-            final XmppRealmConfiguration configuration = realm.getConfiguration();
+		if (!isNewRealm()) {
+			final XmppRealm realm = getEditedRealm();
+			final XmppRealmConfiguration configuration = realm.getConfiguration();
 
-            serverEditText.setText(configuration.getServer());
-            loginEditText.setText(configuration.getLogin());
-            passwordEditText.setText(configuration.getPassword());
-            resourceEditText.setText(configuration.getResource());
-        }
-    }
+			serverEditText.setText(configuration.getServer());
+			loginEditText.setText(configuration.getLogin());
+			passwordEditText.setText(configuration.getPassword());
+			resourceEditText.setText(configuration.getResource());
+		}
+	}
 
-    @Override
-    protected RealmConfiguration validateData() {
-        final String server = serverEditText.getText().toString();
-        final String login = loginEditText.getText().toString();
-        final String password = passwordEditText.getText().toString();
-        final String resource = resourceEditText.getText().toString();
+	@Override
+	protected RealmConfiguration validateData() {
+		final String server = serverEditText.getText().toString();
+		final String login = loginEditText.getText().toString();
+		final String password = passwordEditText.getText().toString();
+		final String resource = resourceEditText.getText().toString();
 
-        return validateData(server, login, password, resource);
-    }
+		return validateData(server, login, password, resource);
+	}
 
-    @Nullable
-    private XmppRealmConfiguration validateData(@Nullable String server, @Nullable String login, @Nullable String password, @Nullable String resource) {
-        boolean ok = true;
+	@Nullable
+	private XmppRealmConfiguration validateData(@Nullable String server, @Nullable String login, @Nullable String password, @Nullable String resource) {
+		boolean ok = true;
 
-        if (Strings.isEmpty(server)) {
-            Toast.makeText(getActivity(), "Server field must be set!", Toast.LENGTH_SHORT).show();
-            ok = false;
-        }
+		if (Strings.isEmpty(server)) {
+			Toast.makeText(getActivity(), "Server field must be set!", Toast.LENGTH_SHORT).show();
+			ok = false;
+		}
 
-        if (Strings.isEmpty(login)) {
-            Toast.makeText(getActivity(), "Login field must be set!", Toast.LENGTH_SHORT).show();
-            ok = false;
-        }
+		if (Strings.isEmpty(login)) {
+			Toast.makeText(getActivity(), "Login field must be set!", Toast.LENGTH_SHORT).show();
+			ok = false;
+		}
 
-        if (Strings.isEmpty(password)) {
-            Toast.makeText(getActivity(), "Password field must be set!", Toast.LENGTH_SHORT).show();
-            ok = false;
-        }
+		if (Strings.isEmpty(password)) {
+			Toast.makeText(getActivity(), "Password field must be set!", Toast.LENGTH_SHORT).show();
+			ok = false;
+		}
 
-        if (ok) {
-            final XmppRealmConfiguration result = new XmppRealmConfiguration(server, login, password);
-            if (resource != null) {
-                result.setResource(resource);
-            }
-            return result;
-        } else {
-            return null;
-        }
-    }
+		if (ok) {
+			final XmppRealmConfiguration result = new XmppRealmConfiguration(server, login, password);
+			if (resource != null) {
+				result.setResource(resource);
+			}
+			return result;
+		} else {
+			return null;
+		}
+	}
 
-    @Override
-    public void onSaveInstanceState(@Nonnull Bundle out) {
-        super.onSaveInstanceState(out);
-    }
+	@Override
+	public void onSaveInstanceState(@Nonnull Bundle out) {
+		super.onSaveInstanceState(out);
+	}
 
-    @Nonnull
-    @Override
-    public RealmDef getRealmDef() {
-        return realmDef;
-    }
+	@Nonnull
+	@Override
+	public RealmDef getRealmDef() {
+		return realmDef;
+	}
 }

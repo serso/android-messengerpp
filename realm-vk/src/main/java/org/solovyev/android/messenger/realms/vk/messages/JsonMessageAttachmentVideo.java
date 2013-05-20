@@ -9,34 +9,34 @@ import javax.annotation.Nullable;
  */
 public class JsonMessageAttachmentVideo implements JsonMessageAttachment {
 
-    @Nullable
-    private Integer vid;
+	@Nullable
+	private Integer vid;
 
-    @Nullable
-    private Integer owner_id;
+	@Nullable
+	private Integer owner_id;
 
-    @Nullable
-    private String title;
+	@Nullable
+	private String title;
 
-    @Nullable
-    private String description;
+	@Nullable
+	private String description;
 
-    @Nullable
-    private Integer duration;
+	@Nullable
+	private Integer duration;
 
-    @Nullable
-    private String image;
+	@Nullable
+	private String image;
 
-    @Nullable
-    private String image_big;
+	@Nullable
+	private String image_big;
 
-    @Nullable
-    private String image_small;
+	@Nullable
+	private String image_small;
 
-    @Nullable
-    private Integer views;
+	@Nullable
+	private Integer views;
 
-    @Nullable
-    private String date;
+	@Nullable
+	private String date;
 
 }

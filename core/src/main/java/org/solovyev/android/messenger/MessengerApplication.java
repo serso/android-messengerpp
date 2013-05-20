@@ -31,23 +31,23 @@ import javax.annotation.Nonnull;
  */
 
 @ReportsCrashes(formKey = "",
-        mailTo = "se.solovyev+programming+messengerpp+crashes+1.0@gmail.com",
-        mode = ReportingInteractionMode.SILENT)
+		mailTo = "se.solovyev+programming+messengerpp+crashes+1.0@gmail.com",
+		mode = ReportingInteractionMode.SILENT)
 public class MessengerApplication extends Application implements MessengerServiceLocator {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTANTS
     *
     **********************************************************************
     */
 
-    @Nonnull
-    private static MessengerApplication instance;
+	@Nonnull
+	private static MessengerApplication instance;
 
-    @Nonnull
-    public static final String TAG = "M++";
+	@Nonnull
+	public static final String TAG = "M++";
 
     /*
     **********************************************************************
@@ -57,177 +57,177 @@ public class MessengerApplication extends Application implements MessengerServic
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private ChatMessageService chatMessageService;
+	@Inject
+	@Nonnull
+	private ChatMessageService chatMessageService;
 
-    @Inject
-    @Nonnull
-    private UserService userService;
+	@Inject
+	@Nonnull
+	private UserService userService;
 
-    @Inject
-    @Nonnull
-    private ChatService chatService;
+	@Inject
+	@Nonnull
+	private ChatService chatService;
 
-    @Inject
-    @Nonnull
-    private SyncService syncService;
+	@Inject
+	@Nonnull
+	private SyncService syncService;
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
-    @Inject
-    @Nonnull
-    private RealmConnectionsService realmConnectionsService;
+	@Inject
+	@Nonnull
+	private RealmConnectionsService realmConnectionsService;
 
-    @Inject
-    @Nonnull
-    private UnreadMessagesCounter unreadMessagesCounter;
+	@Inject
+	@Nonnull
+	private UnreadMessagesCounter unreadMessagesCounter;
 
-    @Inject
-    @Nonnull
-    private UnreadMessagesNotifier unreadMessagesNotifier;
+	@Inject
+	@Nonnull
+	private UnreadMessagesNotifier unreadMessagesNotifier;
 
-    @Inject
-    @Nonnull
-    private MessengerExceptionHandler exceptionHandler;
+	@Inject
+	@Nonnull
+	private MessengerExceptionHandler exceptionHandler;
 
-    @Inject
-    @Nonnull
-    private NotificationService notificationService;
+	@Inject
+	@Nonnull
+	private NotificationService notificationService;
 
-    @Inject
-    @Nonnull
-    private NetworkStateService networkStateService;
+	@Inject
+	@Nonnull
+	private NetworkStateService networkStateService;
 
-    @Inject
-    @Nonnull
-    private TaskService taskService;
+	@Inject
+	@Nonnull
+	private TaskService taskService;
 
-    @Inject
-    @Nonnull
-    private MessengerSecurityService securityService;
+	@Inject
+	@Nonnull
+	private MessengerSecurityService securityService;
 
-    public MessengerApplication() {
-        instance = this;
-    }
+	public MessengerApplication() {
+		instance = this;
+	}
 
-    @Nonnull
-    public static MessengerServiceLocator getServiceLocator() {
-        return instance;
-    }
+	@Nonnull
+	public static MessengerServiceLocator getServiceLocator() {
+		return instance;
+	}
 
-    @Nonnull
-    public static MessengerApplication getApp() {
-        return instance;
-    }
+	@Nonnull
+	public static MessengerApplication getApp() {
+		return instance;
+	}
 
-    @Override
-    @Nonnull
-    public ChatMessageService getChatMessageService() {
-        return chatMessageService;
-    }
+	@Override
+	@Nonnull
+	public ChatMessageService getChatMessageService() {
+		return chatMessageService;
+	}
 
-    @Override
-    @Nonnull
-    public UserService getUserService() {
-        return userService;
-    }
+	@Override
+	@Nonnull
+	public UserService getUserService() {
+		return userService;
+	}
 
-    @Override
-    @Nonnull
-    public ChatService getChatService() {
-        return chatService;
-    }
+	@Override
+	@Nonnull
+	public ChatService getChatService() {
+		return chatService;
+	}
 
-    @Override
-    @Nonnull
-    public SyncService getSyncService() {
-        return syncService;
-    }
+	@Override
+	@Nonnull
+	public SyncService getSyncService() {
+		return syncService;
+	}
 
-    @Override
-    @Nonnull
-    public RealmService getRealmService() {
-        return realmService;
-    }
+	@Override
+	@Nonnull
+	public RealmService getRealmService() {
+		return realmService;
+	}
 
-    @Override
-    @Nonnull
-    public NetworkStateService getNetworkStateService() {
-        return networkStateService;
-    }
+	@Override
+	@Nonnull
+	public NetworkStateService getNetworkStateService() {
+		return networkStateService;
+	}
 
-    @Nonnull
-    @Override
-    public MessengerExceptionHandler getExceptionHandler() {
-        return exceptionHandler;
-    }
+	@Nonnull
+	@Override
+	public MessengerExceptionHandler getExceptionHandler() {
+		return exceptionHandler;
+	}
 
-    @Nonnull
-    @Override
-    public UnreadMessagesCounter getUnreadMessagesCounter() {
-        return unreadMessagesCounter;
-    }
+	@Nonnull
+	@Override
+	public UnreadMessagesCounter getUnreadMessagesCounter() {
+		return unreadMessagesCounter;
+	}
 
-    @Nonnull
-    @Override
-    public TaskService getTaskService() {
-        return taskService;
-    }
+	@Nonnull
+	@Override
+	public TaskService getTaskService() {
+		return taskService;
+	}
 
-    @Nonnull
-    public MessengerSecurityService getSecurityService() {
-        return securityService;
-    }
+	@Nonnull
+	public MessengerSecurityService getSecurityService() {
+		return securityService;
+	}
 
-    @Nonnull
-    @Override
-    public NotificationService getNotificationService() {
-        return notificationService;
-    }
+	@Nonnull
+	@Override
+	public NotificationService getNotificationService() {
+		return notificationService;
+	}
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+	@Override
+	public void onCreate() {
+		super.onCreate();
 
-        ACRA.init(this);
+		ACRA.init(this);
 
-        // initialize Joda time for android
-        System.setProperty("org.joda.time.DateTimeZone.Provider", FastDateTimeZoneProvider.class.getName());
+		// initialize Joda time for android
+		System.setProperty("org.joda.time.DateTimeZone.Provider", FastDateTimeZoneProvider.class.getName());
 
-        DateTimeZone.setDefault(DateTimeZone.UTC);
+		DateTimeZone.setDefault(DateTimeZone.UTC);
 
-        MessengerPreferences.setDefaultValues(this);
+		MessengerPreferences.setDefaultValues(this);
 
-        RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
+		RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
 
-        // init services
-        this.realmService.init();
-        this.userService.init();
-        this.chatService.init();
-        this.chatMessageService.init();
-        this.syncService.init();
-        this.unreadMessagesCounter.init();
+		// init services
+		this.realmService.init();
+		this.userService.init();
+		this.chatService.init();
+		this.chatMessageService.init();
+		this.syncService.init();
+		this.unreadMessagesCounter.init();
 
-        // load persistence data
-        this.realmService.load();
+		// load persistence data
+		this.realmService.load();
 
 
-        // must be done after all loadings
-        this.realmConnectionsService.init();
+		// must be done after all loadings
+		this.realmConnectionsService.init();
 
-        this.networkStateService.startListening(this);
-    }
+		this.networkStateService.startListening(this);
+	}
 
-    public void exit(@Nonnull Activity activity) {
-        realmService.stopAllRealmConnections();
+	public void exit(@Nonnull Activity activity) {
+		realmService.stopAllRealmConnections();
 
-        final Intent serviceIntent = new Intent();
-        serviceIntent.setClass(this, OngoingNotificationService.class);
-        stopService(serviceIntent);
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(this, OngoingNotificationService.class);
+		stopService(serviceIntent);
 
-        activity.finish();
-    }
+		activity.finish();
+	}
 }

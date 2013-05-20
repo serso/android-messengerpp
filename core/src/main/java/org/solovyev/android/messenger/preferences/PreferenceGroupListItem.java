@@ -22,48 +22,48 @@ import javax.annotation.Nullable;
  */
 public final class PreferenceGroupListItem extends AbstractMessengerListItem<PreferenceGroup> {
 
-    @Nonnull
-    private static final String TAG_PREFIX = "preference_group_list_item_";
+	@Nonnull
+	private static final String TAG_PREFIX = "preference_group_list_item_";
 
-    public PreferenceGroupListItem(@Nonnull PreferenceGroup preferenceGroup) {
-        super(TAG_PREFIX, preferenceGroup, R.layout.mpp_list_item_preference);
-    }
+	public PreferenceGroupListItem(@Nonnull PreferenceGroup preferenceGroup) {
+		super(TAG_PREFIX, preferenceGroup, R.layout.mpp_list_item_preference);
+	}
 
-    @Nonnull
-    @Override
-    protected CharSequence getDisplayName(@Nonnull PreferenceGroup preferenceGroup, @Nonnull Context context) {
-        return context.getString(preferenceGroup.getNameResId());
-    }
+	@Nonnull
+	@Override
+	protected CharSequence getDisplayName(@Nonnull PreferenceGroup preferenceGroup, @Nonnull Context context) {
+		return context.getString(preferenceGroup.getNameResId());
+	}
 
-    @Override
-    protected void fillView(@Nonnull PreferenceGroup preferenceGroup, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final ImageView preferenceIconImageView = viewTag.getViewById(R.id.mpp_li_preference_icon_imageview);
+	@Override
+	protected void fillView(@Nonnull PreferenceGroup preferenceGroup, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+		final ImageView preferenceIconImageView = viewTag.getViewById(R.id.mpp_li_preference_icon_imageview);
 
-        if (preferenceGroup.hasIcon()) {
-            preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(preferenceGroup.getIconResId()));
-        } else {
-            preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_empty));
-        }
+		if (preferenceGroup.hasIcon()) {
+			preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(preferenceGroup.getIconResId()));
+		} else {
+			preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_empty));
+		}
 
-        final TextView preferenceNameTextView = viewTag.getViewById(R.id.mpp_li_preference_name_textview);
-        preferenceNameTextView.setText(getDisplayName());
-    }
+		final TextView preferenceNameTextView = viewTag.getViewById(R.id.mpp_li_preference_name_textview);
+		preferenceNameTextView.setText(getDisplayName());
+	}
 
-    @Nullable
-    @Override
-    public OnClickAction getOnClickAction() {
-        return new OnClickAction() {
-            @Override
-            public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-                final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-                eventManager.fire(PreferenceGuiEventType.preference_group_clicked.newEvent(getData()));
-            }
-        };
-    }
+	@Nullable
+	@Override
+	public OnClickAction getOnClickAction() {
+		return new OnClickAction() {
+			@Override
+			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
+				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+				eventManager.fire(PreferenceGuiEventType.preference_group_clicked.newEvent(getData()));
+			}
+		};
+	}
 
-    @Nullable
-    @Override
-    public OnClickAction getOnLongClickAction() {
-        return null;
-    }
+	@Nullable
+	@Override
+	public OnClickAction getOnLongClickAction() {
+		return null;
+	}
 }

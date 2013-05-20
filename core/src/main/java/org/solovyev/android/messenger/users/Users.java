@@ -18,58 +18,58 @@ import java.util.List;
  */
 public final class Users {
 
-    private Users() {
-    }
+	private Users() {
+	}
 
-    @Nonnull
-    public static String getDisplayNameFor(@Nonnull Entity user) {
-        return MessengerApplication.getServiceLocator().getUserService().getUserById(user).getDisplayName();
-    }
+	@Nonnull
+	public static String getDisplayNameFor(@Nonnull Entity user) {
+		return MessengerApplication.getServiceLocator().getUserService().getUserById(user).getDisplayName();
+	}
 
-    @Nonnull
-    public static User newUser(@Nonnull String reamId,
-                               @Nonnull String realmUserId,
-                               @Nonnull UserSyncData userSyncData,
-                               @Nonnull List<AProperty> properties) {
-        final Entity entity = EntityImpl.newInstance(reamId, realmUserId);
-        return newUser(entity, userSyncData, properties);
-    }
+	@Nonnull
+	public static User newUser(@Nonnull String reamId,
+							   @Nonnull String realmUserId,
+							   @Nonnull UserSyncData userSyncData,
+							   @Nonnull List<AProperty> properties) {
+		final Entity entity = EntityImpl.newInstance(reamId, realmUserId);
+		return newUser(entity, userSyncData, properties);
+	}
 
-    @Nonnull
-    public static User newEmptyUser(@Nonnull Entity realmUser) {
-        return newUser(realmUser, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
-    }
+	@Nonnull
+	public static User newEmptyUser(@Nonnull Entity realmUser) {
+		return newUser(realmUser, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
+	}
 
-    @Nonnull
-    public static User newEmptyUser(@Nonnull String userId) {
-        return newEmptyUser(EntityImpl.fromEntityId(userId));
-    }
+	@Nonnull
+	public static User newEmptyUser(@Nonnull String userId) {
+		return newEmptyUser(EntityImpl.fromEntityId(userId));
+	}
 
-    @Nonnull
-    public static User newUser(@Nonnull Entity entity,
-                               @Nonnull UserSyncData userSyncData,
-                               @Nonnull List<AProperty> properties) {
-        return UserImpl.newInstance(entity, userSyncData, properties);
-    }
+	@Nonnull
+	public static User newUser(@Nonnull Entity entity,
+							   @Nonnull UserSyncData userSyncData,
+							   @Nonnull List<AProperty> properties) {
+		return UserImpl.newInstance(entity, userSyncData, properties);
+	}
 
-    @Nonnull
-    public static UserSyncData newNeverSyncedUserSyncData() {
-        return UserSyncDataImpl.newNeverSyncedInstance();
-    }
+	@Nonnull
+	public static UserSyncData newNeverSyncedUserSyncData() {
+		return UserSyncDataImpl.newNeverSyncedInstance();
+	}
 
-    @Nonnull
-    public static UserSyncData newUserSyncData(@Nullable DateTime lastPropertiesSyncDate,
-                                                    @Nullable DateTime lastContactsSyncDate,
-                                                    @Nullable DateTime lastChatsSyncDate,
-                                                    @Nullable DateTime lastUserIconsSyncDate) {
-        return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
-    }
+	@Nonnull
+	public static UserSyncData newUserSyncData(@Nullable DateTime lastPropertiesSyncDate,
+											   @Nullable DateTime lastContactsSyncDate,
+											   @Nullable DateTime lastChatsSyncDate,
+											   @Nullable DateTime lastUserIconsSyncDate) {
+		return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
+	}
 
-    @Nonnull
-    public static UserSyncData newUserSyncData(@Nullable String lastPropertiesSyncDate,
-                                               @Nullable String lastContactsSyncDate,
-                                               @Nullable String lastChatsSyncDate,
-                                               @Nullable String lastUserIconsSyncDate) {
-        return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
-    }
+	@Nonnull
+	public static UserSyncData newUserSyncData(@Nullable String lastPropertiesSyncDate,
+											   @Nullable String lastContactsSyncDate,
+											   @Nullable String lastChatsSyncDate,
+											   @Nullable String lastUserIconsSyncDate) {
+		return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
+	}
 }

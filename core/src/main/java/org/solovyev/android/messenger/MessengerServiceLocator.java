@@ -20,36 +20,36 @@ import javax.annotation.Nonnull;
  */
 public interface MessengerServiceLocator {
 
-    @Nonnull
-    ChatMessageService getChatMessageService();
+	@Nonnull
+	ChatMessageService getChatMessageService();
 
-    @Nonnull
-    UserService getUserService();
+	@Nonnull
+	UserService getUserService();
 
-    @Nonnull
-    ChatService getChatService();
+	@Nonnull
+	ChatService getChatService();
 
-    @Nonnull
-    SyncService getSyncService();
+	@Nonnull
+	SyncService getSyncService();
 
-    @Nonnull
-    RealmService getRealmService();
+	@Nonnull
+	RealmService getRealmService();
 
-    @Nonnull
-    NetworkStateService getNetworkStateService();
+	@Nonnull
+	NetworkStateService getNetworkStateService();
 
-    @Nonnull
-    MessengerExceptionHandler getExceptionHandler();
+	@Nonnull
+	MessengerExceptionHandler getExceptionHandler();
 
-    @Nonnull
-    UnreadMessagesCounter getUnreadMessagesCounter();
+	@Nonnull
+	UnreadMessagesCounter getUnreadMessagesCounter();
 
-    @Nonnull
-    NotificationService getNotificationService();
+	@Nonnull
+	NotificationService getNotificationService();
 
-    @Nonnull
-    TaskService getTaskService();
+	@Nonnull
+	TaskService getTaskService();
 
-    @Nonnull
-    MessengerSecurityService getSecurityService();
+	@Nonnull
+	MessengerSecurityService getSecurityService();
 }

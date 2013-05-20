@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mpp_vk_realm_name">VK</string>
-    <string name="mpp_vk_login">Login</string>
-    <string name="mpp_vk_password">Password</string>
+	<string name="mpp_vk_realm_name">VK</string>
+	<string name="mpp_vk_login">Login</string>
+	<string name="mpp_vk_password">Password</string>
 </resources>

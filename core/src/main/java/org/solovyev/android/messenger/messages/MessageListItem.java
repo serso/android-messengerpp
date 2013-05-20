@@ -29,131 +29,131 @@ import java.util.Arrays;
  */
 public final class MessageListItem extends AbstractMessengerListItem<ChatMessage> /*, ChatEventListener*/ {
 
-    @Nonnull
-    private static final String TAG_PREFIX = "message_list_item_";
+	@Nonnull
+	private static final String TAG_PREFIX = "message_list_item_";
 
-    @Nonnull
-    private Chat chat;
+	@Nonnull
+	private Chat chat;
 
-    private final boolean userMessage;
+	private final boolean userMessage;
 
-    @Nonnull
-    private final MessageListItemStyle style;
+	@Nonnull
+	private final MessageListItemStyle style;
 
-    private MessageListItem(@Nonnull Chat chat,
-                            @Nonnull ChatMessage message,
-                            boolean userMessage,
-                            @Nonnull MessageListItemStyle style) {
-        super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
-        this.chat = chat;
-        this.userMessage = userMessage;
-        this.style = style;
-    }
+	private MessageListItem(@Nonnull Chat chat,
+							@Nonnull ChatMessage message,
+							boolean userMessage,
+							@Nonnull MessageListItemStyle style) {
+		super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
+		this.chat = chat;
+		this.userMessage = userMessage;
+		this.style = style;
+	}
 
-    @Nonnull
-    public static MessageListItem newInstance(@Nonnull User user, @Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull MessageListItemStyle style) {
-        final boolean userMessage = user.getEntity().equals(message.getAuthor());
-        return new MessageListItem(chat, message, userMessage, style);
-    }
+	@Nonnull
+	public static MessageListItem newInstance(@Nonnull User user, @Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull MessageListItemStyle style) {
+		final boolean userMessage = user.getEntity().equals(message.getAuthor());
+		return new MessageListItem(chat, message, userMessage, style);
+	}
 
-    @Override
-    public OnClickAction getOnClickAction() {
-        return new SimpleMenuOnClick<MessageListItem>(Arrays.<LabeledMenuItem<ListItemOnClickData<MessageListItem>>>asList(MenuItems.values()), this, "message-context-menu");
-    }
+	@Override
+	public OnClickAction getOnClickAction() {
+		return new SimpleMenuOnClick<MessageListItem>(Arrays.<LabeledMenuItem<ListItemOnClickData<MessageListItem>>>asList(MenuItems.values()), this, "message-context-menu");
+	}
 
-    @Override
-    public OnClickAction getOnLongClickAction() {
-        return null;
-    }
+	@Override
+	public OnClickAction getOnLongClickAction() {
+		return null;
+	}
 
-    @Nonnull
-    @Override
-    protected CharSequence getDisplayName(@Nonnull ChatMessage data, @Nonnull Context context) {
-        return data.getBody();
-    }
+	@Nonnull
+	@Override
+	protected CharSequence getDisplayName(@Nonnull ChatMessage data, @Nonnull Context context) {
+		return data.getBody();
+	}
 
-    @Override
-    protected void fillView(@Nonnull ChatMessage message, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-        final ViewGroup messageLayout = viewTag.getViewById(R.id.mpp_li_message_linearlayout);
+	@Override
+	protected void fillView(@Nonnull ChatMessage message, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+		final ViewGroup messageLayout = viewTag.getViewById(R.id.mpp_li_message_linearlayout);
 
-        final TextView messageText = viewTag.getViewById(R.id.mpp_li_message_body_textview);
-        messageText.setText(Html.fromHtml(message.getBody()));
+		final TextView messageText = viewTag.getViewById(R.id.mpp_li_message_body_textview);
+		messageText.setText(Html.fromHtml(message.getBody()));
 
-        final TextView messageDate = viewTag.getViewById(R.id.mpp_li_message_date_textview);
-        messageDate.setText(Messages.getMessageTime(message));
+		final TextView messageDate = viewTag.getViewById(R.id.mpp_li_message_date_textview);
+		messageDate.setText(Messages.getMessageTime(message));
 
-        final ImageView messageIcon = viewTag.getViewById(R.id.mpp_li_message_icon_imageview);
-        MessageBubbleViews.setMessageBubbleMessageIcon(context, message, messageIcon);
+		final ImageView messageIcon = viewTag.getViewById(R.id.mpp_li_message_icon_imageview);
+		MessageBubbleViews.setMessageBubbleMessageIcon(context, message, messageIcon);
 
-        final View root = viewTag.getView();
+		final View root = viewTag.getView();
 
-        MessageBubbleViews.fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage, false, style);
+		MessageBubbleViews.fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage, false, style);
 
-        if ( !message.isRead() ) {
-            final ChatMessage readMessage = message.cloneRead();
-            setData(readMessage);
-            final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-            eventManager.fire(ChatGuiEventType.chat_message_read.newEvent(chat, readMessage));
-        }
-    }
+		if (!message.isRead()) {
+			final ChatMessage readMessage = message.cloneRead();
+			setData(readMessage);
+			final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
+			eventManager.fire(ChatGuiEventType.chat_message_read.newEvent(chat, readMessage));
+		}
+	}
 
-    /*@Override*/
-    public void onEvent(@Nonnull ChatEvent event) {
-        if (ChatEventType.message_changed.isEvent(event.getType(), event.getChat(), chat)) {
-            if (getData().equals(event.getData())) {
-                setData(event.getDataAsChatMessage());
-            }
-        }
-    }
+	/*@Override*/
+	public void onEvent(@Nonnull ChatEvent event) {
+		if (ChatEventType.message_changed.isEvent(event.getType(), event.getChat(), chat)) {
+			if (getData().equals(event.getData())) {
+				setData(event.getDataAsChatMessage());
+			}
+		}
+	}
 
-    public static final class Comparator implements java.util.Comparator<MessageListItem> {
+	public static final class Comparator implements java.util.Comparator<MessageListItem> {
 
-        @Nonnull
-        private static final Comparator instance = new Comparator();
+		@Nonnull
+		private static final Comparator instance = new Comparator();
 
-        private Comparator() {
-        }
+		private Comparator() {
+		}
 
-        @Nonnull
-        public static Comparator getInstance() {
-            return instance;
-        }
+		@Nonnull
+		public static Comparator getInstance() {
+			return instance;
+		}
 
-        @Override
-        public int compare(@Nonnull MessageListItem lhs, @Nonnull MessageListItem rhs) {
-            return lhs.getData().getSendDate().compareTo(rhs.getData().getSendDate());
-        }
-    }
+		@Override
+		public int compare(@Nonnull MessageListItem lhs, @Nonnull MessageListItem rhs) {
+			return lhs.getData().getSendDate().compareTo(rhs.getData().getSendDate());
+		}
+	}
 
-    private static enum MenuItems implements LabeledMenuItem<ListItemOnClickData<MessageListItem>> {
+	private static enum MenuItems implements LabeledMenuItem<ListItemOnClickData<MessageListItem>> {
 
-        copy(R.string.c_copy) {
-            @Override
-            public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
-                final android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
+		copy(R.string.c_copy) {
+			@Override
+			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
+				final android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
 
-                final MessageListItem messageListItem = data.getDataObject();
-                clipboard.setText(messageListItem.getData().getBody());
+				final MessageListItem messageListItem = data.getDataObject();
+				clipboard.setText(messageListItem.getData().getBody());
 
-                Toast.makeText(context, context.getString(R.string.c_message_copied), Toast.LENGTH_SHORT).show();
-            }
-        };
+				Toast.makeText(context, context.getString(R.string.c_message_copied), Toast.LENGTH_SHORT).show();
+			}
+		};
 
-        private int captionResId;
+		private int captionResId;
 
-        private MenuItems(int captionResId) {
-            this.captionResId = captionResId;
-        }
+		private MenuItems(int captionResId) {
+			this.captionResId = captionResId;
+		}
 
-        @Nonnull
-        @Override
-        public String getCaption(@Nonnull Context context) {
-            return context.getString(captionResId);
-        }
-    }
+		@Nonnull
+		@Override
+		public String getCaption(@Nonnull Context context) {
+			return context.getString(captionResId);
+		}
+	}
 
-    @Nonnull
-    public ChatMessage getMessage() {
-        return getData();
-    }
+	@Nonnull
+	public ChatMessage getMessage() {
+		return getData();
+	}
 }

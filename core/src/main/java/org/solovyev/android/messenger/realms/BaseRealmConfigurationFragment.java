@@ -12,7 +12,6 @@ import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
-import org.solovyev.android.messenger.TaskOverlayDialogs;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -25,21 +24,21 @@ import javax.annotation.Nullable;
 public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends RoboSherlockFragment {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTANTS
     *
     **********************************************************************
     */
 
-    @Nonnull
-    public static final String EXTRA_REALM_ID = "realm_id";
+	@Nonnull
+	public static final String EXTRA_REALM_ID = "realm_id";
 
-    @Nonnull
-    public static final String FRAGMENT_TAG = "realm-configuration";
+	@Nonnull
+	public static final String FRAGMENT_TAG = "realm-configuration";
 
-    @Nonnull
-    private static final String TAG = "RealmConfiguration";
+	@Nonnull
+	private static final String TAG = "RealmConfiguration";
 
     /*
     **********************************************************************
@@ -49,21 +48,21 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
-    @Inject
-    @Nonnull
-    private MessengerMultiPaneManager multiPaneManager;
+	@Inject
+	@Nonnull
+	private MessengerMultiPaneManager multiPaneManager;
 
-    @Inject
-    @Nonnull
-    private EventManager eventManager;
+	@Inject
+	@Nonnull
+	private EventManager eventManager;
 
-    @Inject
-    @Nonnull
-    private TaskService taskService;
+	@Inject
+	@Nonnull
+	private TaskService taskService;
 
     /*
     **********************************************************************
@@ -73,9 +72,9 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     **********************************************************************
     */
 
-    private T editedRealm;
+	private T editedRealm;
 
-    private int layoutResId;
+	private int layoutResId;
 
     /*
     **********************************************************************
@@ -85,160 +84,160 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
     **********************************************************************
     */
 
-    @Nonnull
-    private Button backButton;
+	@Nonnull
+	private Button backButton;
 
-    @Nonnull
-    private Button saveButton;
+	@Nonnull
+	private Button saveButton;
 
-    @Nonnull
-    private Button removeButton;
+	@Nonnull
+	private Button removeButton;
 
-    @Nonnull
-    private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
+	@Nonnull
+	private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
 
-    protected BaseRealmConfigurationFragment(int layoutResId) {
-        this.layoutResId = layoutResId;
-    }
+	protected BaseRealmConfigurationFragment(int layoutResId) {
+		this.layoutResId = layoutResId;
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        final Bundle arguments = getArguments();
-        if (arguments != null) {
-            final String realmId = arguments.getString(EXTRA_REALM_ID);
-            if (realmId != null) {
-                try {
-                    editedRealm = (T) realmService.getRealmById(realmId);
-                } catch (UnsupportedRealmException e) {
-                    MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
-                    Activities.restartActivity(getActivity());
-                }
-            }
-        }
-    }
+		final Bundle arguments = getArguments();
+		if (arguments != null) {
+			final String realmId = arguments.getString(EXTRA_REALM_ID);
+			if (realmId != null) {
+				try {
+					editedRealm = (T) realmService.getRealmById(realmId);
+				} catch (UnsupportedRealmException e) {
+					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+					Activities.restartActivity(getActivity());
+				}
+			}
+		}
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(this.getActivity());
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(this.getActivity());
 
-        getMultiPaneManager().onCreatePane(this.getActivity(), container, result);
+		getMultiPaneManager().onCreatePane(this.getActivity(), container, result);
 
-        result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    public void onViewCreated(View root, Bundle savedInstanceState) {
-        super.onViewCreated(root, savedInstanceState);
+	@Override
+	public void onViewCreated(View root, Bundle savedInstanceState) {
+		super.onViewCreated(root, savedInstanceState);
 
-        removeButton = (Button) root.findViewById(R.id.mpp_realm_conf_remove_button);
-        if (isNewRealm()) {
-            removeButton.setVisibility(View.GONE);
-        } else {
-            removeButton.setVisibility(View.VISIBLE);
-            removeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeRealm(getEditedRealm());
-                }
-            });
-        }
+		removeButton = (Button) root.findViewById(R.id.mpp_realm_conf_remove_button);
+		if (isNewRealm()) {
+			removeButton.setVisibility(View.GONE);
+		} else {
+			removeButton.setVisibility(View.VISIBLE);
+			removeButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					removeRealm(getEditedRealm());
+				}
+			});
+		}
 
-        backButton = (Button) root.findViewById(R.id.mpp_realm_conf_back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backButtonPressed();
-            }
-        });
-        if (isNewRealm() && getMultiPaneManager().isDualPane(getActivity())) {
-            // in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-            backButton.setVisibility(View.GONE);
-        } else {
-            backButton.setVisibility(View.VISIBLE);
-        }
+		backButton = (Button) root.findViewById(R.id.mpp_realm_conf_back_button);
+		backButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				backButtonPressed();
+			}
+		});
+		if (isNewRealm() && getMultiPaneManager().isDualPane(getActivity())) {
+			// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
+			backButton.setVisibility(View.GONE);
+		} else {
+			backButton.setVisibility(View.VISIBLE);
+		}
 
 
-        saveButton = (Button) root.findViewById(R.id.mpp_realm_conf_save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveRealm();
-            }
-        });
+		saveButton = (Button) root.findViewById(R.id.mpp_realm_conf_save_button);
+		saveButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				saveRealm();
+			}
+		});
 
-        final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
-        fragmentTitle.setText(getFragmentTitle());
+		final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
+		fragmentTitle.setText(getFragmentTitle());
 
-        getMultiPaneManager().onPaneCreated(getActivity(), root);
-    }
+		getMultiPaneManager().onPaneCreated(getActivity(), root);
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-        taskListeners.addTaskListener(RealmSaverCallable.TASK_NAME, RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
-        taskListeners.addTaskListener(RealmRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
-    }
+		taskListeners.addTaskListener(RealmSaverCallable.TASK_NAME, RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.addTaskListener(RealmRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+	}
 
-    public T getEditedRealm() {
-        return editedRealm;
-    }
+	public T getEditedRealm() {
+		return editedRealm;
+	}
 
-    public boolean isNewRealm() {
-        return editedRealm == null;
-    }
+	public boolean isNewRealm() {
+		return editedRealm == null;
+	}
 
-    protected final void removeRealm(@Nonnull Realm realm) {
-        taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(realm), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
-    }
+	protected final void removeRealm(@Nonnull Realm realm) {
+		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(realm), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+	}
 
-    private void saveRealm(@Nonnull RealmBuilder realmBuilder) {
-        taskListeners.run(RealmSaverCallable.TASK_NAME, new RealmSaverCallable(realmBuilder), RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
-    }
+	private void saveRealm(@Nonnull RealmBuilder realmBuilder) {
+		taskListeners.run(RealmSaverCallable.TASK_NAME, new RealmSaverCallable(realmBuilder), RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+	}
 
-    protected final void saveRealm() {
-        final RealmConfiguration configuration = validateData();
-        if (configuration != null) {
-            final RealmBuilder realmBuilder = getRealmDef().newRealmBuilder(configuration, getEditedRealm());
-            saveRealm(realmBuilder);
-        }
-    }
+	protected final void saveRealm() {
+		final RealmConfiguration configuration = validateData();
+		if (configuration != null) {
+			final RealmBuilder realmBuilder = getRealmDef().newRealmBuilder(configuration, getEditedRealm());
+			saveRealm(realmBuilder);
+		}
+	}
 
-    @Nullable
-    protected abstract RealmConfiguration validateData();
+	@Nullable
+	protected abstract RealmConfiguration validateData();
 
-    @Override
-    public void onPause() {
-        taskListeners.removeAllTaskListeners();
+	@Override
+	public void onPause() {
+		taskListeners.removeAllTaskListeners();
 
-        super.onPause();
-    }
+		super.onPause();
+	}
 
-    protected void backButtonPressed() {
-        T editedRealm = getEditedRealm();
-        if (editedRealm != null) {
-            eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(editedRealm, RealmGuiEventType.FinishedState.back));
-        } else {
-            eventManager.fire(RealmDefGuiEventType.newRealmDefEditFinishedEvent(getRealmDef()));
-        }
-    }
+	protected void backButtonPressed() {
+		T editedRealm = getEditedRealm();
+		if (editedRealm != null) {
+			eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(editedRealm, RealmGuiEventType.FinishedState.back));
+		} else {
+			eventManager.fire(RealmDefGuiEventType.newRealmDefEditFinishedEvent(getRealmDef()));
+		}
+	}
 
-    @Nonnull
-    protected MessengerMultiPaneManager getMultiPaneManager() {
-        return multiPaneManager;
-    }
+	@Nonnull
+	protected MessengerMultiPaneManager getMultiPaneManager() {
+		return multiPaneManager;
+	}
 
-    @Nonnull
-    public abstract RealmDef getRealmDef();
+	@Nonnull
+	public abstract RealmDef getRealmDef();
 
-    @Nonnull
-    protected CharSequence getFragmentTitle() {
-        final String realmName = getString(getRealmDef().getNameResId());
-        return getString(R.string.mpp_realm_configuration, realmName);
-    }
+	@Nonnull
+	protected CharSequence getFragmentTitle() {
+		final String realmName = getString(getRealmDef().getNameResId());
+		return getString(R.string.mpp_realm_configuration, realmName);
+	}
 
 }

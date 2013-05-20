@@ -28,16 +28,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DefaultSyncService implements SyncService {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
     **********************************************************************
     */
 
-    @Inject
-    @Nonnull
-    private RealmService realmService;
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
 
     /*
@@ -48,66 +48,67 @@ public class DefaultSyncService implements SyncService {
     **********************************************************************
     */
 
-    @Nonnull
-    private final Set<SyncTask> runningTasks = EnumSet.noneOf(SyncTask.class);
+	@Nonnull
+	private final Set<SyncTask> runningTasks = EnumSet.noneOf(SyncTask.class);
 
-    @Nonnull
-    private final AtomicBoolean syncAllTaskRunning = new AtomicBoolean(false);
+	@Nonnull
+	private final AtomicBoolean syncAllTaskRunning = new AtomicBoolean(false);
 
-    @Nonnull
-    private final Executor executor = Executors.newSingleThreadExecutor();
+	@Nonnull
+	private final Executor executor = Executors.newSingleThreadExecutor();
 
-    @Nonnull
-    private final JEventListener<RealmEvent> realmEventListener = new RealmEventListener();
+	@Nonnull
+	private final JEventListener<RealmEvent> realmEventListener = new RealmEventListener();
 
-    @Override
-    public void init() {
-        realmService.addListener(realmEventListener);
-    }
+	@Override
+	public void init() {
+		realmService.addListener(realmEventListener);
+	}
 
-    @Override
-    public void syncAll(final boolean force) throws SyncAllTaskIsAlreadyRunning {
-        startSyncAllTask(realmService.getEnabledRealms(), force);
-    }
+	@Override
+	public void syncAll(final boolean force) throws SyncAllTaskIsAlreadyRunning {
+		startSyncAllTask(realmService.getEnabledRealms(), force);
+	}
 
-    /**
-     * Method checks if 'all synchronization task' is not running and starts one with specified parameters
-     * @param realms realms for which synchronization should be done
-     * @param force force synchronization. See {@link SyncService#syncAll(boolean)}
-     * @throws SyncAllTaskIsAlreadyRunning thrown when task if 'all synchronization task' is already running
-     */
-    private void startSyncAllTask(@Nonnull Collection<Realm> realms, boolean force) throws SyncAllTaskIsAlreadyRunning {
-        synchronized (syncAllTaskRunning) {
-            if ( syncAllTaskRunning.get() ) {
-                throw new SyncAllTaskIsAlreadyRunning();
-            } else {
-                syncAllTaskRunning.set(true);
-            }
-        }
+	/**
+	 * Method checks if 'all synchronization task' is not running and starts one with specified parameters
+	 *
+	 * @param realms realms for which synchronization should be done
+	 * @param force  force synchronization. See {@link SyncService#syncAll(boolean)}
+	 * @throws SyncAllTaskIsAlreadyRunning thrown when task if 'all synchronization task' is already running
+	 */
+	private void startSyncAllTask(@Nonnull Collection<Realm> realms, boolean force) throws SyncAllTaskIsAlreadyRunning {
+		synchronized (syncAllTaskRunning) {
+			if (syncAllTaskRunning.get()) {
+				throw new SyncAllTaskIsAlreadyRunning();
+			} else {
+				syncAllTaskRunning.set(true);
+			}
+		}
 
-        executor.execute(new SyncRunnable(force, realms));
-    }
+		executor.execute(new SyncRunnable(force, realms));
+	}
 
-    @Override
-    public void syncAllInRealm(@Nonnull Realm realm, boolean force) throws SyncAllTaskIsAlreadyRunning {
-        startSyncAllTask(Arrays.asList(realm), force);
-    }
+	@Override
+	public void syncAllInRealm(@Nonnull Realm realm, boolean force) throws SyncAllTaskIsAlreadyRunning {
+		startSyncAllTask(Arrays.asList(realm), force);
+	}
 
-    @Override
-    public void sync(@Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException {
-        checkRunningTask(syncTask);
+	@Override
+	public void sync(@Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException {
+		checkRunningTask(syncTask);
 
-        new ServiceSyncAsyncTask(syncTask, afterSyncCallback).execute();
-    }
+		new ServiceSyncAsyncTask(syncTask, afterSyncCallback).execute();
+	}
 
-    private void checkRunningTask(SyncTask syncTask) throws TaskIsAlreadyRunningException {
-        synchronized (runningTasks) {
-            if (runningTasks.contains(syncTask)) {
-                throw new TaskIsAlreadyRunningException(syncTask);
-            }
-            runningTasks.add(syncTask);
-        }
-    }
+	private void checkRunningTask(SyncTask syncTask) throws TaskIsAlreadyRunningException {
+		synchronized (runningTasks) {
+			if (runningTasks.contains(syncTask)) {
+				throw new TaskIsAlreadyRunningException(syncTask);
+			}
+			runningTasks.add(syncTask);
+		}
+	}
 
     /*
     **********************************************************************
@@ -117,113 +118,113 @@ public class DefaultSyncService implements SyncService {
     **********************************************************************
     */
 
-    private class ServiceSyncAsyncTask extends SyncAsyncTask {
+	private class ServiceSyncAsyncTask extends SyncAsyncTask {
 
-        @Nonnull
-        private final SyncTask syncTask;
+		@Nonnull
+		private final SyncTask syncTask;
 
-        @Nullable
-        private final Runnable afterSyncCallback;
+		@Nullable
+		private final Runnable afterSyncCallback;
 
-        public ServiceSyncAsyncTask(@Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) {
-            super(Arrays.asList(syncTask));
-            this.syncTask = syncTask;
-            this.afterSyncCallback = afterSyncCallback;
-        }
+		public ServiceSyncAsyncTask(@Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) {
+			super(Arrays.asList(syncTask));
+			this.syncTask = syncTask;
+			this.afterSyncCallback = afterSyncCallback;
+		}
 
-        @Override
-        protected void onSuccessPostExecute(@Nullable Void result) {
-            releaseRunningTask(syncTask);
-            super.onSuccessPostExecute(result);
+		@Override
+		protected void onSuccessPostExecute(@Nullable Void result) {
+			releaseRunningTask(syncTask);
+			super.onSuccessPostExecute(result);
 
-            if (afterSyncCallback != null) {
-                afterSyncCallback.run();
-            }
-        }
+			if (afterSyncCallback != null) {
+				afterSyncCallback.run();
+			}
+		}
 
-        @Override
-        protected void onCancelled() {
-            // just in case
-            releaseRunningTask(syncTask);
-            super.onCancelled();
-        }
+		@Override
+		protected void onCancelled() {
+			// just in case
+			releaseRunningTask(syncTask);
+			super.onCancelled();
+		}
 
-        @Override
-        protected void onFailurePostExecute(@Nonnull Exception e) {
-            releaseRunningTask(syncTask);
-            super.onFailurePostExecute(e);
-        }
-    }
+		@Override
+		protected void onFailurePostExecute(@Nonnull Exception e) {
+			releaseRunningTask(syncTask);
+			super.onFailurePostExecute(e);
+		}
+	}
 
-    private void releaseRunningTask(@Nonnull SyncTask syncTask) {
-        synchronized (runningTasks) {
-            runningTasks.remove(syncTask);
-        }
-    }
+	private void releaseRunningTask(@Nonnull SyncTask syncTask) {
+		synchronized (runningTasks) {
+			runningTasks.remove(syncTask);
+		}
+	}
 
-    private class SyncRunnable implements Runnable {
+	private class SyncRunnable implements Runnable {
 
-        private final boolean force;
+		private final boolean force;
 
-        @Nonnull
-        private final Collection<Realm> realms;
+		@Nonnull
+		private final Collection<Realm> realms;
 
-        public SyncRunnable(boolean force, @Nonnull Collection<Realm> realms) {
-            this.force = force;
-            this.realms = realms;
-        }
+		public SyncRunnable(boolean force, @Nonnull Collection<Realm> realms) {
+			this.force = force;
+			this.realms = realms;
+		}
 
-        @Override
-        public void run() {
-            try {
+		@Override
+		public void run() {
+			try {
 
-                for (Realm realm : realms) {
-                    final SyncData syncData = new SyncDataImpl(realm.getId());
+				for (Realm realm : realms) {
+					final SyncData syncData = new SyncDataImpl(realm.getId());
 
-                    for (SyncTask syncTask : SyncTask.values()) {
-                        try {
-                            try {
-                                checkRunningTask(syncTask);
-                                if (force || syncTask.isTime(syncData)) {
-                                    syncTask.doTask(syncData);
-                                }
-                            } finally {
-                                releaseRunningTask(syncTask);
-                            }
-                        } catch (TaskIsAlreadyRunningException e) {
-                            // ok, task is already running => start another task
-                        } catch (RuntimeException e) {
-                            MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
-                        }
-                    }
-                }
+					for (SyncTask syncTask : SyncTask.values()) {
+						try {
+							try {
+								checkRunningTask(syncTask);
+								if (force || syncTask.isTime(syncData)) {
+									syncTask.doTask(syncData);
+								}
+							} finally {
+								releaseRunningTask(syncTask);
+							}
+						} catch (TaskIsAlreadyRunningException e) {
+							// ok, task is already running => start another task
+						} catch (RuntimeException e) {
+							MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+						}
+					}
+				}
 
-            } finally {
-                synchronized (syncAllTaskRunning) {
-                    syncAllTaskRunning.set(false);
-                }
-            }
-        }
-    }
+			} finally {
+				synchronized (syncAllTaskRunning) {
+					syncAllTaskRunning.set(false);
+				}
+			}
+		}
+	}
 
-    private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
+	private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
 
-        private RealmEventListener() {
-            super(RealmEvent.class);
-        }
+		private RealmEventListener() {
+			super(RealmEvent.class);
+		}
 
-        @Override
-        public void onEvent(@Nonnull RealmEvent event) {
-            switch (event.getType()) {
-                case created:
-                case changed:
-                    try {
-                        syncAllInRealm(event.getRealm(), true);
-                    } catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
-                        // ok, do not care
-                    }
-                    break;
-            }
-        }
-    }
+		@Override
+		public void onEvent(@Nonnull RealmEvent event) {
+			switch (event.getType()) {
+				case created:
+				case changed:
+					try {
+						syncAllInRealm(event.getRealm(), true);
+					} catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+						// ok, do not care
+					}
+					break;
+			}
+		}
+	}
 }

@@ -1,9 +1,9 @@
 package org.solovyev.android.view;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.ref.WeakReference;
 
 /**
@@ -13,25 +13,25 @@ import java.lang.ref.WeakReference;
  */
 public abstract class AbstractOnRefreshListener implements ListViewAwareOnRefreshListener, PullToRefreshListViewProvider {
 
-    @Nullable
-    private WeakReference<PullToRefreshListView> listViewRef;
+	@Nullable
+	private WeakReference<PullToRefreshListView> listViewRef;
 
-    @Override
-    public void setListView(@Nonnull PullToRefreshListView listView) {
-        listViewRef = new WeakReference<PullToRefreshListView>(listView);
-    }
+	@Override
+	public void setListView(@Nonnull PullToRefreshListView listView) {
+		listViewRef = new WeakReference<PullToRefreshListView>(listView);
+	}
 
-    @Override
-    @Nullable
-    public PullToRefreshListView getPullToRefreshListView() {
-        return listViewRef == null ? null : listViewRef.get();
-    }
+	@Override
+	@Nullable
+	public PullToRefreshListView getPullToRefreshListView() {
+		return listViewRef == null ? null : listViewRef.get();
+	}
 
-    public void completeRefresh() {
-        final PullToRefreshListView lv = getPullToRefreshListView();
-        if (lv != null) {
-            lv.onRefreshComplete();
-        }
-    }
+	public void completeRefresh() {
+		final PullToRefreshListView lv = getPullToRefreshListView();
+		if (lv != null) {
+			lv.onRefreshComplete();
+		}
+	}
 
 }
