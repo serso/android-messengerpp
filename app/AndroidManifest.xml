@@ -19,7 +19,7 @@
 	<application
 		android:debuggable="true"
 		android:allowBackup="true"
-		android:hardwareAccelerated="false"
+		android:hardwareAccelerated="true"
 		android:icon="@drawable/mpp_app_icon"
 		android:label="@string/mpp_app_name"
 		android:name=".MessengerApplication"

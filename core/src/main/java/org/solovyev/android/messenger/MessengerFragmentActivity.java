@@ -3,10 +3,8 @@ package org.solovyev.android.messenger;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -276,11 +274,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
-		if (gestureDetector != null) {
-			gestureDetector.onTouchEvent(event);
-		}
-
-		return super.dispatchTouchEvent(event);
+		final boolean handled = gestureDetector != null && gestureDetector.onTouchEvent(event);
+		return handled || super.dispatchTouchEvent(event);
 	}
 
 	private void changeTab(boolean next) {
