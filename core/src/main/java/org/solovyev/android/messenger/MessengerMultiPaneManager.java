@@ -3,7 +3,6 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.view.View;
-import android.view.ViewGroup;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 import javax.annotation.Nonnull;
@@ -25,15 +24,6 @@ public interface MessengerMultiPaneManager {
 	boolean isSecondPane(@Nullable View parent);
 
 	boolean isThirdPane(@Nullable View parent);
-
-	@Nonnull
-	ViewGroup getFirstPane(@Nonnull Activity activity);
-
-	@Nonnull
-	ViewGroup getSecondPane(@Nonnull Activity activity);
-
-	@Nonnull
-	ViewGroup getThirdPane(@Nonnull Activity activity);
 
 	void onCreatePane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane);
 

@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.fragments.ReflectionFragmentBuilder;
@@ -13,10 +13,24 @@ import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager {
 
-	public MessengerMultiPaneFragmentManager(@Nonnull FragmentActivity activity) {
+	public static final List<MessengerPrimaryFragment> tabFragments;
+
+	static {
+		final List<MessengerPrimaryFragment> mutableTabFragments = new ArrayList<MessengerPrimaryFragment>();
+		mutableTabFragments.add(MessengerPrimaryFragment.contacts);
+		mutableTabFragments.add(MessengerPrimaryFragment.messages);
+		mutableTabFragments.add(MessengerPrimaryFragment.realms);
+		mutableTabFragments.add(MessengerPrimaryFragment.settings);
+		tabFragments = Collections.unmodifiableList(mutableTabFragments);
+	}
+
+	public MessengerMultiPaneFragmentManager(@Nonnull SherlockFragmentActivity activity) {
 		super(activity, R.id.content_first_pane, MessengerEmptyFragment.class, MessengerEmptyFragment.FRAGMENT_TAG, R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
 	}
 

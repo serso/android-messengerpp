@@ -6,23 +6,23 @@
 ~ or visit http://se.solovyev.org
 -->
 
-<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
 	a:layout_width="match_parent"
 	a:layout_height="match_parent"
 	a:id="@+id/main"
-	a:background="@color/mpp_bg">
+	a:background="@color/mpp_bg"
+	a:orientation="vertical">
+
+	<include
+		layout="@layout/mpp_main_content"
+		a:layout_height="0dp"
+		a:layout_width="match_parent"
+		a:layout_weight="1"/>
 
 	<include
 		layout="@layout/mpp_footer"
 		a:id="@+id/footer"
 		a:layout_width="match_parent"
-		a:layout_height="0dp"
-		a:layout_alignParentBottom="true" />
+		a:layout_height="wrap_content"/>
 
-	<include
-		layout="@layout/mpp_main_content"
-		a:layout_above="@id/footer"
-		a:layout_height="match_parent"
-		a:layout_width="match_parent" />
-
-</RelativeLayout>
+</LinearLayout>

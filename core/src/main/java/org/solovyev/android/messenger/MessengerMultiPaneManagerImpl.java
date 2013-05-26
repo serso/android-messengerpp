@@ -6,7 +6,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -50,24 +49,6 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
 		} else {
 			return false;
 		}
-	}
-
-	@Nonnull
-	@Override
-	public ViewGroup getFirstPane(@Nonnull Activity activity) {
-		return (ViewGroup) activity.findViewById(R.id.content_first_pane);
-	}
-
-	@Nonnull
-	@Override
-	public ViewGroup getSecondPane(@Nonnull Activity activity) {
-		return (ViewGroup) activity.findViewById(R.id.content_second_pane);
-	}
-
-	@Nonnull
-	@Override
-	public ViewGroup getThirdPane(@Nonnull Activity activity) {
-		return (ViewGroup) activity.findViewById(R.id.content_third_pane);
 	}
 
 	@Override

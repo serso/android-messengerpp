@@ -3,6 +3,10 @@ package org.solovyev.android.messenger;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -18,6 +22,7 @@ import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.view.SwipeGestureListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import roboguice.event.EventManager;
@@ -113,6 +118,10 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
 	@Nullable
 	private JEventListener<MessengerEvent> messengerEventListener;
+
+	@Nullable
+	private GestureDetector gestureDetector;
+
 
     /*
     **********************************************************************
@@ -212,13 +221,15 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(true);
 
+		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
+		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
+
 		if (showActionBarTabs) {
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-			addTab(MessengerPrimaryFragment.contacts);
-			addTab(MessengerPrimaryFragment.messages);
-			addTab(MessengerPrimaryFragment.realms);
-			addTab(MessengerPrimaryFragment.settings);
+			for (MessengerPrimaryFragment tabFragment : MessengerMultiPaneFragmentManager.tabFragments) {
+				addTab(tabFragment);
+			}
 
 			int navPosition = -1;
 			if (savedInstanceState != null) {
@@ -228,10 +239,22 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 			if (navPosition >= 0) {
 				getSupportActionBar().setSelectedNavigationItem(navPosition);
 			}
-		}
 
-		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
-		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
+			if (!isDualPane()) {
+				gestureDetector = new GestureDetector(this, new SwipeGestureListener(this) {
+
+					@Override
+					protected void onSwipeToRight() {
+						changeTab(false);
+					}
+
+					@Override
+					protected void onSwipeToLeft() {
+						changeTab(true);
+					}
+				});
+			}
+		}
 
 		this.menu = new MessengerMenu(new Runnable() {
 			@Override
@@ -249,6 +272,39 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
 		this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
 		this.messengerListeners.addListener(messengerEventListener);
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		if (gestureDetector != null) {
+			gestureDetector.onTouchEvent(event);
+		}
+
+		return super.dispatchTouchEvent(event);
+	}
+
+	private void changeTab(boolean next) {
+		final ActionBar actionBar = getSupportActionBar();
+		final int tabCount = actionBar.getTabCount();
+
+		int position = actionBar.getSelectedNavigationIndex();
+		if (next) {
+			if (position < tabCount - 1) {
+				position = position + 1;
+			} else {
+				position = 0;
+			}
+		} else {
+			if (position > 0) {
+				position = position - 1;
+			} else {
+				position = tabCount - 1;
+			}
+		}
+
+		if (position >= 0 && position < tabCount) {
+			actionBar.setSelectedNavigationItem(position);
+		}
 	}
 
 	@Override

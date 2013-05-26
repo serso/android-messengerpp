@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
+
+<FrameLayout
+	xmlns:a="http://schemas.android.com/apk/res/android"
+	a:id="@+id/content_first_pane"
 	a:layout_width="match_parent"
-	a:layout_height="match_parent"
-	a:id="@+id/content_first_pane" />
+	a:layout_height="match_parent" />
