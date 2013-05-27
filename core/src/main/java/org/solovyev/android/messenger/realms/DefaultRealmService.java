@@ -76,7 +76,7 @@ public class DefaultRealmService implements RealmService {
 	private final Context context;
 
 	@Nonnull
-	private final Map<String, RealmDef> realmDefs = new HashMap<String, RealmDef>();
+	private final Map<String, RealmDef<? extends RealmConfiguration>> realmDefs = new HashMap<String, RealmDef<? extends RealmConfiguration>>();
 
 	@GuardedBy("realms")
 	@Nonnull
@@ -130,7 +130,7 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Collection<RealmDef> getRealmDefs() {
+	public Collection<RealmDef<? extends RealmConfiguration>> getRealmDefs() {
 		return Collections.unmodifiableCollection(this.realmDefs.values());
 	}
 
@@ -183,8 +183,8 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public RealmDef getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException {
-		final RealmDef realm = this.realmDefs.get(realmDefId);
+	public RealmDef<? extends RealmConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException {
+		final RealmDef<? extends RealmConfiguration> realm = this.realmDefs.get(realmDefId);
 		if (realm == null) {
 			throw new UnsupportedRealmException(realmDefId);
 		}

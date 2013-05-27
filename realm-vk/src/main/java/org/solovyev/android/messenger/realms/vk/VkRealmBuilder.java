@@ -23,7 +23,7 @@ import java.util.List;
 public class VkRealmBuilder extends AbstractRealmBuilder<VkRealmConfiguration> {
 
 	protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm, @Nonnull VkRealmConfiguration configuration) {
-		super(realmDef, editedRealm, configuration);
+		super(realmDef, configuration, editedRealm);
 	}
 
 	@Nonnull

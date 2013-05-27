@@ -48,7 +48,7 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
 	public void testConcreteRealms() throws Exception {
 		int index = 0;
 		for (RealmDef realmDef : getRealmService().getRealmDefs()) {
-			final RealmConfiguration realmConfiguration = realmDef.getConfigurationClass().newInstance();
+			final RealmConfiguration realmConfiguration = (RealmConfiguration) realmDef.getConfigurationClass().newInstance();
 			final String realmId = EntityImpl.getRealmId(realmDef.getId(), index);
 			Realm expected = realmDef.newRealm(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), realmConfiguration, RealmState.enabled);
 			realmDao.insertRealm(expected);

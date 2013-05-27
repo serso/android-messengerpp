@@ -26,7 +26,7 @@ public class XmppRealmBuilder extends AbstractRealmBuilder<XmppRealmConfiguratio
 	public XmppRealmBuilder(@Nonnull RealmDef realmDef,
 							@Nullable Realm editedRealm,
 							@Nonnull XmppRealmConfiguration configuration) {
-		super(realmDef, editedRealm, configuration);
+		super(realmDef, configuration, editedRealm);
 	}
 
 	@Nonnull

@@ -5,9 +5,11 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,11 +29,11 @@ public final class Users {
 	}
 
 	@Nonnull
-	public static User newUser(@Nonnull String reamId,
+	public static User newUser(@Nonnull String realmId,
 							   @Nonnull String realmUserId,
 							   @Nonnull UserSyncData userSyncData,
 							   @Nonnull List<AProperty> properties) {
-		final Entity entity = EntityImpl.newInstance(reamId, realmUserId);
+		final Entity entity = EntityImpl.newInstance(realmId, realmUserId);
 		return newUser(entity, userSyncData, properties);
 	}
 
@@ -48,7 +50,7 @@ public final class Users {
 	@Nonnull
 	public static User newUser(@Nonnull Entity entity,
 							   @Nonnull UserSyncData userSyncData,
-							   @Nonnull List<AProperty> properties) {
+							   @Nonnull Collection<AProperty> properties) {
 		return UserImpl.newInstance(entity, userSyncData, properties);
 	}
 
@@ -71,5 +73,25 @@ public final class Users {
 											   @Nullable String lastChatsSyncDate,
 											   @Nullable String lastUserIconsSyncDate) {
 		return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
+	}
+
+	public static void tryParseNameProperties(@Nonnull List<AProperty> result, @Nullable String fullName) {
+		if (fullName != null) {
+			int firstSpaceSymbolIndex = fullName.indexOf(' ');
+			int lastSpaceSymbolIndex = fullName.lastIndexOf(' ');
+			if (firstSpaceSymbolIndex != -1 && firstSpaceSymbolIndex == lastSpaceSymbolIndex) {
+				// only one space in the string
+				// Proof:
+				// 1. if no spaces => both return -1
+				// 2. if more than one spaces => both return different
+				final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
+				final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
+				result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, firstName));
+				result.add(Properties.newProperty(User.PROPERTY_LAST_NAME, lastName));
+			} else {
+				// just store full name in first name field
+				result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, fullName));
+			}
+		}
 	}
 }

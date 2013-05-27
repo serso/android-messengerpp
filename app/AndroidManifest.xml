@@ -10,6 +10,10 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.GET_TASKS" />
 
+	<!-- SMS realm -->
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
 	<!--<uses-permission android:name="com.android.vending.BILLING"/>-->
 
 	<uses-sdk

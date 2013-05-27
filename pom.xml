@@ -11,6 +11,7 @@
 		<module>core</module>
 		<module>realm-vk</module>
 		<module>realm-xmpp</module>
+		<module>realm-sms</module>
 		<module>app</module>
 		<module>app-test</module>
 	</modules>
@@ -59,6 +60,13 @@
 			<dependency>
 				<groupId>org.solovyev.android.messenger</groupId>
 				<artifactId>android-messenger-realm-xmpp</artifactId>
+				<version>1.0</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-realm-sms</artifactId>
 				<version>1.0</version>
 				<type>apklib</type>
 			</dependency>

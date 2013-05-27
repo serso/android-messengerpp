@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 12:56 AM
  */
-public interface RealmDef extends MessengerEntity {
+public interface RealmDef<C extends RealmConfiguration> extends MessengerEntity {
 
 	@Nonnull
 	String FAKE_REALM_ID = "fake";
@@ -52,13 +52,13 @@ public interface RealmDef extends MessengerEntity {
 	Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
 
 	@Nonnull
-	Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state);
+	Realm<C> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull C configuration, @Nonnull RealmState state);
 
 	@Nonnull
-	Class<? extends RealmConfiguration> getConfigurationClass();
+	Class<? extends C> getConfigurationClass();
 
 	@Nonnull
-	RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm);
+	RealmBuilder newRealmBuilder(@Nonnull C configuration, @Nullable Realm editedRealm);
 
 	/**
 	 * Returns list of translated user properties where property name = title, property value = value
@@ -81,7 +81,7 @@ public interface RealmDef extends MessengerEntity {
 	 * @return cipherer to be used while saving {@link RealmConfiguration} in persistence storage
 	 */
 	@Nullable
-	Cipherer<RealmConfiguration, RealmConfiguration> getCipherer();
+	Cipherer<C, C> getCipherer();
 
     /*
 	**********************************************************************

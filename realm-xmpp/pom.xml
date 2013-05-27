@@ -69,49 +69,6 @@
 			<artifactId>common-core-jodatime</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.solovyev.android</groupId>
-			<artifactId>android-common-ads</artifactId>
-			<type>apklib</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.solovyev.android</groupId>
-			<artifactId>android-common-http</artifactId>
-			<type>apklib</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.solovyev.android</groupId>
-			<artifactId>android-common-views</artifactId>
-			<type>apklib</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.solovyev.android</groupId>
-			<artifactId>android-common-sherlock</artifactId>
-			<type>apklib</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.solovyev.android</groupId>
-			<artifactId>android-common-networks</artifactId>
-			<type>apklib</type>
-		</dependency>
-
-		<!-- Pull-to-Refresh -->
-		<dependency>
-			<groupId>com.github.handmark.pulltorefresh</groupId>
-			<artifactId>pulltorefresh-library</artifactId>
-			<type>apklib</type>
-		</dependency>
-
-		<dependency>
-			<groupId>com.actionbarsherlock</groupId>
-			<artifactId>library</artifactId>
-			<type>apklib</type>
-		</dependency>
-
 	</dependencies>
 
 	<build>

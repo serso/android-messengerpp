@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.realms.vk;
+package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
 import org.solovyev.android.messenger.RealmConnection;
@@ -6,44 +6,43 @@ import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
-import org.solovyev.android.messenger.realms.vk.chats.VkRealmChatService;
-import org.solovyev.android.messenger.realms.vk.users.VkRealmUserService;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 
-public final class VkRealm extends AbstractRealm<VkRealmConfiguration> {
+/**
+ * User: serso
+ * Date: 5/27/13
+ * Time: 8:43 PM
+ */
+final class SmsRealm extends AbstractRealm<SmsRealmConfiguration> {
 
-	public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration, @Nonnull RealmState state) {
+	public SmsRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull SmsRealmConfiguration configuration, @Nonnull RealmState state) {
 		super(id, realmDef, user, configuration, state);
 	}
 
 	@Nonnull
 	@Override
 	protected RealmConnection newRealmConnection0(@Nonnull Context context) {
-		return new VkLongPollRealmConnection(this, context);
+		return new SmsRealmConnection(this, context);
 	}
 
 	@Nonnull
 	@Override
 	public String getDisplayName(@Nonnull Context context) {
-		final StringBuilder sb = new StringBuilder();
-
-		sb.append(context.getText(getRealmDef().getNameResId()));
-
-		return sb.toString();
+		return context.getString(getRealmDef().getNameResId());
 	}
 
 	@Nonnull
 	@Override
 	public RealmUserService getRealmUserService() {
-		return new VkRealmUserService(this);
+		return new SmsRealmUserService(this);
 	}
 
 	@Nonnull
 	@Override
 	public RealmChatService getRealmChatService() {
-		return new VkRealmChatService(this);
+		return new SmsRealmChatService();
 	}
 }

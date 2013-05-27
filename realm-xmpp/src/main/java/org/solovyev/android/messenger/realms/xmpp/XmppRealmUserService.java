@@ -137,37 +137,17 @@ class XmppRealmUserService extends AbstractXmppRealmService implements RealmUser
 
 				// full name
 				final String fullName = userCard.getField("FN");
-				tryParseNameProperties(result, fullName);
+				Users.tryParseNameProperties(result, fullName);
 			} catch (XMPPException e) {
 				// For some reason vcard loading may return timeout exception => investigate this behaviour
 				// NOTE: pidgin loads user information also very slow
 				Log.w(TAG, e.getMessage(), e);
 			}
 		} else {
-			tryParseNameProperties(result, name);
+			Users.tryParseNameProperties(result, name);
 		}
 
 		return result;
-	}
-
-	private static void tryParseNameProperties(@Nonnull List<AProperty> result, @Nullable String fullName) {
-		if (fullName != null) {
-			int firstSpaceSymbolIndex = fullName.indexOf(' ');
-			int lastSpaceSymbolIndex = fullName.lastIndexOf(' ');
-			if (firstSpaceSymbolIndex != -1 && firstSpaceSymbolIndex == lastSpaceSymbolIndex) {
-				// only one space in the string
-				// Proof:
-				// 1. if no spaces => both return -1
-				// 2. if more than one spaces => both return different
-				final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
-				final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
-				result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, firstName));
-				result.add(Properties.newProperty(User.PROPERTY_LAST_NAME, lastName));
-			} else {
-				// just store full name in first name field
-				result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, fullName));
-			}
-		}
 	}
 
 	private static class UserContactsLoader implements XmppConnectedCallable<List<User>> {

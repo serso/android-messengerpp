@@ -10,7 +10,6 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * User: serso
@@ -38,7 +37,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 	@Nonnull
 	static User newInstance(@Nonnull Entity entity,
 							@Nonnull UserSyncData userSyncData,
-							@Nonnull List<AProperty> properties) {
+							@Nonnull Collection<AProperty> properties) {
 		final UserImpl result = new UserImpl(entity);
 
 		result.login = entity.getRealmEntityId();

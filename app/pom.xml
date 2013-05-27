@@ -39,6 +39,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.solovyev.android.messenger</groupId>
+			<artifactId>android-messenger-realm-sms</artifactId>
+			<type>apklib</type>
+		</dependency>
+
+		<dependency>
 			<groupId>org.solovyev.android</groupId>
 			<artifactId>android-common-db</artifactId>
 			<type>apklib</type>

@@ -9,8 +9,8 @@
 
 	<packaging>apklib</packaging>
 
-	<artifactId>android-messenger-realm-vk</artifactId>
-	<name>Android Messenger Realm Vk</name>
+	<artifactId>android-messenger-realm-sms</artifactId>
+	<name>Android Messenger Realm SMS</name>
 	<version>1.0</version>
 
 	<dependencies>
@@ -50,12 +50,6 @@
 		<dependency>
 			<groupId>org.solovyev</groupId>
 			<artifactId>common-core-jodatime</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.7.2</version>
 		</dependency>
 
 	</dependencies>

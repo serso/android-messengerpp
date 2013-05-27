@@ -10,15 +10,15 @@ public abstract class AbstractRealmBuilder<C extends RealmConfiguration> impleme
 	@Nonnull
 	private RealmDef realmDef;
 
-	@Nullable
-	private Realm editedRealm;
-
 	@Nonnull
 	private C configuration;
 
+	@Nullable
+	private Realm editedRealm;
+
 	protected AbstractRealmBuilder(@Nonnull RealmDef realmDef,
-								   @Nullable Realm editedRealm,
-								   @Nonnull C configuration) {
+								   @Nonnull C configuration,
+								   @Nullable Realm editedRealm) {
 		this.realmDef = realmDef;
 		this.editedRealm = editedRealm;
 		this.configuration = configuration;

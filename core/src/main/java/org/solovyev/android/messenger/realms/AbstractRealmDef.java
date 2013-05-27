@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 1:05 AM
  */
-public abstract class AbstractRealmDef implements RealmDef {
+public abstract class AbstractRealmDef<C extends RealmConfiguration> implements RealmDef<C> {
 
 	@Nonnull
 	private final String id;
@@ -24,23 +24,23 @@ public abstract class AbstractRealmDef implements RealmDef {
 	private final int iconResId;
 
 	@Nonnull
-	private final Class<? extends BaseRealmConfigurationFragment<?>> configurationActivityClass;
+	private final Class<? extends BaseRealmConfigurationFragment<?>> configurationFragmentClass;
 
 	@Nonnull
-	private final Class<? extends RealmConfiguration> configurationClass;
+	private final Class<? extends C> configurationClass;
 
 	private final boolean notifySentMessagesImmediately;
 
 	protected AbstractRealmDef(@Nonnull String id,
 							   int nameResId,
 							   int iconResId,
-							   @Nonnull Class<? extends BaseRealmConfigurationFragment<?>> configurationActivityClass,
-							   @Nonnull Class<? extends RealmConfiguration> configurationClass,
+							   @Nonnull Class<? extends BaseRealmConfigurationFragment<?>> configurationFragmentClass,
+							   @Nonnull Class<? extends C> configurationClass,
 							   boolean notifySentMessagesImmediately) {
 		this.id = id;
 		this.nameResId = nameResId;
 		this.iconResId = iconResId;
-		this.configurationActivityClass = configurationActivityClass;
+		this.configurationFragmentClass = configurationFragmentClass;
 		this.configurationClass = configurationClass;
 		this.notifySentMessagesImmediately = notifySentMessagesImmediately;
 	}
@@ -63,14 +63,14 @@ public abstract class AbstractRealmDef implements RealmDef {
 
 	@Override
 	@Nonnull
-	public Class<? extends RealmConfiguration> getConfigurationClass() {
+	public Class<? extends C> getConfigurationClass() {
 		return configurationClass;
 	}
 
 	@Nonnull
 	@Override
 	public Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass() {
-		return this.configurationActivityClass;
+		return this.configurationFragmentClass;
 	}
 
 	@Override

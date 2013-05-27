@@ -28,7 +28,7 @@ import java.util.List;
  * Time: 10:34 PM
  */
 @Singleton
-public class VkRealmDef extends AbstractRealmDef {
+public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 
     /*
 	**********************************************************************
@@ -96,14 +96,14 @@ public class VkRealmDef extends AbstractRealmDef {
 
 	@Nonnull
 	@Override
-	public Realm newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state) {
-		return new VkRealm(realmId, this, user, (VkRealmConfiguration) configuration, state);
+	public Realm<VkRealmConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkRealmConfiguration configuration, @Nonnull RealmState state) {
+		return new VkRealm(realmId, this, user, configuration, state);
 	}
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
-		return new VkRealmBuilder(this, editedRealm, (VkRealmConfiguration) configuration);
+	public RealmBuilder newRealmBuilder(@Nonnull VkRealmConfiguration configuration, @Nullable Realm editedRealm) {
+		return new VkRealmBuilder(this, editedRealm, configuration);
 	}
 
 	@Nonnull
@@ -146,7 +146,7 @@ public class VkRealmDef extends AbstractRealmDef {
 
 	@Nullable
 	@Override
-	public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
+	public Cipherer<VkRealmConfiguration, VkRealmConfiguration> getCipherer() {
 		return new VkRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
 	}
 
@@ -177,7 +177,7 @@ public class VkRealmDef extends AbstractRealmDef {
 		}
 	}
 
-	private static class VkRealmConfigurationCipherer implements Cipherer<RealmConfiguration, RealmConfiguration> {
+	private static class VkRealmConfigurationCipherer implements Cipherer<VkRealmConfiguration, VkRealmConfiguration> {
 
 		@Nonnull
 		private final Cipherer<String, String> stringCipherer;
@@ -187,26 +187,14 @@ public class VkRealmDef extends AbstractRealmDef {
 		}
 
 		@Nonnull
-		@Override
-		public RealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull RealmConfiguration decrypted) throws CiphererException {
-			return encrypt(secret, (VkRealmConfiguration) decrypted);
-		}
-
-		@Nonnull
-		public RealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration decrypted) throws CiphererException {
+		public VkRealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration decrypted) throws CiphererException {
 			final VkRealmConfiguration encrypted = decrypted.clone();
 			encrypted.setAccessParameters(stringCipherer.encrypt(secret, decrypted.getAccessToken()), decrypted.getUserId());
 			return encrypted;
 		}
 
 		@Nonnull
-		@Override
-		public RealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull RealmConfiguration encrypted) throws CiphererException {
-			return decrypt(secret, (VkRealmConfiguration) encrypted);
-		}
-
-		@Nonnull
-		public RealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration encrypted) throws CiphererException {
+		public VkRealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration encrypted) throws CiphererException {
 			final VkRealmConfiguration decrypted = encrypted.clone();
 			decrypted.setAccessParameters(stringCipherer.decrypt(secret, encrypted.getAccessToken()), encrypted.getUserId());
 			return decrypted;
