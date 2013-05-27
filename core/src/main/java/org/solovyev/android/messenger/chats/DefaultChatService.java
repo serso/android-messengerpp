@@ -13,6 +13,7 @@ import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
@@ -21,6 +22,11 @@ import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.collections.Collections;
+import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
+import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
+import org.solovyev.common.collections.multimap.ObjectRemovedUpdater;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
+import org.solovyev.common.collections.multimap.WholeListUpdater;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -101,15 +107,13 @@ public class DefaultChatService implements ChatService {
 	*
 	**********************************************************************
 	*/
-	@Nonnull
-	private static final String EVENT_TAG = "ChatEvent";
 
 	@Nonnull
 	private final JEventListeners<JEventListener<? extends ChatEvent>, ChatEvent> listeners;
 
 	// key: chat id, value: list of participants
 	@Nonnull
-	private final Map<Entity, List<User>> chatParticipantsCache = new HashMap<Entity, List<User>>();
+	private final ThreadSafeMultimap<Entity, User> chatParticipantsCache = ThreadSafeMultimap.newInstance();
 
 	// key: chat id, value: last message
 	@Nonnull
@@ -289,9 +293,7 @@ public class DefaultChatService implements ChatService {
 			this.chatDao.deleteAllChatsInRealm(realmId);
 		}
 
-		synchronized (chatParticipantsCache) {
-			Iterators.removeIf(chatParticipantsCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
-		}
+		chatParticipantsCache.update(EntitiesRemovedMapUpdater.<User>newInstance(realmId));
 
 		synchronized (lastMessagesCache) {
 			Iterators.removeIf(lastMessagesCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
@@ -366,6 +368,7 @@ public class DefaultChatService implements ChatService {
 		for (ChatMessage message : messages) {
 			if (message.isPrivate()) {
 				final Entity participant = message.getSecondUser(user);
+				assert participant != null;
 				final Chat chat = getPrivateChat(user, participant);
 				messagesByChats.put(chat, message);
 			} else {
@@ -541,22 +544,19 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<User> getParticipants(@Nonnull Entity chat) {
-		List<User> result;
+		List<User> result = chatParticipantsCache.get(chat);
 
-		synchronized (chatParticipantsCache) {
-			result = chatParticipantsCache.get(chat);
-			if (result == null) {
-				synchronized (lock) {
-					result = chatDao.loadChatParticipants(chat.getEntityId());
-				}
-				if (!Collections.isEmpty(result)) {
-					chatParticipantsCache.put(chat, result);
-				}
+		if (result == ThreadSafeMultimap.NO_VALUE) {
+			synchronized (lock) {
+				result = chatDao.loadChatParticipants(chat.getEntityId());
+			}
+
+			if (!Collections.isEmpty(result)) {
+				chatParticipantsCache.update(chat, new WholeListUpdater<User>(result));
 			}
 		}
 
-		// result list might be in cache and might be updated due to some events => must COPY
-		return new ArrayList<User>(result);
+		return result;
 	}
 
 	@Nonnull
@@ -627,20 +627,10 @@ public class DefaultChatService implements ChatService {
 
 		@Override
 		public void onEvent(@Nonnull UserEvent event) {
-			synchronized (chatParticipantsCache) {
-				final User eventUser = event.getUser();
+			final User eventUser = event.getUser();
 
-				if (event.getType() == UserEventType.changed) {
-					for (List<User> participants : chatParticipantsCache.values()) {
-						for (int i = 0; i < participants.size(); i++) {
-							final User participant = participants.get(i);
-							if (participant.equals(eventUser)) {
-								participants.set(i, eventUser);
-							}
-						}
-					}
-				}
-
+			if (event.getType() == UserEventType.changed) {
+				chatParticipantsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
 			}
 		}
 	}
@@ -657,31 +647,19 @@ public class DefaultChatService implements ChatService {
 			final ChatEventType type = event.getType();
 			final Object data = event.getData();
 
-			synchronized (chatParticipantsCache) {
-
-				if (type == ChatEventType.participant_added) {
-					// participant added => need to add to list of cached participants
-					if (data instanceof User) {
-						final User participant = ((User) data);
-						final List<User> participants = chatParticipantsCache.get(eventChat.getEntity());
-						if (participants != null) {
-							// check if not contains as can be added in parallel
-							if (!Iterables.contains(participants, participant)) {
-								participants.add(participant);
-							}
-						}
-					}
+			if (type == ChatEventType.participant_added) {
+				// participant added => need to add to list of cached participants
+				if (data instanceof User) {
+					final User participant = ((User) data);
+					chatParticipantsCache.update(eventChat.getEntity(), new ObjectAddedUpdater<User>(participant));
 				}
+			}
 
-				if (type == ChatEventType.participant_removed) {
-					// participant removed => try to remove from cached participants
-					if (data instanceof User) {
-						final User participant = ((User) data);
-						final List<User> participants = chatParticipantsCache.get(eventChat.getEntity());
-						if (participants != null) {
-							participants.remove(participant);
-						}
-					}
+			if (type == ChatEventType.participant_removed) {
+				// participant removed => try to remove from cached participants
+				if (data instanceof User) {
+					final User participant = ((User) data);
+					chatParticipantsCache.update(eventChat.getEntity(), new ObjectRemovedUpdater<User>(participant));
 				}
 			}
 
