@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.users;
 
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ import java.util.Collection;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface User extends MutableUserSyncData, MessengerEntity {
+public interface User extends MutableUserSyncData, MessengerEntity, EntityAware {
 
     /*
 	**********************************************************************

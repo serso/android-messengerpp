@@ -10,7 +10,13 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.ThreadSafeMultimap;
+
+import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
+import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
+import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
+import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
+import org.solovyev.common.collections.multimap.ObjectsAddedUpdater;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerExceptionHandler;
@@ -21,6 +27,7 @@ import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.*;
 import org.solovyev.common.collections.Collections;
+import org.solovyev.common.collections.multimap.WholeListUpdater;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -94,9 +101,8 @@ public class DefaultUserService implements UserService {
 	private final ThreadSafeMultimap<Entity, User> userContactsCache = ThreadSafeMultimap.newInstance();
 
 	// key: user entity, value: list of user chats
-	@GuardedBy("userChatsCache")
 	@Nonnull
-	private final Map<Entity, List<Chat>> userChatsCache = new HashMap<Entity, List<Chat>>();
+	private final ThreadSafeMultimap<Entity, Chat> userChatsCache = ThreadSafeMultimap.newInstance();
 
 	// key: user entity, value: user object
 	@GuardedBy("usersCache")
@@ -195,20 +201,18 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> getUserChats(@Nonnull Entity user) {
-		List<Chat> result;
+		List<Chat> result = userChatsCache.get(user);
 
-		synchronized (userChatsCache) {
-			result = userChatsCache.get(user);
-			if (result == null) {
+		if (result == ThreadSafeMultimap.NO_VALUE) {
+			synchronized (lock) {
 				result = chatService.loadUserChats(user);
-				if (!Collections.isEmpty(result)) {
-					userChatsCache.put(user, result);
-				}
+			}
+			if (!Collections.isEmpty(result)) {
+				userChatsCache.update(user, new WholeListUpdater<Chat>(result));
 			}
 		}
 
-		// result list might be in cache and might updates due to some user events => must COPY
-		return new ArrayList<Chat>(result);
+		return result;
 	}
 
 	@Override
@@ -232,11 +236,8 @@ public class DefaultUserService implements UserService {
 			this.userDao.deleteAllUsersInRealm(realmId);
 		}
 
-		synchronized (userChatsCache) {
-			Iterators.removeIf(userChatsCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
-		}
-
-		userContactsCache.update(new UsersRemovedMapUpdater(realmId));
+		userChatsCache.update(EntitiesRemovedMapUpdater.<Chat>newInstance(realmId));
+		userContactsCache.update(EntitiesRemovedMapUpdater.<User>newInstance(realmId));
 
 		synchronized (usersCache) {
 			Iterators.removeIf(usersCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
@@ -261,7 +262,7 @@ public class DefaultUserService implements UserService {
 				result = userDao.loadUserContacts(user.getEntityId());
 			}
 			if (!Collections.isEmpty(result)) {
-				userContactsCache.update(user, new UserListWholeListUpdater(result));
+				userContactsCache.update(user, new WholeListUpdater<User>(result));
 			}
 		}
 
@@ -312,7 +313,7 @@ public class DefaultUserService implements UserService {
 		final List<User> contacts = realm.getRealmUserService().getUserContacts(user.getRealmEntityId());
 
 		if (!contacts.isEmpty()) {
-			userContactsCache.update(user, new UserListWholeListUpdater(contacts));
+			userContactsCache.update(user, new WholeListUpdater<User>(contacts));
 
 			mergeUserContacts(user, contacts, false, true);
 		} else {
@@ -553,59 +554,40 @@ public class DefaultUserService implements UserService {
 
 			if (type == UserEventType.changed) {
 				// user changed => update it in contacts cache
-				userContactsCache.update(new UserChangedMapUpdater(eventUser));
+				userContactsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
 			}
 
 			if (type == UserEventType.contact_added) {
 				// contact added => need to add to list of cached contacts
 				final User contact = event.getDataAsUser();
-				userContactsCache.update(eventUser.getEntity(), new UserListAddedContactUpdater(contact));
+				userContactsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<User>(contact));
 			}
 
 			if (type == UserEventType.contact_added_batch) {
 				// contacts added => need to add to list of cached contacts
 				final List<User> contacts = event.getDataAsUsers();
-				for (final User contact : contacts) {
-					userContactsCache.update(eventUser.getEntity(), new UserListAddedContactUpdater(contact));
-				}
+				userContactsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<User>(contacts));
 			}
 
 			if (type == UserEventType.contact_removed) {
 				// contact removed => try to remove from cached contacts
 				final String removedContactId = event.getDataAsUserId();
-				userContactsCache.update(eventUser.getEntity(), new UserListRemovedContactUpdater(removedContactId));
+				userContactsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<User>(removedContactId));
 			}
 
-			synchronized (userChatsCache) {
-				if (type == UserEventType.chat_added) {
-					final Chat chat = event.getDataAsChat();
-					final List<Chat> chats = userChatsCache.get(eventUser.getEntity());
-					if (chats != null) {
-						if (!Iterables.contains(chats, chat)) {
-							chats.add(chat);
-						}
-					}
-				}
+			if (type == UserEventType.chat_added) {
+				final Chat chat = event.getDataAsChat();
+				userChatsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<Chat>(chat));
+			}
 
-				if (type == UserEventType.chat_added_batch) {
-					final List<Chat> chats = event.getDataAsChats();
-					final List<Chat> chatsFromCache = userChatsCache.get(eventUser.getEntity());
-					if (chatsFromCache != null) {
-						for (Chat chat : chats) {
-							if (!Iterables.contains(chatsFromCache, chat)) {
-								chatsFromCache.add(chat);
-							}
-						}
-					}
-				}
+			if (type == UserEventType.chat_added_batch) {
+				final List<Chat> chats = event.getDataAsChats();
+				userChatsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<Chat>(chats));
+			}
 
-				if (type == UserEventType.chat_removed) {
-					final Chat chat = event.getDataAsChat();
-					final List<Chat> chats = userChatsCache.get(eventUser.getEntity());
-					if (chats != null) {
-						chats.remove(chat);
-					}
-				}
+			if (type == UserEventType.chat_removed) {
+				final Chat chat = event.getDataAsChat();
+				userChatsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(chat.getId()));
 			}
 
 			synchronized (usersCache) {
@@ -625,20 +607,12 @@ public class DefaultUserService implements UserService {
 
 		@Override
 		public void onEvent(@Nonnull ChatEvent event) {
-			synchronized (userChatsCache) {
+			final Chat eventChat = event.getChat();
 
-				final Chat eventChat = event.getChat();
-				if (event.getType() == ChatEventType.changed) {
-					for (List<Chat> chats : userChatsCache.values()) {
-						for (int i = 0; i < chats.size(); i++) {
-							final Chat chat = chats.get(i);
-							if (chat.equals(eventChat)) {
-								chats.set(i, eventChat);
-							}
-						}
-					}
-				}
-
+			switch (event.getType()) {
+				case changed:
+					userChatsCache.update(new ObjectChangedMapUpdater<Chat>(eventChat));
+					break;
 			}
 		}
 
@@ -651,73 +625,6 @@ public class DefaultUserService implements UserService {
     **********************************************************************
     */
 
-
-	private static class UserListWholeListUpdater implements ThreadSafeMultimap.ListUpdater<User> {
-
-		@Nonnull
-		private final List<User> contacts;
-
-		public UserListWholeListUpdater(@Nonnull List<User> contacts) {
-			this.contacts = contacts;
-		}
-
-		@Nonnull
-		@Override
-		public List<User> update(@Nonnull List<User> values) {
-			return contacts;
-		}
-	}
-
-	private static class UserListAddedContactUpdater implements ThreadSafeMultimap.ListUpdater<User> {
-
-		@Nonnull
-		private final User contact;
-
-		public UserListAddedContactUpdater(@Nonnull User contact) {
-			this.contact = contact;
-		}
-
-		@Nullable
-		@Override
-		public List<User> update(@Nonnull List<User> values) {
-			if (values == ThreadSafeMultimap.NO_VALUE) {
-				return null;
-			} else if (!Iterables.contains(values, contact)) {
-				final List<User> result = ThreadSafeMultimap.copy(values);
-				result.add(contact);
-				return result;
-			} else {
-				return null;
-			}
-		}
-	}
-
-	private static class UserListRemovedContactUpdater implements ThreadSafeMultimap.ListUpdater<User> {
-
-		@Nonnull
-		private final String removedContactId;
-
-		public UserListRemovedContactUpdater(@Nonnull String removedContactId) {
-			this.removedContactId = removedContactId;
-		}
-
-		@Nullable
-		@Override
-		public List<User> update(@Nonnull List<User> values) {
-			if (values == ThreadSafeMultimap.NO_VALUE) {
-				return null;
-			} else {
-				final List<User> result = ThreadSafeMultimap.copy(values);
-				Iterables.removeIf(result, new Predicate<User>() {
-					@Override
-					public boolean apply(@Nullable User contact) {
-						return contact != null && contact.getEntity().getEntityId().equals(removedContactId);
-					}
-				});
-				return result;
-			}
-		}
-	}
 
 	private static class UserListContactStatusUpdater implements ThreadSafeMultimap.ListUpdater<User> {
 
@@ -752,54 +659,4 @@ public class DefaultUserService implements UserService {
 		}
 	}
 
-	private static class UserChangedMapUpdater implements ThreadSafeMultimap.MapUpdater<Entity, User> {
-
-		@Nonnull
-		private final User user;
-
-		public UserChangedMapUpdater(@Nonnull User user) {
-			this.user = user;
-		}
-
-		@Nullable
-		@Override
-		public Map<Entity, List<User>> update(@Nonnull Map<Entity, List<User>> map) {
-			final Map<Entity, List<User>> result = ThreadSafeMultimap.copy(map);
-
-			for (List<User> contacts : result.values()) {
-				for (int i = 0; i < contacts.size(); i++) {
-					final User contact = contacts.get(i);
-					if (contact.equals(user)) {
-						contacts.set(i, user);
-					}
-				}
-			}
-
-			return result;
-		}
-	}
-
-	private static class UsersRemovedMapUpdater implements ThreadSafeMultimap.MapUpdater<Entity, User> {
-
-		@Nonnull
-		private final String realmId;
-
-		public UsersRemovedMapUpdater(@Nonnull String realmId) {
-			this.realmId = realmId;
-		}
-
-		@Nonnull
-		@Override
-		public Map<Entity, List<User>> update(@Nonnull Map<Entity, List<User>> map) {
-			final Map<Entity, List<User>> result = new HashMap<Entity, List<User>>(map.size());
-
-			for (Map.Entry<Entity, List<User>> entry : map.entrySet()) {
-				if (!entry.getKey().getRealmId().equals(realmId)) {
-					result.put(entry.getKey(), entry.getValue());
-				}
-			}
-
-			return result;
-		}
-	}
 }

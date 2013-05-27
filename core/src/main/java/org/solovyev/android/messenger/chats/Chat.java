@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.chats;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
@@ -14,7 +15,7 @@ import java.util.List;
  * Date: 6/11/12
  * Time: 7:38 PM
  */
-public interface Chat extends MessengerEntity {
+public interface Chat extends MessengerEntity, EntityAware {
 
 	String PROPERTY_PRIVATE = "private";
 

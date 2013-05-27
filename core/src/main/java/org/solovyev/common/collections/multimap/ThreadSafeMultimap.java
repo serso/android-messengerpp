@@ -1,4 +1,4 @@
-package org.solovyev;
+package org.solovyev.common.collections.multimap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
