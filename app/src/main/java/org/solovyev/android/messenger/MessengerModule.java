@@ -3,6 +3,7 @@ package org.solovyev.android.messenger;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.ChatDao;

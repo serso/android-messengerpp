@@ -644,78 +644,102 @@ public class DefaultChatService implements ChatService {
 		@Override
 		public void onEvent(@Nonnull ChatEvent event) {
 			final Chat eventChat = event.getChat();
-			final ChatEventType type = event.getType();
 			final Object data = event.getData();
 
-			if (type == ChatEventType.participant_added) {
-				// participant added => need to add to list of cached participants
-				if (data instanceof User) {
-					final User participant = ((User) data);
-					chatParticipantsCache.update(eventChat.getEntity(), new ObjectAddedUpdater<User>(participant));
-				}
+			switch (event.getType()) {
+				case added:
+					break;
+				case changed:
+					synchronized (chatsById) {
+						chatsById.put(eventChat.getEntity(), eventChat);
+					}
+					break;
+				case participant_added:
+					// participant added => need to add to list of cached participants
+					if (data instanceof User) {
+						final User participant = ((User) data);
+						chatParticipantsCache.update(eventChat.getEntity(), new ObjectAddedUpdater<User>(participant));
+					}
+					break;
+				case participant_removed:
+					// participant removed => try to remove from cached participants
+					if (data instanceof User) {
+						final User participant = ((User) data);
+						chatParticipantsCache.update(eventChat.getEntity(), new ObjectRemovedUpdater<User>(participant));
+					}
+					break;
+				case message_added:
+					break;
+				case message_added_batch:
+					break;
+				case message_removed:
+					break;
+				case message_changed:
+					synchronized (chatsById) {
+						chatsById.put(eventChat.getEntity(), eventChat);
+					}
+					break;
+				case last_message_changed:
+					synchronized (chatsById) {
+						chatsById.put(eventChat.getEntity(), eventChat);
+					}
+					break;
+				case user_starts_typing:
+					break;
+				case user_stops_typing:
+					break;
+				case unread_message_count_changed:
+					break;
+				case message_read:
+					break;
 			}
 
-			if (type == ChatEventType.participant_removed) {
-				// participant removed => try to remove from cached participants
-				if (data instanceof User) {
-					final User participant = ((User) data);
-					chatParticipantsCache.update(eventChat.getEntity(), new ObjectRemovedUpdater<User>(participant));
-				}
-			}
-
-			synchronized (chatsById) {
-				if (event.isOfType(ChatEventType.changed, ChatEventType.changed, ChatEventType.last_message_changed)) {
-					chatsById.put(eventChat.getEntity(), eventChat);
-				}
-			}
-
-
-			final Map<Chat, ChatMessage> changesLastMessages = new HashMap<Chat, ChatMessage>();
+			final Map<Chat, ChatMessage> changedLastMessages = new HashMap<Chat, ChatMessage>();
 			synchronized (lastMessagesCache) {
-
-				if (type == ChatEventType.message_added) {
-					final ChatMessage message = event.getDataAsChatMessage();
-					final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-					if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate())) {
-						lastMessagesCache.put(eventChat.getEntity(), message);
-						changesLastMessages.put(eventChat, message);
-					}
-				}
-
-				if (type == ChatEventType.message_added_batch) {
-					final List<ChatMessage> messages = event.getDataAsChatMessages();
-
-					ChatMessage newestMessage = null;
-					for (ChatMessage message : messages) {
-						if (newestMessage == null) {
-							newestMessage = message;
-						} else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
-							newestMessage = message;
-						}
-					}
-
-					final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-					if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
-						lastMessagesCache.put(eventChat.getEntity(), newestMessage);
-						changesLastMessages.put(eventChat, newestMessage);
-					}
-				}
-
-
-				if (type == ChatEventType.message_changed) {
-					if (data instanceof ChatMessage) {
-						final ChatMessage message = (ChatMessage) data;
+				switch (event.getType()) {
+					case message_added: {
+						final ChatMessage message = event.getDataAsChatMessage();
 						final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-						if (messageFromCache == null || messageFromCache.equals(message)) {
+						if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate())) {
 							lastMessagesCache.put(eventChat.getEntity(), message);
-							changesLastMessages.put(eventChat, message);
+							changedLastMessages.put(eventChat, message);
 						}
 					}
-				}
+					break;
+					case message_added_batch: {
+						final List<ChatMessage> messages = event.getDataAsChatMessages();
 
+						ChatMessage newestMessage = null;
+						for (ChatMessage message : messages) {
+							if (newestMessage == null) {
+								newestMessage = message;
+							} else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
+								newestMessage = message;
+							}
+						}
+
+						final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
+						if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
+							lastMessagesCache.put(eventChat.getEntity(), newestMessage);
+							changedLastMessages.put(eventChat, newestMessage);
+						}
+					}
+					break;
+					case message_changed: {
+						if (data instanceof ChatMessage) {
+							final ChatMessage message = (ChatMessage) data;
+							final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
+							if (messageFromCache == null || messageFromCache.equals(message)) {
+								lastMessagesCache.put(eventChat.getEntity(), message);
+								changedLastMessages.put(eventChat, message);
+							}
+						}
+					}
+					break;
+				}
 			}
 
-			for (Map.Entry<Chat, ChatMessage> changedLastMessageEntry : changesLastMessages.entrySet()) {
+			for (Map.Entry<Chat, ChatMessage> changedLastMessageEntry : changedLastMessages.entrySet()) {
 				fireEvent(ChatEventType.last_message_changed.newEvent(changedLastMessageEntry.getKey(), changedLastMessageEntry.getValue()));
 			}
 		}

@@ -548,52 +548,51 @@ public class DefaultUserService implements UserService {
 
 		@Override
 		public void onEvent(@Nonnull UserEvent event) {
-			final UserEventType type = event.getType();
 			final User eventUser = event.getUser();
 
-
-			if (type == UserEventType.changed) {
-				// user changed => update it in contacts cache
-				userContactsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
-			}
-
-			if (type == UserEventType.contact_added) {
-				// contact added => need to add to list of cached contacts
-				final User contact = event.getDataAsUser();
-				userContactsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<User>(contact));
-			}
-
-			if (type == UserEventType.contact_added_batch) {
-				// contacts added => need to add to list of cached contacts
-				final List<User> contacts = event.getDataAsUsers();
-				userContactsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<User>(contacts));
-			}
-
-			if (type == UserEventType.contact_removed) {
-				// contact removed => try to remove from cached contacts
-				final String removedContactId = event.getDataAsUserId();
-				userContactsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<User>(removedContactId));
-			}
-
-			if (type == UserEventType.chat_added) {
-				final Chat chat = event.getDataAsChat();
-				userChatsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<Chat>(chat));
-			}
-
-			if (type == UserEventType.chat_added_batch) {
-				final List<Chat> chats = event.getDataAsChats();
-				userChatsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<Chat>(chats));
-			}
-
-			if (type == UserEventType.chat_removed) {
-				final Chat chat = event.getDataAsChat();
-				userChatsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(chat.getId()));
-			}
-
-			synchronized (usersCache) {
-				if (type == UserEventType.changed) {
-					usersCache.put(eventUser.getEntity(), eventUser);
-				}
+			switch (event.getType()) {
+				case added:
+					break;
+				case changed:
+					// user changed => update it in contacts cache
+					userContactsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
+					synchronized (usersCache) {
+						usersCache.put(eventUser.getEntity(), eventUser);
+					}
+					break;
+				case contact_added:
+					// contact added => need to add to list of cached contacts
+					final User contact = event.getDataAsUser();
+					userContactsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<User>(contact));
+					break;
+				case contact_added_batch:
+					// contacts added => need to add to list of cached contacts
+					final List<User> contacts = event.getDataAsUsers();
+					userContactsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<User>(contacts));
+					break;
+				case contact_removed:
+					// contact removed => try to remove from cached contacts
+					final String removedContactId = event.getDataAsUserId();
+					userContactsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<User>(removedContactId));
+					break;
+				case chat_added:
+					final Chat chat = event.getDataAsChat();
+					userChatsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<Chat>(chat));
+					break;
+				case chat_added_batch:
+					final List<Chat> chats = event.getDataAsChats();
+					userChatsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<Chat>(chats));
+					break;
+				case chat_removed:
+					final Chat removedChat = event.getDataAsChat();
+					userChatsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(removedChat.getId()));
+					break;
+				case contact_online:
+					break;
+				case contact_offline:
+					break;
+				case unread_messages_count_changed:
+					break;
 			}
 		}
 
