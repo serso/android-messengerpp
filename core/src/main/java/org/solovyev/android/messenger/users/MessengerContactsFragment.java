@@ -77,7 +77,14 @@ public final class MessengerContactsFragment extends AbstractMessengerContactsFr
 		((AbstractContactsAdapter) getAdapter()).setMode(newMode);
 	}
 
-    /*
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		((AbstractContactsAdapter) getAdapter()).setMode(mode);
+	}
+
+	/*
 	**********************************************************************
     *
     *                           MENU
@@ -95,6 +102,8 @@ public final class MessengerContactsFragment extends AbstractMessengerContactsFr
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
+		final MenuItem contactsMenuItem = menu.findItem(R.id.mpp_menu_toggle_contacts);
+		contactsMenuItem.setIcon(mode.getActionBarIconResId());
 	}
 
 	@Override

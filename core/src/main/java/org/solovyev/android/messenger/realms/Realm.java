@@ -55,6 +55,17 @@ public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
 	@Nonnull
 	Realm copyForNewState(@Nonnull RealmState newState);
 
+	boolean isCompositeUser(@Nonnull User user);
+
+	/**
+	 * Should be called only after {@link Realm#isCompositeUser(org.solovyev.android.messenger.users.User)} returned true
+	 * @param user user for which check should be done
+	 *
+	 * @return true if default value is set for composite user
+	 */
+	boolean isCompositeUserDefined(@Nonnull	User user);
+
+
 	/*
 	**********************************************************************
 	*
@@ -70,5 +81,4 @@ public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
 
 	@Nonnull
 	RealmConnection newRealmConnection(@Nonnull Context context);
-
 }

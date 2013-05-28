@@ -5,11 +5,19 @@ import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+
+import android.widget.Toast;
+import roboguice.RoboGuice;
 import roboguice.event.EventListener;
+import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -22,8 +30,12 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 	@Nonnull
 	private final MessengerFragmentActivity activity;
 
-	public ContactGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+	@Nonnull
+	private final RealmService realmService;
+
+	public ContactGuiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull RealmService realmService) {
 		this.activity = activity;
+		this.realmService = realmService;
 	}
 
 	@Override
@@ -31,32 +43,63 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 		final User contact = event.getContact();
 		final ContactGuiEventType type = event.getType();
 
-		if (type == ContactGuiEventType.contact_clicked) {
-
-			new MessengerAsyncTask<Void, Void, Chat>() {
-
-				@Override
-				protected Chat doWork(@Nonnull List<Void> params) {
-					Chat result = null;
-
-					try {
-						final User user = activity.getRealmService().getRealmById(contact.getEntity().getRealmId()).getUser();
-						result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
-					} catch (RealmException e) {
-						throwException(e);
+		try {
+			final Realm realm = realmService.getRealmByEntityAware(contact);
+			switch (type) {
+				case contact_clicked:
+					if (realm.isCompositeUser(contact)) {
+						if (!realm.isCompositeUserDefined(contact)) {
+							fireEvent(ContactGuiEventType.newShowCompositeUserDialog(contact));
+						} else {
+							fireEvent(ContactGuiEventType.newOpenContactChat(contact));
+						}
+					} else {
+						fireEvent(ContactGuiEventType.newOpenContactChat(contact));
 					}
-
-					return result;
-				}
-
-				@Override
-				protected void onSuccessPostExecute(@Nullable Chat chat) {
-					if (chat != null) {
-						activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
-					}
-				}
-
-			}.execute(null, null);
+					break;
+				case open_contact_chat:
+					onOpenContactChat(contact);
+					break;
+				case show_composite_user_dialog:
+					// todo serso: continue
+					Toast.makeText(activity, "DIALOG MUST BE SHOWN!", Toast.LENGTH_LONG).show();
+					break;
+			}
+		} catch (UnsupportedRealmException e) {
+			// should not happen
+			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 		}
+	}
+
+	private void fireEvent(@Nonnull ContactGuiEvent event) {
+		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
+		eventManager.fire(event);
+	}
+
+	private void onOpenContactChat(final User contact) {
+		new MessengerAsyncTask<Void, Void, Chat>() {
+
+			@Override
+			protected Chat doWork(@Nonnull List<Void> params) {
+				Chat result = null;
+
+				try {
+					final User user = activity.getRealmService().getRealmById(contact.getEntity().getRealmId()).getUser();
+					result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
+				} catch (RealmException e) {
+					throwException(e);
+				}
+
+				return result;
+			}
+
+			@Override
+			protected void onSuccessPostExecute(@Nullable Chat chat) {
+				if (chat != null) {
+					activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
+				}
+			}
+
+		}.execute(null, null);
 	}
 }

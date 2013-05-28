@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -71,6 +72,9 @@ public interface RealmService {
 
 	@Nonnull
 	Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
+
+	@Nonnull
+	Realm getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException;
 
 	@Nonnull
 	Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;

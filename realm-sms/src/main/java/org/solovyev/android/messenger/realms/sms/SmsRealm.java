@@ -8,6 +8,7 @@ import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 
@@ -44,5 +45,16 @@ final class SmsRealm extends AbstractRealm<SmsRealmConfiguration> {
 	@Override
 	public RealmChatService getRealmChatService() {
 		return new SmsRealmChatService();
+	}
+
+	@Override
+	public boolean isCompositeUser(@Nonnull User user) {
+		return true;
+	}
+
+	@Override
+	public boolean isCompositeUserDefined(@Nonnull User user) {
+		final String phoneNumber = user.getPropertyValueByName(User.PROPERTY_PHONE);
+		return !Strings.isEmpty(phoneNumber);
 	}
 }

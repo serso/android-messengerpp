@@ -39,13 +39,13 @@ final class SmsRealmUserService implements RealmUserService {
 		final Context context = MessengerApplication.getApp();
 
 		if (!SmsRealmDef.USER_ID.equals(realmUserId)) {
-			final String selection = ContactsContract.Contacts._ID + " = ?";
+			final String selection = ContactsContract.Contacts._ID + " = ? and " + ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 			final String[] selectionArgs = new String[]{realmUserId};
 
 			final ContentResolver cr = context.getContentResolver();
 			final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, selectionArgs, null);
 			if (!cursor.isAfterLast()) {
-				return new SmsUserMapper(realm).convert(cursor);
+				return new SmsUserMapper(realm, cr).convert(cursor);
 			} else {
 				return null;
 			}
@@ -84,9 +84,10 @@ final class SmsRealmUserService implements RealmUserService {
 	@Nonnull
 	@Override
 	public List<User> getUserContacts(@Nonnull String realmUserId) throws RealmConnectionException {
+		final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 		final ContentResolver cr = MessengerApplication.getApp().getContentResolver();
-		final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, null, null, null);
-		return new ListMapper<User>(new SmsUserMapper(realm)).convert(cursor);
+		final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, null, null);
+		return new ListMapper<User>(new SmsUserMapper(realm, cr)).convert(cursor);
 	}
 
 	@Nonnull

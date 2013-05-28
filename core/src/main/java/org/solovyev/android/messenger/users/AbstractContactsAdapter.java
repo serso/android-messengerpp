@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Filter;
 import com.google.common.base.Function;
@@ -16,6 +17,8 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,9 @@ import java.util.List;
  * Time: 5:55 PM
  */
 public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> {
+
+	@Nonnull
+	private static final String MODE = "mode";
 
 	@Nonnull
 	private MessengerContactsMode mode = MessengerContactsFragment.DEFAULT_CONTACTS_MODE;
@@ -83,6 +89,25 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 	}
 
+	@Override
+	public int loadState(@Nonnull Bundle savedInstanceState, int defaultPosition) {
+		int result = super.loadState(savedInstanceState, defaultPosition);
+
+		final Serializable mode = savedInstanceState.getSerializable(MODE);
+		if (mode instanceof MessengerContactsMode) {
+			this.mode = (MessengerContactsMode) mode;
+		}
+
+		return result;
+	}
+
+	@Override
+	public void saveState(@Nonnull Bundle outState) {
+		super.saveState(outState);
+
+		outState.putSerializable(MODE, mode);
+	}
+
 	private void onContactChanged(@Nonnull UserEvent event, @Nonnull User contact) {
 		final ContactListItem listItem = findInAllElements(contact);
 		if (listItem != null) {
@@ -122,9 +147,9 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	protected abstract boolean canAddContact(@Nonnull User contact);
 
 	public void setMode(@Nonnull MessengerContactsMode newMode) {
-		boolean refilter = this.mode != newMode;
+		boolean changed = this.mode != newMode;
 		this.mode = newMode;
-		if (refilter) {
+		if (changed) {
 			refilter();
 		}
 	}

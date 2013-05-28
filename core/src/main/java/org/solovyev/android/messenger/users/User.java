@@ -44,8 +44,20 @@ public interface User extends MutableUserSyncData, MessengerEntity, EntityAware 
 	@Nonnull
 	static final String PROPERTY_SEX = "sex";
 
+	/**
+	 * Primary phone number, phone number used by default
+	 */
 	@Nonnull
 	static final String PROPERTY_PHONE = "phone";
+
+	/**
+	 * List of all phone numbers separated by ';'
+	 */
+	@Nonnull
+	static final String PROPERTY_PHONES = "phones";
+
+	@Nonnull
+	static final String PROPERTY_PHONES_SEPARATOR = ";";
 
 	@Nonnull
 	static final String PROPERTY_EMAIL = "email";

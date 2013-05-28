@@ -4,6 +4,7 @@ import android.content.Context;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.users.CompositeUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
 
@@ -180,5 +181,15 @@ public abstract class AbstractRealm<C extends RealmConfiguration> extends JObjec
 	@Override
 	public int hashCode() {
 		return id.hashCode();
+	}
+
+	@Override
+	public boolean isCompositeUser(@Nonnull User user) {
+		return user instanceof CompositeUser;
+	}
+
+	@Override
+	public boolean isCompositeUserDefined(@Nonnull User user) {
+		return ((CompositeUser) user).isDefined();
 	}
 }

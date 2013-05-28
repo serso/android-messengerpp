@@ -3,6 +3,12 @@
 	package="org.solovyev.android.messenger.realms.sms"
 	android:versionCode="1"
 	android:versionName="1.0">
+
 	<uses-permission android:name="android.permission.READ_CONTACTS"/>
 	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+	<uses-sdk
+			android:minSdkVersion="7"
+			android:targetSdkVersion="17"/>
+
 </manifest>

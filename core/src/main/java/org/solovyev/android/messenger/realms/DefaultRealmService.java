@@ -11,6 +11,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -328,6 +329,12 @@ public class DefaultRealmService implements RealmService {
 	@Override
 	public Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
 		return getRealmById(entity.getRealmId());
+	}
+
+	@Nonnull
+	@Override
+	public Realm getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException {
+		return getRealmByEntity(entityAware.getEntity());
 	}
 
 	@Nonnull
