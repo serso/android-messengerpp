@@ -100,6 +100,9 @@ public interface User extends MutableUserSyncData, MessengerEntity, EntityAware 
 	@Nonnull
 	User cloneWithNewStatus(boolean online);
 
+	@Nonnull
+	User cloneWithNewProperty(@Nonnull AProperty property);
+
     /*
     **********************************************************************
     *

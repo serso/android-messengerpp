@@ -1,16 +1,27 @@
 package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
+import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
+import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+
+import com.google.common.base.Splitter;
 
 /**
  * User: serso
@@ -56,5 +67,35 @@ final class SmsRealm extends AbstractRealm<SmsRealmConfiguration> {
 	public boolean isCompositeUserDefined(@Nonnull User user) {
 		final String phoneNumber = user.getPropertyValueByName(User.PROPERTY_PHONE);
 		return !Strings.isEmpty(phoneNumber);
+	}
+
+	@Nonnull
+	@Override
+	public List<CompositeUserChoice> getCompositeUserChoices(@Nonnull User user) {
+		final String phoneNumbers = user.getPropertyValueByName(User.PROPERTY_PHONES);
+		if (!Strings.isEmpty(phoneNumbers)) {
+			final List<CompositeUserChoice> choices = new ArrayList<CompositeUserChoice>();
+
+			int index = 0;
+			for (String phoneNumber : Splitter.on(User.PROPERTY_PHONES_SEPARATOR).omitEmptyStrings().split(phoneNumbers)) {
+				choices.add(CompositeUserChoice.newInstance(phoneNumber, index));
+				index++;
+			}
+
+			return choices;
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	@Nonnull
+	@Override
+	public User applyCompositeChoice(@Nonnull CompositeUserChoice compositeUserChoice, @Nonnull User user) {
+		return user.cloneWithNewProperty(Properties.newProperty(User.PROPERTY_PHONE, compositeUserChoice.getName().toString()));
+	}
+
+	@Override
+	public boolean isCompositeUserChoicePersisted() {
+		return true;
 	}
 }

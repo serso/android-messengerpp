@@ -1,10 +1,15 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
+
+import java.util.Collection;
+import java.util.List;
+
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.RealmChatService;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 
@@ -55,6 +60,14 @@ public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
 	@Nonnull
 	Realm copyForNewState(@Nonnull RealmState newState);
 
+	/*
+	**********************************************************************
+	*
+	*                           COMPOSITE USER
+	*
+	**********************************************************************
+	*/
+
 	boolean isCompositeUser(@Nonnull User user);
 
 	/**
@@ -65,6 +78,13 @@ public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
 	 */
 	boolean isCompositeUserDefined(@Nonnull	User user);
 
+	@Nonnull
+	List<CompositeUserChoice> getCompositeUserChoices(@Nonnull User user);
+
+	@Nonnull
+	User applyCompositeChoice(@Nonnull CompositeUserChoice compositeUserChoice, @Nonnull User user);
+
+	boolean isCompositeUserChoicePersisted();
 
 	/*
 	**********************************************************************

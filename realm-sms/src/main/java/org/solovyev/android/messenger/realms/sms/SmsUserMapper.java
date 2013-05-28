@@ -49,7 +49,7 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 		final String[] selectionArgs = {userId};
 		final Cursor phoneCursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, selection, selectionArgs, null);
 		try {
-			if (phoneCursor.moveToNext()) {
+			while (phoneCursor.moveToNext()) {
 				final String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 				if (!Strings.isEmpty(phoneNumber)) {
 					if (phoneNumbers.length() != 0) {

@@ -1,10 +1,16 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.CompositeUser;
+import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
 
@@ -191,5 +197,22 @@ public abstract class AbstractRealm<C extends RealmConfiguration> extends JObjec
 	@Override
 	public boolean isCompositeUserDefined(@Nonnull User user) {
 		return ((CompositeUser) user).isDefined();
+	}
+
+	@Nonnull
+	@Override
+	public List<CompositeUserChoice> getCompositeUserChoices(@Nonnull User user) {
+		return Collections.emptyList();
+	}
+
+	@Nonnull
+	@Override
+	public User applyCompositeChoice(@Nonnull CompositeUserChoice compositeUserChoice, @Nonnull User user) {
+		return user;
+	}
+
+	@Override
+	public boolean isCompositeUserChoicePersisted() {
+		return false;
 	}
 }

@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.Fragments;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -10,7 +11,6 @@ import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 
-import android.widget.Toast;
 import roboguice.RoboGuice;
 import roboguice.event.EventListener;
 import roboguice.event.EventManager;
@@ -61,8 +61,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 					onOpenContactChat(contact);
 					break;
 				case show_composite_user_dialog:
-					// todo serso: continue
-					Toast.makeText(activity, "DIALOG MUST BE SHOWN!", Toast.LENGTH_LONG).show();
+					Fragments.showDialog(new CompositeUserDialogFragment(contact), CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
 					break;
 			}
 		} catch (UnsupportedRealmException e) {

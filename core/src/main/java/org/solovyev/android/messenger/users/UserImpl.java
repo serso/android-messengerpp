@@ -176,4 +176,14 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 
 		return clone;
 	}
+
+	@Nonnull
+	@Override
+	public User cloneWithNewProperty(@Nonnull AProperty property) {
+		final UserImpl clone = clone();
+
+		clone.properties.setProperty(property);
+
+		return clone;
+	}
 }
