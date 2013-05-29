@@ -257,16 +257,16 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 		final LinearLayout root = new LinearLayout(this.getActivity());
 		root.setOrientation(LinearLayout.VERTICAL);
-		root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+		root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 		if (listViewFilter != null) {
 			final View filterView = listViewFilter.createView(savedInstanceState);
-			root.addView(filterView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			root.addView(filterView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		}
 
 		final View listViewParent = createListView(container);
 
-		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		params.gravity = Gravity.CENTER_VERTICAL;
 		root.addView(listViewParent, params);
 
@@ -315,7 +315,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
 		progressContainer.addView(progress, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-		root.addView(progressContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+		root.addView(progressContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 		// ------------------------------------------------------------------
 
@@ -325,7 +325,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		final TextView emptyListCaption = new TextView(context);
 		emptyListCaption.setId(INTERNAL_EMPTY_ID);
 		emptyListCaption.setGravity(Gravity.CENTER);
-		listViewContainer.addView(emptyListCaption, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+		listViewContainer.addView(emptyListCaption, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 
 		final ListViewAwareOnRefreshListener topRefreshListener = getTopPullRefreshListener();
@@ -384,13 +384,13 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			listView = pullToRefreshListView;
 		}
 
-		listViewContainer.addView(listView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+		listViewContainer.addView(listView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-		root.addView(listViewContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+		root.addView(listViewContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 		// ------------------------------------------------------------------
 
-		root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+		root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 		return root;
 	}
