@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<CheckBox xmlns:a="http://schemas.android.com/apk/res/android"
+		  a:id="@+id/mpp_dialog_checkbox"
+		  a:text="@string/mpp_dialog_do_not_ask_again"
+		  style="?android:attr/textAppearanceMedium"
+		  a:layout_width="match_parent"
+		  a:layout_height="wrap_content"/>

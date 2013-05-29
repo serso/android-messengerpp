@@ -101,4 +101,6 @@ public interface Realm<C extends RealmConfiguration> extends MessengerEntity {
 
 	@Nonnull
 	RealmConnection newRealmConnection(@Nonnull Context context);
+
+	int getCompositeDialogTitleResId();
 }

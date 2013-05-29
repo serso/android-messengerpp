@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.solovyev.android.Views;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -214,5 +215,11 @@ public abstract class AbstractRealm<C extends RealmConfiguration> extends JObjec
 	@Override
 	public boolean isCompositeUserChoicePersisted() {
 		return false;
+	}
+
+	@Override
+	public int getCompositeDialogTitleResId() {
+		// todo serso: set proper title
+		return 0;
 	}
 }

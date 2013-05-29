@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.android.Fragments;
+import org.solovyev.android.Fragments2;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -61,7 +61,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 					onOpenContactChat(contact);
 					break;
 				case show_composite_user_dialog:
-					Fragments.showDialog(new CompositeUserDialogFragment(contact), CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
+					Fragments2.showDialog(new CompositeUserDialogFragment(contact), CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
 					break;
 			}
 		} catch (UnsupportedRealmException e) {

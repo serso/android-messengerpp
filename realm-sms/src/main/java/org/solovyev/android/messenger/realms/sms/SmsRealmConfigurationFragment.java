@@ -28,7 +28,7 @@ public final class SmsRealmConfigurationFragment extends BaseRealmConfigurationF
 	private SmsRealmDef realmDef;
 
 	public SmsRealmConfigurationFragment() {
-		super(R.layout.mpp_realm_conf_sms);
+		super(R.layout.mpp_realm_sms_conf);
 	}
 
 	@Nullable

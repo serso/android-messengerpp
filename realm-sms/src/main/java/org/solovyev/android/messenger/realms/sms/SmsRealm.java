@@ -98,4 +98,9 @@ final class SmsRealm extends AbstractRealm<SmsRealmConfiguration> {
 	public boolean isCompositeUserChoicePersisted() {
 		return true;
 	}
+
+	@Override
+	public int getCompositeDialogTitleResId() {
+		return R.string.mpp_sms_realm_composite_dialog_title;
+	}
 }

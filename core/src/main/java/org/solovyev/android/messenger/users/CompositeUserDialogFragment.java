@@ -6,6 +6,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -15,6 +19,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -37,6 +42,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	private static final String TAG = CompositeUserDialogFragment.class.getSimpleName();
 
 	private static final String USER_ENTITY = "user_entity";
+	private static final String DO_NOT_ASK_AGAIN = "do_not_ask_again";
 
 	/*
 	**********************************************************************
@@ -66,6 +72,8 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 	private Realm<?> realm;
 
+	private boolean doNotAskAgain = false;
+
 
 	/*
 	**********************************************************************
@@ -94,6 +102,10 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (savedInstanceState != null) {
+			doNotAskAgain = savedInstanceState.getBoolean(DO_NOT_ASK_AGAIN, false);
+		}
+
 		if (user == null) {
 			if (savedInstanceState != null) {
 				final Parcelable userEntity = savedInstanceState.getParcelable(USER_ENTITY);
@@ -120,6 +132,8 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 		List<CompositeUserChoice> choices = Collections.emptyList();
 		if (user != null) {
+			builder.setTitle(realm.getCompositeDialogTitleResId());
+
 			if (realm.isCompositeUser(user)) {
 				choices = realm.getCompositeUserChoices(user);
 			} else {
@@ -133,12 +147,33 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 		}
 		builder.setItems(choicesStrings, new ChoiceOnClickListener(choices));
 
+		if (realm.isCompositeUserChoicePersisted()) {
+			// NOTE: context from builder is used as custom style may be applied here
+			final LayoutInflater inflater = LayoutInflater.from(builder.getContext());
+			final CheckBox checkBox = (CheckBox) inflater.inflate(R.layout.mpp_dialog_checkbox, null);
+			checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
+					doNotAskAgain = checked;
+				}
+			});
+			checkBox.setChecked(doNotAskAgain);
+
+			builder.setView(checkBox);
+		}
+
 		return builder.create();
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+
+		if (user != null) {
+			outState.putParcelable(USER_ENTITY, user.getEntity());
+		}
+
+		outState.putBoolean(DO_NOT_ASK_AGAIN, doNotAskAgain);
 	}
 
 
@@ -159,7 +194,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	private void onChoiceSelected(@Nonnull CompositeUserChoice compositeUserChoice) {
 		if (user != null && realm != null) {
 			final User newUser = realm.applyCompositeChoice(compositeUserChoice, user);
-			if (realm.isCompositeUserChoicePersisted()) {
+			if (realm.isCompositeUserChoicePersisted() && doNotAskAgain) {
 				userService.updateUser(newUser);
 			}
 
