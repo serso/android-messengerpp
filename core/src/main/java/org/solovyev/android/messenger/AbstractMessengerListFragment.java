@@ -637,7 +637,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 		@Override
 		public void onEvent(@Nonnull final UserEvent event) {
-			Threads.tryRunOnUiThread(getActivity(), new Runnable() {
+			Threads2.tryRunOnUiThread(AbstractMessengerListFragment.this, new Runnable() {
 				@Override
 				public void run() {
 					adapter.onEvent(event);

@@ -12,12 +12,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
-import org.solovyev.android.Threads;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
@@ -395,7 +391,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 					chat = event.getChat();
 				}
 			}
-			Threads.tryRunOnUiThread(getActivity(), new Runnable() {
+			Threads2.tryRunOnUiThread(MessengerMessagesFragment.this, new Runnable() {
 				@Override
 				public void run() {
 					getAdapter().onEvent(event);

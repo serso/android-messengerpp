@@ -31,6 +31,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
 	private ContactListItem(@Nonnull UiContact contact) {
 		super(TAG_PREFIX, contact, R.layout.mpp_list_item_contact);
+		setDisplayName(contact.getDisplayName());
 	}
 
 	private static int getUnreadMessagesCount(@Nonnull User contact) {
@@ -38,7 +39,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	}
 
 	@Nonnull
-	public static ContactListItem newEmpty(User contact) {
+	public static ContactListItem newEmpty(@Nonnull User contact) {
 		return newInstance(UiContact.newInstance(contact, 0));
 	}
 

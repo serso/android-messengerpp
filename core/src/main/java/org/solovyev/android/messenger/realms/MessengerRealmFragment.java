@@ -11,9 +11,9 @@ import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
-import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -258,7 +258,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 				case state_changed:
 					if (eventRealm.equals(realm)) {
 						realm = eventRealm;
-						Threads.tryRunOnUiThread(getActivity(), new Runnable() {
+						Threads2.tryRunOnUiThread(MessengerRealmFragment.this, new Runnable() {
 							@Override
 							public void run() {
 								final View view = getView();

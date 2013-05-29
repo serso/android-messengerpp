@@ -56,13 +56,13 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 					for (R element : elements) {
 						adapter.add(createListItem(element));
 					}
+
+					final Comparator<? super LI> comparator = getComparator();
+					if (comparator != null) {
+						adapter.sort(comparator);
+					}
 				}
 			});
-
-			final Comparator<? super LI> comparator = getComparator();
-			if (comparator != null) {
-				adapter.sort(comparator);
-			}
 		}
 
 		if (onPostExecute != null) {

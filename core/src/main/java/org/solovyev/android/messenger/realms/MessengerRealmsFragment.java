@@ -11,7 +11,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import org.solovyev.android.Threads;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -19,6 +18,7 @@ import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.GuiEventType;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
@@ -190,7 +190,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 
 		@Override
 		public void onEvent(@Nonnull final RealmEvent realmEvent) {
-			Threads.tryRunOnUiThread(getActivity(), new Runnable() {
+			Threads2.tryRunOnUiThread(MessengerRealmsFragment.this, new Runnable() {
 				@Override
 				public void run() {
 					getAdapter().onRealmEvent(realmEvent);

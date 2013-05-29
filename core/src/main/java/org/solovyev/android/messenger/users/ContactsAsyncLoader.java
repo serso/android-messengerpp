@@ -35,7 +35,7 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactLi
 
 		for (User user : realmService.getEnabledRealmUsers()) {
 			for (User contact : userService.getUserContacts(user.getEntity())) {
-				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
+				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
 			}
 		}
 

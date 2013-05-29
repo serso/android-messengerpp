@@ -39,7 +39,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 
 		for (User user : realmService.getEnabledRealmUsers()) {
 			for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
-				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
+				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
 			}
 		}
 

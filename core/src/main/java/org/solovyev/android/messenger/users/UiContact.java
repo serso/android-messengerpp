@@ -16,14 +16,24 @@ final class UiContact implements MessengerEntity {
 
 	private final int unreadMessagesCount;
 
-	private UiContact(@Nonnull User contact, int unreadMessagesCount) {
+	// precached display name in order to calculate it before shown (e.g. for sorting)
+	@Nonnull
+	private final String displayName;
+
+	private UiContact(@Nonnull User contact, int unreadMessagesCount, @Nonnull String displayName) {
 		this.contact = contact;
 		this.unreadMessagesCount = unreadMessagesCount;
+		this.displayName = displayName;
+	}
+
+	@Nonnull
+	static UiContact newInstance(@Nonnull User contact, int unreadMessagesCount, @Nonnull String displayName) {
+		return new UiContact(contact, unreadMessagesCount, displayName);
 	}
 
 	@Nonnull
 	static UiContact newInstance(@Nonnull User contact, int unreadMessagesCount) {
-		return new UiContact(contact, unreadMessagesCount);
+		return newInstance(contact, unreadMessagesCount, "");
 	}
 
 	@Nonnull
@@ -63,6 +73,11 @@ final class UiContact implements MessengerEntity {
 
 	public int getUnreadMessagesCount() {
 		return unreadMessagesCount;
+	}
+
+	@Nonnull
+	String getDisplayName() {
+		return displayName;
 	}
 
 	@Nonnull

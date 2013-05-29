@@ -53,6 +53,10 @@ public abstract class AbstractMessengerListItem<D extends MessengerEntity> imple
 		this.canBeSelected = canBeSelected;
 	}
 
+	protected void setDisplayName(@Nonnull CharSequence displayName) {
+		this.displayName = displayName;
+	}
+
 	@Nonnull
 	@Override
 	public final View updateView(@Nonnull Context context, @Nonnull View view) {
