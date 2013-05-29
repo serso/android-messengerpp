@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Checkable;
 import android.widget.Filter;
+import android.widget.SectionIndexer;
+import org.solovyev.android.list.AlphabetIndexer;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -19,7 +21,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:58 PM
  */
-public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> /*implements UserEventListener*/ {
+public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
 
     /*
 	**********************************************************************
@@ -55,8 +57,12 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	@Nonnull
 	private final SelectedItemListener selectedItemListener = new SelectedItemListener();
 
+	@Nonnull
+	private final SectionIndexer sectionIndexer;
+
 	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
 		super(context, listItems);
+		sectionIndexer = AlphabetIndexer.createAndAttach(this);
 	}
 
 	public boolean isInitialized() {
@@ -134,6 +140,21 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 
 	public int loadState(@Nonnull Bundle savedInstanceState, int defaultPosition) {
 		return savedInstanceState.getInt(POSITION, defaultPosition);
+	}
+
+	@Override
+	public Object[] getSections() {
+		return sectionIndexer.getSections();
+	}
+
+	@Override
+	public int getPositionForSection(int section) {
+		return sectionIndexer.getPositionForSection(section);
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		return sectionIndexer.getSectionForPosition(position);
 	}
 
 	public static final class ListItemComparator implements Comparator<ListItem> {

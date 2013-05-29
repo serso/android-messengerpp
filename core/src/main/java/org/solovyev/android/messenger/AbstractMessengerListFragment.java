@@ -20,6 +20,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.solovyev.android.Threads;
+import org.solovyev.android.list.Alphabet;
+import org.solovyev.android.list.AlphabetIndexer;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -399,6 +401,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		lv.setScrollbarFadingEnabled(true);
 		lv.setCacheColorHint(Color.TRANSPARENT);
 		lv.setOnScrollListener(this);
+		lv.setFastScrollEnabled(true);
 
 		// filter so done manually
 		lv.setTextFilterEnabled(false);
@@ -406,7 +409,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		lv.setVerticalFadingEdgeEnabled(false);
 		lv.setFocusable(false);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+			lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_RIGHT);
 		}
 		lv.setDividerHeight(1);
 	}
