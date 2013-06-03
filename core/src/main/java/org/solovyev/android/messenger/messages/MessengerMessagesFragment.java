@@ -176,7 +176,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 							super.onSuccessPostExecute(result);
 							messageBody.setText("");
 						}
-					}.execute(new SendMessageAsyncTask.Input(getUser(), messageText, chat));
+					}.executeInParallel(new SendMessageAsyncTask.Input(getUser(), messageText, chat));
 				}
 			}
 		});
@@ -252,7 +252,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 		return new AbstractOnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				new SyncChatMessagesForChatAsyncTask(this, getActivity()).execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+				new SyncChatMessagesForChatAsyncTask(this, getActivity()).executeInParallel(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 			}
 		};
 	}
@@ -300,7 +300,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
 					}
 				}
-			}.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), true));
+			}.executeInParallel(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), true));
 		}
 	}
 
@@ -443,7 +443,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 						// let's wait 0.5 sec while sorting & filtering
 						scrollToTheEnd(500);
 					}
-				}.execute(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+				}.executeInParallel(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 			}
 		}
 	}

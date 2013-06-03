@@ -23,6 +23,15 @@ public final class Chats {
 	}
 
 	@Nonnull
+	static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage lastMessage, @Nonnull User user, int unreadMessagesCount) {
+		String result = getDisplayName(chat, lastMessage, user);
+		if (unreadMessagesCount > 0) {
+			result += " (" + unreadMessagesCount + ")";
+		}
+		return result;
+	}
+
+	@Nonnull
 	static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage message, @Nonnull User user) {
 		final String title = message != null ? message.getTitle() : null;
 		if (Strings.isEmpty(title) || title.equals(" ... ")) {

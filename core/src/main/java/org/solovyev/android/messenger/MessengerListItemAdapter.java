@@ -3,9 +3,9 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.Checkable;
-import android.widget.Filter;
 import android.widget.SectionIndexer;
 import org.solovyev.android.list.AlphabetIndexer;
+import org.solovyev.android.list.EmptySectionIndexer;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -47,9 +47,6 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	private boolean initialized = false;
 
 	@Nullable
-	private CharSequence filterText;
-
-	@Nullable
 	private ListItem selectedItem = null;
 
 	private int selectedItemPosition = NOT_SELECTED;
@@ -61,8 +58,16 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	private final SectionIndexer sectionIndexer;
 
 	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
+		this(context, listItems, true);
+	}
+
+	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems, boolean fastScrollEnabled) {
 		super(context, listItems);
-		sectionIndexer = AlphabetIndexer.createAndAttach(this);
+		if (fastScrollEnabled) {
+			sectionIndexer = AlphabetIndexer.createAndAttach(this);
+		} else {
+			sectionIndexer = EmptySectionIndexer.getInstance();
+		}
 	}
 
 	public boolean isInitialized() {
@@ -77,37 +82,19 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	public void onEvent(@Nonnull UserEvent event) {
 	}
 
+	@Deprecated
 	protected void addListItem(@Nonnull LI listItem) {
 		this.add(listItem);
-
-		final Comparator<? super LI> comparator = getComparator();
-		if (comparator != null) {
-			sort(comparator);
-		}
-
-		filter(filterText);
 	}
 
+	@Deprecated
 	protected void removeListItem(@Nonnull LI listItem) {
 		this.remove(listItem);
-
-		final Comparator<? super LI> comparator = getComparator();
-		if (comparator != null) {
-			sort(comparator);
-		}
-
-		filter(filterText);
 	}
 
+	@Deprecated
 	protected void addListItems(@Nonnull List<LI> listItems) {
 		this.addAll(listItems);
-
-		final Comparator<? super LI> comparator = getComparator();
-		if (comparator != null) {
-			sort(comparator);
-		}
-
-		filter(filterText);
 	}
 
 	@Nullable
@@ -115,23 +102,9 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		return ListItemComparator.getInstance();
 	}
 
-	// todo serso: move to ListAdapter
-	public void filter(@Nullable CharSequence filterText) {
-		this.filterText = filterText;
-		this.getFilter().filter(filterText);
-	}
-
-	public void filter(@Nullable CharSequence filterText, @Nullable Filter.FilterListener listener) {
-		this.filterText = filterText;
-		this.getFilter().filter(filterText, listener);
-	}
-
-
-	public void refilter() {
-		this.getFilter().filter(filterText);
-	}
-
 	public void saveState(@Nonnull Bundle outState) {
+		super.saveState(outState);
+
 		final int selectedItemPosition = this.getSelectedItemPosition();
 		if (selectedItemPosition != NOT_SELECTED) {
 			outState.putInt(POSITION, selectedItemPosition);
@@ -139,6 +112,7 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	}
 
 	public int loadState(@Nonnull Bundle savedInstanceState, int defaultPosition) {
+		super.restoreState(savedInstanceState);
 		return savedInstanceState.getInt(POSITION, defaultPosition);
 	}
 

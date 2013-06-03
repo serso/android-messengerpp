@@ -88,9 +88,10 @@ public class DefaultChatMessageService implements ChatMessageService {
 	@Nonnull
 	@Override
 	public List<ChatMessage> getChatMessages(@Nonnull Entity realmChat) {
-		synchronized (lock) {
+		// todo serso: think about lock
+		/*synchronized (lock) {*/
 			return chatMessageDao.loadChatMessages(realmChat.getEntityId());
-		}
+		/*}*/
 	}
 
 	@Override

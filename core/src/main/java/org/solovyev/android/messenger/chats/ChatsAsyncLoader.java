@@ -34,11 +34,13 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 		final ChatService chatService = MessengerApplication.getServiceLocator().getChatService();
 		final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
 
-
 		for (User user : realmService.getEnabledRealmUsers()) {
 			final List<Chat> chats = userService.getUserChats(user.getEntity());
 			for (Chat chat : chats) {
-				result.add(UiChat.newInstance(user, chat, chatService.getLastMessage(chat.getEntity()), chatService.getUnreadMessagesCount(chat.getEntity())));
+				final ChatMessage lastMessage = chatService.getLastMessage(chat.getEntity());
+				final int unreadMessagesCount = chatService.getUnreadMessagesCount(chat.getEntity());
+				final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
+				result.add(UiChat.newInstance(user, chat, lastMessage, unreadMessagesCount, displayName));
 			}
 		}
 

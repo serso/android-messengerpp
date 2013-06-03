@@ -22,16 +22,21 @@ final class UiChat implements MessengerEntity {
 	@Nullable
 	private final ChatMessage lastMessage;
 
-	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount) {
+	// precached display name in order to calculate it before shown (e.g. for sorting)
+	@Nonnull
+	private final String displayName;
+
+	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName) {
 		this.user = user;
 		this.chat = chat;
 		this.lastMessage = lastMessage;
 		this.unreadMessagesCount = unreadMessagesCount;
+		this.displayName = displayName;
 	}
 
 	@Nonnull
-	static UiChat newInstance(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount) {
-		return new UiChat(user, chat, lastMessage, unreadMessagesCount);
+	static UiChat newInstance(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName) {
+		return new UiChat(user, chat, lastMessage, unreadMessagesCount, displayName);
 	}
 
 	@Nonnull
@@ -84,17 +89,22 @@ final class UiChat implements MessengerEntity {
 	}
 
 	@Nonnull
+	String getDisplayName() {
+		return displayName;
+	}
+
+	@Nonnull
 	public UiChat copyForNewChat(@Nonnull Chat newChat) {
-		return UiChat.newInstance(this.user, newChat, this.lastMessage, this.unreadMessagesCount);
+		return UiChat.newInstance(this.user, newChat, this.lastMessage, this.unreadMessagesCount, this.displayName);
 	}
 
 	@Nonnull
 	public UiChat copyForNewLastMessage(@Nonnull ChatMessage newLastMessage) {
-		return UiChat.newInstance(this.user, this.chat, newLastMessage, this.unreadMessagesCount);
+		return UiChat.newInstance(this.user, this.chat, newLastMessage, this.unreadMessagesCount, this.displayName);
 	}
 
 	@Nonnull
 	public UiChat copyForNewUnreadMessageCount(@Nonnull Integer unreadMessagesCount) {
-		return UiChat.newInstance(this.user, this.chat, this.lastMessage, unreadMessagesCount);
+		return UiChat.newInstance(this.user, this.chat, this.lastMessage, unreadMessagesCount, this.displayName);
 	}
 }

@@ -50,7 +50,7 @@ public class MessengerStartActivity extends RoboActivity {
 				syncDone = false;
 			} else {
 				// prefetch data
-				new PreloadCachedData(this).execute(user);
+				new PreloadCachedData(this).executeInParallel(user);
 			}
 		}
 

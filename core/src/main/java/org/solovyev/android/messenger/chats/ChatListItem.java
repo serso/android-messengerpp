@@ -28,8 +28,9 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 	@Nonnull
 	private static final String TAG_PREFIX = "chat_list_item_";
 
-	private ChatListItem(@Nonnull UiChat data) {
-		super(TAG_PREFIX, data, R.layout.mpp_list_item_chat);
+	private ChatListItem(@Nonnull UiChat chat) {
+		super(TAG_PREFIX, chat, R.layout.mpp_list_item_chat);
+		setDisplayName(chat.getDisplayName());
 	}
 
 	@Nullable
@@ -43,7 +44,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 
 	@Nonnull
 	public static ChatListItem newInstance(@Nonnull User user, @Nonnull Chat chat) {
-		return new ChatListItem(UiChat.newInstance(user, chat, getLastChatMessage(chat), getUnreadMessagesCount(chat)));
+		return new ChatListItem(UiChat.newInstance(user, chat, getLastChatMessage(chat), getUnreadMessagesCount(chat), ""));
 	}
 
 	@Nonnull
@@ -53,7 +54,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 
 	@Nonnull
 	public static ChatListItem newEmpty(User user, Chat chat) {
-		return new ChatListItem(UiChat.newInstance(user, chat, null, 0));
+		return new ChatListItem(UiChat.newInstance(user, chat, null, 0, ""));
 	}
 
 	@Override
@@ -90,11 +91,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 	@Nonnull
 	@Override
 	protected String getDisplayName(@Nonnull UiChat uiChat, @Nonnull Context context) {
-		String result = Chats.getDisplayName(uiChat.getChat(), uiChat.getLastMessage(), uiChat.getUser());
-		if (uiChat.getUnreadMessagesCount() > 0) {
-			result += " (" + uiChat.getUnreadMessagesCount() + ")";
-		}
-		return result;
+		return Chats.getDisplayName(uiChat.getChat(), uiChat.getLastMessage(), uiChat.getUser(), uiChat.getUnreadMessagesCount());
 	}
 
 	@Override

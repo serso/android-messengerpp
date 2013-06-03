@@ -99,6 +99,6 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 				}
 			}
 
-		}.execute(null, null);
+		}.executeInParallel();
 	}
 }

@@ -11,6 +11,7 @@ import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.DownloadFileAsyncTask;
 import org.solovyev.android.http.HttpMethod;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.DrawableFromIsConverter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -66,14 +67,14 @@ public class CaptchaViewBuilder implements Builder<AlertDialog> {
 		// todo serso: fragment dialog!
 
 		// at the end schedule captcha download
-		new DownloadFileAsyncTask(context, new DownloadFileAsyncTask.OnPostExecute<List<Object>>() {
+		MessengerAsyncTask.executeInParallel(new DownloadFileAsyncTask(context, new DownloadFileAsyncTask.OnPostExecute<List<Object>>() {
 			@Override
 			public void onPostExecute(@Nonnull final List<Object> result) {
 				if (!Collections.isEmpty(result)) {
 					captchaImage.setImageDrawable((Drawable) result.get(0));
 				}
 			}
-		}).execute(new DownloadFileAsyncTask.Input(captcha.getCaptchaImage(), HttpMethod.GET, DrawableFromIsConverter.getInstance()));
+		}), new DownloadFileAsyncTask.Input(captcha.getCaptchaImage(), HttpMethod.GET, DrawableFromIsConverter.getInstance()));
 
 		return result;
 	}

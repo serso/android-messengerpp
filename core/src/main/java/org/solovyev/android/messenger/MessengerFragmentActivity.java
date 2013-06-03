@@ -238,20 +238,18 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 				getSupportActionBar().setSelectedNavigationItem(navPosition);
 			}
 
-			if (!isDualPane()) {
-				gestureDetector = new GestureDetector(this, new SwipeGestureListener(this) {
+			gestureDetector = new GestureDetector(this, new SwipeGestureListener(this) {
 
-					@Override
-					protected void onSwipeToRight() {
-						changeTab(false);
-					}
+				@Override
+				protected void onSwipeToRight() {
+					changeTab(false);
+				}
 
-					@Override
-					protected void onSwipeToLeft() {
-						changeTab(true);
-					}
-				});
-			}
+				@Override
+				protected void onSwipeToLeft() {
+					changeTab(true);
+				}
+			});
 		}
 
 		this.menu = new MessengerMenu(new Runnable() {

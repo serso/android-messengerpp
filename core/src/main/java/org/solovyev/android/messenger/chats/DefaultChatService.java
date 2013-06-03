@@ -21,12 +21,7 @@ import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.users.*;
-import org.solovyev.common.collections.Collections;
-import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
-import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
-import org.solovyev.common.collections.multimap.ObjectRemovedUpdater;
-import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
-import org.solovyev.common.collections.multimap.WholeListUpdater;
+import org.solovyev.common.collections.multimap.*;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -551,9 +546,7 @@ public class DefaultChatService implements ChatService {
 				result = chatDao.loadChatParticipants(chat.getEntityId());
 			}
 
-			if (!Collections.isEmpty(result)) {
-				chatParticipantsCache.update(chat, new WholeListUpdater<User>(result));
-			}
+			chatParticipantsCache.update(chat, new WholeListUpdater<User>(result));
 		}
 
 		return result;

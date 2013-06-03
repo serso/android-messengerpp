@@ -98,7 +98,7 @@ public class DefaultSyncService implements SyncService {
 	public void sync(@Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException {
 		checkRunningTask(syncTask);
 
-		new ServiceSyncAsyncTask(syncTask, afterSyncCallback).execute();
+		new ServiceSyncAsyncTask(syncTask, afterSyncCallback).executeInParallel();
 	}
 
 	private void checkRunningTask(SyncTask syncTask) throws TaskIsAlreadyRunningException {

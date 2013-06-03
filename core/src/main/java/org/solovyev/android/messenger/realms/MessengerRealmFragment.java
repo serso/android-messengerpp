@@ -169,7 +169,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 		realmSyncButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MessengerSyncAllAsyncTask.newForRealm(getActivity(), syncService, realm).execute((Void) null);
+				MessengerSyncAllAsyncTask.newForRealm(getActivity(), syncService, realm).executeInParallel((Void) null);
 			}
 		});
 

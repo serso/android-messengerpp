@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +21,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.solovyev.android.Threads;
-import org.solovyev.android.list.Alphabet;
-import org.solovyev.android.list.AlphabetIndexer;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -288,6 +287,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		Log.d(tag, "onViewCreated");
 		Log.d(tag, "onViewCreated bundle: " + savedInstanceState);
 
+		setListShown(false);
+
 		if (listViewFilter != null) {
 			listViewFilter.onViewCreated();
 		}
@@ -471,7 +472,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		listLoader = createAsyncLoader(adapter, onPostExecute);
 
 		if (listLoader != null) {
-			listLoader.execute();
+			listLoader.executeInParallel();
 		} else {
 			// we need to schedule onPostExecute in order to be after all pending transaction in fragment manager
 			uiHandler.post(onPostExecute);
@@ -684,9 +685,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		}
 
 		private void runPostFilling() {
-			// change UI state
-			setListShown(true);
-
 			// apply filter if any
 			if (listViewFilter != null) {
 				filter(listViewFilter.getFilterText(), new PostListLoadingFilterListener());
@@ -703,6 +701,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 				final Activity activity = getActivity();
 				if (activity != null && !activity.isFinishing() && !isDetached()) {
+
+					// change UI state
+					setListShown(true);
 
 					int position = -1;
 					if (selectedListItem != null) {

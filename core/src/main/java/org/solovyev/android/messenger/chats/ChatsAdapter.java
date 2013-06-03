@@ -26,7 +26,7 @@ import java.util.List;
 public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*implements ChatEventListener, UserEventListener*/ {
 
 	public ChatsAdapter(@Nonnull Context context) {
-		super(context, new ArrayList<ChatListItem>());
+		super(context, new ArrayList<ChatListItem>(), false);
 	}
 
 	/*@Override*/

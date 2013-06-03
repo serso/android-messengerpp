@@ -120,6 +120,10 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 	 *         data following "T" at all, then the list size is returned.
 	 */
 	public int getPositionForSection(int sectionIndex) {
+		if (sectionIndex < 0) {
+			return 0;
+		}
+
 		final SparseIntArray alphaMap = alphabetMap;
 
 		if (alphabet == null) {
@@ -222,6 +226,12 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 	 * and comparing it with all items in the section array.
 	 */
 	public int getSectionForPosition(int position) {
+		if (position < 0) {
+			return 0;
+		} else if ( position >= adapter.getCount() ) {
+			return adapter.getCount() - 1;
+		}
+
 		String curName = adapter.getItem(position).toString();
 		// Linear search, as there are only a few items in the section index
 		// Could speed this up later if it actually gets used.

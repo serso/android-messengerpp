@@ -10,24 +10,18 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
-import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
-import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
-import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
-import org.solovyev.common.collections.multimap.ObjectsAddedUpdater;
-import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerExceptionHandler;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.realms.*;
-import org.solovyev.common.collections.Collections;
-import org.solovyev.common.collections.multimap.WholeListUpdater;
+import org.solovyev.common.collections.multimap.*;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -207,9 +201,7 @@ public class DefaultUserService implements UserService {
 			synchronized (lock) {
 				result = chatService.loadUserChats(user);
 			}
-			if (!Collections.isEmpty(result)) {
-				userChatsCache.update(user, new WholeListUpdater<Chat>(result));
-			}
+			userChatsCache.update(user, new WholeListUpdater<Chat>(result));
 		}
 
 		return result;
@@ -261,9 +253,8 @@ public class DefaultUserService implements UserService {
 			synchronized (lock) {
 				result = userDao.loadUserContacts(user.getEntityId());
 			}
-			if (!Collections.isEmpty(result)) {
-				userContactsCache.update(user, new WholeListUpdater<User>(result));
-			}
+
+			userContactsCache.update(user, new WholeListUpdater<User>(result));
 		}
 
 		return result;
