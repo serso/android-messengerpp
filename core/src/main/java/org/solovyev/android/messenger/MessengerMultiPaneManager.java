@@ -29,5 +29,5 @@ public interface MessengerMultiPaneManager {
 
 	void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane);
 
-	void fillLoadingLayout(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView);
+	void fillLoadingLayout(@Nonnull Activity activity, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView);
 }

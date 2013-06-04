@@ -90,15 +90,11 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	@Override
-	public int loadState(@Nonnull Bundle savedInstanceState, int defaultPosition) {
-		int result = super.loadState(savedInstanceState, defaultPosition);
-
+	public void restoreState(@Nonnull Bundle savedInstanceState) {
 		final Serializable mode = savedInstanceState.getSerializable(MODE);
 		if (mode instanceof MessengerContactsMode) {
 			this.mode = (MessengerContactsMode) mode;
 		}
-
-		return result;
 	}
 
 	@Override

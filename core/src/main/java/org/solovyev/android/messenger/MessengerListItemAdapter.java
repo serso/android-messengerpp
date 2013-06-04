@@ -44,7 +44,7 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
     **********************************************************************
     */
 
-	private boolean initialized = false;
+	private volatile boolean initialized = false;
 
 	@Nullable
 	private ListItem selectedItem = null;
@@ -111,8 +111,11 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		}
 	}
 
-	public int loadState(@Nonnull Bundle savedInstanceState, int defaultPosition) {
+	public void restoreState(@Nonnull Bundle savedInstanceState) {
 		super.restoreState(savedInstanceState);
+	}
+
+	public int restoreSelectedPosition(@Nonnull Bundle savedInstanceState, int defaultPosition) {
 		return savedInstanceState.getInt(POSITION, defaultPosition);
 	}
 

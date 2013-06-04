@@ -167,12 +167,12 @@ public class ListViewFilter {
 		}
 	}
 
-	@Nonnull
+	@Nullable
 	public CharSequence getFilterText() {
 		if (filterEditText != null) {
 			return filterEditText.getText();
 		} else {
-			return "";
+			return null;
 		}
 	}
 
@@ -191,6 +191,6 @@ public class ListViewFilter {
 		 *
 		 * @param filterText new value of text in filter box (=> list view must filtered with this text)
 		 */
-		void filter(@Nonnull CharSequence filterText);
+		void filter(@Nullable CharSequence filterText);
 	}
 }

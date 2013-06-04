@@ -36,7 +36,6 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -258,8 +257,8 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 	}
 
 	@Override
-	protected void onListViewTopReached() {
-		super.onListViewTopReached();
+	public void onTopReached() {
+		super.onTopReached();
 
 		syncOlderMessages();
 	}

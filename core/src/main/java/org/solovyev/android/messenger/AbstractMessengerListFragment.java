@@ -21,6 +21,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.solovyev.android.Threads;
 import org.solovyev.android.list.ListItem;
+import org.solovyev.android.list.ListViewScroller;
+import org.solovyev.android.list.ListViewScrollerListener;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
@@ -41,14 +43,19 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static android.view.Gravity.CENTER_VERTICAL;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * User: serso
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractMessengerListFragment<T, LI extends MessengerListItem> extends RoboSherlockListFragment implements AbsListView.OnScrollListener, ListViewFilter.FilterableListView {
+public abstract class AbstractMessengerListFragment<T, LI extends MessengerListItem>
+		extends RoboSherlockListFragment
+		implements ListViewScrollerListener, ListViewFilter.FilterableListView {
 
     /*
 	**********************************************************************
@@ -142,13 +149,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	@Nullable
 	private PullToRefreshBase.Mode pullToRefreshMode;
 
-
-	/**
-	 * First visible item in list view. The value is changed due when list view is scrolled.
-	 * Main purpose: to fire events like {@link AbstractMessengerListFragment#onListViewTopReached()}, {@link AbstractMessengerListFragment#onListViewBottomReached()}, etc
-	 */
-	@Nonnull
-	private final AtomicInteger firstVisibleItem = new AtomicInteger(-1);
 
 	/**
 	 * If nothing selected - first list item will be selected
@@ -245,30 +245,26 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(tag, "onCreate: " + this);
-		Log.d(tag, "onCreate bundle: " + savedInstanceState);
 
 		eventManager.fire(FragmentGuiEventType.created.newEvent(this));
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(tag, "onCreateView: " + this);
-		Log.d(tag, "onCreateView bundle: " + savedInstanceState);
 
 		final LinearLayout root = new LinearLayout(this.getActivity());
 		root.setOrientation(LinearLayout.VERTICAL);
-		root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		if (listViewFilter != null) {
 			final View filterView = listViewFilter.createView(savedInstanceState);
-			root.addView(filterView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			root.addView(filterView, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 		}
 
-		final View listViewParent = createListView(container);
+		final View listViewParent = createListView();
 
-		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		params.gravity = Gravity.CENTER_VERTICAL;
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+		params.gravity = CENTER_VERTICAL;
 		root.addView(listViewParent, params);
 
 		// some fragments may change the title and icon of action bar => we need to reset it every time new fragment is shown
@@ -284,8 +280,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
-		Log.d(tag, "onViewCreated");
-		Log.d(tag, "onViewCreated bundle: " + savedInstanceState);
 
 		setListShown(false);
 
@@ -302,7 +296,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		}
 	}
 
-	private View createListView(ViewGroup container) {
+	@Nonnull
+	private View createListView() {
 		final Context context = getActivity();
 
 		final FrameLayout root = new FrameLayout(context);
@@ -316,9 +311,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		progressContainer.setGravity(Gravity.CENTER);
 
 		final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
-		progressContainer.addView(progress, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		progressContainer.addView(progress, new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
-		root.addView(progressContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		root.addView(progressContainer, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		// ------------------------------------------------------------------
 
@@ -328,7 +323,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		final TextView emptyListCaption = new TextView(context);
 		emptyListCaption.setId(INTERNAL_EMPTY_ID);
 		emptyListCaption.setGravity(Gravity.CENTER);
-		listViewContainer.addView(emptyListCaption, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		listViewContainer.addView(emptyListCaption, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 
 		final ListViewAwareOnRefreshListener topRefreshListener = getTopPullRefreshListener();
@@ -351,8 +346,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 			fillListView(pullToRefreshListView.getRefreshableView(), context);
 			pullToRefreshListView.setShowIndicator(false);
-			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView(), container);
-			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView(), container);
+			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView());
+			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView());
 
 			pullToRefreshListView.setOnRefreshListener(new OnRefreshListener2Adapter(topRefreshListener, bottomRefreshListener));
 			listView = pullToRefreshListView;
@@ -365,8 +360,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			fillListView(pullToRefreshListView.getRefreshableView(), context);
 
 			pullToRefreshListView.setShowIndicator(false);
-			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView(), container);
-			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView(), container);
+			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView());
+			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView());
 
 			pullToRefreshListView.setOnRefreshListener(topRefreshListener);
 
@@ -379,21 +374,21 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 			fillListView(pullToRefreshListView.getRefreshableView(), context);
 			pullToRefreshListView.setShowIndicator(false);
-			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView(), container);
-			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView(), container);
+			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView());
+			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView());
 
 			pullToRefreshListView.setOnRefreshListener(bottomRefreshListener);
 
 			listView = pullToRefreshListView;
 		}
 
-		listViewContainer.addView(listView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		listViewContainer.addView(listView, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
-		root.addView(listViewContainer, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		root.addView(listViewContainer, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		// ------------------------------------------------------------------
 
-		root.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		root.setLayoutParams(new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		return root;
 	}
@@ -403,7 +398,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			lv.setScrollbarFadingEnabled(true);
 		}
 		lv.setCacheColorHint(Color.TRANSPARENT);
-		lv.setOnScrollListener(this);
+		ListViewScroller.createAndAttach(lv, this);
 		lv.setFastScrollEnabled(true);
 
 		// filter so done manually
@@ -417,9 +412,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		lv.setDividerHeight(1);
 	}
 
-	private void prepareLoadingView(@Nonnull Resources resources, @Nullable LoadingLayout loadingView, @Nullable ViewGroup paneParent) {
+	private void prepareLoadingView(@Nonnull Resources resources, @Nullable LoadingLayout loadingView) {
 		if (loadingView != null) {
-			multiPaneManager.fillLoadingLayout(this.getActivity(), paneParent, resources, loadingView);
+			multiPaneManager.fillLoadingLayout(this.getActivity(), resources, loadingView);
 		}
 	}
 
@@ -432,7 +427,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(tag, "onActivityCreated: " + this);
 
 		userEventListener = new UiThreadUserEventListener();
 		userService.addListener(userEventListener);
@@ -459,11 +453,15 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		}
 
 		adapter = createAdapter();
+		if (savedInstanceState != null) {
+			adapter.restoreState(savedInstanceState);
+		}
+
 		setListAdapter(adapter);
 
 		if (selectedPosition == null) {
 			if (savedInstanceState != null) {
-				selectedPosition = adapter.loadState(savedInstanceState, selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION);
+				selectedPosition = adapter.restoreSelectedPosition(savedInstanceState, selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION);
 			} else {
 				selectedPosition = selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION;
 			}
@@ -471,10 +469,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 		final PostListLoadingRunnable onPostExecute = new PostListLoadingRunnable(selectedPosition, selectedListItem, lv);
 
-		listLoader = createAsyncLoader(adapter, onPostExecute);
-
-		if (listLoader != null) {
-			listLoader.executeInParallel();
+		this.listLoader = createAsyncLoader(adapter, onPostExecute);
+		if (this.listLoader != null) {
+			this.listLoader.executeInParallel();
 		} else {
 			// we need to schedule onPostExecute in order to be after all pending transaction in fragment manager
 			uiHandler.post(onPostExecute);
@@ -499,8 +496,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		if (listViewFilter != null) {
 			listViewFilter.saveState(outState);
 		}
-
-		Log.d(tag, "onSaveInstanceState: " + outState);
 	}
 
 	@Override
@@ -509,6 +504,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 		if (listLoader != null) {
 			listLoader.cancel(false);
+			listLoader = null;
 		}
 
 		if (userEventListener != null) {
@@ -521,26 +517,13 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		super.onDestroy();
 	}
 
-	public void filter(@Nonnull CharSequence filterText) {
+	public void filter(@Nullable CharSequence filterText) {
 		filter(filterText, null);
 	}
 
-	public void filter(@Nonnull CharSequence filterText, @Nullable Filter.FilterListener filterListener) {
-		if (this.adapter != null) {
-			Log.d("Filtering", "Filter text: " + filterText);
-			if (this.adapter.isInitialized()) {
-				Log.d("Filtering", "Count before filter: " + adapter.getCount());
-				if (filterListener != null) {
-					this.adapter.filter(filterText, filterListener);
-				} else {
-					this.adapter.filter(filterText, new Filter.FilterListener() {
-						@Override
-						public void onFilterComplete(int count) {
-							Log.d("Filtering", "Count after filter: " + count);
-						}
-					});
-				}
-			}
+	public void filter(@Nullable  CharSequence filterText, @Nullable Filter.FilterListener filterListener) {
+		if (this.adapter != null && this.adapter.isInitialized()) {
+			this.adapter.filter(filterText == null ? null : filterText.toString(), filterListener);
 		}
 	}
 
@@ -558,71 +541,17 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
     **********************************************************************
     */
 
-	@Override
-	public final void onScrollStateChanged(AbsListView view, int scrollState) {
-		// do nothing
+
+	public void onItemReachedFromTop(int position) {
 	}
 
-	@Override
-	public final void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		// we want to notify subclasses about several events
-		// 1. onListViewTopReached
-		// 2. onListViewBottomReached
-		// 3. onItemReachedFromTop
-		// 4. onItemReachedFromBottom
-
-		if (this.firstVisibleItem.get() >= 0 && visibleItemCount > 0) {
-			boolean scrollUp = false;
-			boolean scrollDown = false;
-			if (firstVisibleItem < this.firstVisibleItem.get()) {
-				scrollUp = true;
-			}
-			if (firstVisibleItem > this.firstVisibleItem.get()) {
-				scrollDown = true;
-			}
-
-			final int lastVisibleItem = firstVisibleItem + visibleItemCount;
-
-			switch (view.getId()) {
-				case android.R.id.list:
-					if (scrollUp && firstVisibleItem == 0) {
-						// reach top
-						onListViewTopReached();
-					} else {
-						if (scrollDown && lastVisibleItem == totalItemCount) {
-							// reach bottom
-							onListViewBottomReached();
-						}
-					}
-
-					if (scrollDown) {
-						onItemReachedFromTop(lastVisibleItem);
-					}
-
-					if (scrollUp) {
-						onItemReachedFromBottom(lastVisibleItem);
-					}
-
-					break;
-			}
-		}
-
-		this.firstVisibleItem.set(firstVisibleItem);
-
+	public void onItemReachedFromBottom(int position) {
 	}
 
-	@SuppressWarnings("UnusedParameters")
-	protected void onItemReachedFromTop(int position) {
+	public void onBottomReached() {
 	}
 
-	@SuppressWarnings("UnusedParameters")
-	protected void onItemReachedFromBottom(int position) {
-	}
-
-	protected void onListViewBottomReached() {
-	}
-
-	protected void onListViewTopReached() {
+	public void onTopReached() {
 	}
 
 	public final void selectListItem(@Nonnull String listItemId) {
@@ -702,7 +631,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			if (listViewFilter != null) {
 				filter(listViewFilter.getFilterText(), new PostListLoadingFilterListener());
 			} else {
-				filter("", new PostListLoadingFilterListener());
+				filter(null, new PostListLoadingFilterListener());
 			}
 		}
 
@@ -710,8 +639,6 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 			@Override
 			public void onFilterComplete(int count) {
-				Log.d("Filtering", "Count after filter: " + count);
-
 				final Activity activity = getActivity();
 				if (activity != null && !activity.isFinishing() && !isDetached()) {
 

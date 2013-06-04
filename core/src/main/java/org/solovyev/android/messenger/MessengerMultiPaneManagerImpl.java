@@ -106,7 +106,7 @@ public class MessengerMultiPaneManagerImpl implements MessengerMultiPaneManager 
 	}
 
 	@Override
-	public void fillLoadingLayout(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView) {
+	public void fillLoadingLayout(@Nonnull Activity activity, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView) {
 		// todo serso: incorrect color of "Release to refresh caption"
 		loadingView.setTextColor(ColorStateList.valueOf(resources.getColor(R.color.mpp_text)));
 		loadingView.setBackgroundColor(resources.getColor(android.R.color.transparent));
