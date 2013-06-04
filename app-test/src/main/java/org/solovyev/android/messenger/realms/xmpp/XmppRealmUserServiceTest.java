@@ -57,7 +57,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 					try {
 						realmConnection2.start();
 					} catch (RealmConnectionException e) {
-						throw new RealmRuntimeException(e);
+						throw new RealmRuntimeException(realmId, e);
 					}
 				}
 			}).start();
@@ -118,7 +118,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 					try {
 						realmConnection2.start();
 					} catch (RealmConnectionException e) {
-						throw new RealmRuntimeException(e);
+						throw new RealmRuntimeException(realmId, e);
 					}
 				}
 			}).start();

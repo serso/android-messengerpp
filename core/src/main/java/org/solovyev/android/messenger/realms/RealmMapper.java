@@ -43,7 +43,7 @@ public class RealmMapper<C extends RealmConfiguration> implements Converter<Curs
 
 			return realmDef.newRealm(realmId, user, decryptedConfiguration, RealmState.valueOf(state));
 		} catch (UnsupportedRealmException e) {
-			throw new RealmRuntimeException(e);
+			throw new RealmRuntimeException(realmId, e);
 		}
 	}
 

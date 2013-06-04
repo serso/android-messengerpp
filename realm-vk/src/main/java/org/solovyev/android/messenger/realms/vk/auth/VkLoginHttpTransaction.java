@@ -6,9 +6,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
+import org.solovyev.android.http.HttpRuntimeIoException;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ final class VkLoginHttpTransaction extends AbstractHttpTransaction<Void> {
 	public Void getResponse(@Nonnull HttpResponse response) {
 		boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 		if (!ok) {
-			throw new RealmRuntimeException();
+			throw new HttpRuntimeIoException(new IOException());
 		}
 		return null;
 	}

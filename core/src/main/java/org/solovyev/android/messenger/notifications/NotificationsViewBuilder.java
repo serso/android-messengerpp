@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import org.solovyev.android.list.ListItemAdapter;
+import org.solovyev.android.messenger.MessengerNotification;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewBuilder;
-import org.solovyev.common.msg.Message;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import java.util.List;
 public final class NotificationsViewBuilder implements ViewBuilder<View> {
 
 	@Nonnull
-	private final List<Message> notifications;
+	private final List<MessengerNotification> notifications;
 
-	public NotificationsViewBuilder(@Nonnull List<Message> notifications) {
+	public NotificationsViewBuilder(@Nonnull List<MessengerNotification> notifications) {
 		this.notifications = notifications;
 	}
 
@@ -31,7 +31,7 @@ public final class NotificationsViewBuilder implements ViewBuilder<View> {
 		final ListView listView = (ListView) root.findViewById(android.R.id.list);
 
 		final List<NotificationListItem> notificationListItems = new ArrayList<NotificationListItem>();
-		for (Message notification : notifications) {
+		for (MessengerNotification notification : notifications) {
 			notificationListItems.add(new NotificationListItem(notification));
 		}
 

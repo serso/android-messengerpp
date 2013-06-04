@@ -53,9 +53,9 @@ public abstract class LongPollRealmConnection extends AbstractRealmConnection<Re
 				}
 
 			} catch (RuntimeException e) {
-				throw new RealmConnectionException(e);
+				throw new RealmConnectionException(getRealm().getId(), e);
 			} catch (RealmException e) {
-				throw new RealmConnectionException(e);
+				throw new RealmConnectionException(getRealm().getId(), e);
 			}
 		}
 	}

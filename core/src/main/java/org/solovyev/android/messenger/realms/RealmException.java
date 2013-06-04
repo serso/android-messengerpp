@@ -4,23 +4,21 @@ import javax.annotation.Nonnull;
 
 public class RealmException extends Exception {
 
-	public RealmException() {
+	@Nonnull
+	private final String realmId;
+
+	public RealmException(@Nonnull String realmId) {
+		this.realmId = realmId;
 	}
 
-	public RealmException(String detailMessage) {
-		super(detailMessage);
-	}
-
-	public RealmException(String detailMessage, @Nonnull Throwable throwable) {
-		super(detailMessage, throwable);
-	}
-
-	public RealmException(@Nonnull Throwable throwable) {
+	public RealmException(@Nonnull String realmId, @Nonnull Throwable throwable) {
 		super(throwable);
+		this.realmId = realmId;
 	}
 
 	public RealmException(@Nonnull RealmRuntimeException exception) {
 		super(unwrap(exception));
+		this.realmId = exception.getRealmId();
 	}
 
 	@Nonnull
@@ -29,4 +27,8 @@ public class RealmException extends Exception {
 		return cause != null ? cause : exception;
 	}
 
+	@Nonnull
+	public final String getRealmId() {
+		return realmId;
+	}
 }

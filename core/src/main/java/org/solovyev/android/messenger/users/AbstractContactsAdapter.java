@@ -61,7 +61,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				// first - filter contacts which can be added
 				// then - transform user objects to list items objects
 				final List<User> contacts = event.getDataAsUsers();
-				addListItems(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
+				addAll(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
 					@Override
 					public boolean apply(@Nullable User contact) {
 						assert contact != null;
@@ -139,7 +139,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	protected void addListItem(@Nonnull User contact) {
-		addListItem(ContactListItem.newInstance(contact));
+		add(ContactListItem.newInstance(contact));
 	}
 
 	protected abstract void onListItemChanged(@Nonnull User contact);
@@ -176,16 +176,30 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 		@Override
 		protected JPredicate<ContactListItem> getFilter(@Nullable final CharSequence prefix) {
-			return Strings.isEmpty(prefix) ? emptyPrefixFilter : new ContactFilter(prefix);
+			if (Strings.isEmpty(prefix)) {
+				return emptyPrefixFilter;
+			} else {
+				assert prefix != null;
+				return new ContactFilter(prefix.toString().toLowerCase());
+			}
 		}
 
 		private class ContactFilter implements JPredicate<ContactListItem> {
 
 			@Nullable
-			private final CharSequence prefix;
+			private final String prefix;
 
-			public ContactFilter(@Nullable CharSequence prefix) {
+			@Nullable
+			private final PrefixFilter<String> prefixFilter;
+
+			public ContactFilter(@Nullable String prefix) {
 				this.prefix = prefix;
+				if (!Strings.isEmpty(prefix)) {
+					assert prefix != null;
+					prefixFilter = new PrefixFilter<String>(prefix);
+				} else {
+					prefixFilter = null;
+				}
 			}
 
 			@Override
@@ -201,9 +215,8 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 					}
 
 					if (shown) {
-						if (!Strings.isEmpty(prefix)) {
-							assert prefix != null;
-							shown = new PrefixFilter<String>(prefix.toString().toLowerCase()).apply(contact.getDisplayName());
+						if (prefixFilter != null) {
+							shown = prefixFilter.apply(listItem.getDisplayName().toString());
 							if (!shown) {
 								Log.d("Filtering", contact.getDisplayName() + " is filtered due to filter " + prefix);
 							}

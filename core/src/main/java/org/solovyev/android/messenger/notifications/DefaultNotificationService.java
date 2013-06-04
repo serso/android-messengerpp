@@ -41,7 +41,7 @@ public final class DefaultNotificationService implements NotificationService {
 
 	@GuardedBy("notifications")
 	@Nonnull
-	private final List<Message> notifications = new ArrayList<Message>();
+	private final List<MessengerNotification> notifications = new ArrayList<MessengerNotification>();
 
 	@Nonnull
 	private final Context context;
@@ -51,7 +51,7 @@ public final class DefaultNotificationService implements NotificationService {
 		this.context = context;
 	}
 
-	private void notify(@Nonnull final Message notification) {
+	private void notify(@Nonnull final MessengerNotification notification) {
 
 		boolean notifyUser = false;
 
@@ -83,19 +83,29 @@ public final class DefaultNotificationService implements NotificationService {
 
 	@Override
 	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nullable Object... parameters) {
-		notify(new MessengerNotification(context, messageResId, level, parameters));
+		notify(MessengerNotification.newInstance(context, messageResId, level, null, parameters));
 	}
 
 	@Override
 	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull List<Object> parameters) {
-		notify(new MessengerNotification(context, messageResId, level, parameters));
+		notify(MessengerNotification.newInstance(context, messageResId, level, null, parameters));
+	}
+
+	@Override
+	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull Runnable oneClickSolution, @Nullable Object... parameters) {
+		notify(MessengerNotification.newInstance(context, messageResId, level, oneClickSolution, parameters));
+	}
+
+	@Override
+	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull Runnable oneClickSolution, @Nonnull List<Object> parameters) {
+		notify(MessengerNotification.newInstance(context, messageResId, level, oneClickSolution, parameters));
 	}
 
 	@Override
 	@Nonnull
-	public List<Message> getNotifications() {
+	public List<MessengerNotification> getNotifications() {
 		synchronized (notifications) {
-			return new ArrayList<Message>(notifications);
+			return new ArrayList<MessengerNotification>(notifications);
 		}
 	}
 
@@ -107,7 +117,7 @@ public final class DefaultNotificationService implements NotificationService {
 	}
 
 	@Override
-	public void removeNotification(@Nonnull Message notification) {
+	public void removeNotification(@Nonnull MessengerNotification notification) {
 		boolean removed;
 
 		synchronized (notifications) {

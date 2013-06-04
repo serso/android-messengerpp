@@ -47,11 +47,6 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 		return result;
 	}
 
-	@Override
-	protected Comparator<? super ChatListItem> getComparator() {
-		return ChatListItemComparator.getInstance();
-	}
-
 	@Nonnull
 	@Override
 	protected ChatListItem createListItem(@Nonnull UiChat uiChat) {

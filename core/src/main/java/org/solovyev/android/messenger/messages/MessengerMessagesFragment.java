@@ -416,11 +416,6 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 			return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getEntity());
 		}
 
-		@Override
-		protected Comparator<? super MessageListItem> getComparator() {
-			return MessageListItem.Comparator.getInstance();
-		}
-
 		@Nonnull
 		@Override
 		protected MessageListItem createListItem(@Nonnull ChatMessage message) {

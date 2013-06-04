@@ -1,19 +1,28 @@
 package org.solovyev.android.messenger.realms;
 
+import javax.annotation.Nonnull;
+
 public class RealmRuntimeException extends RuntimeException {
 
-	public RealmRuntimeException() {
+	@Nonnull
+	private final String realmId;
+
+	public RealmRuntimeException(@Nonnull String realmId) {
+		this.realmId = realmId;
 	}
 
-	public RealmRuntimeException(String detailMessage) {
-		super(detailMessage);
+	public RealmRuntimeException(@Nonnull RealmException e) {
+		super(e);
+		this.realmId = e.getRealmId();
 	}
 
-	public RealmRuntimeException(String detailMessage, Throwable throwable) {
-		super(detailMessage, throwable);
-	}
-
-	public RealmRuntimeException(Throwable throwable) {
+	public RealmRuntimeException(@Nonnull String realmId, Throwable throwable) {
 		super(throwable);
+		this.realmId = realmId;
+	}
+
+	@Nonnull
+	public String getRealmId() {
+		return realmId;
 	}
 }

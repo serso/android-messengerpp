@@ -4,19 +4,12 @@ import javax.annotation.Nonnull;
 
 public class RealmConnectionException extends RealmException {
 
-	public RealmConnectionException() {
+	public RealmConnectionException(@Nonnull String realmId) {
+		super(realmId);
 	}
 
-	public RealmConnectionException(String detailMessage) {
-		super(detailMessage);
-	}
-
-	public RealmConnectionException(String detailMessage, @Nonnull Throwable throwable) {
-		super(detailMessage, throwable);
-	}
-
-	public RealmConnectionException(@Nonnull Throwable throwable) {
-		super(throwable);
+	public RealmConnectionException(@Nonnull String realmId, @Nonnull Throwable throwable) {
+		super(realmId, throwable);
 	}
 
 	public RealmConnectionException(@Nonnull RealmRuntimeException exception) {

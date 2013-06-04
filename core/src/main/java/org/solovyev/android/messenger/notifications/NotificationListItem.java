@@ -8,8 +8,8 @@ import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.MessengerNotification;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.common.msg.Message;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,9 +17,9 @@ import javax.annotation.Nullable;
 public final class NotificationListItem implements ListItem {
 
 	@Nonnull
-	private final Message notification;
+	private final MessengerNotification notification;
 
-	public NotificationListItem(@Nonnull Message notification) {
+	public NotificationListItem(@Nonnull MessengerNotification notification) {
 		this.notification = notification;
 	}
 
@@ -29,6 +29,7 @@ public final class NotificationListItem implements ListItem {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
+				notification.solveOnClick();
 				MessengerApplication.getServiceLocator().getNotificationService().removeNotification(notification);
 			}
 		};

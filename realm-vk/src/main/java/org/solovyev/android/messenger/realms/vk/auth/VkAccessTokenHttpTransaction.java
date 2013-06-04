@@ -9,7 +9,6 @@ import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 
 import javax.annotation.Nonnull;
@@ -39,7 +38,7 @@ final class VkAccessTokenHttpTransaction extends AbstractHttpTransaction<JsonAut
 	public JsonAuthResult getResponse(@Nonnull HttpResponse response) {
 		boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 		if (!ok) {
-			throw new RealmRuntimeException();
+			throw new HttpRuntimeIoException(new IOException());
 		}
 
 		final String json;

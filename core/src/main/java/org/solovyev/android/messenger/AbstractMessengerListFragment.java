@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -139,6 +138,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	 * Mode which is used for {@link PullToRefreshListView}.
 	 * Note: null if simple {@link ListView} is used instead of {@link PullToRefreshListView}.
 	 */
+	@SuppressWarnings("FieldCanBeLocal")
 	@Nullable
 	private PullToRefreshBase.Mode pullToRefreshMode;
 
@@ -399,7 +399,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	}
 
 	protected void fillListView(@Nonnull ListView lv, @Nonnull Context context) {
-		lv.setScrollbarFadingEnabled(true);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+			lv.setScrollbarFadingEnabled(true);
+		}
 		lv.setCacheColorHint(Color.TRANSPARENT);
 		lv.setOnScrollListener(this);
 		lv.setFastScrollEnabled(true);
@@ -528,7 +530,16 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			Log.d("Filtering", "Filter text: " + filterText);
 			if (this.adapter.isInitialized()) {
 				Log.d("Filtering", "Count before filter: " + adapter.getCount());
-				this.adapter.filter(filterText, filterListener);
+				if (filterListener != null) {
+					this.adapter.filter(filterText, filterListener);
+				} else {
+					this.adapter.filter(filterText, new Filter.FilterListener() {
+						@Override
+						public void onFilterComplete(int count) {
+							Log.d("Filtering", "Count after filter: " + count);
+						}
+					});
+				}
 			}
 		}
 	}
@@ -600,9 +611,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 	}
 
+	@SuppressWarnings("UnusedParameters")
 	protected void onItemReachedFromTop(int position) {
 	}
 
+	@SuppressWarnings("UnusedParameters")
 	protected void onItemReachedFromBottom(int position) {
 	}
 

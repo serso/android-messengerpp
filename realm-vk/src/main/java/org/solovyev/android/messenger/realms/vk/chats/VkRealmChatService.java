@@ -60,9 +60,9 @@ public class VkRealmChatService implements RealmChatService {
 		try {
 			return HttpTransactions.execute(new VkMessagesGetHttpTransaction(realm, getUser(realmUserId)));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		}
 	}
 
@@ -113,9 +113,9 @@ public class VkRealmChatService implements RealmChatService {
 					return result;
 				}
 			} catch (HttpRuntimeIoException e) {
-				throw new RealmConnectionException(e);
+				throw new RealmConnectionException(realm.getId(), e);
 			} catch (IOException e) {
-				throw new RealmConnectionException(e);
+				throw new RealmConnectionException(realm.getId(), e);
 			}
 		} else {
 			Log.e(TAG, "Chat is not found for chat id: " + realmChatId);
@@ -173,9 +173,9 @@ public class VkRealmChatService implements RealmChatService {
 			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(realm.newUserEntity(realmUserId));
 			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(realm, user));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		}
 	}
 
@@ -185,9 +185,9 @@ public class VkRealmChatService implements RealmChatService {
 		try {
 			return HttpTransactions.execute(new VkMessagesSendHttpTransaction(realm, message, chat));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		}
 	}
 

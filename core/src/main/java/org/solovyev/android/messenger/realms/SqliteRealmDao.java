@@ -167,7 +167,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 			}
 			values.put("configuration", new Gson().toJson(configuration));
 		} catch (CiphererException e) {
-			throw new RealmRuntimeException(e);
+			throw new RealmRuntimeException(realm.getId(), e);
 		}
 
 		values.put("state", realm.getState().name());

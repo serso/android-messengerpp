@@ -30,9 +30,9 @@ public class VkRealmLongPollService implements RealmLongPollService {
 		try {
 			return HttpTransactions.execute(new VkGetLongPollServerHttpTransaction(realm));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmException(e);
+			throw new RealmException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmException(e);
+			throw new RealmException(realm.getId(), e);
 		}
 	}
 
@@ -45,9 +45,9 @@ public class VkRealmLongPollService implements RealmLongPollService {
 				return null;
 			}
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmException(e);
+			throw new RealmException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmException(e);
+			throw new RealmException(realm.getId(), e);
 		}
 	}
 }

@@ -108,4 +108,9 @@ public abstract class AbstractRealmDef<C extends RealmConfiguration> implements 
 	public boolean notifySentMessagesImmediately() {
 		return notifySentMessagesImmediately;
 	}
+
+	@Override
+	public boolean handleException(@Nonnull RealmException e, @Nonnull Realm realm) {
+		return false;
+	}
 }

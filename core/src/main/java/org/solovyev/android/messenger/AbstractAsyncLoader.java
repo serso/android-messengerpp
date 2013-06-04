@@ -8,7 +8,6 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -56,11 +55,6 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 					for (R element : elements) {
 						adapter.add(createListItem(element));
 					}
-
-					final Comparator<? super LI> comparator = getComparator();
-					if (comparator != null) {
-						adapter.sort(comparator);
-					}
 				}
 			});
 		}
@@ -69,9 +63,6 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 			onPostExecute.run();
 		}
 	}
-
-	@Nullable
-	protected abstract Comparator<? super LI> getComparator();
 
 	@Nonnull
 	protected abstract LI createListItem(@Nonnull R element);

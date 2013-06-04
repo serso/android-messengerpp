@@ -9,7 +9,6 @@ import org.jsoup.nodes.Element;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -34,7 +33,7 @@ final class VkSubmitApprovalFormHttpTransaction extends AbstractHttpTransaction<
 	public String getResponse(@Nonnull HttpResponse response) {
 		boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 		if (!ok) {
-			throw new RealmRuntimeException();
+			throw new HttpRuntimeIoException(new IOException());
 		}
 
 		try {

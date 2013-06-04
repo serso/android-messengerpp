@@ -32,7 +32,7 @@ public abstract class AbstractXmppRealmService {
 		try {
 			return connectionAware.doOnConnection(callable);
 		} catch (XMPPException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		}
 	}
 }

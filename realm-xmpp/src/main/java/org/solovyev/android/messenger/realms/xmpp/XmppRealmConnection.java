@@ -115,7 +115,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 			if (localConnection != null) {
 				return localConnection;
 			} else {
-				throw new RealmConnectionException();
+				throw new RealmConnectionException(getRealm().getId());
 			}
 		}
 	}

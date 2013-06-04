@@ -113,6 +113,7 @@ public final class VkAuth {
 		return approvalForm;
 	}
 
+	@Nullable
 	private static Element requestAuthorizationForm(@Nonnull AHttpClient httpClient, @Nonnull String login, @Nonnull String password) throws IOException {
 		httpClient.execute(new VkLoginHttpTransaction(login, password));
 

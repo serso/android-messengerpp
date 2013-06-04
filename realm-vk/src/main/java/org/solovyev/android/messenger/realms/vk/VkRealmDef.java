@@ -8,11 +8,14 @@ import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.icons.HttpRealmIconService;
 import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.*;
+import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
+import org.solovyev.common.msg.MessageType;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
@@ -56,6 +59,10 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 	@Inject
 	@Nonnull
 	private ImageLoader imageLoader;
+
+	@Inject
+	@Nonnull
+	private NotificationService notificationService;
 
     /*
     **********************************************************************
@@ -150,7 +157,22 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 		return new VkRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
 	}
 
-    /*
+	@Override
+	public boolean handleException(@Nonnull RealmException e, @Nonnull Realm realm) {
+		boolean handled = super.handleException(e, realm);
+		if (!handled) {
+			if (e.getCause() instanceof VkResponseErrorException) {
+				final VkResponseErrorException cause = (VkResponseErrorException) e.getCause();
+				if ("5".equals(cause.getApiError().getErrorId())) {
+					notificationService.addNotification(R.string.mpp_vk_auth_token_expired, MessageType.error, new AuthTokenExpiredSolver());
+					handled = true;
+				}
+			}
+		}
+		return handled;
+	}
+
+	/*
     **********************************************************************
     *
     *                           STATIC
@@ -198,6 +220,13 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 			final VkRealmConfiguration decrypted = encrypted.clone();
 			decrypted.setAccessParameters(stringCipherer.decrypt(secret, encrypted.getAccessToken()), encrypted.getUserId());
 			return decrypted;
+		}
+	}
+
+	private static class AuthTokenExpiredSolver implements Runnable {
+		@Override
+		public void run() {
+
 		}
 	}
 }

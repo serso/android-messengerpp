@@ -34,9 +34,9 @@ public class VkRealmUserService implements RealmUserService {
 			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(realm, realmUserId, null));
 			return Collections.getFirstListElement(users);
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		}
 	}
 
@@ -46,9 +46,9 @@ public class VkRealmUserService implements RealmUserService {
 		try {
 			return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(realm, realmUserId));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		}
 	}
 
@@ -63,9 +63,9 @@ public class VkRealmUserService implements RealmUserService {
 				result.addAll(HttpTransactions.execute(vkUsersGetHttpTransaction));
 			}
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(e);
+			throw new RealmConnectionException(realm.getId(), e);
 		}
 
 		return result;

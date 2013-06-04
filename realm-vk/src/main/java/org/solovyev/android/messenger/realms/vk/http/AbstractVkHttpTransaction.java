@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms.vk.http;
 
 import android.util.Log;
+import com.google.gson.JsonParseException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -10,6 +11,7 @@ import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.http.IllegalJsonException;
+import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.realms.vk.VkRealm;
 
 import javax.annotation.Nonnull;
@@ -61,8 +63,10 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
 
 			try {
 				return getResponseFromJson(json);
+			} catch (JsonParseException e) {
+				throw new RealmRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
 			} catch (IllegalJsonException e) {
-				throw VkResponseErrorException.newInstance(json, this);
+				throw new RealmRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
 			}
 		} catch (IOException e) {
 			throw new HttpRuntimeIoException(e);

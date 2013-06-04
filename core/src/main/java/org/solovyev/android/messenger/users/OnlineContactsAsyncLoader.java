@@ -46,11 +46,6 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 		return result;
 	}
 
-	@Override
-	protected Comparator<? super ContactListItem> getComparator() {
-		return MessengerListItemAdapter.ListItemComparator.getInstance();
-	}
-
 	@Nonnull
 	@Override
 	protected ContactListItem createListItem(@Nonnull UiContact contact) {

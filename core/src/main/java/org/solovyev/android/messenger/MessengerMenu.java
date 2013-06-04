@@ -183,7 +183,7 @@ final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 		@Override
 		public void onClick(@Nonnull final MenuItem menuItem, @Nonnull Context context) {
 			if (notificationPopupWindow == null) {
-				final List<Message> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
+				final List<MessengerNotification> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
 				if (!notifications.isEmpty()) {
 					final NotificationsViewBuilder viewBuilder = new NotificationsViewBuilder(notifications);
 
