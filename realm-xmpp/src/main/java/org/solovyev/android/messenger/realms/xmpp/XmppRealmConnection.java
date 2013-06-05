@@ -46,18 +46,19 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 	@Nullable
 	private synchronized Connection tryToConnect(int connectionAttempt) throws RealmConnectionException {
 		if (this.connection == null) {
-			final Connection connection = new XMPPConnection(getRealm().getConfiguration().toXmppConfiguration());
+			final XmppRealm realm = getRealm();
+			final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
 
 			// connect to the server
 			try {
-				prepareConnection(connection, getRealm());
+				prepareConnection(connection, realm);
 
 				this.connection = connection;
 			} catch (XMPPException e) {
 				if (connectionAttempt < CONNECTION_RETRIES) {
 					tryToConnect(connectionAttempt + 1);
 				} else {
-					throw new RealmConnectionException("Unable to connect!");
+					throw new RealmConnectionException(realm.getId());
 				}
 			}
 		}

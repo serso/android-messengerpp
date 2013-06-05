@@ -83,7 +83,7 @@ public interface RealmDef<C extends RealmConfiguration> extends MessengerEntity 
 	@Nullable
 	Cipherer<C, C> getCipherer();
 
-	boolean handleException(@Nonnull RealmException e, @Nonnull Realm realm);
+	boolean handleException(@Nonnull Throwable e, @Nonnull Realm realm);
 
     /*
 	**********************************************************************

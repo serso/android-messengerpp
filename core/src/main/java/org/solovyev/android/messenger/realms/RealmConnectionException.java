@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms;
 
 import javax.annotation.Nonnull;
 
-public class RealmConnectionException extends RealmException {
+public final class RealmConnectionException extends RealmException {
 
 	public RealmConnectionException(@Nonnull String realmId) {
 		super(realmId);

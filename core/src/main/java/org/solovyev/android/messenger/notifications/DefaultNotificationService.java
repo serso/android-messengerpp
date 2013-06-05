@@ -1,7 +1,5 @@
 package org.solovyev.android.messenger.notifications;
 
-import android.app.Application;
-import android.content.Context;
 import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -11,9 +9,7 @@ import com.google.inject.Singleton;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.MessengerEventType;
 import org.solovyev.android.messenger.MessengerListeners;
-import org.solovyev.android.messenger.MessengerNotification;
 import org.solovyev.common.msg.Message;
-import org.solovyev.common.msg.MessageLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,17 +37,12 @@ public final class DefaultNotificationService implements NotificationService {
 
 	@GuardedBy("notifications")
 	@Nonnull
-	private final List<MessengerNotification> notifications = new ArrayList<MessengerNotification>();
+	private final List<Notification> notifications = new ArrayList<Notification>();
 
-	@Nonnull
-	private final Context context;
-
-	@Inject
-	public DefaultNotificationService(@Nonnull Application context) {
-		this.context = context;
+	public DefaultNotificationService() {
 	}
 
-	private void notify(@Nonnull final MessengerNotification notification) {
+	private void notify(@Nonnull final Notification notification) {
 
 		boolean notifyUser = false;
 
@@ -82,30 +73,15 @@ public final class DefaultNotificationService implements NotificationService {
 	}
 
 	@Override
-	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nullable Object... parameters) {
-		notify(MessengerNotification.newInstance(context, messageResId, level, null, parameters));
-	}
-
-	@Override
-	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull List<Object> parameters) {
-		notify(MessengerNotification.newInstance(context, messageResId, level, null, parameters));
-	}
-
-	@Override
-	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull Runnable oneClickSolution, @Nullable Object... parameters) {
-		notify(MessengerNotification.newInstance(context, messageResId, level, oneClickSolution, parameters));
-	}
-
-	@Override
-	public void addNotification(int messageResId, @Nonnull MessageLevel level, @Nonnull Runnable oneClickSolution, @Nonnull List<Object> parameters) {
-		notify(MessengerNotification.newInstance(context, messageResId, level, oneClickSolution, parameters));
+	public void add(@Nonnull Notification notification) {
+		notify(notification);
 	}
 
 	@Override
 	@Nonnull
-	public List<MessengerNotification> getNotifications() {
+	public List<Notification> getNotifications() {
 		synchronized (notifications) {
-			return new ArrayList<MessengerNotification>(notifications);
+			return new ArrayList<Notification>(notifications);
 		}
 	}
 
@@ -117,7 +93,7 @@ public final class DefaultNotificationService implements NotificationService {
 	}
 
 	@Override
-	public void removeNotification(@Nonnull MessengerNotification notification) {
+	public void remove(@Nonnull Notification notification) {
 		boolean removed;
 
 		synchronized (notifications) {
@@ -130,7 +106,7 @@ public final class DefaultNotificationService implements NotificationService {
 	}
 
 	@Override
-	public void removeNotification(int notificationId) {
+	public void remove(int notificationId) {
 		final List<Message> removedNotifications = new ArrayList<Message>();
 
 		final String messageCode = String.valueOf(notificationId);

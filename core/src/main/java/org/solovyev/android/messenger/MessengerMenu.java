@@ -15,12 +15,12 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationsViewBuilder;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.APopupWindow;
 import org.solovyev.android.view.AbsoluteAPopupWindow;
 import org.solovyev.android.view.AnchorAPopupWindow;
-import org.solovyev.common.msg.Message;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -183,7 +183,7 @@ final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 		@Override
 		public void onClick(@Nonnull final MenuItem menuItem, @Nonnull Context context) {
 			if (notificationPopupWindow == null) {
-				final List<MessengerNotification> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
+				final List<Notification> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
 				if (!notifications.isEmpty()) {
 					final NotificationsViewBuilder viewBuilder = new NotificationsViewBuilder(notifications);
 

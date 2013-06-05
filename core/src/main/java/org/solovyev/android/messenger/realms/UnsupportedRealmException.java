@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  * Date: 7/22/12
  * Time: 1:12 AM
  */
-public class UnsupportedRealmException extends RealmException {
+public final class UnsupportedRealmException extends RealmException {
 
 	public UnsupportedRealmException(@Nonnull String realmId) {
 		super(realmId);

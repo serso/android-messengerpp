@@ -31,7 +31,7 @@ public class VkAuthenticationHttpTransactionTest {
             HttpTransactions.execute(new VkAuthenticationHttpTransaction("test", "test"));
             Assert.fail();
         } catch (VkResponseErrorException e) {
-            final CommonApiError vkError = e.getApiError();
+            final VkError vkError = e.getApiError();
             // just to be sure that we've got known error
             final VkErrorType vkErrorType = VkErrorType.valueOf(vkError.getErrorId());
 

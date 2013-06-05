@@ -3,5 +3,6 @@
 	<string name="mpp_vk_realm_name">VK</string>
 	<string name="mpp_vk_login">Login</string>
 	<string name="mpp_vk_password">Password</string>
-	<string name="mpp_vk_auth_token_expired">Authentication period has been expired. Try to log in again</string>
+	<string name="mpp_vk_notification_auth_token_expired">Authentication period has been expired. Try to log in again</string>
+	<string name="mpp_vk_notification_error">VK error occurred: %1$s</string>
 </resources>

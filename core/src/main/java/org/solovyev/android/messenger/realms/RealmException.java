@@ -12,7 +12,7 @@ public class RealmException extends Exception {
 	}
 
 	public RealmException(@Nonnull String realmId, @Nonnull Throwable throwable) {
-		super(throwable);
+		super(unwrap(throwable));
 		this.realmId = realmId;
 	}
 
@@ -22,9 +22,13 @@ public class RealmException extends Exception {
 	}
 
 	@Nonnull
-	private static Throwable unwrap(@Nonnull RealmRuntimeException exception) {
-		final Throwable cause = exception.getCause();
-		return cause != null ? cause : exception;
+	private static Throwable unwrap(@Nonnull Throwable exception) {
+		if (exception instanceof RealmRuntimeException) {
+			final Throwable cause = exception.getCause();
+			return cause != null ? cause : exception;
+		} else {
+			return exception;
+		}
 	}
 
 	@Nonnull

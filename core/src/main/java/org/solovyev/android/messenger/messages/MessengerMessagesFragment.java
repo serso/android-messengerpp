@@ -31,12 +31,13 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.msg.MessageType;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+
+import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
 
 /**
  * User: serso
@@ -132,7 +133,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
 				if (chat == null) {
 					Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
-					notificationService.addNotification(R.string.mpp_notification_undefined_error, MessageType.error);
+					notificationService.add(newUndefinedErrorNotification());
 					Activities.restartActivity(getActivity());
 				} else {
 					realm = realmService.getRealmById(chat.getEntity().getRealmId());

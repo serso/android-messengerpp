@@ -8,8 +8,13 @@ import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.icons.HttpRealmIconService;
 import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.*;
+import org.solovyev.android.messenger.notifications.Notifications;
+import org.solovyev.android.messenger.realms.AbstractRealmDef;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmBuilder;
+import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
@@ -24,6 +29,8 @@ import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
 
 /**
  * User: serso
@@ -158,18 +165,26 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 	}
 
 	@Override
-	public boolean handleException(@Nonnull RealmException e, @Nonnull Realm realm) {
+	public boolean handleException(@Nonnull Throwable e, @Nonnull Realm realm) {
 		boolean handled = super.handleException(e, realm);
 		if (!handled) {
-			if (e.getCause() instanceof VkResponseErrorException) {
-				final VkResponseErrorException cause = (VkResponseErrorException) e.getCause();
-				if ("5".equals(cause.getApiError().getErrorId())) {
-					notificationService.addNotification(R.string.mpp_vk_auth_token_expired, MessageType.error, new AuthTokenExpiredSolver());
-					handled = true;
+			if (e instanceof VkResponseErrorException) {
+				final VkResponseErrorException cause = (VkResponseErrorException) e;
+				if ("5".equals(cause.getError().getErrorId())) {
+					notificationService.add(newNotification(R.string.mpp_vk_notification_auth_token_expired, MessageType.error));
+				} else {
+					notificationService.add(newVkNotification(cause));
 				}
+
+				handled = true;
 			}
 		}
 		return handled;
+	}
+
+	@Nonnull
+	private static Notification newVkNotification(@Nonnull VkResponseErrorException e) {
+		return Notifications.newNotification(R.string.mpp_vk_notification_error, MessageType.error, e.getError().getErrorDescription()).causedBy(e);
 	}
 
 	/*

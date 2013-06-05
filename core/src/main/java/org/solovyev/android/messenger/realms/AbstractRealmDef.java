@@ -110,7 +110,7 @@ public abstract class AbstractRealmDef<C extends RealmConfiguration> implements 
 	}
 
 	@Override
-	public boolean handleException(@Nonnull RealmException e, @Nonnull Realm realm) {
+	public boolean handleException(@Nonnull Throwable e, @Nonnull Realm realm) {
 		return false;
 	}
 }
