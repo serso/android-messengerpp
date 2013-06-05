@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
+import static org.solovyev.android.messenger.notifications.Notifications.newOpenRealmConfSolution;
 
 /**
  * User: serso
@@ -171,7 +172,7 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 			if (e instanceof VkResponseErrorException) {
 				final VkResponseErrorException cause = (VkResponseErrorException) e;
 				if ("5".equals(cause.getError().getErrorId())) {
-					notificationService.add(newNotification(R.string.mpp_vk_notification_auth_token_expired, MessageType.error));
+					notificationService.add(newNotification(R.string.mpp_vk_notification_auth_token_expired, MessageType.error).solvedBy(newOpenRealmConfSolution(realm)));
 				} else {
 					notificationService.add(newVkNotification(cause));
 				}

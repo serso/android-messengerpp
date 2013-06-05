@@ -73,4 +73,8 @@ public final class Notification extends AbstractMessage {
 	Throwable getCause() {
 		return cause;
 	}
+
+	public void dismiss() {
+		MessengerApplication.getServiceLocator().getNotificationService().remove(this);
+	}
 }

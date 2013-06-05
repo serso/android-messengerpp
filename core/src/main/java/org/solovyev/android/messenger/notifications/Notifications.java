@@ -5,6 +5,7 @@ import org.acra.ACRA;
 import org.solovyev.android.Activities2;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.msg.MessageLevel;
 import org.solovyev.common.msg.MessageType;
 
@@ -53,6 +54,11 @@ public final class Notifications {
 		return Notification.newInstance(messageResId, messageLevel, params);
 	}
 
+	@Nonnull
+	public static NotificationSolution newOpenRealmConfSolution(@Nonnull Realm realm) {
+		return new OpenRealmConfSolution(realm);
+	}
+
 	/*
 	**********************************************************************
 	*
@@ -80,7 +86,7 @@ public final class Notifications {
 			if (cause != null) {
 				ACRA.getErrorReporter().handleException(cause);
 			}
-			MessengerApplication.getServiceLocator().getNotificationService().remove(notification);
+			notification.dismiss();
 		}
 	}
 
@@ -89,6 +95,21 @@ public final class Notifications {
 		@Override
 		public void solve(@Nonnull Notification notification) {
 			Activities2.startActivity(MessengerApplication.getApp(), new Intent(ACTION_WIRELESS_SETTINGS));
+		}
+	}
+
+	private static class OpenRealmConfSolution implements NotificationSolution {
+		@Nonnull
+		private final Realm realm;
+
+		public OpenRealmConfSolution(@Nonnull Realm realm) {
+			this.realm = realm;
+		}
+
+		@Override
+		public void solve(@Nonnull Notification notification) {
+			// todo serso: open configuration for specified realm
+			notification.dismiss();
 		}
 	}
 }
