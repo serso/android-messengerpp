@@ -46,18 +46,18 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 	public void handleException(@Nonnull final Throwable e) {
 		Notification notification = null;
 
-		if (e instanceof UnsupportedRealmException) {
+		if (e instanceof UnsupportedAccountException) {
 			notification = REALM_NOT_SUPPORTED_NOTIFICATION;
-		} else if (e instanceof RealmConnectionException) {
-			final boolean handled = handleRealmException((RealmException) e);
+		} else if (e instanceof AccountConnectionException) {
+			final boolean handled = handleRealmException((AccountException) e);
 			if (!handled) {
 				if (networkStateService.getNetworkData().getState() == NetworkState.CONNECTED) {
 					// if we are not connected show nothing
 					notification = newRealmConnectionErrorNotification();
 				}
 			}
-		} else if (e instanceof RealmException) {
-			final boolean handled = handleRealmException((RealmException) e);
+		} else if (e instanceof AccountException) {
+			final boolean handled = handleRealmException((AccountException) e);
 			if (!handled) {
 				notification = newRealmErrorNotification();
 			}
@@ -66,7 +66,7 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 		} else if (e instanceof IllegalJsonRuntimeException) {
 			notification = newInvalidResponseNotification();
 		} else if (e instanceof RealmRuntimeException) {
-			handleException(new RealmException((RealmRuntimeException) e));
+			handleException(new AccountException((RealmRuntimeException) e));
 		} else {
 			notification = newUndefinedErrorNotification();
 		}
@@ -78,7 +78,7 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 		}
 	}
 
-	private boolean handleRealmException(@Nonnull RealmException e) {
+	private boolean handleRealmException(@Nonnull AccountException e) {
 		boolean handled = false;
 
 		final String realmId = e.getRealmId();
@@ -92,7 +92,7 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 			} else {
 				handled = account.getRealmDef().handleException(e, account);
 			}
-		} catch (UnsupportedRealmException e1) {
+		} catch (UnsupportedAccountException e1) {
 			handleException(e1);
 		}
 

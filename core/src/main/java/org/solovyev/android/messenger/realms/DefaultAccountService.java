@@ -184,27 +184,27 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	@Override
-	public RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException {
+	public RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException {
 		final RealmDef<? extends AccountConfiguration> realm = this.realmDefs.get(realmDefId);
 		if (realm == null) {
-			throw new UnsupportedRealmException(realmDefId);
+			throw new UnsupportedAccountException(realmDefId);
 		}
 		return realm;
 	}
 
 	@Nonnull
 	@Override
-	public Account getAccountById(@Nonnull String accountId) throws UnsupportedRealmException {
+	public Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException {
 		final Account account = this.accounts.get(accountId);
 		if (account == null) {
-			throw new UnsupportedRealmException(accountId);
+			throw new UnsupportedAccountException(accountId);
 		}
 		return account;
 	}
 
 	@Nonnull
 	@Override
-	public Account saveAccount(@Nonnull AccountBuilder accountBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
+	public Account saveAccount(@Nonnull AccountBuilder accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException {
 		Account result;
 
 		try {
@@ -237,7 +237,7 @@ public class DefaultAccountService implements AccountService {
 					});
 
 					if (alreadyExists) {
-						throw new RealmAlreadyExistsException();
+						throw new AccountAlreadyExistsException();
 					} else {
 						synchronized (lock) {
 							if (oldAccount != null) {
@@ -257,7 +257,7 @@ public class DefaultAccountService implements AccountService {
 			}
 		} catch (AccountBuilder.ConnectionException e) {
 			throw new InvalidCredentialsException(e);
-		} catch (RealmException e) {
+		} catch (AccountException e) {
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			throw new InvalidCredentialsException(e);
 		} finally {
@@ -295,7 +295,7 @@ public class DefaultAccountService implements AccountService {
 				}
 
 				return result;
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 				// return old unchanged value in case of error
 				return account;
@@ -327,13 +327,13 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	@Override
-	public Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+	public Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
 		return getAccountById(entity.getRealmId());
 	}
 
 	@Nonnull
 	@Override
-	public Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException {
+	public Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedAccountException {
 		return getAccountByEntity(entityAware.getEntity());
 	}
 
@@ -387,7 +387,7 @@ public class DefaultAccountService implements AccountService {
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
 		try {
 			return getAccountById(user.getEntity().getRealmId()).getRealmDef().getUserProperties(user, context);
-		} catch (UnsupportedRealmException e) {
+		} catch (UnsupportedAccountException e) {
 			return Collections.emptyList();
 		}
 	}

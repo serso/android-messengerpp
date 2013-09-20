@@ -36,7 +36,7 @@ final class AccountSaverListener extends MessengerContextCallback<Activity, Acco
 	public void onFailure(@Nonnull Activity context, Throwable e) {
 		if (e instanceof InvalidCredentialsException) {
 			Toast.makeText(context, "Invalid credentials!", Toast.LENGTH_SHORT).show();
-		} else if (e instanceof RealmAlreadyExistsException) {
+		} else if (e instanceof AccountAlreadyExistsException) {
 			Toast.makeText(context, "Same account already configured!", Toast.LENGTH_SHORT).show();
 		} else {
 			super.onFailure(context, e);

@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.chats;
 import android.widget.ImageView;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -127,7 +127,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return private chat
 	 */
 	@Nonnull
-	Chat getPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws RealmException;
+	Chat getPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException;
 
 	/**
 	 * Method returns second user in private chat (first user is always realm user)
@@ -154,7 +154,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return new chat messages for user
 	 */
 	@Nonnull
-	List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws RealmException;
+	List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws AccountException;
 
 	/**
 	 * Method synchronizes newer chat messages for <var>chat</var>
@@ -164,7 +164,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return list of newer messages if there exist ones
 	 */
 	@Nonnull
-	List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws RealmException;
+	List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws AccountException;
 
 	/**
 	 * Method synchronizes older chat messages for <var>chat</var>
@@ -174,9 +174,9 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return list of older messages if there exist ones
 	 */
 	@Nonnull
-	List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException;
+	List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException;
 
-	void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException;
+	void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException;
 
 	/**
 	 * Method merges specified <var>chats</var> with already saved in the storage.
@@ -186,7 +186,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return merge result
 	 */
 	@Nonnull
-	MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> chats) throws RealmException;
+	MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException;
 
 	/**
 	 * Method tries to save chat.
@@ -198,7 +198,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return updated chat
 	 */
 	@Nonnull
-	ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws RealmException;
+	ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException;
 
 	/**
 	 * Key: chat for which unread messages exist, value: number of unread messages

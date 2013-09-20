@@ -24,7 +24,7 @@ class AccountSaverCallable implements Callable<Account> {
 	}
 
 	@Override
-	public Account call() throws InvalidCredentialsException, RealmAlreadyExistsException {
+	public Account call() throws InvalidCredentialsException, AccountAlreadyExistsException {
 		return MessengerApplication.getServiceLocator().getAccountService().saveAccount(accountBuilder);
 	}
 }

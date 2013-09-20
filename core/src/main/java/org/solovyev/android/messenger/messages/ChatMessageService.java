@@ -5,7 +5,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public interface ChatMessageService {
 	void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView);
 
 	@Nullable
-	ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws RealmException;
+	ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException;
 
 	/**
 	 * @return total number of unread messages in the application

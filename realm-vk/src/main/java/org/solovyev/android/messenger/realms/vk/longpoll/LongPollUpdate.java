@@ -7,7 +7,7 @@ import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
  */
 public interface LongPollUpdate {
 
-	void doUpdate(@Nonnull User user, @Nonnull Account account) throws RealmException;
+	void doUpdate(@Nonnull User user, @Nonnull Account account) throws AccountException;
 
 	public static class Adapter implements JsonDeserializer<LongPollUpdate> {
 
@@ -158,7 +158,7 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Account account) throws RealmException {
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) throws AccountException {
 			getChatService().syncChat(account.newChatEntity(realmChatId), user.getEntity());
 		}
 
@@ -209,7 +209,7 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Account account) throws RealmException {
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) throws AccountException {
 			final Entity realmChat;
 			if (this.realmChatId != null) {
 				realmChat = account.newChatEntity(this.realmChatId);

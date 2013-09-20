@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.MessengerContactFragment;
 import org.solovyev.android.messenger.users.MessengerContactsInfoFragment;
@@ -120,7 +120,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
 							try {
 								final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
 								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity()));
-							} catch (UnsupportedRealmException e) {
+							} catch (UnsupportedAccountException e) {
 								MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 							}
 							return new MessengerContactsInfoFragment(participants);

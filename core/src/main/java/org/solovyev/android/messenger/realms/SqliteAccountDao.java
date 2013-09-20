@@ -51,11 +51,11 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Override
-	public void insertRealm(@Nonnull Account account) throws RealmException {
+	public void insertRealm(@Nonnull Account account) throws AccountException {
 		try {
 			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(account, secret)));
 		} catch (RealmRuntimeException e) {
-			throw new RealmException(e);
+			throw new AccountException(e);
 		}
 	}
 
@@ -81,11 +81,11 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Override
-	public void updateRealm(@Nonnull Account account) throws RealmException {
+	public void updateRealm(@Nonnull Account account) throws AccountException {
 		try {
 			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(account, secret)));
 		} catch (RealmRuntimeException e) {
-			throw new RealmException(e);
+			throw new AccountException(e);
 		}
 	}
 

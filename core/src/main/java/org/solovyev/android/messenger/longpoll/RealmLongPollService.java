@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.longpoll;
 
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 
 import javax.annotation.Nullable;
 
@@ -12,9 +12,9 @@ import javax.annotation.Nullable;
 public interface RealmLongPollService {
 
 	@Nullable
-	Object startLongPolling() throws RealmException;
+	Object startLongPolling() throws AccountException;
 
 
 	@Nullable
-	LongPollResult waitForResult(@Nullable Object longPollingData) throws RealmException;
+	LongPollResult waitForResult(@Nullable Object longPollingData) throws AccountException;
 }

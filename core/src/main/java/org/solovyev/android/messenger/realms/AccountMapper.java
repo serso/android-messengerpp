@@ -42,7 +42,7 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 			final C decryptedConfiguration = decryptConfiguration(realmDef, encryptedConfiguration);
 
 			return realmDef.newRealm(realmId, user, decryptedConfiguration, AccountState.valueOf(state));
-		} catch (UnsupportedRealmException e) {
+		} catch (UnsupportedAccountException e) {
 			throw new RealmRuntimeException(realmId, e);
 		}
 	}

@@ -8,7 +8,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -35,7 +35,7 @@ final class SmsAccountUserService implements AccountUserService {
 
 	@Nullable
 	@Override
-	public User getUserById(@Nonnull String realmUserId) throws RealmConnectionException {
+	public User getUserById(@Nonnull String realmUserId) throws AccountConnectionException {
 		final Context context = MessengerApplication.getApp();
 
 		if (!SmsRealmDef.USER_ID.equals(realmUserId)) {
@@ -83,7 +83,7 @@ final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String realmUserId) throws RealmConnectionException {
+	public List<User> getUserContacts(@Nonnull String realmUserId) throws AccountConnectionException {
 		final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 		final ContentResolver cr = MessengerApplication.getApp().getContentResolver();
 		final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, null, null);
@@ -92,7 +92,7 @@ final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws RealmConnectionException {
+	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 }

@@ -2,7 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -46,7 +46,7 @@ public abstract class AbstractRealmConnection<A extends Account> implements Real
 	}
 
 	@Override
-	public final void start() throws RealmConnectionException {
+	public final void start() throws AccountConnectionException {
 		stopped.set(false);
 		try {
 			doWork();
@@ -55,7 +55,7 @@ public abstract class AbstractRealmConnection<A extends Account> implements Real
 		}
 	}
 
-	protected abstract void doWork() throws RealmConnectionException;
+	protected abstract void doWork() throws AccountConnectionException;
 
 	protected abstract void stopWork();
 

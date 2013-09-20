@@ -5,8 +5,8 @@ import org.solovyev.android.fragments.FragmentDef;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.MessengerPreferenceGroupsFragment;
+import org.solovyev.android.messenger.realms.MessengerAccountsFragment;
 import org.solovyev.android.messenger.realms.MessengerRealmDefsFragment;
-import org.solovyev.android.messenger.realms.MessengerRealmsFragment;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ public enum MessengerPrimaryFragment implements FragmentDef {
 
 	contacts(MessengerContactsFragment.class, MessengerContactsFragment.FRAGMENT_TAG, R.string.mpp_tab_contacts),
 	messages(MessengerChatsFragment.class, MessengerChatsFragment.FRAGMENT_TAG, R.string.mpp_tab_messages),
-	realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms),
+	realms(MessengerAccountsFragment.class, MessengerAccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms),
 	realm_defs(MessengerRealmDefsFragment.class, MessengerRealmDefsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms, true),
 	settings(MessengerPreferenceGroupsFragment.class, MessengerPreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences);
 

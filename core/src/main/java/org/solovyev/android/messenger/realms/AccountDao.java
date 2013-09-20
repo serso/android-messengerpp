@@ -7,7 +7,7 @@ public interface AccountDao {
 
 	final String TAG = AccountDao.class.getSimpleName();
 
-	void insertRealm(@Nonnull Account account) throws RealmException;
+	void insertRealm(@Nonnull Account account) throws AccountException;
 
 	void deleteRealm(@Nonnull String realmId);
 
@@ -16,7 +16,7 @@ public interface AccountDao {
 
 	void deleteAllRealms();
 
-	void updateRealm(@Nonnull Account account) throws RealmException;
+	void updateRealm(@Nonnull Account account) throws AccountException;
 
 	@Nonnull
 	Collection<Account> loadRealmsInState(@Nonnull AccountState state);

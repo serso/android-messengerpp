@@ -21,7 +21,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.AccountService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
@@ -139,7 +139,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 					account = accountService.getAccountById(chat.getEntity().getRealmId());
 				}
 			}
-		} catch (UnsupportedRealmException e) {
+		} catch (UnsupportedAccountException e) {
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			Activities.restartActivity(getActivity());
 		}

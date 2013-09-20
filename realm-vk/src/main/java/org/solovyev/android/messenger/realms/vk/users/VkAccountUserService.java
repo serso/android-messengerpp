@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -29,33 +29,33 @@ public class VkAccountUserService implements AccountUserService {
 	}
 
 	@Override
-	public User getUserById(@Nonnull String realmUserId) throws RealmConnectionException {
+	public User getUserById(@Nonnull String realmUserId) throws AccountConnectionException {
 		try {
 			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(realm, realmUserId, null));
 			return Collections.getFirstListElement(users);
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(realm.getId(), e);
 		}
 	}
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String realmUserId) throws RealmConnectionException {
+	public List<User> getUserContacts(@Nonnull String realmUserId) throws AccountConnectionException {
 		try {
 			return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(realm, realmUserId));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(realm.getId(), e);
 		}
 	}
 
 
 	@Nonnull
 	@Override
-	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws RealmConnectionException {
+	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException {
 		final List<User> result = new ArrayList<User>(users.size());
 
 		try {
@@ -63,9 +63,9 @@ public class VkAccountUserService implements AccountUserService {
 				result.addAll(HttpTransactions.execute(vkUsersGetHttpTransaction));
 			}
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(realm.getId(), e);
 		} catch (IOException e) {
-			throw new RealmConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(realm.getId(), e);
 		}
 
 		return result;

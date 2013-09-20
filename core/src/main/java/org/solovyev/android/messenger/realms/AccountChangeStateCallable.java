@@ -10,15 +10,15 @@ import java.util.concurrent.Callable;
  * Date: 4/13/13
  * Time: 1:12 PM
  */
-final class RealmChangeStateCallable implements Callable<Account> {
+final class AccountChangeStateCallable implements Callable<Account> {
 
 	@Nonnull
-	static final String TASK_NAME = "realm-change-state";
+	static final String TASK_NAME = "account-change-state";
 
 	@Nonnull
 	private final Account account;
 
-	RealmChangeStateCallable(@Nonnull Account account) {
+	AccountChangeStateCallable(@Nonnull Account account) {
 		this.account = account;
 	}
 

@@ -7,7 +7,7 @@ public final class RealmRuntimeException extends RuntimeException {
 	@Nonnull
 	private final String realmId;
 
-	public RealmRuntimeException(@Nonnull RealmException e) {
+	public RealmRuntimeException(@Nonnull AccountException e) {
 		this(e.getRealmId(), e);
 	}
 

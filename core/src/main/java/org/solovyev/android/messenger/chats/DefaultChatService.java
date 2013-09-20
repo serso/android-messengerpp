@@ -149,7 +149,7 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Nonnull
-	private Chat newPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws RealmException {
+	private Chat newPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException {
 		final Account account = getRealmByEntity(user1);
 
 		Chat result;
@@ -188,7 +188,7 @@ public class DefaultChatService implements ChatService {
 	 * @return prepared chat
 	 */
 	@Nonnull
-	private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity user1, @Nonnull Entity user2) throws UnsupportedRealmException {
+	private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity user1, @Nonnull Entity user2) throws UnsupportedAccountException {
 		final Account account = getRealmByEntity(user1);
 		final Entity chatEntity = getPrivateChatId(user1, user2);
 
@@ -206,7 +206,7 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Nonnull
-	private ApiChat prepareChat(@Nonnull ApiChat apiChat) throws UnsupportedRealmException {
+	private ApiChat prepareChat(@Nonnull ApiChat apiChat) throws UnsupportedAccountException {
 		if (apiChat.getChat().isPrivate()) {
 			final Account account = accountService.getAccountById(apiChat.getChat().getEntity().getRealmId());
 			final User user = account.getUser();
@@ -243,7 +243,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws RealmException {
+	public ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException {
 		final MergeDaoResult<ApiChat, String> result = mergeUserChats(user, Arrays.asList(chat));
 		if (result.getAddedObjects().size() > 0) {
 			return result.getAddedObjects().get(0);
@@ -301,7 +301,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) throws RealmException {
+	public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException {
 		synchronized (lock) {
 			final List<ApiChat> preparedChats;
 			try {
@@ -311,13 +311,13 @@ public class DefaultChatService implements ChatService {
 						assert chat != null;
 						try {
 							return prepareChat(chat);
-						} catch (UnsupportedRealmException e) {
+						} catch (UnsupportedAccountException e) {
 							throw new RealmRuntimeException(e);
 						}
 					}
 				});
 			} catch (RealmRuntimeException e) {
-				throw new RealmException(e);
+				throw new AccountException(e);
 			}
 			return chatDao.mergeUserChats(user.getEntityId(), preparedChats);
 		}
@@ -349,13 +349,13 @@ public class DefaultChatService implements ChatService {
 
 
 	@Nonnull
-	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
 		return accountService.getAccountById(entity.getRealmId());
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws RealmException {
+	public List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws AccountException {
 		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getChatMessages(user.getRealmEntityId());
 
 		final Multimap<Chat, ChatMessage> messagesByChats = ArrayListMultimap.create();
@@ -380,7 +380,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws RealmException {
+	public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws AccountException {
 		final Account account = getRealmByEntity(chat);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
@@ -451,7 +451,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException {
+	public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
 		final Integer offset = getChatMessageService().getChatMessages(chat).size();
 
 		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getRealmEntityId(), user.getRealmEntityId(), offset);
@@ -461,7 +461,7 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException {
+	public void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
 		syncNewerChatMessagesForChat(chat);
 	}
 
@@ -501,7 +501,7 @@ public class DefaultChatService implements ChatService {
 				// just in case...
 				imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_app_icon));
 			}
-		} catch (UnsupportedRealmException e) {
+		} catch (UnsupportedAccountException e) {
 			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_app_icon));
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 		}
@@ -525,7 +525,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) throws RealmException {
+	public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) throws AccountException {
 		final Entity chat = this.getPrivateChatId(user1, user2);
 
 		Chat result = this.getChatById(chat);

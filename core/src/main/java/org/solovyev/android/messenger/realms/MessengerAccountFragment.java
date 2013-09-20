@@ -97,7 +97,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 			if (realmId != null) {
 				try {
 					account = accountService.getAccountById(realmId);
-				} catch (UnsupportedRealmException e) {
+				} catch (UnsupportedAccountException e) {
 					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 					Activities.restartActivity(getActivity());
 				}
@@ -190,7 +190,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	public void onResume() {
 		super.onResume();
 
-		taskListeners.addTaskListener(RealmChangeStateCallable.TASK_NAME, RealmChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.addTaskListener(AccountChangeStateCallable.TASK_NAME, AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
 		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
@@ -223,7 +223,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	}
 
 	private void changeState() {
-		taskListeners.run(RealmChangeStateCallable.TASK_NAME, new RealmChangeStateCallable(account), RealmChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(account), AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
 	}
 
 	private void editRealm() {

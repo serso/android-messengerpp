@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +18,7 @@ final class SmsRealmConnection extends AbstractRealmConnection<SmsAccount> {
 	}
 
 	@Override
-	protected void doWork() throws RealmConnectionException {
+	protected void doWork() throws AccountConnectionException {
 
 	}
 

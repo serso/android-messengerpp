@@ -7,9 +7,9 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.messenger.realms.AccountService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.UnsupportedAccountException;
 
 import roboguice.RoboGuice;
 import roboguice.event.EventListener;
@@ -64,7 +64,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 					Fragments2.showDialog(new CompositeUserDialogFragment(contact), CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
 					break;
 			}
-		} catch (UnsupportedRealmException e) {
+		} catch (UnsupportedAccountException e) {
 			// should not happen
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 		}
@@ -85,7 +85,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 				try {
 					final User user = activity.getAccountService().getAccountById(contact.getEntity().getRealmId()).getUser();
 					result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
-				} catch (RealmException e) {
+				} catch (AccountException e) {
 					throwException(e);
 				}
 

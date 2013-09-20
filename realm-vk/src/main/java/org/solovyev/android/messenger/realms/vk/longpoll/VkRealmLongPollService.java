@@ -4,7 +4,7 @@ import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
 import org.solovyev.android.messenger.longpoll.RealmLongPollService;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 
 import javax.annotation.Nonnull;
@@ -26,18 +26,18 @@ public class VkRealmLongPollService implements RealmLongPollService {
 	}
 
 	@Override
-	public Object startLongPolling() throws RealmException {
+	public Object startLongPolling() throws AccountException {
 		try {
 			return HttpTransactions.execute(new VkGetLongPollServerHttpTransaction(account));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmException(account.getId(), e);
+			throw new AccountException(account.getId(), e);
 		} catch (IOException e) {
-			throw new RealmException(account.getId(), e);
+			throw new AccountException(account.getId(), e);
 		}
 	}
 
 	@Override
-	public LongPollResult waitForResult(@Nullable Object longPollingData) throws RealmException {
+	public LongPollResult waitForResult(@Nullable Object longPollingData) throws AccountException {
 		try {
 			if (longPollingData instanceof LongPollServerData) {
 				return HttpTransactions.execute(new VkGetLongPollingDataHttpTransaction((LongPollServerData) longPollingData));
@@ -45,9 +45,9 @@ public class VkRealmLongPollService implements RealmLongPollService {
 				return null;
 			}
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmException(account.getId(), e);
+			throw new AccountException(account.getId(), e);
 		} catch (IOException e) {
-			throw new RealmException(account.getId(), e);
+			throw new AccountException(account.getId(), e);
 		}
 	}
 }

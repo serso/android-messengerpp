@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger;
 
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 
@@ -28,7 +28,7 @@ public interface RealmConnection {
 	/**
 	 * Method starts listening to remote realm events
 	 */
-	void start() throws RealmConnectionException;
+	void start() throws AccountConnectionException;
 
 	/**
 	 * Method stops listening to remove realm events

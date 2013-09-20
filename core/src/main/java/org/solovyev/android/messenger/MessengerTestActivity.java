@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.users.User;
 
@@ -56,7 +56,7 @@ public class MessengerTestActivity extends RoboSherlockActivity {
 								}
 							}
 						});
-					} catch (RealmException e) {
+					} catch (AccountException e) {
 						e.printStackTrace();
 					}
 				}

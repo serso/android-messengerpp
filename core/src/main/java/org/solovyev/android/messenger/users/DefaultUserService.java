@@ -147,7 +147,7 @@ public class DefaultUserService implements UserService {
 					try {
 						final Account account = getRealmByEntity(user);
 						result = account.getAccountUserService().getUserById(user.getRealmEntityId());
-					} catch (RealmException e) {
+					} catch (AccountException e) {
 						// unable to load from realm => just return empty user
 						Log.e(TAG, e.getMessage(), e);
 					}
@@ -172,7 +172,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Nonnull
-	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
 		return accountService.getAccountById(entity.getRealmId());
 	}
 
@@ -289,7 +289,7 @@ public class DefaultUserService implements UserService {
     */
 
 	@Override
-	public void syncUser(@Nonnull Entity userEntity) throws RealmException {
+	public void syncUser(@Nonnull Entity userEntity) throws AccountException {
 		User user = getRealmByEntity(userEntity).getAccountUserService().getUserById(userEntity.getRealmEntityId());
 		if (user != null) {
 			user = user.updatePropertiesSyncDate();
@@ -299,7 +299,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	@Nonnull
-	public List<User> syncUserContacts(@Nonnull Entity user) throws RealmException {
+	public List<User> syncUserContacts(@Nonnull Entity user) throws AccountException {
 		final Account account = getRealmByEntity(user);
 		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getRealmEntityId());
 
@@ -352,7 +352,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<Chat> syncUserChats(@Nonnull Entity user) throws RealmException {
+	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
 		final List<ApiChat> apiChats = getRealmByEntity(user).getAccountChatService().getUserChats(user.getRealmEntityId());
 
 		final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
@@ -369,7 +369,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends ApiChat> apiChats) throws RealmException {
+	public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends ApiChat> apiChats) throws AccountException {
 		User user = this.getUserById(userEntity);
 
 		final MergeDaoResult<ApiChat, String> result;
@@ -424,7 +424,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void syncUserContactsStatuses(@Nonnull Entity userEntity) throws RealmException {
+	public void syncUserContactsStatuses(@Nonnull Entity userEntity) throws AccountException {
 		final List<User> contacts = getRealmByEntity(userEntity).getAccountUserService().checkOnlineUsers(getUserContacts(userEntity));
 
 		final User user = getUserById(userEntity);
@@ -448,7 +448,7 @@ public class DefaultUserService implements UserService {
     */
 
 	@Override
-	public void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedRealmException {
+	public void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedAccountException {
 		final RealmIconService realmIconService = getRealmIconServiceByUser(user);
 
 		// fetch self icon
@@ -464,7 +464,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Nonnull
-	private RealmIconService getRealmIconServiceByUser(@Nonnull User user) throws UnsupportedRealmException {
+	private RealmIconService getRealmIconServiceByUser(@Nonnull User user) throws UnsupportedAccountException {
 		return getRealmByEntity(user.getEntity()).getRealmDef().getRealmIconService();
 	}
 
@@ -472,7 +472,7 @@ public class DefaultUserService implements UserService {
 	public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
 		try {
 			getRealmIconServiceByUser(user).setUserIcon(user, imageView);
-		} catch (UnsupportedRealmException e) {
+		} catch (UnsupportedAccountException e) {
 			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
 			exceptionHandler.handleException(e);
 		}
@@ -487,7 +487,7 @@ public class DefaultUserService implements UserService {
 	public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
 		try {
 			getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
-		} catch (UnsupportedRealmException e) {
+		} catch (UnsupportedAccountException e) {
 			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
 			exceptionHandler.handleException(e);
 		}
@@ -526,7 +526,7 @@ public class DefaultUserService implements UserService {
 			} else {
 				return 0;
 			}
-		} catch (RealmException e) {
+		} catch (AccountException e) {
 			return 0;
 		}
 	}

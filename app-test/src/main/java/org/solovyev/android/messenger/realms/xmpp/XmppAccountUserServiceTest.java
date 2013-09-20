@@ -7,8 +7,8 @@ import junit.framework.Assert;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 import org.solovyev.android.messenger.realms.AccountState;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
 import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -56,7 +56,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 				public void run() {
 					try {
 						realmConnection2.start();
-					} catch (RealmConnectionException e) {
+					} catch (AccountConnectionException e) {
 						throw new RealmRuntimeException(realm2.getId(), e);
 					}
 				}
@@ -117,7 +117,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 				public void run() {
 					try {
 						realmConnection2.start();
-					} catch (RealmConnectionException e) {
+					} catch (AccountConnectionException e) {
 						throw new RealmRuntimeException(realm2.getId(), e);
 					}
 				}

@@ -4,7 +4,7 @@ import android.content.Context;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 	}
 
 	@Override
-	protected void doWork() throws RealmConnectionException {
+	protected void doWork() throws AccountConnectionException {
 		// Try to create connection (if not exists)
 		if (this.connection == null) {
 			tryToConnect(0);
@@ -44,7 +44,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 	}
 
 	@Nullable
-	private synchronized Connection tryToConnect(int connectionAttempt) throws RealmConnectionException {
+	private synchronized Connection tryToConnect(int connectionAttempt) throws AccountConnectionException {
 		if (this.connection == null) {
 			final XmppAccount realm = getAccount();
 			final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
@@ -58,7 +58,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 				if (connectionAttempt < CONNECTION_RETRIES) {
 					tryToConnect(connectionAttempt + 1);
 				} else {
-					throw new RealmConnectionException(realm.getId());
+					throw new AccountConnectionException(realm.getId());
 				}
 			}
 		}
@@ -106,7 +106,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 	}
 
 	@Nonnull
-	private Connection tryGetConnection() throws XMPPException, RealmConnectionException {
+	private Connection tryGetConnection() throws XMPPException, AccountConnectionException {
 		Connection localConnection = connection;
 		if (localConnection != null) {
 			prepareConnection(localConnection, getAccount());
@@ -116,13 +116,13 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 			if (localConnection != null) {
 				return localConnection;
 			} else {
-				throw new RealmConnectionException(getAccount().getId());
+				throw new AccountConnectionException(getAccount().getId());
 			}
 		}
 	}
 
 	@Override
-	public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException {
+	public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, AccountConnectionException {
 		final Connection connection = tryGetConnection();
 		synchronized (connection) {
 			return callable.call(connection);

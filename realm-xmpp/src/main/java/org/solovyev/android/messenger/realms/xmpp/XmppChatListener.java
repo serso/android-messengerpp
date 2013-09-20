@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -31,7 +31,7 @@ final class XmppChatListener implements ChatManagerListener {
 			try {
 				newChat = getChatService().saveChat(account.getUser().getEntity(), newChat);
 				chat.addMessageListener(new XmppMessageListener(account, newChat.getChat().getEntity()));
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
 		}

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import org.jivesoftware.smack.XMPPException;
-import org.solovyev.android.messenger.realms.RealmConnectionException;
+import org.solovyev.android.messenger.realms.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 
@@ -12,5 +12,5 @@ import javax.annotation.Nonnull;
  */
 public interface XmppConnectionAware {
 
-	<R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, RealmConnectionException;
+	<R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, AccountConnectionException;
 }

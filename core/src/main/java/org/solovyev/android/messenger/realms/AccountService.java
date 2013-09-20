@@ -62,22 +62,22 @@ public interface AccountService {
 	 *
 	 * @param realmDefId id of realm def
 	 * @return realm
-	 * @throws UnsupportedRealmException if realm hasn't been registered in this service
+	 * @throws UnsupportedAccountException if realm hasn't been registered in this service
 	 */
 	@Nonnull
-	RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
+	RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException;
 
 	@Nonnull
-	Account getAccountById(@Nonnull String accountId) throws UnsupportedRealmException;
+	Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException;
 
 	@Nonnull
-	Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
+	Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException;
 
 	@Nonnull
-	Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException;
+	Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedAccountException;
 
 	@Nonnull
-	Account saveAccount(@Nonnull AccountBuilder accountBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+	Account saveAccount(@Nonnull AccountBuilder accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException;
 
 	@Nonnull
 	Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState);

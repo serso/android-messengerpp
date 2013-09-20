@@ -8,7 +8,7 @@ import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -50,7 +50,7 @@ class XmppRosterListener implements RosterListener {
 					final Entity entity = account.newUserEntity(contactId);
 					try {
 						return accountUserService.getUserById(entity.getRealmEntityId());
-					} catch (RealmException e) {
+					} catch (AccountException e) {
 						throw new RealmRuntimeException(e);
 					}
 				}
@@ -60,7 +60,7 @@ class XmppRosterListener implements RosterListener {
 			getUserService().mergeUserContacts(account.getUser().getEntity(), contacts, false, true);
 
 		} catch (RealmRuntimeException e) {
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(new RealmException(e));
+			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(new AccountException(e));
 		}
 	}
 

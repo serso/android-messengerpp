@@ -34,10 +34,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessengerRealmsFragment extends AbstractMessengerListFragment<Account, AccountListItem> implements DetachableFragment {
+public class MessengerAccountsFragment extends AbstractMessengerListFragment<Account, AccountListItem> implements DetachableFragment {
 
 	@Nonnull
-	public static final String FRAGMENT_TAG = "realms";
+	public static final String FRAGMENT_TAG = "accounts";
 
 	@Inject
 	@Nonnull
@@ -46,10 +46,10 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	@Nullable
-	private JEventListener<AccountEvent> realmEventListener;
+	private JEventListener<AccountEvent> accountEventListener;
 
-	public MessengerRealmsFragment() {
-		super("Realms", false, true);
+	public MessengerAccountsFragment() {
+		super("Accounts", false, true);
 	}
 
 	@Override
@@ -85,14 +85,14 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		realmEventListener = new UiRealmEventListener();
-		accountService.addListener(realmEventListener);
+		accountEventListener = new UiRealmEventListener();
+		accountService.addListener(accountEventListener);
 	}
 
 	@Override
 	public void onDestroyView() {
-		if (realmEventListener != null) {
-			accountService.removeListener(realmEventListener);
+		if (accountEventListener != null) {
+			accountService.removeListener(accountEventListener);
 		}
 		super.onDestroyView();
 	}
@@ -190,7 +190,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 
 		@Override
 		public void onEvent(@Nonnull final AccountEvent accountEvent) {
-			Threads2.tryRunOnUiThread(MessengerRealmsFragment.this, new Runnable() {
+			Threads2.tryRunOnUiThread(MessengerAccountsFragment.this, new Runnable() {
 				@Override
 				public void run() {
 					getAdapter().onRealmEvent(accountEvent);

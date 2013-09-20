@@ -2,9 +2,9 @@ package org.solovyev.android.messenger.sync;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.messenger.realms.AccountService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public enum SyncTask {
 				if (lastPropertiesSyncDate == null || lastPropertiesSyncDate.plusHours(1).isBefore(DateTime.now())) {
 					result = true;
 				}
-			} catch (UnsupportedRealmException e) {
+			} catch (UnsupportedAccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -40,7 +40,7 @@ public enum SyncTask {
 			try {
 				final User user = getRealmService().getAccountById(syncData.getRealmId()).getUser();
 				MessengerApplication.getServiceLocator().getUserService().syncUser(user.getEntity());
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -58,7 +58,7 @@ public enum SyncTask {
 				if (lastContactsSyncDate == null || lastContactsSyncDate.plusHours(1).isBefore(DateTime.now())) {
 					result = true;
 				}
-			} catch (UnsupportedRealmException e) {
+			} catch (UnsupportedAccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -71,7 +71,7 @@ public enum SyncTask {
 			try {
 				final User user = getRealmService().getAccountById(syncData.getRealmId()).getUser();
 				MessengerApplication.getServiceLocator().getUserService().syncUserContacts(user.getEntity());
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -89,7 +89,7 @@ public enum SyncTask {
 				if (lastUserIconsSyncDate == null || lastUserIconsSyncDate.plusDays(1).isBefore(DateTime.now())) {
 					result = true;
 				}
-			} catch (UnsupportedRealmException e) {
+			} catch (UnsupportedAccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -104,7 +104,7 @@ public enum SyncTask {
 
 				MessengerApplication.getServiceLocator().getUserService().fetchUserAndContactsIcons(user);
 
-			} catch (UnsupportedRealmException e) {
+			} catch (UnsupportedAccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -122,7 +122,7 @@ public enum SyncTask {
 			try {
 				final User user = getRealmService().getAccountById(syncData.getRealmId()).getUser();
 				MessengerApplication.getServiceLocator().getUserService().syncUserContactsStatuses(user.getEntity());
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -140,7 +140,7 @@ public enum SyncTask {
 				if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(24).isBefore(DateTime.now())) {
 					result = true;
 				}
-			} catch (UnsupportedRealmException e) {
+			} catch (UnsupportedAccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -153,7 +153,7 @@ public enum SyncTask {
 			try {
 				final User user = getRealmService().getAccountById(syncData.getRealmId()).getUser();
 				MessengerApplication.getServiceLocator().getUserService().syncUserChats(user.getEntity());
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -171,7 +171,7 @@ public enum SyncTask {
 			try {
 				final User user = getRealmService().getAccountById(syncData.getRealmId()).getUser();
 				MessengerApplication.getServiceLocator().getChatService().syncChatMessages(user.getEntity());
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				// ok, user is not logged in
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}

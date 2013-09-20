@@ -14,14 +14,14 @@ import javax.annotation.Nonnull;
  * Date: 4/13/13
  * Time: 1:33 PM
  */
-final class RealmChangeStateListener extends MessengerContextCallback<Activity, Account> {
+final class AccountChangeStateListener extends MessengerContextCallback<Activity, Account> {
 
-	private RealmChangeStateListener() {
+	private AccountChangeStateListener() {
 	}
 
 	@Nonnull
 	static FutureCallback<Account> newInstance(@Nonnull Activity activity) {
-		return Tasks.toUiThreadFutureCallback(activity, new RealmChangeStateListener());
+		return Tasks.toUiThreadFutureCallback(activity, new AccountChangeStateListener());
 	}
 
 	@Override

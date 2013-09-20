@@ -5,7 +5,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.RealmException;
+import org.solovyev.android.messenger.realms.AccountException;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
 				} else {
 					MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
 				}
-			} catch (RealmException e) {
+			} catch (AccountException e) {
 				throwException(e);
 			}
 

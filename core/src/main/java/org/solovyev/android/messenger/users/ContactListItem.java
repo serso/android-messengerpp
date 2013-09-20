@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.AccountService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.UnsupportedAccountException;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 import roboguice.RoboGuice;
@@ -131,7 +131,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 			try {
 				final Account account = accountService.getAccountById(getContact().getEntity().getRealmId());
 				accountName.setText("[" + account.getUser().getDisplayName() + "]");
-			} catch (UnsupportedRealmException e) {
+			} catch (UnsupportedAccountException e) {
 				// cannot do anything => just handle exception
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import org.solovyev.android.messenger.realms.UnsupportedAccountException;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -22,7 +23,6 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.AccountService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
 import com.google.inject.Inject;
@@ -119,7 +119,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 		} else {
 			try {
 				account = accountService.getAccountByEntityAware(user);
-			} catch (UnsupportedRealmException e) {
+			} catch (UnsupportedAccountException e) {
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
 		}

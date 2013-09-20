@@ -102,7 +102,7 @@ final class RealmConnections {
 				startRealmConnection(0, null);
 			}
 
-			private void startRealmConnection(int attempt, @Nullable RealmConnectionException lastError) {
+			private void startRealmConnection(int attempt, @Nullable AccountConnectionException lastError) {
 				Log.d(MessengerApplication.TAG, "Realm start requested, attempt: " + attempt);
 
 				if (attempt > RETRY_CONNECTION_ATTEMPT_COUNT) {
@@ -124,7 +124,7 @@ final class RealmConnections {
 								Log.d(MessengerApplication.TAG, "Realm is enabled => starting connection...");
 								realmConnection.start();
 							}
-						} catch (RealmConnectionException e) {
+						} catch (AccountConnectionException e) {
 							Log.w(MessengerApplication.TAG, "Realm connection error occurred, connection attempt: " + attempt, e);
 
 							if (!realmConnection.isStopped()) {

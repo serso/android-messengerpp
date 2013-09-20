@@ -110,7 +110,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 			if (accountId != null) {
 				try {
 					editedRealm = (T) accountService.getAccountById(accountId);
-				} catch (UnsupportedRealmException e) {
+				} catch (UnsupportedAccountException e) {
 					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 					Activities.restartActivity(getActivity());
 				}
