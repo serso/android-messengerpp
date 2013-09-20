@@ -12,10 +12,7 @@ import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
@@ -316,11 +313,11 @@ public class DefaultChatService implements ChatService {
 						try {
 							return prepareChat(chat);
 						} catch (UnsupportedAccountException e) {
-							throw new RealmRuntimeException(e);
+							throw new AccountRuntimeException(e);
 						}
 					}
 				});
-			} catch (RealmRuntimeException e) {
+			} catch (AccountRuntimeException e) {
 				throw new AccountException(e);
 			}
 			return chatDao.mergeUserChats(user.getEntityId(), preparedChats);

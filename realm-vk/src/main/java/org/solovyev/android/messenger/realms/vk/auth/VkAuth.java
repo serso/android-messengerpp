@@ -7,7 +7,7 @@ import org.jsoup.select.Elements;
 import org.solovyev.android.http.AHttpClient;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.http.LastRedirectHandler;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 
 import javax.annotation.Nonnull;
@@ -51,7 +51,7 @@ public final class VkAuth {
 
 			return requestAccessToken(httpClient, code);
 
-		} catch (RealmRuntimeException e) {
+		} catch (AccountRuntimeException e) {
 			throw new InvalidCredentialsException(e);
 		} catch (IOException e) {
 			throw new InvalidCredentialsException(e);

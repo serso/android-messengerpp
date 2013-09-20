@@ -1,12 +1,12 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
 import android.util.Log;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.PredicateSpy;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Time: 10:47 PM
  */
 @ThreadSafe
-final class RealmConnections {
+final class AccountConnections {
 
     /*
 	**********************************************************************
@@ -55,7 +55,7 @@ final class RealmConnections {
 
 	@GuardedBy("realmConnections")
 	@Nonnull
-	private final Set<RealmConnection> realmConnections = new HashSet<RealmConnection>();
+	private final Set<AccountConnection> accountConnections = new HashSet<AccountConnection>();
 
 	@Nonnull
 	private final AtomicInteger threadCounter = new AtomicInteger(0);
@@ -68,70 +68,70 @@ final class RealmConnections {
 
 		@Override
 		public Thread newThread(Runnable r) {
-			return new Thread(r, "Realm connection thread: " + threadCounter.incrementAndGet());
+			return new Thread(r, "Account connection thread: " + threadCounter.incrementAndGet());
 		}
 	});
 
-	RealmConnections(@Nonnull Context context) {
+	AccountConnections(@Nonnull Context context) {
 		this.context = context.getApplicationContext();
 	}
 
 	public void startConnectionsFor(@Nonnull Collection<Account> accounts, boolean start) {
-		synchronized (realmConnections) {
+		synchronized (accountConnections) {
 			for (final Account account : accounts) {
 				// are there any realm connections for current realm?
-				boolean contains = Iterables.any(realmConnections, new RealmConnectionFinder(account));
+				boolean contains = Iterables.any(accountConnections, new AccountConnectionFinder(account));
 
 				if (!contains) {
 					// there is no realm connection for current realm => need to add
-					final RealmConnection realmConnection = account.newRealmConnection(context);
+					final AccountConnection accountConnection = account.newRealmConnection(context);
 
-					realmConnections.add(realmConnection);
+					accountConnections.add(accountConnection);
 
 					if (start) {
-						startRealmConnection(realmConnection);
+						startAccountConnection(accountConnection);
 					}
 				}
 			}
 		}
 
-		onRealmConnectionsStarted();
+		onAccountConnectionsStarted();
 	}
 
-	private void startRealmConnection(@Nonnull final RealmConnection realmConnection) {
+	private void startAccountConnection(@Nonnull final AccountConnection accountConnection) {
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
-				startRealmConnection(0, null);
+				startAccountConnection(0, null);
 			}
 
-			private void startRealmConnection(int attempt, @Nullable AccountConnectionException lastError) {
+			private void startAccountConnection(int attempt, @Nullable AccountConnectionException lastError) {
 				Log.d(MessengerApplication.TAG, "Realm start requested, attempt: " + attempt);
 
 				if (attempt > RETRY_CONNECTION_ATTEMPT_COUNT) {
 					Log.d(MessengerApplication.TAG, "Max retry count reached => stopping...");
 
-					if (!realmConnection.isStopped()) {
-						realmConnection.stop();
+					if (!accountConnection.isStopped()) {
+						accountConnection.stop();
 					}
 
 					if (lastError != null) {
 						MessengerApplication.getServiceLocator().getExceptionHandler().handleException(lastError);
 					}
 
-					MessengerApplication.getServiceLocator().getAccountService().changeAccountState(realmConnection.getAccount(), AccountState.disabled_by_app);
+					MessengerApplication.getServiceLocator().getAccountService().changeAccountState(accountConnection.getAccount(), AccountState.disabled_by_app);
 				} else {
-					if (realmConnection.isStopped()) {
+					if (accountConnection.isStopped()) {
 						try {
-							if (realmConnection.getAccount().isEnabled()) {
+							if (accountConnection.getAccount().isEnabled()) {
 								Log.d(MessengerApplication.TAG, "Realm is enabled => starting connection...");
-								realmConnection.start();
+								accountConnection.start();
 							}
 						} catch (AccountConnectionException e) {
 							Log.w(MessengerApplication.TAG, "Realm connection error occurred, connection attempt: " + attempt, e);
 
-							if (!realmConnection.isStopped()) {
-								realmConnection.stop();
+							if (!accountConnection.isStopped()) {
+								accountConnection.stop();
 							}
 
 							try {
@@ -140,7 +140,7 @@ final class RealmConnections {
 							} catch (InterruptedException e1) {
 								Log.e(MessengerApplication.TAG, e1.getMessage(), e1);
 							} finally {
-								startRealmConnection(attempt + 1, e);
+								startAccountConnection(attempt + 1, e);
 							}
 						}
 					}
@@ -150,7 +150,7 @@ final class RealmConnections {
 	}
 
 	// todo serso: better approach is to fire "realm_connected" events from realm connection and do sync for each realm separately (as soon as it is connected)
-	private void onRealmConnectionsStarted() {
+	private void onAccountConnectionsStarted() {
 		postStartExecutor.schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -165,45 +165,45 @@ final class RealmConnections {
 	}
 
 	public void tryStopAll() {
-		synchronized (this.realmConnections) {
-			for (RealmConnection realmConnection : realmConnections) {
-				if (!realmConnection.isStopped()) {
-					realmConnection.stop();
+		synchronized (this.accountConnections) {
+			for (AccountConnection accountConnection : accountConnections) {
+				if (!accountConnection.isStopped()) {
+					accountConnection.stop();
 				}
 			}
 		}
 	}
 
 	public void tryStopFor(@Nonnull Account account) {
-		synchronized (this.realmConnections) {
-			for (RealmConnection realmConnection : realmConnections) {
-				if (account.equals(realmConnection.getAccount()) && !realmConnection.isStopped()) {
-					realmConnection.stop();
+		synchronized (this.accountConnections) {
+			for (AccountConnection accountConnection : accountConnections) {
+				if (account.equals(accountConnection.getAccount()) && !accountConnection.isStopped()) {
+					accountConnection.stop();
 				}
 			}
 		}
 	}
 
 	public void tryStartAll() {
-		synchronized (this.realmConnections) {
-			for (RealmConnection realmConnection : realmConnections) {
-				if (realmConnection.isStopped()) {
-					startRealmConnection(realmConnection);
+		synchronized (this.accountConnections) {
+			for (AccountConnection accountConnection : accountConnections) {
+				if (accountConnection.isStopped()) {
+					startAccountConnection(accountConnection);
 				}
 			}
 		}
 
-		onRealmConnectionsStarted();
+		onAccountConnectionsStarted();
 	}
 
 	public void removeConnectionFor(@Nonnull Account account) {
-		synchronized (this.realmConnections) {
+		synchronized (this.accountConnections) {
 			// remove realm connections belonged to specified realm
-			final List<RealmConnection> removedConnections = new ArrayList<RealmConnection>();
-			Iterables.removeIf(this.realmConnections, PredicateSpy.spyOn(new RealmConnectionFinder(account), removedConnections));
+			final List<AccountConnection> removedConnections = new ArrayList<AccountConnection>();
+			Iterables.removeIf(this.accountConnections, PredicateSpy.spyOn(new AccountConnectionFinder(account), removedConnections));
 
 			// stop them
-			for (RealmConnection removedConnection : removedConnections) {
+			for (AccountConnection removedConnection : removedConnections) {
 				if (!removedConnection.isStopped()) {
 					removedConnection.stop();
 				}
@@ -211,25 +211,25 @@ final class RealmConnections {
 		}
 	}
 
-	public void updateRealm(@Nonnull Account account, boolean start) {
-		synchronized (this.realmConnections) {
+	public void updateAccount(@Nonnull Account account, boolean start) {
+		synchronized (this.accountConnections) {
 			removeConnectionFor(account);
 			startConnectionsFor(Arrays.asList(account), start);
 		}
 	}
 
-	private static class RealmConnectionFinder implements Predicate<RealmConnection> {
+	private static class AccountConnectionFinder implements Predicate<AccountConnection> {
 
 		@Nonnull
 		private final Account account;
 
-		public RealmConnectionFinder(@Nonnull Account account) {
+		public AccountConnectionFinder(@Nonnull Account account) {
 			this.account = account;
 		}
 
 		@Override
-		public boolean apply(@Nullable RealmConnection realmConnection) {
-			return realmConnection != null && realmConnection.getAccount().equals(account);
+		public boolean apply(@Nullable AccountConnection accountConnection) {
+			return accountConnection != null && accountConnection.getAccount().equals(account);
 		}
 	}
 

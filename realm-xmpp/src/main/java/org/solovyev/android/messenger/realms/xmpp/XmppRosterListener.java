@@ -9,7 +9,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -51,7 +51,7 @@ class XmppRosterListener implements RosterListener {
 					try {
 						return accountUserService.getUserById(entity.getRealmEntityId());
 					} catch (AccountException e) {
-						throw new RealmRuntimeException(e);
+						throw new AccountRuntimeException(e);
 					}
 				}
 			}));
@@ -59,7 +59,7 @@ class XmppRosterListener implements RosterListener {
 			// we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed
 			getUserService().mergeUserContacts(account.getUser().getEntity(), contacts, false, true);
 
-		} catch (RealmRuntimeException e) {
+		} catch (AccountRuntimeException e) {
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(new AccountException(e));
 		}
 	}

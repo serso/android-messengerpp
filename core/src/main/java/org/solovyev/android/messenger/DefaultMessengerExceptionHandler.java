@@ -8,7 +8,6 @@ import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.network.NetworkState;
 import org.solovyev.android.network.NetworkStateService;
 
@@ -66,8 +65,8 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 			notification = NO_INTERNET_NOTIFICATION;
 		} else if (e instanceof IllegalJsonRuntimeException) {
 			notification = newInvalidResponseNotification();
-		} else if (e instanceof RealmRuntimeException) {
-			handleException(new AccountException((RealmRuntimeException) e));
+		} else if (e instanceof AccountRuntimeException) {
+			handleException(new AccountException((AccountRuntimeException) e));
 		} else {
 			notification = newUndefinedErrorNotification();
 		}

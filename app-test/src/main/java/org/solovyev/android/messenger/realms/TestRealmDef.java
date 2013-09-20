@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.realms;
 import android.content.Context;
 import android.widget.ImageView;
 import com.google.inject.Singleton;
-import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -29,7 +29,7 @@ public class TestRealmDef extends AbstractRealmDef {
 	}
 
 	@Nonnull
-	public RealmConnection createRealmConnection(@Nonnull Context context, @Nonnull Account account) {
+	public AccountConnection createRealmConnection(@Nonnull Context context, @Nonnull Account account) {
 		return null;
 	}
 

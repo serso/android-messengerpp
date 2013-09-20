@@ -1,19 +1,19 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.accounts;
 
 import org.solovyev.android.messenger.accounts.AccountException;
 
 import javax.annotation.Nonnull;
 
-public final class RealmRuntimeException extends RuntimeException {
+public final class AccountRuntimeException extends RuntimeException {
 
 	@Nonnull
 	private final String realmId;
 
-	public RealmRuntimeException(@Nonnull AccountException e) {
+	public AccountRuntimeException(@Nonnull AccountException e) {
 		this(e.getRealmId(), e);
 	}
 
-	public RealmRuntimeException(@Nonnull String realmId, Throwable throwable) {
+	public AccountRuntimeException(@Nonnull String realmId, Throwable throwable) {
 		super(throwable);
 		this.realmId = realmId;
 	}

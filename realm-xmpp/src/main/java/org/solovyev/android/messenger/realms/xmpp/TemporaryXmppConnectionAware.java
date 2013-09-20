@@ -33,7 +33,7 @@ class TemporaryXmppConnectionAware implements XmppConnectionAware {
 	@Override
 	public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, AccountConnectionException {
 		final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
-		XmppRealmConnection.checkConnectionStatus(connection, realm);
+		XmppAccountConnection.checkConnectionStatus(connection, realm);
 		return callable.call(connection);
 	}
 }

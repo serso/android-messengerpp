@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 import android.content.Context;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.ChatStateManager;
-import org.solovyev.android.messenger.AbstractRealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
@@ -14,9 +14,9 @@ import javax.annotation.Nullable;
  * Date: 2/24/13
  * Time: 8:13 PM
  */
-public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> implements XmppConnectionAware {
+public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount> implements XmppConnectionAware {
 
-	private static final String TAG = XmppRealmConnection.class.getSimpleName();
+	private static final String TAG = XmppAccountConnection.class.getSimpleName();
 
 	private static final int CONNECTION_RETRIES = 3;
 
@@ -29,7 +29,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 	@Nonnull
 	private final RosterListener rosterListener;
 
-	public XmppRealmConnection(@Nonnull XmppAccount account, @Nonnull Context context) {
+	public XmppAccountConnection(@Nonnull XmppAccount account, @Nonnull Context context) {
 		super(account, context);
 		chatListener = new XmppChatListener(account);
 		rosterListener = new XmppRosterListener(account);

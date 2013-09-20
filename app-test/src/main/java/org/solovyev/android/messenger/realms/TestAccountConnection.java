@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.solovyev.android.messenger.AbstractRealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 
 import javax.annotation.Nonnull;
 
@@ -10,9 +10,9 @@ import javax.annotation.Nonnull;
  * Date: 3/4/13
  * Time: 5:05 PM
  */
-public class TestRealmConnection extends AbstractRealmConnection<TestAccount> {
+public class TestAccountConnection extends AbstractAccountConnection<TestAccount> {
 
-	public TestRealmConnection(@Nonnull TestAccount account, @Nonnull Context context) {
+	public TestAccountConnection(@Nonnull TestAccount account, @Nonnull Context context) {
 		super(account, context);
 	}
 

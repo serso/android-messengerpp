@@ -18,7 +18,7 @@ import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.db.StringIdMapper;
-import org.solovyev.android.messenger.realms.DeleteAllRowsInRealmDbExec;
+import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.collections.Collections;
 
@@ -102,10 +102,10 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 	@Override
 	public void deleteAllUsersInRealm(@Nonnull String realmId) {
 		// todo serso: startWith must be replaced with equals!
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_contacts", "user_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_properties", "user_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newStartsWith("user_chats", "user_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsInRealmDbExec.newInstance("users", "realm_id", realmId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_contacts", "user_id", realmId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_properties", "user_id", realmId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "user_id", realmId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("users", "realm_id", realmId));
 	}
 
 	@Nonnull

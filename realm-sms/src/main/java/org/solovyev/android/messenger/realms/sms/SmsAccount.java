@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -34,8 +34,8 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	protected RealmConnection newRealmConnection0(@Nonnull Context context) {
-		return new SmsRealmConnection(this, context);
+	protected AccountConnection newRealmConnection0(@Nonnull Context context) {
+		return new SmsAccountConnection(this, context);
 	}
 
 	@Nonnull

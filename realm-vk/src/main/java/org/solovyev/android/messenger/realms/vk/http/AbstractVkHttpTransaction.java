@@ -11,7 +11,7 @@ import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 
 import javax.annotation.Nonnull;
@@ -64,9 +64,9 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
 			try {
 				return getResponseFromJson(json);
 			} catch (JsonParseException e) {
-				throw new RealmRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
+				throw new AccountRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
 			} catch (IllegalJsonException e) {
-				throw new RealmRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
+				throw new AccountRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
 			}
 		} catch (IOException e) {
 			throw new HttpRuntimeIoException(e);

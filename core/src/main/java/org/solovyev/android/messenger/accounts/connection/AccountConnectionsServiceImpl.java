@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.accounts.connection;
 
 import android.app.Application;
 import com.google.inject.Inject;
@@ -29,7 +29,7 @@ import static org.solovyev.android.messenger.notifications.Notifications.newReal
  * Time: 8:17 PM
  */
 @Singleton
-public final class RealmConnectionsServiceImpl implements RealmConnectionsService, NetworkStateListener {
+public final class AccountConnectionsServiceImpl implements AccountConnectionsService, NetworkStateListener {
 
     /*
 	**********************************************************************
@@ -66,19 +66,19 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 	**********************************************************************
 	*/
 	@Nonnull
-	private RealmConnections realmConnections;
+	private AccountConnections accountConnections;
 
 	@Nullable
 	private RealmEventListener realmEventListener;
 
 	@Inject
-	public RealmConnectionsServiceImpl(@Nonnull Application context) {
+	public AccountConnectionsServiceImpl(@Nonnull Application context) {
 		this.context = context;
 	}
 
 	@Override
 	public void init() {
-		realmConnections = new RealmConnections(context);
+		accountConnections = new AccountConnections(context);
 
 		networkStateService.addListener(this);
 
@@ -90,7 +90,7 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 
 	private void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
 		final boolean start = canStartConnection();
-		realmConnections.startConnectionsFor(accounts, start);
+		accountConnections.startConnectionsFor(accounts, start);
 	}
 
 	private boolean canStartConnection() {
@@ -106,11 +106,11 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 			case CONNECTED:
 				notificationService.remove(NO_INTERNET_NOTIFICATION);
 				notificationService.remove(newRealmConnectionErrorNotification());
-				realmConnections.tryStartAll();
+				accountConnections.tryStartAll();
 				break;
 			case NOT_CONNECTED:
 				notificationService.add(NO_INTERNET_NOTIFICATION);
-				realmConnections.tryStopAll();
+				accountConnections.tryStopAll();
 				break;
 		}
 	}
@@ -129,24 +129,24 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 					tryStartConnectionsFor(Arrays.asList(account));
 					break;
 				case changed:
-					realmConnections.updateRealm(account, canStartConnection());
+					accountConnections.updateAccount(account, canStartConnection());
 					break;
 				case state_changed:
 					switch (account.getState()) {
 						case removed:
-							realmConnections.removeConnectionFor(account);
+							accountConnections.removeConnectionFor(account);
 							break;
 						default:
 							if (account.isEnabled()) {
 								tryStartConnectionsFor(Arrays.asList(account));
 							} else {
-								realmConnections.tryStopFor(account);
+								accountConnections.tryStopFor(account);
 							}
 							break;
 					}
 					break;
 				case stop:
-					realmConnections.tryStopFor(account);
+					accountConnections.tryStopFor(account);
 					break;
 				case start:
 					tryStartConnectionsFor(Arrays.asList(account));

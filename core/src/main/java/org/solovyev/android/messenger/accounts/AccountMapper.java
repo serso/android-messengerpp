@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
 import org.solovyev.common.security.Cipherer;
@@ -45,7 +44,7 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 
 			return realmDef.newRealm(realmId, user, decryptedConfiguration, AccountState.valueOf(state));
 		} catch (UnsupportedAccountException e) {
-			throw new RealmRuntimeException(realmId, e);
+			throw new AccountRuntimeException(realmId, e);
 		}
 	}
 

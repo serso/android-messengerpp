@@ -5,8 +5,8 @@ import android.util.Log;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessageService;
@@ -42,8 +42,8 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 
 	@Nonnull
 	@Override
-	protected RealmConnection newRealmConnection0(@Nonnull Context context) {
-		return new XmppRealmConnection(this, context);
+	protected AccountConnection newRealmConnection0(@Nonnull Context context) {
+		return new XmppAccountConnection(this, context);
 	}
 
 	@Nonnull
@@ -66,7 +66,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 
 	@Nonnull
 	private XmppConnectionAware getXmppConnectionAware() {
-		XmppConnectionAware realmAware = getRealmConnection();
+		XmppConnectionAware realmAware = getAccountConnection();
 		if (realmAware == null) {
 			realmAware = TemporaryXmppConnectionAware.newInstance(this);
 			Log.w(TAG, "Creation of temporary xmpp connection!");
@@ -75,8 +75,8 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nullable
-	protected XmppRealmConnection getRealmConnection() {
-		return (XmppRealmConnection) super.getRealmConnection();
+	protected XmppAccountConnection getAccountConnection() {
+		return (XmppAccountConnection) super.getAccountConnection();
 	}
 
 	@Nonnull

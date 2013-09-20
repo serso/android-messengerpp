@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
-import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.RealmDef;
@@ -36,7 +36,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	 * Last created realm connection
 	 */
 	@Nullable
-	private volatile RealmConnection realmConnection;
+	private volatile AccountConnection accountConnection;
 
 	public AbstractAccount(@Nonnull String id,
 						   @Nonnull RealmDef realmDef,
@@ -146,18 +146,18 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public final synchronized RealmConnection newRealmConnection(@Nonnull Context context) {
-		final RealmConnection realmConnection = newRealmConnection0(context);
-		this.realmConnection = realmConnection;
-		return realmConnection;
+	public final synchronized AccountConnection newRealmConnection(@Nonnull Context context) {
+		final AccountConnection accountConnection = newRealmConnection0(context);
+		this.accountConnection = accountConnection;
+		return accountConnection;
 	}
 
 	@Nonnull
-	protected abstract RealmConnection newRealmConnection0(@Nonnull Context context);
+	protected abstract AccountConnection newRealmConnection0(@Nonnull Context context);
 
 	@Nullable
-	protected synchronized RealmConnection getRealmConnection() {
-		return realmConnection;
+	protected synchronized AccountConnection getAccountConnection() {
+		return accountConnection;
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.realms;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.chats.AccountChatService;
@@ -33,8 +33,8 @@ public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	protected RealmConnection newRealmConnection0(@Nonnull Context context) {
-		return new TestRealmConnection(this, context);
+	protected AccountConnection newRealmConnection0(@Nonnull Context context) {
+		return new TestAccountConnection(this, context);
 	}
 
 	@Nonnull

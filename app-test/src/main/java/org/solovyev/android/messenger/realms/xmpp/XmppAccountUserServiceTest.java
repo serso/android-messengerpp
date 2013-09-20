@@ -5,11 +5,11 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import junit.framework.Assert;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
-import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -48,16 +48,16 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 	}
 
 	public void testGetUserById() throws Exception {
-		final RealmConnection realmConnection2 = realm2.newRealmConnection(getInstrumentation().getContext());
+		final AccountConnection accountConnection2 = realm2.newRealmConnection(getInstrumentation().getContext());
 
 		try {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						realmConnection2.start();
+						accountConnection2.start();
 					} catch (AccountConnectionException e) {
-						throw new RealmRuntimeException(realm2.getId(), e);
+						throw new AccountRuntimeException(realm2.getId(), e);
 					}
 				}
 			}).start();
@@ -89,7 +89,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 
 
 		} finally {
-			realmConnection2.stop();
+			accountConnection2.stop();
 		}
 	}
 
@@ -109,16 +109,16 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 	}
 
 	public void testCheckOnlineUsers() throws Exception {
-		final RealmConnection realmConnection2 = realm2.newRealmConnection(getInstrumentation().getContext());
+		final AccountConnection accountConnection2 = realm2.newRealmConnection(getInstrumentation().getContext());
 
 		try {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						realmConnection2.start();
+						accountConnection2.start();
 					} catch (AccountConnectionException e) {
-						throw new RealmRuntimeException(realm2.getId(), e);
+						throw new AccountRuntimeException(realm2.getId(), e);
 					}
 				}
 			}).start();
@@ -148,7 +148,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 			}));
 
 		} finally {
-			realmConnection2.stop();
+			accountConnection2.stop();
 		}
 	}
 

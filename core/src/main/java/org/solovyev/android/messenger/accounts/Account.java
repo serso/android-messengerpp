@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.MessengerEntity;
-import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmDef;
@@ -87,7 +87,7 @@ public interface Account<C extends AccountConfiguration> extends MessengerEntity
 	/*
 	**********************************************************************
 	*
-	*                           Realm Services
+	*                           Account Services
 	*
 	**********************************************************************
 	*/
@@ -98,7 +98,7 @@ public interface Account<C extends AccountConfiguration> extends MessengerEntity
 	AccountChatService getAccountChatService();
 
 	@Nonnull
-	RealmConnection newRealmConnection(@Nonnull Context context);
+	AccountConnection newRealmConnection(@Nonnull Context context);
 
 	int getCompositeDialogTitleResId();
 }

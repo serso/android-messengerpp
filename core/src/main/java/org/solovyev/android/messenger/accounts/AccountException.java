@@ -1,7 +1,5 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
-
 import javax.annotation.Nonnull;
 
 public class AccountException extends Exception {
@@ -18,14 +16,14 @@ public class AccountException extends Exception {
 		this.realmId = realmId;
 	}
 
-	public AccountException(@Nonnull RealmRuntimeException exception) {
+	public AccountException(@Nonnull AccountRuntimeException exception) {
 		super(unwrap(exception));
 		this.realmId = exception.getRealmId();
 	}
 
 	@Nonnull
 	private static Throwable unwrap(@Nonnull Throwable exception) {
-		if (exception instanceof RealmRuntimeException) {
+		if (exception instanceof AccountRuntimeException) {
 			final Throwable cause = exception.getCause();
 			return cause != null ? cause : exception;
 		} else {

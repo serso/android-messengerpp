@@ -12,7 +12,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.RealmConnectionsService;
+import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -79,7 +79,7 @@ public class MessengerApplication extends Application implements MessengerServic
 
 	@Inject
 	@Nonnull
-	private RealmConnectionsService realmConnectionsService;
+	private AccountConnectionsService accountConnectionsService;
 
 	@Inject
 	@Nonnull
@@ -216,7 +216,7 @@ public class MessengerApplication extends Application implements MessengerServic
 
 
 		// must be done after all loadings
-		this.realmConnectionsService.init();
+		this.accountConnectionsService.init();
 
 		this.networkStateService.startListening(this);
 	}

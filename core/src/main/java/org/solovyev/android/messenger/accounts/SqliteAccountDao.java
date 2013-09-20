@@ -10,8 +10,6 @@ import com.google.gson.Gson;
 import com.google.inject.Singleton;
 import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.*;
-import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
@@ -56,7 +54,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	public void insertRealm(@Nonnull Account account) throws AccountException {
 		try {
 			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(account, secret)));
-		} catch (RealmRuntimeException e) {
+		} catch (AccountRuntimeException e) {
 			throw new AccountException(e);
 		}
 	}
@@ -71,7 +69,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	public Collection<Account> loadRealms() {
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
-		} catch (RealmRuntimeException e) {
+		} catch (AccountRuntimeException e) {
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			return Collections.emptyList();
 		}
@@ -86,7 +84,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	public void updateRealm(@Nonnull Account account) throws AccountException {
 		try {
 			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(account, secret)));
-		} catch (RealmRuntimeException e) {
+		} catch (AccountRuntimeException e) {
 			throw new AccountException(e);
 		}
 	}
@@ -96,7 +94,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	public Collection<Account> loadRealmsInState(@Nonnull AccountState state) {
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
-		} catch (RealmRuntimeException e) {
+		} catch (AccountRuntimeException e) {
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			return Collections.emptyList();
 		}
@@ -151,7 +149,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Nonnull
-	private static ContentValues toContentValues(@Nonnull Account account, @Nullable SecretKey secret) throws RealmRuntimeException {
+	private static ContentValues toContentValues(@Nonnull Account account, @Nullable SecretKey secret) throws AccountRuntimeException {
 		final ContentValues values = new ContentValues();
 
 		values.put("id", account.getId());
@@ -169,7 +167,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 			}
 			values.put("configuration", new Gson().toJson(configuration));
 		} catch (CiphererException e) {
-			throw new RealmRuntimeException(account.getId(), e);
+			throw new AccountRuntimeException(account.getId(), e);
 		}
 
 		values.put("state", account.getState().name());

@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms.vk;
 
 import android.content.Context;
-import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -21,8 +21,8 @@ public final class VkAccount extends AbstractAccount<VkAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	protected RealmConnection newRealmConnection0(@Nonnull Context context) {
-		return new VkLongPollRealmConnection(this, context);
+	protected AccountConnection newRealmConnection0(@Nonnull Context context) {
+		return new VkLongPollAccountConnection(this, context);
 	}
 
 	@Nonnull

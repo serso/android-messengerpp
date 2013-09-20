@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
 import org.solovyev.android.messenger.accounts.Account;
@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 7/25/12
  * Time: 6:10 PM
  */
-public abstract class AbstractRealmConnection<A extends Account> implements RealmConnection {
+public abstract class AbstractAccountConnection<A extends Account> implements AccountConnection {
 
 	@Nonnull
-	private static final String TAG = "RealmConnection";
+	private static final String TAG = "AccountConnection";
 
 	@Nonnull
 	private volatile A account;
@@ -26,7 +26,7 @@ public abstract class AbstractRealmConnection<A extends Account> implements Real
 	@Nonnull
 	private final AtomicBoolean stopped = new AtomicBoolean(true);
 
-	protected AbstractRealmConnection(@Nonnull A account, @Nonnull Context context) {
+	protected AbstractAccountConnection(@Nonnull A account, @Nonnull Context context) {
 		this.account = account;
 		this.context = context;
 	}
