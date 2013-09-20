@@ -26,9 +26,9 @@ public class RealmDefGuiEventListener implements EventListener<RealmDefGuiEvent>
 		switch (event.getType()) {
 			case realm_def_clicked:
 				if (activity.isDualPane()) {
-					activity.getMultiPaneFragmentManager().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, false);
+					activity.getMultiPaneFragmentManager().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseAccountConfigurationFragment.FRAGMENT_TAG, false);
 				} else {
-					activity.getMultiPaneFragmentManager().setMainFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
+					activity.getMultiPaneFragmentManager().setMainFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 				}
 				break;
 			case realm_def_edit_finished:

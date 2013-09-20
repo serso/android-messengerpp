@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.AccountConfiguration;
-import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
+import org.solovyev.android.messenger.realms.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.text.Strings;
@@ -14,7 +14,7 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragment<XmppAccount> {
+public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
 
     /*
 	**********************************************************************
@@ -62,7 +62,7 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
 	@Nonnull
 	private EditText resourceEditText;
 
-	public XmppRealmConfigurationFragment() {
+	public XmppAccountConfigurationFragment() {
 		super(R.layout.mpp_realm_conf_xmpp);
 	}
 

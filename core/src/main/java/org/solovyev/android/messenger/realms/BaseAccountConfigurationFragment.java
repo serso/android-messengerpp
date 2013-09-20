@@ -21,7 +21,7 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class BaseRealmConfigurationFragment<T extends Account<?>> extends RoboSherlockFragment {
+public abstract class BaseAccountConfigurationFragment<T extends Account<?>> extends RoboSherlockFragment {
 
     /*
 	**********************************************************************
@@ -32,13 +32,13 @@ public abstract class BaseRealmConfigurationFragment<T extends Account<?>> exten
     */
 
 	@Nonnull
-	public static final String EXTRA_REALM_ID = "realm_id";
+	public static final String ARGS_ACCOUNT_ID = "account_id";
 
 	@Nonnull
-	public static final String FRAGMENT_TAG = "realm-configuration";
+	public static final String FRAGMENT_TAG = "account-configuration";
 
 	@Nonnull
-	private static final String TAG = "RealmConfiguration";
+	private static final String TAG = "AccountConfiguration";
 
     /*
     **********************************************************************
@@ -96,7 +96,7 @@ public abstract class BaseRealmConfigurationFragment<T extends Account<?>> exten
 	@Nonnull
 	private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
 
-	protected BaseRealmConfigurationFragment(int layoutResId) {
+	protected BaseAccountConfigurationFragment(int layoutResId) {
 		this.layoutResId = layoutResId;
 	}
 
@@ -106,10 +106,10 @@ public abstract class BaseRealmConfigurationFragment<T extends Account<?>> exten
 
 		final Bundle arguments = getArguments();
 		if (arguments != null) {
-			final String realmId = arguments.getString(EXTRA_REALM_ID);
-			if (realmId != null) {
+			final String accountId = arguments.getString(ARGS_ACCOUNT_ID);
+			if (accountId != null) {
 				try {
-					editedRealm = (T) realmService.getRealmById(realmId);
+					editedRealm = (T) realmService.getRealmById(accountId);
 				} catch (UnsupportedRealmException e) {
 					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 					Activities.restartActivity(getActivity());

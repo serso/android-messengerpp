@@ -24,7 +24,7 @@ public abstract class AbstractRealmDef<C extends AccountConfiguration> implement
 	private final int iconResId;
 
 	@Nonnull
-	private final Class<? extends BaseRealmConfigurationFragment<?>> configurationFragmentClass;
+	private final Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass;
 
 	@Nonnull
 	private final Class<? extends C> configurationClass;
@@ -34,7 +34,7 @@ public abstract class AbstractRealmDef<C extends AccountConfiguration> implement
 	protected AbstractRealmDef(@Nonnull String id,
 							   int nameResId,
 							   int iconResId,
-							   @Nonnull Class<? extends BaseRealmConfigurationFragment<?>> configurationFragmentClass,
+							   @Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
 							   @Nonnull Class<? extends C> configurationClass,
 							   boolean notifySentMessagesImmediately) {
 		this.id = id;
@@ -69,7 +69,7 @@ public abstract class AbstractRealmDef<C extends AccountConfiguration> implement
 
 	@Nonnull
 	@Override
-	public Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass() {
+	public Class<? extends BaseAccountConfigurationFragment> getConfigurationFragmentClass() {
 		return this.configurationFragmentClass;
 	}
 

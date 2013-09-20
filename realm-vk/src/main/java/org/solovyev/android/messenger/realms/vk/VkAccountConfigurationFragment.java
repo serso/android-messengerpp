@@ -6,13 +6,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.AccountConfiguration;
-import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
+import org.solovyev.android.messenger.realms.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 
-public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment<VkAccount> {
+public class VkAccountConfigurationFragment extends BaseAccountConfigurationFragment<VkAccount> {
 
     /*
 	**********************************************************************
@@ -41,7 +41,7 @@ public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment
 	@Nonnull
 	private EditText passwordEditText;
 
-	public VkRealmConfigurationFragment() {
+	public VkAccountConfigurationFragment() {
 		super(R.layout.mpp_realm_conf_vk);
 	}
 

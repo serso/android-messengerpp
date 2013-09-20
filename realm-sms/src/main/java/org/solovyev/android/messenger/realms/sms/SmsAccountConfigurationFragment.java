@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.sms;
 
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.AccountConfiguration;
-import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
+import org.solovyev.android.messenger.realms.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmDef;
 
 import javax.annotation.Nonnull;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
  * Date: 5/27/13
  * Time: 9:08 PM
  */
-public final class SmsRealmConfigurationFragment extends BaseRealmConfigurationFragment<SmsAccount> {
+public final class SmsAccountConfigurationFragment extends BaseAccountConfigurationFragment<SmsAccount> {
 
     /*
 	**********************************************************************
@@ -27,7 +27,7 @@ public final class SmsRealmConfigurationFragment extends BaseRealmConfigurationF
 	@Nonnull
 	private SmsRealmDef realmDef;
 
-	public SmsRealmConfigurationFragment() {
+	public SmsAccountConfigurationFragment() {
 		super(R.layout.mpp_realm_sms_conf);
 	}
 

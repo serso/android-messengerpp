@@ -52,11 +52,11 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
 
 	private void handleRealmEditRequestedEvent(@Nonnull Account account) {
 		final Bundle fragmentArgs = new Bundle();
-		fragmentArgs.putString(BaseRealmConfigurationFragment.EXTRA_REALM_ID, account.getId());
+		fragmentArgs.putString(BaseAccountConfigurationFragment.ARGS_ACCOUNT_ID, account.getId());
 		if (activity.isDualPane()) {
-			activity.getMultiPaneFragmentManager().setSecondFragment(account.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
+			activity.getMultiPaneFragmentManager().setSecondFragment(account.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 		} else {
-			activity.getMultiPaneFragmentManager().setMainFragment(account.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseRealmConfigurationFragment.FRAGMENT_TAG, true);
+			activity.getMultiPaneFragmentManager().setMainFragment(account.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 		}
 	}
 

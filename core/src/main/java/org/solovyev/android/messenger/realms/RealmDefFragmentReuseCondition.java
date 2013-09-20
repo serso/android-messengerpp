@@ -22,8 +22,8 @@ public class RealmDefFragmentReuseCondition implements JPredicate<Fragment> {
 
 	@Override
 	public boolean apply(@Nullable Fragment fragment) {
-		if (fragment instanceof BaseRealmConfigurationFragment) {
-			final BaseRealmConfigurationFragment oldRealmFragment = ((BaseRealmConfigurationFragment) fragment);
+		if (fragment instanceof BaseAccountConfigurationFragment) {
+			final BaseAccountConfigurationFragment oldRealmFragment = ((BaseAccountConfigurationFragment) fragment);
 			if (realmDef.equals(oldRealmFragment.getRealmDef())) {
 				// do nothing - configuration fragment for this item is already opened
 				return true;

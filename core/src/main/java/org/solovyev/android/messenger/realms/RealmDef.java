@@ -49,7 +49,7 @@ public interface RealmDef<C extends AccountConfiguration> extends MessengerEntit
 	void init(@Nonnull Context context);
 
 	@Nonnull
-	Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
+	Class<? extends BaseAccountConfigurationFragment> getConfigurationFragmentClass();
 
 	@Nonnull
 	Account<C> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull C configuration, @Nonnull AccountState state);

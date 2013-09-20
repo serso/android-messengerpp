@@ -57,7 +57,7 @@ public final class XmppRealmDef extends AbstractRealmDef<XmppAccountConfiguratio
 	private Application context;
 
 	public XmppRealmDef() {
-		super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationFragment.class, XmppAccountConfiguration.class, true);
+		super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppAccountConfigurationFragment.class, XmppAccountConfiguration.class, true);
 	}
 
 	@Nonnull

@@ -10,13 +10,13 @@ import javax.annotation.Nullable;
  * Date: 2/27/13
  * Time: 9:15 PM
  */
-public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragment<TestAccount> {
+public class TestAccountConfigurationFragment extends BaseAccountConfigurationFragment<TestAccount> {
 
 	@Inject
 	@Nonnull
 	private TestRealmDef realmDef;
 
-	public TestRealmConfigurationFragment() {
+	public TestAccountConfigurationFragment() {
 		super(0);
 	}
 
