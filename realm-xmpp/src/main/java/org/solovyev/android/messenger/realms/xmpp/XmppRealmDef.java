@@ -62,7 +62,7 @@ public final class XmppRealmDef extends AbstractRealmDef<XmppAccountConfiguratio
 
 	@Nonnull
 	@Override
-	public Realm<XmppAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull XmppAccountConfiguration configuration, @Nonnull RealmState state) {
+	public Realm<XmppAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull XmppAccountConfiguration configuration, @Nonnull AccountState state) {
 		return new XmppRealm(realmId, this, user, configuration, state);
 	}
 

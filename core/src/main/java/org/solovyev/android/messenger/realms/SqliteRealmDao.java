@@ -91,7 +91,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
 	@Nonnull
 	@Override
-	public Collection<Realm> loadRealmsInState(@Nonnull RealmState state) {
+	public Collection<Realm> loadRealmsInState(@Nonnull AccountState state) {
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
 		} catch (RealmRuntimeException e) {
@@ -178,9 +178,9 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 	private class LoadRealm extends AbstractDbQuery<Collection<Realm>> {
 
 		@Nullable
-		private final RealmState state;
+		private final AccountState state;
 
-		protected LoadRealm(@Nonnull Context context, @Nullable RealmState state, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+		protected LoadRealm(@Nonnull Context context, @Nullable AccountState state, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 			super(context, sqliteOpenHelper);
 			this.state = state;
 		}

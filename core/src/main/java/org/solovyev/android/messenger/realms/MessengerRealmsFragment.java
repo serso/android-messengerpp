@@ -114,7 +114,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 	protected MessengerListItemAdapter<RealmListItem> createAdapter() {
 		final List<RealmListItem> listItems = new ArrayList<RealmListItem>();
 		for (Realm realm : realmService.getRealms()) {
-			if (realm.getState() != RealmState.removed) {
+			if (realm.getState() != AccountState.removed) {
 				listItems.add(new RealmListItem(realm));
 			}
 		}

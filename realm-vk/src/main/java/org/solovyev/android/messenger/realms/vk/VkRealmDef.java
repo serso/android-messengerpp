@@ -12,9 +12,9 @@ import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.notifications.Notifications;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
+import org.solovyev.android.messenger.realms.AccountState;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmBuilder;
-import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
@@ -111,7 +111,7 @@ public class VkRealmDef extends AbstractRealmDef<VkAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public Realm<VkAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull RealmState state) {
+	public Realm<VkAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
 		return new VkRealm(realmId, this, user, configuration, state);
 	}
 

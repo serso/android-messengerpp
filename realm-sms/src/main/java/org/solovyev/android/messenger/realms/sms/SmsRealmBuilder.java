@@ -30,7 +30,7 @@ final class SmsRealmBuilder extends AbstractRealmBuilder<SmsAccountConfiguration
 
 	@Nonnull
 	@Override
-	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state) {
+	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new SmsRealm(id, getRealmDef(), user, getConfiguration(), state);
 	}
 

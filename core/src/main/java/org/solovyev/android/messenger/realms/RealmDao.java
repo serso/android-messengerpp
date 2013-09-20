@@ -19,7 +19,7 @@ public interface RealmDao {
 	void updateRealm(@Nonnull Realm realm) throws RealmException;
 
 	@Nonnull
-	Collection<Realm> loadRealmsInState(@Nonnull RealmState state);
+	Collection<Realm> loadRealmsInState(@Nonnull AccountState state);
 
 	void init();
 }

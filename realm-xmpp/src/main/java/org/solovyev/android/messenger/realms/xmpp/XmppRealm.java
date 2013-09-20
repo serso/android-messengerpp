@@ -13,9 +13,9 @@ import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.realms.AbstractRealm;
+import org.solovyev.android.messenger.realms.AccountState;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -36,7 +36,7 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 					 @Nonnull RealmDef realmDef,
 					 @Nonnull User user,
 					 @Nonnull XmppAccountConfiguration configuration,
-					 @Nonnull RealmState state) {
+					 @Nonnull AccountState state) {
 		super(id, realmDef, user, configuration, state);
 	}
 

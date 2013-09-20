@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
-public enum RealmState {
+public enum AccountState {
 	enabled,
 
 	/**

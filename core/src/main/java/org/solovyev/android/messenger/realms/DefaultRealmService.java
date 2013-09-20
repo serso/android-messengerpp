@@ -114,12 +114,12 @@ public class DefaultRealmService implements RealmService {
 
 		synchronized (lock) {
 			// reset status to enabled for temporary disable realms
-			for (Realm realm : realmDao.loadRealmsInState(RealmState.disabled_by_app)) {
-				changeRealmState(realm, RealmState.enabled, false);
+			for (Realm realm : realmDao.loadRealmsInState(AccountState.disabled_by_app)) {
+				changeRealmState(realm, AccountState.enabled, false);
 			}
 
 			// remove all scheduled to remove realms
-			for (Realm realm : realmDao.loadRealmsInState(RealmState.removed)) {
+			for (Realm realm : realmDao.loadRealmsInState(AccountState.removed)) {
 				this.messageService.removeAllMessagesInRealm(realm.getId());
 				this.chatService.removeChatsInRealm(realm.getId());
 				this.userService.removeUsersInRealm(realm.getId());
@@ -232,7 +232,7 @@ public class DefaultRealmService implements RealmService {
 					final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Realm>() {
 						@Override
 						public boolean apply(@Nullable Realm realm) {
-							return realm != null && realm.getState() != RealmState.removed && newRealm.same(realm);
+							return realm != null && realm.getState() != AccountState.removed && newRealm.same(realm);
 						}
 					});
 
@@ -273,12 +273,12 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState) {
+	public Realm changeRealmState(@Nonnull Realm realm, @Nonnull AccountState newState) {
 		return changeRealmState(realm, newState, true);
 	}
 
 	@Nonnull
-	private Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState, boolean fireEvent) {
+	private Realm changeRealmState(@Nonnull Realm realm, @Nonnull AccountState newState, boolean fireEvent) {
 		if (realm.getState() != newState) {
 			try {
 				final Realm result = realm.copyForNewState(newState);
@@ -314,7 +314,7 @@ public class DefaultRealmService implements RealmService {
 		}
 
 		if (realm != null) {
-			changeRealmState((Realm) realm, (RealmState) RealmState.removed);
+			changeRealmState((Realm) realm, (AccountState) AccountState.removed);
 		}
 	}
 

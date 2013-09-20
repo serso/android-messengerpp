@@ -25,6 +25,6 @@ final class RealmChangeStateCallable implements Callable<Realm> {
 	@Override
 	public Realm call() throws Exception {
 		final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
-		return realmService.changeRealmState(realm, realm.isEnabled() ? RealmState.disabled_by_user : RealmState.enabled);
+		return realmService.changeRealmState(realm, realm.isEnabled() ? AccountState.disabled_by_user : AccountState.enabled);
 	}
 }

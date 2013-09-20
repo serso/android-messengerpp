@@ -21,12 +21,12 @@ public class TestRealm extends AbstractRealm<TestAccountConfiguration> {
 	}
 
 	public TestRealm(@Nonnull TestRealmDef realmDef, int index) {
-		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), RealmState.enabled);
+		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
 	}
 
 
 	public TestRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull TestAccountConfiguration configuration) {
-		super(id, realmDef, user, configuration, RealmState.enabled);
+		super(id, realmDef, user, configuration, AccountState.enabled);
 	}
 
 	@Nonnull

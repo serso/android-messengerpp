@@ -80,7 +80,7 @@ public interface RealmService {
 	Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
 	@Nonnull
-	Realm changeRealmState(@Nonnull Realm realm, @Nonnull RealmState newState);
+	Realm changeRealmState(@Nonnull Realm realm, @Nonnull AccountState newState);
 
 	void removeRealm(@Nonnull String realmId);
 

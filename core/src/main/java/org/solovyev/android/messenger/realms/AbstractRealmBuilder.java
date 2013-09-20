@@ -36,7 +36,7 @@ public abstract class AbstractRealmBuilder<C extends AccountConfiguration> imple
 
 		final User user = getRealmUser(realmId);
 
-		return newRealm(realmId, user, RealmState.enabled);
+		return newRealm(realmId, user, AccountState.enabled);
 	}
 
 	@Nonnull
@@ -54,5 +54,5 @@ public abstract class AbstractRealmBuilder<C extends AccountConfiguration> imple
 	}
 
 	@Nonnull
-	protected abstract Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state);
+	protected abstract Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
 }

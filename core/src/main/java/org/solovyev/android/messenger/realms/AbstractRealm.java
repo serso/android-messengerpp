@@ -29,7 +29,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 	private C configuration;
 
 	@Nonnull
-	private RealmState state;
+	private AccountState state;
 
 	/**
 	 * Last created realm connection
@@ -41,7 +41,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 						 @Nonnull RealmDef realmDef,
 						 @Nonnull User user,
 						 @Nonnull C configuration,
-						 @Nonnull RealmState state) {
+						 @Nonnull AccountState state) {
 		if (!user.getEntity().getRealmId().equals(id)) {
 			throw new IllegalArgumentException("User must belong to realm!");
 		}
@@ -79,13 +79,13 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 
 	@Nonnull
 	@Override
-	public final RealmState getState() {
+	public final AccountState getState() {
 		return state;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return state == RealmState.enabled;
+		return state == AccountState.enabled;
 	}
 
 	@Nonnull
@@ -126,7 +126,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 
 	@Nonnull
 	@Override
-	public final Realm copyForNewState(@Nonnull RealmState newState) {
+	public final Realm copyForNewState(@Nonnull AccountState newState) {
 		final AbstractRealm clone = clone();
 		clone.state = newState;
 		return clone;

@@ -5,9 +5,9 @@ import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
+import org.solovyev.android.messenger.realms.AccountState;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkAuth;
 import org.solovyev.android.messenger.realms.vk.users.VkUsersGetHttpTransaction;
@@ -34,7 +34,7 @@ public class VkRealmBuilder extends AbstractRealmBuilder<VkAccountConfiguration>
 
 		User result;
 		try {
-			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkRealm(realmId, getRealmDef(), defaultUser, getConfiguration(), RealmState.removed), userId, null));
+			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkRealm(realmId, getRealmDef(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
 			if (users.isEmpty()) {
 				result = defaultUser;
 			} else {
@@ -50,7 +50,7 @@ public class VkRealmBuilder extends AbstractRealmBuilder<VkAccountConfiguration>
 
 	@Nonnull
 	@Override
-	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull RealmState state) {
+	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new VkRealm(id, getRealmDef(), user, getConfiguration(), state);
 	}
 

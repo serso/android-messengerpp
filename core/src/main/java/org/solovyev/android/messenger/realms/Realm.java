@@ -27,7 +27,7 @@ public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 	C getConfiguration();
 
 	@Nonnull
-	RealmState getState();
+	AccountState getState();
 
 	boolean isEnabled();
 
@@ -55,7 +55,7 @@ public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 	String getDisplayName(@Nonnull Context context);
 
 	@Nonnull
-	Realm copyForNewState(@Nonnull RealmState newState);
+	Realm copyForNewState(@Nonnull AccountState newState);
 
 	/*
 	**********************************************************************
