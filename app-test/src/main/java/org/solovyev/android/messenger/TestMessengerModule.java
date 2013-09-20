@@ -19,10 +19,9 @@ import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
-import org.solovyev.android.messenger.realms.DefaultRealmService;
-import org.solovyev.android.messenger.realms.RealmDao;
-import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.realms.SqliteRealmDao;
+import org.solovyev.android.messenger.notifications.DefaultNotificationService;
+import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
 import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
@@ -33,6 +32,8 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
+import org.solovyev.tasks.TaskService;
+import org.solovyev.tasks.Tasks;
 import roboguice.RoboGuice;
 import roboguice.inject.RoboInjector;
 
@@ -40,6 +41,8 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TestMessengerModule extends AbstractModule {
 
@@ -54,13 +57,20 @@ public class TestMessengerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		bind(ExecutorService.class).toInstance(Executors.newSingleThreadExecutor());
+		bind(TaskService.class).toInstance(Tasks.newTaskService());
+
+		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
+		bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
+		bind(NotificationService.class).to(DefaultNotificationService.class);
+
 		bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
 		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 
 		bind(RealmService.class).to(DefaultRealmService.class);
 		bind(RealmDao.class).to(SqliteRealmDao.class);
+		bind(RealmConnectionsService.class).to(RealmConnectionsServiceImpl.class);
 
-		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
 		bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
 		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
 		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
