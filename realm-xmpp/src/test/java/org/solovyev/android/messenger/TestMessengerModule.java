@@ -19,9 +19,9 @@ import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
-import org.solovyev.android.messenger.realms.DefaultRealmService;
+import org.solovyev.android.messenger.realms.DefaultAccountService;
 import org.solovyev.android.messenger.realms.RealmDao;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.realms.SqliteRealmDao;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -55,7 +55,7 @@ public class TestMessengerModule extends AbstractModule {
 		bind(SQLiteOpenHelperConfiguration.class).to(TestMessengerDbConfiguration.class);
 		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 
-		bind(RealmService.class).to(DefaultRealmService.class);
+		bind(AccountService.class).to(DefaultAccountService.class);
 		bind(RealmDao.class).to(SqliteRealmDao.class);
 
 		bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);

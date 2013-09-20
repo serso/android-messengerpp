@@ -28,7 +28,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.FragmentGuiEventType;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
@@ -87,7 +87,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -205,8 +205,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	}
 
 	@Nonnull
-	protected RealmService getRealmService() {
-		return realmService;
+	protected AccountService getAccountService() {
+		return accountService;
 	}
 
 	@Nonnull

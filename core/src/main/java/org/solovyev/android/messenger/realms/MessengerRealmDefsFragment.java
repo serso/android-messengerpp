@@ -20,7 +20,7 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	public MessengerRealmDefsFragment() {
 		super("RealmDefs", false, true);
@@ -47,7 +47,7 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
 	@Override
 	protected MessengerListItemAdapter<RealmDefListItem> createAdapter() {
 		final List<RealmDefListItem> listItems = new ArrayList<RealmDefListItem>();
-		for (RealmDef realmDef : realmService.getRealmDefs()) {
+		for (RealmDef realmDef : accountService.getRealmDefs()) {
 			listItems.add(new RealmDefListItem(realmDef));
 		}
 		return new MessengerListItemAdapter<RealmDefListItem>(getActivity(), listItems);

@@ -118,7 +118,7 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
 						public Fragment build() {
 							final List<User> participants = new ArrayList<User>();
 							try {
-								final Account account = activity.getRealmService().getRealmByEntity(chat.getEntity());
+								final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
 								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity()));
 							} catch (UnsupportedRealmException e) {
 								MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);

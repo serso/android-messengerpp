@@ -63,7 +63,7 @@ public class DefaultChatService implements ChatService {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@GuardedBy("lock")
 	@Inject
@@ -208,7 +208,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	private ApiChat prepareChat(@Nonnull ApiChat apiChat) throws UnsupportedRealmException {
 		if (apiChat.getChat().isPrivate()) {
-			final Account account = realmService.getRealmById(apiChat.getChat().getEntity().getRealmId());
+			final Account account = accountService.getAccountById(apiChat.getChat().getEntity().getRealmId());
 			final User user = account.getUser();
 			final List<User> participants = apiChat.getParticipantsExcept(user);
 
@@ -350,7 +350,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
-		return realmService.getRealmById(entity.getRealmId());
+		return accountService.getAccountById(entity.getRealmId());
 	}
 
 	@Nonnull

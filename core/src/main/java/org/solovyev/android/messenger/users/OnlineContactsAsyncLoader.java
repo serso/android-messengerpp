@@ -4,13 +4,11 @@ import android.content.Context;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -21,14 +19,14 @@ import java.util.List;
 public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
 
 	@Nonnull
-	private final RealmService realmService;
+	private final AccountService accountService;
 
 	OnlineContactsAsyncLoader(@Nonnull Context context,
 							  @Nonnull ListAdapter<ContactListItem> adapter,
 							  @Nullable Runnable onPostExecute,
-							  @Nonnull RealmService realmService) {
+							  @Nonnull AccountService accountService) {
 		super(context, adapter, onPostExecute);
-		this.realmService = realmService;
+		this.accountService = accountService;
 	}
 
 	@Nonnull
@@ -37,7 +35,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 
 		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 
-		for (User user : realmService.getEnabledRealmUsers()) {
+		for (User user : accountService.getEnabledRealmUsers()) {
 			for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
 				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
 			}

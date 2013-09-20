@@ -86,7 +86,7 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
 			case last_message_changed:
 			case unread_message_count_changed:
 				try {
-					final User user = MessengerApplication.getServiceLocator().getRealmService().getRealmById(eventChat.getEntity().getRealmId()).getUser();
+					final User user = MessengerApplication.getServiceLocator().getAccountService().getAccountById(eventChat.getEntity().getRealmId()).getUser();
 					final ChatListItem chatListItem = findInAllElements(user, eventChat);
 					if (chatListItem != null) {
 						chatListItem.onEvent(event);

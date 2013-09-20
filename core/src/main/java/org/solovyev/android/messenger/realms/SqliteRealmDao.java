@@ -31,7 +31,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Nullable
 	private SecretKey secret;

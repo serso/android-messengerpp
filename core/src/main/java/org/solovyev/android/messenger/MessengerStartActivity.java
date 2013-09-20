@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.User;
@@ -26,7 +26,7 @@ public class MessengerStartActivity extends RoboActivity {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -37,7 +37,7 @@ public class MessengerStartActivity extends RoboActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final Collection<Account> accounts = realmService.getEnabledRealms();
+		final Collection<Account> accounts = accountService.getEnabledAccounts();
 		// todo serso: maybe move to Application or Service?
 		// prefetch data and do synchronization
 

@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
  * Date: 3/9/13
  * Time: 2:45 PM
  */
-public enum RealmEventType {
+public enum AccountEventType {
 
 	/**
 	 * Fires when realm is created
@@ -36,8 +36,8 @@ public enum RealmEventType {
 	start;
 
 	@Nonnull
-	RealmEvent newEvent(@Nonnull Account account, @Nullable Object data) {
+	AccountEvent newEvent(@Nonnull Account account, @Nullable Object data) {
 		assert data == null;
-		return new RealmEvent(account, this, null);
+		return new AccountEvent(account, this, null);
 	}
 }

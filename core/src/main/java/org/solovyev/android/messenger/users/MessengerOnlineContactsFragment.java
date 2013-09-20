@@ -15,11 +15,11 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
 	@Nonnull
 	@Override
 	protected AbstractAsyncLoader<UiContact, ContactListItem> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return new OnlineContactsAsyncLoader(getActivity(), adapter, onPostExecute, getRealmService());
+		return new OnlineContactsAsyncLoader(getActivity(), adapter, onPostExecute, getAccountService());
 	}
 
 	@Nonnull
 	protected AbstractContactsAdapter createAdapter() {
-		return new OnlineContactsAdapter(getActivity(), getRealmService());
+		return new OnlineContactsAdapter(getActivity(), getAccountService());
 	}
 }

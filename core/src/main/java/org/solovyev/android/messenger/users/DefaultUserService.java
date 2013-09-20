@@ -51,7 +51,7 @@ public class DefaultUserService implements UserService {
 	*/
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -173,7 +173,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
-		return realmService.getRealmById(entity.getRealmId());
+		return accountService.getAccountById(entity.getRealmId());
 	}
 
 	private void insertUser(@Nonnull User user) {

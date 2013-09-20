@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmException;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -80,8 +80,8 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 	}
 
 	@Nonnull
-	private static RealmService getRealmService() {
-		return MessengerApplication.getServiceLocator().getRealmService();
+	private static AccountService getRealmService() {
+		return MessengerApplication.getServiceLocator().getAccountService();
 	}
 
 	public static class Input {
@@ -124,7 +124,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 		@Nullable
 		public ChatMessage sendChatMessage() throws RealmException {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getRealmById(author.getEntity().getRealmId())));
+			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getAccountById(author.getEntity().getRealmId())));
 			liteChatMessage.setAuthor(author.getEntity());
 			liteChatMessage.setBody(message);
 

@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Time: 1:02 AM
  */
 @Singleton
-public class DefaultRealmService implements RealmService {
+public class DefaultAccountService implements AccountService {
 
     /*
 	**********************************************************************
@@ -87,21 +87,21 @@ public class DefaultRealmService implements RealmService {
 	private AtomicInteger realmCounter = new AtomicInteger(0);
 
 	@Nonnull
-	private final JEventListeners<JEventListener<? extends RealmEvent>, RealmEvent> listeners;
+	private final JEventListeners<JEventListener<? extends AccountEvent>, AccountEvent> listeners;
 
 	@Inject
-	public DefaultRealmService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+	public DefaultAccountService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
 		this(context, configuration.getRealmDefs(), lock, eventExecutor);
 	}
 
-	public DefaultRealmService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+	public DefaultAccountService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
 		for (RealmDef realmDef : realmDefs) {
 			this.realmDefs.put(realmDef.getId(), realmDef);
 		}
 
 		this.context = context;
 		this.lock = lock;
-		this.listeners = Listeners.newEventListenersBuilderFor(RealmEvent.class).withHardReferences().withExecutor(eventExecutor).create();
+		this.listeners = Listeners.newEventListenersBuilderFor(AccountEvent.class).withHardReferences().withExecutor(eventExecutor).create();
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Collection<Account> getRealms() {
+	public Collection<Account> getAccounts() {
 		synchronized (this.realms) {
 			// must copy as concurrent modification might occur (e.g. realm removal)
 			return new ArrayList<Account>(this.realms.values());
@@ -146,7 +146,7 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Collection<Account> getEnabledRealms() {
+	public Collection<Account> getEnabledAccounts() {
 		synchronized (this.realms) {
 			final List<Account> result = new ArrayList<Account>(this.realms.size());
 			for (Account account : this.realms.values()) {
@@ -163,7 +163,7 @@ public class DefaultRealmService implements RealmService {
 	public Collection<User> getEnabledRealmUsers() {
 		final List<User> result = new ArrayList<User>();
 
-		for (Account account : getEnabledRealms()) {
+		for (Account account : getEnabledAccounts()) {
 			result.add(account.getUser());
 		}
 
@@ -194,7 +194,7 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Account getRealmById(@Nonnull String realmId) throws UnsupportedRealmException {
+	public Account getAccountById(@Nonnull String realmId) throws UnsupportedRealmException {
 		final Account account = this.realms.get(realmId);
 		if (account == null) {
 			throw new UnsupportedRealmException(realmId);
@@ -204,29 +204,29 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Account saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
+	public Account saveAccount(@Nonnull RealmBuilder accountBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
 		Account result;
 
 		try {
-			final AccountConfiguration configuration = realmBuilder.getConfiguration();
-			final Account oldAccount = realmBuilder.getEditedAccount();
+			final AccountConfiguration configuration = accountBuilder.getConfiguration();
+			final Account oldAccount = accountBuilder.getEditedAccount();
 			if (oldAccount != null && oldAccount.getConfiguration().equals(configuration)) {
 				// new realm configuration is exactly the same => can omit saving the realm
 				result = oldAccount;
 			} else {
 				// saving realm (realm either new or changed)
 
-				realmBuilder.connect();
+				accountBuilder.connect();
 
-				realmBuilder.loginUser(null);
+				accountBuilder.loginUser(null);
 
 				final String newRealmId;
 				if (oldAccount != null) {
 					newRealmId = oldAccount.getId();
 				} else {
-					newRealmId = generateRealmId(realmBuilder.getRealmDef());
+					newRealmId = generateRealmId(accountBuilder.getRealmDef());
 				}
-				final Account newAccount = realmBuilder.build(new RealmBuilder.Data(newRealmId));
+				final Account newAccount = accountBuilder.build(new RealmBuilder.Data(newRealmId));
 
 				synchronized (realms) {
 					final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Account>() {
@@ -243,11 +243,11 @@ public class DefaultRealmService implements RealmService {
 							if (oldAccount != null) {
 								realmDao.updateRealm(newAccount);
 								realms.put(newAccount.getId(), newAccount);
-								listeners.fireEvent(RealmEventType.changed.newEvent(newAccount, null));
+								listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
 							} else {
 								realmDao.insertRealm(newAccount);
 								realms.put(newAccount.getId(), newAccount);
-								listeners.fireEvent(RealmEventType.created.newEvent(newAccount, null));
+								listeners.fireEvent(AccountEventType.created.newEvent(newAccount, null));
 							}
 						}
 					}
@@ -262,7 +262,7 @@ public class DefaultRealmService implements RealmService {
 			throw new InvalidCredentialsException(e);
 		} finally {
 			try {
-				realmBuilder.disconnect();
+				accountBuilder.disconnect();
 			} catch (RealmBuilder.ConnectionException e) {
 				Log.e(TAG, e.getMessage(), e);
 			}
@@ -273,7 +273,7 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Account changeRealmState(@Nonnull Account account, @Nonnull AccountState newState) {
+	public Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState) {
 		return changeRealmState(account, newState, true);
 	}
 
@@ -291,7 +291,7 @@ public class DefaultRealmService implements RealmService {
 				}
 
 				if (fireEvent) {
-					listeners.fireEvent(RealmEventType.state_changed.newEvent(result, null));
+					listeners.fireEvent(AccountEventType.state_changed.newEvent(result, null));
 				}
 
 				return result;
@@ -306,20 +306,20 @@ public class DefaultRealmService implements RealmService {
 	}
 
 	@Override
-	public void removeRealm(@Nonnull String realmId) {
+	public void removeAccount(@Nonnull String accountId) {
 		final Account account;
 
 		synchronized (realms) {
-			account = this.realms.get(realmId);
+			account = this.realms.get(accountId);
 		}
 
 		if (account != null) {
-			changeRealmState((Account) account, (AccountState) AccountState.removed);
+			changeAccountState((Account) account, (AccountState) AccountState.removed);
 		}
 	}
 
 	@Override
-	public boolean isOneRealm() {
+	public boolean isOneAccount() {
 		synchronized (realms) {
 			return realms.size() == 1;
 		}
@@ -327,14 +327,14 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
-		return getRealmById(entity.getRealmId());
+	public Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+		return getAccountById(entity.getRealmId());
 	}
 
 	@Nonnull
 	@Override
-	public Account getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException {
-		return getRealmByEntity(entityAware.getEntity());
+	public Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException {
+		return getAccountByEntity(entityAware.getEntity());
 	}
 
 	@Nonnull
@@ -367,26 +367,26 @@ public class DefaultRealmService implements RealmService {
 	}
 
 	@Override
-	public void addListener(@Nonnull JEventListener<RealmEvent> listener) {
+	public void addListener(@Nonnull JEventListener<AccountEvent> listener) {
 		listeners.addListener(listener);
 	}
 
 	@Override
-	public void removeListener(@Nonnull JEventListener<RealmEvent> listener) {
+	public void removeListener(@Nonnull JEventListener<AccountEvent> listener) {
 		listeners.removeListener(listener);
 	}
 
 	@Override
 	public void stopAllRealmConnections() {
-		for (Account account : getRealms()) {
-			listeners.fireEvent(RealmEventType.stop.newEvent(account, null));
+		for (Account account : getAccounts()) {
+			listeners.fireEvent(AccountEventType.stop.newEvent(account, null));
 		}
 	}
 
 	@Override
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
 		try {
-			return getRealmById(user.getEntity().getRealmId()).getRealmDef().getUserProperties(user, context);
+			return getAccountById(user.getEntity().getRealmId()).getRealmDef().getUserProperties(user, context);
 		} catch (UnsupportedRealmException e) {
 			return Collections.emptyList();
 		}

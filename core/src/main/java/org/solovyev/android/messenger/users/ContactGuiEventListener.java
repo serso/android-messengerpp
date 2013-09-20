@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 
 import roboguice.RoboGuice;
@@ -31,11 +31,11 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 	private final MessengerFragmentActivity activity;
 
 	@Nonnull
-	private final RealmService realmService;
+	private final AccountService accountService;
 
-	public ContactGuiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull RealmService realmService) {
+	public ContactGuiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull AccountService accountService) {
 		this.activity = activity;
-		this.realmService = realmService;
+		this.accountService = accountService;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 		final ContactGuiEventType type = event.getType();
 
 		try {
-			final Account account = realmService.getRealmByEntityAware(contact);
+			final Account account = accountService.getAccountByEntityAware(contact);
 			switch (type) {
 				case contact_clicked:
 					if (account.isCompositeUser(contact)) {
@@ -83,7 +83,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 				Chat result = null;
 
 				try {
-					final User user = activity.getRealmService().getRealmById(contact.getEntity().getRealmId()).getUser();
+					final User user = activity.getAccountService().getAccountById(contact.getEntity().getRealmId()).getUser();
 					result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
 				} catch (RealmException e) {
 					throwException(e);

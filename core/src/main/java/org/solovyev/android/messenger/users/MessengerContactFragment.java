@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
@@ -47,7 +47,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -149,7 +149,7 @@ public class MessengerContactFragment extends RoboSherlockFragment {
 		MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contact, contactIcon);
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
-		final List<AProperty> contactProperties = realmService.getUserProperties(contact, this.getActivity());
+		final List<AProperty> contactProperties = accountService.getUserProperties(contact, this.getActivity());
 		for (AProperty contactProperty : contactProperties) {
 			final View propertyView = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property).build(this.getActivity());
 

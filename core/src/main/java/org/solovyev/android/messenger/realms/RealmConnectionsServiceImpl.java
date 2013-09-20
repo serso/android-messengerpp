@@ -38,7 +38,7 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -80,9 +80,9 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 		networkStateService.addListener(this);
 
 		realmEventListener = new RealmEventListener();
-		realmService.addListener(realmEventListener);
+		accountService.addListener(realmEventListener);
 
-		tryStartConnectionsFor(realmService.getEnabledRealms());
+		tryStartConnectionsFor(accountService.getEnabledAccounts());
 	}
 
 	private void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
@@ -112,14 +112,14 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 		}
 	}
 
-	private final class RealmEventListener extends AbstractJEventListener<RealmEvent> implements JEventListener<RealmEvent> {
+	private final class RealmEventListener extends AbstractJEventListener<AccountEvent> implements JEventListener<AccountEvent> {
 
 		private RealmEventListener() {
-			super(RealmEvent.class);
+			super(AccountEvent.class);
 		}
 
 		@Override
-		public void onEvent(@Nonnull RealmEvent event) {
+		public void onEvent(@Nonnull AccountEvent event) {
 			final Account account = event.getRealm();
 			switch (event.getType()) {
 				case created:

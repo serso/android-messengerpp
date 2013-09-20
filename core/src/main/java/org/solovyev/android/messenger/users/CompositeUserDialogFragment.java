@@ -21,7 +21,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
@@ -57,7 +57,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	/*
 	**********************************************************************
@@ -118,7 +118,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 			throw new IllegalStateException("User is null");
 		} else {
 			try {
-				account = realmService.getRealmByEntityAware(user);
+				account = accountService.getAccountByEntityAware(user);
 			} catch (UnsupportedRealmException e) {
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}

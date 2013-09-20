@@ -33,7 +33,7 @@ public class RealmMapper<C extends AccountConfiguration> implements Converter<Cu
 		final String state = cursor.getString(4);
 
 		try {
-			final RealmDef<C> realmDef = (RealmDef<C>) MessengerApplication.getServiceLocator().getRealmService().getRealmDefById(realmDefId);
+			final RealmDef<C> realmDef = (RealmDef<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmDefById(realmDefId);
 			// realm is not loaded => no way we can find user in realm services
 			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
 

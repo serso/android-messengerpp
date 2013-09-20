@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
@@ -44,7 +44,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -151,6 +151,6 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 	@Nonnull
 	private Account getRealmByUser(@Nonnull Entity userEntity) throws UnsupportedRealmException {
-		return realmService.getRealmById(userEntity.getRealmId());
+		return accountService.getAccountById(userEntity.getRealmId());
 	}
 }

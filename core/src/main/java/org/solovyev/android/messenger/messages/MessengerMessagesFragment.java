@@ -20,7 +20,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -73,7 +73,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -123,7 +123,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 		try {
 			if (chat != null) {
 				// chat is set => fragment was just created => we need to load realm
-				account = realmService.getRealmById(chat.getEntity().getRealmId());
+				account = accountService.getAccountById(chat.getEntity().getRealmId());
 			} else {
 				// first - restore state
 				final Entity realmChat = savedInstanceState.getParcelable(CHAT);
@@ -136,7 +136,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 					notificationService.add(newUndefinedErrorNotification());
 					Activities.restartActivity(getActivity());
 				} else {
-					account = realmService.getRealmById(chat.getEntity().getRealmId());
+					account = accountService.getAccountById(chat.getEntity().getRealmId());
 				}
 			}
 		} catch (UnsupportedRealmException e) {

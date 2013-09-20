@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.RealmConnectionsService;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
@@ -75,7 +75,7 @@ public class MessengerApplication extends Application implements MessengerServic
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -149,8 +149,8 @@ public class MessengerApplication extends Application implements MessengerServic
 
 	@Override
 	@Nonnull
-	public RealmService getRealmService() {
-		return realmService;
+	public AccountService getAccountService() {
+		return accountService;
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class MessengerApplication extends Application implements MessengerServic
 		RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
 
 		// init services
-		this.realmService.init();
+		this.accountService.init();
 		this.userService.init();
 		this.chatService.init();
 		this.chatMessageService.init();
@@ -212,7 +212,7 @@ public class MessengerApplication extends Application implements MessengerServic
 		this.unreadMessagesCounter.init();
 
 		// load persistence data
-		this.realmService.load();
+		this.accountService.load();
 
 
 		// must be done after all loadings
@@ -222,7 +222,7 @@ public class MessengerApplication extends Application implements MessengerServic
 	}
 
 	public void exit(@Nonnull Activity activity) {
-		realmService.stopAllRealmConnections();
+		accountService.stopAllRealmConnections();
 
 		final Intent serviceIntent = new Intent();
 		serviceIntent.setClass(this, OngoingNotificationService.class);

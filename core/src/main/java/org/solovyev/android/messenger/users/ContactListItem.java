@@ -10,7 +10,7 @@ import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
@@ -121,15 +121,15 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
 		contactName.setText(getDisplayName());
 
-		final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
+		final AccountService accountService = MessengerApplication.getServiceLocator().getAccountService();
 
 		final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
-		if (realmService.isOneRealm()) {
+		if (accountService.isOneAccount()) {
 			accountName.setVisibility(View.GONE);
 		} else {
 			accountName.setVisibility(View.VISIBLE);
 			try {
-				final Account account = realmService.getRealmById(getContact().getEntity().getRealmId());
+				final Account account = accountService.getAccountById(getContact().getEntity().getRealmId());
 				accountName.setText("[" + account.getUser().getDisplayName() + "]");
 			} catch (UnsupportedRealmException e) {
 				// cannot do anything => just handle exception

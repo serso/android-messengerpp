@@ -50,7 +50,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -109,7 +109,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 			final String accountId = arguments.getString(ARGS_ACCOUNT_ID);
 			if (accountId != null) {
 				try {
-					editedRealm = (T) realmService.getRealmById(accountId);
+					editedRealm = (T) accountService.getAccountById(accountId);
 				} catch (UnsupportedRealmException e) {
 					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 					Activities.restartActivity(getActivity());

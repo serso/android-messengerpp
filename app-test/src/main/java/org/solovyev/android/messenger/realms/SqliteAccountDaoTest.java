@@ -47,7 +47,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 	public void testConcreteRealms() throws Exception {
 		int index = 0;
-		for (RealmDef realmDef : getRealmService().getRealmDefs()) {
+		for (RealmDef realmDef : getAccountService().getRealmDefs()) {
 			final AccountConfiguration accountConfiguration = (AccountConfiguration) realmDef.getConfigurationClass().newInstance();
 			final String realmId = EntityImpl.getRealmId(realmDef.getId(), index);
 			Account expected = realmDef.newRealm(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), accountConfiguration, AccountState.enabled);

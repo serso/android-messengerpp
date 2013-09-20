@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.AccountConfiguration;
 import org.solovyev.android.messenger.realms.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -40,7 +40,7 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
     /*
     **********************************************************************

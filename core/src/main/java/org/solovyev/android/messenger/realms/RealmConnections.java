@@ -116,7 +116,7 @@ final class RealmConnections {
 						MessengerApplication.getServiceLocator().getExceptionHandler().handleException(lastError);
 					}
 
-					MessengerApplication.getServiceLocator().getRealmService().changeRealmState(realmConnection.getAccount(), AccountState.disabled_by_app);
+					MessengerApplication.getServiceLocator().getAccountService().changeAccountState(realmConnection.getAccount(), AccountState.disabled_by_app);
 				} else {
 					if (realmConnection.isStopped()) {
 						try {

@@ -18,7 +18,7 @@ import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManage
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.view.SwipeGestureListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -65,7 +65,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -165,8 +165,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 	}
 
 	@Nonnull
-	public RealmService getRealmService() {
-		return realmService;
+	public AccountService getAccountService() {
+		return accountService;
 	}
 
 	@Nonnull

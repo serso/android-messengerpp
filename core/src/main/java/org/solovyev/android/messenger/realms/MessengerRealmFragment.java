@@ -56,7 +56,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -96,7 +96,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 			final String realmId = arguments.getString(EXTRA_REALM_ID);
 			if (realmId != null) {
 				try {
-					account = realmService.getRealmById(realmId);
+					account = accountService.getAccountById(realmId);
 				} catch (UnsupportedRealmException e) {
 					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 					Activities.restartActivity(getActivity());
@@ -109,7 +109,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		} else {
 			realmEventListener = new RealmEventListener();
-			realmService.addListener(realmEventListener);
+			accountService.addListener(realmEventListener);
 		}
 	}
 
@@ -204,7 +204,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 	@Override
 	public void onDestroy() {
 		if (realmEventListener != null) {
-			realmService.removeListener(realmEventListener);
+			accountService.removeListener(realmEventListener);
 		}
 
 		super.onDestroy();
@@ -240,14 +240,14 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(getAccount()), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
-	private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
+	private final class RealmEventListener extends AbstractJEventListener<AccountEvent> {
 
 		protected RealmEventListener() {
-			super(RealmEvent.class);
+			super(AccountEvent.class);
 		}
 
 		@Override
-		public void onEvent(@Nonnull RealmEvent event) {
+		public void onEvent(@Nonnull AccountEvent event) {
 			final Account eventAccount = event.getRealm();
 			switch (event.getType()) {
 				case changed:

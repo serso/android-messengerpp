@@ -5,9 +5,9 @@ import org.solovyev.common.listeners.AbstractTypedJEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RealmEvent extends AbstractTypedJEvent<Account, RealmEventType> {
+public final class AccountEvent extends AbstractTypedJEvent<Account, AccountEventType> {
 
-	RealmEvent(@Nonnull Account account, @Nonnull RealmEventType type, @Nullable Object data) {
+	AccountEvent(@Nonnull Account account, @Nonnull AccountEventType type, @Nullable Object data) {
 		super(account, type, data);
 	}
 

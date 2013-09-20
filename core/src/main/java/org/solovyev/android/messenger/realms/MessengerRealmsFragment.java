@@ -41,12 +41,12 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	@Nullable
-	private JEventListener<RealmEvent> realmEventListener;
+	private JEventListener<AccountEvent> realmEventListener;
 
 	public MessengerRealmsFragment() {
 		super("Realms", false, true);
@@ -86,13 +86,13 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 		super.onActivityCreated(savedInstanceState);
 
 		realmEventListener = new UiRealmEventListener();
-		realmService.addListener(realmEventListener);
+		accountService.addListener(realmEventListener);
 	}
 
 	@Override
 	public void onDestroyView() {
 		if (realmEventListener != null) {
-			realmService.removeListener(realmEventListener);
+			accountService.removeListener(realmEventListener);
 		}
 		super.onDestroyView();
 	}
@@ -113,7 +113,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 	@Override
 	protected MessengerListItemAdapter<RealmListItem> createAdapter() {
 		final List<RealmListItem> listItems = new ArrayList<RealmListItem>();
-		for (Account account : realmService.getRealms()) {
+		for (Account account : accountService.getAccounts()) {
 			if (account.getState() != AccountState.removed) {
 				listItems.add(new RealmListItem(account));
 			}
@@ -182,18 +182,18 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 		return (RealmsAdapter) super.getAdapter();
 	}
 
-	private class UiRealmEventListener extends AbstractJEventListener<RealmEvent> {
+	private class UiRealmEventListener extends AbstractJEventListener<AccountEvent> {
 
 		private UiRealmEventListener() {
-			super(RealmEvent.class);
+			super(AccountEvent.class);
 		}
 
 		@Override
-		public void onEvent(@Nonnull final RealmEvent realmEvent) {
+		public void onEvent(@Nonnull final AccountEvent accountEvent) {
 			Threads2.tryRunOnUiThread(MessengerRealmsFragment.this, new Runnable() {
 				@Override
 				public void run() {
-					getAdapter().onRealmEvent(realmEvent);
+					getAdapter().onRealmEvent(accountEvent);
 				}
 			});
 		}

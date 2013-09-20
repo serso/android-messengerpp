@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.RealmEvent;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountEvent;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -37,7 +37,7 @@ public class DefaultSyncService implements SyncService {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 
     /*
@@ -58,16 +58,16 @@ public class DefaultSyncService implements SyncService {
 	private final Executor executor = Executors.newSingleThreadExecutor();
 
 	@Nonnull
-	private final JEventListener<RealmEvent> realmEventListener = new RealmEventListener();
+	private final JEventListener<AccountEvent> realmEventListener = new RealmEventListener();
 
 	@Override
 	public void init() {
-		realmService.addListener(realmEventListener);
+		accountService.addListener(realmEventListener);
 	}
 
 	@Override
 	public void syncAll(final boolean force) throws SyncAllTaskIsAlreadyRunning {
-		startSyncAllTask(realmService.getEnabledRealms(), force);
+		startSyncAllTask(accountService.getEnabledAccounts(), force);
 	}
 
 	/**
@@ -207,14 +207,14 @@ public class DefaultSyncService implements SyncService {
 		}
 	}
 
-	private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
+	private final class RealmEventListener extends AbstractJEventListener<AccountEvent> {
 
 		private RealmEventListener() {
-			super(RealmEvent.class);
+			super(AccountEvent.class);
 		}
 
 		@Override
-		public void onEvent(@Nonnull RealmEvent event) {
+		public void onEvent(@Nonnull AccountEvent event) {
 			switch (event.getType()) {
 				case created:
 				case changed:

@@ -24,7 +24,7 @@ final class RealmRemoverCallable implements Callable<Account> {
 
 	@Override
 	public Account call() {
-		MessengerApplication.getServiceLocator().getRealmService().removeRealm(account.getId());
+		MessengerApplication.getServiceLocator().getAccountService().removeAccount(account.getId());
 
 		return account;
 	}

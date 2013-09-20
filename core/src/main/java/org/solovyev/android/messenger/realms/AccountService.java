@@ -17,10 +17,10 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 12:57 AM
  */
-public interface RealmService {
+public interface AccountService {
 
 	@Nonnull
-	static String TAG = "RealmService";
+	static String TAG = "AccountService";
 
 	/**
 	 * Method initializes service, must be called once before any other operations with current service
@@ -40,10 +40,10 @@ public interface RealmService {
 	Collection<RealmDef<? extends AccountConfiguration>> getRealmDefs();
 
 	@Nonnull
-	Collection<Account> getRealms();
+	Collection<Account> getAccounts();
 
 	@Nonnull
-	Collection<Account> getEnabledRealms();
+	Collection<Account> getEnabledAccounts();
 
 	/**
 	 * @return collection of users in all configured realms
@@ -68,23 +68,23 @@ public interface RealmService {
 	RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
 
 	@Nonnull
-	Account getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
+	Account getAccountById(@Nonnull String realmId) throws UnsupportedRealmException;
 
 	@Nonnull
-	Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
+	Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
 
 	@Nonnull
-	Account getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException;
+	Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException;
 
 	@Nonnull
-	Account saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+	Account saveAccount(@Nonnull RealmBuilder accountBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
 	@Nonnull
-	Account changeRealmState(@Nonnull Account account, @Nonnull AccountState newState);
+	Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState);
 
-	void removeRealm(@Nonnull String realmId);
+	void removeAccount(@Nonnull String accountId);
 
-	boolean isOneRealm();
+	boolean isOneAccount();
 
     /*
 	**********************************************************************
@@ -94,9 +94,9 @@ public interface RealmService {
     **********************************************************************
     */
 
-	void addListener(@Nonnull JEventListener<RealmEvent> listener);
+	void addListener(@Nonnull JEventListener<AccountEvent> listener);
 
-	void removeListener(@Nonnull JEventListener<RealmEvent> listener);
+	void removeListener(@Nonnull JEventListener<AccountEvent> listener);
 
 	void stopAllRealmConnections();
 

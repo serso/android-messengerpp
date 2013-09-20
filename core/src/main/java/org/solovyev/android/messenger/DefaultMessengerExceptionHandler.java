@@ -32,7 +32,7 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Inject
 	@Nonnull
@@ -84,7 +84,7 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 		final String realmId = e.getRealmId();
 
 		try {
-			final Account account = realmService.getRealmById(realmId);
+			final Account account = accountService.getAccountById(realmId);
 			final Throwable cause = e.getCause();
 
 			if (cause != e) {

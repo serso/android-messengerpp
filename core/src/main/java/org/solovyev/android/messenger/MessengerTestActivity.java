@@ -8,7 +8,7 @@ import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ public class MessengerTestActivity extends RoboSherlockActivity {
 
 	@Inject
 	@Nonnull
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Nonnull
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -43,7 +43,7 @@ public class MessengerTestActivity extends RoboSherlockActivity {
 		executorService.execute(new Runnable() {
 			@Override
 			public void run() {
-				for (Account account : realmService.getRealms()) {
+				for (Account account : accountService.getAccounts()) {
 					try {
 						final User user = account.getAccountUserService().getUserById("se.solovyev@gmail.com");
 						Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {

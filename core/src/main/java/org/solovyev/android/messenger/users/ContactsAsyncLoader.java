@@ -4,13 +4,11 @@ import android.content.Context;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -30,10 +28,10 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactLi
 	protected List<UiContact> getElements(@Nonnull Context context) {
 		final List<UiContact> result = new ArrayList<UiContact>();
 
-		final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
+		final AccountService accountService = MessengerApplication.getServiceLocator().getAccountService();
 		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 
-		for (User user : realmService.getEnabledRealmUsers()) {
+		for (User user : accountService.getEnabledRealmUsers()) {
 			for (User contact : userService.getUserContacts(user.getEntity())) {
 				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
 			}

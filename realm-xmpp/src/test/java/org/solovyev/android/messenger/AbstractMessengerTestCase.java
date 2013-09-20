@@ -6,7 +6,7 @@ import com.xtremelabs.robolectric.Robolectric;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.AccountService;
 import org.solovyev.android.messenger.realms.xmpp.XmppRealmDef;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ public abstract class AbstractMessengerTestCase {
 
 	@Nonnull
 	@Inject
-	private RealmService realmService;
+	private AccountService accountService;
 
 	@Nonnull
 	private TestMessengerModule module;
@@ -50,8 +50,8 @@ public abstract class AbstractMessengerTestCase {
 	}
 
 	@Nonnull
-	public RealmService getRealmService() {
-		return realmService;
+	public AccountService getAccountService() {
+		return accountService;
 	}
 
 	@Nonnull

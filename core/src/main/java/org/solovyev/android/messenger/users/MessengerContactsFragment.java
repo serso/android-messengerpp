@@ -63,7 +63,7 @@ public final class MessengerContactsFragment extends AbstractMessengerContactsFr
 
 	@Nonnull
 	protected AbstractContactsAdapter createAdapter() {
-		return new ContactsAdapter(getActivity(), getRealmService());
+		return new ContactsAdapter(getActivity(), getAccountService());
 	}
 
 	@Override
