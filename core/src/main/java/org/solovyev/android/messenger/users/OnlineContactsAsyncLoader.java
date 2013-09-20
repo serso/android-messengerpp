@@ -4,7 +4,7 @@ import android.content.Context;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.AccountService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
+import org.solovyev.android.messenger.accounts.AccountException;
+
 import javax.annotation.Nonnull;
 
 public final class RealmRuntimeException extends RuntimeException {

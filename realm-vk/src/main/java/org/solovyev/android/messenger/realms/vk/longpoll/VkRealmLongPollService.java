@@ -4,7 +4,7 @@ import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
 import org.solovyev.android.messenger.longpoll.RealmLongPollService;
-import org.solovyev.android.messenger.realms.AccountException;
+import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 
 import javax.annotation.Nonnull;

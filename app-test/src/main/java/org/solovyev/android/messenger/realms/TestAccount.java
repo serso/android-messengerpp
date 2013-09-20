@@ -4,6 +4,8 @@ import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.AbstractAccount;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.AccountUserService;

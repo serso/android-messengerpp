@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import org.solovyev.android.messenger.realms.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -21,8 +21,8 @@ import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountService;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
 import com.google.inject.Inject;

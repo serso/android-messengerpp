@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.preferences.MessengerOnPreferenceAttachedL
 import org.solovyev.android.messenger.preferences.PreferenceGuiEvent;
 import org.solovyev.android.messenger.preferences.PreferenceGuiEventListener;
 import org.solovyev.android.messenger.preferences.PreferenceListFragment;
-import org.solovyev.android.messenger.realms.AccountGuiEvent;
+import org.solovyev.android.messenger.accounts.AccountGuiEvent;
 import org.solovyev.android.messenger.realms.RealmDefGuiEvent;
 import org.solovyev.android.messenger.realms.RealmDefGuiEventListener;
 import org.solovyev.android.messenger.realms.RealmGuiEventListener;

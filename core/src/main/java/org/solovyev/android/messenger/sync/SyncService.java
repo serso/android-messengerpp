@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.sync;
 
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

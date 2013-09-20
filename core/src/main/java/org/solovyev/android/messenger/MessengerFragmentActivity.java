@@ -18,7 +18,7 @@ import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManage
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.view.SwipeGestureListener;
 import org.solovyev.common.listeners.AbstractJEventListener;

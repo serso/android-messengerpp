@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.messages.ChatMessageImpl;
 import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 

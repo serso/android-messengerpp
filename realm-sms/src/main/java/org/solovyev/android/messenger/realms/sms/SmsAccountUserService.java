@@ -8,7 +8,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;

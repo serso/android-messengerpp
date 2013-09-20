@@ -5,7 +5,7 @@ import org.solovyev.android.fragments.FragmentDef;
 import org.solovyev.android.messenger.chats.MessengerChatsFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.MessengerPreferenceGroupsFragment;
-import org.solovyev.android.messenger.realms.MessengerAccountsFragment;
+import org.solovyev.android.messenger.accounts.MessengerAccountsFragment;
 import org.solovyev.android.messenger.realms.MessengerRealmDefsFragment;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
 

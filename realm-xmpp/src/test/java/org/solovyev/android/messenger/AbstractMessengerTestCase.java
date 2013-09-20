@@ -6,7 +6,7 @@ import com.xtremelabs.robolectric.Robolectric;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.realms.xmpp.XmppRealmDef;
 
 import javax.annotation.Nonnull;

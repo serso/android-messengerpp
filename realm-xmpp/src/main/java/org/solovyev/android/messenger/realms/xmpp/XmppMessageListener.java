@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

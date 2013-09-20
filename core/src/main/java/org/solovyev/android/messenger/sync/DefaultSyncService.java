@@ -3,9 +3,9 @@ package org.solovyev.android.messenger.sync;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.AccountEvent;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountEvent;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 

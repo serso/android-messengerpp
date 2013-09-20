@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessages;

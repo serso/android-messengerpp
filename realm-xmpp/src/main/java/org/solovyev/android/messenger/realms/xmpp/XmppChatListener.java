@@ -7,8 +7,8 @@ import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.AccountException;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

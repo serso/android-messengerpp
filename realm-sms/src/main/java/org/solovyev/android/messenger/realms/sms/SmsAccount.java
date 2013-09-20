@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.realms.AbstractAccount;
-import org.solovyev.android.messenger.realms.AccountState;
+import org.solovyev.android.messenger.accounts.AbstractAccount;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.AccountUserService;

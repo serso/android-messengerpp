@@ -6,9 +6,9 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
 import com.google.inject.Inject;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.AccountException;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;

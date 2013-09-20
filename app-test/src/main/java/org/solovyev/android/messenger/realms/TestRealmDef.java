@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ImageView;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.icons.RealmIconService;

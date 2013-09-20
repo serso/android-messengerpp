@@ -3,9 +3,9 @@ package org.solovyev.android.messenger.longpoll;
 import android.content.Context;
 import android.util.Log;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.AccountConnectionException;
-import org.solovyev.android.messenger.realms.AccountException;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;

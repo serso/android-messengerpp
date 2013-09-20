@@ -5,7 +5,7 @@ import org.acra.ACRA;
 import org.solovyev.android.Activities2;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.common.msg.MessageLevel;
 import org.solovyev.common.msg.MessageType;
 

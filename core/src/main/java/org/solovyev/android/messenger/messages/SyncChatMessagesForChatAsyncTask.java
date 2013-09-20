@@ -5,7 +5,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.AccountException;
+import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 
 import javax.annotation.Nonnull;

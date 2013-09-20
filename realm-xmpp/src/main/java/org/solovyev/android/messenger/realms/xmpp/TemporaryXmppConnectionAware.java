@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.solovyev.android.messenger.realms.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 

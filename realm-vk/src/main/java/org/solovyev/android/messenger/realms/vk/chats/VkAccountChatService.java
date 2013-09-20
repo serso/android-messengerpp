@@ -7,7 +7,7 @@ import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;

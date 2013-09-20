@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.common.listeners.JEventListener;
 

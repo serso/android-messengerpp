@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
-import org.solovyev.android.messenger.realms.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;

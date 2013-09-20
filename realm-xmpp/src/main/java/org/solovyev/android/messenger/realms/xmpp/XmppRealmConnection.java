@@ -4,7 +4,7 @@ import android.content.Context;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

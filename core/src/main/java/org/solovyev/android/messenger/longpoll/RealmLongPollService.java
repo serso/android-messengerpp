@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.longpoll;
 
-import org.solovyev.android.messenger.realms.AccountException;
+import org.solovyev.android.messenger.accounts.AccountException;
 
 import javax.annotation.Nullable;
 

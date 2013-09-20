@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.android.messenger.realms.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

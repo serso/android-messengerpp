@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 import com.google.gson.Gson;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;

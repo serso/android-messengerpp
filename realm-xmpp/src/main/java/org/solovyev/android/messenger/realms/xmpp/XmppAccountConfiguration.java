@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import com.google.gson.Gson;
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
-import org.solovyev.android.messenger.realms.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;

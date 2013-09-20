@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 

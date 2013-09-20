@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;

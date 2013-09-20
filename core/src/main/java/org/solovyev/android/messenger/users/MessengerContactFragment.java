@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.AccountService;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 

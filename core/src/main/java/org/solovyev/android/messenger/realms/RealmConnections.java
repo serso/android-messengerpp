@@ -7,6 +7,9 @@ import com.google.common.collect.Iterables;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.RealmConnection;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 

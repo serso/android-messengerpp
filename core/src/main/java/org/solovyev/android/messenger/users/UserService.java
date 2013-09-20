@@ -4,9 +4,9 @@ import android.widget.ImageView;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Account;
-import org.solovyev.android.messenger.realms.AccountException;
-import org.solovyev.android.messenger.realms.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;

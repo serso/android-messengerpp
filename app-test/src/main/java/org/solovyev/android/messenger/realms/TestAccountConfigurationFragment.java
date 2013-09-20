@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.realms;
 
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

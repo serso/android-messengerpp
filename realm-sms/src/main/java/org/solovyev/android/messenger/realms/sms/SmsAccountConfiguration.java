@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.realms.sms;
 
-import org.solovyev.android.messenger.realms.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;

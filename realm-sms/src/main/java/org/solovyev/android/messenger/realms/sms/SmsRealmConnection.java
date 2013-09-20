@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 

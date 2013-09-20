@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.realms.TestAccount;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.properties.AProperty;

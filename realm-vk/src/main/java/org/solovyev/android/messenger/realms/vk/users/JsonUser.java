@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;

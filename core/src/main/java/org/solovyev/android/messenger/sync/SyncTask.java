@@ -2,9 +2,9 @@ package org.solovyev.android.messenger.sync;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.AccountException;
-import org.solovyev.android.messenger.realms.AccountService;
-import org.solovyev.android.messenger.realms.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;

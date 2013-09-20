@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.support.v4.app.Fragment;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
