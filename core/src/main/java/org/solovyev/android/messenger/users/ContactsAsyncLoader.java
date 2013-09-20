@@ -31,7 +31,7 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactLi
 		final AccountService accountService = MessengerApplication.getServiceLocator().getAccountService();
 		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 
-		for (User user : accountService.getEnabledRealmUsers()) {
+		for (User user : accountService.getEnabledAccountUsers()) {
 			for (User contact : userService.getUserContacts(user.getEntity())) {
 				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
 			}

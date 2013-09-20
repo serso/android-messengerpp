@@ -3,9 +3,9 @@ package org.solovyev.android.messenger.realms;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
-public interface RealmDao {
+public interface AccountDao {
 
-	final String TAG = RealmDao.class.getSimpleName();
+	final String TAG = AccountDao.class.getSimpleName();
 
 	void insertRealm(@Nonnull Account account) throws RealmException;
 

@@ -17,14 +17,14 @@ class RealmSaverCallable implements Callable<Account> {
 	static final String TASK_NAME = "realm-save";
 
 	@Nonnull
-	private final RealmBuilder realmBuilder;
+	private final AccountBuilder accountBuilder;
 
-	RealmSaverCallable(@Nonnull RealmBuilder realmBuilder) {
-		this.realmBuilder = realmBuilder;
+	RealmSaverCallable(@Nonnull AccountBuilder accountBuilder) {
+		this.accountBuilder = accountBuilder;
 	}
 
 	@Override
 	public Account call() throws InvalidCredentialsException, RealmAlreadyExistsException {
-		return MessengerApplication.getServiceLocator().getAccountService().saveAccount(realmBuilder);
+		return MessengerApplication.getServiceLocator().getAccountService().saveAccount(accountBuilder);
 	}
 }

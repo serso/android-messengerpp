@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.AccountState;
-import org.solovyev.android.messenger.realms.RealmBuilder;
+import org.solovyev.android.messenger.realms.AccountBuilder;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
@@ -64,8 +64,8 @@ public final class SmsRealmDef extends AbstractRealmDef<SmsAccountConfiguration>
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull SmsAccountConfiguration configuration, @Nullable Account editedAccount) {
-		return new SmsRealmBuilder(this, editedAccount, configuration);
+	public AccountBuilder newRealmBuilder(@Nonnull SmsAccountConfiguration configuration, @Nullable Account editedAccount) {
+		return new SmsAccountBuilder(this, editedAccount, configuration);
 	}
 
 	@Nonnull

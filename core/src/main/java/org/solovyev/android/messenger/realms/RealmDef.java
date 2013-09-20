@@ -58,7 +58,7 @@ public interface RealmDef<C extends AccountConfiguration> extends MessengerEntit
 	Class<? extends C> getConfigurationClass();
 
 	@Nonnull
-	RealmBuilder newRealmBuilder(@Nonnull C configuration, @Nullable Account editedAccount);
+	AccountBuilder newRealmBuilder(@Nonnull C configuration, @Nullable Account editedAccount);
 
 	/**
 	 * Returns list of translated user properties where property name = title, property value = value

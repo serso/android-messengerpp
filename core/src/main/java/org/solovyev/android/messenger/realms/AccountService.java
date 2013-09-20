@@ -46,16 +46,16 @@ public interface AccountService {
 	Collection<Account> getEnabledAccounts();
 
 	/**
-	 * @return collection of users in all configured realms
+	 * @return collection of users in all configured accounts
 	 */
 	@Nonnull
-	Collection<User> getRealmUsers();
+	Collection<User> getAccountUsers();
 
 	/**
-	 * @return collection of users in all configured ENABLED realms
+	 * @return collection of users in all configured ENABLED accounts
 	 */
 	@Nonnull
-	Collection<User> getEnabledRealmUsers();
+	Collection<User> getEnabledAccountUsers();
 
 	/**
 	 * Method returns the realm which previously has been registered in this service
@@ -77,7 +77,7 @@ public interface AccountService {
 	Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException;
 
 	@Nonnull
-	Account saveAccount(@Nonnull RealmBuilder accountBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+	Account saveAccount(@Nonnull AccountBuilder accountBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
 	@Nonnull
 	Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState);

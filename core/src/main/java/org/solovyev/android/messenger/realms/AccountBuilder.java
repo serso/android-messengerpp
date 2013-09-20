@@ -7,7 +7,7 @@ import org.solovyev.common.BuilderWithData;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface RealmBuilder extends BuilderWithData<Account, RealmBuilder.Data> {
+public interface AccountBuilder extends BuilderWithData<Account, AccountBuilder.Data> {
 
 	@Nonnull
 	RealmDef getRealmDef();

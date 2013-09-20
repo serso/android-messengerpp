@@ -45,7 +45,7 @@ public class TestRealmDef extends AbstractRealmDef {
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull AccountConfiguration configuration, @Nullable Account editedAccount) {
+	public AccountBuilder newRealmBuilder(@Nonnull AccountConfiguration configuration, @Nullable Account editedAccount) {
 		return null;
 	}
 

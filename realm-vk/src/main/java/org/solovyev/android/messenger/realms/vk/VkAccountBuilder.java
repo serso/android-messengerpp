@@ -4,7 +4,7 @@ import android.util.Log;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
+import org.solovyev.android.messenger.realms.AbstractAccountBuilder;
 import org.solovyev.android.messenger.realms.AccountState;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmDef;
@@ -20,9 +20,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 
-public class VkRealmBuilder extends AbstractRealmBuilder<VkAccountConfiguration> {
+public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfiguration> {
 
-	protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull VkAccountConfiguration configuration) {
+	protected VkAccountBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull VkAccountConfiguration configuration) {
 		super(realmDef, configuration, editedAccount);
 	}
 

@@ -54,7 +54,7 @@ public class MessengerModule extends AbstractModule {
 		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 
 		bind(AccountService.class).to(DefaultAccountService.class);
-		bind(RealmDao.class).to(SqliteRealmDao.class);
+		bind(AccountDao.class).to(SqliteAccountDao.class);
 
 		bind(RealmConnectionsService.class).to(RealmConnectionsServiceImpl.class);
 		bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);

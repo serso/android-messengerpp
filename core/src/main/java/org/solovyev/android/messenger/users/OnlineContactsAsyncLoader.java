@@ -35,7 +35,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 
 		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
 
-		for (User user : accountService.getEnabledRealmUsers()) {
+		for (User user : accountService.getEnabledAccountUsers()) {
 			for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
 				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
 			}

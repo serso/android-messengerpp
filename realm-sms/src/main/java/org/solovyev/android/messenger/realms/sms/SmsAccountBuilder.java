@@ -16,9 +16,9 @@ import java.util.Collections;
  * Date: 5/27/13
  * Time: 8:47 PM
  */
-final class SmsRealmBuilder extends AbstractRealmBuilder<SmsAccountConfiguration> {
+final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccountConfiguration> {
 
-	SmsRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull SmsAccountConfiguration configuration) {
+	SmsAccountBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull SmsAccountConfiguration configuration) {
 		super(realmDef, configuration, editedAccount);
 	}
 

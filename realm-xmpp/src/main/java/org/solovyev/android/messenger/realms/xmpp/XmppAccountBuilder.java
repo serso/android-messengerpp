@@ -6,7 +6,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
+import org.solovyev.android.messenger.realms.AbstractAccountBuilder;
 import org.solovyev.android.messenger.realms.AccountState;
 import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmDef;
@@ -17,15 +17,15 @@ import org.solovyev.android.messenger.users.Users;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class XmppRealmBuilder extends AbstractRealmBuilder<XmppAccountConfiguration> {
+public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfiguration> {
 	;
 
 	@Nullable
 	private Connection connection;
 
-	public XmppRealmBuilder(@Nonnull RealmDef realmDef,
-							@Nullable Account editedAccount,
-							@Nonnull XmppAccountConfiguration configuration) {
+	public XmppAccountBuilder(@Nonnull RealmDef realmDef,
+							  @Nullable Account editedAccount,
+							  @Nonnull XmppAccountConfiguration configuration) {
 		super(realmDef, configuration, editedAccount);
 	}
 

@@ -33,7 +33,7 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 		final ChatService chatService = MessengerApplication.getServiceLocator().getChatService();
 		final AccountService accountService = MessengerApplication.getServiceLocator().getAccountService();
 
-		for (User user : accountService.getEnabledRealmUsers()) {
+		for (User user : accountService.getEnabledAccountUsers()) {
 			final List<Chat> chats = userService.getUserChats(user.getEntity());
 			for (Chat chat : chats) {
 				final ChatMessage lastMessage = chatService.getLastMessage(chat.getEntity());

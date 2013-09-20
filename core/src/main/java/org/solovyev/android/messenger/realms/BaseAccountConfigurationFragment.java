@@ -195,15 +195,15 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(account), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
-	private void saveRealm(@Nonnull RealmBuilder realmBuilder) {
-		taskListeners.run(RealmSaverCallable.TASK_NAME, new RealmSaverCallable(realmBuilder), RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+	private void saveRealm(@Nonnull AccountBuilder accountBuilder) {
+		taskListeners.run(RealmSaverCallable.TASK_NAME, new RealmSaverCallable(accountBuilder), RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
 	}
 
 	protected final void saveRealm() {
 		final AccountConfiguration configuration = validateData();
 		if (configuration != null) {
-			final RealmBuilder realmBuilder = getRealmDef().newRealmBuilder(configuration, getEditedRealm());
-			saveRealm(realmBuilder);
+			final AccountBuilder accountBuilder = getRealmDef().newRealmBuilder(configuration, getEditedRealm());
+			saveRealm(accountBuilder);
 		}
 	}
 

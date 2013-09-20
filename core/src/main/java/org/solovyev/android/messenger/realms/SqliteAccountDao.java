@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Singleton
-public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
+public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao {
 
 	@Inject
 	@Nonnull
@@ -37,11 +37,11 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 	private SecretKey secret;
 
 	@Inject
-	public SqliteRealmDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+	public SqliteAccountDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
 	}
 
-	SqliteRealmDao(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+	SqliteAccountDao(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
 	}
 

@@ -5,7 +5,7 @@ import org.solovyev.android.messenger.users.User;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class AbstractRealmBuilder<C extends AccountConfiguration> implements RealmBuilder {
+public abstract class AbstractAccountBuilder<C extends AccountConfiguration> implements AccountBuilder {
 
 	@Nonnull
 	private RealmDef realmDef;
@@ -16,9 +16,9 @@ public abstract class AbstractRealmBuilder<C extends AccountConfiguration> imple
 	@Nullable
 	private Account editedAccount;
 
-	protected AbstractRealmBuilder(@Nonnull RealmDef realmDef,
-								   @Nonnull C configuration,
-								   @Nullable Account editedAccount) {
+	protected AbstractAccountBuilder(@Nonnull RealmDef realmDef,
+									 @Nonnull C configuration,
+									 @Nullable Account editedAccount) {
 		this.realmDef = realmDef;
 		this.editedAccount = editedAccount;
 		this.configuration = configuration;
