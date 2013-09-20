@@ -28,13 +28,13 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfigurat
 
 	@Nonnull
 	@Override
-	protected User getRealmUser(@Nonnull String realmId) {
+	protected User getAccountUser(@Nonnull String accountId) {
 		final String userId = getConfiguration().getUserId();
-		final User defaultUser = Users.newEmptyUser(EntityImpl.newInstance(realmId, userId));
+		final User defaultUser = Users.newEmptyUser(EntityImpl.newInstance(accountId, userId));
 
 		User result;
 		try {
-			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(realmId, getRealmDef(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
+			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(accountId, getRealmDef(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
 			if (users.isEmpty()) {
 				result = defaultUser;
 			} else {

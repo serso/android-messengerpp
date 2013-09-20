@@ -68,7 +68,7 @@ public interface AccountService {
 	RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
 
 	@Nonnull
-	Account getAccountById(@Nonnull String realmId) throws UnsupportedRealmException;
+	Account getAccountById(@Nonnull String accountId) throws UnsupportedRealmException;
 
 	@Nonnull
 	Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;

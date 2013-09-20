@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessengerRealmsFragment extends AbstractMessengerListFragment<Account, RealmListItem> implements DetachableFragment {
+public class MessengerRealmsFragment extends AbstractMessengerListFragment<Account, AccountListItem> implements DetachableFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "realms";
@@ -111,19 +111,19 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 
 	@Nonnull
 	@Override
-	protected MessengerListItemAdapter<RealmListItem> createAdapter() {
-		final List<RealmListItem> listItems = new ArrayList<RealmListItem>();
+	protected MessengerListItemAdapter<AccountListItem> createAdapter() {
+		final List<AccountListItem> listItems = new ArrayList<AccountListItem>();
 		for (Account account : accountService.getAccounts()) {
 			if (account.getState() != AccountState.removed) {
-				listItems.add(new RealmListItem(account));
+				listItems.add(new AccountListItem(account));
 			}
 		}
-		return new RealmsAdapter(getActivity(), listItems);
+		return new AccountsAdapter(getActivity(), listItems);
 	}
 
 	@Nullable
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull MessengerListItemAdapter<AccountListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return null;
 	}
 
@@ -178,8 +178,8 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Accou
 
 	@Nonnull
 	@Override
-	protected RealmsAdapter getAdapter() {
-		return (RealmsAdapter) super.getAdapter();
+	protected AccountsAdapter getAdapter() {
+		return (AccountsAdapter) super.getAdapter();
 	}
 
 	private class UiRealmEventListener extends AbstractJEventListener<AccountEvent> {

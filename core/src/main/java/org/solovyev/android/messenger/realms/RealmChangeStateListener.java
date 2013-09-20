@@ -27,6 +27,6 @@ final class RealmChangeStateListener extends MessengerContextCallback<Activity, 
 	@Override
 	public void onSuccess(@Nonnull Activity context, Account account) {
 		final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(account, RealmGuiEventType.FinishedState.status_changed));
+		eventManager.fire(AccountGuiEventType.newAccountEditFinishedEvent(account, AccountGuiEventType.FinishedState.status_changed));
 	}
 }

@@ -194,10 +194,10 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	@Override
-	public Account getAccountById(@Nonnull String realmId) throws UnsupportedRealmException {
-		final Account account = this.accounts.get(realmId);
+	public Account getAccountById(@Nonnull String accountId) throws UnsupportedRealmException {
+		final Account account = this.accounts.get(accountId);
 		if (account == null) {
-			throw new UnsupportedRealmException(realmId);
+			throw new UnsupportedRealmException(accountId);
 		}
 		return account;
 	}

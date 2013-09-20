@@ -24,8 +24,8 @@ final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccountConfigura
 
 	@Nonnull
 	@Override
-	protected User getRealmUser(@Nonnull String realmId) {
-		return Users.newUser(realmId, SmsRealmDef.USER_ID, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
+	protected User getAccountUser(@Nonnull String accountId) {
+		return Users.newUser(accountId, SmsRealmDef.USER_ID, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
 	}
 
 	@Nonnull

@@ -32,15 +32,15 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 	@Nonnull
 	@Override
 	public final Account build(@Nonnull Data data) {
-		final String realmId = data.getRealmId();
+		final String realmId = data.getAccountId();
 
-		final User user = getRealmUser(realmId);
+		final User user = getAccountUser(realmId);
 
 		return newRealm(realmId, user, AccountState.enabled);
 	}
 
 	@Nonnull
-	protected abstract User getRealmUser(@Nonnull String realmId);
+	protected abstract User getAccountUser(@Nonnull String accountId);
 
 	@Nonnull
 	public RealmDef getRealmDef() {

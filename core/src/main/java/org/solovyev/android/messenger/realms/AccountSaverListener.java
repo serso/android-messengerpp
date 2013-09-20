@@ -16,20 +16,20 @@ import javax.annotation.Nonnull;
  * Date: 4/13/13
  * Time: 1:47 PM
  */
-final class RealmSaverListener extends MessengerContextCallback<Activity, Account> {
+final class AccountSaverListener extends MessengerContextCallback<Activity, Account> {
 
-	private RealmSaverListener() {
+	private AccountSaverListener() {
 	}
 
 	@Nonnull
 	static FutureCallback<Account> newInstance(@Nonnull Activity activity) {
-		return Tasks.toUiThreadFutureCallback(activity, new RealmSaverListener());
+		return Tasks.toUiThreadFutureCallback(activity, new AccountSaverListener());
 	}
 
 	@Override
 	public void onSuccess(@Nonnull Activity context, Account account) {
 		final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(account, RealmGuiEventType.FinishedState.saved));
+		eventManager.fire(AccountGuiEventType.newAccountEditFinishedEvent(account, AccountGuiEventType.FinishedState.saved));
 	}
 
 	@Override

@@ -17,10 +17,10 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RealmListItem extends AbstractMessengerListItem<Account> {
+public final class AccountListItem extends AbstractMessengerListItem<Account> {
 
 	@Nonnull
-	private static final String TAG_PREFIX = "realm_list_item_";
+	private static final String TAG_PREFIX = "account_list_item_";
 
     /*
 	**********************************************************************
@@ -31,7 +31,7 @@ public final class RealmListItem extends AbstractMessengerListItem<Account> {
     */
 
 
-	public RealmListItem(@Nonnull Account account) {
+	public AccountListItem(@Nonnull Account account) {
 		super(TAG_PREFIX, account, R.layout.mpp_list_item_realm);
 	}
 
@@ -42,7 +42,7 @@ public final class RealmListItem extends AbstractMessengerListItem<Account> {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
 				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(RealmGuiEventType.newRealmViewRequestedEvent(getRealm()));
+				eventManager.fire(AccountGuiEventType.newAccountViewRequestedEvent(getRealm()));
 			}
 		};
 	}

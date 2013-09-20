@@ -179,8 +179,8 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	public void onResume() {
 		super.onResume();
 
-		taskListeners.addTaskListener(RealmSaverCallable.TASK_NAME, RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
-		taskListeners.addTaskListener(RealmRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.addTaskListener(AccountSaverCallable.TASK_NAME, AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
 	public T getEditedRealm() {
@@ -192,11 +192,11 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	}
 
 	protected final void removeRealm(@Nonnull Account account) {
-		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(account), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
 	private void saveRealm(@Nonnull AccountBuilder accountBuilder) {
-		taskListeners.run(RealmSaverCallable.TASK_NAME, new RealmSaverCallable(accountBuilder), RealmSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
 	}
 
 	protected final void saveRealm() {
@@ -220,7 +220,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	protected void backButtonPressed() {
 		T editedRealm = getEditedRealm();
 		if (editedRealm != null) {
-			eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(editedRealm, RealmGuiEventType.FinishedState.back));
+			eventManager.fire(AccountGuiEventType.newAccountEditFinishedEvent(editedRealm, AccountGuiEventType.FinishedState.back));
 		} else {
 			eventManager.fire(RealmDefGuiEventType.newRealmDefEditFinishedEvent(getRealmDef()));
 		}

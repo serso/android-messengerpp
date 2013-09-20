@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
  * Date: 4/13/13
  * Time: 1:02 PM
  */
-final class RealmRemoverCallable implements Callable<Account> {
+final class AccountRemoverCallable implements Callable<Account> {
 
 	@Nonnull
 	static final String TASK_NAME = "realm-remove";
@@ -18,7 +18,7 @@ final class RealmRemoverCallable implements Callable<Account> {
 	@Nonnull
 	private final Account account;
 
-	RealmRemoverCallable(@Nonnull Account account) {
+	AccountRemoverCallable(@Nonnull Account account) {
 		this.account = account;
 	}
 

@@ -27,15 +27,15 @@ public interface AccountBuilder extends BuilderWithData<Account, AccountBuilder.
 	public static final class Data {
 
 		@Nonnull
-		private final String realmId;
+		private final String accountId;
 
-		public Data(@Nonnull String realmId) {
-			this.realmId = realmId;
+		public Data(@Nonnull String accountId) {
+			this.accountId = accountId;
 		}
 
 		@Nonnull
-		public String getRealmId() {
-			return realmId;
+		public String getAccountId() {
+			return accountId;
 		}
 	}
 

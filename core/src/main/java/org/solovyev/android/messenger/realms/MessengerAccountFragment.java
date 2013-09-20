@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * Date: 3/1/13
  * Time: 8:57 PM
  */
-public class MessengerRealmFragment extends RoboSherlockFragment {
+public class MessengerAccountFragment extends RoboSherlockFragment {
 
     /*
 	**********************************************************************
@@ -41,10 +41,10 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     */
 
 	@Nonnull
-	public static final String EXTRA_REALM_ID = "realm_id";
+	public static final String ARGS_REALM_ID = "account_id";
 
 	@Nonnull
-	public static final String FRAGMENT_TAG = "realm";
+	public static final String FRAGMENT_TAG = "account";
 
     /*
     **********************************************************************
@@ -93,7 +93,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
 		final Bundle arguments = getArguments();
 		if (arguments != null) {
-			final String realmId = arguments.getString(EXTRA_REALM_ID);
+			final String realmId = arguments.getString(ARGS_REALM_ID);
 			if (realmId != null) {
 				try {
 					account = accountService.getAccountById(realmId);
@@ -139,7 +139,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 		realmBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(RealmGuiEventType.newRealmViewCancelledEvent(account));
+				eventManager.fire(AccountGuiEventType.newAccountViewCancelledEvent(account));
 			}
 		});
 		if (multiPaneManager.isDualPane(getActivity())) {
@@ -191,7 +191,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 		super.onResume();
 
 		taskListeners.addTaskListener(RealmChangeStateCallable.TASK_NAME, RealmChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
-		taskListeners.addTaskListener(RealmRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
 	@Override
@@ -227,7 +227,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 	}
 
 	private void editRealm() {
-		eventManager.fire(RealmGuiEventType.newRealmEditRequestedEvent(account));
+		eventManager.fire(AccountGuiEventType.newAccountEditRequestedEvent(account));
 	}
 
 	@Nonnull
@@ -237,7 +237,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
 
 	private void removeRealm() {
-		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(getAccount()), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
 	private final class RealmEventListener extends AbstractJEventListener<AccountEvent> {
@@ -258,7 +258,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 				case state_changed:
 					if (eventAccount.equals(account)) {
 						account = eventAccount;
-						Threads2.tryRunOnUiThread(MessengerRealmFragment.this, new Runnable() {
+						Threads2.tryRunOnUiThread(MessengerAccountFragment.this, new Runnable() {
 							@Override
 							public void run() {
 								final View view = getView();

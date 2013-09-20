@@ -27,6 +27,6 @@ final class RealmRemoverListener extends MessengerContextCallback<Activity, Acco
 	@Override
 	public void onSuccess(@Nonnull Activity activity, Account account) {
 		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
-		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(account, RealmGuiEventType.FinishedState.removed));
+		eventManager.fire(AccountGuiEventType.newAccountEditFinishedEvent(account, AccountGuiEventType.FinishedState.removed));
 	}
 }

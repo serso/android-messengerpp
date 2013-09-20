@@ -198,7 +198,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		@Nonnull
 		@Override
 		public Collection<Account> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<Account>(new RealmMapper(secret)).convert(cursor);
+			return new ListMapper<Account>(new AccountMapper(secret)).convert(cursor);
 		}
 	}
 

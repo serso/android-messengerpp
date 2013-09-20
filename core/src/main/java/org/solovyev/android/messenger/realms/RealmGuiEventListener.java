@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * Date: 3/5/13
  * Time: 1:50 PM
  */
-public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
+public class RealmGuiEventListener implements EventListener<AccountGuiEvent> {
 
 	@Nonnull
 	private static final String TAG = RealmGuiEventListener.class.getSimpleName();
@@ -27,20 +27,20 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
 	}
 
 	@Override
-	public void onEvent(@Nonnull RealmGuiEvent event) {
+	public void onEvent(@Nonnull AccountGuiEvent event) {
 		final Account account = event.getRealm();
 
 		switch (event.getType()) {
-			case realm_view_requested:
+			case account_view_requested:
 				handleRealmViewRequestedEvent(account);
 				break;
-			case realm_view_cancelled:
+			case account_view_cancelled:
 				handleRealmViewCancelledEvent(account);
 				break;
-			case realm_edit_requested:
+			case account_edit_requested:
 				handleRealmEditRequestedEvent(account);
 				break;
-			case realm_edit_finished:
+			case account_edit_finished:
 				handleRealmEditFinishedEvent(event);
 				break;
 		}
@@ -73,16 +73,16 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
 
 	private void showRealmFragment(@Nonnull Account account, boolean firstPane) {
 		final Bundle fragmentArgs = new Bundle();
-		fragmentArgs.putString(MessengerRealmFragment.EXTRA_REALM_ID, account.getId());
+		fragmentArgs.putString(MessengerAccountFragment.ARGS_REALM_ID, account.getId());
 		if (firstPane) {
-			activity.getMultiPaneFragmentManager().setMainFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), MessengerRealmFragment.FRAGMENT_TAG, true);
+			activity.getMultiPaneFragmentManager().setMainFragment(MessengerAccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), MessengerAccountFragment.FRAGMENT_TAG, true);
 		} else {
-			activity.getMultiPaneFragmentManager().setSecondFragment(MessengerRealmFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), MessengerRealmFragment.FRAGMENT_TAG, false);
+			activity.getMultiPaneFragmentManager().setSecondFragment(MessengerAccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), MessengerAccountFragment.FRAGMENT_TAG, false);
 		}
 	}
 
-	private void handleRealmEditFinishedEvent(@Nonnull RealmGuiEvent event) {
-		final RealmGuiEventType.FinishedState state = (RealmGuiEventType.FinishedState) event.getData();
+	private void handleRealmEditFinishedEvent(@Nonnull AccountGuiEvent event) {
+		final AccountGuiEventType.FinishedState state = (AccountGuiEventType.FinishedState) event.getData();
 		assert state != null;
 		switch (state) {
 			case back:
@@ -112,16 +112,16 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
     */
 
 	/**
-	 * Fragment will be reused if it's instance of {@link MessengerRealmFragment} and
+	 * Fragment will be reused if it's instance of {@link MessengerAccountFragment} and
 	 * contains same realm as one passed in constructor
 	 */
-	private static class RealmFragmentReuseCondition extends AbstractFragmentReuseCondition<MessengerRealmFragment> {
+	private static class RealmFragmentReuseCondition extends AbstractFragmentReuseCondition<MessengerAccountFragment> {
 
 		@Nonnull
 		private final Account account;
 
 		private RealmFragmentReuseCondition(@Nonnull Account account) {
-			super(MessengerRealmFragment.class);
+			super(MessengerAccountFragment.class);
 			this.account = account;
 		}
 
@@ -131,7 +131,7 @@ public class RealmGuiEventListener implements EventListener<RealmGuiEvent> {
 		}
 
 		@Override
-		protected boolean canReuseFragment(@Nonnull MessengerRealmFragment fragment) {
+		protected boolean canReuseFragment(@Nonnull MessengerAccountFragment fragment) {
 			return account.equals(fragment.getAccount());
 		}
 	}

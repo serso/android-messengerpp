@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  * Date: 4/13/13
  * Time: 1:05 PM
  */
-class RealmSaverCallable implements Callable<Account> {
+class AccountSaverCallable implements Callable<Account> {
 
 	@Nonnull
 	static final String TASK_NAME = "realm-save";
@@ -19,7 +19,7 @@ class RealmSaverCallable implements Callable<Account> {
 	@Nonnull
 	private final AccountBuilder accountBuilder;
 
-	RealmSaverCallable(@Nonnull AccountBuilder accountBuilder) {
+	AccountSaverCallable(@Nonnull AccountBuilder accountBuilder) {
 		this.accountBuilder = accountBuilder;
 	}
 

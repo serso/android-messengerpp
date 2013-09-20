@@ -14,12 +14,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 
-public class RealmMapper<C extends AccountConfiguration> implements Converter<Cursor, Account<C>> {
+public class AccountMapper<C extends AccountConfiguration> implements Converter<Cursor, Account<C>> {
 
 	@Nullable
 	private final SecretKey secret;
 
-	public RealmMapper(@Nullable SecretKey secret) {
+	public AccountMapper(@Nullable SecretKey secret) {
 		this.secret = secret;
 	}
 

@@ -31,18 +31,18 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfig
 
 	@Nonnull
 	@Override
-	protected User getRealmUser(@Nonnull String realmId) {
+	protected User getAccountUser(@Nonnull String accountId) {
 		User user;
 
 		if (connection != null) {
 			try {
-				user = XmppAccountUserService.toUser(realmId, getConfiguration().getLogin(), null, true, connection);
+				user = XmppAccountUserService.toUser(accountId, getConfiguration().getLogin(), null, true, connection);
 			} catch (XMPPException e) {
 				Log.e("XmppRealmBuilder", e.getMessage(), e);
-				user = Users.newEmptyUser(EntityImpl.newInstance(realmId, getConfiguration().getLogin()));
+				user = Users.newEmptyUser(EntityImpl.newInstance(accountId, getConfiguration().getLogin()));
 			}
 		} else {
-			user = Users.newEmptyUser(EntityImpl.newInstance(realmId, getConfiguration().getLogin()));
+			user = Users.newEmptyUser(EntityImpl.newInstance(accountId, getConfiguration().getLogin()));
 		}
 
 		return user;

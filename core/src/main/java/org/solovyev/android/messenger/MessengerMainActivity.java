@@ -13,9 +13,9 @@ import org.solovyev.android.messenger.preferences.MessengerOnPreferenceAttachedL
 import org.solovyev.android.messenger.preferences.PreferenceGuiEvent;
 import org.solovyev.android.messenger.preferences.PreferenceGuiEventListener;
 import org.solovyev.android.messenger.preferences.PreferenceListFragment;
+import org.solovyev.android.messenger.realms.AccountGuiEvent;
 import org.solovyev.android.messenger.realms.RealmDefGuiEvent;
 import org.solovyev.android.messenger.realms.RealmDefGuiEventListener;
-import org.solovyev.android.messenger.realms.RealmGuiEvent;
 import org.solovyev.android.messenger.realms.RealmGuiEventListener;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.ContactGuiEvent;
@@ -87,7 +87,7 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
 
 		listeners = new RoboListeners(getEventManager());
 		listeners.add(GuiEvent.class, new GuiEventListener(this));
-		listeners.add(RealmGuiEvent.class, new RealmGuiEventListener(this));
+		listeners.add(AccountGuiEvent.class, new RealmGuiEventListener(this));
 		listeners.add(RealmDefGuiEvent.class, new RealmDefGuiEventListener(this));
 		listeners.add(ContactGuiEvent.class, new ContactGuiEventListener(this, getAccountService()));
 		listeners.add(ChatGuiEvent.class, new ChatGuiEventListener(this, getChatService()));

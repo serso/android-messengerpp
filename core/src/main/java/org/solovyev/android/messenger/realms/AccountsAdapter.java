@@ -9,9 +9,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> {
+public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 
-	public RealmsAdapter(@Nonnull Context context, @Nonnull List<? extends RealmListItem> listItems) {
+	public AccountsAdapter(@Nonnull Context context, @Nonnull List<? extends AccountListItem> listItems) {
 		super(context, listItems);
 	}
 
@@ -30,7 +30,7 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> {
 				addListItem(createListItem(account));
 				break;
 			case changed:
-				final RealmListItem listItem = findInAllElements(account);
+				final AccountListItem listItem = findInAllElements(account);
 				if (listItem != null) {
 					listItem.onRealmChangedEvent(account);
 				}
@@ -40,9 +40,9 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> {
 					case enabled:
 					case disabled_by_user:
 					case disabled_by_app:
-						final RealmListItem realmListItem = findInAllElements(account);
-						if (realmListItem != null) {
-							realmListItem.onRealmChangedEvent(account);
+						final AccountListItem accountListItem = findInAllElements(account);
+						if (accountListItem != null) {
+							accountListItem.onRealmChangedEvent(account);
 						}
 						break;
 					case removed:
@@ -54,12 +54,12 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> {
 	}
 
 	@Nullable
-	protected RealmListItem findInAllElements(@Nonnull Account account) {
-		return Iterables.find(getAllElements(), Predicates.<RealmListItem>equalTo(createListItem(account)), null);
+	protected AccountListItem findInAllElements(@Nonnull Account account) {
+		return Iterables.find(getAllElements(), Predicates.<AccountListItem>equalTo(createListItem(account)), null);
 	}
 
 	@Nonnull
-	private RealmListItem createListItem(@Nonnull Account account) {
-		return new RealmListItem(account);
+	private AccountListItem createListItem(@Nonnull Account account) {
+		return new AccountListItem(account);
 	}
 }
