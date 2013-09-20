@@ -2,13 +2,13 @@ package org.solovyev.android.messenger.realms.vk;
 
 import android.content.Context;
 import org.solovyev.android.messenger.RealmConnection;
-import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
-import org.solovyev.android.messenger.realms.vk.chats.VkRealmChatService;
-import org.solovyev.android.messenger.realms.vk.users.VkRealmUserService;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.realms.vk.chats.VkAccountChatService;
+import org.solovyev.android.messenger.realms.vk.users.VkAccountUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -37,13 +37,13 @@ public final class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public RealmUserService getRealmUserService() {
-		return new VkRealmUserService(this);
+	public AccountUserService getAccountUserService() {
+		return new VkAccountUserService(this);
 	}
 
 	@Nonnull
 	@Override
-	public RealmChatService getRealmChatService() {
-		return new VkRealmChatService(this);
+	public AccountChatService getAccountChatService() {
+		return new VkAccountChatService(this);
 	}
 }

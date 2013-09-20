@@ -159,9 +159,9 @@ public class DefaultChatService implements ChatService {
 			result = getChatById(realmChat);
 			if (result == null) {
 				// no private chat exists => create one
-				final RealmChatService realmChatService = realm.getRealmChatService();
+				final AccountChatService accountChatService = realm.getAccountChatService();
 
-				Chat chat = realmChatService.newPrivateChat(realmChat, user1.getRealmEntityId(), user2.getRealmEntityId());
+				Chat chat = accountChatService.newPrivateChat(realmChat, user1.getRealmEntityId(), user2.getRealmEntityId());
 
 				chat = preparePrivateChat(chat, user1, user2);
 
@@ -356,7 +356,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws RealmException {
-		final List<ChatMessage> messages = getRealmByEntity(user).getRealmChatService().getChatMessages(user.getRealmEntityId());
+		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getChatMessages(user.getRealmEntityId());
 
 		final Multimap<Chat, ChatMessage> messagesByChats = ArrayListMultimap.create();
 
@@ -382,9 +382,9 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws RealmException {
 		final Realm realm = getRealmByEntity(chat);
-		final RealmChatService realmChatService = realm.getRealmChatService();
+		final AccountChatService accountChatService = realm.getAccountChatService();
 
-		final List<ChatMessage> messages = realmChatService.getNewerChatMessagesForChat(chat.getRealmEntityId(), realm.getUser().getEntity().getRealmEntityId());
+		final List<ChatMessage> messages = accountChatService.getNewerChatMessagesForChat(chat.getRealmEntityId(), realm.getUser().getEntity().getRealmEntityId());
 
 		saveChatMessages(chat, messages, true);
 
@@ -454,7 +454,7 @@ public class DefaultChatService implements ChatService {
 	public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws RealmException {
 		final Integer offset = getChatMessageService().getChatMessages(chat).size();
 
-		final List<ChatMessage> messages = getRealmByEntity(user).getRealmChatService().getOlderChatMessagesForChat(chat.getRealmEntityId(), user.getRealmEntityId(), offset);
+		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getRealmEntityId(), user.getRealmEntityId(), offset);
 		saveChatMessages(chat, messages, false);
 
 		return java.util.Collections.unmodifiableList(messages);

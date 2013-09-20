@@ -3,9 +3,9 @@ package org.solovyev.android.messenger.realms;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -18,7 +18,7 @@ import java.util.List;
  * Date: 3/4/13
  * Time: 5:15 PM
  */
-public class TestRealmService implements RealmUserService, RealmChatService {
+public class TestAccountService implements AccountUserService, AccountChatService {
 	@Nullable
 	@Override
 	public User getUserById(@Nonnull String realmUserId) {

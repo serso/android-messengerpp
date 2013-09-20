@@ -8,7 +8,7 @@ import org.jivesoftware.smackx.OfflineMessageManager;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
@@ -23,9 +23,9 @@ import java.util.List;
  * Date: 3/5/13
  * Time: 9:17 PM
  */
-class XmppRealmChatService extends AbstractXmppRealmService implements RealmChatService {
+class XmppAccountChatService extends AbstractXmppRealmService implements AccountChatService {
 
-	public XmppRealmChatService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+	public XmppAccountChatService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
 		super(realm, connectionAware);
 	}
 

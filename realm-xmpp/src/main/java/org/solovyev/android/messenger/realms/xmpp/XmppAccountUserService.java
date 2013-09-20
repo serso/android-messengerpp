@@ -12,7 +12,7 @@ import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
@@ -31,12 +31,12 @@ import java.util.List;
  * Date: 2/24/13
  * Time: 8:45 PM
  */
-class XmppRealmUserService extends AbstractXmppRealmService implements RealmUserService {
+class XmppAccountUserService extends AbstractXmppRealmService implements AccountUserService {
 
 	@Nonnull
-	private static final String TAG = "M++/" + XmppRealmUserService.class.getSimpleName();
+	private static final String TAG = "M++/" + XmppAccountUserService.class.getSimpleName();
 
-	XmppRealmUserService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+	XmppAccountUserService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
 		super(realm, connectionAware);
 	}
 

@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
 import org.solovyev.android.messenger.realms.RealmRuntimeException;
 import org.solovyev.android.messenger.realms.RealmState;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * Date: 3/4/13
  * Time: 8:28 PM
  */
-public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
+public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 
 	@Nonnull
 	private XmppRealm realm1;
@@ -37,14 +37,14 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 	private XmppRealmDef xmppRealmDef;
 
 	@Nonnull
-	private RealmUserService realmUserService1;
+	private AccountUserService accountUserService;
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		realm1 = newRealm1();
 		realm2 = newRealm2();
-		realmUserService1 = new XmppRealmUserService(realm1, TemporaryXmppConnectionAware.newInstance(realm1));
+		accountUserService = new XmppAccountUserService(realm1, TemporaryXmppConnectionAware.newInstance(realm1));
 	}
 
 	public void testGetUserById() throws Exception {
@@ -65,7 +65,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 			// wait until realm2 will be connected
 			Thread.sleep(100);
 
-			final User user2 = realmUserService1.getUserById(realm2.getUser().getEntity().getRealmEntityId());
+			final User user2 = accountUserService.getUserById(realm2.getUser().getEntity().getRealmEntityId());
 			Assert.assertNotNull(user2);
 			Assert.assertEquals(user2.getEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN2);
 			Assert.assertEquals(user2.getEntity().getRealmId(), realm1.getId());
@@ -73,14 +73,14 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 			Assert.assertNull(user2.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
 			// load self
-			final User user1 = realmUserService1.getUserById(realm1.getUser().getEntity().getRealmEntityId());
+			final User user1 = accountUserService.getUserById(realm1.getUser().getEntity().getRealmEntityId());
 			Assert.assertNotNull(user1);
 			Assert.assertEquals(user1.getEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN);
 			Assert.assertEquals(user1.getEntity().getRealmId(), realm1.getId());
 			Assert.assertEquals("Sergey I Solovyev", user1.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
 			Assert.assertNull(user1.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
-			final User serso = realmUserService1.getUserById("se.solovyev@gmail.com");
+			final User serso = accountUserService.getUserById("se.solovyev@gmail.com");
 			Assert.assertNotNull(serso);
 			Assert.assertEquals(serso.getEntity().getRealmEntityId(), "se.solovyev@gmail.com");
 			Assert.assertEquals(serso.getEntity().getRealmId(), realm1.getId());
@@ -94,7 +94,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 	}
 
 	public void testGetUserContacts() throws Exception {
-		List<User> contacts1 = realmUserService1.getUserContacts(TestXmppConfiguration.USER_LOGIN);
+		List<User> contacts1 = accountUserService.getUserContacts(TestXmppConfiguration.USER_LOGIN);
 		Assert.assertTrue(contacts1.size() >= 2);
 		Assert.assertTrue(Iterables.any(contacts1, new Predicate<User>() {
 			@Override
@@ -103,7 +103,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 			}
 		}));
 
-		contacts1 = realmUserService1.getUserContacts(TestXmppConfiguration.USER_LOGIN2);
+		contacts1 = accountUserService.getUserContacts(TestXmppConfiguration.USER_LOGIN2);
 		Assert.assertTrue(contacts1.isEmpty());
 
 	}
@@ -128,7 +128,7 @@ public class XmppRealmUserServiceTest extends AbstractMessengerTestCase {
 
 
 			final User user2InRealm1 = Users.newEmptyUser(realm1.newUserEntity(realm2.getUser().getEntity().getRealmEntityId()));
-			final List<User> users1 = realmUserService1.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
+			final List<User> users1 = accountUserService.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
 			Assert.assertNotNull(users1);
 			Assert.assertTrue(!users1.isEmpty());
 

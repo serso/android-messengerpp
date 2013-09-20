@@ -11,7 +11,7 @@ import java.util.List;
  * Date: 5/25/12
  * Time: 8:33 PM
  */
-public interface RealmUserService {
+public interface AccountUserService {
 
 	/**
 	 * @param realmUserId realm user id

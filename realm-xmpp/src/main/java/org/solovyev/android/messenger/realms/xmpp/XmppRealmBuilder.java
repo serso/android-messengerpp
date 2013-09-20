@@ -36,7 +36,7 @@ public class XmppRealmBuilder extends AbstractRealmBuilder<XmppAccountConfigurat
 
 		if (connection != null) {
 			try {
-				user = XmppRealmUserService.toUser(realmId, getConfiguration().getLogin(), null, true, connection);
+				user = XmppAccountUserService.toUser(realmId, getConfiguration().getLogin(), null, true, connection);
 			} catch (XMPPException e) {
 				Log.e("XmppRealmBuilder", e.getMessage(), e);
 				user = Users.newEmptyUser(EntityImpl.newInstance(realmId, getConfiguration().getLogin()));

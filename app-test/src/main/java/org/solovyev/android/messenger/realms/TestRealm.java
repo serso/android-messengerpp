@@ -4,9 +4,9 @@ import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.RealmConnection;
-import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 
@@ -43,13 +43,13 @@ public class TestRealm extends AbstractRealm<TestAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public RealmUserService getRealmUserService() {
-		return new TestRealmService();
+	public AccountUserService getAccountUserService() {
+		return new TestAccountService();
 	}
 
 	@Nonnull
 	@Override
-	public RealmChatService getRealmChatService() {
-		return new TestRealmService();
+	public AccountChatService getAccountChatService() {
+		return new TestAccountService();
 	}
 }

@@ -45,7 +45,7 @@ public class MessengerTestActivity extends RoboSherlockActivity {
 			public void run() {
 				for (Realm realm : realmService.getRealms()) {
 					try {
-						final User user = realm.getRealmUserService().getUserById("se.solovyev@gmail.com");
+						final User user = realm.getAccountUserService().getUserById("se.solovyev@gmail.com");
 						Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
 							@Override
 							public void run() {

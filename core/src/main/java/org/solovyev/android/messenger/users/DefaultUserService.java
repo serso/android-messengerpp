@@ -146,7 +146,7 @@ public class DefaultUserService implements UserService {
 				if (tryFindInRealm) {
 					try {
 						final Realm realm = getRealmByEntity(user);
-						result = realm.getRealmUserService().getUserById(user.getRealmEntityId());
+						result = realm.getAccountUserService().getUserById(user.getRealmEntityId());
 					} catch (RealmException e) {
 						// unable to load from realm => just return empty user
 						Log.e(TAG, e.getMessage(), e);
@@ -290,7 +290,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void syncUser(@Nonnull Entity userEntity) throws RealmException {
-		User user = getRealmByEntity(userEntity).getRealmUserService().getUserById(userEntity.getRealmEntityId());
+		User user = getRealmByEntity(userEntity).getAccountUserService().getUserById(userEntity.getRealmEntityId());
 		if (user != null) {
 			user = user.updatePropertiesSyncDate();
 			updateUser(user, true);
@@ -301,7 +301,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	public List<User> syncUserContacts(@Nonnull Entity user) throws RealmException {
 		final Realm realm = getRealmByEntity(user);
-		final List<User> contacts = realm.getRealmUserService().getUserContacts(user.getRealmEntityId());
+		final List<User> contacts = realm.getAccountUserService().getUserContacts(user.getRealmEntityId());
 
 		if (!contacts.isEmpty()) {
 			userContactsCache.update(user, new WholeListUpdater<User>(contacts));
@@ -353,7 +353,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws RealmException {
-		final List<ApiChat> apiChats = getRealmByEntity(user).getRealmChatService().getUserChats(user.getRealmEntityId());
+		final List<ApiChat> apiChats = getRealmByEntity(user).getAccountChatService().getUserChats(user.getRealmEntityId());
 
 		final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
 			@Override
@@ -425,7 +425,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void syncUserContactsStatuses(@Nonnull Entity userEntity) throws RealmException {
-		final List<User> contacts = getRealmByEntity(userEntity).getRealmUserService().checkOnlineUsers(getUserContacts(userEntity));
+		final List<User> contacts = getRealmByEntity(userEntity).getAccountUserService().checkOnlineUsers(getUserContacts(userEntity));
 
 		final User user = getUserById(userEntity);
 

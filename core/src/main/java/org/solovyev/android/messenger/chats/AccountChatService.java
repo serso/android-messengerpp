@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 6/6/12
  * Time: 3:29 PM
  */
-public interface RealmChatService {
+public interface AccountChatService {
 
 	@Nonnull
 	List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws RealmConnectionException;

@@ -16,7 +16,7 @@ import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -60,8 +60,8 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public RealmUserService getRealmUserService() {
-		return new XmppRealmUserService(this, getXmppConnectionAware());
+	public AccountUserService getAccountUserService() {
+		return new XmppAccountUserService(this, getXmppConnectionAware());
 	}
 
 	@Nonnull
@@ -81,8 +81,8 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public RealmChatService getRealmChatService() {
-		return new XmppRealmChatService(this, getXmppConnectionAware());
+	public AccountChatService getAccountChatService() {
+		return new XmppAccountChatService(this, getXmppConnectionAware());
 	}
 
 	@Nonnull

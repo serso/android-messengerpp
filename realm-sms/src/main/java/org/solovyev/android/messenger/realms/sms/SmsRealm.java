@@ -7,12 +7,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.solovyev.android.messenger.RealmConnection;
-import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
@@ -46,14 +46,14 @@ final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public RealmUserService getRealmUserService() {
-		return new SmsRealmUserService(this);
+	public AccountUserService getAccountUserService() {
+		return new SmsAccountUserService(this);
 	}
 
 	@Nonnull
 	@Override
-	public RealmChatService getRealmChatService() {
-		return new SmsRealmChatService();
+	public AccountChatService getAccountChatService() {
+		return new SmsAccountChatService();
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import android.provider.ContactsContract;
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
-import org.solovyev.android.messenger.users.RealmUserService;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -24,12 +24,12 @@ import java.util.List;
  * Date: 5/27/13
  * Time: 9:23 PM
  */
-final class SmsRealmUserService implements RealmUserService {
+final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
 	private final SmsRealm realm;
 
-	SmsRealmUserService(@Nonnull SmsRealm realm) {
+	SmsAccountUserService(@Nonnull SmsRealm realm) {
 		this.realm = realm;
 	}
 

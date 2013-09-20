@@ -25,10 +25,10 @@ import java.util.List;
  * Date: 6/6/12
  * Time: 3:30 PM
  */
-public class VkRealmChatService implements RealmChatService {
+public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
-	private static final String TAG = VkRealmChatService.class.getSimpleName();
+	private static final String TAG = VkAccountChatService.class.getSimpleName();
 
 	@Nonnull
 	private static final String CHAT_DELIMITER = ":";
@@ -36,7 +36,7 @@ public class VkRealmChatService implements RealmChatService {
 	@Nonnull
 	private final VkRealm realm;
 
-	public VkRealmChatService(@Nonnull VkRealm realm) {
+	public VkAccountChatService(@Nonnull VkRealm realm) {
 		this.realm = realm;
 	}
 

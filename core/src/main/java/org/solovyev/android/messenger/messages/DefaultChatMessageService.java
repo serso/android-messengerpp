@@ -105,9 +105,9 @@ public class DefaultChatMessageService implements ChatMessageService {
 	@Override
 	public ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws RealmException {
 		final Realm realm = getRealmByUser(user);
-		final RealmChatService realmChatService = realm.getRealmChatService();
+		final AccountChatService accountChatService = realm.getAccountChatService();
 
-		final String realmMessageId = realmChatService.sendChatMessage(chat, chatMessage);
+		final String realmMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
 		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(realm.newMessageEntity(realmMessageId == null ? NO_REALM_MESSAGE_ID : realmMessageId, chatMessage.getEntity().getEntityId()));
 

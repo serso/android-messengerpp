@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 5/27/13
  * Time: 9:23 PM
  */
-final class SmsRealmChatService implements RealmChatService {
+final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override

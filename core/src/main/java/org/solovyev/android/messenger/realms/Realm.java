@@ -1,18 +1,16 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-
-import java.util.List;
-
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.RealmConnection;
-import org.solovyev.android.messenger.chats.RealmChatService;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
-import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 
@@ -93,10 +91,10 @@ public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 	**********************************************************************
 	*/
 	@Nonnull
-	RealmUserService getRealmUserService();
+	AccountUserService getAccountUserService();
 
 	@Nonnull
-	RealmChatService getRealmChatService();
+	AccountChatService getAccountChatService();
 
 	@Nonnull
 	RealmConnection newRealmConnection(@Nonnull Context context);
