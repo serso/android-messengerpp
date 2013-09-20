@@ -77,7 +77,7 @@ public class DefaultRealmService implements RealmService {
 	private final Context context;
 
 	@Nonnull
-	private final Map<String, RealmDef<? extends RealmConfiguration>> realmDefs = new HashMap<String, RealmDef<? extends RealmConfiguration>>();
+	private final Map<String, RealmDef<? extends AccountConfiguration>> realmDefs = new HashMap<String, RealmDef<? extends AccountConfiguration>>();
 
 	@GuardedBy("realms")
 	@Nonnull
@@ -131,7 +131,7 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Collection<RealmDef<? extends RealmConfiguration>> getRealmDefs() {
+	public Collection<RealmDef<? extends AccountConfiguration>> getRealmDefs() {
 		return Collections.unmodifiableCollection(this.realmDefs.values());
 	}
 
@@ -184,8 +184,8 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public RealmDef<? extends RealmConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException {
-		final RealmDef<? extends RealmConfiguration> realm = this.realmDefs.get(realmDefId);
+	public RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException {
+		final RealmDef<? extends AccountConfiguration> realm = this.realmDefs.get(realmDefId);
 		if (realm == null) {
 			throw new UnsupportedRealmException(realmDefId);
 		}
@@ -208,7 +208,7 @@ public class DefaultRealmService implements RealmService {
 		Realm result;
 
 		try {
-			final RealmConfiguration configuration = realmBuilder.getConfiguration();
+			final AccountConfiguration configuration = realmBuilder.getConfiguration();
 			final Realm oldRealm = realmBuilder.getEditedRealm();
 			if (oldRealm != null && oldRealm.getConfiguration().equals(configuration)) {
 				// new realm configuration is exactly the same => can omit saving the realm

@@ -26,7 +26,7 @@ import java.util.List;
  * Time: 8:45 PM
  */
 @Singleton
-public final class SmsRealmDef extends AbstractRealmDef<SmsRealmConfiguration> {
+public final class SmsRealmDef extends AbstractRealmDef<SmsAccountConfiguration> {
 
 	/*
 	**********************************************************************
@@ -52,19 +52,19 @@ public final class SmsRealmDef extends AbstractRealmDef<SmsRealmConfiguration> {
 
 	@Inject
 	public SmsRealmDef(@Nonnull Application context) {
-		super(REALM_ID, R.string.mpp_sms_realm_name, R.drawable.mpp_sms_icon, SmsRealmConfigurationFragment.class, SmsRealmConfiguration.class, false);
+		super(REALM_ID, R.string.mpp_sms_realm_name, R.drawable.mpp_sms_icon, SmsRealmConfigurationFragment.class, SmsAccountConfiguration.class, false);
 		this.context = context;
 	}
 
 	@Nonnull
 	@Override
-	public Realm<SmsRealmConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull SmsRealmConfiguration configuration, @Nonnull RealmState state) {
+	public Realm<SmsAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull RealmState state) {
 		return new SmsRealm(realmId, this, user, configuration, state);
 	}
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull SmsRealmConfiguration configuration, @Nullable Realm editedRealm) {
+	public RealmBuilder newRealmBuilder(@Nonnull SmsAccountConfiguration configuration, @Nullable Realm editedRealm) {
 		return new SmsRealmBuilder(this, editedRealm, configuration);
 	}
 
@@ -83,7 +83,7 @@ public final class SmsRealmDef extends AbstractRealmDef<SmsRealmConfiguration> {
 
 	@Nullable
 	@Override
-	public Cipherer<SmsRealmConfiguration, SmsRealmConfiguration> getCipherer() {
+	public Cipherer<SmsAccountConfiguration, SmsAccountConfiguration> getCipherer() {
 		return new SmsRealmConfigurationCipherer();
 	}
 
@@ -95,18 +95,18 @@ public final class SmsRealmDef extends AbstractRealmDef<SmsRealmConfiguration> {
     **********************************************************************
     */
 
-	private static class SmsRealmConfigurationCipherer implements Cipherer<SmsRealmConfiguration, SmsRealmConfiguration> {
+	private static class SmsRealmConfigurationCipherer implements Cipherer<SmsAccountConfiguration, SmsAccountConfiguration> {
 
 		private SmsRealmConfigurationCipherer() {
 		}
 
 		@Nonnull
-		public SmsRealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull SmsRealmConfiguration decrypted) throws CiphererException {
+		public SmsAccountConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull SmsAccountConfiguration decrypted) throws CiphererException {
 			return decrypted.clone();
 		}
 
 		@Nonnull
-		public SmsRealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull SmsRealmConfiguration encrypted) throws CiphererException {
+		public SmsAccountConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull SmsAccountConfiguration encrypted) throws CiphererException {
 			return encrypted.clone();
 		}
 	}

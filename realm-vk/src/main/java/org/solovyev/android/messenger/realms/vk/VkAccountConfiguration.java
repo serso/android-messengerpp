@@ -1,11 +1,11 @@
 package org.solovyev.android.messenger.realms.vk;
 
-import org.solovyev.android.messenger.realms.RealmConfiguration;
+import org.solovyev.android.messenger.realms.AccountConfiguration;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 
-public class VkRealmConfiguration extends JObject implements RealmConfiguration {
+public class VkAccountConfiguration extends JObject implements AccountConfiguration {
 
 	@Nonnull
 	private String login;
@@ -20,10 +20,10 @@ public class VkRealmConfiguration extends JObject implements RealmConfiguration 
 	private String userId;
 
 	// for json
-	public VkRealmConfiguration() {
+	public VkAccountConfiguration() {
 	}
 
-	public VkRealmConfiguration(@Nonnull String login, @Nonnull String password) {
+	public VkAccountConfiguration(@Nonnull String login, @Nonnull String password) {
 		this.login = login;
 		this.password = password;
 	}
@@ -35,8 +35,8 @@ public class VkRealmConfiguration extends JObject implements RealmConfiguration 
 
 	@Nonnull
 	@Override
-	public VkRealmConfiguration clone() {
-		return (VkRealmConfiguration) super.clone();
+	public VkAccountConfiguration clone() {
+		return (VkAccountConfiguration) super.clone();
 	}
 
 	@Nonnull

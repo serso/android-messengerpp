@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 1:05 AM
  */
-public abstract class AbstractRealmDef<C extends RealmConfiguration> implements RealmDef<C> {
+public abstract class AbstractRealmDef<C extends AccountConfiguration> implements RealmDef<C> {
 
 	@Nonnull
 	private final String id;

@@ -28,14 +28,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public final class XmppRealm extends AbstractRealm<XmppRealmConfiguration> {
+public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 	private static final String TAG = XmppRealm.class.getSimpleName();
 
 	public XmppRealm(@Nonnull String id,
 					 @Nonnull RealmDef realmDef,
 					 @Nonnull User user,
-					 @Nonnull XmppRealmConfiguration configuration,
+					 @Nonnull XmppAccountConfiguration configuration,
 					 @Nonnull RealmState state) {
 		super(id, realmDef, user, configuration, state);
 	}

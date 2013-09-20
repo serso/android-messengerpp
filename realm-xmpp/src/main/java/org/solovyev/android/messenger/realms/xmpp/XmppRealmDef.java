@@ -28,7 +28,7 @@ import java.util.List;
  * Time: 8:09 PM
  */
 @Singleton
-public final class XmppRealmDef extends AbstractRealmDef<XmppRealmConfiguration> {
+public final class XmppRealmDef extends AbstractRealmDef<XmppAccountConfiguration> {
 
     /*
 	**********************************************************************
@@ -57,18 +57,18 @@ public final class XmppRealmDef extends AbstractRealmDef<XmppRealmConfiguration>
 	private Application context;
 
 	public XmppRealmDef() {
-		super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationFragment.class, XmppRealmConfiguration.class, true);
+		super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppRealmConfigurationFragment.class, XmppAccountConfiguration.class, true);
 	}
 
 	@Nonnull
 	@Override
-	public Realm<XmppRealmConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull XmppRealmConfiguration configuration, @Nonnull RealmState state) {
+	public Realm<XmppAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull XmppAccountConfiguration configuration, @Nonnull RealmState state) {
 		return new XmppRealm(realmId, this, user, configuration, state);
 	}
 
 	@Override
 	@Nonnull
-	public RealmBuilder newRealmBuilder(@Nonnull XmppRealmConfiguration configuration, @Nullable Realm editedRealm) {
+	public RealmBuilder newRealmBuilder(@Nonnull XmppAccountConfiguration configuration, @Nullable Realm editedRealm) {
 		return new XmppRealmBuilder(this, editedRealm, configuration);
 	}
 
@@ -105,7 +105,7 @@ public final class XmppRealmDef extends AbstractRealmDef<XmppRealmConfiguration>
 
 	@Nullable
 	@Override
-	public Cipherer<XmppRealmConfiguration, XmppRealmConfiguration> getCipherer() {
+	public Cipherer<XmppAccountConfiguration, XmppAccountConfiguration> getCipherer() {
 		return new XmppRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
 	}
 
@@ -117,7 +117,7 @@ public final class XmppRealmDef extends AbstractRealmDef<XmppRealmConfiguration>
     **********************************************************************
     */
 
-	private static class XmppRealmConfigurationCipherer implements Cipherer<XmppRealmConfiguration, XmppRealmConfiguration> {
+	private static class XmppRealmConfigurationCipherer implements Cipherer<XmppAccountConfiguration, XmppAccountConfiguration> {
 
 		@Nonnull
 		private final Cipherer<String, String> stringCipherer;
@@ -127,15 +127,15 @@ public final class XmppRealmDef extends AbstractRealmDef<XmppRealmConfiguration>
 		}
 
 		@Nonnull
-		public XmppRealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull XmppRealmConfiguration decrypted) throws CiphererException {
-			final XmppRealmConfiguration encrypted = decrypted.clone();
+		public XmppAccountConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull XmppAccountConfiguration decrypted) throws CiphererException {
+			final XmppAccountConfiguration encrypted = decrypted.clone();
 			encrypted.setPassword(stringCipherer.encrypt(secret, decrypted.getPassword()));
 			return encrypted;
 		}
 
 		@Nonnull
-		public XmppRealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull XmppRealmConfiguration encrypted) throws CiphererException {
-			final XmppRealmConfiguration decrypted = encrypted.clone();
+		public XmppAccountConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull XmppAccountConfiguration encrypted) throws CiphererException {
+			final XmppAccountConfiguration decrypted = encrypted.clone();
 			decrypted.setPassword(stringCipherer.decrypt(secret, encrypted.getPassword()));
 			return decrypted;
 		}

@@ -22,7 +22,7 @@ public interface RealmBuilder extends BuilderWithData<Realm, RealmBuilder.Data> 
 	void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException;
 
 	@Nonnull
-	RealmConfiguration getConfiguration();
+	AccountConfiguration getConfiguration();
 
 	public static final class Data {
 

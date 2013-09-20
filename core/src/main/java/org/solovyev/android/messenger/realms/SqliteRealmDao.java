@@ -156,10 +156,10 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 		values.put("realm_def_id", realm.getRealmDef().getId());
 		values.put("user_id", realm.getUser().getEntity().getEntityId());
 
-		final RealmConfiguration configuration;
+		final AccountConfiguration configuration;
 
 		try {
-			final Cipherer<RealmConfiguration, RealmConfiguration> cipherer = realm.getRealmDef().getCipherer();
+			final Cipherer<AccountConfiguration, AccountConfiguration> cipherer = realm.getRealmDef().getCipherer();
 			if (cipherer != null && secret != null) {
 				configuration = cipherer.encrypt(secret, realm.getConfiguration());
 			} else {

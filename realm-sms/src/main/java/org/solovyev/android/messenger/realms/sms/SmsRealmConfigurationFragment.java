@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.realms.sms;
 
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.realms.AccountConfiguration;
 import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
-import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.realms.RealmDef;
 
 import javax.annotation.Nonnull;
@@ -33,8 +33,8 @@ public final class SmsRealmConfigurationFragment extends BaseRealmConfigurationF
 
 	@Nullable
 	@Override
-	protected RealmConfiguration validateData() {
-		return new SmsRealmConfiguration();
+	protected AccountConfiguration validateData() {
+		return new SmsAccountConfiguration();
 	}
 
 	@Nonnull

@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.realms.sms;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import org.solovyev.android.messenger.realms.RealmState;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.RealmUserService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
 
@@ -28,9 +26,9 @@ import com.google.common.base.Splitter;
  * Date: 5/27/13
  * Time: 8:43 PM
  */
-final class SmsRealm extends AbstractRealm<SmsRealmConfiguration> {
+final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
-	public SmsRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull SmsRealmConfiguration configuration, @Nonnull RealmState state) {
+	public SmsRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull RealmState state) {
 		super(id, realmDef, user, configuration, state);
 	}
 

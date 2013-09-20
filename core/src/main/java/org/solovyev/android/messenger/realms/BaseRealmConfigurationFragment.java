@@ -200,7 +200,7 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
 	}
 
 	protected final void saveRealm() {
-		final RealmConfiguration configuration = validateData();
+		final AccountConfiguration configuration = validateData();
 		if (configuration != null) {
 			final RealmBuilder realmBuilder = getRealmDef().newRealmBuilder(configuration, getEditedRealm());
 			saveRealm(realmBuilder);
@@ -208,7 +208,7 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
 	}
 
 	@Nullable
-	protected abstract RealmConfiguration validateData();
+	protected abstract AccountConfiguration validateData();
 
 	@Override
 	public void onPause() {

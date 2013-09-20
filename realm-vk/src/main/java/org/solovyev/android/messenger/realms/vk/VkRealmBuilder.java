@@ -20,9 +20,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 
-public class VkRealmBuilder extends AbstractRealmBuilder<VkRealmConfiguration> {
+public class VkRealmBuilder extends AbstractRealmBuilder<VkAccountConfiguration> {
 
-	protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm, @Nonnull VkRealmConfiguration configuration) {
+	protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm, @Nonnull VkAccountConfiguration configuration) {
 		super(realmDef, configuration, editedRealm);
 	}
 
@@ -64,7 +64,7 @@ public class VkRealmBuilder extends AbstractRealmBuilder<VkRealmConfiguration> {
 
 	@Override
 	public void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
-		final VkRealmConfiguration configuration = getConfiguration();
+		final VkAccountConfiguration configuration = getConfiguration();
 
 		final JsonAuthResult result = VkAuth.doOauth2Authorization(configuration.getLogin(), configuration.getPassword());
 		configuration.setAccessParameters(result.getAccessToken(), result.getUserId());

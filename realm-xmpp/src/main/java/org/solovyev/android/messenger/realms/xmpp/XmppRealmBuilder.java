@@ -17,7 +17,7 @@ import org.solovyev.android.messenger.users.Users;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class XmppRealmBuilder extends AbstractRealmBuilder<XmppRealmConfiguration> {
+public class XmppRealmBuilder extends AbstractRealmBuilder<XmppAccountConfiguration> {
 	;
 
 	@Nullable
@@ -25,7 +25,7 @@ public class XmppRealmBuilder extends AbstractRealmBuilder<XmppRealmConfiguratio
 
 	public XmppRealmBuilder(@Nonnull RealmDef realmDef,
 							@Nullable Realm editedRealm,
-							@Nonnull XmppRealmConfiguration configuration) {
+							@Nonnull XmppAccountConfiguration configuration) {
 		super(realmDef, configuration, editedRealm);
 	}
 
@@ -83,7 +83,7 @@ public class XmppRealmBuilder extends AbstractRealmBuilder<XmppRealmConfiguratio
 	public void loginUser(@Nullable ResolvedCaptcha resolvedCaptcha) throws InvalidCredentialsException {
 		try {
 			if (connection != null) {
-				final XmppRealmConfiguration configuration = getConfiguration();
+				final XmppAccountConfiguration configuration = getConfiguration();
 				connection.login(configuration.getLogin(), configuration.getPassword());
 			} else {
 				throw new InvalidCredentialsException("Not connected!");

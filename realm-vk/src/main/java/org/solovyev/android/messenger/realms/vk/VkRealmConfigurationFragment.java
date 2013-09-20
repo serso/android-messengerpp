@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.realms.AccountConfiguration;
 import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
-import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.common.text.Strings;
 
@@ -54,7 +54,7 @@ public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment
 
 		if (!isNewRealm()) {
 			final VkRealm realm = getEditedRealm();
-			final VkRealmConfiguration configuration = realm.getConfiguration();
+			final VkAccountConfiguration configuration = realm.getConfiguration();
 
 			loginEditText.setText(configuration.getLogin());
 			passwordEditText.setText(configuration.getPassword());
@@ -62,7 +62,7 @@ public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment
 	}
 
 	@Override
-	protected RealmConfiguration validateData() {
+	protected AccountConfiguration validateData() {
 		boolean ok = true;
 
 		final String login = loginEditText.getText().toString();
@@ -78,7 +78,7 @@ public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment
 		}
 
 		if (ok) {
-			return new VkRealmConfiguration(login, password);
+			return new VkAccountConfiguration(login, password);
 		} else {
 			return null;
 		}

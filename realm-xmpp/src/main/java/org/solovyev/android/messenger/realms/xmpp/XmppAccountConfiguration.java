@@ -2,12 +2,12 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import com.google.gson.Gson;
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
-import org.solovyev.android.messenger.realms.RealmConfiguration;
+import org.solovyev.android.messenger.realms.AccountConfiguration;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 
-public class XmppRealmConfiguration extends JObject implements RealmConfiguration {
+public class XmppAccountConfiguration extends JObject implements AccountConfiguration {
 
 	private static final boolean DEBUG = true;
 
@@ -32,10 +32,10 @@ public class XmppRealmConfiguration extends JObject implements RealmConfiguratio
 	private Integer port = DEFAULT_PORT;
 
 	// for gson
-	public XmppRealmConfiguration() {
+	public XmppAccountConfiguration() {
 	}
 
-	public XmppRealmConfiguration(@Nonnull String server, @Nonnull String login, @Nonnull String password) {
+	public XmppAccountConfiguration(@Nonnull String server, @Nonnull String login, @Nonnull String password) {
 		this.server = server;
 		this.login = login;
 		this.password = password;
@@ -86,9 +86,9 @@ public class XmppRealmConfiguration extends JObject implements RealmConfiguratio
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof XmppRealmConfiguration)) return false;
+		if (!(o instanceof XmppAccountConfiguration)) return false;
 
-		XmppRealmConfiguration that = (XmppRealmConfiguration) o;
+		XmppAccountConfiguration that = (XmppAccountConfiguration) o;
 
 		if (!login.equals(that.login)) return false;
 		if (!port.equals(that.port)) return false;
@@ -106,14 +106,14 @@ public class XmppRealmConfiguration extends JObject implements RealmConfiguratio
 	}
 
 	@Nonnull
-	public static XmppRealmConfiguration fromJson(@Nonnull String json) {
-		return new Gson().fromJson(json, XmppRealmConfiguration.class);
+	public static XmppAccountConfiguration fromJson(@Nonnull String json) {
+		return new Gson().fromJson(json, XmppAccountConfiguration.class);
 	}
 
 	@Nonnull
 	@Override
-	public XmppRealmConfiguration clone() {
-		return (XmppRealmConfiguration) super.clone();
+	public XmppAccountConfiguration clone() {
+		return (XmppAccountConfiguration) super.clone();
 	}
 
 	public void setPassword(@Nonnull String password) {

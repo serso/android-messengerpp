@@ -24,7 +24,7 @@ public class TestRealmDef extends AbstractRealmDef {
 	public static final String REALM_ID = "test";
 
 	public TestRealmDef() {
-		super(REALM_ID, R.string.mpp_test_realm_name, R.drawable.mpp_test_icon, TestRealmConfigurationFragment.class, TestRealmConfiguration.class, false);
+		super(REALM_ID, R.string.mpp_test_realm_name, R.drawable.mpp_test_icon, TestRealmConfigurationFragment.class, TestAccountConfiguration.class, false);
 	}
 
 	@Nonnull
@@ -39,13 +39,13 @@ public class TestRealmDef extends AbstractRealmDef {
 
 	@Nonnull
 	@Override
-	public Realm<TestRealmConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull RealmConfiguration configuration, @Nonnull RealmState state) {
-		return new TestRealm(realmId, this, user, (TestRealmConfiguration) configuration);
+	public Realm<TestAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull RealmState state) {
+		return new TestRealm(realmId, this, user, (TestAccountConfiguration) configuration);
 	}
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull RealmConfiguration configuration, @Nullable Realm editedRealm) {
+	public RealmBuilder newRealmBuilder(@Nonnull AccountConfiguration configuration, @Nullable Realm editedRealm) {
 		return null;
 	}
 
@@ -81,7 +81,7 @@ public class TestRealmDef extends AbstractRealmDef {
 
 	@Nullable
 	@Override
-	public Cipherer<RealmConfiguration, RealmConfiguration> getCipherer() {
+	public Cipherer<AccountConfiguration, AccountConfiguration> getCipherer() {
 		return null;
 	}
 

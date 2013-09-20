@@ -82,7 +82,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 		if (!connection.isConnected()) {
 			connection.connect();
 			if (!connection.isAuthenticated()) {
-				final XmppRealmConfiguration configuration = realm.getConfiguration();
+				final XmppAccountConfiguration configuration = realm.getConfiguration();
 				connection.login(configuration.getLogin(), configuration.getPassword(), configuration.getResource());
 			}
 		}

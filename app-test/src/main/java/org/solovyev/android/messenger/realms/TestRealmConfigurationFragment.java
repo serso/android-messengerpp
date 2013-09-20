@@ -22,8 +22,8 @@ public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragme
 
 	@Nullable
 	@Override
-	protected RealmConfiguration validateData() {
-		return new TestRealmConfiguration("test", 42);
+	protected AccountConfiguration validateData() {
+		return new TestAccountConfiguration("test", 42);
 	}
 
 	@Nonnull

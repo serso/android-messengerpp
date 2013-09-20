@@ -4,7 +4,7 @@ import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 
-public class TestRealmConfiguration extends JObject implements RealmConfiguration {
+public class TestAccountConfiguration extends JObject implements AccountConfiguration {
 
 	@Nonnull
 	private String testStringField;
@@ -12,10 +12,10 @@ public class TestRealmConfiguration extends JObject implements RealmConfiguratio
 	private int testIntField;
 
 	// for json
-	public TestRealmConfiguration() {
+	public TestAccountConfiguration() {
 	}
 
-	public TestRealmConfiguration(@Nonnull String testStringField, int testIntField) {
+	public TestAccountConfiguration(@Nonnull String testStringField, int testIntField) {
 		this.testStringField = testStringField;
 		this.testIntField = testIntField;
 	}
@@ -31,16 +31,16 @@ public class TestRealmConfiguration extends JObject implements RealmConfiguratio
 
 	@Nonnull
 	@Override
-	public TestRealmConfiguration clone() {
-		return (TestRealmConfiguration) super.clone();
+	public TestAccountConfiguration clone() {
+		return (TestAccountConfiguration) super.clone();
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof TestRealmConfiguration)) return false;
+		if (!(o instanceof TestAccountConfiguration)) return false;
 
-		TestRealmConfiguration that = (TestRealmConfiguration) o;
+		TestAccountConfiguration that = (TestAccountConfiguration) o;
 
 		if (testIntField != that.testIntField) return false;
 		if (!testStringField.equals(that.testStringField)) return false;

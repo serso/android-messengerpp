@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 12:56 AM
  */
-public interface RealmDef<C extends RealmConfiguration> extends MessengerEntity {
+public interface RealmDef<C extends AccountConfiguration> extends MessengerEntity {
 
 	@Nonnull
 	String FAKE_REALM_ID = "fake";
@@ -78,7 +78,7 @@ public interface RealmDef<C extends RealmConfiguration> extends MessengerEntity 
 	RealmIconService getRealmIconService();
 
 	/**
-	 * @return cipherer to be used while saving {@link RealmConfiguration} in persistence storage
+	 * @return cipherer to be used while saving {@link AccountConfiguration} in persistence storage
 	 */
 	@Nullable
 	Cipherer<C, C> getCipherer();

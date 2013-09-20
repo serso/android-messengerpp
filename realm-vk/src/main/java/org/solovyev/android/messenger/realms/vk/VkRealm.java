@@ -13,9 +13,9 @@ import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 
-public final class VkRealm extends AbstractRealm<VkRealmConfiguration> {
+public final class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 
-	public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkRealmConfiguration configuration, @Nonnull RealmState state) {
+	public VkRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull RealmState state) {
 		super(id, realmDef, user, configuration, state);
 	}
 

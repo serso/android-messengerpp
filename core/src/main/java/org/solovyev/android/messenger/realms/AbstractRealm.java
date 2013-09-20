@@ -1,12 +1,6 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import org.solovyev.android.Views;
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -17,8 +11,10 @@ import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class AbstractRealm<C extends RealmConfiguration> extends JObject implements Realm<C> {
+public abstract class AbstractRealm<C extends AccountConfiguration> extends JObject implements Realm<C> {
 
 	@Nonnull
 	private String id;

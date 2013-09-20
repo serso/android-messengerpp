@@ -39,7 +39,7 @@ import static org.solovyev.android.messenger.notifications.Notifications.newOpen
  * Time: 10:34 PM
  */
 @Singleton
-public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
+public class VkRealmDef extends AbstractRealmDef<VkAccountConfiguration> {
 
     /*
 	**********************************************************************
@@ -98,7 +98,7 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
     */
 
 	public VkRealmDef() {
-		super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkRealmConfigurationFragment.class, VkRealmConfiguration.class, false);
+		super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkRealmConfigurationFragment.class, VkAccountConfiguration.class, false);
 	}
 
     /*
@@ -111,13 +111,13 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 
 	@Nonnull
 	@Override
-	public Realm<VkRealmConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkRealmConfiguration configuration, @Nonnull RealmState state) {
+	public Realm<VkAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull RealmState state) {
 		return new VkRealm(realmId, this, user, configuration, state);
 	}
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull VkRealmConfiguration configuration, @Nullable Realm editedRealm) {
+	public RealmBuilder newRealmBuilder(@Nonnull VkAccountConfiguration configuration, @Nullable Realm editedRealm) {
 		return new VkRealmBuilder(this, editedRealm, configuration);
 	}
 
@@ -161,7 +161,7 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 
 	@Nullable
 	@Override
-	public Cipherer<VkRealmConfiguration, VkRealmConfiguration> getCipherer() {
+	public Cipherer<VkAccountConfiguration, VkAccountConfiguration> getCipherer() {
 		return new VkRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
 	}
 
@@ -215,7 +215,7 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 		}
 	}
 
-	private static class VkRealmConfigurationCipherer implements Cipherer<VkRealmConfiguration, VkRealmConfiguration> {
+	private static class VkRealmConfigurationCipherer implements Cipherer<VkAccountConfiguration, VkAccountConfiguration> {
 
 		@Nonnull
 		private final Cipherer<String, String> stringCipherer;
@@ -225,15 +225,15 @@ public class VkRealmDef extends AbstractRealmDef<VkRealmConfiguration> {
 		}
 
 		@Nonnull
-		public VkRealmConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration decrypted) throws CiphererException {
-			final VkRealmConfiguration encrypted = decrypted.clone();
+		public VkAccountConfiguration encrypt(@Nonnull SecretKey secret, @Nonnull VkAccountConfiguration decrypted) throws CiphererException {
+			final VkAccountConfiguration encrypted = decrypted.clone();
 			encrypted.setAccessParameters(stringCipherer.encrypt(secret, decrypted.getAccessToken()), decrypted.getUserId());
 			return encrypted;
 		}
 
 		@Nonnull
-		public VkRealmConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull VkRealmConfiguration encrypted) throws CiphererException {
-			final VkRealmConfiguration decrypted = encrypted.clone();
+		public VkAccountConfiguration decrypt(@Nonnull SecretKey secret, @Nonnull VkAccountConfiguration encrypted) throws CiphererException {
+			final VkAccountConfiguration decrypted = encrypted.clone();
 			decrypted.setAccessParameters(stringCipherer.decrypt(secret, encrypted.getAccessToken()), encrypted.getUserId());
 			return decrypted;
 		}

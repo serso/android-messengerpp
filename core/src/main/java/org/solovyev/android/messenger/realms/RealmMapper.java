@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 
-public class RealmMapper<C extends RealmConfiguration> implements Converter<Cursor, Realm<C>> {
+public class RealmMapper<C extends AccountConfiguration> implements Converter<Cursor, Realm<C>> {
 
 	@Nullable
 	private final SecretKey secret;

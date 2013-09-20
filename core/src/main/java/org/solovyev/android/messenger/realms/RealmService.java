@@ -37,7 +37,7 @@ public interface RealmService {
 	 * @return collection of all configured realms in application
 	 */
 	@Nonnull
-	Collection<RealmDef<? extends RealmConfiguration>> getRealmDefs();
+	Collection<RealmDef<? extends AccountConfiguration>> getRealmDefs();
 
 	@Nonnull
 	Collection<Realm> getRealms();
@@ -65,7 +65,7 @@ public interface RealmService {
 	 * @throws UnsupportedRealmException if realm hasn't been registered in this service
 	 */
 	@Nonnull
-	RealmDef<? extends RealmConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
+	RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
 
 	@Nonnull
 	Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;

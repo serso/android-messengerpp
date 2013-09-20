@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.realms.AccountConfiguration;
 import org.solovyev.android.messenger.realms.BaseRealmConfigurationFragment;
-import org.solovyev.android.messenger.realms.RealmConfiguration;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.text.Strings;
@@ -77,7 +77,7 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
 
 		if (!isNewRealm()) {
 			final XmppRealm realm = getEditedRealm();
-			final XmppRealmConfiguration configuration = realm.getConfiguration();
+			final XmppAccountConfiguration configuration = realm.getConfiguration();
 
 			serverEditText.setText(configuration.getServer());
 			loginEditText.setText(configuration.getLogin());
@@ -87,7 +87,7 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
 	}
 
 	@Override
-	protected RealmConfiguration validateData() {
+	protected AccountConfiguration validateData() {
 		final String server = serverEditText.getText().toString();
 		final String login = loginEditText.getText().toString();
 		final String password = passwordEditText.getText().toString();
@@ -97,7 +97,7 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
 	}
 
 	@Nullable
-	private XmppRealmConfiguration validateData(@Nullable String server, @Nullable String login, @Nullable String password, @Nullable String resource) {
+	private XmppAccountConfiguration validateData(@Nullable String server, @Nullable String login, @Nullable String password, @Nullable String resource) {
 		boolean ok = true;
 
 		if (Strings.isEmpty(server)) {
@@ -116,7 +116,7 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
 		}
 
 		if (ok) {
-			final XmppRealmConfiguration result = new XmppRealmConfiguration(server, login, password);
+			final XmppAccountConfiguration result = new XmppAccountConfiguration(server, login, password);
 			if (resource != null) {
 				result.setResource(resource);
 			}
