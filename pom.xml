@@ -20,8 +20,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<common.version>1.0.4</common.version>
-		<android.common.version>1.1.1-SNAPSHOT</android.common.version>
+		<jcl.version>1.0.6-SNAPSHOT</jcl.version>
+		<acl.version>1.1.3-SNAPSHOT</acl.version>
 	</properties>
 
 	<dependencyManagement>
@@ -133,74 +133,74 @@
 			<dependency>
 				<groupId>org.solovyev</groupId>
 				<artifactId>common-core</artifactId>
-				<version>${common.version}</version>
+				<version>${jcl.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev</groupId>
 				<artifactId>common-msg</artifactId>
-				<version>${common.version}</version>
+				<version>${jcl.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev</groupId>
 				<artifactId>common-core-jodatime</artifactId>
-				<version>${common.version}</version>
+				<version>${jcl.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-ads</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-http</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-db</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-views</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-sherlock</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-networks</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-fragments</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-tasks</artifactId>
-				<version>${android.common.version}</version>
+				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
 
