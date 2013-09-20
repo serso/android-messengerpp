@@ -28,7 +28,7 @@ public class TestRealmDef extends AbstractRealmDef {
 	}
 
 	@Nonnull
-	public RealmConnection createRealmConnection(@Nonnull Context context, @Nonnull Realm realm) {
+	public RealmConnection createRealmConnection(@Nonnull Context context, @Nonnull Account account) {
 		return null;
 	}
 
@@ -39,13 +39,13 @@ public class TestRealmDef extends AbstractRealmDef {
 
 	@Nonnull
 	@Override
-	public Realm<TestAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull AccountState state) {
-		return new TestRealm(realmId, this, user, (TestAccountConfiguration) configuration);
+	public Account<TestAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull AccountState state) {
+		return new TestAccount(realmId, this, user, (TestAccountConfiguration) configuration);
 	}
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull AccountConfiguration configuration, @Nullable Realm editedRealm) {
+	public RealmBuilder newRealmBuilder(@Nonnull AccountConfiguration configuration, @Nullable Account editedAccount) {
 		return null;
 	}
 

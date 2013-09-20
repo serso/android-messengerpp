@@ -24,29 +24,29 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> {
     */
 
 	public void onRealmEvent(@Nonnull RealmEvent realmEvent) {
-		final Realm realm = realmEvent.getRealm();
+		final Account account = realmEvent.getRealm();
 		switch (realmEvent.getType()) {
 			case created:
-				addListItem(createListItem(realm));
+				addListItem(createListItem(account));
 				break;
 			case changed:
-				final RealmListItem listItem = findInAllElements(realm);
+				final RealmListItem listItem = findInAllElements(account);
 				if (listItem != null) {
-					listItem.onRealmChangedEvent(realm);
+					listItem.onRealmChangedEvent(account);
 				}
 				break;
 			case state_changed:
-				switch (realm.getState()) {
+				switch (account.getState()) {
 					case enabled:
 					case disabled_by_user:
 					case disabled_by_app:
-						final RealmListItem realmListItem = findInAllElements(realm);
+						final RealmListItem realmListItem = findInAllElements(account);
 						if (realmListItem != null) {
-							realmListItem.onRealmChangedEvent(realm);
+							realmListItem.onRealmChangedEvent(account);
 						}
 						break;
 					case removed:
-						removeListItem(createListItem(realm));
+						removeListItem(createListItem(account));
 						break;
 				}
 				break;
@@ -54,12 +54,12 @@ public class RealmsAdapter extends MessengerListItemAdapter<RealmListItem> {
 	}
 
 	@Nullable
-	protected RealmListItem findInAllElements(@Nonnull Realm realm) {
-		return Iterables.find(getAllElements(), Predicates.<RealmListItem>equalTo(createListItem(realm)), null);
+	protected RealmListItem findInAllElements(@Nonnull Account account) {
+		return Iterables.find(getAllElements(), Predicates.<RealmListItem>equalTo(createListItem(account)), null);
 	}
 
 	@Nonnull
-	private RealmListItem createListItem(@Nonnull Realm realm) {
-		return new RealmListItem(realm);
+	private RealmListItem createListItem(@Nonnull Account account) {
+		return new RealmListItem(account);
 	}
 }

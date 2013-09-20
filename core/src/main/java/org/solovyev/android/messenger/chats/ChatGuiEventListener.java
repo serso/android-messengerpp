@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.MessengerContactFragment;
@@ -118,8 +118,8 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
 						public Fragment build() {
 							final List<User> participants = new ArrayList<User>();
 							try {
-								final Realm realm = activity.getRealmService().getRealmByEntity(chat.getEntity());
-								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity()));
+								final Account account = activity.getRealmService().getRealmByEntity(chat.getEntity());
+								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity()));
 							} catch (UnsupportedRealmException e) {
 								MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 							}

@@ -14,7 +14,7 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragment<XmppRealm> {
+public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragment<XmppAccount> {
 
     /*
 	**********************************************************************
@@ -76,7 +76,7 @@ public class XmppRealmConfigurationFragment extends BaseRealmConfigurationFragme
 		resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
 
 		if (!isNewRealm()) {
-			final XmppRealm realm = getEditedRealm();
+			final XmppAccount realm = getEditedRealm();
 			final XmppAccountConfiguration configuration = realm.getConfiguration();
 
 			serverEditText.setText(configuration.getServer());

@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.messages.ChatMessageImpl;
 import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
@@ -133,24 +133,24 @@ public class JsonMessage {
 	@Nonnull
 	public LiteChatMessage toLiteChatMessage(@Nonnull User user,
 											 @Nullable String explicitUserId,
-											 @Nonnull Realm realm) throws IllegalJsonException {
+											 @Nonnull Account account) throws IllegalJsonException {
 		if (mid == null || uid == null || date == null) {
 			throw new IllegalJsonException();
 		}
 
-		final LiteChatMessageImpl result = Messages.newMessage(realm.newMessageEntity(mid));
+		final LiteChatMessageImpl result = Messages.newMessage(account.newMessageEntity(mid));
 
 		final MessageDirection messageDirection = getMessageDirection();
 		if (messageDirection == MessageDirection.out) {
 			result.setAuthor(user.getEntity());
-			result.setRecipient(realm.newUserEntity(explicitUserId == null ? uid : explicitUserId));
+			result.setRecipient(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
 		} else if (messageDirection == MessageDirection.in) {
-			result.setAuthor(realm.newUserEntity(explicitUserId == null ? uid : explicitUserId));
+			result.setAuthor(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
 			result.setRecipient(user.getEntity());
 		} else {
-			result.setAuthor(realm.newUserEntity(uid));
+			result.setAuthor(account.newUserEntity(uid));
 			if (explicitUserId != null) {
-				result.setRecipient(realm.newUserEntity(explicitUserId));
+				result.setRecipient(account.newUserEntity(explicitUserId));
 			}
 		}
 
@@ -169,14 +169,14 @@ public class JsonMessage {
 	}
 
 	@Nonnull
-	public ChatMessage toChatMessage(@Nonnull User user, @Nullable String explicitUserId, @Nonnull Realm realm) throws IllegalJsonException {
+	public ChatMessage toChatMessage(@Nonnull User user, @Nullable String explicitUserId, @Nonnull Account account) throws IllegalJsonException {
 		if (read_state == null || out == null) {
 			throw new IllegalJsonException();
 		}
 
-		final ChatMessageImpl result = Messages.newInstance(toLiteChatMessage(user, explicitUserId, realm), isRead());
+		final ChatMessageImpl result = Messages.newInstance(toLiteChatMessage(user, explicitUserId, account), isRead());
 		result.setDirection(getNotNullMessageDirection());
-		for (LiteChatMessage fwdMessage : getFwdMessages(user, realm)) {
+		for (LiteChatMessage fwdMessage : getFwdMessages(user, account)) {
 			result.addFwdMessage(fwdMessage);
 		}
 
@@ -184,7 +184,7 @@ public class JsonMessage {
 	}
 
 	@Nonnull
-	private List<LiteChatMessage> getFwdMessages(@Nonnull User user, @Nonnull Realm realm) throws IllegalJsonException {
+	private List<LiteChatMessage> getFwdMessages(@Nonnull User user, @Nonnull Account account) throws IllegalJsonException {
 		if (fwd_messages == null) {
 			return Collections.emptyList();
 		} else {
@@ -192,7 +192,7 @@ public class JsonMessage {
 
 			for (JsonMessage fwd_message : fwd_messages) {
 				// todo serso: think about explicit user id
-				result.add(fwd_message.toLiteChatMessage(user, null, realm));
+				result.add(fwd_message.toLiteChatMessage(user, null, account));
 			}
 
 			return result;

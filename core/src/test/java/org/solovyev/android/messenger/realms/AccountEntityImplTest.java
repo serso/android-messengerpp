@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 
-public class RealmEntityImplTest {
+public class AccountEntityImplTest {
 
 	@Test
 	public void testFromUserId() throws Exception {

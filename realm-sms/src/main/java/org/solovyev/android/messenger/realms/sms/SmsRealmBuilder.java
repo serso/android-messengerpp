@@ -18,8 +18,8 @@ import java.util.Collections;
  */
 final class SmsRealmBuilder extends AbstractRealmBuilder<SmsAccountConfiguration> {
 
-	SmsRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm, @Nonnull SmsAccountConfiguration configuration) {
-		super(realmDef, configuration, editedRealm);
+	SmsRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull SmsAccountConfiguration configuration) {
+		super(realmDef, configuration, editedAccount);
 	}
 
 	@Nonnull
@@ -30,8 +30,8 @@ final class SmsRealmBuilder extends AbstractRealmBuilder<SmsAccountConfiguration
 
 	@Nonnull
 	@Override
-	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new SmsRealm(id, getRealmDef(), user, getConfiguration(), state);
+	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+		return new SmsAccount(id, getRealmDef(), user, getConfiguration(), state);
 	}
 
 	@Override

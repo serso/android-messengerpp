@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
  * Date: 2/24/13
  * Time: 8:13 PM
  */
-public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> implements XmppConnectionAware {
+public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> implements XmppConnectionAware {
 
 	private static final String TAG = XmppRealmConnection.class.getSimpleName();
 
@@ -29,7 +29,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 	@Nonnull
 	private final RosterListener rosterListener;
 
-	public XmppRealmConnection(@Nonnull XmppRealm realm, @Nonnull Context context) {
+	public XmppRealmConnection(@Nonnull XmppAccount realm, @Nonnull Context context) {
 		super(realm, context);
 		chatListener = new XmppChatListener(realm);
 		rosterListener = new XmppRosterListener(realm);
@@ -46,7 +46,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 	@Nullable
 	private synchronized Connection tryToConnect(int connectionAttempt) throws RealmConnectionException {
 		if (this.connection == null) {
-			final XmppRealm realm = getRealm();
+			final XmppAccount realm = getRealm();
 			final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
 
 			// connect to the server
@@ -66,7 +66,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 		return this.connection;
 	}
 
-	private void prepareConnection(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
+	private void prepareConnection(@Nonnull Connection connection, @Nonnull XmppAccount realm) throws XMPPException {
 		checkConnectionStatus(connection, realm);
 
 		// todo serso: investigate why we cannot add listeners in after connection constructor
@@ -78,7 +78,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppRealm> impl
 		ChatStateManager.getInstance(connection);
 	}
 
-	static void checkConnectionStatus(@Nonnull Connection connection, @Nonnull XmppRealm realm) throws XMPPException {
+	static void checkConnectionStatus(@Nonnull Connection connection, @Nonnull XmppAccount realm) throws XMPPException {
 		if (!connection.isConnected()) {
 			connection.connect();
 			if (!connection.isAuthenticated()) {

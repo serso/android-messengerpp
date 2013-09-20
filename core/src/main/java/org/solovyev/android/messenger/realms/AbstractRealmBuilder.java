@@ -14,13 +14,13 @@ public abstract class AbstractRealmBuilder<C extends AccountConfiguration> imple
 	private C configuration;
 
 	@Nullable
-	private Realm editedRealm;
+	private Account editedAccount;
 
 	protected AbstractRealmBuilder(@Nonnull RealmDef realmDef,
 								   @Nonnull C configuration,
-								   @Nullable Realm editedRealm) {
+								   @Nullable Account editedAccount) {
 		this.realmDef = realmDef;
-		this.editedRealm = editedRealm;
+		this.editedAccount = editedAccount;
 		this.configuration = configuration;
 	}
 
@@ -31,7 +31,7 @@ public abstract class AbstractRealmBuilder<C extends AccountConfiguration> imple
 
 	@Nonnull
 	@Override
-	public final Realm build(@Nonnull Data data) {
+	public final Account build(@Nonnull Data data) {
 		final String realmId = data.getRealmId();
 
 		final User user = getRealmUser(realmId);
@@ -49,10 +49,10 @@ public abstract class AbstractRealmBuilder<C extends AccountConfiguration> imple
 
 	@Nullable
 	@Override
-	public Realm getEditedRealm() {
-		return this.editedRealm;
+	public Account getEditedAccount() {
+		return this.editedAccount;
 	}
 
 	@Nonnull
-	protected abstract Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
+	protected abstract Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
 }

@@ -9,7 +9,7 @@ import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
@@ -77,12 +77,12 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 	@Nonnull
 	@Override
-	public synchronized Entity generateEntity(@Nonnull Realm realm) {
+	public synchronized Entity generateEntity(@Nonnull Account account) {
 		// todo serso: create normal way of generating ids
-		final Entity tmp = EntityImpl.newInstance(realm.getId(), String.valueOf(System.currentTimeMillis()));
+		final Entity tmp = EntityImpl.newInstance(account.getId(), String.valueOf(System.currentTimeMillis()));
 
 		// NOTE: empty realm entity id in order to get real from realm service
-		return EntityImpl.newInstance(realm.getId(), ChatMessageService.NO_REALM_MESSAGE_ID, tmp.getEntityId());
+		return EntityImpl.newInstance(account.getId(), ChatMessageService.NO_REALM_MESSAGE_ID, tmp.getEntityId());
 	}
 
 	@Nonnull
@@ -104,12 +104,12 @@ public class DefaultChatMessageService implements ChatMessageService {
 	@Nullable
 	@Override
 	public ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws RealmException {
-		final Realm realm = getRealmByUser(user);
-		final AccountChatService accountChatService = realm.getAccountChatService();
+		final Account account = getRealmByUser(user);
+		final AccountChatService accountChatService = account.getAccountChatService();
 
 		final String realmMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(realm.newMessageEntity(realmMessageId == null ? NO_REALM_MESSAGE_ID : realmMessageId, chatMessage.getEntity().getEntityId()));
+		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(account.newMessageEntity(realmMessageId == null ? NO_REALM_MESSAGE_ID : realmMessageId, chatMessage.getEntity().getEntityId()));
 
 		message.setAuthor(user);
 		if (chat.isPrivate()) {
@@ -128,7 +128,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 		result.setDirection(MessageDirection.out);
 
-		if (realm.getRealmDef().notifySentMessagesImmediately()) {
+		if (account.getRealmDef().notifySentMessagesImmediately()) {
 			chatService.saveChatMessages(chat.getEntity(), Arrays.asList(result), false);
 		}
 
@@ -150,7 +150,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 	}
 
 	@Nonnull
-	private Realm getRealmByUser(@Nonnull Entity userEntity) throws UnsupportedRealmException {
+	private Account getRealmByUser(@Nonnull Entity userEntity) throws UnsupportedRealmException {
 		return realmService.getRealmById(userEntity.getRealmId());
 	}
 }

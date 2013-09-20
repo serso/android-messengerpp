@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  * Date: 4/13/13
  * Time: 1:05 PM
  */
-class RealmSaverCallable implements Callable<Realm> {
+class RealmSaverCallable implements Callable<Account> {
 
 	@Nonnull
 	static final String TASK_NAME = "realm-save";
@@ -24,7 +24,7 @@ class RealmSaverCallable implements Callable<Realm> {
 	}
 
 	@Override
-	public Realm call() throws InvalidCredentialsException, RealmAlreadyExistsException {
+	public Account call() throws InvalidCredentialsException, RealmAlreadyExistsException {
 		return MessengerApplication.getServiceLocator().getRealmService().saveRealm(realmBuilder);
 	}
 }

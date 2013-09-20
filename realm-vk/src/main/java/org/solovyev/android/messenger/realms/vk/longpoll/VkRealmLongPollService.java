@@ -5,7 +5,7 @@ import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
 import org.solovyev.android.messenger.longpoll.RealmLongPollService;
 import org.solovyev.android.messenger.realms.RealmException;
-import org.solovyev.android.messenger.realms.vk.VkRealm;
+import org.solovyev.android.messenger.realms.vk.VkAccount;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,9 +19,9 @@ import java.io.IOException;
 public class VkRealmLongPollService implements RealmLongPollService {
 
 	@Nonnull
-	private final VkRealm realm;
+	private final VkAccount realm;
 
-	public VkRealmLongPollService(@Nonnull VkRealm realm) {
+	public VkRealmLongPollService(@Nonnull VkAccount realm) {
 		this.realm = realm;
 	}
 

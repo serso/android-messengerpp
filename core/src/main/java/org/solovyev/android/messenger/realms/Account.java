@@ -12,7 +12,7 @@ import org.solovyev.android.messenger.users.User;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
+public interface Account<C extends AccountConfiguration> extends MessengerEntity {
 
 	@Nonnull
 	String getId();
@@ -49,13 +49,13 @@ public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 	@Nonnull
 	Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId);
 
-	boolean same(@Nonnull Realm that);
+	boolean same(@Nonnull Account that);
 
 	@Nonnull
 	String getDisplayName(@Nonnull Context context);
 
 	@Nonnull
-	Realm copyForNewState(@Nonnull AccountState newState);
+	Account copyForNewState(@Nonnull AccountState newState);
 
 	/*
 	**********************************************************************
@@ -68,7 +68,7 @@ public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 	boolean isCompositeUser(@Nonnull User user);
 
 	/**
-	 * Should be called only after {@link Realm#isCompositeUser(org.solovyev.android.messenger.users.User)} returned true
+	 * Should be called only after {@link Account#isCompositeUser(org.solovyev.android.messenger.users.User)} returned true
 	 * @param user user for which check should be done
 	 *
 	 * @return true if default value is set for composite user

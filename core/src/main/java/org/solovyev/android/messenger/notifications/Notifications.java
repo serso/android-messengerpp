@@ -5,7 +5,7 @@ import org.acra.ACRA;
 import org.solovyev.android.Activities2;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.common.msg.MessageLevel;
 import org.solovyev.common.msg.MessageType;
 
@@ -55,8 +55,8 @@ public final class Notifications {
 	}
 
 	@Nonnull
-	public static NotificationSolution newOpenRealmConfSolution(@Nonnull Realm realm) {
-		return new OpenRealmConfSolution(realm);
+	public static NotificationSolution newOpenRealmConfSolution(@Nonnull Account account) {
+		return new OpenRealmConfSolution(account);
 	}
 
 	/*
@@ -100,10 +100,10 @@ public final class Notifications {
 
 	private static class OpenRealmConfSolution implements NotificationSolution {
 		@Nonnull
-		private final Realm realm;
+		private final Account account;
 
-		public OpenRealmConfSolution(@Nonnull Realm realm) {
-			this.realm = realm;
+		public OpenRealmConfSolution(@Nonnull Account account) {
+			this.account = account;
 		}
 
 		@Override

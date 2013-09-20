@@ -145,8 +145,8 @@ public class DefaultUserService implements UserService {
 			if (result == null) {
 				if (tryFindInRealm) {
 					try {
-						final Realm realm = getRealmByEntity(user);
-						result = realm.getAccountUserService().getUserById(user.getRealmEntityId());
+						final Account account = getRealmByEntity(user);
+						result = account.getAccountUserService().getUserById(user.getRealmEntityId());
 					} catch (RealmException e) {
 						// unable to load from realm => just return empty user
 						Log.e(TAG, e.getMessage(), e);
@@ -172,7 +172,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Nonnull
-	private Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
 		return realmService.getRealmById(entity.getRealmId());
 	}
 
@@ -300,15 +300,15 @@ public class DefaultUserService implements UserService {
 	@Override
 	@Nonnull
 	public List<User> syncUserContacts(@Nonnull Entity user) throws RealmException {
-		final Realm realm = getRealmByEntity(user);
-		final List<User> contacts = realm.getAccountUserService().getUserContacts(user.getRealmEntityId());
+		final Account account = getRealmByEntity(user);
+		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getRealmEntityId());
 
 		if (!contacts.isEmpty()) {
 			userContactsCache.update(user, new WholeListUpdater<User>(contacts));
 
 			mergeUserContacts(user, contacts, false, true);
 		} else {
-			Log.w(TAG, "User contacts synchronization returned empty list for realm " + realm.getId());
+			Log.w(TAG, "User contacts synchronization returned empty list for realm " + account.getId());
 		}
 
 		return java.util.Collections.unmodifiableList(contacts);
@@ -479,8 +479,8 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void setUsersIcon(@Nonnull Realm realm, @Nonnull List<User> users, ImageView imageView) {
-		realm.getRealmDef().getRealmIconService().setUsersIcon(users, imageView);
+	public void setUsersIcon(@Nonnull Account account, @Nonnull List<User> users, ImageView imageView) {
+		account.getRealmDef().getRealmIconService().setUsersIcon(users, imageView);
 	}
 
 	@Override

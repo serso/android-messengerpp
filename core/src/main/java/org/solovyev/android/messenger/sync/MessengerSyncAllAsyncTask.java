@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,14 +18,14 @@ import java.util.List;
 public class MessengerSyncAllAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
 	@Nullable
-	private final Realm realm;
+	private final Account account;
 
 	@Nonnull
 	private final SyncService syncService;
 
-	private MessengerSyncAllAsyncTask(@Nonnull Context context, @Nonnull SyncService syncService, @Nullable Realm realm) {
+	private MessengerSyncAllAsyncTask(@Nonnull Context context, @Nonnull SyncService syncService, @Nullable Account account) {
 		super(context);
-		this.realm = realm;
+		this.account = account;
 		this.syncService = syncService;
 	}
 
@@ -35,8 +35,8 @@ public class MessengerSyncAllAsyncTask extends MessengerAsyncTask<Void, Void, Vo
 	}
 
 	@Nonnull
-	public static MessengerSyncAllAsyncTask newForRealm(@Nonnull Context context, @Nonnull SyncService syncService, @Nonnull Realm realm) {
-		return new MessengerSyncAllAsyncTask(context, syncService, realm);
+	public static MessengerSyncAllAsyncTask newForRealm(@Nonnull Context context, @Nonnull SyncService syncService, @Nonnull Account account) {
+		return new MessengerSyncAllAsyncTask(context, syncService, account);
 	}
 
 	@Override
@@ -44,10 +44,10 @@ public class MessengerSyncAllAsyncTask extends MessengerAsyncTask<Void, Void, Vo
 		Context context = getContext();
 		if (context != null) {
 			try {
-				if (realm == null) {
+				if (account == null) {
 					syncService.syncAll(true);
 				} else {
-					syncService.syncAllInRealm(realm, true);
+					syncService.syncAllInRealm(account, true);
 				}
 			} catch (SyncAllTaskIsAlreadyRunning e) {
 				throwException(e);

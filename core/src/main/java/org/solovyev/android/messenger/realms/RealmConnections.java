@@ -73,15 +73,15 @@ final class RealmConnections {
 		this.context = context.getApplicationContext();
 	}
 
-	public void startConnectionsFor(@Nonnull Collection<Realm> realms, boolean start) {
+	public void startConnectionsFor(@Nonnull Collection<Account> accounts, boolean start) {
 		synchronized (realmConnections) {
-			for (final Realm realm : realms) {
+			for (final Account account : accounts) {
 				// are there any realm connections for current realm?
-				boolean contains = Iterables.any(realmConnections, new RealmConnectionFinder(realm));
+				boolean contains = Iterables.any(realmConnections, new RealmConnectionFinder(account));
 
 				if (!contains) {
 					// there is no realm connection for current realm => need to add
-					final RealmConnection realmConnection = realm.newRealmConnection(context);
+					final RealmConnection realmConnection = account.newRealmConnection(context);
 
 					realmConnections.add(realmConnection);
 
@@ -171,10 +171,10 @@ final class RealmConnections {
 		}
 	}
 
-	public void tryStopFor(@Nonnull Realm realm) {
+	public void tryStopFor(@Nonnull Account account) {
 		synchronized (this.realmConnections) {
 			for (RealmConnection realmConnection : realmConnections) {
-				if (realm.equals(realmConnection.getRealm()) && !realmConnection.isStopped()) {
+				if (account.equals(realmConnection.getRealm()) && !realmConnection.isStopped()) {
 					realmConnection.stop();
 				}
 			}
@@ -193,11 +193,11 @@ final class RealmConnections {
 		onRealmConnectionsStarted();
 	}
 
-	public void removeConnectionFor(@Nonnull Realm realm) {
+	public void removeConnectionFor(@Nonnull Account account) {
 		synchronized (this.realmConnections) {
 			// remove realm connections belonged to specified realm
 			final List<RealmConnection> removedConnections = new ArrayList<RealmConnection>();
-			Iterables.removeIf(this.realmConnections, PredicateSpy.spyOn(new RealmConnectionFinder(realm), removedConnections));
+			Iterables.removeIf(this.realmConnections, PredicateSpy.spyOn(new RealmConnectionFinder(account), removedConnections));
 
 			// stop them
 			for (RealmConnection removedConnection : removedConnections) {
@@ -208,25 +208,25 @@ final class RealmConnections {
 		}
 	}
 
-	public void updateRealm(@Nonnull Realm realm, boolean start) {
+	public void updateRealm(@Nonnull Account account, boolean start) {
 		synchronized (this.realmConnections) {
-			removeConnectionFor(realm);
-			startConnectionsFor(Arrays.asList(realm), start);
+			removeConnectionFor(account);
+			startConnectionsFor(Arrays.asList(account), start);
 		}
 	}
 
 	private static class RealmConnectionFinder implements Predicate<RealmConnection> {
 
 		@Nonnull
-		private final Realm realm;
+		private final Account account;
 
-		public RealmConnectionFinder(@Nonnull Realm realm) {
-			this.realm = realm;
+		public RealmConnectionFinder(@Nonnull Account account) {
+			this.account = account;
 		}
 
 		@Override
 		public boolean apply(@Nullable RealmConnection realmConnection) {
-			return realmConnection != null && realmConnection.getRealm().equals(realm);
+			return realmConnection != null && realmConnection.getRealm().equals(account);
 		}
 	}
 

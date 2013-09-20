@@ -6,7 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.realms.vk.VkRealm;
+import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.collections.Collections;
@@ -34,7 +34,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	@javax.annotation.Nullable
 	private final List<ApiUserField> apiUserFields;
 
-	private VkUsersGetHttpTransaction(@Nonnull VkRealm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+	private VkUsersGetHttpTransaction(@Nonnull VkAccount realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
 		super(realm, "users.get");
 		this.apiUserFields = apiUserFields;
 		assert !userIds.isEmpty();
@@ -43,7 +43,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	}
 
 	@Nonnull
-	public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@Nonnull VkRealm realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+	public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@Nonnull VkAccount realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
 		final List<VkUsersGetHttpTransaction> result = new ArrayList<VkUsersGetHttpTransaction>();
 
 		for (List<String> userIdsChunk : Collections.split(userIds, MAX_CHUNK)) {
@@ -54,7 +54,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	}
 
 	@Nonnull
-	public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull VkRealm realm, @Nonnull List<User> users, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+	public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull VkAccount realm, @Nonnull List<User> users, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
 		return newInstancesForUserIds(realm, Lists.transform(users, new Function<User, String>() {
 			@Override
 			public String apply(@Nullable User user) {
@@ -65,7 +65,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	}
 
 	@Nonnull
-	public static VkUsersGetHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull String userId, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+	public static VkUsersGetHttpTransaction newInstance(@Nonnull VkAccount realm, @Nonnull String userId, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
 		return new VkUsersGetHttpTransaction(realm, Arrays.asList(userId), apiUserFields);
 	}
 

@@ -12,7 +12,7 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 
-public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment<VkRealm> {
+public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment<VkAccount> {
 
     /*
 	**********************************************************************
@@ -53,7 +53,7 @@ public class VkRealmConfigurationFragment extends BaseRealmConfigurationFragment
 		passwordEditText = (EditText) root.findViewById(R.id.mpp_vk_password_edittext);
 
 		if (!isNewRealm()) {
-			final VkRealm realm = getEditedRealm();
+			final VkAccount realm = getEditedRealm();
 			final VkAccountConfiguration configuration = realm.getConfiguration();
 
 			loginEditText.setText(configuration.getLogin());

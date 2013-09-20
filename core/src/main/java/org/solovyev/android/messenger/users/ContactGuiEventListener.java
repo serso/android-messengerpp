@@ -6,7 +6,7 @@ import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatGuiEventType;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
@@ -44,11 +44,11 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 		final ContactGuiEventType type = event.getType();
 
 		try {
-			final Realm realm = realmService.getRealmByEntityAware(contact);
+			final Account account = realmService.getRealmByEntityAware(contact);
 			switch (type) {
 				case contact_clicked:
-					if (realm.isCompositeUser(contact)) {
-						if (!realm.isCompositeUserDefined(contact)) {
+					if (account.isCompositeUser(contact)) {
+						if (!account.isCompositeUserDefined(contact)) {
 							fireEvent(ContactGuiEventType.newShowCompositeUserDialog(contact));
 						} else {
 							fireEvent(ContactGuiEventType.newOpenContactChat(contact));

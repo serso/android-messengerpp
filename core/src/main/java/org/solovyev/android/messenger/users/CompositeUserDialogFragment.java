@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import roboguice.RoboGuice;
@@ -21,7 +20,7 @@ import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 
@@ -70,7 +69,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 	private User user;
 
-	private Realm<?> realm;
+	private Account<?> account;
 
 	private boolean doNotAskAgain = false;
 
@@ -119,7 +118,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 			throw new IllegalStateException("User is null");
 		} else {
 			try {
-				realm = realmService.getRealmByEntityAware(user);
+				account = realmService.getRealmByEntityAware(user);
 			} catch (UnsupportedRealmException e) {
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}
@@ -132,10 +131,10 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 		List<CompositeUserChoice> choices = Collections.emptyList();
 		if (user != null) {
-			builder.setTitle(realm.getCompositeDialogTitleResId());
+			builder.setTitle(account.getCompositeDialogTitleResId());
 
-			if (realm.isCompositeUser(user)) {
-				choices = realm.getCompositeUserChoices(user);
+			if (account.isCompositeUser(user)) {
+				choices = account.getCompositeUserChoices(user);
 			} else {
 				Log.w(TAG, "Expecting composite user, got " + user.getClass() + ". User id: " + user.getId());
 			}
@@ -147,7 +146,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 		}
 		builder.setItems(choicesStrings, new ChoiceOnClickListener(choices));
 
-		if (realm.isCompositeUserChoicePersisted()) {
+		if (account.isCompositeUserChoicePersisted()) {
 			// NOTE: context from builder is used as custom style may be applied here
 			final LayoutInflater inflater = LayoutInflater.from(builder.getContext());
 			final CheckBox checkBox = (CheckBox) inflater.inflate(R.layout.mpp_dialog_checkbox, null);
@@ -192,9 +191,9 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	}
 
 	private void onChoiceSelected(@Nonnull CompositeUserChoice compositeUserChoice) {
-		if (user != null && realm != null) {
-			final User newUser = realm.applyCompositeChoice(compositeUserChoice, user);
-			if (realm.isCompositeUserChoicePersisted() && doNotAskAgain) {
+		if (user != null && account != null) {
+			final User newUser = account.applyCompositeChoice(compositeUserChoice, user);
+			if (account.isCompositeUserChoicePersisted() && doNotAskAgain) {
 				userService.updateUser(newUser);
 			}
 

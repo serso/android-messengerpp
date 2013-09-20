@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 
-public class RealmMapper<C extends AccountConfiguration> implements Converter<Cursor, Realm<C>> {
+public class RealmMapper<C extends AccountConfiguration> implements Converter<Cursor, Account<C>> {
 
 	@Nullable
 	private final SecretKey secret;
@@ -25,7 +25,7 @@ public class RealmMapper<C extends AccountConfiguration> implements Converter<Cu
 
 	@Nonnull
 	@Override
-	public Realm<C> convert(@Nonnull Cursor cursor) {
+	public Account<C> convert(@Nonnull Cursor cursor) {
 		final String realmId = cursor.getString(0);
 		final String realmDefId = cursor.getString(1);
 		final String userId = cursor.getString(2);

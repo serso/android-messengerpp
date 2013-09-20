@@ -17,7 +17,7 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RealmListItem extends AbstractMessengerListItem<Realm> {
+public final class RealmListItem extends AbstractMessengerListItem<Account> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "realm_list_item_";
@@ -31,8 +31,8 @@ public final class RealmListItem extends AbstractMessengerListItem<Realm> {
     */
 
 
-	public RealmListItem(@Nonnull Realm realm) {
-		super(TAG_PREFIX, realm, R.layout.mpp_list_item_realm);
+	public RealmListItem(@Nonnull Account account) {
+		super(TAG_PREFIX, account, R.layout.mpp_list_item_realm);
 	}
 
 	@Nullable
@@ -48,7 +48,7 @@ public final class RealmListItem extends AbstractMessengerListItem<Realm> {
 	}
 
 	@Nonnull
-	private Realm getRealm() {
+	private Account getRealm() {
 		return getData();
 	}
 
@@ -58,34 +58,34 @@ public final class RealmListItem extends AbstractMessengerListItem<Realm> {
 		return null;
 	}
 
-	public void onRealmChangedEvent(@Nonnull Realm eventRealm) {
-		final Realm realm = getRealm();
-		if (realm.equals(eventRealm)) {
-			setData(eventRealm);
+	public void onRealmChangedEvent(@Nonnull Account eventAccount) {
+		final Account account = getRealm();
+		if (account.equals(eventAccount)) {
+			setData(eventAccount);
 		}
 	}
 
 	@Nonnull
 	@Override
-	protected String getDisplayName(@Nonnull Realm realm, @Nonnull Context context) {
-		return realm.getUser().getDisplayName();
+	protected String getDisplayName(@Nonnull Account account, @Nonnull Context context) {
+		return account.getUser().getDisplayName();
 	}
 
 	@Override
-	protected void fillView(@Nonnull Realm realm, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+	protected void fillView(@Nonnull Account account, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
 		final ImageView realmIconImageView = viewTag.getViewById(R.id.mpp_li_realm_icon_imageview);
 
-		final Drawable realmIcon = context.getResources().getDrawable(realm.getRealmDef().getIconResId());
+		final Drawable realmIcon = context.getResources().getDrawable(account.getRealmDef().getIconResId());
 		realmIconImageView.setImageDrawable(realmIcon);
 
 		final TextView realmUserNameTextView = viewTag.getViewById(R.id.mpp_li_realm_user_name_textview);
 		realmUserNameTextView.setText(getDisplayName());
 
 		final TextView realmNameTextView = viewTag.getViewById(R.id.mpp_li_realm_name_textview);
-		realmNameTextView.setText(realm.getDisplayName(context));
+		realmNameTextView.setText(account.getDisplayName(context));
 
 		final View realmWarningView = viewTag.getViewById(R.id.mpp_li_realm_warning_imageview);
-		if (realm.isEnabled()) {
+		if (account.isEnabled()) {
 			realmWarningView.setVisibility(View.GONE);
 		} else {
 			realmWarningView.setVisibility(View.VISIBLE);

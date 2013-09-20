@@ -10,9 +10,9 @@ import javax.annotation.Nonnull;
  * Date: 3/4/13
  * Time: 5:05 PM
  */
-public class TestRealmConnection extends AbstractRealmConnection<TestRealm> {
+public class TestRealmConnection extends AbstractRealmConnection<TestAccount> {
 
-	public TestRealmConnection(@Nonnull TestRealm realm, @Nonnull Context context) {
+	public TestRealmConnection(@Nonnull TestAccount realm, @Nonnull Context context) {
 		super(realm, context);
 	}
 

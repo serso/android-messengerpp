@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
  * Date: 5/27/13
  * Time: 9:08 PM
  */
-public final class SmsRealmConfigurationFragment extends BaseRealmConfigurationFragment<SmsRealm> {
+public final class SmsRealmConfigurationFragment extends BaseRealmConfigurationFragment<SmsAccount> {
 
     /*
 	**********************************************************************

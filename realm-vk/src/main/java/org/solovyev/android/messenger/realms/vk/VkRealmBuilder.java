@@ -6,7 +6,7 @@ import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
 import org.solovyev.android.messenger.realms.AccountState;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkAuth;
@@ -22,8 +22,8 @@ import java.util.List;
 
 public class VkRealmBuilder extends AbstractRealmBuilder<VkAccountConfiguration> {
 
-	protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Realm editedRealm, @Nonnull VkAccountConfiguration configuration) {
-		super(realmDef, configuration, editedRealm);
+	protected VkRealmBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull VkAccountConfiguration configuration) {
+		super(realmDef, configuration, editedAccount);
 	}
 
 	@Nonnull
@@ -34,7 +34,7 @@ public class VkRealmBuilder extends AbstractRealmBuilder<VkAccountConfiguration>
 
 		User result;
 		try {
-			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkRealm(realmId, getRealmDef(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
+			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(realmId, getRealmDef(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
 			if (users.isEmpty()) {
 				result = defaultUser;
 			} else {
@@ -50,8 +50,8 @@ public class VkRealmBuilder extends AbstractRealmBuilder<VkAccountConfiguration>
 
 	@Nonnull
 	@Override
-	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new VkRealm(id, getRealmDef(), user, getConfiguration(), state);
+	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+		return new VkAccount(id, getRealmDef(), user, getConfiguration(), state);
 	}
 
 	@Override

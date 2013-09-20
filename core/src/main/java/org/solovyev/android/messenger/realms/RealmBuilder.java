@@ -7,13 +7,13 @@ import org.solovyev.common.BuilderWithData;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface RealmBuilder extends BuilderWithData<Realm, RealmBuilder.Data> {
+public interface RealmBuilder extends BuilderWithData<Account, RealmBuilder.Data> {
 
 	@Nonnull
 	RealmDef getRealmDef();
 
 	@Nullable
-	Realm getEditedRealm();
+	Account getEditedAccount();
 
 	void connect() throws ConnectionException;
 

@@ -10,22 +10,22 @@ import java.util.concurrent.Callable;
  * Date: 4/13/13
  * Time: 1:02 PM
  */
-final class RealmRemoverCallable implements Callable<Realm> {
+final class RealmRemoverCallable implements Callable<Account> {
 
 	@Nonnull
 	static final String TASK_NAME = "realm-remove";
 
 	@Nonnull
-	private final Realm realm;
+	private final Account account;
 
-	RealmRemoverCallable(@Nonnull Realm realm) {
-		this.realm = realm;
+	RealmRemoverCallable(@Nonnull Account account) {
+		this.account = account;
 	}
 
 	@Override
-	public Realm call() {
-		MessengerApplication.getServiceLocator().getRealmService().removeRealm(realm.getId());
+	public Account call() {
+		MessengerApplication.getServiceLocator().getRealmService().removeRealm(account.getId());
 
-		return realm;
+		return account;
 	}
 }

@@ -27,9 +27,9 @@ import java.util.List;
 final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
-	private final SmsRealm realm;
+	private final SmsAccount realm;
 
-	SmsAccountUserService(@Nonnull SmsRealm realm) {
+	SmsAccountUserService(@Nonnull SmsAccount realm) {
 		this.realm = realm;
 	}
 

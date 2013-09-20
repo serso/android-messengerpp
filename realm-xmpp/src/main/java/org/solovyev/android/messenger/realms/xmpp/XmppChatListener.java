@@ -7,7 +7,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
 
 import javax.annotation.Nonnull;
@@ -16,10 +16,10 @@ import java.util.Collections;
 final class XmppChatListener implements ChatManagerListener {
 
 	@Nonnull
-	private Realm realm;
+	private Account account;
 
-	public XmppChatListener(@Nonnull Realm realm) {
-		this.realm = realm;
+	public XmppChatListener(@Nonnull Account account) {
+		this.account = account;
 	}
 
 	@Override
@@ -27,10 +27,10 @@ final class XmppChatListener implements ChatManagerListener {
 		Log.i("M++/Xmpp", "Chat created!");
 
 		if (!createdLocally) {
-			ApiChat newChat = XmppRealm.toApiChat(chat, Collections.<Message>emptyList(), realm);
+			ApiChat newChat = XmppAccount.toApiChat(chat, Collections.<Message>emptyList(), account);
 			try {
-				newChat = getChatService().saveChat(realm.getUser().getEntity(), newChat);
-				chat.addMessageListener(new XmppMessageListener(realm, newChat.getChat().getEntity()));
+				newChat = getChatService().saveChat(account.getUser().getEntity(), newChat);
+				chat.addMessageListener(new XmppMessageListener(account, newChat.getChat().getEntity()));
 			} catch (RealmException e) {
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 			}

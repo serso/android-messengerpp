@@ -8,7 +8,7 @@ import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.AbstractRealmBuilder;
 import org.solovyev.android.messenger.realms.AccountState;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
@@ -24,9 +24,9 @@ public class XmppRealmBuilder extends AbstractRealmBuilder<XmppAccountConfigurat
 	private Connection connection;
 
 	public XmppRealmBuilder(@Nonnull RealmDef realmDef,
-							@Nullable Realm editedRealm,
+							@Nullable Account editedAccount,
 							@Nonnull XmppAccountConfiguration configuration) {
-		super(realmDef, configuration, editedRealm);
+		super(realmDef, configuration, editedAccount);
 	}
 
 	@Nonnull
@@ -50,8 +50,8 @@ public class XmppRealmBuilder extends AbstractRealmBuilder<XmppAccountConfigurat
 
 	@Nonnull
 	@Override
-	protected Realm newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new XmppRealm(id, getRealmDef(), user, getConfiguration(), state);
+	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+		return new XmppAccount(id, getRealmDef(), user, getConfiguration(), state);
 	}
 
 	@Override

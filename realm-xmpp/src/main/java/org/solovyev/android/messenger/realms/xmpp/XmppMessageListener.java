@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -24,20 +24,20 @@ import java.util.List;
 final class XmppMessageListener implements ChatStateListener {
 
 	@Nonnull
-	private Realm realm;
+	private Account account;
 
 	@Nonnull
 	private final Entity chat;
 
-	XmppMessageListener(@Nonnull Realm realm, @Nonnull Entity chat) {
-		this.realm = realm;
+	XmppMessageListener(@Nonnull Account account, @Nonnull Entity chat) {
+		this.account = account;
 		this.chat = chat;
 	}
 
 	@Override
 	public void processMessage(Chat chat, Message message) {
 		Log.i("M++/Xmpp", "Message created: " + message.getBody());
-		final List<ChatMessage> messages = XmppRealm.toMessages(realm, Arrays.asList(message));
+		final List<ChatMessage> messages = XmppAccount.toMessages(account, Arrays.asList(message));
 		if (!messages.isEmpty()) {
 			getChatService().saveChatMessages(this.chat, messages, false);
 		} else {

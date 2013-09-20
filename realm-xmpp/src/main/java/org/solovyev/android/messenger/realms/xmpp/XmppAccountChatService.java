@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 class XmppAccountChatService extends AbstractXmppRealmService implements AccountChatService {
 
-	public XmppAccountChatService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+	public XmppAccountChatService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware) {
 		super(realm, connectionAware);
 	}
 
@@ -38,7 +38,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 				final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
 				try {
 					if (offlineManager.supportsFlexibleRetrieval()) {
-						return XmppRealm.toMessages(getRealm(), offlineManager.getMessages());
+						return XmppAccount.toMessages(getRealm(), offlineManager.getMessages());
 					}
 				} catch (XMPPException e) {
 					// ok, not supported by server
@@ -80,7 +80,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 			@Override
 			public Chat call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
 				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getRealm(), realmChat));
-				return XmppRealm.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
+				return XmppAccount.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
 			}
 		});
 	}
@@ -94,12 +94,12 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 		private final ChatMessage message;
 
 		@Nonnull
-		private final Realm realm;
+		private final Account account;
 
-		private MessengerSender(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull Realm realm) {
+		private MessengerSender(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull Account account) {
 			this.chat = chat;
 			this.message = message;
-			this.realm = realm;
+			this.account = account;
 		}
 
 		@Override
@@ -110,10 +110,10 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 			org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getRealmEntityId());
 			if (smackChat == null) {
 				// smack forget about chat ids after restart => need to create chat here
-				smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), realmChat.getRealmEntityId(), new XmppMessageListener(realm, realmChat));
+				smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), realmChat.getRealmEntityId(), new XmppMessageListener(account, realmChat));
 			} else {
 				// todo serso: remove if unnecessary
-				smackChat.addMessageListener(new XmppMessageListener(realm, realmChat));
+				smackChat.addMessageListener(new XmppMessageListener(account, realmChat));
 			}
 
 			smackChat.sendMessage(message.getBody());

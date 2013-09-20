@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.longpoll;
 import android.content.Context;
 import android.util.Log;
 import org.solovyev.android.messenger.AbstractRealmConnection;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
 import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.users.User;
@@ -15,16 +15,16 @@ import javax.annotation.Nonnull;
  * Date: 7/25/12
  * Time: 5:53 PM
  */
-public abstract class LongPollRealmConnection extends AbstractRealmConnection<Realm> {
+public abstract class LongPollRealmConnection extends AbstractRealmConnection<Account> {
 
 	public static final String TAG = "LongPolling";
 	@Nonnull
 	private final RealmLongPollService realmLongPollService;
 
-	protected LongPollRealmConnection(@Nonnull Realm realm,
+	protected LongPollRealmConnection(@Nonnull Account account,
 									  @Nonnull Context context,
 									  @Nonnull RealmLongPollService realmLongPollService) {
-		super(realm, context);
+		super(account, context);
 		this.realmLongPollService = realmLongPollService;
 	}
 

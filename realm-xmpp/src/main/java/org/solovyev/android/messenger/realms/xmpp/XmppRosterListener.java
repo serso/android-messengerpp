@@ -30,9 +30,9 @@ class XmppRosterListener implements RosterListener {
 	private static final String TAG = "M++/XmppRosterListener";
 
 	@Nonnull
-	private final XmppRealm realm;
+	private final XmppAccount realm;
 
-	XmppRosterListener(@Nonnull XmppRealm realm) {
+	XmppRosterListener(@Nonnull XmppAccount realm) {
 		this.realm = realm;
 	}
 

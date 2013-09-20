@@ -5,7 +5,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.vk.VkRealm;
+import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.android.messenger.users.User;
 
@@ -29,19 +29,19 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
 	@Nonnull
 	private final User user;
 
-	private VkMessagesGetDialogsHttpTransaction(@Nonnull VkRealm realm, @Nonnull Integer count, @Nonnull User user) {
+	private VkMessagesGetDialogsHttpTransaction(@Nonnull VkAccount realm, @Nonnull Integer count, @Nonnull User user) {
 		super(realm, "messages.getDialogs");
 		this.count = count;
 		this.user = user;
 	}
 
 	@Nonnull
-	public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull VkRealm realm, @Nonnull User user) {
+	public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull VkAccount realm, @Nonnull User user) {
 		return new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user);
 	}
 
 	@Nonnull
-	public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@Nonnull VkRealm realm, @Nonnull Integer count, @Nonnull User user) {
+	public static List<VkMessagesGetDialogsHttpTransaction> newInstances(@Nonnull VkAccount realm, @Nonnull Integer count, @Nonnull User user) {
 		final List<VkMessagesGetDialogsHttpTransaction> result = new ArrayList<VkMessagesGetDialogsHttpTransaction>();
 
 		for (int i = 0; i < count / MAX_COUNT; i++) {

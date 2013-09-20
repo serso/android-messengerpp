@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.notifications.Notifications;
 import org.solovyev.android.messenger.realms.AbstractRealmDef;
 import org.solovyev.android.messenger.realms.AccountState;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmBuilder;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.users.Gender;
@@ -111,14 +111,14 @@ public class VkRealmDef extends AbstractRealmDef<VkAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public Realm<VkAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
-		return new VkRealm(realmId, this, user, configuration, state);
+	public Account<VkAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
+		return new VkAccount(realmId, this, user, configuration, state);
 	}
 
 	@Nonnull
 	@Override
-	public RealmBuilder newRealmBuilder(@Nonnull VkAccountConfiguration configuration, @Nullable Realm editedRealm) {
-		return new VkRealmBuilder(this, editedRealm, configuration);
+	public RealmBuilder newRealmBuilder(@Nonnull VkAccountConfiguration configuration, @Nullable Account editedAccount) {
+		return new VkRealmBuilder(this, editedAccount, configuration);
 	}
 
 	@Nonnull
@@ -166,13 +166,13 @@ public class VkRealmDef extends AbstractRealmDef<VkAccountConfiguration> {
 	}
 
 	@Override
-	public boolean handleException(@Nonnull Throwable e, @Nonnull Realm realm) {
-		boolean handled = super.handleException(e, realm);
+	public boolean handleException(@Nonnull Throwable e, @Nonnull Account account) {
+		boolean handled = super.handleException(e, account);
 		if (!handled) {
 			if (e instanceof VkResponseErrorException) {
 				final VkResponseErrorException cause = (VkResponseErrorException) e;
 				if ("5".equals(cause.getError().getErrorId())) {
-					notificationService.add(newNotification(R.string.mpp_vk_notification_auth_token_expired, MessageType.error).solvedBy(newOpenRealmConfSolution(realm)));
+					notificationService.add(newNotification(R.string.mpp_vk_notification_auth_token_expired, MessageType.error).solvedBy(newOpenRealmConfSolution(account)));
 				} else {
 					notificationService.add(newVkNotification(cause));
 				}

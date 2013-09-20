@@ -14,19 +14,19 @@ import javax.annotation.Nonnull;
  * Date: 4/13/13
  * Time: 1:44 PM
  */
-final class RealmRemoverListener extends MessengerContextCallback<Activity, Realm> {
+final class RealmRemoverListener extends MessengerContextCallback<Activity, Account> {
 
 	private RealmRemoverListener() {
 	}
 
 	@Nonnull
-	static FutureCallback<Realm> newInstance(@Nonnull Activity activity) {
+	static FutureCallback<Account> newInstance(@Nonnull Activity activity) {
 		return Tasks.toUiThreadFutureCallback(activity, new RealmRemoverListener());
 	}
 
 	@Override
-	public void onSuccess(@Nonnull Activity activity, Realm realm) {
+	public void onSuccess(@Nonnull Activity activity, Account account) {
 		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
-		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(realm, RealmGuiEventType.FinishedState.removed));
+		eventManager.fire(RealmGuiEventType.newRealmEditFinishedEvent(account, RealmGuiEventType.FinishedState.removed));
 	}
 }

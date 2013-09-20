@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 import com.google.gson.Gson;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
@@ -20,10 +20,10 @@ import java.util.List;
 public class JsonUserConverter implements Converter<String, List<User>> {
 
 	@Nonnull
-	private final Realm realm;
+	private final Account account;
 
-	private JsonUserConverter(@Nonnull Realm realm) {
-		this.realm = realm;
+	private JsonUserConverter(@Nonnull Account account) {
+		this.account = account;
 	}
 
 	@Nonnull
@@ -39,7 +39,7 @@ public class JsonUserConverter implements Converter<String, List<User>> {
 		try {
 			if (!Collections.isEmpty(jsonUsers)) {
 				for (JsonUser jsonUser : jsonUsers) {
-					result.add(jsonUser.toUser(realm));
+					result.add(jsonUser.toUser(account));
 				}
 			}
 		} catch (IllegalJsonException e) {
@@ -50,7 +50,7 @@ public class JsonUserConverter implements Converter<String, List<User>> {
 	}
 
 	@Nonnull
-	public static Converter<String, List<User>> newInstance(@Nonnull Realm realm) {
-		return new JsonUserConverter(realm);
+	public static Converter<String, List<User>> newInstance(@Nonnull Account account) {
+		return new JsonUserConverter(account);
 	}
 }

@@ -52,13 +52,13 @@ public interface RealmDef<C extends AccountConfiguration> extends MessengerEntit
 	Class<? extends BaseRealmConfigurationFragment> getConfigurationFragmentClass();
 
 	@Nonnull
-	Realm<C> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull C configuration, @Nonnull AccountState state);
+	Account<C> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull C configuration, @Nonnull AccountState state);
 
 	@Nonnull
 	Class<? extends C> getConfigurationClass();
 
 	@Nonnull
-	RealmBuilder newRealmBuilder(@Nonnull C configuration, @Nullable Realm editedRealm);
+	RealmBuilder newRealmBuilder(@Nonnull C configuration, @Nullable Account editedAccount);
 
 	/**
 	 * Returns list of translated user properties where property name = title, property value = value
@@ -83,7 +83,7 @@ public interface RealmDef<C extends AccountConfiguration> extends MessengerEntit
 	@Nullable
 	Cipherer<C, C> getCipherer();
 
-	boolean handleException(@Nonnull Throwable e, @Nonnull Realm realm);
+	boolean handleException(@Nonnull Throwable e, @Nonnull Account account);
 
     /*
 	**********************************************************************

@@ -13,19 +13,19 @@ import org.solovyev.android.messenger.users.Users;
 import javax.annotation.Nonnull;
 
 @Singleton
-public class TestRealm extends AbstractRealm<TestAccountConfiguration> {
+public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 
 	@Inject
-	public TestRealm(@Nonnull TestRealmDef realmDef) {
+	public TestAccount(@Nonnull TestRealmDef realmDef) {
 		this(realmDef, 1);
 	}
 
-	public TestRealm(@Nonnull TestRealmDef realmDef, int index) {
+	public TestAccount(@Nonnull TestRealmDef realmDef, int index) {
 		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
 	}
 
 
-	public TestRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull TestAccountConfiguration configuration) {
+	public TestAccount(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull TestAccountConfiguration configuration) {
 		super(id, realmDef, user, configuration, AccountState.enabled);
 	}
 

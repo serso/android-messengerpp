@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.sync;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmEvent;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -73,11 +73,11 @@ public class DefaultSyncService implements SyncService {
 	/**
 	 * Method checks if 'all synchronization task' is not running and starts one with specified parameters
 	 *
-	 * @param realms realms for which synchronization should be done
+	 * @param accounts realms for which synchronization should be done
 	 * @param force  force synchronization. See {@link SyncService#syncAll(boolean)}
 	 * @throws SyncAllTaskIsAlreadyRunning thrown when task if 'all synchronization task' is already running
 	 */
-	private void startSyncAllTask(@Nonnull Collection<Realm> realms, boolean force) throws SyncAllTaskIsAlreadyRunning {
+	private void startSyncAllTask(@Nonnull Collection<Account> accounts, boolean force) throws SyncAllTaskIsAlreadyRunning {
 		synchronized (syncAllTaskRunning) {
 			if (syncAllTaskRunning.get()) {
 				throw new SyncAllTaskIsAlreadyRunning();
@@ -86,12 +86,12 @@ public class DefaultSyncService implements SyncService {
 			}
 		}
 
-		executor.execute(new SyncRunnable(force, realms));
+		executor.execute(new SyncRunnable(force, accounts));
 	}
 
 	@Override
-	public void syncAllInRealm(@Nonnull Realm realm, boolean force) throws SyncAllTaskIsAlreadyRunning {
-		startSyncAllTask(Arrays.asList(realm), force);
+	public void syncAllInRealm(@Nonnull Account account, boolean force) throws SyncAllTaskIsAlreadyRunning {
+		startSyncAllTask(Arrays.asList(account), force);
 	}
 
 	@Override
@@ -167,19 +167,19 @@ public class DefaultSyncService implements SyncService {
 		private final boolean force;
 
 		@Nonnull
-		private final Collection<Realm> realms;
+		private final Collection<Account> accounts;
 
-		public SyncRunnable(boolean force, @Nonnull Collection<Realm> realms) {
+		public SyncRunnable(boolean force, @Nonnull Collection<Account> accounts) {
 			this.force = force;
-			this.realms = realms;
+			this.accounts = accounts;
 		}
 
 		@Override
 		public void run() {
 			try {
 
-				for (Realm realm : realms) {
-					final SyncData syncData = new SyncDataImpl(realm.getId());
+				for (Account account : accounts) {
+					final SyncData syncData = new SyncDataImpl(account.getId());
 
 					for (SyncTask syncTask : SyncTask.values()) {
 						try {

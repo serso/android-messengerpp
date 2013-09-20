@@ -7,19 +7,19 @@ public interface RealmDao {
 
 	final String TAG = RealmDao.class.getSimpleName();
 
-	void insertRealm(@Nonnull Realm realm) throws RealmException;
+	void insertRealm(@Nonnull Account account) throws RealmException;
 
 	void deleteRealm(@Nonnull String realmId);
 
 	@Nonnull
-	Collection<Realm> loadRealms();
+	Collection<Account> loadRealms();
 
 	void deleteAllRealms();
 
-	void updateRealm(@Nonnull Realm realm) throws RealmException;
+	void updateRealm(@Nonnull Account account) throws RealmException;
 
 	@Nonnull
-	Collection<Realm> loadRealmsInState(@Nonnull AccountState state);
+	Collection<Account> loadRealmsInState(@Nonnull AccountState state);
 
 	void init();
 }

@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -64,7 +64,7 @@ class JsonUser {
 	private String photo_rec;
 
 	@Nonnull
-	public User toUser(@Nonnull Realm realm) throws IllegalJsonException {
+	public User toUser(@Nonnull Account account) throws IllegalJsonException {
 		if (uid == null) {
 			throw new IllegalJsonException();
 		}
@@ -92,7 +92,7 @@ class JsonUser {
 		properties.add(Properties.newProperty("photoBig", photo_big));
 		properties.add(Properties.newProperty("photoRec", photo_rec));
 
-		return Users.newUser(realm.newUserEntity(uid), Users.newUserSyncData(DateTime.now(), null, null, null), properties);
+		return Users.newUser(account.newUserEntity(uid), Users.newUserSyncData(DateTime.now(), null, null, null), properties);
 	}
 
 	@Nullable

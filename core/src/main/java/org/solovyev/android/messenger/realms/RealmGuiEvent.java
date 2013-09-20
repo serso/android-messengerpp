@@ -10,14 +10,14 @@ import javax.annotation.Nullable;
  * Date: 3/5/13
  * Time: 12:48 PM
  */
-public final class RealmGuiEvent extends AbstractTypedJEvent<Realm, RealmGuiEventType> {
+public final class RealmGuiEvent extends AbstractTypedJEvent<Account, RealmGuiEventType> {
 
-	public RealmGuiEvent(@Nonnull Realm realm, @Nonnull RealmGuiEventType type, @Nullable Object data) {
-		super(realm, type, data);
+	public RealmGuiEvent(@Nonnull Account account, @Nonnull RealmGuiEventType type, @Nullable Object data) {
+		super(account, type, data);
 	}
 
 	@Nonnull
-	public Realm getRealm() {
+	public Account getRealm() {
 		return getEventObject();
 	}
 }

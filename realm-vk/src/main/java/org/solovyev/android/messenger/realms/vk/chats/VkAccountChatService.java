@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
-import org.solovyev.android.messenger.realms.vk.VkRealm;
+import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -34,9 +34,9 @@ public class VkAccountChatService implements AccountChatService {
 	private static final String CHAT_DELIMITER = ":";
 
 	@Nonnull
-	private final VkRealm realm;
+	private final VkAccount realm;
 
-	public VkAccountChatService(@Nonnull VkRealm realm) {
+	public VkAccountChatService(@Nonnull VkAccount realm) {
 		this.realm = realm;
 	}
 

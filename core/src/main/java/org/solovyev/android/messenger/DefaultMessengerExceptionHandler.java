@@ -84,13 +84,13 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 		final String realmId = e.getRealmId();
 
 		try {
-			final Realm realm = realmService.getRealmById(realmId);
+			final Account account = realmService.getRealmById(realmId);
 			final Throwable cause = e.getCause();
 
 			if (cause != e) {
-				handled = realm.getRealmDef().handleException(cause, realm);
+				handled = account.getRealmDef().handleException(cause, account);
 			} else {
-				handled = realm.getRealmDef().handleException(e, realm);
+				handled = account.getRealmDef().handleException(e, account);
 			}
 		} catch (UnsupportedRealmException e1) {
 			handleException(e1);

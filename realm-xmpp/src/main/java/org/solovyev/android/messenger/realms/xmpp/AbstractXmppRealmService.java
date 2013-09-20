@@ -13,18 +13,18 @@ import javax.annotation.Nonnull;
 public abstract class AbstractXmppRealmService {
 
 	@Nonnull
-	private final XmppRealm realm;
+	private final XmppAccount realm;
 
 	@Nonnull
 	private final XmppConnectionAware connectionAware;
 
-	protected AbstractXmppRealmService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+	protected AbstractXmppRealmService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware) {
 		this.realm = realm;
 		this.connectionAware = connectionAware;
 	}
 
 	@Nonnull
-	public XmppRealm getRealm() {
+	public XmppAccount getRealm() {
 		return realm;
 	}
 

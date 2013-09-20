@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
 
 import javax.annotation.Nonnull;
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 7/25/12
  * Time: 6:10 PM
  */
-public abstract class AbstractRealmConnection<R extends Realm> implements RealmConnection {
+public abstract class AbstractRealmConnection<R extends Account> implements RealmConnection {
 
 	@Nonnull
 	private static final String TAG = "RealmConnection";

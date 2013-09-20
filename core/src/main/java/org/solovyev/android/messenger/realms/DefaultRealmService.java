@@ -81,7 +81,7 @@ public class DefaultRealmService implements RealmService {
 
 	@GuardedBy("realms")
 	@Nonnull
-	private final Map<String, Realm> realms = new HashMap<String, Realm>();
+	private final Map<String, Account> realms = new HashMap<String, Account>();
 
 	@Nonnull
 	private AtomicInteger realmCounter = new AtomicInteger(0);
@@ -114,17 +114,17 @@ public class DefaultRealmService implements RealmService {
 
 		synchronized (lock) {
 			// reset status to enabled for temporary disable realms
-			for (Realm realm : realmDao.loadRealmsInState(AccountState.disabled_by_app)) {
-				changeRealmState(realm, AccountState.enabled, false);
+			for (Account account : realmDao.loadRealmsInState(AccountState.disabled_by_app)) {
+				changeRealmState(account, AccountState.enabled, false);
 			}
 
 			// remove all scheduled to remove realms
-			for (Realm realm : realmDao.loadRealmsInState(AccountState.removed)) {
-				this.messageService.removeAllMessagesInRealm(realm.getId());
-				this.chatService.removeChatsInRealm(realm.getId());
-				this.userService.removeUsersInRealm(realm.getId());
-				this.realmDao.deleteRealm(realm.getId());
-				this.realms.remove(realm.getId());
+			for (Account account : realmDao.loadRealmsInState(AccountState.removed)) {
+				this.messageService.removeAllMessagesInRealm(account.getId());
+				this.chatService.removeChatsInRealm(account.getId());
+				this.userService.removeUsersInRealm(account.getId());
+				this.realmDao.deleteRealm(account.getId());
+				this.realms.remove(account.getId());
 			}
 		}
 	}
@@ -137,21 +137,21 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Collection<Realm> getRealms() {
+	public Collection<Account> getRealms() {
 		synchronized (this.realms) {
 			// must copy as concurrent modification might occur (e.g. realm removal)
-			return new ArrayList<Realm>(this.realms.values());
+			return new ArrayList<Account>(this.realms.values());
 		}
 	}
 
 	@Nonnull
 	@Override
-	public Collection<Realm> getEnabledRealms() {
+	public Collection<Account> getEnabledRealms() {
 		synchronized (this.realms) {
-			final List<Realm> result = new ArrayList<Realm>(this.realms.size());
-			for (Realm realm : this.realms.values()) {
-				if (realm.isEnabled()) {
-					result.add(realm);
+			final List<Account> result = new ArrayList<Account>(this.realms.size());
+			for (Account account : this.realms.values()) {
+				if (account.isEnabled()) {
+					result.add(account);
 				}
 			}
 			return result;
@@ -163,8 +163,8 @@ public class DefaultRealmService implements RealmService {
 	public Collection<User> getEnabledRealmUsers() {
 		final List<User> result = new ArrayList<User>();
 
-		for (Realm realm : getEnabledRealms()) {
-			result.add(realm.getUser());
+		for (Account account : getEnabledRealms()) {
+			result.add(account.getUser());
 		}
 
 		return result;
@@ -175,8 +175,8 @@ public class DefaultRealmService implements RealmService {
 	public Collection<User> getRealmUsers() {
 		final List<User> result = new ArrayList<User>();
 		synchronized (this.realms) {
-			for (Realm realm : this.realms.values()) {
-				result.add(realm.getUser());
+			for (Account account : this.realms.values()) {
+				result.add(account.getUser());
 			}
 		}
 		return result;
@@ -194,25 +194,25 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException {
-		final Realm realm = this.realms.get(realmId);
-		if (realm == null) {
+	public Account getRealmById(@Nonnull String realmId) throws UnsupportedRealmException {
+		final Account account = this.realms.get(realmId);
+		if (account == null) {
 			throw new UnsupportedRealmException(realmId);
 		}
-		return realm;
+		return account;
 	}
 
 	@Nonnull
 	@Override
-	public Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
-		Realm result;
+	public Account saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException {
+		Account result;
 
 		try {
 			final AccountConfiguration configuration = realmBuilder.getConfiguration();
-			final Realm oldRealm = realmBuilder.getEditedRealm();
-			if (oldRealm != null && oldRealm.getConfiguration().equals(configuration)) {
+			final Account oldAccount = realmBuilder.getEditedAccount();
+			if (oldAccount != null && oldAccount.getConfiguration().equals(configuration)) {
 				// new realm configuration is exactly the same => can omit saving the realm
-				result = oldRealm;
+				result = oldAccount;
 			} else {
 				// saving realm (realm either new or changed)
 
@@ -221,18 +221,18 @@ public class DefaultRealmService implements RealmService {
 				realmBuilder.loginUser(null);
 
 				final String newRealmId;
-				if (oldRealm != null) {
-					newRealmId = oldRealm.getId();
+				if (oldAccount != null) {
+					newRealmId = oldAccount.getId();
 				} else {
 					newRealmId = generateRealmId(realmBuilder.getRealmDef());
 				}
-				final Realm newRealm = realmBuilder.build(new RealmBuilder.Data(newRealmId));
+				final Account newAccount = realmBuilder.build(new RealmBuilder.Data(newRealmId));
 
 				synchronized (realms) {
-					final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Realm>() {
+					final boolean alreadyExists = Iterables.any(realms.values(), new Predicate<Account>() {
 						@Override
-						public boolean apply(@Nullable Realm realm) {
-							return realm != null && realm.getState() != AccountState.removed && newRealm.same(realm);
+						public boolean apply(@Nullable Account realm) {
+							return realm != null && realm.getState() != AccountState.removed && newAccount.same(realm);
 						}
 					});
 
@@ -240,20 +240,20 @@ public class DefaultRealmService implements RealmService {
 						throw new RealmAlreadyExistsException();
 					} else {
 						synchronized (lock) {
-							if (oldRealm != null) {
-								realmDao.updateRealm(newRealm);
-								realms.put(newRealm.getId(), newRealm);
-								listeners.fireEvent(RealmEventType.changed.newEvent(newRealm, null));
+							if (oldAccount != null) {
+								realmDao.updateRealm(newAccount);
+								realms.put(newAccount.getId(), newAccount);
+								listeners.fireEvent(RealmEventType.changed.newEvent(newAccount, null));
 							} else {
-								realmDao.insertRealm(newRealm);
-								realms.put(newRealm.getId(), newRealm);
-								listeners.fireEvent(RealmEventType.created.newEvent(newRealm, null));
+								realmDao.insertRealm(newAccount);
+								realms.put(newAccount.getId(), newAccount);
+								listeners.fireEvent(RealmEventType.created.newEvent(newAccount, null));
 							}
 						}
 					}
 				}
 
-				result = newRealm;
+				result = newAccount;
 			}
 		} catch (RealmBuilder.ConnectionException e) {
 			throw new InvalidCredentialsException(e);
@@ -273,18 +273,18 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Realm changeRealmState(@Nonnull Realm realm, @Nonnull AccountState newState) {
-		return changeRealmState(realm, newState, true);
+	public Account changeRealmState(@Nonnull Account account, @Nonnull AccountState newState) {
+		return changeRealmState(account, newState, true);
 	}
 
 	@Nonnull
-	private Realm changeRealmState(@Nonnull Realm realm, @Nonnull AccountState newState, boolean fireEvent) {
-		if (realm.getState() != newState) {
+	private Account changeRealmState(@Nonnull Account account, @Nonnull AccountState newState, boolean fireEvent) {
+		if (account.getState() != newState) {
 			try {
-				final Realm result = realm.copyForNewState(newState);
+				final Account result = account.copyForNewState(newState);
 
 				synchronized (realms) {
-					this.realms.put(realm.getId(), result);
+					this.realms.put(account.getId(), result);
 					synchronized (lock) {
 						this.realmDao.updateRealm(result);
 					}
@@ -298,23 +298,23 @@ public class DefaultRealmService implements RealmService {
 			} catch (RealmException e) {
 				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 				// return old unchanged value in case of error
-				return realm;
+				return account;
 			}
 		} else {
-			return realm;
+			return account;
 		}
 	}
 
 	@Override
 	public void removeRealm(@Nonnull String realmId) {
-		final Realm realm;
+		final Account account;
 
 		synchronized (realms) {
-			realm = this.realms.get(realmId);
+			account = this.realms.get(realmId);
 		}
 
-		if (realm != null) {
-			changeRealmState((Realm) realm, (AccountState) AccountState.removed);
+		if (account != null) {
+			changeRealmState((Account) account, (AccountState) AccountState.removed);
 		}
 	}
 
@@ -327,13 +327,13 @@ public class DefaultRealmService implements RealmService {
 
 	@Nonnull
 	@Override
-	public Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+	public Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
 		return getRealmById(entity.getRealmId());
 	}
 
 	@Nonnull
 	@Override
-	public Realm getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException {
+	public Account getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException {
 		return getRealmByEntity(entityAware.getEntity());
 	}
 
@@ -344,17 +344,17 @@ public class DefaultRealmService implements RealmService {
 
 	@Override
 	public void load() {
-		final Collection<Realm> realmsFromDb = realmDao.loadRealms();
+		final Collection<Account> realmsFromDb = realmDao.loadRealms();
 		synchronized (realms) {
 			int maxRealmIndex = 0;
 
 			realms.clear();
-			for (Realm realm : realmsFromDb) {
-				final String realmId = realm.getId();
-				realms.put(realmId, realm);
+			for (Account account : realmsFromDb) {
+				final String realmId = account.getId();
+				realms.put(realmId, account);
 
 				// +1 for '~' symbol between realm and index
-				String realmIndexString = realmId.substring(realm.getRealmDef().getId().length() + 1);
+				String realmIndexString = realmId.substring(account.getRealmDef().getId().length() + 1);
 				try {
 					maxRealmIndex = Math.max(Integer.valueOf(realmIndexString), maxRealmIndex);
 				} catch (NumberFormatException e) {
@@ -378,8 +378,8 @@ public class DefaultRealmService implements RealmService {
 
 	@Override
 	public void stopAllRealmConnections() {
-		for (Realm realm : getRealms()) {
-			listeners.fireEvent(RealmEventType.stop.newEvent(realm, null));
+		for (Account account : getRealms()) {
+			listeners.fireEvent(RealmEventType.stop.newEvent(account, null));
 		}
 	}
 

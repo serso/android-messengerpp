@@ -10,21 +10,21 @@ import java.util.concurrent.Callable;
  * Date: 4/13/13
  * Time: 1:12 PM
  */
-final class RealmChangeStateCallable implements Callable<Realm> {
+final class RealmChangeStateCallable implements Callable<Account> {
 
 	@Nonnull
 	static final String TASK_NAME = "realm-change-state";
 
 	@Nonnull
-	private final Realm realm;
+	private final Account account;
 
-	RealmChangeStateCallable(@Nonnull Realm realm) {
-		this.realm = realm;
+	RealmChangeStateCallable(@Nonnull Account account) {
+		this.account = account;
 	}
 
 	@Override
-	public Realm call() throws Exception {
+	public Account call() throws Exception {
 		final RealmService realmService = MessengerApplication.getServiceLocator().getRealmService();
-		return realmService.changeRealmState(realm, realm.isEnabled() ? AccountState.disabled_by_user : AccountState.enabled);
+		return realmService.changeRealmState(account, account.isEnabled() ? AccountState.disabled_by_user : AccountState.enabled);
 	}
 }

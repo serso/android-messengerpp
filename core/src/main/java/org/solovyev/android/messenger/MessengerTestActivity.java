@@ -6,7 +6,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
 import com.google.inject.Inject;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.users.User;
@@ -43,9 +43,9 @@ public class MessengerTestActivity extends RoboSherlockActivity {
 		executorService.execute(new Runnable() {
 			@Override
 			public void run() {
-				for (Realm realm : realmService.getRealms()) {
+				for (Account account : realmService.getRealms()) {
 					try {
-						final User user = realm.getAccountUserService().getUserById("se.solovyev@gmail.com");
+						final User user = account.getAccountUserService().getUserById("se.solovyev@gmail.com");
 						Threads.tryRunOnUiThread(MessengerTestActivity.this, new Runnable() {
 							@Override
 							public void run() {

@@ -85,9 +85,9 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 		tryStartConnectionsFor(realmService.getEnabledRealms());
 	}
 
-	private void tryStartConnectionsFor(@Nonnull Collection<Realm> realms) {
+	private void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
 		final boolean start = canStartConnection();
-		realmConnections.startConnectionsFor(realms, start);
+		realmConnections.startConnectionsFor(accounts, start);
 	}
 
 	private boolean canStartConnection() {
@@ -120,33 +120,33 @@ public final class RealmConnectionsServiceImpl implements RealmConnectionsServic
 
 		@Override
 		public void onEvent(@Nonnull RealmEvent event) {
-			final Realm realm = event.getRealm();
+			final Account account = event.getRealm();
 			switch (event.getType()) {
 				case created:
-					tryStartConnectionsFor(Arrays.asList(realm));
+					tryStartConnectionsFor(Arrays.asList(account));
 					break;
 				case changed:
-					realmConnections.updateRealm(realm, canStartConnection());
+					realmConnections.updateRealm(account, canStartConnection());
 					break;
 				case state_changed:
-					switch (realm.getState()) {
+					switch (account.getState()) {
 						case removed:
-							realmConnections.removeConnectionFor(realm);
+							realmConnections.removeConnectionFor(account);
 							break;
 						default:
-							if (realm.isEnabled()) {
-								tryStartConnectionsFor(Arrays.asList(realm));
+							if (account.isEnabled()) {
+								tryStartConnectionsFor(Arrays.asList(account));
 							} else {
-								realmConnections.tryStopFor(realm);
+								realmConnections.tryStopFor(account);
 							}
 							break;
 					}
 					break;
 				case stop:
-					realmConnections.tryStopFor(realm);
+					realmConnections.tryStopFor(account);
 					break;
 				case start:
-					tryStartConnectionsFor(Arrays.asList(realm));
+					tryStartConnectionsFor(Arrays.asList(account));
 					break;
 			}
 		}

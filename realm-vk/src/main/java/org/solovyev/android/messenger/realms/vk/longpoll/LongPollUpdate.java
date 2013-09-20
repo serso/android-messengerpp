@@ -6,7 +6,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
  */
 public interface LongPollUpdate {
 
-	void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException;
+	void doUpdate(@Nonnull User user, @Nonnull Account account) throws RealmException;
 
 	public static class Adapter implements JsonDeserializer<LongPollUpdate> {
 
@@ -101,12 +101,12 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
 			// not self
 			if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
-				Chat chat = getChatService().getChatById(realm.newChatEntity(realmChatId));
+				Chat chat = getChatService().getChatById(account.newChatEntity(realmChatId));
 				if (chat != null) {
-					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, realm.newUserEntity(realmUserId)));
+					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, account.newUserEntity(realmUserId)));
 				}
 			}
 		}
@@ -128,10 +128,10 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
 			// not self
 			if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
-				final Entity secondRealmUser = realm.newUserEntity(realmUserId);
+				final Entity secondRealmUser = account.newUserEntity(realmUserId);
 
 				final Entity realmChat = getChatService().getPrivateChatId(user.getEntity(), secondRealmUser);
 				Chat chat = getChatService().getChatById(realmChat);
@@ -158,8 +158,8 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException {
-			getChatService().syncChat(realm.newChatEntity(realmChatId), user.getEntity());
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) throws RealmException {
+			getChatService().syncChat(account.newChatEntity(realmChatId), user.getEntity());
 		}
 
 
@@ -172,7 +172,7 @@ public interface LongPollUpdate {
 	static class EmptyLongPollUpdate implements LongPollUpdate {
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
 			// do nothing
 		}
 
@@ -209,13 +209,13 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) throws RealmException {
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) throws RealmException {
 			final Entity realmChat;
 			if (this.realmChatId != null) {
-				realmChat = realm.newChatEntity(this.realmChatId);
+				realmChat = account.newChatEntity(this.realmChatId);
 			} else {
 				assert realmFriendId != null;
-				realmChat = getChatService().getPrivateChatId(user.getEntity(), realm.newUserEntity(realmFriendId));
+				realmChat = getChatService().getPrivateChatId(user.getEntity(), account.newUserEntity(realmFriendId));
 			}
 
 			getChatService().syncNewerChatMessagesForChat(realmChat);
@@ -240,8 +240,8 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
-			final User contact = getUserService().getUserById(realm.newUserEntity(realmFriendId)).cloneWithNewStatus(online);
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
+			final User contact = getUserService().getUserById(account.newUserEntity(realmFriendId)).cloneWithNewStatus(online);
 			getUserService().onContactPresenceChanged(user, contact, online);
 		}
 
@@ -260,7 +260,7 @@ public interface LongPollUpdate {
 		}
 
 		@Override
-		public void doUpdate(@Nonnull User user, @Nonnull Realm realm) {
+		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
 			// todo serso: implement
 		}
 	}

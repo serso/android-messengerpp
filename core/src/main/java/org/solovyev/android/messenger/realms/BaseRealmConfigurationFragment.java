@@ -21,7 +21,7 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends RoboSherlockFragment {
+public abstract class BaseRealmConfigurationFragment<T extends Account<?>> extends RoboSherlockFragment {
 
     /*
 	**********************************************************************
@@ -191,8 +191,8 @@ public abstract class BaseRealmConfigurationFragment<T extends Realm<?>> extends
 		return editedRealm == null;
 	}
 
-	protected final void removeRealm(@Nonnull Realm realm) {
-		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(realm), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+	protected final void removeRealm(@Nonnull Account account) {
+		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(account), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
 	private void saveRealm(@Nonnull RealmBuilder realmBuilder) {

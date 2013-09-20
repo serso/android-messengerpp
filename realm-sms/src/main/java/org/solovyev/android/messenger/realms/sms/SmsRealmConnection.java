@@ -11,9 +11,9 @@ import javax.annotation.Nonnull;
  * Date: 5/27/13
  * Time: 9:22 PM
  */
-final class SmsRealmConnection extends AbstractRealmConnection<SmsRealm> {
+final class SmsRealmConnection extends AbstractRealmConnection<SmsAccount> {
 
-	SmsRealmConnection(@Nonnull SmsRealm realm, @Nonnull Context context) {
+	SmsRealmConnection(@Nonnull SmsAccount realm, @Nonnull Context context) {
 		super(realm, context);
 	}
 

@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractRealm<C extends AccountConfiguration> extends JObject implements Realm<C> {
+public abstract class AbstractAccount<C extends AccountConfiguration> extends JObject implements Account<C> {
 
 	@Nonnull
 	private String id;
@@ -37,11 +37,11 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 	@Nullable
 	private volatile RealmConnection realmConnection;
 
-	public AbstractRealm(@Nonnull String id,
-						 @Nonnull RealmDef realmDef,
-						 @Nonnull User user,
-						 @Nonnull C configuration,
-						 @Nonnull AccountState state) {
+	public AbstractAccount(@Nonnull String id,
+						   @Nonnull RealmDef realmDef,
+						   @Nonnull User user,
+						   @Nonnull C configuration,
+						   @Nonnull AccountState state) {
 		if (!user.getEntity().getRealmId().equals(id)) {
 			throw new IllegalArgumentException("User must belong to realm!");
 		}
@@ -126,16 +126,16 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 
 	@Nonnull
 	@Override
-	public final Realm copyForNewState(@Nonnull AccountState newState) {
-		final AbstractRealm clone = clone();
+	public final Account copyForNewState(@Nonnull AccountState newState) {
+		final AbstractAccount clone = clone();
 		clone.state = newState;
 		return clone;
 	}
 
 	@Nonnull
 	@Override
-	public AbstractRealm clone() {
-		final AbstractRealm clone = (AbstractRealm) super.clone();
+	public AbstractAccount clone() {
+		final AbstractAccount clone = (AbstractAccount) super.clone();
 
 		clone.user = this.user.clone();
 		clone.configuration = this.configuration.clone();
@@ -160,9 +160,9 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 	}
 
 	@Override
-	public boolean same(@Nonnull Realm r) {
-		if (r instanceof AbstractRealm) {
-			final AbstractRealm that = (AbstractRealm) r;
+	public boolean same(@Nonnull Account r) {
+		if (r instanceof AbstractAccount) {
+			final AbstractAccount that = (AbstractAccount) r;
 			return this.configuration.equals(that.configuration);
 		} else {
 			return false;
@@ -172,9 +172,9 @@ public abstract class AbstractRealm<C extends AccountConfiguration> extends JObj
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof AbstractRealm)) return false;
+		if (!(o instanceof AbstractAccount)) return false;
 
-		final AbstractRealm that = (AbstractRealm) o;
+		final AbstractAccount that = (AbstractAccount) o;
 
 		if (!id.equals(that.id)) return false;
 

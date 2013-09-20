@@ -12,9 +12,9 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
-import org.solovyev.android.messenger.realms.AbstractRealm;
+import org.solovyev.android.messenger.realms.AbstractAccount;
 import org.solovyev.android.messenger.realms.AccountState;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -28,15 +28,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
+public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration> {
 
-	private static final String TAG = XmppRealm.class.getSimpleName();
+	private static final String TAG = XmppAccount.class.getSimpleName();
 
-	public XmppRealm(@Nonnull String id,
-					 @Nonnull RealmDef realmDef,
-					 @Nonnull User user,
-					 @Nonnull XmppAccountConfiguration configuration,
-					 @Nonnull AccountState state) {
+	public XmppAccount(@Nonnull String id,
+					   @Nonnull RealmDef realmDef,
+					   @Nonnull User user,
+					   @Nonnull XmppAccountConfiguration configuration,
+					   @Nonnull AccountState state) {
 		super(id, realmDef, user, configuration, state);
 	}
 
@@ -125,34 +125,34 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	}
 
 	@Nonnull
-	static ApiChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> messages, @Nonnull Realm realm) {
-		final User participant = toUser(smackChat.getParticipant(), realm);
+	static ApiChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> messages, @Nonnull Account account) {
+		final User participant = toUser(smackChat.getParticipant(), account);
 
 		final Entity chat;
 
 		final String realmChatId = smackChat.getThreadID();
 		if (Strings.isEmpty(realmChatId)) {
-			chat = getChatService().getPrivateChatId(realm.getUser().getEntity(), participant.getEntity());
+			chat = getChatService().getPrivateChatId(account.getUser().getEntity(), participant.getEntity());
 		} else {
-			chat = realm.newChatEntity(realmChatId);
+			chat = account.newChatEntity(realmChatId);
 		}
 
-		final List<ChatMessage> chatMessages = toMessages(realm, messages);
-		final List<User> participants = Arrays.asList(realm.getUser(), participant);
+		final List<ChatMessage> chatMessages = toMessages(account, messages);
+		final List<User> participants = Arrays.asList(account.getUser(), participant);
 		return Chats.newPrivateApiChat(chat, participants, chatMessages);
 	}
 
 	@Nonnull
-	static List<ChatMessage> toMessages(@Nonnull Realm realm, @Nonnull Iterable<Message> messages) {
-		return toMessages(realm, messages.iterator());
+	static List<ChatMessage> toMessages(@Nonnull Account account, @Nonnull Iterable<Message> messages) {
+		return toMessages(account, messages.iterator());
 	}
 
-	static List<ChatMessage> toMessages(@Nonnull Realm realm, @Nonnull Iterator<Message> messages) {
+	static List<ChatMessage> toMessages(@Nonnull Account account, @Nonnull Iterator<Message> messages) {
 		final List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
 
 		while (messages.hasNext()) {
 			final Message message = messages.next();
-			final ChatMessage chatMessage = toChatMessage(message, realm);
+			final ChatMessage chatMessage = toChatMessage(message, account);
 			if (chatMessage != null) {
 				chatMessages.add(chatMessage);
 			}
@@ -161,13 +161,13 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	}
 
 	@Nullable
-	private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Realm realm) {
+	private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Account account) {
 		final String body = message.getBody();
 		if (!Strings.isEmpty(body)) {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(realm));
+			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(account));
 			liteChatMessage.setBody(body);
-			liteChatMessage.setAuthor(realm.newUserEntity(message.getFrom()));
-			liteChatMessage.setRecipient(realm.newUserEntity(message.getTo()));
+			liteChatMessage.setAuthor(account.newUserEntity(message.getFrom()));
+			liteChatMessage.setRecipient(account.newUserEntity(message.getTo()));
 			liteChatMessage.setSendDate(DateTime.now());
 			// new message by default unread
 			return Messages.newInstance(liteChatMessage, false);
@@ -177,7 +177,7 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	}
 
 	@Nonnull
-	private static User toUser(@Nonnull String realmUserId, @Nonnull Realm realm) {
-		return Users.newEmptyUser(realm.newUserEntity(realmUserId));
+	private static User toUser(@Nonnull String realmUserId, @Nonnull Account account) {
+		return Users.newEmptyUser(account.newUserEntity(realmUserId));
 	}
 }

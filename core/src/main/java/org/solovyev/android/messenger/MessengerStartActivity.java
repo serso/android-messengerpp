@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -37,14 +37,14 @@ public class MessengerStartActivity extends RoboActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final Collection<Realm> realms = realmService.getEnabledRealms();
+		final Collection<Account> accounts = realmService.getEnabledRealms();
 		// todo serso: maybe move to Application or Service?
 		// prefetch data and do synchronization
 
 		boolean syncDone = true;
 
-		for (Realm realm : realms) {
-			final User user = realm.getUser();
+		for (Account account : accounts) {
+			final User user = account.getUser();
 
 			if (!user.getUserSyncData().isFirstSyncDone()) {
 				syncDone = false;

@@ -9,7 +9,7 @@ import org.solovyev.common.collections.Collections;
 
 import java.util.Collection;
 
-public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
+public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 	@Inject
 	private RealmDao realmDao;
@@ -23,16 +23,16 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
 	}
 
 	public void testRealmOperations() throws Exception {
-		Collection<Realm> realms = realmDao.loadRealms();
-		Assert.assertTrue(realms.isEmpty());
+		Collection<Account> accounts = realmDao.loadRealms();
+		Assert.assertTrue(accounts.isEmpty());
 
 		TestAccountConfiguration expectedConfig1 = new TestAccountConfiguration("test_config_field", 42);
-		final Realm expected1 = testRealmDef.newRealm("test~01", Users.newEmptyUser(EntityImpl.newInstance("test~01", "user01")), expectedConfig1, AccountState.enabled);
+		final Account expected1 = testRealmDef.newRealm("test~01", Users.newEmptyUser(EntityImpl.newInstance("test~01", "user01")), expectedConfig1, AccountState.enabled);
 		realmDao.insertRealm(expected1);
 
-		realms = realmDao.loadRealms();
-		Assert.assertTrue(realms.size() == 1);
-		Realm<TestAccountConfiguration> actual1 = Collections.getFirstCollectionElement(realms);
+		accounts = realmDao.loadRealms();
+		Assert.assertTrue(accounts.size() == 1);
+		Account<TestAccountConfiguration> actual1 = Collections.getFirstCollectionElement(accounts);
 		Assert.assertNotNull(actual1);
 		Assert.assertTrue(expected1.same(actual1));
 		Assert.assertTrue(actual1.getConfiguration().equals(expectedConfig1));
@@ -41,8 +41,8 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
 
 		realmDao.deleteRealm(expected1.getId());
 
-		realms = realmDao.loadRealms();
-		Assert.assertTrue(realms.isEmpty());
+		accounts = realmDao.loadRealms();
+		Assert.assertTrue(accounts.isEmpty());
 	}
 
 	public void testConcreteRealms() throws Exception {
@@ -50,12 +50,12 @@ public class SqliteRealmDaoTest extends AbstractMessengerTestCase {
 		for (RealmDef realmDef : getRealmService().getRealmDefs()) {
 			final AccountConfiguration accountConfiguration = (AccountConfiguration) realmDef.getConfigurationClass().newInstance();
 			final String realmId = EntityImpl.getRealmId(realmDef.getId(), index);
-			Realm expected = realmDef.newRealm(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
+			Account expected = realmDef.newRealm(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
 			realmDao.insertRealm(expected);
 		}
 
-		Collection<Realm> realms = realmDao.loadRealms();
-		Assert.assertTrue(realms.size() == 3);
+		Collection<Account> accounts = realmDao.loadRealms();
+		Assert.assertTrue(accounts.size() == 3);
 	}
 
 	public void tearDown() throws Exception {

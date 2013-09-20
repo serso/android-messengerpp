@@ -4,7 +4,7 @@ import android.widget.ImageView;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.common.listeners.JEventListener;
@@ -178,11 +178,11 @@ public interface UserService {
 	/**
 	 * Method sets some icon which represents set of <var>users</var> in <var>imageView</var>
 	 *
-	 * @param realm     realm
+	 * @param account     realm
 	 * @param users     users for whom icon shall be set
 	 * @param imageView view to which icon shall be set
 	 */
-	void setUsersIcon(@Nonnull Realm realm, @Nonnull List<User> users, ImageView imageView);
+	void setUsersIcon(@Nonnull Account account, @Nonnull List<User> users, ImageView imageView);
 
 	void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView);
 

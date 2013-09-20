@@ -7,8 +7,8 @@ import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.realms.Account;
+import org.solovyev.android.messenger.realms.TestAccount;
 import org.solovyev.android.messenger.realms.TestRealmDef;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
@@ -36,7 +36,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 	private TestRealmDef testRealmDef;
 
 	@Inject
-	private TestRealm testRealm;
+	private TestAccount testRealm;
 
 	@Override
 	public void setUp() throws Exception {
@@ -109,9 +109,9 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 	}
 
 	public void testRandomOperations() throws Exception {
-		final List<Realm> realms = new ArrayList<Realm>(REALMS_COUNT);
+		final List<Account> accounts = new ArrayList<Account>(REALMS_COUNT);
 		for (int i = 0; i < REALMS_COUNT; i++) {
-			realms.add(new TestRealm(testRealmDef, i));
+			accounts.add(new TestAccount(testRealmDef, i));
 		}
 
 		final List<User> users = new ArrayList<User>();
@@ -124,7 +124,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 				case 1:
 				case 2:
 				case 3:
-					final Realm r = realms.get(random.nextInt(REALMS_COUNT));
+					final Account r = accounts.get(random.nextInt(REALMS_COUNT));
 					List<AProperty> newProperties = generateUserProperties(random);
 					final User newUser = Users.newUser(r.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), newProperties);
 					users.add(newUser);
@@ -144,7 +144,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 							userDao.updateUser(updatedUser);
 							Assert.assertTrue(Objects.areEqual(updatedProperties, userDao.loadUserPropertiesById(updatedUser.getId()), new CollectionEqualizer<AProperty>(null)));
 						} else {
-							final Realm r2 = realms.get(random.nextInt(REALMS_COUNT));
+							final Account r2 = accounts.get(random.nextInt(REALMS_COUNT));
 							final User newUser2 = Users.newUser(r2.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), generateUserProperties(random));
 							userDao.updateUser(newUser2);
 							Assert.assertNull(userDao.loadUserById(newUser2.getId()));
@@ -153,14 +153,14 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 					}
 					break;
 				case 5:
-					final Realm realm = realms.get(random.nextInt(realms.size()));
+					final Account account = accounts.get(random.nextInt(accounts.size()));
 					Iterables.removeIf(users, new Predicate<User>() {
 						@Override
 						public boolean apply(@Nullable User user) {
-							return user.getEntity().getRealmId().equals(realm.getId());
+							return user.getEntity().getRealmId().equals(account.getId());
 						}
 					});
-					userDao.deleteAllUsersInRealm(realm.getId());
+					userDao.deleteAllUsersInRealm(account.getId());
 					break;
 				case 6:
 					users.clear();

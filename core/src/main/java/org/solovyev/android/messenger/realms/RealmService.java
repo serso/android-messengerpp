@@ -40,10 +40,10 @@ public interface RealmService {
 	Collection<RealmDef<? extends AccountConfiguration>> getRealmDefs();
 
 	@Nonnull
-	Collection<Realm> getRealms();
+	Collection<Account> getRealms();
 
 	@Nonnull
-	Collection<Realm> getEnabledRealms();
+	Collection<Account> getEnabledRealms();
 
 	/**
 	 * @return collection of users in all configured realms
@@ -68,19 +68,19 @@ public interface RealmService {
 	RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedRealmException;
 
 	@Nonnull
-	Realm getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
+	Account getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
 
 	@Nonnull
-	Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
+	Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException;
 
 	@Nonnull
-	Realm getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException;
+	Account getRealmByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedRealmException;
 
 	@Nonnull
-	Realm saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
+	Account saveRealm(@Nonnull RealmBuilder realmBuilder) throws InvalidCredentialsException, RealmAlreadyExistsException;
 
 	@Nonnull
-	Realm changeRealmState(@Nonnull Realm realm, @Nonnull AccountState newState);
+	Account changeRealmState(@Nonnull Account account, @Nonnull AccountState newState);
 
 	void removeRealm(@Nonnull String realmId);
 

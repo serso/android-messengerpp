@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.solovyev.android.messenger.RealmConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.realms.AbstractRealm;
+import org.solovyev.android.messenger.realms.AbstractAccount;
 import org.solovyev.android.messenger.realms.AccountState;
 import org.solovyev.android.messenger.realms.RealmDef;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
@@ -26,9 +26,9 @@ import com.google.common.base.Splitter;
  * Date: 5/27/13
  * Time: 8:43 PM
  */
-final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
+final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
-	public SmsRealm(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
+	public SmsAccount(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
 		super(id, realmDef, user, configuration, state);
 	}
 

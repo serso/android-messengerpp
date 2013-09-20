@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessages;
@@ -50,18 +50,18 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 	private final UserService userService;
 
 	@Nonnull
-	private final Realm realm;
+	private final Account account;
 
 	public JsonChatConverter(@Nonnull User user,
 							 @Nullable String explicitChatId,
 							 @Nullable String explicitUserId,
 							 @Nonnull UserService userService,
-							 @Nonnull Realm realm) {
+							 @Nonnull Account account) {
 		this.user = user;
 		this.explicitChatId = explicitChatId;
 		this.explicitUserId = explicitUserId;
 		this.userService = userService;
-		this.realm = realm;
+		this.account = account;
 	}
 
 	@Nonnull
@@ -87,7 +87,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
 			if (!Collections.isEmpty(jsonMessages)) {
 				for (JsonMessage jsonMessage : jsonMessages) {
-					final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, realm);
+					final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, account);
 
 					final Integer apiChatId = jsonMessage.getChat_id();
 					if (apiChatId == null && explicitChatId == null) {
@@ -124,12 +124,12 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 						ApiChatImpl chat = chats.get(realmChatId);
 						if (chat == null) {
 							// create new chat object
-							chat = ApiChatImpl.newInstance(realm.newChatEntity(realmChatId), jsonMessagesResult.getCount(), false);
+							chat = ApiChatImpl.newInstance(account.newChatEntity(realmChatId), jsonMessagesResult.getCount(), false);
 
 							final String participantsStr = jsonMessage.getChat_active();
 							if (!Strings.isEmpty(participantsStr)) {
 								for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
-									chat.addParticipant(userService.getUserById(realm.newUserEntity(String.valueOf(participantId))));
+									chat.addParticipant(userService.getUserById(account.newUserEntity(String.valueOf(participantId))));
 								}
 							}
 

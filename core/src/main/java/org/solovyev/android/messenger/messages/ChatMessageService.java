@@ -4,7 +4,7 @@ import android.widget.ImageView;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmException;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ public interface ChatMessageService {
 	void init();
 
 	@Nonnull
-	Entity generateEntity(@Nonnull Realm realm);
+	Entity generateEntity(@Nonnull Account account);
 
 	@Nonnull
 	List<ChatMessage> getChatMessages(@Nonnull Entity realmChat);

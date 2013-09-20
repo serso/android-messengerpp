@@ -79,7 +79,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
     **********************************************************************
     */
 
-	private Realm realm;
+	private Account account;
 
 	@Nullable
 	private RealmEventListener realmEventListener;
@@ -96,7 +96,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 			final String realmId = arguments.getString(EXTRA_REALM_ID);
 			if (realmId != null) {
 				try {
-					realm = realmService.getRealmById(realmId);
+					account = realmService.getRealmById(realmId);
 				} catch (UnsupportedRealmException e) {
 					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
 					Activities.restartActivity(getActivity());
@@ -104,7 +104,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 			}
 		}
 
-		if (realm == null) {
+		if (account == null) {
 			// remove fragment
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		} else {
@@ -130,16 +130,16 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 		super.onViewCreated(root, savedInstanceState);
 
 		final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_def_icon_imageview);
-		realmIconImageView.setImageDrawable(getResources().getDrawable(realm.getRealmDef().getIconResId()));
+		realmIconImageView.setImageDrawable(getResources().getDrawable(account.getRealmDef().getIconResId()));
 
 		final TextView realmNameTextView = (TextView) root.findViewById(R.id.mpp_fragment_title);
-		realmNameTextView.setText(realm.getDisplayName(getActivity()));
+		realmNameTextView.setText(account.getDisplayName(getActivity()));
 
 		final Button realmBackButton = (Button) root.findViewById(R.id.mpp_realm_back_button);
 		realmBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(RealmGuiEventType.newRealmViewCancelledEvent(realm));
+				eventManager.fire(RealmGuiEventType.newRealmViewCancelledEvent(account));
 			}
 		});
 		if (multiPaneManager.isDualPane(getActivity())) {
@@ -169,7 +169,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 		realmSyncButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MessengerSyncAllAsyncTask.newForRealm(getActivity(), syncService, realm).executeInParallel((Void) null);
+				MessengerSyncAllAsyncTask.newForRealm(getActivity(), syncService, account).executeInParallel((Void) null);
 			}
 		});
 
@@ -213,7 +213,7 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 	private void onRealmStateChanged(@Nonnull View root) {
 		final Button realmSyncButton = (Button) root.findViewById(R.id.mpp_realm_sync_button);
 		final Button realmStateButton = (Button) root.findViewById(R.id.mpp_realm_state_button);
-		if (realm.isEnabled()) {
+		if (account.isEnabled()) {
 			realmStateButton.setText(R.string.mpp_disable);
 			realmSyncButton.setVisibility(View.VISIBLE);
 		} else {
@@ -223,21 +223,21 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 	}
 
 	private void changeState() {
-		taskListeners.run(RealmChangeStateCallable.TASK_NAME, new RealmChangeStateCallable(realm), RealmChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.run(RealmChangeStateCallable.TASK_NAME, new RealmChangeStateCallable(account), RealmChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
 	}
 
 	private void editRealm() {
-		eventManager.fire(RealmGuiEventType.newRealmEditRequestedEvent(realm));
+		eventManager.fire(RealmGuiEventType.newRealmEditRequestedEvent(account));
 	}
 
 	@Nonnull
-	public Realm getRealm() {
-		return realm;
+	public Account getAccount() {
+		return account;
 	}
 
 
 	private void removeRealm() {
-		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(getRealm()), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.run(RealmRemoverCallable.TASK_NAME, new RealmRemoverCallable(getAccount()), RealmRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
 	}
 
 	private final class RealmEventListener extends AbstractJEventListener<RealmEvent> {
@@ -248,16 +248,16 @@ public class MessengerRealmFragment extends RoboSherlockFragment {
 
 		@Override
 		public void onEvent(@Nonnull RealmEvent event) {
-			final Realm eventRealm = event.getRealm();
+			final Account eventAccount = event.getRealm();
 			switch (event.getType()) {
 				case changed:
-					if (eventRealm.equals(realm)) {
-						realm = eventRealm;
+					if (eventAccount.equals(account)) {
+						account = eventAccount;
 					}
 					break;
 				case state_changed:
-					if (eventRealm.equals(realm)) {
-						realm = eventRealm;
+					if (eventAccount.equals(account)) {
+						account = eventAccount;
 						Threads2.tryRunOnUiThread(MessengerRealmFragment.this, new Runnable() {
 							@Override
 							public void run() {

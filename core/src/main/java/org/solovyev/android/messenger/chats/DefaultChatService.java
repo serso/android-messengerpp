@@ -150,7 +150,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	private Chat newPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws RealmException {
-		final Realm realm = getRealmByEntity(user1);
+		final Account account = getRealmByEntity(user1);
 
 		Chat result;
 
@@ -159,7 +159,7 @@ public class DefaultChatService implements ChatService {
 			result = getChatById(realmChat);
 			if (result == null) {
 				// no private chat exists => create one
-				final AccountChatService accountChatService = realm.getAccountChatService();
+				final AccountChatService accountChatService = account.getAccountChatService();
 
 				Chat chat = accountChatService.newPrivateChat(realmChat, user1.getRealmEntityId(), user2.getRealmEntityId());
 
@@ -189,7 +189,7 @@ public class DefaultChatService implements ChatService {
 	 */
 	@Nonnull
 	private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity user1, @Nonnull Entity user2) throws UnsupportedRealmException {
-		final Realm realm = getRealmByEntity(user1);
+		final Account account = getRealmByEntity(user1);
 		final Entity chatEntity = getPrivateChatId(user1, user2);
 
 		if (!chatEntity.getRealmEntityId().equals(chat.getEntity().getRealmEntityId())) {
@@ -199,7 +199,7 @@ public class DefaultChatService implements ChatService {
 			final String realmChatId = chat.getEntity().getRealmEntityId();
 
 			// copy with new id
-			chat = chat.copyWithNew(realm.newRealmEntity(realmChatId, chatEntity.getEntityId()));
+			chat = chat.copyWithNew(account.newRealmEntity(realmChatId, chatEntity.getEntityId()));
 		}
 
 		return chat;
@@ -208,8 +208,8 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	private ApiChat prepareChat(@Nonnull ApiChat apiChat) throws UnsupportedRealmException {
 		if (apiChat.getChat().isPrivate()) {
-			final Realm realm = realmService.getRealmById(apiChat.getChat().getEntity().getRealmId());
-			final User user = realm.getUser();
+			final Account account = realmService.getRealmById(apiChat.getChat().getEntity().getRealmId());
+			final User user = account.getUser();
 			final List<User> participants = apiChat.getParticipantsExcept(user);
 
 			if (participants.size() == 1) {
@@ -225,7 +225,7 @@ public class DefaultChatService implements ChatService {
 					final String realmChatId = apiChat.getChat().getEntity().getRealmEntityId();
 
 					// copy with new id
-					apiChat = apiChat.copyWithNew(realm.newRealmEntity(realmChatId, realmChat.getEntityId()));
+					apiChat = apiChat.copyWithNew(account.newRealmEntity(realmChatId, realmChat.getEntityId()));
 				}
 			}
 		}
@@ -349,7 +349,7 @@ public class DefaultChatService implements ChatService {
 
 
 	@Nonnull
-	private Realm getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
+	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedRealmException {
 		return realmService.getRealmById(entity.getRealmId());
 	}
 
@@ -381,10 +381,10 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws RealmException {
-		final Realm realm = getRealmByEntity(chat);
-		final AccountChatService accountChatService = realm.getAccountChatService();
+		final Account account = getRealmByEntity(chat);
+		final AccountChatService accountChatService = account.getAccountChatService();
 
-		final List<ChatMessage> messages = accountChatService.getNewerChatMessagesForChat(chat.getRealmEntityId(), realm.getUser().getEntity().getRealmEntityId());
+		final List<ChatMessage> messages = accountChatService.getNewerChatMessagesForChat(chat.getRealmEntityId(), account.getUser().getEntity().getRealmEntityId());
 
 		saveChatMessages(chat, messages, true);
 
@@ -486,16 +486,16 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView) {
 		try {
-			final Realm realm = getRealmByEntity(chat.getEntity());
+			final Account account = getRealmByEntity(chat.getEntity());
 
-			final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), realm.getUser().getEntity());
+			final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
 
 			if (!otherParticipants.isEmpty()) {
 				if (otherParticipants.size() == 1) {
 					final User participant = otherParticipants.get(0);
 					userService.setUserIcon(participant, imageView);
 				} else {
-					userService.setUsersIcon(realm, otherParticipants, imageView);
+					userService.setUsersIcon(account, otherParticipants, imageView);
 				}
 			} else {
 				// just in case...

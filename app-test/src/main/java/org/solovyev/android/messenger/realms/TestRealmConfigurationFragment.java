@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
  * Date: 2/27/13
  * Time: 9:15 PM
  */
-public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragment<TestRealm> {
+public class TestRealmConfigurationFragment extends BaseRealmConfigurationFragment<TestAccount> {
 
 	@Inject
 	@Nonnull

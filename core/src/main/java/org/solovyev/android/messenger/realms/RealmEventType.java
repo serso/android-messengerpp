@@ -36,8 +36,8 @@ public enum RealmEventType {
 	start;
 
 	@Nonnull
-	RealmEvent newEvent(@Nonnull Realm realm, @Nullable Object data) {
+	RealmEvent newEvent(@Nonnull Account account, @Nullable Object data) {
 		assert data == null;
-		return new RealmEvent(realm, this, null);
+		return new RealmEvent(account, this, null);
 	}
 }

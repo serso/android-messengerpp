@@ -26,12 +26,12 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 	static final String[] COLUMNS = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.PHOTO_ID};
 
 	@Nonnull
-	private final SmsRealm realm;
+	private final SmsAccount realm;
 
 	@Nonnull
 	private final ContentResolver contentResolver;
 
-	public SmsUserMapper(@Nonnull SmsRealm realm, @Nonnull ContentResolver contentResolver) {
+	public SmsUserMapper(@Nonnull SmsAccount realm, @Nonnull ContentResolver contentResolver) {
 		this.realm = realm;
 		this.contentResolver = contentResolver;
 	}

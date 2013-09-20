@@ -19,14 +19,14 @@ import javax.annotation.Nonnull;
 class TemporaryXmppConnectionAware implements XmppConnectionAware {
 
 	@Nonnull
-	private final XmppRealm realm;
+	private final XmppAccount realm;
 
-	private TemporaryXmppConnectionAware(@Nonnull XmppRealm realm) {
+	private TemporaryXmppConnectionAware(@Nonnull XmppAccount realm) {
 		this.realm = realm;
 	}
 
 	@Nonnull
-	static XmppConnectionAware newInstance(@Nonnull XmppRealm realm) {
+	static XmppConnectionAware newInstance(@Nonnull XmppAccount realm) {
 		return new TemporaryXmppConnectionAware(realm);
 	}
 

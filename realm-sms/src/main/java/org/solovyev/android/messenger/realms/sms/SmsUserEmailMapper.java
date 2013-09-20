@@ -24,9 +24,9 @@ public final class SmsUserEmailMapper implements Converter<Cursor, User> {
 			ContactsContract.CommonDataKinds.Email.DATA,
 			ContactsContract.Contacts.DISPLAY_NAME};
 
-	private SmsRealm realm;
+	private SmsAccount realm;
 
-	public SmsUserEmailMapper(@Nonnull SmsRealm realm) {
+	public SmsUserEmailMapper(@Nonnull SmsAccount realm) {
 		this.realm = realm;
 	}
 

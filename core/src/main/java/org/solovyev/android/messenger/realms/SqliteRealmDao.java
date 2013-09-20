@@ -51,9 +51,9 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 	}
 
 	@Override
-	public void insertRealm(@Nonnull Realm realm) throws RealmException {
+	public void insertRealm(@Nonnull Account account) throws RealmException {
 		try {
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(realm, secret)));
+			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(account, secret)));
 		} catch (RealmRuntimeException e) {
 			throw new RealmException(e);
 		}
@@ -66,7 +66,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
 	@Nonnull
 	@Override
-	public Collection<Realm> loadRealms() {
+	public Collection<Account> loadRealms() {
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
 		} catch (RealmRuntimeException e) {
@@ -81,9 +81,9 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 	}
 
 	@Override
-	public void updateRealm(@Nonnull Realm realm) throws RealmException {
+	public void updateRealm(@Nonnull Account account) throws RealmException {
 		try {
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(realm, secret)));
+			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(account, secret)));
 		} catch (RealmRuntimeException e) {
 			throw new RealmException(e);
 		}
@@ -91,7 +91,7 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
 	@Nonnull
 	@Override
-	public Collection<Realm> loadRealmsInState(@Nonnull AccountState state) {
+	public Collection<Account> loadRealmsInState(@Nonnull AccountState state) {
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
 		} catch (RealmRuntimeException e) {
@@ -108,74 +108,74 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
     **********************************************************************
     */
 
-	private static class InsertRealm extends AbstractObjectDbExec<Realm> {
+	private static class InsertRealm extends AbstractObjectDbExec<Account> {
 
 		@Nullable
 		private final SecretKey secret;
 
-		public InsertRealm(@Nonnull Realm realm, @Nullable SecretKey secret) {
-			super(realm);
+		public InsertRealm(@Nonnull Account account, @Nullable SecretKey secret) {
+			super(account);
 			this.secret = secret;
 		}
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
-			final Realm realm = getNotNullObject();
+			final Account account = getNotNullObject();
 
-			final ContentValues values = toContentValues(realm, secret);
+			final ContentValues values = toContentValues(account, secret);
 
 			return db.insert("realms", null, values);
 		}
 	}
 
-	private static class UpdateRealm extends AbstractObjectDbExec<Realm> {
+	private static class UpdateRealm extends AbstractObjectDbExec<Account> {
 
 		@Nullable
 		private final SecretKey secret;
 
-		public UpdateRealm(@Nonnull Realm realm, @Nullable SecretKey secret) {
-			super(realm);
+		public UpdateRealm(@Nonnull Account account, @Nullable SecretKey secret) {
+			super(account);
 			this.secret = secret;
 		}
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
-			final Realm realm = getNotNullObject();
+			final Account account = getNotNullObject();
 
-			final ContentValues values = toContentValues(realm, secret);
+			final ContentValues values = toContentValues(account, secret);
 
-			return db.update("realms", values, "id = ?", new String[]{realm.getId()});
+			return db.update("realms", values, "id = ?", new String[]{account.getId()});
 		}
 	}
 
 	@Nonnull
-	private static ContentValues toContentValues(@Nonnull Realm realm, @Nullable SecretKey secret) throws RealmRuntimeException {
+	private static ContentValues toContentValues(@Nonnull Account account, @Nullable SecretKey secret) throws RealmRuntimeException {
 		final ContentValues values = new ContentValues();
 
-		values.put("id", realm.getId());
-		values.put("realm_def_id", realm.getRealmDef().getId());
-		values.put("user_id", realm.getUser().getEntity().getEntityId());
+		values.put("id", account.getId());
+		values.put("realm_def_id", account.getRealmDef().getId());
+		values.put("user_id", account.getUser().getEntity().getEntityId());
 
 		final AccountConfiguration configuration;
 
 		try {
-			final Cipherer<AccountConfiguration, AccountConfiguration> cipherer = realm.getRealmDef().getCipherer();
+			final Cipherer<AccountConfiguration, AccountConfiguration> cipherer = account.getRealmDef().getCipherer();
 			if (cipherer != null && secret != null) {
-				configuration = cipherer.encrypt(secret, realm.getConfiguration());
+				configuration = cipherer.encrypt(secret, account.getConfiguration());
 			} else {
-				configuration = realm.getConfiguration();
+				configuration = account.getConfiguration();
 			}
 			values.put("configuration", new Gson().toJson(configuration));
 		} catch (CiphererException e) {
-			throw new RealmRuntimeException(realm.getId(), e);
+			throw new RealmRuntimeException(account.getId(), e);
 		}
 
-		values.put("state", realm.getState().name());
+		values.put("state", account.getState().name());
 
 		return values;
 	}
 
-	private class LoadRealm extends AbstractDbQuery<Collection<Realm>> {
+	private class LoadRealm extends AbstractDbQuery<Collection<Account>> {
 
 		@Nullable
 		private final AccountState state;
@@ -197,8 +197,8 @@ public class SqliteRealmDao extends AbstractSQLiteHelper implements RealmDao {
 
 		@Nonnull
 		@Override
-		public Collection<Realm> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<Realm>(new RealmMapper(secret)).convert(cursor);
+		public Collection<Account> retrieveData(@Nonnull Cursor cursor) {
+			return new ListMapper<Account>(new RealmMapper(secret)).convert(cursor);
 		}
 	}
 

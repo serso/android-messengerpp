@@ -10,7 +10,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Account;
 import org.solovyev.android.messenger.realms.RealmConnectionException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -36,7 +36,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	@Nonnull
 	private static final String TAG = "M++/" + XmppAccountUserService.class.getSimpleName();
 
-	XmppAccountUserService(@Nonnull XmppRealm realm, @Nonnull XmppConnectionAware connectionAware) {
+	XmppAccountUserService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware) {
 		super(realm, connectionAware);
 	}
 
@@ -69,13 +69,13 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	private static class UserLoader implements XmppConnectedCallable<User> {
 
 		@Nonnull
-		private final Realm realm;
+		private final Account account;
 
 		@Nonnull
 		private final String realmUserId;
 
-		public UserLoader(@Nonnull Realm realm, @Nonnull String realmUserId) {
-			this.realm = realm;
+		public UserLoader(@Nonnull Account account, @Nonnull String realmUserId) {
+			this.account = account;
 			this.realmUserId = realmUserId;
 		}
 
@@ -83,14 +83,14 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		public User call(@Nonnull Connection connection) throws RealmConnectionException, XMPPException {
 			final User result;
 
-			if (realm.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
+			if (account.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
 				// realm user cannot be found in roster ->  information should be loaded separately
-				result = toUser(realm.getId(), realmUserId, null, true, connection);
+				result = toUser(account.getId(), realmUserId, null, true, connection);
 			} else {
 				// try to find user contacts in roster
 				final RosterEntry entry = connection.getRoster().getEntry(realmUserId);
 				if (entry != null) {
-					result = toUser(realm.getId(), entry.getUser(), entry.getName(), false, connection);
+					result = toUser(account.getId(), entry.getUser(), entry.getName(), false, connection);
 				} else {
 					result = null;
 				}
@@ -153,26 +153,26 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	private static class UserContactsLoader implements XmppConnectedCallable<List<User>> {
 
 		@Nonnull
-		private final Realm realm;
+		private final Account account;
 
 		@Nonnull
 		private final String realmUserId;
 
-		private UserContactsLoader(@Nonnull Realm realm, @Nonnull String realmUserId) {
-			this.realm = realm;
+		private UserContactsLoader(@Nonnull Account account, @Nonnull String realmUserId) {
+			this.account = account;
 			this.realmUserId = realmUserId;
 		}
 
 		@Override
 		public List<User> call(@Nonnull final Connection connection) throws RealmConnectionException, XMPPException {
 
-			if (realm.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
+			if (account.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
 				// realm user => load contacts through the roster
 				final Collection<RosterEntry> entries = connection.getRoster().getEntries();
 
 				final List<User> result = new ArrayList<User>(entries.size());
 				for (RosterEntry entry : entries) {
-					result.add(toUser(realm.getId(), entry.getUser(), entry.getName(), false, connection));
+					result.add(toUser(account.getId(), entry.getUser(), entry.getName(), false, connection));
 				}
 
 				return result;
@@ -187,13 +187,13 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	private static class OnlineUsersChecker implements XmppConnectedCallable<List<User>> {
 
 		@Nonnull
-		private final Realm realm;
+		private final Account account;
 
 		@Nonnull
 		private final List<User> users;
 
-		public OnlineUsersChecker(@Nonnull Realm realm, @Nonnull List<User> users) {
-			this.realm = realm;
+		public OnlineUsersChecker(@Nonnull Account account, @Nonnull List<User> users) {
+			this.account = account;
 			this.users = users;
 		}
 
@@ -206,7 +206,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 			for (final User user : users) {
 
 				final boolean online;
-				if (realm.getUser().equals(user)) {
+				if (account.getUser().equals(user)) {
 					// realm user => always online
 					online = true;
 				} else {
