@@ -116,11 +116,11 @@ final class RealmConnections {
 						MessengerApplication.getServiceLocator().getExceptionHandler().handleException(lastError);
 					}
 
-					MessengerApplication.getServiceLocator().getRealmService().changeRealmState(realmConnection.getRealm(), AccountState.disabled_by_app);
+					MessengerApplication.getServiceLocator().getRealmService().changeRealmState(realmConnection.getAccount(), AccountState.disabled_by_app);
 				} else {
 					if (realmConnection.isStopped()) {
 						try {
-							if (realmConnection.getRealm().isEnabled()) {
+							if (realmConnection.getAccount().isEnabled()) {
 								Log.d(MessengerApplication.TAG, "Realm is enabled => starting connection...");
 								realmConnection.start();
 							}
@@ -174,7 +174,7 @@ final class RealmConnections {
 	public void tryStopFor(@Nonnull Account account) {
 		synchronized (this.realmConnections) {
 			for (RealmConnection realmConnection : realmConnections) {
-				if (account.equals(realmConnection.getRealm()) && !realmConnection.isStopped()) {
+				if (account.equals(realmConnection.getAccount()) && !realmConnection.isStopped()) {
 					realmConnection.stop();
 				}
 			}
@@ -226,7 +226,7 @@ final class RealmConnections {
 
 		@Override
 		public boolean apply(@Nullable RealmConnection realmConnection) {
-			return realmConnection != null && realmConnection.getRealm().equals(account);
+			return realmConnection != null && realmConnection.getAccount().equals(account);
 		}
 	}
 

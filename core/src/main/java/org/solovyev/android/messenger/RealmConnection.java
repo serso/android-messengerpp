@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 public interface RealmConnection {
 
 	@Nonnull
-	Account getRealm();
+	Account getAccount();
 
 	/**
 	 * Method starts listening to remote realm events

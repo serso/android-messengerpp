@@ -12,8 +12,8 @@ import javax.annotation.Nonnull;
  */
 public class TestRealmConnection extends AbstractRealmConnection<TestAccount> {
 
-	public TestRealmConnection(@Nonnull TestAccount realm, @Nonnull Context context) {
-		super(realm, context);
+	public TestRealmConnection(@Nonnull TestAccount account, @Nonnull Context context) {
+		super(account, context);
 	}
 
 	@Override

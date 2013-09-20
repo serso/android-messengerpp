@@ -30,16 +30,16 @@ class XmppRosterListener implements RosterListener {
 	private static final String TAG = "M++/XmppRosterListener";
 
 	@Nonnull
-	private final XmppAccount realm;
+	private final XmppAccount account;
 
-	XmppRosterListener(@Nonnull XmppAccount realm) {
-		this.realm = realm;
+	XmppRosterListener(@Nonnull XmppAccount account) {
+		this.account = account;
 	}
 
 	@Override
 	public void entriesAdded(@Nonnull Collection<String> contactIds) {
 		Log.d(TAG, "entriesAdded() called");
-		final AccountUserService accountUserService = realm.getAccountUserService();
+		final AccountUserService accountUserService = account.getAccountUserService();
 		final List<User> contacts;
 		try {
 			contacts = Lists.newArrayList(Iterables.transform(contactIds, new Function<String, User>() {
@@ -47,7 +47,7 @@ class XmppRosterListener implements RosterListener {
 				public User apply(@Nullable String contactId) {
 					assert contactId != null;
 					// we need to request new user entity because user id should be prepared properly
-					final Entity entity = realm.newUserEntity(contactId);
+					final Entity entity = account.newUserEntity(contactId);
 					try {
 						return accountUserService.getUserById(entity.getRealmEntityId());
 					} catch (RealmException e) {
@@ -57,7 +57,7 @@ class XmppRosterListener implements RosterListener {
 			}));
 
 			// we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed
-			getUserService().mergeUserContacts(realm.getUser().getEntity(), contacts, false, true);
+			getUserService().mergeUserContacts(account.getUser().getEntity(), contacts, false, true);
 
 		} catch (RealmRuntimeException e) {
 			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(new RealmException(e));
@@ -77,10 +77,10 @@ class XmppRosterListener implements RosterListener {
 	@Override
 	public void presenceChanged(@Nonnull final Presence presence) {
 		Log.d(TAG, "presenceChanged() called");
-		final String realmUserId = presence.getFrom();
+		final String accountUserId = presence.getFrom();
 
-		final User contact = getUserService().getUserById(realm.newUserEntity(realmUserId));
-		getUserService().onContactPresenceChanged(realm.getUser(), contact, presence.isAvailable());
+		final User contact = getUserService().getUserById(account.newUserEntity(accountUserId));
+		getUserService().onContactPresenceChanged(account.getUser(), contact, presence.isAvailable());
 	}
 
 	@Nonnull

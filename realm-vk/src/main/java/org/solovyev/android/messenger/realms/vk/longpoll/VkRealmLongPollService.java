@@ -19,20 +19,20 @@ import java.io.IOException;
 public class VkRealmLongPollService implements RealmLongPollService {
 
 	@Nonnull
-	private final VkAccount realm;
+	private final VkAccount account;
 
-	public VkRealmLongPollService(@Nonnull VkAccount realm) {
-		this.realm = realm;
+	public VkRealmLongPollService(@Nonnull VkAccount account) {
+		this.account = account;
 	}
 
 	@Override
 	public Object startLongPolling() throws RealmException {
 		try {
-			return HttpTransactions.execute(new VkGetLongPollServerHttpTransaction(realm));
+			return HttpTransactions.execute(new VkGetLongPollServerHttpTransaction(account));
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmException(realm.getId(), e);
+			throw new RealmException(account.getId(), e);
 		} catch (IOException e) {
-			throw new RealmException(realm.getId(), e);
+			throw new RealmException(account.getId(), e);
 		}
 	}
 
@@ -45,9 +45,9 @@ public class VkRealmLongPollService implements RealmLongPollService {
 				return null;
 			}
 		} catch (HttpRuntimeIoException e) {
-			throw new RealmException(realm.getId(), e);
+			throw new RealmException(account.getId(), e);
 		} catch (IOException e) {
-			throw new RealmException(realm.getId(), e);
+			throw new RealmException(account.getId(), e);
 		}
 	}
 }

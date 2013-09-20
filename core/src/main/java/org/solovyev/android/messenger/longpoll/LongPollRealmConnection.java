@@ -41,11 +41,11 @@ public abstract class LongPollRealmConnection extends AbstractRealmConnection<Ac
 				while (!isStopped()) {
 					Log.i(TAG, "Long polling started!");
 
-					final User user = getRealm().getUser();
+					final User user = getAccount().getUser();
 					final LongPollResult longPollResult = realmLongPollService.waitForResult(longPollingData);
 					if (longPollResult != null) {
 						longPollingData = longPollResult.updateLongPollServerData(longPollingData);
-						longPollResult.doUpdates(user, getRealm());
+						longPollResult.doUpdates(user, getAccount());
 					}
 
 					Log.i(TAG, "Long polling ended!");
@@ -53,9 +53,9 @@ public abstract class LongPollRealmConnection extends AbstractRealmConnection<Ac
 				}
 
 			} catch (RuntimeException e) {
-				throw new RealmConnectionException(getRealm().getId(), e);
+				throw new RealmConnectionException(getAccount().getId(), e);
 			} catch (RealmException e) {
-				throw new RealmConnectionException(getRealm().getId(), e);
+				throw new RealmConnectionException(getAccount().getId(), e);
 			}
 		}
 	}

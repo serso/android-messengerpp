@@ -12,13 +12,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 7/25/12
  * Time: 6:10 PM
  */
-public abstract class AbstractRealmConnection<R extends Account> implements RealmConnection {
+public abstract class AbstractRealmConnection<A extends Account> implements RealmConnection {
 
 	@Nonnull
 	private static final String TAG = "RealmConnection";
 
 	@Nonnull
-	private volatile R realm;
+	private volatile A account;
 
 	@Nonnull
 	private final Context context;
@@ -26,14 +26,14 @@ public abstract class AbstractRealmConnection<R extends Account> implements Real
 	@Nonnull
 	private final AtomicBoolean stopped = new AtomicBoolean(true);
 
-	protected AbstractRealmConnection(@Nonnull R realm, @Nonnull Context context) {
-		this.realm = realm;
+	protected AbstractRealmConnection(@Nonnull A account, @Nonnull Context context) {
+		this.account = account;
 		this.context = context;
 	}
 
 	@Nonnull
-	public final R getRealm() {
-		return realm;
+	public final A getAccount() {
+		return account;
 	}
 
 	@Nonnull

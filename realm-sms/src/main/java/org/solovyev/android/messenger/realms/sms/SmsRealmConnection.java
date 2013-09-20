@@ -13,8 +13,8 @@ import javax.annotation.Nonnull;
  */
 final class SmsRealmConnection extends AbstractRealmConnection<SmsAccount> {
 
-	SmsRealmConnection(@Nonnull SmsAccount realm, @Nonnull Context context) {
-		super(realm, context);
+	SmsRealmConnection(@Nonnull SmsAccount account, @Nonnull Context context) {
+		super(account, context);
 	}
 
 	@Override

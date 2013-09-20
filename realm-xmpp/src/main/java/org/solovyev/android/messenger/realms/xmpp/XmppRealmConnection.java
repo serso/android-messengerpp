@@ -29,10 +29,10 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 	@Nonnull
 	private final RosterListener rosterListener;
 
-	public XmppRealmConnection(@Nonnull XmppAccount realm, @Nonnull Context context) {
-		super(realm, context);
-		chatListener = new XmppChatListener(realm);
-		rosterListener = new XmppRosterListener(realm);
+	public XmppRealmConnection(@Nonnull XmppAccount account, @Nonnull Context context) {
+		super(account, context);
+		chatListener = new XmppChatListener(account);
+		rosterListener = new XmppRosterListener(account);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 	@Nullable
 	private synchronized Connection tryToConnect(int connectionAttempt) throws RealmConnectionException {
 		if (this.connection == null) {
-			final XmppAccount realm = getRealm();
+			final XmppAccount realm = getAccount();
 			final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
 
 			// connect to the server
@@ -109,14 +109,14 @@ public class XmppRealmConnection extends AbstractRealmConnection<XmppAccount> im
 	private Connection tryGetConnection() throws XMPPException, RealmConnectionException {
 		Connection localConnection = connection;
 		if (localConnection != null) {
-			prepareConnection(localConnection, getRealm());
+			prepareConnection(localConnection, getAccount());
 			return localConnection;
 		} else {
 			localConnection = tryToConnect(CONNECTION_RETRIES - 1);
 			if (localConnection != null) {
 				return localConnection;
 			} else {
-				throw new RealmConnectionException(getRealm().getId());
+				throw new RealmConnectionException(getAccount().getId());
 			}
 		}
 	}
