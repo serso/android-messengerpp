@@ -469,7 +469,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	private RealmIconService getRealmIconServiceByUser(@Nonnull User user) throws UnsupportedAccountException {
-		return getRealmByEntity(user.getEntity()).getRealmDef().getRealmIconService();
+		return getRealmByEntity(user.getEntity()).getRealm().getRealmIconService();
 	}
 
 	@Override
@@ -484,7 +484,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void setUsersIcon(@Nonnull Account account, @Nonnull List<User> users, ImageView imageView) {
-		account.getRealmDef().getRealmIconService().setUsersIcon(users, imageView);
+		account.getRealm().getRealmIconService().setUsersIcon(users, imageView);
 	}
 
 	@Override

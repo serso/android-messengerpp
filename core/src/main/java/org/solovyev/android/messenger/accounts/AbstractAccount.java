@@ -4,7 +4,7 @@ import android.content.Context;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.CompositeUser;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
@@ -21,7 +21,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	private String id;
 
 	@Nonnull
-	private RealmDef realmDef;
+	private Realm realm;
 
 	@Nonnull
 	private User user;
@@ -39,7 +39,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	private volatile AccountConnection accountConnection;
 
 	public AbstractAccount(@Nonnull String id,
-						   @Nonnull RealmDef realmDef,
+						   @Nonnull Realm realm,
 						   @Nonnull User user,
 						   @Nonnull C configuration,
 						   @Nonnull AccountState state) {
@@ -48,7 +48,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 		}
 
 		this.id = id;
-		this.realmDef = realmDef;
+		this.realm = realm;
 		this.user = user;
 		this.configuration = configuration;
 		this.state = state;
@@ -62,8 +62,8 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public final RealmDef getRealmDef() {
-		return realmDef;
+	public final Realm getRealm() {
+		return realm;
 	}
 
 	@Nonnull

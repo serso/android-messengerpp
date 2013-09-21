@@ -21,20 +21,20 @@ import java.util.Collections;
  */
 final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccountConfiguration> {
 
-	SmsAccountBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull SmsAccountConfiguration configuration) {
-		super(realmDef, configuration, editedAccount);
+	SmsAccountBuilder(@Nonnull Realm realm, @Nullable Account editedAccount, @Nonnull SmsAccountConfiguration configuration) {
+		super(realm, configuration, editedAccount);
 	}
 
 	@Nonnull
 	@Override
 	protected User getAccountUser(@Nonnull String accountId) {
-		return Users.newUser(accountId, SmsRealmDef.USER_ID, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
+		return Users.newUser(accountId, SmsRealm.USER_ID, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
 	}
 
 	@Nonnull
 	@Override
 	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new SmsAccount(id, getRealmDef(), user, getConfiguration(), state);
+		return new SmsAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 
 	@Override

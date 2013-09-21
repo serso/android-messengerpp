@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.realms.TestAccount;
-import org.solovyev.android.messenger.realms.TestRealmDef;
+import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.Objects;
@@ -33,7 +33,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 	private UserDao userDao;
 
 	@Inject
-	private TestRealmDef testRealmDef;
+	private TestRealm testRealmDef;
 
 	@Inject
 	private TestAccount testRealm;
@@ -98,7 +98,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
-		expected = Users.newUser(TestRealmDef.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+		expected = Users.newUser(TestRealm.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.updateUser(expected);
 
 		List<String> usersIds = userDao.loadUserIds();

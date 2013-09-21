@@ -9,7 +9,7 @@ import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.AbstractRealmDef;
+import org.solovyev.android.messenger.accounts.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -31,7 +31,7 @@ import java.util.List;
  * Time: 8:09 PM
  */
 @Singleton
-public final class XmppRealmDef extends AbstractRealmDef<XmppAccountConfiguration> {
+public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
     /*
 	**********************************************************************
@@ -59,19 +59,19 @@ public final class XmppRealmDef extends AbstractRealmDef<XmppAccountConfiguratio
 	@Nonnull
 	private Application context;
 
-	public XmppRealmDef() {
+	public XmppRealm() {
 		super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppAccountConfigurationFragment.class, XmppAccountConfiguration.class, true);
 	}
 
 	@Nonnull
 	@Override
-	public Account<XmppAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull XmppAccountConfiguration configuration, @Nonnull AccountState state) {
-		return new XmppAccount(realmId, this, user, configuration, state);
+	public Account<XmppAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull XmppAccountConfiguration configuration, @Nonnull AccountState state) {
+		return new XmppAccount(accountId, this, user, configuration, state);
 	}
 
 	@Override
 	@Nonnull
-	public AccountBuilder newRealmBuilder(@Nonnull XmppAccountConfiguration configuration, @Nullable Account editedAccount) {
+	public AccountBuilder newAccountBuilder(@Nonnull XmppAccountConfiguration configuration, @Nullable Account editedAccount) {
 		return new XmppAccountBuilder(this, editedAccount, configuration);
 	}
 

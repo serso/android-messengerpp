@@ -7,7 +7,7 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkAuth;
 import org.solovyev.android.messenger.realms.vk.users.VkUsersGetHttpTransaction;
@@ -22,8 +22,8 @@ import java.util.List;
 
 public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfiguration> {
 
-	protected VkAccountBuilder(@Nonnull RealmDef realmDef, @Nullable Account editedAccount, @Nonnull VkAccountConfiguration configuration) {
-		super(realmDef, configuration, editedAccount);
+	protected VkAccountBuilder(@Nonnull Realm realm, @Nullable Account editedAccount, @Nonnull VkAccountConfiguration configuration) {
+		super(realm, configuration, editedAccount);
 	}
 
 	@Nonnull
@@ -34,7 +34,7 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfigurat
 
 		User result;
 		try {
-			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(accountId, getRealmDef(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
+			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(accountId, getRealm(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
 			if (users.isEmpty()) {
 				result = defaultUser;
 			} else {
@@ -51,7 +51,7 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfigurat
 	@Nonnull
 	@Override
 	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new VkAccount(id, getRealmDef(), user, getConfiguration(), state);
+		return new VkAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 
 	@Override

@@ -18,17 +18,17 @@ import javax.annotation.Nonnull;
 public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 
 	@Inject
-	public TestAccount(@Nonnull TestRealmDef realmDef) {
+	public TestAccount(@Nonnull TestRealm realmDef) {
 		this(realmDef, 1);
 	}
 
-	public TestAccount(@Nonnull TestRealmDef realmDef, int index) {
+	public TestAccount(@Nonnull TestRealm realmDef, int index) {
 		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
 	}
 
 
-	public TestAccount(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull TestAccountConfiguration configuration) {
-		super(id, realmDef, user, configuration, AccountState.enabled);
+	public TestAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull TestAccountConfiguration configuration) {
+		super(id, realm, user, configuration, AccountState.enabled);
 	}
 
 	@Nonnull
@@ -40,7 +40,7 @@ public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 	@Nonnull
 	@Override
 	public String getDisplayName(@Nonnull Context context) {
-		return context.getString(getRealmDef().getNameResId());
+		return context.getString(getRealm().getNameResId());
 	}
 
 	@Nonnull

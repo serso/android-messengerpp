@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.util.Log;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.accounts.AccountService;
 import roboguice.RoboGuice;
 
@@ -28,7 +28,7 @@ public class SyncTimerTask extends TimerTask {
 	public void run() {
 		final Context context = this.contextRef.get();
 		if (context != null) {
-			for (RealmDef realm : RoboGuice.getInjector(context).getInstance(AccountService.class).getRealmDefs()) {
+			for (Realm realm : RoboGuice.getInjector(context).getInstance(AccountService.class).getRealmDefs()) {
 				final SyncData syncData = new SyncDataImpl(realm.getId());
 
 				for (SyncTask syncTask : SyncTask.values()) {

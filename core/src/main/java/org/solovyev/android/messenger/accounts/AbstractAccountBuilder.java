@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 public abstract class AbstractAccountBuilder<C extends AccountConfiguration> implements AccountBuilder {
 
 	@Nonnull
-	private RealmDef realmDef;
+	private Realm realm;
 
 	@Nonnull
 	private C configuration;
@@ -17,10 +17,10 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 	@Nullable
 	private Account editedAccount;
 
-	protected AbstractAccountBuilder(@Nonnull RealmDef realmDef,
+	protected AbstractAccountBuilder(@Nonnull Realm realm,
 									 @Nonnull C configuration,
 									 @Nullable Account editedAccount) {
-		this.realmDef = realmDef;
+		this.realm = realm;
 		this.editedAccount = editedAccount;
 		this.configuration = configuration;
 	}
@@ -44,8 +44,8 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 	protected abstract User getAccountUser(@Nonnull String accountId);
 
 	@Nonnull
-	public RealmDef getRealmDef() {
-		return realmDef;
+	public Realm getRealm() {
+		return realm;
 	}
 
 	@Nullable

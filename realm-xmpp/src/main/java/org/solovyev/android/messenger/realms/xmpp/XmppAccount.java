@@ -15,7 +15,7 @@ import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -33,11 +33,11 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	private static final String TAG = XmppAccount.class.getSimpleName();
 
 	public XmppAccount(@Nonnull String id,
-					   @Nonnull RealmDef realmDef,
+					   @Nonnull Realm realm,
 					   @Nonnull User user,
 					   @Nonnull XmppAccountConfiguration configuration,
 					   @Nonnull AccountState state) {
-		super(id, realmDef, user, configuration, state);
+		super(id, realm, user, configuration, state);
 	}
 
 	@Nonnull
@@ -51,7 +51,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	public String getDisplayName(@Nonnull Context context) {
 		final StringBuilder sb = new StringBuilder();
 
-		sb.append(context.getText(getRealmDef().getNameResId()));
+		sb.append(context.getText(getRealm().getNameResId()));
 		sb.append("@");
 		sb.append(getConfiguration().getServer());
 

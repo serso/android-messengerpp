@@ -55,9 +55,9 @@ public class RealmGuiEventListener implements EventListener<AccountGuiEvent> {
 		final Bundle fragmentArgs = new Bundle();
 		fragmentArgs.putString(BaseAccountConfigurationFragment.ARGS_ACCOUNT_ID, account.getId());
 		if (activity.isDualPane()) {
-			activity.getMultiPaneFragmentManager().setSecondFragment(account.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
+			activity.getMultiPaneFragmentManager().setSecondFragment(account.getRealm().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 		} else {
-			activity.getMultiPaneFragmentManager().setMainFragment(account.getRealmDef().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
+			activity.getMultiPaneFragmentManager().setMainFragment(account.getRealm().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 		}
 	}
 

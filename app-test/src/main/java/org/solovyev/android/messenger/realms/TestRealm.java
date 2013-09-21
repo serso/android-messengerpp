@@ -19,12 +19,12 @@ import java.util.Collections;
 import java.util.List;
 
 @Singleton
-public class TestRealmDef extends AbstractRealmDef {
+public class TestRealm extends AbstractRealm {
 
 	@Nonnull
 	public static final String REALM_ID = "test";
 
-	public TestRealmDef() {
+	public TestRealm() {
 		super(REALM_ID, R.string.mpp_test_realm_name, R.drawable.mpp_test_icon, TestAccountConfigurationFragment.class, TestAccountConfiguration.class, false);
 	}
 
@@ -40,13 +40,13 @@ public class TestRealmDef extends AbstractRealmDef {
 
 	@Nonnull
 	@Override
-	public Account<TestAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull AccountState state) {
-		return new TestAccount(realmId, this, user, (TestAccountConfiguration) configuration);
+	public Account<TestAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull AccountState state) {
+		return new TestAccount(accountId, this, user, (TestAccountConfiguration) configuration);
 	}
 
 	@Nonnull
 	@Override
-	public AccountBuilder newRealmBuilder(@Nonnull AccountConfiguration configuration, @Nullable Account editedAccount) {
+	public AccountBuilder newAccountBuilder(@Nonnull AccountConfiguration configuration, @Nullable Account editedAccount) {
 		return null;
 	}
 

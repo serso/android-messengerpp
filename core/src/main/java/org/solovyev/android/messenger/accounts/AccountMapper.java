@@ -5,7 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
 import org.solovyev.common.security.Cipherer;
@@ -34,25 +34,25 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 		final String state = cursor.getString(4);
 
 		try {
-			final RealmDef<C> realmDef = (RealmDef<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmDefById(realmId);
+			final Realm<C> realm = (Realm<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmDefById(realmId);
 			// realm is not loaded => no way we can find user in realm services
 			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
 
-			final C encryptedConfiguration = new Gson().fromJson(configuration, realmDef.getConfigurationClass());
+			final C encryptedConfiguration = new Gson().fromJson(configuration, realm.getConfigurationClass());
 
-			final C decryptedConfiguration = decryptConfiguration(realmDef, encryptedConfiguration);
+			final C decryptedConfiguration = decryptConfiguration(realm, encryptedConfiguration);
 
-			return realmDef.newRealm(accountId, user, decryptedConfiguration, AccountState.valueOf(state));
+			return realm.newAccount(accountId, user, decryptedConfiguration, AccountState.valueOf(state));
 		} catch (UnsupportedAccountException e) {
 			throw new AccountRuntimeException(accountId, e);
 		}
 	}
 
 	@Nonnull
-	private C decryptConfiguration(@Nonnull RealmDef<C> realmDef, @Nonnull C encryptedConfiguration) {
+	private C decryptConfiguration(@Nonnull Realm<C> realm, @Nonnull C encryptedConfiguration) {
 		try {
 			final C decryptedConfiguration;
-			final Cipherer<C, C> cipherer = realmDef.getCipherer();
+			final Cipherer<C, C> cipherer = realm.getCipherer();
 			if (secret != null && cipherer != null) {
 				decryptedConfiguration = cipherer.decrypt(secret, encryptedConfiguration);
 			} else {

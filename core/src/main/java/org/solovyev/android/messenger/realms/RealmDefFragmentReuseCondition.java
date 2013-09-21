@@ -15,17 +15,17 @@ import javax.annotation.Nullable;
 public class RealmDefFragmentReuseCondition implements JPredicate<Fragment> {
 
 	@Nonnull
-	private final RealmDef realmDef;
+	private final Realm realm;
 
-	public RealmDefFragmentReuseCondition(@Nonnull RealmDef realmDef) {
-		this.realmDef = realmDef;
+	public RealmDefFragmentReuseCondition(@Nonnull Realm realm) {
+		this.realm = realm;
 	}
 
 	@Override
 	public boolean apply(@Nullable Fragment fragment) {
 		if (fragment instanceof BaseAccountConfigurationFragment) {
 			final BaseAccountConfigurationFragment oldRealmFragment = ((BaseAccountConfigurationFragment) fragment);
-			if (realmDef.equals(oldRealmFragment.getRealmDef())) {
+			if (realm.equals(oldRealmFragment.getRealmDef())) {
 				// do nothing - configuration fragment for this item is already opened
 				return true;
 			}

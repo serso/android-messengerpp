@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.messages.ChatMessageImpl;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.realms.TestAccount;
-import org.solovyev.android.messenger.realms.TestRealmDef;
+import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -31,7 +31,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 	private ChatMessageDao chatMessageDao;
 
 	@Inject
-	private TestRealmDef testRealmDef;
+	private TestRealm testRealmDef;
 
 	@Inject
 	private TestAccount testRealm;

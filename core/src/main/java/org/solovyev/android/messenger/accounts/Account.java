@@ -5,7 +5,7 @@ import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
@@ -19,7 +19,7 @@ public interface Account<C extends AccountConfiguration> extends MessengerEntity
 	String getId();
 
 	@Nonnull
-	RealmDef getRealmDef();
+	Realm getRealm();
 
 	@Nonnull
 	User getUser();

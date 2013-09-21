@@ -13,7 +13,7 @@ import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmDefGuiEventType;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -204,7 +204,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	protected final void saveRealm() {
 		final AccountConfiguration configuration = validateData();
 		if (configuration != null) {
-			final AccountBuilder accountBuilder = getRealmDef().newRealmBuilder(configuration, getEditedRealm());
+			final AccountBuilder accountBuilder = getRealmDef().newAccountBuilder(configuration, getEditedRealm());
 			saveRealm(accountBuilder);
 		}
 	}
@@ -234,7 +234,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	}
 
 	@Nonnull
-	public abstract RealmDef getRealmDef();
+	public abstract Realm getRealmDef();
 
 	@Nonnull
 	protected CharSequence getFragmentTitle() {

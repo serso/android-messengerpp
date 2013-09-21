@@ -16,7 +16,7 @@ public class TestAccountConfigurationFragment extends BaseAccountConfigurationFr
 
 	@Inject
 	@Nonnull
-	private TestRealmDef realmDef;
+	private TestRealm realmDef;
 
 	public TestAccountConfigurationFragment() {
 		super(0);
@@ -30,7 +30,7 @@ public class TestAccountConfigurationFragment extends BaseAccountConfigurationFr
 
 	@Nonnull
 	@Override
-	public RealmDef getRealmDef() {
+	public Realm getRealmDef() {
 		return realmDef;
 	}
 }

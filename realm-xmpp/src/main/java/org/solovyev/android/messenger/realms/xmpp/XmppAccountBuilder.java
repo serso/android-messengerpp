@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -23,10 +23,10 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfig
 	@Nullable
 	private Connection connection;
 
-	public XmppAccountBuilder(@Nonnull RealmDef realmDef,
+	public XmppAccountBuilder(@Nonnull Realm realm,
 							  @Nullable Account editedAccount,
 							  @Nonnull XmppAccountConfiguration configuration) {
-		super(realmDef, configuration, editedAccount);
+		super(realm, configuration, editedAccount);
 	}
 
 	@Nonnull
@@ -51,7 +51,7 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfig
 	@Nonnull
 	@Override
 	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new XmppAccount(id, getRealmDef(), user, getConfiguration(), state);
+		return new XmppAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 
 	@Override

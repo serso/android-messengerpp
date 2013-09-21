@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -28,8 +28,8 @@ import com.google.common.base.Splitter;
  */
 final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
-	public SmsAccount(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
-		super(id, realmDef, user, configuration, state);
+	public SmsAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
+		super(id, realm, user, configuration, state);
 	}
 
 	@Nonnull
@@ -41,7 +41,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Nonnull
 	@Override
 	public String getDisplayName(@Nonnull Context context) {
-		return context.getString(getRealmDef().getNameResId());
+		return context.getString(getRealm().getNameResId());
 	}
 
 	@Nonnull

@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.realms.xmpp.XmppRealmDef;
+import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +31,7 @@ public abstract class AbstractMessengerTestCase {
 
 	@Inject
 	@Nonnull
-	private XmppRealmDef xmppRealmDef;
+	private XmppRealm xmppRealmDef;
 
 	@Before
 	public void setUp() throws Exception {
@@ -55,7 +55,7 @@ public abstract class AbstractMessengerTestCase {
 	}
 
 	@Nonnull
-	public XmppRealmDef getXmppRealmDef() {
+	public XmppRealm getXmppRealmDef() {
 		return xmppRealmDef;
 	}
 }

@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<RealmDef, RealmDefListItem> implements DetachableFragment {
+public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Realm, RealmDefListItem> implements DetachableFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "realms-defs";
@@ -48,15 +48,15 @@ public class MessengerRealmDefsFragment extends AbstractMessengerListFragment<Re
 	@Override
 	protected MessengerListItemAdapter<RealmDefListItem> createAdapter() {
 		final List<RealmDefListItem> listItems = new ArrayList<RealmDefListItem>();
-		for (RealmDef realmDef : accountService.getRealmDefs()) {
-			listItems.add(new RealmDefListItem(realmDef));
+		for (Realm realm : accountService.getRealmDefs()) {
+			listItems.add(new RealmDefListItem(realm));
 		}
 		return new MessengerListItemAdapter<RealmDefListItem>(getActivity(), listItems);
 	}
 
 	@Nullable
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<RealmDef>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmDefListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<Realm>> createAsyncLoader(@Nonnull MessengerListItemAdapter<RealmDefListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return null;
 	}
 

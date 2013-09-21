@@ -17,7 +17,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 12:56 AM
  */
-public interface RealmDef<C extends AccountConfiguration> extends MessengerEntity {
+public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 
 	@Nonnull
 	String FAKE_REALM_ID = "fake";
@@ -53,13 +53,13 @@ public interface RealmDef<C extends AccountConfiguration> extends MessengerEntit
 	Class<? extends BaseAccountConfigurationFragment> getConfigurationFragmentClass();
 
 	@Nonnull
-	Account<C> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull C configuration, @Nonnull AccountState state);
+	Account<C> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull C configuration, @Nonnull AccountState state);
 
 	@Nonnull
 	Class<? extends C> getConfigurationClass();
 
 	@Nonnull
-	AccountBuilder newRealmBuilder(@Nonnull C configuration, @Nullable Account editedAccount);
+	AccountBuilder newAccountBuilder(@Nonnull C configuration, @Nullable Account editedAccount);
 
 	/**
 	 * Returns list of translated user properties where property name = title, property value = value

@@ -34,7 +34,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 
 	@Inject
 	@Nonnull
-	private XmppRealmDef xmppRealmDef;
+	private XmppRealm xmppRealmDef;
 
 	@Nonnull
 	private AccountUserService accountUserService;

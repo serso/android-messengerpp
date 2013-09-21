@@ -62,7 +62,7 @@ public class XmppRealmIconService implements RealmIconService {
 	private BitmapDrawable getUserIcon(@Nonnull User user) {
 		BitmapDrawable result = null;
 
-		final String userIconBase64 = user.getPropertyValueByName(XmppRealmDef.USER_PROPERTY_AVATAR_BASE64);
+		final String userIconBase64 = user.getPropertyValueByName(XmppRealm.USER_PROPERTY_AVATAR_BASE64);
 		if (userIconBase64 != null) {
 			try {
 				final byte[] userIconBytes = ABase64StringDecoder.getInstance().convert(userIconBase64);

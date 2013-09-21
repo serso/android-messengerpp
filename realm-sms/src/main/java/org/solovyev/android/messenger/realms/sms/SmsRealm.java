@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.android.messenger.accounts.AbstractRealm;
 import org.solovyev.android.messenger.icons.RealmIconService;
-import org.solovyev.android.messenger.accounts.AbstractRealmDef;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
@@ -26,7 +26,7 @@ import java.util.List;
  * Time: 8:45 PM
  */
 @Singleton
-public final class SmsRealmDef extends AbstractRealmDef<SmsAccountConfiguration> {
+public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
 	/*
 	**********************************************************************
@@ -51,20 +51,20 @@ public final class SmsRealmDef extends AbstractRealmDef<SmsAccountConfiguration>
 	private final Context context;
 
 	@Inject
-	public SmsRealmDef(@Nonnull Application context) {
+	public SmsRealm(@Nonnull Application context) {
 		super(REALM_ID, R.string.mpp_sms_realm_name, R.drawable.mpp_sms_icon, SmsAccountConfigurationFragment.class, SmsAccountConfiguration.class, false);
 		this.context = context;
 	}
 
 	@Nonnull
 	@Override
-	public Account<SmsAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
-		return new SmsAccount(realmId, this, user, configuration, state);
+	public Account<SmsAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
+		return new SmsAccount(accountId, this, user, configuration, state);
 	}
 
 	@Nonnull
 	@Override
-	public AccountBuilder newRealmBuilder(@Nonnull SmsAccountConfiguration configuration, @Nullable Account editedAccount) {
+	public AccountBuilder newAccountBuilder(@Nonnull SmsAccountConfiguration configuration, @Nullable Account editedAccount) {
 		return new SmsAccountBuilder(this, editedAccount, configuration);
 	}
 

@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.notifications.Notifications;
-import org.solovyev.android.messenger.accounts.AbstractRealmDef;
+import org.solovyev.android.messenger.accounts.AbstractRealm;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
@@ -39,7 +39,7 @@ import static org.solovyev.android.messenger.notifications.Notifications.newOpen
  * Time: 10:34 PM
  */
 @Singleton
-public class VkRealmDef extends AbstractRealmDef<VkAccountConfiguration> {
+public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 
     /*
 	**********************************************************************
@@ -97,7 +97,7 @@ public class VkRealmDef extends AbstractRealmDef<VkAccountConfiguration> {
     **********************************************************************
     */
 
-	public VkRealmDef() {
+	public VkRealm() {
 		super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkAccountConfigurationFragment.class, VkAccountConfiguration.class, false);
 	}
 
@@ -111,13 +111,13 @@ public class VkRealmDef extends AbstractRealmDef<VkAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public Account<VkAccountConfiguration> newRealm(@Nonnull String realmId, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
-		return new VkAccount(realmId, this, user, configuration, state);
+	public Account<VkAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
+		return new VkAccount(accountId, this, user, configuration, state);
 	}
 
 	@Nonnull
 	@Override
-	public AccountBuilder newRealmBuilder(@Nonnull VkAccountConfiguration configuration, @Nullable Account editedAccount) {
+	public AccountBuilder newAccountBuilder(@Nonnull VkAccountConfiguration configuration, @Nullable Account editedAccount) {
 		return new VkAccountBuilder(this, editedAccount, configuration);
 	}
 

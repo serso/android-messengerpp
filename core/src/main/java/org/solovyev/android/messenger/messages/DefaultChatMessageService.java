@@ -128,7 +128,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 		result.setDirection(MessageDirection.out);
 
-		if (account.getRealmDef().notifySentMessagesImmediately()) {
+		if (account.getRealm().notifySentMessagesImmediately()) {
 			chatService.saveChatMessages(chat.getEntity(), Arrays.asList(result), false);
 		}
 

@@ -2,8 +2,8 @@ package org.solovyev.android.messenger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.xmpp.XmppRealmDef;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -19,11 +19,11 @@ public class TestMessengerConfiguration implements MessengerConfiguration {
 
 	@Inject
 	@Nonnull
-	private XmppRealmDef xmppRealmDef;
+	private XmppRealm xmppRealmDef;
 
 	@Nonnull
 	@Override
-	public Collection<RealmDef> getRealmDefs() {
-		return Arrays.<RealmDef>asList(xmppRealmDef);
+	public Collection<Realm> getRealms() {
+		return Arrays.<Realm>asList(xmppRealmDef);
 	}
 }

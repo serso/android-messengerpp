@@ -22,14 +22,14 @@ public class RealmDefGuiEventListener implements EventListener<RealmDefGuiEvent>
 
 	@Override
 	public void onEvent(@Nonnull RealmDefGuiEvent event) {
-		final RealmDef realmDef = event.getRealmDef();
+		final Realm realm = event.getRealmDef();
 
 		switch (event.getType()) {
 			case realm_def_clicked:
 				if (activity.isDualPane()) {
-					activity.getMultiPaneFragmentManager().setSecondFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseAccountConfigurationFragment.FRAGMENT_TAG, false);
+					activity.getMultiPaneFragmentManager().setSecondFragment(realm.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realm), BaseAccountConfigurationFragment.FRAGMENT_TAG, false);
 				} else {
-					activity.getMultiPaneFragmentManager().setMainFragment(realmDef.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realmDef), BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
+					activity.getMultiPaneFragmentManager().setMainFragment(realm.getConfigurationFragmentClass(), null, new RealmDefFragmentReuseCondition(realm), BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 				}
 				break;
 			case realm_def_edit_finished:

@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
@@ -78,7 +78,7 @@ public class DefaultAccountService implements AccountService {
 	private final Context context;
 
 	@Nonnull
-	private final Map<String, RealmDef<? extends AccountConfiguration>> realmDefs = new HashMap<String, RealmDef<? extends AccountConfiguration>>();
+	private final Map<String, Realm<? extends AccountConfiguration>> realmDefs = new HashMap<String, Realm<? extends AccountConfiguration>>();
 
 	@GuardedBy("accounts")
 	@Nonnull
@@ -92,12 +92,12 @@ public class DefaultAccountService implements AccountService {
 
 	@Inject
 	public DefaultAccountService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
-		this(context, configuration.getRealmDefs(), lock, eventExecutor);
+		this(context, configuration.getRealms(), lock, eventExecutor);
 	}
 
-	public DefaultAccountService(@Nonnull Application context, @Nonnull Collection<? extends RealmDef> realmDefs, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
-		for (RealmDef realmDef : realmDefs) {
-			this.realmDefs.put(realmDef.getId(), realmDef);
+	public DefaultAccountService(@Nonnull Application context, @Nonnull Collection<? extends Realm> realmDefs, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+		for (Realm realm : realmDefs) {
+			this.realmDefs.put(realm.getId(), realm);
 		}
 
 		this.context = context;
@@ -109,8 +109,8 @@ public class DefaultAccountService implements AccountService {
 	public void init() {
 		accountDao.init();
 
-		for (RealmDef realmDef : realmDefs.values()) {
-			realmDef.init(context);
+		for (Realm realm : realmDefs.values()) {
+			realm.init(context);
 		}
 
 		synchronized (lock) {
@@ -132,7 +132,7 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	@Override
-	public Collection<RealmDef<? extends AccountConfiguration>> getRealmDefs() {
+	public Collection<Realm<? extends AccountConfiguration>> getRealmDefs() {
 		return Collections.unmodifiableCollection(this.realmDefs.values());
 	}
 
@@ -185,8 +185,8 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	@Override
-	public RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException {
-		final RealmDef<? extends AccountConfiguration> realm = this.realmDefs.get(realmDefId);
+	public Realm<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException {
+		final Realm<? extends AccountConfiguration> realm = this.realmDefs.get(realmDefId);
 		if (realm == null) {
 			throw new UnsupportedAccountException(realmDefId);
 		}
@@ -225,7 +225,7 @@ public class DefaultAccountService implements AccountService {
 				if (oldAccount != null) {
 					newRealmId = oldAccount.getId();
 				} else {
-					newRealmId = generateRealmId(accountBuilder.getRealmDef());
+					newRealmId = generateRealmId(accountBuilder.getRealm());
 				}
 				final Account newAccount = accountBuilder.build(new AccountBuilder.Data(newRealmId));
 
@@ -339,8 +339,8 @@ public class DefaultAccountService implements AccountService {
 	}
 
 	@Nonnull
-	private String generateRealmId(@Nonnull RealmDef realmDef) {
-		return EntityImpl.getRealmId(realmDef.getId(), accountCounter.getAndIncrement());
+	private String generateRealmId(@Nonnull Realm realm) {
+		return EntityImpl.getRealmId(realm.getId(), accountCounter.getAndIncrement());
 	}
 
 	@Override
@@ -355,7 +355,7 @@ public class DefaultAccountService implements AccountService {
 				accounts.put(realmId, account);
 
 				// +1 for '~' symbol between realm and index
-				String realmIndexString = realmId.substring(account.getRealmDef().getId().length() + 1);
+				String realmIndexString = realmId.substring(account.getRealm().getId().length() + 1);
 				try {
 					maxRealmIndex = Math.max(Integer.valueOf(realmIndexString), maxRealmIndex);
 				} catch (NumberFormatException e) {
@@ -387,7 +387,7 @@ public class DefaultAccountService implements AccountService {
 	@Override
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
 		try {
-			return getAccountById(user.getEntity().getAccountId()).getRealmDef().getUserProperties(user, context);
+			return getAccountById(user.getEntity().getAccountId()).getRealm().getUserProperties(user, context);
 		} catch (UnsupportedAccountException e) {
 			return Collections.emptyList();
 		}

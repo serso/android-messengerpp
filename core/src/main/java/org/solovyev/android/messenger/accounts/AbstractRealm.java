@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
@@ -15,7 +15,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 1:05 AM
  */
-public abstract class AbstractRealmDef<C extends AccountConfiguration> implements RealmDef<C> {
+public abstract class AbstractRealm<C extends AccountConfiguration> implements Realm<C> {
 
 	@Nonnull
 	private final String id;
@@ -32,12 +32,12 @@ public abstract class AbstractRealmDef<C extends AccountConfiguration> implement
 
 	private final boolean notifySentMessagesImmediately;
 
-	protected AbstractRealmDef(@Nonnull String id,
-							   int nameResId,
-							   int iconResId,
-							   @Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
-							   @Nonnull Class<? extends C> configurationClass,
-							   boolean notifySentMessagesImmediately) {
+	protected AbstractRealm(@Nonnull String id,
+							int nameResId,
+							int iconResId,
+							@Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
+							@Nonnull Class<? extends C> configurationClass,
+							boolean notifySentMessagesImmediately) {
 		this.id = id;
 		this.nameResId = nameResId;
 		this.iconResId = iconResId;
@@ -80,11 +80,11 @@ public abstract class AbstractRealmDef<C extends AccountConfiguration> implement
 			return true;
 		}
 
-		if (!(o instanceof AbstractRealmDef)) {
+		if (!(o instanceof AbstractRealm)) {
 			return false;
 		}
 
-		final AbstractRealmDef that = (AbstractRealmDef) o;
+		final AbstractRealm that = (AbstractRealm) o;
 
 		return id.equals(that.id);
 

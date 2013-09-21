@@ -38,7 +38,7 @@ public interface AccountService {
 	 * @return collection of all configured realms in application
 	 */
 	@Nonnull
-	Collection<RealmDef<? extends AccountConfiguration>> getRealmDefs();
+	Collection<Realm<? extends AccountConfiguration>> getRealmDefs();
 
 	@Nonnull
 	Collection<Account> getAccounts();
@@ -66,7 +66,7 @@ public interface AccountService {
 	 * @throws UnsupportedAccountException if realm hasn't been registered in this service
 	 */
 	@Nonnull
-	RealmDef<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException;
+	Realm<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException;
 
 	@Nonnull
 	Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException;

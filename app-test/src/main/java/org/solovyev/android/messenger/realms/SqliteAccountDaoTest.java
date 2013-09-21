@@ -19,7 +19,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 	private AccountDao accountDao;
 
 	@Inject
-	private TestRealmDef testRealmDef;
+	private TestRealm testRealmDef;
 
 	public void setUp() throws Exception {
 		super.setUp();
@@ -31,7 +31,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		Assert.assertTrue(accounts.isEmpty());
 
 		TestAccountConfiguration expectedConfig1 = new TestAccountConfiguration("test_config_field", 42);
-		final Account expected1 = testRealmDef.newRealm("test~01", Users.newEmptyUser(EntityImpl.newInstance("test~01", "user01")), expectedConfig1, AccountState.enabled);
+		final Account expected1 = testRealmDef.newAccount("test~01", Users.newEmptyUser(EntityImpl.newInstance("test~01", "user01")), expectedConfig1, AccountState.enabled);
 		accountDao.insertRealm(expected1);
 
 		accounts = accountDao.loadAccounts();
@@ -51,10 +51,10 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 	public void testConcreteRealms() throws Exception {
 		int index = 0;
-		for (RealmDef realmDef : getAccountService().getRealmDefs()) {
-			final AccountConfiguration accountConfiguration = (AccountConfiguration) realmDef.getConfigurationClass().newInstance();
-			final String realmId = EntityImpl.getRealmId(realmDef.getId(), index);
-			Account expected = realmDef.newRealm(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
+		for (Realm realm : getAccountService().getRealmDefs()) {
+			final AccountConfiguration accountConfiguration = (AccountConfiguration) realm.getConfigurationClass().newInstance();
+			final String realmId = EntityImpl.getRealmId(realm.getId(), index);
+			Account expected = realm.newAccount(realmId, Users.newEmptyUser(EntityImpl.newInstance(realmId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
 			accountDao.insertRealm(expected);
 		}
 

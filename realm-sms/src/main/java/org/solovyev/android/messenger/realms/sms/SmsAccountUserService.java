@@ -38,7 +38,7 @@ final class SmsAccountUserService implements AccountUserService {
 	public User getUserById(@Nonnull String realmUserId) throws AccountConnectionException {
 		final Context context = MessengerApplication.getApp();
 
-		if (!SmsRealmDef.USER_ID.equals(realmUserId)) {
+		if (!SmsRealm.USER_ID.equals(realmUserId)) {
 			final String selection = ContactsContract.Contacts._ID + " = ? and " + ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 			final String[] selectionArgs = new String[]{realmUserId};
 
@@ -77,7 +77,7 @@ final class SmsAccountUserService implements AccountUserService {
 				}
 			}
 
-			return user == null ? realm.getUser() : Users.newUser(realm.newRealmEntity(SmsRealmDef.USER_ID), Users.newNeverSyncedUserSyncData(), user.getProperties());
+			return user == null ? realm.getUser() : Users.newUser(realm.newRealmEntity(SmsRealm.USER_ID), Users.newNeverSyncedUserSyncData(), user.getProperties());
 		}
 	}
 

@@ -5,7 +5,7 @@ import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.vk.chats.VkAccountChatService;
 import org.solovyev.android.messenger.realms.vk.users.VkAccountUserService;
 import org.solovyev.android.messenger.users.AccountUserService;
@@ -15,8 +15,8 @@ import javax.annotation.Nonnull;
 
 public final class VkAccount extends AbstractAccount<VkAccountConfiguration> {
 
-	public VkAccount(@Nonnull String id, @Nonnull RealmDef realmDef, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
-		super(id, realmDef, user, configuration, state);
+	public VkAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
+		super(id, realm, user, configuration, state);
 	}
 
 	@Nonnull
@@ -30,7 +30,7 @@ public final class VkAccount extends AbstractAccount<VkAccountConfiguration> {
 	public String getDisplayName(@Nonnull Context context) {
 		final StringBuilder sb = new StringBuilder();
 
-		sb.append(context.getText(getRealmDef().getNameResId()));
+		sb.append(context.getText(getRealm().getNameResId()));
 
 		return sb.toString();
 	}

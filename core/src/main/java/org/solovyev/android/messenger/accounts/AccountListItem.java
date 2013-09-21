@@ -75,7 +75,7 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 	protected void fillView(@Nonnull Account account, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
 		final ImageView iconImageView = viewTag.getViewById(R.id.mpp_li_account_icon_imageview);
 
-		final Drawable realmIcon = context.getResources().getDrawable(account.getRealmDef().getIconResId());
+		final Drawable realmIcon = context.getResources().getDrawable(account.getRealm().getIconResId());
 		iconImageView.setImageDrawable(realmIcon);
 
 		final TextView userNameTextView = viewTag.getViewById(R.id.mpp_li_account_user_name_textview);

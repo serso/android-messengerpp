@@ -153,13 +153,13 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		final ContentValues values = new ContentValues();
 
 		values.put("id", account.getId());
-		values.put("realm_id", account.getRealmDef().getId());
+		values.put("realm_id", account.getRealm().getId());
 		values.put("user_id", account.getUser().getEntity().getEntityId());
 
 		final AccountConfiguration configuration;
 
 		try {
-			final Cipherer<AccountConfiguration, AccountConfiguration> cipherer = account.getRealmDef().getCipherer();
+			final Cipherer<AccountConfiguration, AccountConfiguration> cipherer = account.getRealm().getCipherer();
 			if (cipherer != null && secret != null) {
 				configuration = cipherer.encrypt(secret, account.getConfiguration());
 			} else {

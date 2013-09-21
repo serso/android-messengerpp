@@ -16,13 +16,13 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-class RealmDefListItem extends AbstractMessengerListItem<RealmDef> {
+class RealmDefListItem extends AbstractMessengerListItem<Realm> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "realm_def_list_item_";
 
-	RealmDefListItem(@Nonnull RealmDef realmDef) {
-		super(TAG_PREFIX, realmDef, R.layout.mpp_list_item_realm_def);
+	RealmDefListItem(@Nonnull Realm realm) {
+		super(TAG_PREFIX, realm, R.layout.mpp_list_item_realm_def);
 	}
 
 	@Nullable
@@ -38,7 +38,7 @@ class RealmDefListItem extends AbstractMessengerListItem<RealmDef> {
 	}
 
 	@Nonnull
-	private RealmDef getRealmDef() {
+	private Realm getRealmDef() {
 		return getData();
 	}
 
@@ -50,14 +50,14 @@ class RealmDefListItem extends AbstractMessengerListItem<RealmDef> {
 
 	@Nonnull
 	@Override
-	protected String getDisplayName(@Nonnull RealmDef realmDef, @Nonnull Context context) {
-		return context.getString(realmDef.getNameResId());
+	protected String getDisplayName(@Nonnull Realm realm, @Nonnull Context context) {
+		return context.getString(realm.getNameResId());
 	}
 
 	@Override
-	protected void fillView(@Nonnull RealmDef realmDef, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+	protected void fillView(@Nonnull Realm realm, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
 		final ImageView realmDefIconImageView = viewTag.getViewById(R.id.mpp_li_realm_def_icon_imageview);
-		final Drawable configuredRealmIcon = context.getResources().getDrawable(realmDef.getIconResId());
+		final Drawable configuredRealmIcon = context.getResources().getDrawable(realm.getIconResId());
 		realmDefIconImageView.setImageDrawable(configuredRealmIcon);
 
 		final TextView realmDefNameTextView = viewTag.getViewById(R.id.mpp_li_realm_def_name_textview);

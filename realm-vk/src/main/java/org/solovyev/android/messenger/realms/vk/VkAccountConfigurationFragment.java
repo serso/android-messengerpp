@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ public class VkAccountConfigurationFragment extends BaseAccountConfigurationFrag
 
 	@Inject
 	@Nonnull
-	private VkRealmDef realmDef;
+	private VkRealm realmDef;
 
     /*
     **********************************************************************
@@ -86,7 +86,7 @@ public class VkAccountConfigurationFragment extends BaseAccountConfigurationFrag
 
 	@Nonnull
 	@Override
-	public RealmDef getRealmDef() {
+	public Realm getRealmDef() {
 		return realmDef;
 	}
 }

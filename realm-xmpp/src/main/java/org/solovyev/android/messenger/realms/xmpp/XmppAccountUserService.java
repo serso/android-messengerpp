@@ -128,11 +128,11 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 				result.add(Properties.newProperty(User.PROPERTY_NICKNAME, userCard.getNickName()));
 				result.add(Properties.newProperty(User.PROPERTY_EMAIL, userCard.getEmailHome()));
 				result.add(Properties.newProperty(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
-				result.add(Properties.newProperty(XmppRealmDef.USER_PROPERTY_AVATAR_HASH, userCard.getAvatarHash()));
+				result.add(Properties.newProperty(XmppRealm.USER_PROPERTY_AVATAR_HASH, userCard.getAvatarHash()));
 
 				final byte[] avatar = userCard.getAvatar();
 				if (avatar != null) {
-					result.add(Properties.newProperty(XmppRealmDef.USER_PROPERTY_AVATAR_BASE64, ABase64StringEncoder.getInstance().convert(avatar)));
+					result.add(Properties.newProperty(XmppRealm.USER_PROPERTY_AVATAR_BASE64, ABase64StringEncoder.getInstance().convert(avatar)));
 				}
 
 				// full name

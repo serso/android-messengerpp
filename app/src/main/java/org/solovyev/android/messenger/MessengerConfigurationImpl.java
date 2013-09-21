@@ -2,10 +2,10 @@ package org.solovyev.android.messenger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.messenger.realms.RealmDef;
-import org.solovyev.android.messenger.realms.sms.SmsRealmDef;
-import org.solovyev.android.messenger.realms.vk.VkRealmDef;
-import org.solovyev.android.messenger.realms.xmpp.XmppRealmDef;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.sms.SmsRealm;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
+import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -21,34 +21,34 @@ import java.util.List;
 public class MessengerConfigurationImpl implements MessengerConfiguration {
 
 	@Nonnull
-	private final List<RealmDef> realmDefs = new ArrayList<RealmDef>();
+	private final List<Realm> realms = new ArrayList<Realm>();
 
 	@Inject
 	@Nonnull
-	private XmppRealmDef xmppRealmDef;
+	private XmppRealm xmppRealmDef;
 
 	@Inject
 	@Nonnull
-	private VkRealmDef vkRealmDef;
+	private VkRealm vkRealmDef;
 
 	@Inject
 	@Nonnull
-	private SmsRealmDef smsRealmDef;
+	private SmsRealm smsRealmDef;
 
 	public MessengerConfigurationImpl() {
 	}
 
 	@Nonnull
 	@Override
-	public Collection<RealmDef> getRealmDefs() {
-		synchronized (realmDefs) {
-			if (realmDefs.isEmpty()) {
-				realmDefs.add(xmppRealmDef);
-				realmDefs.add(vkRealmDef);
-				realmDefs.add(smsRealmDef);
+	public Collection<Realm> getRealms() {
+		synchronized (realms) {
+			if (realms.isEmpty()) {
+				realms.add(xmppRealmDef);
+				realms.add(vkRealmDef);
+				realms.add(smsRealmDef);
 			}
 		}
 
-		return this.realmDefs;
+		return this.realms;
 	}
 }

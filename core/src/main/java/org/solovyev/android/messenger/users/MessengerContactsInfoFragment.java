@@ -17,7 +17,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.realms.RealmDef;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 import javax.annotation.Nonnull;
@@ -44,7 +44,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 
 	@Inject
 	@Nonnull
-	private RealmDef realm;
+	private Realm realm;
 
 	@Nonnull
 	private static final String CONTACT_IDS = "contact_ids";
