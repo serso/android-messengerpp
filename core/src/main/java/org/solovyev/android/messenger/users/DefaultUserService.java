@@ -229,7 +229,7 @@ public class DefaultUserService implements UserService {
 	@Override
 	public void removeUsersInRealm(@Nonnull final String realmId) {
 		synchronized (lock) {
-			this.userDao.deleteAllUsersInRealm(realmId);
+			this.userDao.deleteAllUsersForAccount(realmId);
 		}
 
 		userChatsCache.update(EntitiesRemovedMapUpdater.<Chat>newInstance(realmId));

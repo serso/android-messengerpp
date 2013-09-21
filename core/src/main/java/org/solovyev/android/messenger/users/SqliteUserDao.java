@@ -100,12 +100,12 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 	}
 
 	@Override
-	public void deleteAllUsersInRealm(@Nonnull String realmId) {
+	public void deleteAllUsersForAccount(@Nonnull String accountId) {
 		// todo serso: startWith must be replaced with equals!
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_contacts", "user_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_properties", "user_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "user_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("users", "realm_id", realmId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_contacts", "user_id", accountId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_properties", "user_id", accountId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "user_id", accountId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("users", "account_id", accountId));
 	}
 
 	@Nonnull
@@ -458,7 +458,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
 
 		values.put("id", user.getEntity().getEntityId());
-		values.put("realm_id", user.getEntity().getAccountId());
+		values.put("account_id", user.getEntity().getAccountId());
 		values.put("realm_user_id", user.getEntity().getRealmEntityId());
 		values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
 		values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));

@@ -80,7 +80,7 @@ public class DefaultAccountService implements AccountService {
 	@Nonnull
 	private final Map<String, RealmDef<? extends AccountConfiguration>> realmDefs = new HashMap<String, RealmDef<? extends AccountConfiguration>>();
 
-	@GuardedBy("realms")
+	@GuardedBy("accounts")
 	@Nonnull
 	private final Map<String, Account> accounts = new HashMap<String, Account>();
 

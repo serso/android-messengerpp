@@ -103,7 +103,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		List<String> usersIds = userDao.loadUserIds();
 		Assert.assertEquals(2, usersIds.size());
-		userDao.deleteAllUsersInRealm("test~1");
+		userDao.deleteAllUsersForAccount("test~1");
 		usersIds = userDao.loadUserIds();
 		Assert.assertEquals(0, usersIds.size());
 	}
@@ -160,7 +160,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 							return user.getEntity().getAccountId().equals(account.getId());
 						}
 					});
-					userDao.deleteAllUsersInRealm(account.getId());
+					userDao.deleteAllUsersForAccount(account.getId());
 					break;
 				case 6:
 					users.clear();

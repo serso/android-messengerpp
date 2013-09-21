@@ -12,13 +12,13 @@ import javax.annotation.Nonnull;
 public interface Entity extends Parcelable {
 
 	/**
-	 * @return unique ID of user in application
+	 * @return unique ID of entity (user/chat/message) in application
 	 */
 	@Nonnull
 	String getEntityId();
 
 	/**
-	 * @return account to which user is belonged to
+	 * @return account to which entity is belonged to
 	 */
 	@Nonnull
 	String getAccountId();

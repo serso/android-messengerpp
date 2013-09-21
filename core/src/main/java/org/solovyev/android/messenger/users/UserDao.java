@@ -74,7 +74,7 @@ public interface UserDao {
 	 *
 	 * @param realmId realm id
 	 */
-	void deleteAllUsersInRealm(@Nonnull String realmId);
+	void deleteAllUsersForAccount(@Nonnull String realmId);
 
     /*
     **********************************************************************

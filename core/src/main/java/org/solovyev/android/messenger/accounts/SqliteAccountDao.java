@@ -61,7 +61,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 
 	@Override
 	public void deleteRealm(@Nonnull String accountId) {
-		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealm(accountId)));
+		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteAccount(accountId)));
 	}
 
 	@Nonnull
@@ -77,7 +77,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 
 	@Override
 	public void deleteAllAccounts() {
-		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(DeleteAllRowsDbExec.newInstance("realms")));
+		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(DeleteAllRowsDbExec.newInstance("accounts")));
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 
 			final ContentValues values = toContentValues(account, secret);
 
-			return db.insert("realms", null, values);
+			return db.insert("accounts", null, values);
 		}
 	}
 
@@ -144,7 +144,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 
 			final ContentValues values = toContentValues(account, secret);
 
-			return db.update("realms", values, "id = ?", new String[]{account.getId()});
+			return db.update("accounts", values, "id = ?", new String[]{account.getId()});
 		}
 	}
 
@@ -153,7 +153,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		final ContentValues values = new ContentValues();
 
 		values.put("id", account.getId());
-		values.put("realm_def_id", account.getRealmDef().getId());
+		values.put("realm_id", account.getRealmDef().getId());
 		values.put("user_id", account.getUser().getEntity().getEntityId());
 
 		final AccountConfiguration configuration;
@@ -189,9 +189,9 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
 			if (state == null) {
-				return db.query("realms", null, null, null, null, null, null);
+				return db.query("accounts", null, null, null, null, null, null);
 			} else {
-				return db.query("realms", null, "state = ?", new String[]{state.name()}, null, null, null);
+				return db.query("accounts", null, "state = ?", new String[]{state.name()}, null, null, null);
 			}
 		}
 
@@ -202,9 +202,9 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		}
 	}
 
-	private static class DeleteRealm extends AbstractObjectDbExec<String> {
+	private static class DeleteAccount extends AbstractObjectDbExec<String> {
 
-		public DeleteRealm(@Nonnull String realmId) {
+		public DeleteAccount(@Nonnull String realmId) {
 			super(realmId);
 		}
 
@@ -212,7 +212,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		public long exec(@Nonnull SQLiteDatabase db) {
 			final String realmId = getNotNullObject();
 
-			return db.delete("realms", "id = ?", new String[]{realmId});
+			return db.delete("accounts", "id = ?", new String[]{realmId});
 		}
 	}
 

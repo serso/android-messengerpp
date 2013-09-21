@@ -110,8 +110,8 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 	}
 
 	@Override
-	public void deleteAllMessagesInRealm(@Nonnull String realmId) {
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("messages", "realm_id", realmId));
+	public void deleteAllMessagesForAccount(@Nonnull String accountId) {
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("messages", "account_id", accountId));
 	}
 
 	@Nonnull
@@ -407,7 +407,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		final ContentValues values = new ContentValues();
 
 		values.put("id", chatMessage.getEntity().getEntityId());
-		values.put("realm_id", chatMessage.getEntity().getAccountId());
+		values.put("account_id", chatMessage.getEntity().getAccountId());
 		values.put("realm_message_id", chatMessage.getEntity().getRealmEntityId());
 
 		values.put("chat_id", chat.getEntity().getEntityId());

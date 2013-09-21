@@ -39,5 +39,5 @@ public interface ChatMessageDao {
 
 	void deleteAllMessages();
 
-	void deleteAllMessagesInRealm(@Nonnull String realmId);
+	void deleteAllMessagesForAccount(@Nonnull String realmId);
 }

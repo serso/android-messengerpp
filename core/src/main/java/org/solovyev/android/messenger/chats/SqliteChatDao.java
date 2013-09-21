@@ -85,11 +85,11 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	}
 
 	@Override
-	public void deleteAllChatsInRealm(@Nonnull String realmId) {
+	public void deleteAllChatsForAccount(@Nonnull String accountId) {
 		// todo serso: startWith must be replaced with equals!
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "chat_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("chat_properties", "chat_id", realmId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("chats", "realm_id", realmId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "chat_id", accountId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("chat_properties", "chat_id", accountId));
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("chats", "account_id", accountId));
 	}
 
 	@Nonnull
@@ -395,7 +395,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		final ContentValues values = new ContentValues();
 
 		values.put("id", chat.getEntity().getEntityId());
-		values.put("realm_id", chat.getEntity().getAccountId());
+		values.put("account_id", chat.getEntity().getAccountId());
 		values.put("realm_chat_id", chat.getEntity().getRealmEntityId());
 		values.put("last_messages_sync_date", lastMessagesSyncDate == null ? null : dateTimeFormatter.print(lastMessagesSyncDate));
 
@@ -500,7 +500,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery("select c.id, c.realm_id, c.realm_chat_id, count(*) from chats c, messages m where c.id = m.chat_id and m.read = 0 group by c.id, c.realm_id, c.realm_chat_id", null);
+			return db.rawQuery("select c.id, c.account_id, c.realm_chat_id, count(*) from chats c, messages m where c.id = m.chat_id and m.read = 0 group by c.id, c.account_id, c.realm_chat_id", null);
 		}
 
 		@Nonnull

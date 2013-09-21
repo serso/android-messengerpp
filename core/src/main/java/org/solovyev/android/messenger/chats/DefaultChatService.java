@@ -286,7 +286,7 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public void removeChatsInRealm(@Nonnull String realmId) {
 		synchronized (lock) {
-			this.chatDao.deleteAllChatsInRealm(realmId);
+			this.chatDao.deleteAllChatsForAccount(realmId);
 		}
 
 		chatParticipantsCache.update(EntitiesRemovedMapUpdater.<User>newInstance(realmId));
