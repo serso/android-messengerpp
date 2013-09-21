@@ -4,15 +4,11 @@ import javax.annotation.Nonnull;
 
 public final class AccountConnectionException extends AccountException {
 
-	public AccountConnectionException(@Nonnull String realmId) {
-		super(realmId);
+	public AccountConnectionException(@Nonnull String accountId) {
+		super(accountId);
 	}
 
-	public AccountConnectionException(@Nonnull String realmId, @Nonnull Throwable throwable) {
-		super(realmId, throwable);
-	}
-
-	public AccountConnectionException(@Nonnull AccountRuntimeException exception) {
-		super(exception);
+	public AccountConnectionException(@Nonnull String accountId, @Nonnull Throwable throwable) {
+		super(accountId, throwable);
 	}
 }

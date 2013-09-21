@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
 import org.solovyev.common.security.Cipherer;
@@ -34,7 +35,7 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 		final String state = cursor.getString(4);
 
 		try {
-			final Realm<C> realm = (Realm<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmDefById(realmId);
+			final Realm<C> realm = (Realm<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmById(realmId);
 			// realm is not loaded => no way we can find user in realm services
 			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
 
@@ -43,7 +44,7 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 			final C decryptedConfiguration = decryptConfiguration(realm, encryptedConfiguration);
 
 			return realm.newAccount(accountId, user, decryptedConfiguration, AccountState.valueOf(state));
-		} catch (UnsupportedAccountException e) {
+		} catch (UnsupportedRealmException e) {
 			throw new AccountRuntimeException(accountId, e);
 		}
 	}

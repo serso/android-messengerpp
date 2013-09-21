@@ -5,20 +5,20 @@ import javax.annotation.Nonnull;
 public class AccountException extends Exception {
 
 	@Nonnull
-	private final String realmId;
+	private final String accountId;
 
-	public AccountException(@Nonnull String realmId) {
-		this.realmId = realmId;
+	public AccountException(@Nonnull String accountId) {
+		this.accountId = accountId;
 	}
 
-	public AccountException(@Nonnull String realmId, @Nonnull Throwable throwable) {
+	public AccountException(@Nonnull String accountId, @Nonnull Throwable throwable) {
 		super(unwrap(throwable));
-		this.realmId = realmId;
+		this.accountId = accountId;
 	}
 
 	public AccountException(@Nonnull AccountRuntimeException exception) {
 		super(unwrap(exception));
-		this.realmId = exception.getRealmId();
+		this.accountId = exception.getAccountId();
 	}
 
 	@Nonnull
@@ -32,7 +32,7 @@ public class AccountException extends Exception {
 	}
 
 	@Nonnull
-	public final String getRealmId() {
-		return realmId;
+	public final String getAccountId() {
+		return accountId;
 	}
 }

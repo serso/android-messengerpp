@@ -1,7 +1,5 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.accounts.AccountException;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -11,7 +9,7 @@ import javax.annotation.Nonnull;
  */
 public final class UnsupportedAccountException extends AccountException {
 
-	public UnsupportedAccountException(@Nonnull String realmId) {
-		super(realmId);
+	public UnsupportedAccountException(@Nonnull String accountId) {
+		super(accountId);
 	}
 }

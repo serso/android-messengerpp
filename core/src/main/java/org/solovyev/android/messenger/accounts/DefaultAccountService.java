@@ -15,6 +15,7 @@ import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
@@ -185,10 +186,10 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	@Override
-	public Realm<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException {
-		final Realm<? extends AccountConfiguration> realm = this.realmDefs.get(realmDefId);
+	public Realm<? extends AccountConfiguration> getRealmById(@Nonnull String realmId) throws UnsupportedRealmException {
+		final Realm<? extends AccountConfiguration> realm = this.realmDefs.get(realmId);
 		if (realm == null) {
-			throw new UnsupportedAccountException(realmDefId);
+			throw new UnsupportedRealmException(realmId);
 		}
 		return realm;
 	}

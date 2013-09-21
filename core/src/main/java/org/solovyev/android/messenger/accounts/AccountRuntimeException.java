@@ -1,25 +1,23 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.accounts.AccountException;
-
 import javax.annotation.Nonnull;
 
 public final class AccountRuntimeException extends RuntimeException {
 
 	@Nonnull
-	private final String realmId;
+	private final String accountId;
 
 	public AccountRuntimeException(@Nonnull AccountException e) {
-		this(e.getRealmId(), e);
+		this(e.getAccountId(), e);
 	}
 
-	public AccountRuntimeException(@Nonnull String realmId, Throwable throwable) {
+	public AccountRuntimeException(@Nonnull String accountId, Throwable throwable) {
 		super(throwable);
-		this.realmId = realmId;
+		this.accountId = accountId;
 	}
 
 	@Nonnull
-	public String getRealmId() {
-		return realmId;
+	public String getAccountId() {
+		return accountId;
 	}
 }

@@ -81,7 +81,7 @@ public final class DefaultMessengerExceptionHandler implements MessengerExceptio
 	private boolean handleRealmException(@Nonnull AccountException e) {
 		boolean handled = false;
 
-		final String realmId = e.getRealmId();
+		final String realmId = e.getAccountId();
 
 		try {
 			final Account account = accountService.getAccountById(realmId);

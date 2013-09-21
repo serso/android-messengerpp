@@ -34,10 +34,10 @@ public class VkAccountChatService implements AccountChatService {
 	private static final String CHAT_DELIMITER = ":";
 
 	@Nonnull
-	private final VkAccount realm;
+	private final VkAccount account;
 
-	public VkAccountChatService(@Nonnull VkAccount realm) {
-		this.realm = realm;
+	public VkAccountChatService(@Nonnull VkAccount account) {
+		this.account = account;
 	}
 
     /*@Nonnull
@@ -58,11 +58,11 @@ public class VkAccountChatService implements AccountChatService {
 	@Override
 	public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws AccountConnectionException {
 		try {
-			return HttpTransactions.execute(new VkMessagesGetHttpTransaction(realm, getUser(realmUserId)));
+			return HttpTransactions.execute(new VkMessagesGetHttpTransaction(account, getUser(realmUserId)));
 		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		}
 	}
 
@@ -73,19 +73,19 @@ public class VkAccountChatService implements AccountChatService {
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
-				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(realm, secondUserId, user));
+				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(account, secondUserId, user));
 			}
 
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId) {
-				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(realm, chatId, user));
+				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(account, chatId, user));
 			}
 		});
 	}
 
 	private List<ChatMessage> getChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull VkHttpTransactionForMessagesForChatProvider p) throws AccountConnectionException {
-		final Chat chat = getChatService().getChatById(realm.newChatEntity(realmChatId));
+		final Chat chat = getChatService().getChatById(account.newChatEntity(realmChatId));
 
 		if (chat != null) {
 			try {
@@ -113,9 +113,9 @@ public class VkAccountChatService implements AccountChatService {
 					return result;
 				}
 			} catch (HttpRuntimeIoException e) {
-				throw new AccountConnectionException(realm.getId(), e);
+				throw new AccountConnectionException(account.getId(), e);
 			} catch (IOException e) {
-				throw new AccountConnectionException(realm.getId(), e);
+				throw new AccountConnectionException(account.getId(), e);
 			}
 		} else {
 			Log.e(TAG, "Chat is not found for chat id: " + realmChatId);
@@ -130,13 +130,13 @@ public class VkAccountChatService implements AccountChatService {
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<ChatMessage>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
-				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(realm, secondUserId, user, offset));
+				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forUser(account, secondUserId, user, offset));
 			}
 
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<ChatMessage>>> getForChat(@Nonnull User user, @Nonnull String chatId) {
-				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(realm, chatId, user, offset));
+				return Arrays.asList(VkMessagesGetHistoryHttpTransaction.forChat(account, chatId, user, offset));
 			}
 		});
 	}
@@ -152,7 +152,7 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	private User getUser(@Nonnull String realmUserId) {
-		return getUserService().getUserById(realm.newUserEntity(realmUserId));
+		return getUserService().getUserById(account.newUserEntity(realmUserId));
 	}
 
 	@Nonnull
@@ -170,12 +170,12 @@ public class VkAccountChatService implements AccountChatService {
 	@Override
 	public List<ApiChat> getUserChats(@Nonnull String realmUserId) throws AccountConnectionException {
 		try {
-			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(realm.newUserEntity(realmUserId));
-			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(realm, user));
+			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(account.newUserEntity(realmUserId));
+			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(account, user));
 		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		}
 	}
 
@@ -183,17 +183,17 @@ public class VkAccountChatService implements AccountChatService {
 	@Override
 	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException {
 		try {
-			return HttpTransactions.execute(new VkMessagesSendHttpTransaction(realm, message, chat));
+			return HttpTransactions.execute(new VkMessagesSendHttpTransaction(account, message, chat));
 		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		}
 	}
 
 	@Nonnull
 	@Override
 	public Chat newPrivateChat(@Nonnull Entity chat, @Nonnull String user1, @Nonnull String user2) {
-		return Chats.newPrivateChat(realm.newChatEntity(user1 + CHAT_DELIMITER + user2));
+		return Chats.newPrivateChat(account.newChatEntity(user1 + CHAT_DELIMITER + user2));
 	}
 }

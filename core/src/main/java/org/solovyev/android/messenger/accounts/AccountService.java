@@ -61,12 +61,13 @@ public interface AccountService {
 	/**
 	 * Method returns the realm which previously has been registered in this service
 	 *
-	 * @param realmDefId id of realm def
+	 *
+	 * @param realmId id of realm
 	 * @return realm
-	 * @throws UnsupportedAccountException if realm hasn't been registered in this service
+	 * @throws UnsupportedRealmException if realm hasn't been registered in this service
 	 */
 	@Nonnull
-	Realm<? extends AccountConfiguration> getRealmDefById(@Nonnull String realmDefId) throws UnsupportedAccountException;
+	Realm<? extends AccountConfiguration> getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
 
 	@Nonnull
 	Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException;

@@ -22,21 +22,21 @@ import java.util.List;
 public class VkAccountUserService implements AccountUserService {
 
 	@Nonnull
-	private final VkAccount realm;
+	private final VkAccount account;
 
-	public VkAccountUserService(@Nonnull VkAccount realm) {
-		this.realm = realm;
+	public VkAccountUserService(@Nonnull VkAccount account) {
+		this.account = account;
 	}
 
 	@Override
 	public User getUserById(@Nonnull String realmUserId) throws AccountConnectionException {
 		try {
-			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(realm, realmUserId, null));
+			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(account, realmUserId, null));
 			return Collections.getFirstListElement(users);
 		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		}
 	}
 
@@ -44,11 +44,11 @@ public class VkAccountUserService implements AccountUserService {
 	@Override
 	public List<User> getUserContacts(@Nonnull String realmUserId) throws AccountConnectionException {
 		try {
-			return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(realm, realmUserId));
+			return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(account, realmUserId));
 		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		}
 	}
 
@@ -59,13 +59,13 @@ public class VkAccountUserService implements AccountUserService {
 		final List<User> result = new ArrayList<User>(users.size());
 
 		try {
-			for (VkUsersGetHttpTransaction vkUsersGetHttpTransaction : VkUsersGetHttpTransaction.newInstancesForUsers(realm, users, Arrays.asList(ApiUserField.online))) {
+			for (VkUsersGetHttpTransaction vkUsersGetHttpTransaction : VkUsersGetHttpTransaction.newInstancesForUsers(account, users, Arrays.asList(ApiUserField.online))) {
 				result.addAll(HttpTransactions.execute(vkUsersGetHttpTransaction));
 			}
 		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
-			throw new AccountConnectionException(realm.getId(), e);
+			throw new AccountConnectionException(account.getId(), e);
 		}
 
 		return result;

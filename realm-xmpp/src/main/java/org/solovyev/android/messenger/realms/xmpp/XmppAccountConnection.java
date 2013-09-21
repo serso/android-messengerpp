@@ -46,19 +46,19 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 	@Nullable
 	private synchronized Connection tryToConnect(int connectionAttempt) throws AccountConnectionException {
 		if (this.connection == null) {
-			final XmppAccount realm = getAccount();
-			final Connection connection = new XMPPConnection(realm.getConfiguration().toXmppConfiguration());
+			final XmppAccount account = getAccount();
+			final Connection connection = new XMPPConnection(account.getConfiguration().toXmppConfiguration());
 
 			// connect to the server
 			try {
-				prepareConnection(connection, realm);
+				prepareConnection(connection, account);
 
 				this.connection = connection;
 			} catch (XMPPException e) {
 				if (connectionAttempt < CONNECTION_RETRIES) {
 					tryToConnect(connectionAttempt + 1);
 				} else {
-					throw new AccountConnectionException(realm.getId());
+					throw new AccountConnectionException(account.getId());
 				}
 			}
 		}

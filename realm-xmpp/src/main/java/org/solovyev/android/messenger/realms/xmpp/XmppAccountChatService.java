@@ -38,7 +38,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 				final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
 				try {
 					if (offlineManager.supportsFlexibleRetrieval()) {
-						return XmppAccount.toMessages(getRealm(), offlineManager.getMessages());
+						return XmppAccount.toMessages(getAccount(), offlineManager.getMessages());
 					}
 				} catch (XMPPException e) {
 					// ok, not supported by server
@@ -70,7 +70,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 	@Nullable
 	@Override
 	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException {
-		return doOnConnection(new MessengerSender(chat, message, getRealm()));
+		return doOnConnection(new MessengerSender(chat, message, getAccount()));
 	}
 
 	@Nonnull
@@ -79,8 +79,8 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 		return doOnConnection(new XmppConnectedCallable<Chat>() {
 			@Override
 			public Chat call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
-				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getRealm(), realmChat));
-				return XmppAccount.toApiChat(smackChat, Collections.<Message>emptyList(), getRealm()).getChat();
+				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getAccount(), realmChat));
+				return XmppAccount.toApiChat(smackChat, Collections.<Message>emptyList(), getAccount()).getChat();
 			}
 		});
 	}
