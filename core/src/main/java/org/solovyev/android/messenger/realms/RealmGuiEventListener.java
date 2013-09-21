@@ -74,7 +74,7 @@ public class RealmGuiEventListener implements EventListener<AccountGuiEvent> {
 
 	private void showRealmFragment(@Nonnull Account account, boolean firstPane) {
 		final Bundle fragmentArgs = new Bundle();
-		fragmentArgs.putString(MessengerAccountFragment.ARGS_REALM_ID, account.getId());
+		fragmentArgs.putString(MessengerAccountFragment.ARGS_ACCOUNT_ID, account.getId());
 		if (firstPane) {
 			activity.getMultiPaneFragmentManager().setMainFragment(MessengerAccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), MessengerAccountFragment.FRAGMENT_TAG, true);
 		} else {

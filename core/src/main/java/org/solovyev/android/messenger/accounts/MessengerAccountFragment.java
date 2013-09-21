@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
@@ -24,6 +23,9 @@ import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static org.solovyev.android.Activities.restartActivity;
 
 /**
  * User: serso
@@ -41,7 +43,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
     */
 
 	@Nonnull
-	public static final String ARGS_REALM_ID = "account_id";
+	public static final String ARGS_ACCOUNT_ID = "account_id";
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "account";
@@ -82,7 +84,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	private Account account;
 
 	@Nullable
-	private RealmEventListener realmEventListener;
+	private AccountEventListener accountEventListener;
 
 	@Nonnull
 	private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
@@ -93,13 +95,13 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 
 		final Bundle arguments = getArguments();
 		if (arguments != null) {
-			final String realmId = arguments.getString(ARGS_REALM_ID);
-			if (realmId != null) {
+			final String accountId = arguments.getString(ARGS_ACCOUNT_ID);
+			if (accountId != null) {
 				try {
-					account = accountService.getAccountById(realmId);
+					account = accountService.getAccountById(accountId);
 				} catch (UnsupportedAccountException e) {
 					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
-					Activities.restartActivity(getActivity());
+					restartActivity(getActivity());
 				}
 			}
 		}
@@ -108,19 +110,19 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 			// remove fragment
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		} else {
-			realmEventListener = new RealmEventListener();
-			accountService.addListener(realmEventListener);
+			accountEventListener = new AccountEventListener();
+			accountService.addListener(accountEventListener);
 		}
 	}
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_fragment_realm).build(this.getActivity());
+		final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_fragment_account).build(this.getActivity());
 
 		multiPaneManager.onCreatePane(this.getActivity(), container, result);
 
-		result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		result.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		return result;
 	}
@@ -129,14 +131,14 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	public void onViewCreated(@Nonnull View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_def_icon_imageview);
+		final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
 		realmIconImageView.setImageDrawable(getResources().getDrawable(account.getRealmDef().getIconResId()));
 
-		final TextView realmNameTextView = (TextView) root.findViewById(R.id.mpp_fragment_title);
-		realmNameTextView.setText(account.getDisplayName(getActivity()));
+		final TextView nameTextView = (TextView) root.findViewById(R.id.mpp_fragment_title);
+		nameTextView.setText(account.getDisplayName(getActivity()));
 
-		final Button realmBackButton = (Button) root.findViewById(R.id.mpp_realm_back_button);
-		realmBackButton.setOnClickListener(new View.OnClickListener() {
+		final Button backButton = (Button) root.findViewById(R.id.mpp_account_back_button);
+		backButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				eventManager.fire(AccountGuiEventType.newAccountViewCancelledEvent(account));
@@ -144,44 +146,44 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 		});
 		if (multiPaneManager.isDualPane(getActivity())) {
 			// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-			realmBackButton.setVisibility(View.GONE);
+			backButton.setVisibility(View.GONE);
 		} else {
-			realmBackButton.setVisibility(View.VISIBLE);
+			backButton.setVisibility(View.VISIBLE);
 		}
 
-		final Button realmRemoveButton = (Button) root.findViewById(R.id.mpp_realm_remove_button);
-		realmRemoveButton.setOnClickListener(new View.OnClickListener() {
+		final Button removeButton = (Button) root.findViewById(R.id.mpp_account_remove_button);
+		removeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				removeRealm();
+				removeAccount();
 			}
 		});
 
-		final Button realmEditButton = (Button) root.findViewById(R.id.mpp_realm_edit_button);
-		realmEditButton.setOnClickListener(new View.OnClickListener() {
+		final Button editButton = (Button) root.findViewById(R.id.mpp_account_edit_button);
+		editButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				editRealm();
+				editAccount();
 			}
 		});
 
-		final Button realmSyncButton = (Button) root.findViewById(R.id.mpp_realm_sync_button);
-		realmSyncButton.setOnClickListener(new View.OnClickListener() {
+		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
+		syncButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MessengerSyncAllAsyncTask.newForRealm(getActivity(), syncService, account).executeInParallel((Void) null);
+				MessengerSyncAllAsyncTask.newForAccount(getActivity(), syncService, account).executeInParallel((Void) null);
 			}
 		});
 
-		final Button realmStateButton = (Button) root.findViewById(R.id.mpp_realm_state_button);
-		realmStateButton.setOnClickListener(new View.OnClickListener() {
+		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
+		changeStateButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				changeState();
 			}
 		});
 
-		onRealmStateChanged(root);
+		onAccountStateChanged(root);
 
 		multiPaneManager.onPaneCreated(getActivity(), root);
 	}
@@ -190,8 +192,8 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	public void onResume() {
 		super.onResume();
 
-		taskListeners.addTaskListener(AccountChangeStateCallable.TASK_NAME, AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
-		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.addTaskListener(AccountChangeStateCallable.TASK_NAME, AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	@Override
@@ -203,30 +205,30 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 
 	@Override
 	public void onDestroy() {
-		if (realmEventListener != null) {
-			accountService.removeListener(realmEventListener);
+		if (accountEventListener != null) {
+			accountService.removeListener(accountEventListener);
 		}
 
 		super.onDestroy();
 	}
 
-	private void onRealmStateChanged(@Nonnull View root) {
-		final Button realmSyncButton = (Button) root.findViewById(R.id.mpp_realm_sync_button);
-		final Button realmStateButton = (Button) root.findViewById(R.id.mpp_realm_state_button);
+	private void onAccountStateChanged(@Nonnull View root) {
+		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
+		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
 		if (account.isEnabled()) {
-			realmStateButton.setText(R.string.mpp_disable);
-			realmSyncButton.setVisibility(View.VISIBLE);
+			changeStateButton.setText(R.string.mpp_disable);
+			syncButton.setVisibility(View.VISIBLE);
 		} else {
-			realmStateButton.setText(R.string.mpp_enable);
-			realmSyncButton.setVisibility(View.GONE);
+			changeStateButton.setText(R.string.mpp_enable);
+			syncButton.setVisibility(View.GONE);
 		}
 	}
 
 	private void changeState() {
-		taskListeners.run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(account), AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(account), AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 	}
 
-	private void editRealm() {
+	private void editAccount() {
 		eventManager.fire(AccountGuiEventType.newAccountEditRequestedEvent(account));
 	}
 
@@ -236,19 +238,19 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	}
 
 
-	private void removeRealm() {
-		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+	private void removeAccount() {
+		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
-	private final class RealmEventListener extends AbstractJEventListener<AccountEvent> {
+	private final class AccountEventListener extends AbstractJEventListener<AccountEvent> {
 
-		protected RealmEventListener() {
+		protected AccountEventListener() {
 			super(AccountEvent.class);
 		}
 
 		@Override
 		public void onEvent(@Nonnull AccountEvent event) {
-			final Account eventAccount = event.getRealm();
+			final Account eventAccount = event.getAccount();
 			switch (event.getType()) {
 				case changed:
 					if (eventAccount.equals(account)) {
@@ -263,7 +265,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 							public void run() {
 								final View view = getView();
 								if (view != null) {
-									onRealmStateChanged(view);
+									onAccountStateChanged(view);
 								}
 							}
 						});

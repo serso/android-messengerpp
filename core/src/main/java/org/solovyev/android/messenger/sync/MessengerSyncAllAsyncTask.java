@@ -30,12 +30,12 @@ public class MessengerSyncAllAsyncTask extends MessengerAsyncTask<Void, Void, Vo
 	}
 
 	@Nonnull
-	public static MessengerSyncAllAsyncTask newForAllRealms(@Nonnull Context context, @Nonnull SyncService syncService) {
+	public static MessengerSyncAllAsyncTask newForAllAccounts(@Nonnull Context context, @Nonnull SyncService syncService) {
 		return new MessengerSyncAllAsyncTask(context, syncService, null);
 	}
 
 	@Nonnull
-	public static MessengerSyncAllAsyncTask newForRealm(@Nonnull Context context, @Nonnull SyncService syncService, @Nonnull Account account) {
+	public static MessengerSyncAllAsyncTask newForAccount(@Nonnull Context context, @Nonnull SyncService syncService, @Nonnull Account account) {
 		return new MessengerSyncAllAsyncTask(context, syncService, account);
 	}
 
@@ -47,7 +47,7 @@ public class MessengerSyncAllAsyncTask extends MessengerAsyncTask<Void, Void, Vo
 				if (account == null) {
 					syncService.syncAll(true);
 				} else {
-					syncService.syncAllInRealm(account, true);
+					syncService.syncAllForAccount(account, true);
 				}
 			} catch (SyncAllTaskIsAlreadyRunning e) {
 				throwException(e);

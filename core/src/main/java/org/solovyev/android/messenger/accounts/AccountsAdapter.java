@@ -24,7 +24,7 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
     */
 
 	public void onRealmEvent(@Nonnull AccountEvent accountEvent) {
-		final Account account = accountEvent.getRealm();
+		final Account account = accountEvent.getAccount();
 		switch (accountEvent.getType()) {
 			case created:
 				addListItem(createListItem(account));

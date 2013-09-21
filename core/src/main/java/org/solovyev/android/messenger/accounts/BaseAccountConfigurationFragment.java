@@ -181,8 +181,8 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	public void onResume() {
 		super.onResume();
 
-		taskListeners.addTaskListener(AccountSaverCallable.TASK_NAME, AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
-		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.addTaskListener(AccountSaverCallable.TASK_NAME, AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	public T getEditedRealm() {
@@ -194,11 +194,11 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	}
 
 	protected final void removeRealm(@Nonnull Account account) {
-		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_realm_title, R.string.mpp_removing_realm_message);
+		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	private void saveRealm(@Nonnull AccountBuilder accountBuilder) {
-		taskListeners.run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_realm_title, R.string.mpp_saving_realm_message);
+		taskListeners.run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 	}
 
 	protected final void saveRealm() {

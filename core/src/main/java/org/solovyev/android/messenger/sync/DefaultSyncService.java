@@ -90,7 +90,7 @@ public class DefaultSyncService implements SyncService {
 	}
 
 	@Override
-	public void syncAllInRealm(@Nonnull Account account, boolean force) throws SyncAllTaskIsAlreadyRunning {
+	public void syncAllForAccount(@Nonnull Account account, boolean force) throws SyncAllTaskIsAlreadyRunning {
 		startSyncAllTask(Arrays.asList(account), force);
 	}
 
@@ -219,7 +219,7 @@ public class DefaultSyncService implements SyncService {
 				case created:
 				case changed:
 					try {
-						syncAllInRealm(event.getRealm(), true);
+						syncAllForAccount(event.getAccount(), true);
 					} catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
 						// ok, do not care
 					}

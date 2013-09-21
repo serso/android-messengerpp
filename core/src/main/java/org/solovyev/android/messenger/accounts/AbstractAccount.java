@@ -33,7 +33,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	private AccountState state;
 
 	/**
-	 * Last created realm connection
+	 * Last created account connection
 	 */
 	@Nullable
 	private volatile AccountConnection accountConnection;

@@ -41,7 +41,7 @@ public final class MessengerOnPreferenceAttachedListener implements PreferenceLi
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				// todo serso: show user message that action has been started
-				MessengerSyncAllAsyncTask.newForAllRealms(context, syncService).executeInParallel((Void) null);
+				MessengerSyncAllAsyncTask.newForAllAccounts(context, syncService).executeInParallel((Void) null);
 				return true;
 			}
 		});

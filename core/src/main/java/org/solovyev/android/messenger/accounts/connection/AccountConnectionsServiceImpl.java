@@ -123,7 +123,7 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 
 		@Override
 		public void onEvent(@Nonnull AccountEvent event) {
-			final Account account = event.getRealm();
+			final Account account = event.getAccount();
 			switch (event.getType()) {
 				case created:
 					tryStartConnectionsFor(Arrays.asList(account));

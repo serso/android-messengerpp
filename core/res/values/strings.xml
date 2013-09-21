@@ -77,10 +77,10 @@
 	<string name="mpp_notification_text">Click to open app</string>
 	<string name="mpp_private_chat_title">Chat with %1$s</string>
 	<string name="mpp_public_chat_title">Chat</string>
-	<string name="mpp_saving_realm_title">Saving…</string>
-	<string name="mpp_saving_realm_message">Wait a second while app is trying to save account</string>
-	<string name="mpp_removing_realm_title">Removing…</string>
-	<string name="mpp_removing_realm_message">Wait a second while app is trying to remove account</string>
+	<string name="mpp_saving_account_title">Saving…</string>
+	<string name="mpp_saving_account_message">Wait a second while app is trying to save account</string>
+	<string name="mpp_removing_account_title">Removing…</string>
+	<string name="mpp_removing_account_message">Wait a second while app is trying to remove account</string>
 	<string name="mpp_disable">Disable</string>
 	<string name="mpp_enable">Enable</string>
 	<string name="mpp_menu_notifications">Notifications</string>
