@@ -4,6 +4,7 @@ import android.app.Application;
 import android.test.InstrumentationTestCase;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.realms.RealmService;
 
 import javax.annotation.Nonnull;
 
@@ -21,6 +22,10 @@ public abstract class AbstractMessengerTestCase extends InstrumentationTestCase 
 	@Nonnull
 	@Inject
 	private AccountService accountService;
+
+	@Nonnull
+	@Inject
+	private RealmService realmService;
 
 	@Nonnull
 	private TestMessengerModule module;
@@ -47,5 +52,10 @@ public abstract class AbstractMessengerTestCase extends InstrumentationTestCase 
 	@Nonnull
 	public AccountService getAccountService() {
 		return accountService;
+	}
+
+	@Nonnull
+	public RealmService getRealmService() {
+		return realmService;
 	}
 }

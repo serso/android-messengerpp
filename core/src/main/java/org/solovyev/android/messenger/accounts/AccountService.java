@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
-import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -33,13 +32,6 @@ public interface AccountService {
 	 */
 	void load();
 
-
-	/**
-	 * @return collection of all configured realms in application
-	 */
-	@Nonnull
-	Collection<Realm<? extends AccountConfiguration>> getRealmDefs();
-
 	@Nonnull
 	Collection<Account> getAccounts();
 
@@ -57,17 +49,6 @@ public interface AccountService {
 	 */
 	@Nonnull
 	Collection<User> getEnabledAccountUsers();
-
-	/**
-	 * Method returns the realm which previously has been registered in this service
-	 *
-	 *
-	 * @param realmId id of realm
-	 * @return realm
-	 * @throws UnsupportedRealmException if realm hasn't been registered in this service
-	 */
-	@Nonnull
-	Realm<? extends AccountConfiguration> getRealmById(@Nonnull String realmId) throws UnsupportedRealmException;
 
 	@Nonnull
 	Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException;

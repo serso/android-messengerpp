@@ -14,6 +14,7 @@ import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
@@ -76,6 +77,10 @@ public class MessengerApplication extends Application implements MessengerServic
 	@Inject
 	@Nonnull
 	private AccountService accountService;
+
+	@Inject
+	@Nonnull
+	private RealmService realmService;
 
 	@Inject
 	@Nonnull
@@ -153,6 +158,12 @@ public class MessengerApplication extends Application implements MessengerServic
 		return accountService;
 	}
 
+	@Nonnull
+	@Override
+	public RealmService getRealmService() {
+		return realmService;
+	}
+
 	@Override
 	@Nonnull
 	public NetworkStateService getNetworkStateService() {
@@ -204,6 +215,7 @@ public class MessengerApplication extends Application implements MessengerServic
 		RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
 
 		// init services
+		this.realmService.init();
 		this.accountService.init();
 		this.userService.init();
 		this.chatService.init();

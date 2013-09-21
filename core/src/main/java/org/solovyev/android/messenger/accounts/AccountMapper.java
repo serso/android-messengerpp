@@ -35,7 +35,7 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 		final String state = cursor.getString(4);
 
 		try {
-			final Realm<C> realm = (Realm<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmById(realmId);
+			final Realm<C> realm = (Realm<C>) MessengerApplication.getServiceLocator().getRealmService().getRealmById(realmId);
 			// realm is not loaded => no way we can find user in realm services
 			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
 

@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
@@ -21,10 +20,10 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 
 	@Inject
 	@Nonnull
-	private AccountService accountService;
+	private RealmService realmService;
 
 	public MessengerRealmsFragment() {
-		super("RealmDefs", false, true);
+		super("Realms", false, true);
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm
 	@Override
 	protected MessengerListItemAdapter<RealmListItem> createAdapter() {
 		final List<RealmListItem> listItems = new ArrayList<RealmListItem>();
-		for (Realm realm : accountService.getRealmDefs()) {
+		for (Realm realm : realmService.getRealms()) {
 			listItems.add(new RealmListItem(realm));
 		}
 		return new MessengerListItemAdapter<RealmListItem>(getActivity(), listItems);

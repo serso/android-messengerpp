@@ -15,7 +15,6 @@ import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
@@ -78,9 +77,6 @@ public class DefaultAccountService implements AccountService {
 	@Nonnull
 	private final Context context;
 
-	@Nonnull
-	private final Map<String, Realm<? extends AccountConfiguration>> realmDefs = new HashMap<String, Realm<? extends AccountConfiguration>>();
-
 	@GuardedBy("accounts")
 	@Nonnull
 	private final Map<String, Account> accounts = new HashMap<String, Account>();
@@ -96,11 +92,7 @@ public class DefaultAccountService implements AccountService {
 		this(context, configuration.getRealms(), lock, eventExecutor);
 	}
 
-	public DefaultAccountService(@Nonnull Application context, @Nonnull Collection<? extends Realm> realmDefs, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
-		for (Realm realm : realmDefs) {
-			this.realmDefs.put(realm.getId(), realm);
-		}
-
+	public DefaultAccountService(@Nonnull Application context, @Nonnull Collection<? extends Realm> realms, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
 		this.context = context;
 		this.lock = lock;
 		this.listeners = Listeners.newEventListenersBuilderFor(AccountEvent.class).withHardReferences().withExecutor(eventExecutor).create();
@@ -109,10 +101,6 @@ public class DefaultAccountService implements AccountService {
 	@Override
 	public void init() {
 		accountDao.init();
-
-		for (Realm realm : realmDefs.values()) {
-			realm.init(context);
-		}
 
 		synchronized (lock) {
 			// reset status to enabled for temporary disable realms
@@ -129,12 +117,6 @@ public class DefaultAccountService implements AccountService {
 				this.accounts.remove(account.getId());
 			}
 		}
-	}
-
-	@Nonnull
-	@Override
-	public Collection<Realm<? extends AccountConfiguration>> getRealmDefs() {
-		return Collections.unmodifiableCollection(this.realmDefs.values());
 	}
 
 	@Nonnull
@@ -182,16 +164,6 @@ public class DefaultAccountService implements AccountService {
 			}
 		}
 		return result;
-	}
-
-	@Nonnull
-	@Override
-	public Realm<? extends AccountConfiguration> getRealmById(@Nonnull String realmId) throws UnsupportedRealmException {
-		final Realm<? extends AccountConfiguration> realm = this.realmDefs.get(realmId);
-		if (realm == null) {
-			throw new UnsupportedRealmException(realmId);
-		}
-		return realm;
 	}
 
 	@Nonnull
