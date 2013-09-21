@@ -28,7 +28,7 @@ public final class EntitiesRemovedMapUpdater<V> implements ThreadSafeMultimap.Ma
 		final Map<Entity, List<V>> result = new HashMap<Entity, List<V>>(map.size());
 
 		for (Map.Entry<Entity, List<V>> entry : map.entrySet()) {
-			if (!entry.getKey().getRealmId().equals(realmId)) {
+			if (!entry.getKey().getAccountId().equals(realmId)) {
 				result.put(entry.getKey(), entry.getValue());
 			}
 		}

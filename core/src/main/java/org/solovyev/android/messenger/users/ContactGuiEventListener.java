@@ -83,7 +83,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 				Chat result = null;
 
 				try {
-					final User user = activity.getAccountService().getAccountById(contact.getEntity().getRealmId()).getUser();
+					final User user = activity.getAccountService().getAccountById(contact.getEntity().getAccountId()).getUser();
 					result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
 				} catch (AccountException e) {
 					throwException(e);

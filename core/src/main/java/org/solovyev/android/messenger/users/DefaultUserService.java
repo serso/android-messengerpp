@@ -177,7 +177,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
-		return accountService.getAccountById(entity.getRealmId());
+		return accountService.getAccountById(entity.getAccountId());
 	}
 
 	private void insertUser(@Nonnull User user) {

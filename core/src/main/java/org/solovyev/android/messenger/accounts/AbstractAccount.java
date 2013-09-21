@@ -43,7 +43,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 						   @Nonnull User user,
 						   @Nonnull C configuration,
 						   @Nonnull AccountState state) {
-		if (!user.getEntity().getRealmId().equals(id)) {
+		if (!user.getEntity().getAccountId().equals(id)) {
 			throw new IllegalArgumentException("User must belong to realm!");
 		}
 

@@ -209,7 +209,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	private ApiChat prepareChat(@Nonnull ApiChat apiChat) throws UnsupportedAccountException {
 		if (apiChat.getChat().isPrivate()) {
-			final Account account = accountService.getAccountById(apiChat.getChat().getEntity().getRealmId());
+			final Account account = accountService.getAccountById(apiChat.getChat().getEntity().getAccountId());
 			final User user = account.getUser();
 			final List<User> participants = apiChat.getParticipantsExcept(user);
 
@@ -351,7 +351,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
-		return accountService.getAccountById(entity.getRealmId());
+		return accountService.getAccountById(entity.getAccountId());
 	}
 
 	@Nonnull
@@ -476,7 +476,7 @@ public class DefaultChatService implements ChatService {
 				if (first) {
 					first = false;
 				} else {
-					return EntityImpl.newInstance(chat.getEntity().getRealmId(), userId);
+					return EntityImpl.newInstance(chat.getEntity().getAccountId(), userId);
 				}
 			}
 		}
@@ -516,7 +516,7 @@ public class DefaultChatService implements ChatService {
 		if (realmEntityId1.equals(realmEntityId2)) {
 			Log.e(TAG, "Same user in private chat " + Strings.fromStackTrace(Thread.currentThread().getStackTrace()));
 		}
-		return EntityImpl.newInstance(user1.getRealmId(), realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
+		return EntityImpl.newInstance(user1.getAccountId(), realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
 	}
 
 	@Nonnull

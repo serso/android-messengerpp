@@ -151,6 +151,6 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 	@Nonnull
 	private Account getRealmByUser(@Nonnull Entity userEntity) throws UnsupportedAccountException {
-		return accountService.getAccountById(userEntity.getRealmId());
+		return accountService.getAccountById(userEntity.getAccountId());
 	}
 }

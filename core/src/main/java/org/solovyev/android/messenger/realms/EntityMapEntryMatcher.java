@@ -27,6 +27,6 @@ public final class EntityMapEntryMatcher implements Predicate<Map.Entry<Entity, 
 
 	@Override
 	public boolean apply(@javax.annotation.Nullable Map.Entry<Entity, ?> entry) {
-		return entry != null && entry.getKey().getRealmId().equals(realmId);
+		return entry != null && entry.getKey().getAccountId().equals(realmId);
 	}
 }

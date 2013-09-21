@@ -124,7 +124,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 		@Nullable
 		public ChatMessage sendChatMessage() throws AccountException {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getAccountById(author.getEntity().getRealmId())));
+			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getAccountById(author.getEntity().getAccountId())));
 			liteChatMessage.setAuthor(author.getEntity());
 			liteChatMessage.setBody(message);
 

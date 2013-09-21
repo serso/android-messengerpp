@@ -63,7 +63,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(expected, actual);
-		Assert.assertEquals(realmUser.getRealmId(), actual.getEntity().getRealmId());
+		Assert.assertEquals(realmUser.getAccountId(), actual.getEntity().getAccountId());
 		Assert.assertEquals("2", actual.getEntity().getRealmEntityId());
 		Assert.assertEquals("test~1:2", actual.getEntity().getEntityId());
 		Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getProperties(), new CollectionEqualizer<AProperty>(null)));
@@ -157,7 +157,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 					Iterables.removeIf(users, new Predicate<User>() {
 						@Override
 						public boolean apply(@Nullable User user) {
-							return user.getEntity().getRealmId().equals(account.getId());
+							return user.getEntity().getAccountId().equals(account.getId());
 						}
 					});
 					userDao.deleteAllUsersInRealm(account.getId());

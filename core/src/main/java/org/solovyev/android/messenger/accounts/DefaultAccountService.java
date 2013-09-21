@@ -329,7 +329,7 @@ public class DefaultAccountService implements AccountService {
 	@Nonnull
 	@Override
 	public Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
-		return getAccountById(entity.getRealmId());
+		return getAccountById(entity.getAccountId());
 	}
 
 	@Nonnull
@@ -387,7 +387,7 @@ public class DefaultAccountService implements AccountService {
 	@Override
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
 		try {
-			return getAccountById(user.getEntity().getRealmId()).getRealmDef().getUserProperties(user, context);
+			return getAccountById(user.getEntity().getAccountId()).getRealmDef().getUserProperties(user, context);
 		} catch (UnsupportedAccountException e) {
 			return Collections.emptyList();
 		}

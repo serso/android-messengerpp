@@ -18,10 +18,10 @@ public interface Entity extends Parcelable {
 	String getEntityId();
 
 	/**
-	 * @return realm to which user is belonged to
+	 * @return account to which user is belonged to
 	 */
 	@Nonnull
-	String getRealmId();
+	String getAccountId();
 
 	/**
 	 * @return realm def id to which user is belonged to

@@ -129,7 +129,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		} else {
 			accountName.setVisibility(View.VISIBLE);
 			try {
-				final Account account = accountService.getAccountById(getContact().getEntity().getRealmId());
+				final Account account = accountService.getAccountById(getContact().getEntity().getAccountId());
 				accountName.setText("[" + account.getUser().getDisplayName() + "]");
 			} catch (UnsupportedAccountException e) {
 				// cannot do anything => just handle exception

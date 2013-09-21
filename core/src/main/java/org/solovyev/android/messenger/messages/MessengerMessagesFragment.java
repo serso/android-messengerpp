@@ -123,7 +123,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 		try {
 			if (chat != null) {
 				// chat is set => fragment was just created => we need to load realm
-				account = accountService.getAccountById(chat.getEntity().getRealmId());
+				account = accountService.getAccountById(chat.getEntity().getAccountId());
 			} else {
 				// first - restore state
 				final Entity realmChat = savedInstanceState.getParcelable(CHAT);
@@ -136,7 +136,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 					notificationService.add(newUndefinedErrorNotification());
 					Activities.restartActivity(getActivity());
 				} else {
-					account = accountService.getAccountById(chat.getEntity().getRealmId());
+					account = accountService.getAccountById(chat.getEntity().getAccountId());
 				}
 			}
 		} catch (UnsupportedAccountException e) {

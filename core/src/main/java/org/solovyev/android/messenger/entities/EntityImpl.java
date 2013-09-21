@@ -42,7 +42,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     */
 
 	@Nonnull
-	private String realmId;
+	private String accountId;
 
 	@Nullable
 	private String realmDefId;
@@ -64,17 +64,17 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     **********************************************************************
     */
 
-	private EntityImpl(@Nonnull String realmId, @Nonnull String realmEntityId, @Nonnull String entityId) {
-		this.realmId = realmId;
+	private EntityImpl(@Nonnull String accountId, @Nonnull String realmEntityId, @Nonnull String entityId) {
+		this.accountId = accountId;
 		this.realmEntityId = realmEntityId;
 		this.entityId = entityId;
 	}
 
-	private EntityImpl(@Nonnull String realmId,
+	private EntityImpl(@Nonnull String accountId,
 					   @Nullable String realmDefId,
 					   @Nonnull String realmEntityId,
 					   @Nonnull String entityId) {
-		this.realmId = realmId;
+		this.accountId = accountId;
 		this.realmDefId = realmDefId;
 		this.realmEntityId = realmEntityId;
 		this.entityId = entityId;
@@ -125,19 +125,19 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	}
 
 	@Nonnull
-	public String getRealmId() {
-		return this.realmId;
+	public String getAccountId() {
+		return this.accountId;
 	}
 
 	@Nonnull
 	@Override
 	public String getRealmDefId() {
 		if (this.realmDefId == null) {
-			final int index = realmId.indexOf(DELIMITER_REALM);
+			final int index = accountId.indexOf(DELIMITER_REALM);
 			if (index >= 0) {
 				this.realmDefId = entityId.substring(0, index);
 			} else {
-				throw new IllegalArgumentException("No realm def id is stored in realmId!");
+				throw new IllegalArgumentException("No realm id is stored in accountId!");
 			}
 
 		}
@@ -194,7 +194,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 
 	@Override
 	public void writeToParcel(@Nonnull Parcel out, int flags) {
-		out.writeString(realmId);
+		out.writeString(accountId);
 		out.writeString(realmDefId);
 		out.writeString(realmEntityId);
 		out.writeString(entityId);
