@@ -7,19 +7,19 @@ import javax.annotation.Nonnull;
  * Date: 3/8/13
  * Time: 10:29 PM
  */
-public enum GuiEventType {
+public enum UiEventType {
 	show_realm_defs,
 	app_exit;
 
 	@Nonnull
-	private GuiEvent guiEvent;
+	private UiEvent uiEvent;
 
-	private GuiEventType() {
-		this.guiEvent = new GuiEvent(this, null);
+	private UiEventType() {
+		this.uiEvent = new UiEvent(this, null);
 	}
 
 	@Nonnull
-	public GuiEvent newEvent() {
-		return guiEvent;
+	public UiEvent newEvent() {
+		return uiEvent;
 	}
 }

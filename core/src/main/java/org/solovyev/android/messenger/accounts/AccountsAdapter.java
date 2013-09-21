@@ -18,12 +18,12 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
     /*
 	**********************************************************************
     *
-    *                           REALM LISTENERS
+    *                           ACCOUNT LISTENERS
     *
     **********************************************************************
     */
 
-	public void onRealmEvent(@Nonnull AccountEvent accountEvent) {
+	public void onAccountEvent(@Nonnull AccountEvent accountEvent) {
 		final Account account = accountEvent.getAccount();
 		switch (accountEvent.getType()) {
 			case created:
@@ -32,7 +32,7 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 			case changed:
 				final AccountListItem listItem = findInAllElements(account);
 				if (listItem != null) {
-					listItem.onRealmChangedEvent(account);
+					listItem.onAccountChangedEvent(account);
 				}
 				break;
 			case state_changed:
@@ -42,7 +42,7 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 					case disabled_by_app:
 						final AccountListItem accountListItem = findInAllElements(account);
 						if (accountListItem != null) {
-							accountListItem.onRealmChangedEvent(account);
+							accountListItem.onAccountChangedEvent(account);
 						}
 						break;
 					case removed:

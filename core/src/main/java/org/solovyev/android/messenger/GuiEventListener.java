@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * Date: 3/8/13
  * Time: 10:35 PM
  */
-public class GuiEventListener implements EventListener<GuiEvent> {
+public class GuiEventListener implements EventListener<UiEvent> {
 
 	@Nonnull
 	private final MessengerMainActivity activity;
@@ -20,7 +20,7 @@ public class GuiEventListener implements EventListener<GuiEvent> {
 	}
 
 	@Override
-	public void onEvent(@Nonnull GuiEvent event) {
+	public void onEvent(@Nonnull UiEvent event) {
 		switch (event.getType()) {
 			case show_realm_defs:
 				handleShowRealmDefsEvent();

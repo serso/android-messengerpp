@@ -32,7 +32,7 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 
 
 	public AccountListItem(@Nonnull Account account) {
-		super(TAG_PREFIX, account, R.layout.mpp_list_item_realm);
+		super(TAG_PREFIX, account, R.layout.mpp_list_item_account);
 	}
 
 	@Nullable
@@ -58,7 +58,7 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 		return null;
 	}
 
-	public void onRealmChangedEvent(@Nonnull Account eventAccount) {
+	public void onAccountChangedEvent(@Nonnull Account eventAccount) {
 		final Account account = getRealm();
 		if (account.equals(eventAccount)) {
 			setData(eventAccount);
@@ -73,22 +73,22 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 
 	@Override
 	protected void fillView(@Nonnull Account account, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-		final ImageView realmIconImageView = viewTag.getViewById(R.id.mpp_li_realm_icon_imageview);
+		final ImageView iconImageView = viewTag.getViewById(R.id.mpp_li_account_icon_imageview);
 
 		final Drawable realmIcon = context.getResources().getDrawable(account.getRealmDef().getIconResId());
-		realmIconImageView.setImageDrawable(realmIcon);
+		iconImageView.setImageDrawable(realmIcon);
 
-		final TextView realmUserNameTextView = viewTag.getViewById(R.id.mpp_li_realm_user_name_textview);
-		realmUserNameTextView.setText(getDisplayName());
+		final TextView userNameTextView = viewTag.getViewById(R.id.mpp_li_account_user_name_textview);
+		userNameTextView.setText(getDisplayName());
 
-		final TextView realmNameTextView = viewTag.getViewById(R.id.mpp_li_realm_name_textview);
-		realmNameTextView.setText(account.getDisplayName(context));
+		final TextView nameTextView = viewTag.getViewById(R.id.mpp_li_account_name_textview);
+		nameTextView.setText(account.getDisplayName(context));
 
-		final View realmWarningView = viewTag.getViewById(R.id.mpp_li_realm_warning_imageview);
+		final View warningView = viewTag.getViewById(R.id.mpp_li_account_warning_imageview);
 		if (account.isEnabled()) {
-			realmWarningView.setVisibility(View.GONE);
+			warningView.setVisibility(View.GONE);
 		} else {
-			realmWarningView.setVisibility(View.VISIBLE);
+			warningView.setVisibility(View.VISIBLE);
 		}
 	}
 }

@@ -3,7 +3,7 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
 	<item
-		a:id="@+id/mpp_menu_realm_add"
+		a:id="@+id/mpp_menu_account_add"
 		a:title="@string/mpp_realm_add"
 		a:icon="@drawable/mpp_ab_add"
 		a:showAsAction="always" />

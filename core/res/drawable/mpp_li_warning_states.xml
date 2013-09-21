@@ -3,15 +3,15 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 	<!-- pressed -->
-	<item android:state_pressed="true" android:drawable="@drawable/mpp_li_realm_warning_inverted" />
+	<item android:state_pressed="true" android:drawable="@drawable/mpp_li_warning_inverted" />
 
 	<!--
 	For normal size screens selected and not selected states must be the same
 	as there is no second pane on which additional content is shown
 	-->
 	<!-- list item selected-->
-	<item android:state_activated="true" android:drawable="@drawable/mpp_li_realm_warning" />
+	<item android:state_activated="true" android:drawable="@drawable/mpp_li_warning" />
 
 	<!-- default, list item not selected -->
-	<item android:drawable="@drawable/mpp_li_realm_warning" />
+	<item android:drawable="@drawable/mpp_li_warning" />
 </selector>

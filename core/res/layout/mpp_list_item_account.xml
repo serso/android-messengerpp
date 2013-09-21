@@ -4,7 +4,7 @@
 	style="?mpp_list_item">
 
 	<ImageView
-		a:id="@+id/mpp_li_realm_icon_imageview"
+		a:id="@+id/mpp_li_account_icon_imageview"
 		style="?mpp_list_item_icon"/>
 
 	<LinearLayout
@@ -15,18 +15,18 @@
 		a:layout_gravity="center_vertical">
 
 		<TextView
-			a:id="@+id/mpp_li_realm_user_name_textview"
+			a:id="@+id/mpp_li_account_user_name_textview"
 			style="?mpp_list_item_name" />
 
 		<TextView
-			a:id="@+id/mpp_li_realm_name_textview"
+			a:id="@+id/mpp_li_account_name_textview"
 			style="?mpp_list_item_text_secondary" />
 
 	</LinearLayout>
 
 	<ImageView
-		a:id="@+id/mpp_li_realm_warning_imageview"
-		a:background="@drawable/mpp_li_realm_warning_states"
+		a:id="@+id/mpp_li_account_warning_imageview"
+		a:background="@drawable/mpp_li_warning_states"
 		style="?mpp_list_item_icon"
 		a:visibility="gone" />
 

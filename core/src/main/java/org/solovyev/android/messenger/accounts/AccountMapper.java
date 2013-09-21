@@ -27,14 +27,14 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 	@Nonnull
 	@Override
 	public Account<C> convert(@Nonnull Cursor cursor) {
-		final String realmId = cursor.getString(0);
-		final String realmDefId = cursor.getString(1);
+		final String accountId = cursor.getString(0);
+		final String realmId = cursor.getString(1);
 		final String userId = cursor.getString(2);
 		final String configuration = cursor.getString(3);
 		final String state = cursor.getString(4);
 
 		try {
-			final RealmDef<C> realmDef = (RealmDef<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmDefById(realmDefId);
+			final RealmDef<C> realmDef = (RealmDef<C>) MessengerApplication.getServiceLocator().getAccountService().getRealmDefById(realmId);
 			// realm is not loaded => no way we can find user in realm services
 			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
 
@@ -42,9 +42,9 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 
 			final C decryptedConfiguration = decryptConfiguration(realmDef, encryptedConfiguration);
 
-			return realmDef.newRealm(realmId, user, decryptedConfiguration, AccountState.valueOf(state));
+			return realmDef.newRealm(accountId, user, decryptedConfiguration, AccountState.valueOf(state));
 		} catch (UnsupportedAccountException e) {
-			throw new AccountRuntimeException(realmId, e);
+			throw new AccountRuntimeException(accountId, e);
 		}
 	}
 

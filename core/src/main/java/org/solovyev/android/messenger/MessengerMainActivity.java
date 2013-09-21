@@ -86,7 +86,7 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
 		super.onCreate(savedInstanceState);
 
 		listeners = new RoboListeners(getEventManager());
-		listeners.add(GuiEvent.class, new GuiEventListener(this));
+		listeners.add(UiEvent.class, new GuiEventListener(this));
 		listeners.add(AccountGuiEvent.class, new RealmGuiEventListener(this));
 		listeners.add(RealmDefGuiEvent.class, new RealmDefGuiEventListener(this));
 		listeners.add(ContactGuiEvent.class, new ContactGuiEventListener(this, getAccountService()));

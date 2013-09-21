@@ -16,7 +16,7 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.GuiEventType;
+import org.solovyev.android.messenger.UiEventType;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -63,14 +63,14 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View root = super.onCreateView(inflater, container, savedInstanceState);
 
-		final View realmsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_realms_footer).build(this.getActivity());
+		final View realmsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_accounts_footer).build(this.getActivity());
 
-		final View addRealmButton = realmsFooter.findViewById(R.id.mpp_add_realm_button);
+		final View addRealmButton = realmsFooter.findViewById(R.id.mpp_add_account_button);
 		addRealmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
-				eventManager.fire(GuiEventType.show_realm_defs.newEvent());
+				eventManager.fire(UiEventType.show_realm_defs.newEvent());
 			}
 		});
 
@@ -85,7 +85,7 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		accountEventListener = new UiRealmEventListener();
+		accountEventListener = new UiAccountEventListener();
 		accountService.addListener(accountEventListener);
 	}
 
@@ -138,7 +138,7 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		if (this.menu == null) {
-			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_realms, RealmsMenu.class, SherlockMenuHelper.getInstance());
+			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_accounts, AccountsMenu.class, SherlockMenuHelper.getInstance());
 		}
 
 		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
@@ -154,18 +154,18 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 		return this.menu.onOptionsItemSelected(this.getActivity(), item) || super.onOptionsItemSelected(item);
 	}
 
-	private static enum RealmsMenu implements IdentifiableMenuItem<MenuItem> {
-		realm_add(R.id.mpp_menu_realm_add) {
+	private static enum AccountsMenu implements IdentifiableMenuItem<MenuItem> {
+		account_add(R.id.mpp_menu_account_add) {
 			@Override
 			public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
 				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(GuiEventType.show_realm_defs.newEvent());
+				eventManager.fire(UiEventType.show_realm_defs.newEvent());
 			}
 		};
 
 		private final int menuItemId;
 
-		RealmsMenu(int menuItemId) {
+		AccountsMenu(int menuItemId) {
 			this.menuItemId = menuItemId;
 		}
 
@@ -182,9 +182,9 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 		return (AccountsAdapter) super.getAdapter();
 	}
 
-	private class UiRealmEventListener extends AbstractJEventListener<AccountEvent> {
+	private class UiAccountEventListener extends AbstractJEventListener<AccountEvent> {
 
-		private UiRealmEventListener() {
+		private UiAccountEventListener() {
 			super(AccountEvent.class);
 		}
 
@@ -193,7 +193,7 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 			Threads2.tryRunOnUiThread(MessengerAccountsFragment.this, new Runnable() {
 				@Override
 				public void run() {
-					getAdapter().onRealmEvent(accountEvent);
+					getAdapter().onAccountEvent(accountEvent);
 				}
 			});
 		}
