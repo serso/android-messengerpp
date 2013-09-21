@@ -9,9 +9,9 @@ import javax.annotation.Nonnull;
  * Date: 8/16/12
  * Time: 1:07 AM
  */
-public class ContactGuiEvent extends AbstractTypedJEvent<User, ContactGuiEventType> {
+public class ContactUiEvent extends AbstractTypedJEvent<User, ContactUiEventType> {
 
-	public ContactGuiEvent(@Nonnull User contact, @Nonnull ContactGuiEventType type) {
+	public ContactUiEvent(@Nonnull User contact, @Nonnull ContactUiEventType type) {
 		super(contact, type, null);
 	}
 

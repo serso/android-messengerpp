@@ -27,6 +27,6 @@ final class AccountChangeStateListener extends MessengerContextCallback<Activity
 	@Override
 	public void onSuccess(@Nonnull Activity context, Account account) {
 		final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-		eventManager.fire(AccountGuiEventType.newAccountEditFinishedEvent(account, AccountGuiEventType.FinishedState.status_changed));
+		eventManager.fire(AccountUiEventType.newAccountEditFinishedEvent(account, AccountUiEventType.FinishedState.status_changed));
 	}
 }

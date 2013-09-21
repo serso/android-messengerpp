@@ -10,9 +10,9 @@ import javax.annotation.Nullable;
  * Date: 3/17/13
  * Time: 6:25 PM
  */
-public final class PreferenceGuiEvent extends AbstractTypedJEvent<PreferenceGroup, PreferenceGuiEventType> {
+public final class PreferenceUiEvent extends AbstractTypedJEvent<PreferenceGroup, PreferenceUiEventType> {
 
-	public PreferenceGuiEvent(@Nonnull PreferenceGroup eventObject, @Nonnull PreferenceGuiEventType type, @Nullable Object data) {
+	public PreferenceUiEvent(@Nonnull PreferenceGroup eventObject, @Nonnull PreferenceUiEventType type, @Nullable Object data) {
 		super(eventObject, type, data);
 	}
 

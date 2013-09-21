@@ -26,10 +26,10 @@ import java.util.List;
  * Date: 3/5/13
  * Time: 1:59 PM
  */
-public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
+public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 
 	@Nonnull
-	private static final String TAG = ChatGuiEventListener.class.getSimpleName();
+	private static final String TAG = ChatUiEventListener.class.getSimpleName();
 
 	@Nonnull
 	private final MessengerFragmentActivity activity;
@@ -37,15 +37,15 @@ public class ChatGuiEventListener implements EventListener<ChatGuiEvent> {
 	@Nonnull
 	private final ChatService chatService;
 
-	public ChatGuiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull ChatService chatService) {
+	public ChatUiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull ChatService chatService) {
 		this.activity = activity;
 		this.chatService = chatService;
 	}
 
 	@Override
-	public void onEvent(ChatGuiEvent event) {
+	public void onEvent(ChatUiEvent event) {
 		final Chat chat = event.getChat();
-		final ChatGuiEventType type = event.getType();
+		final ChatUiEventType type = event.getType();
 
 		switch (type) {
 			case chat_open_requested:

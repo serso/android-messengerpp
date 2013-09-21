@@ -56,7 +56,7 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
 				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(PreferenceGuiEventType.preference_group_clicked.newEvent(getData()));
+				eventManager.fire(PreferenceUiEventType.preference_group_clicked.newEvent(getData()));
 			}
 		};
 	}

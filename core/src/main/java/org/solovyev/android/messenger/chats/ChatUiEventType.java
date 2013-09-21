@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
  * Date: 8/17/12
  * Time: 1:02 AM
  */
-public enum ChatGuiEventType {
+public enum ChatUiEventType {
 
 	chat_open_requested,
 	chat_clicked,
@@ -20,14 +20,14 @@ public enum ChatGuiEventType {
 	};
 
 	@Nonnull
-	public final ChatGuiEvent newEvent(@Nonnull Chat chat) {
+	public final ChatUiEvent newEvent(@Nonnull Chat chat) {
 		return newEvent(chat, null);
 	}
 
 	@Nonnull
-	public final ChatGuiEvent newEvent(@Nonnull Chat chat, @Nullable Object data) {
+	public final ChatUiEvent newEvent(@Nonnull Chat chat, @Nullable Object data) {
 		checkData(data);
-		return new ChatGuiEvent(chat, this, data);
+		return new ChatUiEvent(chat, this, data);
 	}
 
 	protected void checkData(@Nullable Object data) {

@@ -5,7 +5,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatGuiEventType;
+import org.solovyev.android.messenger.chats.ChatUiEventType;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -25,7 +25,7 @@ import java.util.List;
  * Date: 3/5/13
  * Time: 1:54 PM
  */
-public final class ContactGuiEventListener implements EventListener<ContactGuiEvent> {
+public final class ContactUiEventListener implements EventListener<ContactUiEvent> {
 
 	@Nonnull
 	private final MessengerFragmentActivity activity;
@@ -33,15 +33,15 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 	@Nonnull
 	private final AccountService accountService;
 
-	public ContactGuiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull AccountService accountService) {
+	public ContactUiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull AccountService accountService) {
 		this.activity = activity;
 		this.accountService = accountService;
 	}
 
 	@Override
-	public void onEvent(@Nonnull ContactGuiEvent event) {
+	public void onEvent(@Nonnull ContactUiEvent event) {
 		final User contact = event.getContact();
-		final ContactGuiEventType type = event.getType();
+		final ContactUiEventType type = event.getType();
 
 		try {
 			final Account account = accountService.getAccountByEntityAware(contact);
@@ -49,12 +49,12 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 				case contact_clicked:
 					if (account.isCompositeUser(contact)) {
 						if (!account.isCompositeUserDefined(contact)) {
-							fireEvent(ContactGuiEventType.newShowCompositeUserDialog(contact));
+							fireEvent(ContactUiEventType.newShowCompositeUserDialog(contact));
 						} else {
-							fireEvent(ContactGuiEventType.newOpenContactChat(contact));
+							fireEvent(ContactUiEventType.newOpenContactChat(contact));
 						}
 					} else {
-						fireEvent(ContactGuiEventType.newOpenContactChat(contact));
+						fireEvent(ContactUiEventType.newOpenContactChat(contact));
 					}
 					break;
 				case open_contact_chat:
@@ -70,7 +70,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 		}
 	}
 
-	private void fireEvent(@Nonnull ContactGuiEvent event) {
+	private void fireEvent(@Nonnull ContactUiEvent event) {
 		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
 		eventManager.fire(event);
 	}
@@ -95,7 +95,7 @@ public final class ContactGuiEventListener implements EventListener<ContactGuiEv
 			@Override
 			protected void onSuccessPostExecute(@Nullable Chat chat) {
 				if (chat != null) {
-					activity.getEventManager().fire(ChatGuiEventType.chat_clicked.newEvent(chat));
+					activity.getEventManager().fire(ChatUiEventType.chat_clicked.newEvent(chat));
 				}
 			}
 

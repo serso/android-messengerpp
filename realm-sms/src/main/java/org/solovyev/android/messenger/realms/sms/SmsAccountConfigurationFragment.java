@@ -39,7 +39,7 @@ public final class SmsAccountConfigurationFragment extends BaseAccountConfigurat
 
 	@Nonnull
 	@Override
-	public Realm getRealmDef() {
+	public Realm getRealm() {
 		return realmDef;
 	}
 }

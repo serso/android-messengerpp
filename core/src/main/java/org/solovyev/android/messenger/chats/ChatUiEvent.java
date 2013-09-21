@@ -10,9 +10,9 @@ import javax.annotation.Nullable;
  * Date: 8/17/12
  * Time: 1:02 AM
  */
-public final class ChatGuiEvent extends AbstractTypedJEvent<Chat, ChatGuiEventType> {
+public final class ChatUiEvent extends AbstractTypedJEvent<Chat, ChatUiEventType> {
 
-	public ChatGuiEvent(@Nonnull Chat chat, @Nonnull ChatGuiEventType type, @Nullable Object data) {
+	public ChatUiEvent(@Nonnull Chat chat, @Nonnull ChatUiEventType type, @Nullable Object data) {
 		super(chat, type, data);
 	}
 

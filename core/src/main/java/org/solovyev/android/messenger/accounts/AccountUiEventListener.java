@@ -1,10 +1,9 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 
@@ -15,20 +14,20 @@ import javax.annotation.Nonnull;
  * Date: 3/5/13
  * Time: 1:50 PM
  */
-public class RealmGuiEventListener implements EventListener<AccountGuiEvent> {
+public final class AccountUiEventListener implements EventListener<AccountUiEvent> {
 
 	@Nonnull
-	private static final String TAG = RealmGuiEventListener.class.getSimpleName();
+	private static final String TAG = AccountUiEventListener.class.getSimpleName();
 
 	@Nonnull
 	private final MessengerFragmentActivity activity;
 
-	public RealmGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+	public AccountUiEventListener(@Nonnull MessengerFragmentActivity activity) {
 		this.activity = activity;
 	}
 
 	@Override
-	public void onEvent(@Nonnull AccountGuiEvent event) {
+	public void onEvent(@Nonnull AccountUiEvent event) {
 		final Account account = event.getRealm();
 
 		switch (event.getType()) {
@@ -82,8 +81,8 @@ public class RealmGuiEventListener implements EventListener<AccountGuiEvent> {
 		}
 	}
 
-	private void handleRealmEditFinishedEvent(@Nonnull AccountGuiEvent event) {
-		final AccountGuiEventType.FinishedState state = (AccountGuiEventType.FinishedState) event.getData();
+	private void handleRealmEditFinishedEvent(@Nonnull AccountUiEvent event) {
+		final AccountUiEventType.FinishedState state = (AccountUiEventType.FinishedState) event.getData();
 		assert state != null;
 		switch (state) {
 			case back:

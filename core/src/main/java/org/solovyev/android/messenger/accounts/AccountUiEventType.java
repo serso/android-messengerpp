@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  * Date: 3/5/13
  * Time: 12:49 PM
  */
-public enum AccountGuiEventType {
+public enum AccountUiEventType {
 
 	/**
 	 * Fired when account view is requested (e.g. account is clicked in the list of accounts)
@@ -31,23 +31,23 @@ public enum AccountGuiEventType {
 	account_edit_finished;
 
 	@Nonnull
-	public static AccountGuiEvent newAccountViewRequestedEvent(@Nonnull Account account) {
-		return new AccountGuiEvent(account, account_view_requested, null);
+	public static AccountUiEvent newAccountViewRequestedEvent(@Nonnull Account account) {
+		return new AccountUiEvent(account, account_view_requested, null);
 	}
 
 	@Nonnull
-	public static AccountGuiEvent newAccountViewCancelledEvent(@Nonnull Account account) {
-		return new AccountGuiEvent(account, account_view_cancelled, null);
+	public static AccountUiEvent newAccountViewCancelledEvent(@Nonnull Account account) {
+		return new AccountUiEvent(account, account_view_cancelled, null);
 	}
 
 	@Nonnull
-	public static AccountGuiEvent newAccountEditRequestedEvent(@Nonnull Account account) {
-		return new AccountGuiEvent(account, account_edit_requested, null);
+	public static AccountUiEvent newAccountEditRequestedEvent(@Nonnull Account account) {
+		return new AccountUiEvent(account, account_edit_requested, null);
 	}
 
 	@Nonnull
-	public static AccountGuiEvent newAccountEditFinishedEvent(@Nonnull Account account, @Nonnull FinishedState state) {
-		return new AccountGuiEvent(account, account_edit_finished, state);
+	public static AccountUiEvent newAccountEditFinishedEvent(@Nonnull Account account, @Nonnull FinishedState state) {
+		return new AccountUiEvent(account, account_edit_finished, state);
 	}
 
 	public static enum FinishedState {

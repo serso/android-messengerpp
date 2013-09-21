@@ -4,11 +4,11 @@
 	style="?mpp_list_item">
 
 	<ImageView
-		a:id="@+id/mpp_li_realm_def_icon_imageview"
+		a:id="@+id/mpp_li_realm_icon_imageview"
 		style="?mpp_list_item_icon" />
 
 	<TextView
-		a:id="@+id/mpp_li_realm_def_name_textview"
+		a:id="@+id/mpp_li_realm_name_textview"
 		style="?mpp_list_item_name" />
 
 </LinearLayout>

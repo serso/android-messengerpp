@@ -12,7 +12,7 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatGuiEventType;
+import org.solovyev.android.messenger.chats.ChatUiEventType;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.Notification;
@@ -156,7 +156,7 @@ final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 				final Chat chat = MessengerApplication.getServiceLocator().getChatService().getChatById(chatEntity);
 				if (chat != null) {
 					final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-					eventManager.fire(ChatGuiEventType.chat_open_requested.newEvent(chat));
+					eventManager.fire(ChatUiEventType.chat_open_requested.newEvent(chat));
 				}
 			}
 		}

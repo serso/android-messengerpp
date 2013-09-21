@@ -10,12 +10,12 @@ import javax.annotation.Nonnull;
  * Date: 3/8/13
  * Time: 10:35 PM
  */
-public class GuiEventListener implements EventListener<UiEvent> {
+public class UiEventListener implements EventListener<UiEvent> {
 
 	@Nonnull
 	private final MessengerMainActivity activity;
 
-	public GuiEventListener(@Nonnull MessengerMainActivity activity) {
+	public UiEventListener(@Nonnull MessengerMainActivity activity) {
 		this.activity = activity;
 	}
 

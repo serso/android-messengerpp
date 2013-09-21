@@ -141,7 +141,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 		backButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(AccountGuiEventType.newAccountViewCancelledEvent(account));
+				eventManager.fire(AccountUiEventType.newAccountViewCancelledEvent(account));
 			}
 		});
 		if (multiPaneManager.isDualPane(getActivity())) {
@@ -229,7 +229,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	}
 
 	private void editAccount() {
-		eventManager.fire(AccountGuiEventType.newAccountEditRequestedEvent(account));
+		eventManager.fire(AccountUiEventType.newAccountEditRequestedEvent(account));
 	}
 
 	@Nonnull

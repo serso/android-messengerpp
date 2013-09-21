@@ -20,7 +20,6 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.android.messenger.realms.*;
 import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.collections.multimap.*;
 import org.solovyev.common.listeners.AbstractJEventListener;

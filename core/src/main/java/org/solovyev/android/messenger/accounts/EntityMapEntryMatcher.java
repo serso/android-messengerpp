@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.accounts;
 
 import com.google.common.base.Predicate;
 import org.solovyev.android.messenger.entities.Entity;
@@ -14,10 +14,10 @@ import java.util.Map;
 public final class EntityMapEntryMatcher implements Predicate<Map.Entry<Entity, ?>> {
 
 	@Nonnull
-	private final String realmId;
+	private final String accountId;
 
-	private EntityMapEntryMatcher(@Nonnull String realmId) {
-		this.realmId = realmId;
+	private EntityMapEntryMatcher(@Nonnull String accountId) {
+		this.accountId = accountId;
 	}
 
 	@Nonnull
@@ -27,6 +27,6 @@ public final class EntityMapEntryMatcher implements Predicate<Map.Entry<Entity, 
 
 	@Override
 	public boolean apply(@javax.annotation.Nullable Map.Entry<Entity, ?> entry) {
-		return entry != null && entry.getKey().getAccountId().equals(realmId);
+		return entry != null && entry.getKey().getAccountId().equals(accountId);
 	}
 }

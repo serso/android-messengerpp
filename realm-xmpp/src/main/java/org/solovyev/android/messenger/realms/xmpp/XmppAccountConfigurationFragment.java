@@ -133,7 +133,7 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 
 	@Nonnull
 	@Override
-	public Realm getRealmDef() {
+	public Realm getRealm() {
 		return realmDef;
 	}
 }

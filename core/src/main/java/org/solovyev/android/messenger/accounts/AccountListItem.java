@@ -42,7 +42,7 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
 				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(AccountGuiEventType.newAccountViewRequestedEvent(getRealm()));
+				eventManager.fire(AccountUiEventType.newAccountViewRequestedEvent(getRealm()));
 			}
 		};
 	}

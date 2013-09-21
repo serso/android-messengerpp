@@ -7,13 +7,13 @@ import javax.annotation.Nonnull;
  * Date: 3/17/13
  * Time: 6:24 PM
  */
-public enum PreferenceGuiEventType {
+public enum PreferenceUiEventType {
 
 	preference_group_clicked;
 
 
 	@Nonnull
-	public PreferenceGuiEvent newEvent(@Nonnull PreferenceGroup preferenceGroup) {
-		return new PreferenceGuiEvent(preferenceGroup, this, null);
+	public PreferenceUiEvent newEvent(@Nonnull PreferenceGroup preferenceGroup) {
+		return new PreferenceUiEvent(preferenceGroup, this, null);
 	}
 }

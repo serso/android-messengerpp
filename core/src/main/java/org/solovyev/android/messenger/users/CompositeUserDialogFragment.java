@@ -198,7 +198,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 			}
 
 			final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
-			eventManager.fire(ContactGuiEventType.newContactClicked(newUser));
+			eventManager.fire(ContactUiEventType.newContactClicked(newUser));
 		}
 	}
 }

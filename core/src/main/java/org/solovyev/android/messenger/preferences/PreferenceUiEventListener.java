@@ -13,21 +13,21 @@ import javax.annotation.Nonnull;
  * Date: 3/17/13
  * Time: 6:28 PM
  */
-public final class PreferenceGuiEventListener implements EventListener<PreferenceGuiEvent> {
+public final class PreferenceUiEventListener implements EventListener<PreferenceUiEvent> {
 
 	@Nonnull
 	private final MessengerFragmentActivity activity;
 
-	public PreferenceGuiEventListener(@Nonnull MessengerFragmentActivity activity) {
+	public PreferenceUiEventListener(@Nonnull MessengerFragmentActivity activity) {
 		this.activity = activity;
 	}
 
 	@Override
-	public void onEvent(@Nonnull PreferenceGuiEvent event) {
+	public void onEvent(@Nonnull PreferenceUiEvent event) {
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 		final PreferenceGroup preferenceGroup = event.getPreferenceScreen();
 
-		if (event.isOfType(PreferenceGuiEventType.preference_group_clicked)) {
+		if (event.isOfType(PreferenceUiEventType.preference_group_clicked)) {
 			final int preferencesResId = preferenceGroup.getPreferencesResId();
 
 			if (activity.isDualPane()) {

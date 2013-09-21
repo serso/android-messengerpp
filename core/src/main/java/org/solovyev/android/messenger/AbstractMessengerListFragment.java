@@ -26,7 +26,7 @@ import org.solovyev.android.list.ListViewScrollerListener;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.fragments.FragmentGuiEventType;
+import org.solovyev.android.messenger.fragments.FragmentUiEventType;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -246,7 +246,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		eventManager.fire(FragmentGuiEventType.created.newEvent(this));
+		eventManager.fire(FragmentUiEventType.created.newEvent(this));
 	}
 
 	@Override
@@ -287,7 +287,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			listViewFilter.onViewCreated();
 		}
 
-		eventManager.fire(FragmentGuiEventType.shown.newEvent(this));
+		eventManager.fire(FragmentUiEventType.shown.newEvent(this));
 	}
 
 	public void toggleFilterBox() {
@@ -482,7 +482,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	public void onStart() {
 		super.onStart();
 
-		eventManager.fire(FragmentGuiEventType.started.newEvent(this));
+		eventManager.fire(FragmentUiEventType.started.newEvent(this));
 	}
 
 	@Override

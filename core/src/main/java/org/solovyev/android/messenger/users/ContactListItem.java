@@ -59,7 +59,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 			@Override
 			public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
 				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(ContactGuiEventType.newContactClicked(getContact()));
+				eventManager.fire(ContactUiEventType.newContactClicked(getContact()));
 
 			}
 		};

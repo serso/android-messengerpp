@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmDefGuiEventType;
+import org.solovyev.android.messenger.realms.RealmUiEventType;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.tasks.TaskService;
@@ -204,7 +204,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	protected final void saveRealm() {
 		final AccountConfiguration configuration = validateData();
 		if (configuration != null) {
-			final AccountBuilder accountBuilder = getRealmDef().newAccountBuilder(configuration, getEditedRealm());
+			final AccountBuilder accountBuilder = getRealm().newAccountBuilder(configuration, getEditedRealm());
 			saveRealm(accountBuilder);
 		}
 	}
@@ -222,9 +222,9 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	protected void backButtonPressed() {
 		T editedRealm = getEditedRealm();
 		if (editedRealm != null) {
-			eventManager.fire(AccountGuiEventType.newAccountEditFinishedEvent(editedRealm, AccountGuiEventType.FinishedState.back));
+			eventManager.fire(AccountUiEventType.newAccountEditFinishedEvent(editedRealm, AccountUiEventType.FinishedState.back));
 		} else {
-			eventManager.fire(RealmDefGuiEventType.newRealmDefEditFinishedEvent(getRealmDef()));
+			eventManager.fire(RealmUiEventType.newAccountEditFinishedEvent(getRealm()));
 		}
 	}
 
@@ -234,11 +234,11 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	}
 
 	@Nonnull
-	public abstract Realm getRealmDef();
+	public abstract Realm getRealm();
 
 	@Nonnull
 	protected CharSequence getFragmentTitle() {
-		final String realmName = getString(getRealmDef().getNameResId());
+		final String realmName = getString(getRealm().getNameResId());
 		return getString(R.string.mpp_realm_configuration, realmName);
 	}
 

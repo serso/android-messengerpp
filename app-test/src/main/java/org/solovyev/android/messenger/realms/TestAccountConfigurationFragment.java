@@ -30,7 +30,7 @@ public class TestAccountConfigurationFragment extends BaseAccountConfigurationFr
 
 	@Nonnull
 	@Override
-	public Realm getRealmDef() {
+	public Realm getRealm() {
 		return realmDef;
 	}
 }

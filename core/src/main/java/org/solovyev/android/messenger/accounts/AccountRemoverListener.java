@@ -27,6 +27,6 @@ final class AccountRemoverListener extends MessengerContextCallback<Activity, Ac
 	@Override
 	public void onSuccess(@Nonnull Activity activity, Account account) {
 		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
-		eventManager.fire(AccountGuiEventType.newAccountEditFinishedEvent(account, AccountGuiEventType.FinishedState.removed));
+		eventManager.fire(AccountUiEventType.newAccountEditFinishedEvent(account, AccountUiEventType.FinishedState.removed));
 	}
 }

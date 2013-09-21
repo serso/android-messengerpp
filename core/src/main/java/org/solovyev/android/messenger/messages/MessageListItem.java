@@ -93,7 +93,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 			final ChatMessage readMessage = message.cloneRead();
 			setData(readMessage);
 			final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-			eventManager.fire(ChatGuiEventType.chat_message_read.newEvent(chat, readMessage));
+			eventManager.fire(ChatUiEventType.chat_message_read.newEvent(chat, readMessage));
 		}
 	}
 

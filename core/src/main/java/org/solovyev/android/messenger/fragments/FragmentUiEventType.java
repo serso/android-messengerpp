@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  * Date: 3/7/13
  * Time: 5:16 PM
  */
-public enum FragmentGuiEventType {
+public enum FragmentUiEventType {
 
 	/**
 	 * After {@link android.app.Fragment#onCreate(android.os.Bundle)} is called
@@ -18,8 +18,8 @@ public enum FragmentGuiEventType {
 	created {
 		@Override
 		@Nonnull
-		public FragmentGuiEvent newEvent(@Nonnull Fragment fragment) {
-			return new FragmentGuiEvent(fragment.getClass(), this);
+		public FragmentUiEvent newEvent(@Nonnull Fragment fragment) {
+			return new FragmentUiEvent(fragment.getClass(), this);
 		}
 	},
 
@@ -29,7 +29,7 @@ public enum FragmentGuiEventType {
 	shown {
 		@Nonnull
 		@Override
-		public FragmentGuiEvent newEvent(@Nonnull Fragment fragment) {
+		public FragmentUiEvent newEvent(@Nonnull Fragment fragment) {
 			return newFragmentEvent(fragment, this);
 		}
 	},
@@ -37,24 +37,24 @@ public enum FragmentGuiEventType {
 	started {
 		@Nonnull
 		@Override
-		public FragmentGuiEvent newEvent(@Nonnull Fragment fragment) {
+		public FragmentUiEvent newEvent(@Nonnull Fragment fragment) {
 			return newFragmentEvent(fragment, this);
 		}
 	};
 
 	@Nonnull
-	public abstract FragmentGuiEvent newEvent(@Nonnull Fragment fragment);
+	public abstract FragmentUiEvent newEvent(@Nonnull Fragment fragment);
 
-	private static FragmentGuiEvent newFragmentEvent(@Nonnull Fragment fragment, @Nonnull FragmentGuiEventType type) {
+	private static FragmentUiEvent newFragmentEvent(@Nonnull Fragment fragment, @Nonnull FragmentUiEventType type) {
 		final View view = fragment.getView();
 		if (view == null) {
 			throw new IllegalArgumentException("View is not created for fragment, but fragment is shown!");
 		}
 
 		if (view.getParent() instanceof View) {
-			return new FragmentGuiEvent(fragment.getClass(), type, ((View) view.getParent()).getId());
+			return new FragmentUiEvent(fragment.getClass(), type, ((View) view.getParent()).getId());
 		} else {
-			return new FragmentGuiEvent(fragment.getClass(), type);
+			return new FragmentUiEvent(fragment.getClass(), type);
 		}
 	}
 }
