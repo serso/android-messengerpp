@@ -9,17 +9,17 @@ public interface AccountDao {
 
 	void insertRealm(@Nonnull Account account) throws AccountException;
 
-	void deleteRealm(@Nonnull String realmId);
+	void deleteRealm(@Nonnull String accountId);
 
 	@Nonnull
-	Collection<Account> loadRealms();
+	Collection<Account> loadAccounts();
 
-	void deleteAllRealms();
+	void deleteAllAccounts();
 
-	void updateRealm(@Nonnull Account account) throws AccountException;
+	void updateAccount(@Nonnull Account account) throws AccountException;
 
 	@Nonnull
-	Collection<Account> loadRealmsInState(@Nonnull AccountState state);
+	Collection<Account> loadAccountsInState(@Nonnull AccountState state);
 
 	void init();
 }

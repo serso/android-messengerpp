@@ -60,13 +60,13 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Override
-	public void deleteRealm(@Nonnull String realmId) {
-		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealm(realmId)));
+	public void deleteRealm(@Nonnull String accountId) {
+		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteRealm(accountId)));
 	}
 
 	@Nonnull
 	@Override
-	public Collection<Account> loadRealms() {
+	public Collection<Account> loadAccounts() {
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {
@@ -76,12 +76,12 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Override
-	public void deleteAllRealms() {
+	public void deleteAllAccounts() {
 		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(DeleteAllRowsDbExec.newInstance("realms")));
 	}
 
 	@Override
-	public void updateRealm(@Nonnull Account account) throws AccountException {
+	public void updateAccount(@Nonnull Account account) throws AccountException {
 		try {
 			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(account, secret)));
 		} catch (AccountRuntimeException e) {
@@ -91,7 +91,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 
 	@Nonnull
 	@Override
-	public Collection<Account> loadRealmsInState(@Nonnull AccountState state) {
+	public Collection<Account> loadAccountsInState(@Nonnull AccountState state) {
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {

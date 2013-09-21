@@ -23,18 +23,18 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 	public void setUp() throws Exception {
 		super.setUp();
-		accountDao.deleteAllRealms();
+		accountDao.deleteAllAccounts();
 	}
 
 	public void testRealmOperations() throws Exception {
-		Collection<Account> accounts = accountDao.loadRealms();
+		Collection<Account> accounts = accountDao.loadAccounts();
 		Assert.assertTrue(accounts.isEmpty());
 
 		TestAccountConfiguration expectedConfig1 = new TestAccountConfiguration("test_config_field", 42);
 		final Account expected1 = testRealmDef.newRealm("test~01", Users.newEmptyUser(EntityImpl.newInstance("test~01", "user01")), expectedConfig1, AccountState.enabled);
 		accountDao.insertRealm(expected1);
 
-		accounts = accountDao.loadRealms();
+		accounts = accountDao.loadAccounts();
 		Assert.assertTrue(accounts.size() == 1);
 		Account<TestAccountConfiguration> actual1 = Collections.getFirstCollectionElement(accounts);
 		Assert.assertNotNull(actual1);
@@ -45,7 +45,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 		accountDao.deleteRealm(expected1.getId());
 
-		accounts = accountDao.loadRealms();
+		accounts = accountDao.loadAccounts();
 		Assert.assertTrue(accounts.isEmpty());
 	}
 
@@ -58,12 +58,12 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 			accountDao.insertRealm(expected);
 		}
 
-		Collection<Account> accounts = accountDao.loadRealms();
+		Collection<Account> accounts = accountDao.loadAccounts();
 		Assert.assertTrue(accounts.size() == 3);
 	}
 
 	public void tearDown() throws Exception {
-		accountDao.deleteAllRealms();
+		accountDao.deleteAllAccounts();
 		super.tearDown();
 	}
 }

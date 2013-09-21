@@ -115,12 +115,12 @@ public class DefaultAccountService implements AccountService {
 
 		synchronized (lock) {
 			// reset status to enabled for temporary disable realms
-			for (Account account : accountDao.loadRealmsInState(AccountState.disabled_by_app)) {
+			for (Account account : accountDao.loadAccountsInState(AccountState.disabled_by_app)) {
 				changeRealmState(account, AccountState.enabled, false);
 			}
 
 			// remove all scheduled to remove realms
-			for (Account account : accountDao.loadRealmsInState(AccountState.removed)) {
+			for (Account account : accountDao.loadAccountsInState(AccountState.removed)) {
 				this.messageService.removeAllMessagesInRealm(account.getId());
 				this.chatService.removeChatsInRealm(account.getId());
 				this.userService.removeUsersInRealm(account.getId());
@@ -242,7 +242,7 @@ public class DefaultAccountService implements AccountService {
 					} else {
 						synchronized (lock) {
 							if (oldAccount != null) {
-								accountDao.updateRealm(newAccount);
+								accountDao.updateAccount(newAccount);
 								accounts.put(newAccount.getId(), newAccount);
 								listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
 							} else {
@@ -287,7 +287,7 @@ public class DefaultAccountService implements AccountService {
 				synchronized (accounts) {
 					this.accounts.put(account.getId(), result);
 					synchronized (lock) {
-						this.accountDao.updateRealm(result);
+						this.accountDao.updateAccount(result);
 					}
 				}
 
@@ -345,7 +345,7 @@ public class DefaultAccountService implements AccountService {
 
 	@Override
 	public void load() {
-		final Collection<Account> realmsFromDb = accountDao.loadRealms();
+		final Collection<Account> realmsFromDb = accountDao.loadAccounts();
 		synchronized (accounts) {
 			int maxRealmIndex = 0;
 
