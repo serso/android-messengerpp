@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.users;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.entities.Entity;
@@ -75,7 +77,17 @@ public final class Users {
 		return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
 	}
 
-	public static void tryParseNameProperties(@Nonnull List<AProperty> result, @Nullable String fullName) {
+	public static void setUserOnlineProperty(@Nonnull List<AProperty> properties, boolean online) {
+		Iterables.removeIf(properties, new Predicate<AProperty>() {
+			@Override
+			public boolean apply(@Nullable AProperty property) {
+				return property != null && property.getName().equals(User.PROPERTY_ONLINE);
+			}
+		});
+		properties.add(Properties.newProperty(User.PROPERTY_ONLINE, String.valueOf(online)));
+	}
+
+	public static void tryParseNameProperties(@Nonnull List<AProperty> properties, @Nullable String fullName) {
 		if (fullName != null) {
 			int firstSpaceSymbolIndex = fullName.indexOf(' ');
 			int lastSpaceSymbolIndex = fullName.lastIndexOf(' ');
@@ -86,11 +98,11 @@ public final class Users {
 				// 2. if more than one spaces => both return different
 				final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
 				final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
-				result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, firstName));
-				result.add(Properties.newProperty(User.PROPERTY_LAST_NAME, lastName));
+				properties.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, firstName));
+				properties.add(Properties.newProperty(User.PROPERTY_LAST_NAME, lastName));
 			} else {
 				// just store full name in first name field
-				result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, fullName));
+				properties.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, fullName));
 			}
 		}
 	}

@@ -29,9 +29,9 @@ public class VkAccountUserService implements AccountUserService {
 	}
 
 	@Override
-	public User getUserById(@Nonnull String realmUserId) throws AccountConnectionException {
+	public User getUserById(@Nonnull String accountUserId) throws AccountConnectionException {
 		try {
-			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(account, realmUserId, null));
+			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(account, accountUserId, null));
 			return Collections.getFirstListElement(users);
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);
@@ -42,9 +42,9 @@ public class VkAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String realmUserId) throws AccountConnectionException {
+	public List<User> getUserContacts(@Nonnull String accountUserId) throws AccountConnectionException {
 		try {
-			return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(account, realmUserId));
+			return HttpTransactions.execute(VkFriendsGetHttpTransaction.newInstance(account, accountUserId));
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {

@@ -21,13 +21,13 @@ import java.util.List;
 public class TestAccountService implements AccountUserService, AccountChatService {
 	@Nullable
 	@Override
-	public User getUserById(@Nonnull String realmUserId) {
+	public User getUserById(@Nonnull String accountUserId) {
 		return null;
 	}
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String realmUserId) {
+	public List<User> getUserContacts(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 

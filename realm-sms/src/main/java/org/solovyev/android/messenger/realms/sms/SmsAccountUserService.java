@@ -16,7 +16,7 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,12 +35,12 @@ final class SmsAccountUserService implements AccountUserService {
 
 	@Nullable
 	@Override
-	public User getUserById(@Nonnull String realmUserId) throws AccountConnectionException {
+	public User getUserById(@Nonnull String accountUserId) throws AccountConnectionException {
 		final Context context = MessengerApplication.getApp();
 
-		if (!SmsRealm.USER_ID.equals(realmUserId)) {
+		if (!SmsRealm.USER_ID.equals(accountUserId)) {
 			final String selection = ContactsContract.Contacts._ID + " = ? and " + ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
-			final String[] selectionArgs = new String[]{realmUserId};
+			final String[] selectionArgs = new String[]{accountUserId};
 
 			final ContentResolver cr = context.getContentResolver();
 			final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, selectionArgs, null);
@@ -83,7 +83,7 @@ final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String realmUserId) throws AccountConnectionException {
+	public List<User> getUserContacts(@Nonnull String accountUserId) throws AccountConnectionException {
 		final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 		final ContentResolver cr = MessengerApplication.getApp().getContentResolver();
 		final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, null, null);
@@ -93,6 +93,11 @@ final class SmsAccountUserService implements AccountUserService {
 	@Nonnull
 	@Override
 	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException {
-		return Collections.emptyList();
+		// all users are reachable in SMS realm
+		final List<User> result = new ArrayList<User>(users.size());
+		for (User user : users) {
+			result.add(user.cloneWithNewStatus(true));
+		}
+		return result;
 	}
 }

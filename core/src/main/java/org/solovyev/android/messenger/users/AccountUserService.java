@@ -14,24 +14,24 @@ import java.util.List;
 public interface AccountUserService {
 
 	/**
-	 * @param realmUserId realm user id
-	 * @return fully loaded user which is identified by <var>realmUserId</var> in current realm
+	 * @param accountUserId account user id
+	 * @return fully loaded user which is identified by <var>accountUserId</var> in current account
 	 */
 	@Nullable
-	User getUserById(@Nonnull String realmUserId) throws AccountConnectionException;
+	User getUserById(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	/**
-	 * @param realmUserId realm user id
+	 * @param accountUserId account user id
 	 * @return list of user contacts (users to which current user can write messages and is aware of theirs presence in chat)
 	 */
 	@Nonnull
-	List<User> getUserContacts(@Nonnull String realmUserId) throws AccountConnectionException;
+	List<User> getUserContacts(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	/**
-	 * Method checks if user in <var>users</var> list is online and returns list of online users
+	 * Method checks if user in <var>users</var> list is online
 	 *
 	 * @param users list of users for which online check should be done
-	 * @return list of user which are currently online (sub list of specified list)
+	 * @return list of users with updated statuses (online/offline)
 	 */
 	@Nonnull
 	List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException;

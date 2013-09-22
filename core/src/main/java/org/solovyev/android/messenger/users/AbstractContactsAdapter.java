@@ -81,6 +81,8 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 			case unread_messages_count_changed:
 				onContactChanged(event, eventUser);
 				break;
+			case contacts_presence_changed:
+				throw new UnsupportedOperationException();
 			case contact_online:
 			case contact_offline:
 				onContactPresenceChanged(event);
@@ -110,13 +112,13 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 			listItem.onEvent(event);
 			onListItemChanged(contact);
 			notifyDataSetChanged();
+			refilter();
 		}
 	}
 
 	private void onContactPresenceChanged(@Nonnull UserEvent event) {
 		final User contact = event.getDataAsUser();
 		onContactChanged(event, contact);
-		refilter();
 	}
 
 	@Nullable

@@ -112,7 +112,7 @@ public class DefaultAccountService implements AccountService {
 			for (Account account : accountDao.loadAccountsInState(AccountState.removed)) {
 				this.messageService.removeAllMessagesInRealm(account.getId());
 				this.chatService.removeChatsInRealm(account.getId());
-				this.userService.removeUsersInRealm(account.getId());
+				this.userService.removeUsersInAccount(account.getId());
 				this.accountDao.deleteRealm(account.getId());
 				this.accounts.remove(account.getId());
 			}

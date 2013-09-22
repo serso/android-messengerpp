@@ -65,6 +65,17 @@ public enum UserEventType {
 		}
 	},
 
+	/**
+	 * Fires when contacts presence has changed,
+	 * Data: list of contacts for whom presence have been changed
+	 */
+	contacts_presence_changed  {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof List;
+		}
+	},
+
 	// Number of unread messages in private chat has changed
 	unread_messages_count_changed {
 		@Override

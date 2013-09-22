@@ -42,14 +42,14 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	@Nullable
 	@Override
-	public User getUserById(@Nonnull final String realmUserId) throws AccountConnectionException {
-		return doOnConnection(new UserLoader(getAccount(), realmUserId));
+	public User getUserById(@Nonnull final String accountUserId) throws AccountConnectionException {
+		return doOnConnection(new UserLoader(getAccount(), accountUserId));
 	}
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull final String realmUserId) throws AccountConnectionException {
-		return doOnConnection(new UserContactsLoader(getAccount(), realmUserId));
+	public List<User> getUserContacts(@Nonnull final String accountUserId) throws AccountConnectionException {
+		return doOnConnection(new UserContactsLoader(getAccount(), accountUserId));
 	}
 
 	@Nonnull

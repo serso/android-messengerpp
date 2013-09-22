@@ -72,11 +72,11 @@ public interface UserService {
 	void updateUser(@Nonnull User user);
 
 	/**
-	 * Method removes all users in realm identified by <var>realmId</var>
+	 * Method removes all users in account identified by <var>accountId</var>
 	 *
-	 * @param realmId id of realm for which users shall be removed
+	 * @param accountId id of account for which users shall be removed
 	 */
-	void removeUsersInRealm(@Nonnull String realmId);
+	void removeUsersInAccount(@Nonnull String accountId);
 
     /*
     **********************************************************************

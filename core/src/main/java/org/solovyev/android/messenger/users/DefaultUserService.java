@@ -223,16 +223,16 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void removeUsersInRealm(@Nonnull final String realmId) {
+	public void removeUsersInAccount(@Nonnull final String accountId) {
 		synchronized (lock) {
-			this.userDao.deleteAllUsersForAccount(realmId);
+			this.userDao.deleteAllUsersForAccount(accountId);
 		}
 
-		userChatsCache.update(EntitiesRemovedMapUpdater.<Chat>newInstance(realmId));
-		userContactsCache.update(EntitiesRemovedMapUpdater.<User>newInstance(realmId));
+		userChatsCache.update(EntitiesRemovedMapUpdater.<Chat>newInstance(accountId));
+		userContactsCache.update(EntitiesRemovedMapUpdater.<User>newInstance(accountId));
 
 		synchronized (usersCache) {
-			Iterators.removeIf(usersCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
+			Iterators.removeIf(usersCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(accountId));
 		}
 	}
 
@@ -274,9 +274,6 @@ public class DefaultUserService implements UserService {
 	@Override
 	public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, final boolean available) {
 		final UserEventType userEventType = available ? UserEventType.contact_online : UserEventType.contact_offline;
-
-		userContactsCache.update(user.getEntity(), new UserListContactStatusUpdater(contact, available));
-
 		this.listeners.fireEvent(userEventType.newEvent(user, contact));
 	}
 
@@ -343,8 +340,10 @@ public class DefaultUserService implements UserService {
 
 		for (User updatedContact : result.getUpdatedObjects()) {
 			userEvents.add(UserEventType.changed.newEvent(updatedContact));
-			final UserEventType type = updatedContact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline;
-			userEvents.add(type.newEvent(user, updatedContact));
+		}
+
+		if(!result.getUpdatedObjects().isEmpty()) {
+			userEvents.add(UserEventType.contacts_presence_changed.newEvent(user, result.getUpdatedObjects()));
 		}
 
 		listeners.fireEvents(userEvents);
@@ -429,14 +428,7 @@ public class DefaultUserService implements UserService {
 
 		final User user = getUserById(userEntity);
 
-		final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
-
-		for (User contact : contacts) {
-			final UserEventType type = contact.isOnline() ? UserEventType.contact_online : UserEventType.contact_offline;
-			userEvents.add(type.newEvent(user, contact));
-		}
-
-		listeners.fireEvents(userEvents);
+		listeners.fireEvent(UserEventType.contacts_presence_changed.newEvent(user, contacts));
 	}
 
     /*
@@ -579,8 +571,13 @@ public class DefaultUserService implements UserService {
 					userChatsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(removedChat.getId()));
 					break;
 				case contact_online:
+					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(Arrays.asList(event.getDataAsUser())));
 					break;
 				case contact_offline:
+					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(Arrays.asList(event.getDataAsUser())));
+					break;
+				case contacts_presence_changed:
+					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(event.getDataAsUsers()));
 					break;
 				case unread_messages_count_changed:
 					break;
@@ -619,32 +616,51 @@ public class DefaultUserService implements UserService {
 	private static class UserListContactStatusUpdater implements ThreadSafeMultimap.ListUpdater<User> {
 
 		@Nonnull
-		private final User contact;
+		private final List<User> contacts;
 
-		private final boolean available;
-
-		public UserListContactStatusUpdater(@Nonnull User contact, boolean available) {
-			this.contact = contact;
-			this.available = available;
+		public UserListContactStatusUpdater(@Nonnull List<User> contacts) {
+			this.contacts = contacts;
 		}
 
 		@Nullable
 		@Override
 		public List<User> update(@Nonnull List<User> values) {
-			final int index = Iterables.indexOf(values, new Predicate<User>() {
-				@Override
-				public boolean apply(@Nullable User user) {
-					return contact.equals(user);
-				}
-			});
+			if (contacts.size() == 1) {
+				final User contact = contacts.get(0);
 
-			if (index >= 0) {
-				// contact found => update status locally (persistence is not updated at status change is too frequent event)
-				final List<User> result = ThreadSafeMultimap.copy(values);
-				result.set(index, result.get(index).cloneWithNewStatus(available));
-				return result;
+				final int index = Iterables.indexOf(values, new Predicate<User>() {
+					@Override
+					public boolean apply(@Nullable User user) {
+						return contact.equals(user);
+					}
+				});
+
+				if (index >= 0) {
+					// contact found => update status locally (persistence is not updated at status change is too frequent event)
+					final List<User> result = ThreadSafeMultimap.copy(values);
+					result.set(index, result.get(index).cloneWithNewStatus(contact.isOnline()));
+					return result;
+				} else {
+					return null;
+				}
 			} else {
-				return null;
+				final List<User> result = ThreadSafeMultimap.copy(values);
+
+				for (int i = 0; i < result.size(); i++) {
+					final User user = result.get(i);
+					final User contact = Iterables.find(contacts, new Predicate<User>() {
+						@Override
+						public boolean apply(@Nullable User contact) {
+							return user.equals(contact);
+						}
+					}, null);
+
+					if(contact != null) {
+						result.set(i, user.cloneWithNewStatus(contact.isOnline()));
+					}
+				}
+
+				return result;
 			}
 		}
 	}
