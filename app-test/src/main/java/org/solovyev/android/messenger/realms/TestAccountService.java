@@ -39,25 +39,25 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) {
+	public List<ChatMessage> getChatMessages(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
+	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) {
+	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getUserChats(@Nonnull String realmUserId) {
+	public List<ApiChat> getUserChats(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
@@ -69,7 +69,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) {
+	public Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) {
 		throw new UnsupportedOperationException();
 	}
 }

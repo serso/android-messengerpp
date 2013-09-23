@@ -18,25 +18,25 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws AccountConnectionException {
+	public List<ChatMessage> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) throws AccountConnectionException {
+	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) throws AccountConnectionException {
+	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getUserChats(@Nonnull String realmUserId) throws AccountConnectionException {
+	public List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
@@ -48,7 +48,7 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) throws AccountConnectionException {
-		return Chats.newPrivateChat(realmChat);
+	public Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException {
+		return Chats.newPrivateChat(accountChat);
 	}
 }

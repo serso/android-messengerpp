@@ -31,7 +31,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws AccountConnectionException {
+	public List<ChatMessage> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
 		return doOnConnection(new XmppConnectedCallable<List<ChatMessage>>() {
 			@Override
 			public List<ChatMessage> call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
@@ -51,19 +51,19 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) {
+	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) {
+	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getUserChats(@Nonnull String realmUserId) {
+	public List<ApiChat> getUserChats(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
@@ -75,11 +75,11 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public Chat newPrivateChat(@Nonnull final Entity realmChat, @Nonnull String realmUserId1, @Nonnull final String realmUserId2) throws AccountConnectionException {
+	public Chat newPrivateChat(@Nonnull final Entity accountChat, @Nonnull String accountUserId1, @Nonnull final String accountUserId2) throws AccountConnectionException {
 		return doOnConnection(new XmppConnectedCallable<Chat>() {
 			@Override
 			public Chat call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
-				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getAccountEntityId(), new XmppMessageListener(getAccount(), realmChat));
+				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(accountUserId2, accountChat.getAccountEntityId(), new XmppMessageListener(getAccount(), accountChat));
 				return XmppAccount.toApiChat(smackChat, Collections.<Message>emptyList(), getAccount()).getChat();
 			}
 		});

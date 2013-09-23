@@ -15,16 +15,16 @@ import java.util.List;
 public interface AccountChatService {
 
 	@Nonnull
-	List<ChatMessage> getChatMessages(@Nonnull String realmUserId) throws AccountConnectionException;
+	List<ChatMessage> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	@Nonnull
-	List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId) throws AccountConnectionException;
+	List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;
 
 	@Nonnull
-	List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull Integer offset) throws AccountConnectionException;
+	List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException;
 
 	@Nonnull
-	List<ApiChat> getUserChats(@Nonnull String realmUserId) throws AccountConnectionException;
+	List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	/**
 	 * Method sends message to the realm and, if possible, returns message is. If message id could not be returned
@@ -38,5 +38,5 @@ public interface AccountChatService {
 	String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException;
 
 	@Nonnull
-	Chat newPrivateChat(@Nonnull Entity realmChat, @Nonnull String realmUserId1, @Nonnull String realmUserId2) throws AccountConnectionException;
+	Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException;
 }
