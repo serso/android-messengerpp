@@ -45,13 +45,13 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	private String accountId;
 
 	@Nullable
-	private String realmDefId;
+	private String realmId;
 
 	@Nonnull
-	private String realmEntityId;
+	private String accountEntityId;
 
 	@Nullable
-	private String appRealmEntityId;
+	private String appAccountEntityId;
 
 	@Nonnull
 	private String entityId;
@@ -64,42 +64,42 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     **********************************************************************
     */
 
-	private EntityImpl(@Nonnull String accountId, @Nonnull String realmEntityId, @Nonnull String entityId) {
+	private EntityImpl(@Nonnull String accountId, @Nonnull String accountEntityId, @Nonnull String entityId) {
 		this.accountId = accountId;
-		this.realmEntityId = realmEntityId;
+		this.accountEntityId = accountEntityId;
 		this.entityId = entityId;
 	}
 
 	private EntityImpl(@Nonnull String accountId,
-					   @Nullable String realmDefId,
-					   @Nonnull String realmEntityId,
+					   @Nullable String realmId,
+					   @Nonnull String accountEntityId,
 					   @Nonnull String entityId) {
 		this.accountId = accountId;
-		this.realmDefId = realmDefId;
-		this.realmEntityId = realmEntityId;
+		this.realmId = realmId;
+		this.accountEntityId = accountEntityId;
 		this.entityId = entityId;
 	}
 
 	@Nonnull
-	public static EntityImpl newInstance(@Nonnull String realmId, @Nonnull String realmEntityId, @Nonnull String entityId) {
-		if (Strings.isEmpty(realmId)) {
-			throw new IllegalArgumentException("Realm cannot be empty!");
+	public static EntityImpl newInstance(@Nonnull String accountId, @Nonnull String accountEntityId, @Nonnull String entityId) {
+		if (Strings.isEmpty(accountId)) {
+			throw new IllegalArgumentException("Account cannot be empty!");
 		}
 
-		if (Strings.isEmpty(realmEntityId)) {
-			throw new IllegalArgumentException("Realm entity id cannot be empty!");
+		if (Strings.isEmpty(accountEntityId)) {
+			throw new IllegalArgumentException("Account entity id cannot be empty!");
 		}
 
 		if (Strings.isEmpty(entityId)) {
 			throw new IllegalArgumentException("Entity id cannot be empty!");
 		}
 
-		return new EntityImpl(realmId, realmEntityId, entityId);
+		return new EntityImpl(accountId, accountEntityId, entityId);
 	}
 
 	@Nonnull
-	public static Entity newInstance(@Nonnull String realmId, @Nonnull String realmEntityId) {
-		return newInstance(realmId, realmEntityId, realmId + DELIMITER + realmEntityId);
+	public static Entity newInstance(@Nonnull String accountId, @Nonnull String accountEntityId) {
+		return newInstance(accountId, accountEntityId, accountId + DELIMITER + accountEntityId);
 	}
 
 	@Nonnull
@@ -131,37 +131,37 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 
 	@Nonnull
 	@Override
-	public String getRealmDefId() {
-		if (this.realmDefId == null) {
+	public String getRealmId() {
+		if (this.realmId == null) {
 			final int index = accountId.indexOf(DELIMITER_REALM);
 			if (index >= 0) {
-				this.realmDefId = entityId.substring(0, index);
+				this.realmId = entityId.substring(0, index);
 			} else {
 				throw new IllegalArgumentException("No realm id is stored in accountId!");
 			}
 
 		}
-		return this.realmDefId;
+		return this.realmId;
 	}
 
 	@Nonnull
 	public String getAccountEntityId() {
-		return this.realmEntityId;
+		return this.accountEntityId;
 	}
 
 	@Nonnull
 	@Override
-	public String getAppRealmEntityId() {
-		if (appRealmEntityId == null) {
+	public String getAppAccountEntityId() {
+		if (appAccountEntityId == null) {
 			final int index = entityId.indexOf(DELIMITER);
 			if (index >= 0) {
-				appRealmEntityId = entityId.substring(index + 1);
+				appAccountEntityId = entityId.substring(index + 1);
 			} else {
 				throw new IllegalArgumentException("No realm is stored in entityId!");
 			}
 		}
 
-		return appRealmEntityId;
+		return appAccountEntityId;
 	}
 
 	@Nonnull
@@ -195,8 +195,8 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	@Override
 	public void writeToParcel(@Nonnull Parcel out, int flags) {
 		out.writeString(accountId);
-		out.writeString(realmDefId);
-		out.writeString(realmEntityId);
+		out.writeString(realmId);
+		out.writeString(accountEntityId);
 		out.writeString(entityId);
 	}
 

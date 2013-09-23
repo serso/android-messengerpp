@@ -97,8 +97,8 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public Entity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId) {
-		return EntityImpl.newInstance(getId(), realmEntityId, entityId);
+	public Entity newRealmEntity(@Nonnull String accountEntityId, @Nonnull String entityId) {
+		return EntityImpl.newInstance(getId(), accountEntityId, entityId);
 	}
 
 	@Nonnull

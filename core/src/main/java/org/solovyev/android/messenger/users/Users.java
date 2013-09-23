@@ -32,10 +32,10 @@ public final class Users {
 
 	@Nonnull
 	public static User newUser(@Nonnull String realmId,
-							   @Nonnull String realmUserId,
+							   @Nonnull String accountUserId,
 							   @Nonnull UserSyncData userSyncData,
 							   @Nonnull List<AProperty> properties) {
-		final Entity entity = EntityImpl.newInstance(realmId, realmUserId);
+		final Entity entity = EntityImpl.newInstance(realmId, accountUserId);
 		return newUser(entity, userSyncData, properties);
 	}
 

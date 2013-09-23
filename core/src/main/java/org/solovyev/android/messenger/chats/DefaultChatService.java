@@ -471,7 +471,7 @@ public class DefaultChatService implements ChatService {
 		boolean first = true;
 
 		if (chat.isPrivate()) {
-			for (String userId : Splitter.on(PRIVATE_CHAT_DELIMITER).split(chat.getEntity().getAppRealmEntityId())) {
+			for (String userId : Splitter.on(PRIVATE_CHAT_DELIMITER).split(chat.getEntity().getAppAccountEntityId())) {
 				if (first) {
 					first = false;
 				} else {

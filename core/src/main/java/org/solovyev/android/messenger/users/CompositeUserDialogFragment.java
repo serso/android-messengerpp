@@ -148,7 +148,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 		if (account.isCompositeUserChoicePersisted()) {
 			// NOTE: context from builder is used as custom style may be applied here
-			final LayoutInflater inflater = LayoutInflater.from(builder.getContext());
+			final LayoutInflater inflater = LayoutInflater.from(getActivity());
 			final CheckBox checkBox = (CheckBox) inflater.inflate(R.layout.mpp_dialog_checkbox, null);
 			checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				@Override

@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.realms.sms;
 
+import android.telephony.SmsManager;
+
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
