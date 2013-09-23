@@ -8,6 +8,7 @@ import org.jivesfotware.smackx.enitycaps.provider.MessengerCapsExtensionProvider
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.accounts.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
@@ -82,6 +83,9 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 		SmackAndroid.init(context);
 		SmackConfiguration.setPacketReplyTimeout(300000);
 		ProviderManager.getInstance().addExtensionProvider("c", "http://jabber.org/protocol/caps", new MessengerCapsExtensionProvider());
+
+		// we need to call static initializer block
+		ServiceDiscoveryManager.class.getName();
 	}
 
 
