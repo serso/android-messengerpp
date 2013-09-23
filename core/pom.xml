@@ -38,9 +38,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.solovyev.android</groupId>
-			<artifactId>android-common-ads</artifactId>
-			<type>apklib</type>
+			<groupId>org.solovyev</groupId>
+			<artifactId>common-security</artifactId>
 		</dependency>
 
 		<dependency>
@@ -51,7 +50,19 @@
 
 		<dependency>
 			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-db</artifactId>
+			<type>apklib</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
 			<artifactId>android-common-views</artifactId>
+			<type>apklib</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-security</artifactId>
 			<type>apklib</type>
 		</dependency>
 

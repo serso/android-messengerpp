@@ -149,6 +149,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.solovyev</groupId>
+				<artifactId>common-security</artifactId>
+				<version>${jcl.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-ads</artifactId>
 				<version>${acl.version}</version>
@@ -172,6 +178,13 @@
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-views</artifactId>
+				<version>${acl.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-security</artifactId>
 				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>
@@ -321,7 +334,7 @@
 				<plugin>
 					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>3.5.1</version>
+					<version>3.6.1</version>
 					<configuration>
 
 						<sourceDirectories>
