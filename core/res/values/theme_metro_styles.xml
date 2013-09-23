@@ -11,6 +11,13 @@
 		<item name="android:textCursorDrawable">@null</item>
 	</style>
 
+	<style name="mpp_list_view" parent="@android:style/Widget.ListView">
+		<!--
+			Remove footer added by some firmwares (Motorola ATRIX, DROID)
+			See: http://stackoverflow.com/questions/11078882/list-is-not-properly-shown-with-motorola-razor-xt910-android-2-3
+		-->
+		<item name="android:overScrollFooter">@null</item>
+	</style>
 
 	<!--
 		List item style (whole object)
@@ -150,6 +157,7 @@
 		<item name="android:focusable">true</item>
 		<item name="android:layout_width">80dp</item>
 		<item name="android:layout_height">45dp</item>
+		<item name="android:minHeight">45dp</item>
 		<item name="android:textColor">@color/mpp_text</item>
 		<item name="android:textSize">15sp</item>
 

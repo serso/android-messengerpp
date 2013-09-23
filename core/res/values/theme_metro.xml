@@ -2,6 +2,8 @@
 <resources>
 
 	<style name="mpp_theme_metro" parent="Theme.Sherlock">
+		<item name="android:listViewStyle">@style/mpp_list_view</item>
+
 		<item name="mpp_list_item">@style/mpp_list_item</item>
 		<item name="mpp_list_item_block">@style/mpp_list_item_block</item>
 		<item name="mpp_list_item_icon">@style/mpp_list_item_icon</item>
