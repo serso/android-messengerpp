@@ -81,13 +81,13 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 		super.init(context);
 
 		SmackAndroid.init(context);
-		SmackConfiguration.setPacketReplyTimeout(300000);
-		ProviderManager.getInstance().addExtensionProvider("c", "http://jabber.org/protocol/caps", new MessengerCapsExtensionProvider());
 
-		// we need to call static initializer block
-		ServiceDiscoveryManager.class.getName();
-	}
+	SmackConfiguration.setPacketReplyTimeout(300000);
+	ProviderManager.getInstance().addExtensionProvider("c", "http://jabber.org/protocol/caps", new MessengerCapsExtensionProvider());
 
+	// we need to call static initializer block
+	ServiceDiscoveryManager.class.getName();
+}
 
 	@Nonnull
 	@Override
