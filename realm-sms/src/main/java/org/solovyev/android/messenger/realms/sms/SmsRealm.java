@@ -39,6 +39,12 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	private static final String REALM_ID = "sms";
 	static final String USER_ID = "self";
 
+	public static final String INTENT_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+	public static final String INTENT_SENT = "SMS_SENT";
+	public static final String INTENT_DELIVERED = "SMS_DELIVERED";
+	public static final String INTENT_EXTRA_SMS_ID = "sms_id";
+	public static final String INTENT_EXTRA_PDUS ="pdus";
+
 	/*
 	**********************************************************************
 	*
@@ -52,7 +58,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
 	@Inject
 	public SmsRealm(@Nonnull Application context) {
-		super(REALM_ID, R.string.mpp_sms_realm_name, R.drawable.mpp_sms_icon, SmsAccountConfigurationFragment.class, SmsAccountConfiguration.class, false);
+		super(REALM_ID, R.string.mpp_sms_realm_name, R.drawable.mpp_sms_icon, SmsAccountConfigurationFragment.class, SmsAccountConfiguration.class, true);
 		this.context = context;
 	}
 

@@ -81,8 +81,8 @@ public class DefaultChatMessageService implements ChatMessageService {
 		// todo serso: create normal way of generating ids
 		final Entity tmp = EntityImpl.newInstance(account.getId(), String.valueOf(System.currentTimeMillis()));
 
-		// NOTE: empty realm entity id in order to get real from realm service
-		return EntityImpl.newInstance(account.getId(), ChatMessageService.NO_REALM_MESSAGE_ID, tmp.getEntityId());
+		// NOTE: empty account entity id in order to get real from realm service
+		return EntityImpl.newInstance(account.getId(), ChatMessageService.NO_ACCOUNT_MESSAGE_ID, tmp.getEntityId());
 	}
 
 	@Nonnull
@@ -107,9 +107,9 @@ public class DefaultChatMessageService implements ChatMessageService {
 		final Account account = getRealmByUser(user);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
-		final String realmMessageId = accountChatService.sendChatMessage(chat, chatMessage);
+		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(account.newMessageEntity(realmMessageId == null ? NO_REALM_MESSAGE_ID : realmMessageId, chatMessage.getEntity().getEntityId()));
+		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_MESSAGE_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
 
 		message.setAuthor(user);
 		if (chat.isPrivate()) {

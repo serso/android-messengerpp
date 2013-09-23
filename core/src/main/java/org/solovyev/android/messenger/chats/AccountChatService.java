@@ -32,7 +32,7 @@ public interface AccountChatService {
 	 *
 	 * @param chat    chat in which message was created
 	 * @param message message to be sent
-	 * @return message id of send message if possible
+	 * @return message id of sent message if possible
 	 */
 	@Nullable
 	String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException;

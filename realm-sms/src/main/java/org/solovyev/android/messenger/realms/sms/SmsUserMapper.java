@@ -16,6 +16,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.solovyev.android.properties.Properties.newProperty;
+
 /**
  * User: serso
  * Date: 5/27/13
@@ -71,10 +73,10 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 		final List<AProperty> properties = new ArrayList<AProperty>();
 		Users.tryParseNameProperties(properties, cursor.getString(1));
 		if (phoneNumbers.length() > 0) {
-			properties.add(Properties.newProperty(User.PROPERTY_PHONES, phoneNumbers.toString()));
+			properties.add(newProperty(User.PROPERTY_PHONES, phoneNumbers.toString()));
 		}
 		if (defaultPhoneNumber != null) {
-			properties.add(Properties.newProperty(User.PROPERTY_PHONE, defaultPhoneNumber));
+			properties.add(newProperty(User.PROPERTY_PHONE, defaultPhoneNumber));
 		}
 		return Users.newUser(realm.getId(), userId, Users.newNeverSyncedUserSyncData(), properties);
 	}

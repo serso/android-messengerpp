@@ -24,7 +24,7 @@ import java.util.List;
 @ThreadSafe
 public interface ChatMessageService {
 
-	final String NO_REALM_MESSAGE_ID = "empty";
+	final String NO_ACCOUNT_MESSAGE_ID = "empty";
 
 	void init();
 
