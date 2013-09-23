@@ -1,14 +1,14 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.util.Log;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.packet.VCard;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
@@ -38,6 +38,40 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	XmppAccountUserService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware) {
 		super(realm, connectionAware);
+	}
+
+	@Nonnull
+	private static List<User> checkPresenceStatuses(@Nonnull Connection connection, @Nonnull List<User> users, @Nonnull Account account) {
+		final List<User> result = new ArrayList<User>(users.size());
+
+		final Roster roster = connection.getRoster();
+		for (final User user : users) {
+			result.add(checkPresence(account, roster, user));
+		}
+
+		return result;
+	}
+
+	@Nonnull
+	private static User checkPresence(@Nonnull Account account, @Nonnull Roster roster, @Nonnull final User user) {
+		return user.cloneWithNewStatus(isUserOnline(account, roster, user.getEntity()));
+	}
+
+	private static boolean isUserOnline(@Nonnull Account account, @Nonnull Roster roster, @Nonnull final Entity entity) {
+		final boolean online;
+		if (account.getUser().getEntity().equals(entity)) {
+			// realm user => always online
+			online = true;
+		} else {
+			final RosterEntry entry = roster.getEntry(entity.getAccountEntityId());
+			if (entry != null) {
+				final Presence presence = roster.getPresence(entry.getUser());
+				online = presence.isAvailable();
+			} else {
+				online = false;
+			}
+		}
+		return online;
 	}
 
 	@Nullable
@@ -83,14 +117,14 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		public User call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 			final User result;
 
-			if (account.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
+			if (account.getUser().getEntity().getAccountEntityId().equals(realmUserId)) {
 				// realm user cannot be found in roster ->  information should be loaded separately
-				result = toUser(account.getId(), realmUserId, null, true, connection);
+				result = toAccountUser(account.getId(), realmUserId, null, connection);
 			} else {
 				// try to find user contacts in roster
 				final RosterEntry entry = connection.getRoster().getEntry(realmUserId);
 				if (entry != null) {
-					result = toUser(account.getId(), entry.getUser(), entry.getName(), false, connection);
+					result = toUser(account.getId(), entry.getUser(), entry.getName(), connection, account);
 				} else {
 					result = null;
 				}
@@ -101,9 +135,17 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	}
 
 	@Nonnull
-	public static User toUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, boolean available, @Nonnull Connection connection) throws XMPPException {
-		final List<AProperty> properties = loadUserProperties(true, realmUserId, available, connection, name);
-		return Users.newUser(EntityImpl.newInstance(realmId, realmUserId), Users.newNeverSyncedUserSyncData(), properties);
+	public static User toUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, @Nonnull Connection connection, @Nonnull Account account) throws XMPPException {
+		final Entity entity = EntityImpl.newInstance(realmId, realmUserId);
+		final List<AProperty> properties = loadUserProperties(true, realmUserId, isUserOnline(account, connection.getRoster(), entity), connection, name);
+		return Users.newUser(entity, Users.newNeverSyncedUserSyncData(), properties);
+	}
+
+	@Nonnull
+	public static User toAccountUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, @Nonnull Connection connection) throws XMPPException {
+		final Entity entity = EntityImpl.newInstance(realmId, realmUserId);
+		final List<AProperty> properties = loadUserProperties(true, realmUserId, true, connection, name);
+		return Users.newUser(entity, Users.newNeverSyncedUserSyncData(), properties);
 	}
 
 	@Nonnull
@@ -166,13 +208,14 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		@Override
 		public List<User> call(@Nonnull final Connection connection) throws AccountConnectionException, XMPPException {
 
-			if (account.getUser().getEntity().getRealmEntityId().equals(realmUserId)) {
+			if (account.getUser().getEntity().getAccountEntityId().equals(realmUserId)) {
 				// realm user => load contacts through the roster
-				final Collection<RosterEntry> entries = connection.getRoster().getEntries();
+				final Roster roster = connection.getRoster();
+				final Collection<RosterEntry> entries = roster.getEntries();
 
 				final List<User> result = new ArrayList<User>(entries.size());
 				for (RosterEntry entry : entries) {
-					result.add(toUser(account.getId(), entry.getUser(), entry.getName(), false, connection));
+					result.add(toUser(account.getId(), entry.getUser(), entry.getName(), connection, account));
 				}
 
 				return result;
@@ -199,36 +242,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 		@Override
 		public List<User> call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
-			final List<User> result = new ArrayList<User>();
-
-			final Roster roster = connection.getRoster();
-			final Collection<RosterEntry> entries = roster.getEntries();
-			for (final User user : users) {
-
-				final boolean online;
-				if (account.getUser().equals(user)) {
-					// realm user => always online
-					online = true;
-				} else {
-					final RosterEntry entry = Iterables.find(entries, new Predicate<RosterEntry>() {
-						@Override
-						public boolean apply(@Nullable RosterEntry entry) {
-							return entry != null && user.getEntity().getRealmEntityId().equals(entry.getUser());
-						}
-					}, null);
-
-					if (entry != null) {
-						final Presence presence = roster.getPresence(entry.getUser());
-						online = presence.isAvailable();
-					} else {
-						online = false;
-					}
-				}
-
-				result.add(user.cloneWithNewStatus(online));
-			}
-
-			return result;
+			return checkPresenceStatuses(connection, users, account);
 		}
 	}
 }

@@ -97,7 +97,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
 						if (secondUser != null) {
 							// vk allows to have messages sent to person self himself - we don't
-							if (!secondUser.getRealmEntityId().equals(user.getEntity().getRealmEntityId())) {
+							if (!secondUser.getAccountEntityId().equals(user.getEntity().getAccountEntityId())) {
 								final Entity realmUser = user.getEntity();
 								final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().getPrivateChatId(realmUser, secondUser);
 

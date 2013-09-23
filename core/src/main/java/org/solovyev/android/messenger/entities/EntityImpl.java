@@ -145,7 +145,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	}
 
 	@Nonnull
-	public String getRealmEntityId() {
+	public String getAccountEntityId() {
 		return this.realmEntityId;
 	}
 

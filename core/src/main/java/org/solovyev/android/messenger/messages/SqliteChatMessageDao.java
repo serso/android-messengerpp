@@ -408,7 +408,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 		values.put("id", chatMessage.getEntity().getEntityId());
 		values.put("account_id", chatMessage.getEntity().getAccountId());
-		values.put("realm_message_id", chatMessage.getEntity().getRealmEntityId());
+		values.put("realm_message_id", chatMessage.getEntity().getAccountEntityId());
 
 		values.put("chat_id", chat.getEntity().getEntityId());
 		values.put("author_id", chatMessage.getAuthor().getEntityId());

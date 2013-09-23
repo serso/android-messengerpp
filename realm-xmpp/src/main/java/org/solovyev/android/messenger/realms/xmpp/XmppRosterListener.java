@@ -49,7 +49,7 @@ class XmppRosterListener implements RosterListener {
 					// we need to request new user entity because user id should be prepared properly
 					final Entity entity = account.newUserEntity(contactId);
 					try {
-						return accountUserService.getUserById(entity.getRealmEntityId());
+						return accountUserService.getUserById(entity.getAccountEntityId());
 					} catch (AccountException e) {
 						throw new AccountRuntimeException(e);
 					}

@@ -44,28 +44,6 @@ public enum UserEventType {
 	},
 
 	/**
-	 * Fired when contact presence is changed to available/online
-	 * Data: contact (User) - contact for which presence is changed
-	 */
-	contact_online {
-		@Override
-		protected void checkData(@Nullable Object data) {
-			assert data instanceof User;
-		}
-	},
-
-	/**
-	 * Fired when contact presence is changed to unavailable/offline
-	 * Data: contact (User) - contact for which presence is changed
-	 */
-	contact_offline {
-		@Override
-		protected void checkData(@Nullable Object data) {
-			assert data instanceof User;
-		}
-	},
-
-	/**
 	 * Fires when contacts presence has changed,
 	 * Data: list of contacts for whom presence have been changed
 	 */

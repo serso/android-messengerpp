@@ -46,11 +46,11 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 		try {
 
 			if (chat.isPrivate()) {
-				result.add(new BasicNameValuePair("uid", chat.getSecondUser().getRealmEntityId()));
+				result.add(new BasicNameValuePair("uid", chat.getSecondUser().getAccountEntityId()));
 			}
 
 			if (!chat.isPrivate()) {
-				result.add(new BasicNameValuePair("chat_id", chat.getEntity().getRealmEntityId()));
+				result.add(new BasicNameValuePair("chat_id", chat.getEntity().getAccountEntityId()));
 			}
 
 			result.add(new BasicNameValuePair("message", URLEncoder.encode(chatMessage.getBody(), "utf-8")));
@@ -64,7 +64,7 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 					@Override
 					public String apply(@Nullable LiteChatMessage fwdMessage) {
 						assert fwdMessage != null;
-						return fwdMessage.getEntity().getRealmEntityId();
+						return fwdMessage.getEntity().getAccountEntityId();
 					}
 				}));
 

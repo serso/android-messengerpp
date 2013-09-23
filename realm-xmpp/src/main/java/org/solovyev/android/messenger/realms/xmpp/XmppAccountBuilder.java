@@ -18,7 +18,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfiguration> {
-	;
 
 	@Nullable
 	private Connection connection;
@@ -36,7 +35,7 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfig
 
 		if (connection != null) {
 			try {
-				user = XmppAccountUserService.toUser(accountId, getConfiguration().getLogin(), null, true, connection);
+				user = XmppAccountUserService.toAccountUser(accountId, getConfiguration().getLogin(), null, connection);
 			} catch (XMPPException e) {
 				Log.e("XmppRealmBuilder", e.getMessage(), e);
 				user = Users.newEmptyUser(EntityImpl.newInstance(accountId, getConfiguration().getLogin()));

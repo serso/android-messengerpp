@@ -38,8 +38,14 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 	@Override
 	protected void doWork() throws AccountConnectionException {
 		// Try to create connection (if not exists)
-		if (this.connection == null) {
-			tryToConnect(0);
+		while (!isStopped()) {
+			if (this.connection == null) {
+				tryToConnect(0);
+			}
+			try {
+				Thread.sleep(10L * 60L * 1000L);
+			} catch (InterruptedException e) {
+			}
 		}
 	}
 

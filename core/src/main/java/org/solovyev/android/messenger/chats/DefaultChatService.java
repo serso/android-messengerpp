@@ -161,7 +161,7 @@ public class DefaultChatService implements ChatService {
 				// no private chat exists => create one
 				final AccountChatService accountChatService = account.getAccountChatService();
 
-				Chat chat = accountChatService.newPrivateChat(realmChat, user1.getRealmEntityId(), user2.getRealmEntityId());
+				Chat chat = accountChatService.newPrivateChat(realmChat, user1.getAccountEntityId(), user2.getAccountEntityId());
 
 				chat = preparePrivateChat(chat, user1, user2);
 
@@ -192,11 +192,11 @@ public class DefaultChatService implements ChatService {
 		final Account account = getRealmByEntity(user1);
 		final Entity chatEntity = getPrivateChatId(user1, user2);
 
-		if (!chatEntity.getRealmEntityId().equals(chat.getEntity().getRealmEntityId())) {
+		if (!chatEntity.getAccountEntityId().equals(chat.getEntity().getAccountEntityId())) {
 			/**
 			 * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#getPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
 			 */
-			final String realmChatId = chat.getEntity().getRealmEntityId();
+			final String realmChatId = chat.getEntity().getAccountEntityId();
 
 			// copy with new id
 			chat = chat.copyWithNew(account.newRealmEntity(realmChatId, chatEntity.getEntityId()));
@@ -218,11 +218,11 @@ public class DefaultChatService implements ChatService {
 
 				final Entity realmChat = getPrivateChatId(participant1, participant2);
 
-				if (!realmChat.getRealmEntityId().equals(apiChat.getChat().getEntity().getRealmEntityId())) {
+				if (!realmChat.getAccountEntityId().equals(apiChat.getChat().getEntity().getAccountEntityId())) {
 					/**
 					 * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#getPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
 					 */
-					final String realmChatId = apiChat.getChat().getEntity().getRealmEntityId();
+					final String realmChatId = apiChat.getChat().getEntity().getAccountEntityId();
 
 					// copy with new id
 					apiChat = apiChat.copyWithNew(account.newRealmEntity(realmChatId, realmChat.getEntityId()));
@@ -356,7 +356,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws AccountException {
-		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getChatMessages(user.getRealmEntityId());
+		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getChatMessages(user.getAccountEntityId());
 
 		final Multimap<Chat, ChatMessage> messagesByChats = ArrayListMultimap.create();
 
@@ -384,7 +384,7 @@ public class DefaultChatService implements ChatService {
 		final Account account = getRealmByEntity(chat);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
-		final List<ChatMessage> messages = accountChatService.getNewerChatMessagesForChat(chat.getRealmEntityId(), account.getUser().getEntity().getRealmEntityId());
+		final List<ChatMessage> messages = accountChatService.getNewerChatMessagesForChat(chat.getAccountEntityId(), account.getUser().getEntity().getAccountEntityId());
 
 		saveChatMessages(chat, messages, true);
 
@@ -454,7 +454,7 @@ public class DefaultChatService implements ChatService {
 	public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
 		final Integer offset = getChatMessageService().getChatMessages(chat).size();
 
-		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getRealmEntityId(), user.getRealmEntityId(), offset);
+		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
 		saveChatMessages(chat, messages, false);
 
 		return java.util.Collections.unmodifiableList(messages);
@@ -510,8 +510,8 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2) {
-		final String realmEntityId1 = user1.getRealmEntityId();
-		final String realmEntityId2 = user2.getRealmEntityId();
+		final String realmEntityId1 = user1.getAccountEntityId();
+		final String realmEntityId2 = user2.getAccountEntityId();
 		if (realmEntityId1.equals(realmEntityId2)) {
 			Log.e(TAG, "Same user in private chat " + Strings.fromStackTrace(Thread.currentThread().getStackTrace()));
 		}

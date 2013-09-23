@@ -105,7 +105,7 @@ public class DefaultAccountService implements AccountService {
 		synchronized (lock) {
 			// reset status to enabled for temporary disable realms
 			for (Account account : accountDao.loadAccountsInState(AccountState.disabled_by_app)) {
-				changeRealmState(account, AccountState.enabled, false);
+				changeAccountState(account, AccountState.enabled, false);
 			}
 
 			// remove all scheduled to remove realms
@@ -248,11 +248,11 @@ public class DefaultAccountService implements AccountService {
 	@Nonnull
 	@Override
 	public Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState) {
-		return changeRealmState(account, newState, true);
+		return changeAccountState(account, newState, true);
 	}
 
 	@Nonnull
-	private Account changeRealmState(@Nonnull Account account, @Nonnull AccountState newState, boolean fireEvent) {
+	private Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState, boolean fireEvent) {
 		if (account.getState() != newState) {
 			try {
 				final Account result = account.copyForNewState(newState);
@@ -288,7 +288,7 @@ public class DefaultAccountService implements AccountService {
 		}
 
 		if (account != null) {
-			changeAccountState((Account) account, (AccountState) AccountState.removed);
+			changeAccountState(account, AccountState.removed);
 		}
 	}
 

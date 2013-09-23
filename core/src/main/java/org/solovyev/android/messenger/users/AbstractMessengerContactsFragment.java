@@ -35,20 +35,15 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
 			@Override
 			public void onRefresh() {
 				try {
-					getSyncService().sync(SyncTask.user_contacts, null);
-				} catch (TaskIsAlreadyRunningException e) {
-					e.showMessage(getActivity());
-				}
-
-				try {
 					getSyncService().sync(SyncTask.user_contacts_statuses, new Runnable() {
 						@Override
 						public void run() {
 							completeRefresh();
 						}
 					});
-					Toast.makeText(getActivity(), "User contacts sync started!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "User contacts presence sync started!", Toast.LENGTH_SHORT).show();
 				} catch (TaskIsAlreadyRunningException e) {
+					completeRefresh();
 					e.showMessage(getActivity());
 				}
 			}

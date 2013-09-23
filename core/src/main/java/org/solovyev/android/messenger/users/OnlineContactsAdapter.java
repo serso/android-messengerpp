@@ -20,17 +20,21 @@ public class OnlineContactsAdapter extends AbstractContactsAdapter {
 	public void onEvent(@Nonnull UserEvent event) {
 		super.onEvent(event);
 
-		if (event.isOfType(UserEventType.contact_offline)) {
-			final User offlineContact = event.getDataAsUser();
-			removeListItem(offlineContact);
+		switch (event.getType()) {
+			case contacts_presence_changed:
+				for (User contact : event.getDataAsUsers()) {
+					if(contact.isOnline()) {
+						tryAddOnlineContact(contact);
+					}
+				}
+				break;
 		}
+	}
 
-		if (event.isOfType(UserEventType.contact_online)) {
-			final User onlineContact = event.getDataAsUser();
-			final ContactListItem listItem = findInAllElements(onlineContact);
-			if (listItem == null) {
-				addListItem(onlineContact);
-			}
+	private void tryAddOnlineContact(@Nonnull User contact) {
+		final ContactListItem listItem = findInAllElements(contact);
+		if (listItem == null) {
+			addListItem(contact);
 		}
 	}
 

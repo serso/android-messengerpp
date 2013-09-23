@@ -32,15 +32,15 @@ public class AccountEntityImplTest {
 
 		Entity actual = EntityImpl.fromEntityId("1:test");
 		Assert.assertEquals("1", actual.getAccountId());
-		Assert.assertEquals("test", actual.getRealmEntityId());
+		Assert.assertEquals("test", actual.getAccountEntityId());
 
 		actual = EntityImpl.fromEntityId("test:1");
 		Assert.assertEquals("test", actual.getAccountId());
-		Assert.assertEquals("1", actual.getRealmEntityId());
+		Assert.assertEquals("1", actual.getAccountEntityId());
 
 		actual = EntityImpl.fromEntityId("1:2:3");
 		Assert.assertEquals("1", actual.getAccountId());
-		Assert.assertEquals("2:3", actual.getRealmEntityId());
+		Assert.assertEquals("2:3", actual.getAccountEntityId());
 
 	}
 }

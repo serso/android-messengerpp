@@ -40,7 +40,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 							@Nonnull Collection<AProperty> properties) {
 		final UserImpl result = new UserImpl(entity);
 
-		result.login = entity.getRealmEntityId();
+		result.login = entity.getAccountEntityId();
 		result.userSyncData = userSyncData;
 		result.properties = Properties.newProperties(properties);
 
@@ -90,7 +90,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 
 		if (!firstNameExists && !lastNameExists) {
 			// first and last names are empty
-			result.append(this.getEntity().getRealmEntityId());
+			result.append(this.getEntity().getAccountEntityId());
 		} else {
 
 			if (firstNameExists) {
@@ -170,9 +170,15 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 	@Nonnull
 	@Override
 	public User cloneWithNewStatus(boolean online) {
-		final UserImpl clone = clone();
+		final UserImpl clone;
 
-		clone.properties.setProperty(PROPERTY_ONLINE, Boolean.toString(online));
+		if (isOnline() != online) {
+			clone = clone();
+
+			clone.properties.setProperty(PROPERTY_ONLINE, Boolean.toString(online));
+		} else {
+			clone = this;
+		}
 
 		return clone;
 	}

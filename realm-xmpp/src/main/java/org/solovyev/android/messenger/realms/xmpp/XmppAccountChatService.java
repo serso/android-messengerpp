@@ -79,7 +79,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 		return doOnConnection(new XmppConnectedCallable<Chat>() {
 			@Override
 			public Chat call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
-				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getRealmEntityId(), new XmppMessageListener(getAccount(), realmChat));
+				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(realmUserId2, realmChat.getAccountEntityId(), new XmppMessageListener(getAccount(), realmChat));
 				return XmppAccount.toApiChat(smackChat, Collections.<Message>emptyList(), getAccount()).getChat();
 			}
 		});
@@ -107,10 +107,10 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 			final ChatManager chatManager = connection.getChatManager();
 
 			final Entity realmChat = chat.getEntity();
-			org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getRealmEntityId());
+			org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getAccountEntityId());
 			if (smackChat == null) {
 				// smack forget about chat ids after restart => need to create chat here
-				smackChat = chatManager.createChat(chat.getSecondUser().getRealmEntityId(), realmChat.getRealmEntityId(), new XmppMessageListener(account, realmChat));
+				smackChat = chatManager.createChat(chat.getSecondUser().getAccountEntityId(), realmChat.getAccountEntityId(), new XmppMessageListener(account, realmChat));
 			} else {
 				// todo serso: remove if unnecessary
 				smackChat.addMessageListener(new XmppMessageListener(account, realmChat));

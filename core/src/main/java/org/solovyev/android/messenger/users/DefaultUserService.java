@@ -33,6 +33,8 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 
+import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
+
 /**
  * User: serso
  * Date: 5/24/12
@@ -146,7 +148,7 @@ public class DefaultUserService implements UserService {
 				if (tryFindInRealm) {
 					try {
 						final Account account = getRealmByEntity(user);
-						result = account.getAccountUserService().getUserById(user.getRealmEntityId());
+						result = account.getAccountUserService().getUserById(user.getAccountEntityId());
 					} catch (AccountException e) {
 						// unable to load from realm => just return empty user
 						Log.e(TAG, e.getMessage(), e);
@@ -273,8 +275,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, final boolean available) {
-		final UserEventType userEventType = available ? UserEventType.contact_online : UserEventType.contact_offline;
-		this.listeners.fireEvent(userEventType.newEvent(user, contact));
+		this.listeners.fireEvent(contacts_presence_changed.newEvent(user, Arrays.asList(contact)));
 	}
 
     /*
@@ -287,7 +288,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void syncUser(@Nonnull Entity userEntity) throws AccountException {
-		User user = getRealmByEntity(userEntity).getAccountUserService().getUserById(userEntity.getRealmEntityId());
+		User user = getRealmByEntity(userEntity).getAccountUserService().getUserById(userEntity.getAccountEntityId());
 		if (user != null) {
 			user = user.updatePropertiesSyncDate();
 			updateUser(user, true);
@@ -298,7 +299,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	public List<User> syncUserContacts(@Nonnull Entity user) throws AccountException {
 		final Account account = getRealmByEntity(user);
-		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getRealmEntityId());
+		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getAccountEntityId());
 
 		if (!contacts.isEmpty()) {
 			userContactsCache.update(user, new WholeListUpdater<User>(contacts));
@@ -343,7 +344,7 @@ public class DefaultUserService implements UserService {
 		}
 
 		if(!result.getUpdatedObjects().isEmpty()) {
-			userEvents.add(UserEventType.contacts_presence_changed.newEvent(user, result.getUpdatedObjects()));
+			userEvents.add(contacts_presence_changed.newEvent(user, result.getUpdatedObjects()));
 		}
 
 		listeners.fireEvents(userEvents);
@@ -352,7 +353,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
-		final List<ApiChat> apiChats = getRealmByEntity(user).getAccountChatService().getUserChats(user.getRealmEntityId());
+		final List<ApiChat> apiChats = getRealmByEntity(user).getAccountChatService().getUserChats(user.getAccountEntityId());
 
 		final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
 			@Override
@@ -428,7 +429,7 @@ public class DefaultUserService implements UserService {
 
 		final User user = getUserById(userEntity);
 
-		listeners.fireEvent(UserEventType.contacts_presence_changed.newEvent(user, contacts));
+		listeners.fireEvent(contacts_presence_changed.newEvent(user, contacts));
 	}
 
     /*
@@ -569,12 +570,6 @@ public class DefaultUserService implements UserService {
 				case chat_removed:
 					final Chat removedChat = event.getDataAsChat();
 					userChatsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(removedChat.getId()));
-					break;
-				case contact_online:
-					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(Arrays.asList(event.getDataAsUser())));
-					break;
-				case contact_offline:
-					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(Arrays.asList(event.getDataAsUser())));
 					break;
 				case contacts_presence_changed:
 					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(event.getDataAsUsers()));

@@ -65,24 +65,24 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 			// wait until realm2 will be connected
 			Thread.sleep(100);
 
-			final User user2 = accountUserService.getUserById(realm2.getUser().getEntity().getRealmEntityId());
+			final User user2 = accountUserService.getUserById(realm2.getUser().getEntity().getAccountEntityId());
 			Assert.assertNotNull(user2);
-			Assert.assertEquals(user2.getEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN2);
+			Assert.assertEquals(user2.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN2);
 			Assert.assertEquals(user2.getEntity().getAccountId(), realm1.getId());
 			Assert.assertEquals("Sergey II Solovyev", user2.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
 			Assert.assertNull(user2.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
 			// load self
-			final User user1 = accountUserService.getUserById(realm1.getUser().getEntity().getRealmEntityId());
+			final User user1 = accountUserService.getUserById(realm1.getUser().getEntity().getAccountEntityId());
 			Assert.assertNotNull(user1);
-			Assert.assertEquals(user1.getEntity().getRealmEntityId(), TestXmppConfiguration.USER_LOGIN);
+			Assert.assertEquals(user1.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN);
 			Assert.assertEquals(user1.getEntity().getAccountId(), realm1.getId());
 			Assert.assertEquals("Sergey I Solovyev", user1.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
 			Assert.assertNull(user1.getPropertyValueByName(User.PROPERTY_LAST_NAME));
 
 			final User serso = accountUserService.getUserById("se.solovyev@gmail.com");
 			Assert.assertNotNull(serso);
-			Assert.assertEquals(serso.getEntity().getRealmEntityId(), "se.solovyev@gmail.com");
+			Assert.assertEquals(serso.getEntity().getAccountEntityId(), "se.solovyev@gmail.com");
 			Assert.assertEquals(serso.getEntity().getAccountId(), realm1.getId());
 			Assert.assertEquals("Sergey", serso.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
 			Assert.assertEquals("Solovyev", serso.getPropertyValueByName(User.PROPERTY_LAST_NAME));
@@ -99,7 +99,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 		Assert.assertTrue(Iterables.any(contacts1, new Predicate<User>() {
 			@Override
 			public boolean apply(@Nullable User contact) {
-				return contact != null && contact.getEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
+				return contact != null && contact.getEntity().getAccountEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
 			}
 		}));
 
@@ -127,7 +127,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 			Thread.sleep(100);
 
 
-			final User user2InRealm1 = Users.newEmptyUser(realm1.newUserEntity(realm2.getUser().getEntity().getRealmEntityId()));
+			final User user2InRealm1 = Users.newEmptyUser(realm1.newUserEntity(realm2.getUser().getEntity().getAccountEntityId()));
 			final List<User> users1 = accountUserService.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
 			Assert.assertNotNull(users1);
 			Assert.assertTrue(!users1.isEmpty());
@@ -136,14 +136,14 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 /*            Assert.assertTrue(Iterables.any(users1, new Predicate<User>() {
 				@Override
                 public boolean apply(@Nullable User contact) {
-                    return contact != null && contact.getRealmUser().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN2) && contact.isOnline();
+                    return contact != null && contact.getRealmUser().getAccountEntityId().equals(TestXmppConfiguration.USER_LOGIN2) && contact.isOnline();
                 }
             }));*/
 
 			Assert.assertTrue(Iterables.any(users1, new Predicate<User>() {
 				@Override
 				public boolean apply(@Nullable User contact) {
-					return contact != null && contact.getEntity().getRealmEntityId().equals(TestXmppConfiguration.USER_LOGIN) && contact.isOnline();
+					return contact != null && contact.getEntity().getAccountEntityId().equals(TestXmppConfiguration.USER_LOGIN) && contact.isOnline();
 				}
 			}));
 

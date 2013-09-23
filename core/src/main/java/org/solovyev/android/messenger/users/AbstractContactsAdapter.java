@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
+
 /**
  * User: serso
  * Date: 6/2/12
@@ -82,10 +84,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				onContactChanged(event, eventUser);
 				break;
 			case contacts_presence_changed:
-				throw new UnsupportedOperationException();
-			case contact_online:
-			case contact_offline:
-				onContactPresenceChanged(event);
+				onContactsPresenceChanged(event);
 				break;
 		}
 
@@ -107,18 +106,36 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	private void onContactChanged(@Nonnull UserEvent event, @Nonnull User contact) {
+		onContactChanged(event, contact, true);
+	}
+
+	private void onContactChanged(@Nonnull UserEvent event, @Nonnull User contact, boolean refilter) {
 		final ContactListItem listItem = findInAllElements(contact);
 		if (listItem != null) {
-			listItem.onEvent(event);
+			if(event.getType() == unread_messages_count_changed) {
+				listItem.onUnreadMessagesCountChanged(event.getDataAsInteger());
+			} else {
+				listItem.onContactChanged(contact);
+			}
 			onListItemChanged(contact);
-			notifyDataSetChanged();
-			refilter();
+
+			if (refilter) {
+				refilter();
+			}
 		}
 	}
 
 	private void onContactPresenceChanged(@Nonnull UserEvent event) {
 		final User contact = event.getDataAsUser();
 		onContactChanged(event, contact);
+	}
+
+	private void onContactsPresenceChanged(@Nonnull UserEvent event) {
+		final List<User> contacts = event.getDataAsUsers();
+		for (User contact : contacts) {
+			onContactChanged(event, contact, false);
+		}
+		refilter();
 	}
 
 	@Nullable

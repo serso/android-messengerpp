@@ -103,7 +103,7 @@ public interface LongPollUpdate {
 		@Override
 		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
 			// not self
-			if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
+			if (!user.getEntity().getAccountEntityId().equals(realmUserId)) {
 				Chat chat = getChatService().getChatById(account.newChatEntity(realmChatId));
 				if (chat != null) {
 					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, account.newUserEntity(realmUserId)));
@@ -130,7 +130,7 @@ public interface LongPollUpdate {
 		@Override
 		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
 			// not self
-			if (!user.getEntity().getRealmEntityId().equals(realmUserId)) {
+			if (!user.getEntity().getAccountEntityId().equals(realmUserId)) {
 				final Entity secondRealmUser = account.newUserEntity(realmUserId);
 
 				final Entity realmChat = getChatService().getPrivateChatId(user.getEntity(), secondRealmUser);

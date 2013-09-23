@@ -70,32 +70,12 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		return null;
 	}
 
-	/*@Override*/
-	public void onEvent(@Nonnull UserEvent event) {
-		final User contact = getContact();
+	public void onUnreadMessagesCountChanged(@Nonnull Integer unreadMessagesCount) {
+		setData(getData().copyForNewUnreadMessagesCount(unreadMessagesCount));
+	}
 
-		final UserEventType type = event.getType();
-		final User eventUser = event.getUser();
-
-		switch (type) {
-			case changed:
-				if (contact.equals(eventUser)) {
-					setData(getData().copyForNewUser(eventUser));
-				}
-				break;
-			case contact_offline:
-			case contact_online:
-				final User eventContact = event.getDataAsUser();
-				if (contact.equals(eventContact)) {
-					setData(getData().copyForNewUser(eventContact));
-				}
-				break;
-			case unread_messages_count_changed:
-				if (contact.equals(eventUser)) {
-					setData(getData().copyForNewUnreadMessagesCount(event.getDataAsInteger()));
-				}
-				break;
-		}
+	public void onContactChanged(@Nonnull User newContact) {
+		setData(getData().copyForNewUser(newContact));
 	}
 
 	@Nonnull

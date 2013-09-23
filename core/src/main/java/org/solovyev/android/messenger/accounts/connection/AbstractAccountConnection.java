@@ -61,7 +61,8 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 
 	@Override
 	public final void stop() {
-		stopped.set(true);
-		stopWork();
+		if (stopped.compareAndSet(false, true)) {
+			stopWork();
+		}
 	}
 }
