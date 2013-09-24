@@ -4,8 +4,6 @@ import android.content.Context;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.accounts.AccountService;
-
 /**
  * User: serso
  * Date: 6/1/12
@@ -13,7 +11,7 @@ import org.solovyev.android.messenger.accounts.AccountService;
  */
 public final class ContactsAdapter extends AbstractContactsAdapter {
 
-	public ContactsAdapter(@Nonnull Context context, @Nonnull AccountService accountService) {
+	public ContactsAdapter(@Nonnull Context context) {
 		super(context);
 	}
 

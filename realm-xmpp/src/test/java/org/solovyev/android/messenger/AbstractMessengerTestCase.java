@@ -1,24 +1,23 @@
 package org.solovyev.android.messenger;
 
 import android.app.Application;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
-import com.google.inject.Inject;
-import com.xtremelabs.robolectric.Robolectric;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
  * Date: 2/27/13
  * Time: 10:16 PM
  */
-@RunWith(MessengerRobolectricTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public abstract class AbstractMessengerTestCase {
 
 	@Nonnull

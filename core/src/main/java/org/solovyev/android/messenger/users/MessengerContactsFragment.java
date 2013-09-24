@@ -66,7 +66,7 @@ public final class MessengerContactsFragment extends AbstractMessengerContactsFr
 
 	@Nonnull
 	protected AbstractContactsAdapter createAdapter() {
-		return new ContactsAdapter(getActivity(), getAccountService());
+		return new ContactsAdapter(getActivity());
 	}
 
 	@Override

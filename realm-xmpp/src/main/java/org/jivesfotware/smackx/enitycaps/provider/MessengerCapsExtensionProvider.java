@@ -17,8 +17,6 @@
 
 package org.jivesfotware.smackx.enitycaps.provider;
 
-import java.io.IOException;
-
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.PacketExtension;
 import org.jivesoftware.smack.provider.PacketExtensionProvider;
@@ -27,6 +25,8 @@ import org.jivesoftware.smackx.entitycaps.packet.CapsExtension;
 import org.solovyev.common.text.Strings;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 /**
  * Fix for missing hash
@@ -57,7 +57,7 @@ public class MessengerCapsExtensionProvider implements PacketExtensionProvider {
 		if (version != null && node != null) {
 			return new CapsExtension(node, version, Strings.getNotEmpty(hash, ""));
 		} else {
-			throw new XMPPException("Caps elment with missing attributes");
+			throw new XMPPException("Caps element with missing attributes");
 		}
 	}
 }

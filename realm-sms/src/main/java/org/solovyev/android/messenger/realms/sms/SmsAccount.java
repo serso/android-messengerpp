@@ -1,13 +1,7 @@
 package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.base.Splitter;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
@@ -16,10 +10,15 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Splitter;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
+import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
  * User: serso
@@ -63,7 +62,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
 	@Override
 	public boolean isCompositeUserDefined(@Nonnull User user) {
-		final String phoneNumber = user.getPropertyValueByName(User.PROPERTY_PHONE);
+		final String phoneNumber = user.getPropertyValueByName(PROPERTY_PHONE);
 		return !Strings.isEmpty(phoneNumber);
 	}
 
@@ -89,7 +88,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Nonnull
 	@Override
 	public User applyCompositeChoice(@Nonnull CompositeUserChoice compositeUserChoice, @Nonnull User user) {
-		return user.cloneWithNewProperty(Properties.newProperty(User.PROPERTY_PHONE, compositeUserChoice.getName().toString()));
+		return user.cloneWithNewProperty(newProperty(PROPERTY_PHONE, compositeUserChoice.getName().toString()));
 	}
 
 	@Override
