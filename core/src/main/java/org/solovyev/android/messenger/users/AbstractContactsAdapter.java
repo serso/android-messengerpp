@@ -189,6 +189,8 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 	private class ContactsFilter extends AdapterFilter<ContactListItem> {
 
+		private final String TAG = newTag("ContactFilter");
+
 		@Nonnull
 		private ContactFilter emptyPrefixFilter = new ContactFilter(null);
 
@@ -245,11 +247,11 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 						if (prefixFilter != null) {
 							shown = prefixFilter.apply(listItem.getDisplayName().toString());
 							if (!shown) {
-								Log.d("Filtering", contact.getDisplayName() + " is filtered due to filter " + prefix);
+								Log.d(TAG, contact.getDisplayName() + " is filtered due to filter " + prefix);
 							}
 						}
 					} else {
-						Log.d("Filtering", contact.getDisplayName() + " is filtered due to mode " + mode);
+						Log.d(TAG, contact.getDisplayName() + " is filtered due to mode " + mode);
 					}
 
 					return shown;

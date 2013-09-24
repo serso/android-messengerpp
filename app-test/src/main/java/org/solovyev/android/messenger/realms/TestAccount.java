@@ -25,7 +25,7 @@ public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 	}
 
 	public TestAccount(@Nonnull TestRealm realmDef, int index) {
-		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newInstance(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
+		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newEntity(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
 	}
 
 

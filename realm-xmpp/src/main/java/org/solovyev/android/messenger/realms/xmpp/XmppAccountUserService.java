@@ -138,14 +138,14 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	public static User toUser(@Nonnull String realmId, @Nonnull String accountUserId, @Nullable String name, @Nonnull Connection connection, @Nonnull Account account) throws XMPPException {
-		final Entity entity = EntityImpl.newInstance(realmId, accountUserId);
+		final Entity entity = EntityImpl.newEntity(realmId, accountUserId);
 		final List<AProperty> properties = loadUserProperties(true, accountUserId, isUserOnline(account, connection.getRoster(), entity), connection, name);
 		return Users.newUser(entity, Users.newNeverSyncedUserSyncData(), properties);
 	}
 
 	@Nonnull
 	public static User toAccountUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, @Nonnull Connection connection) throws XMPPException {
-		final Entity entity = EntityImpl.newInstance(realmId, realmUserId);
+		final Entity entity = EntityImpl.newEntity(realmId, realmUserId);
 		final List<AProperty> properties = loadUserProperties(true, realmUserId, true, connection, name);
 		return Users.newUser(entity, Users.newNeverSyncedUserSyncData(), properties);
 	}

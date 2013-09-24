@@ -82,7 +82,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	}
 
 	@Nonnull
-	public static EntityImpl newInstance(@Nonnull String accountId, @Nonnull String accountEntityId, @Nonnull String entityId) {
+	public static EntityImpl newEntity(@Nonnull String accountId, @Nonnull String accountEntityId, @Nonnull String entityId) {
 		if (Strings.isEmpty(accountId)) {
 			throw new IllegalArgumentException("Account cannot be empty!");
 		}
@@ -99,8 +99,13 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	}
 
 	@Nonnull
-	public static Entity newInstance(@Nonnull String accountId, @Nonnull String accountEntityId) {
-		return newInstance(accountId, accountEntityId, accountId + DELIMITER + accountEntityId);
+	public static Entity newEntity(@Nonnull String accountId, @Nonnull String accountEntityId) {
+		return newEntity(accountId, accountEntityId, generateEntityId(accountId, accountEntityId));
+	}
+
+	@Nonnull
+	public static String generateEntityId(@Nonnull String accountId, String appAccountEntityId) {
+		return accountId + DELIMITER + appAccountEntityId;
 	}
 
 	@Nonnull
@@ -109,9 +114,9 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 		if (index >= 0) {
 			final String realmId = entityId.substring(0, index);
 			final String realmUserId = entityId.substring(index + 1);
-			return newInstance(realmId, realmUserId);
+			return newEntity(realmId, realmUserId);
 		} else {
-			throw new IllegalArgumentException("No realm is stored in entityId!");
+			throw new IllegalArgumentException("No account id is stored in entityId!");
 		}
 	}
 

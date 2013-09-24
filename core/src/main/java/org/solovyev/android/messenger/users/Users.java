@@ -10,12 +10,14 @@ import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+
+import static org.solovyev.android.messenger.entities.EntityImpl.fromEntityId;
+import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 /**
  * User: serso
@@ -37,7 +39,7 @@ public final class Users {
 							   @Nonnull String accountUserId,
 							   @Nonnull UserSyncData userSyncData,
 							   @Nonnull List<AProperty> properties) {
-		final Entity entity = EntityImpl.newInstance(realmId, accountUserId);
+		final Entity entity = newEntity(realmId, accountUserId);
 		return newUser(entity, userSyncData, properties);
 	}
 
@@ -48,7 +50,7 @@ public final class Users {
 
 	@Nonnull
 	public static User newEmptyUser(@Nonnull String userId) {
-		return newEmptyUser(EntityImpl.fromEntityId(userId));
+		return newEmptyUser(fromEntityId(userId));
 	}
 
 	@Nonnull

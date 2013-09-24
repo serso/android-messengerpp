@@ -29,6 +29,8 @@ import org.solovyev.android.messenger.users.UserService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
+
 /**
  * User: serso
  * Date: 6/11/12
@@ -86,10 +88,10 @@ public class DefaultChatMessageService implements ChatMessageService {
 	@Override
 	public synchronized Entity generateEntity(@Nonnull Account account) {
 		// todo serso: create normal way of generating ids
-		final Entity tmp = EntityImpl.newInstance(account.getId(), String.valueOf(System.currentTimeMillis()));
+		final Entity tmp = newEntity(account.getId(), String.valueOf(System.currentTimeMillis()));
 
 		// NOTE: empty account entity id in order to get real from realm service
-		return EntityImpl.newInstance(account.getId(), ChatMessageService.NO_ACCOUNT_MESSAGE_ID, tmp.getEntityId());
+		return newEntity(account.getId(), ChatMessageService.NO_ACCOUNT_MESSAGE_ID, tmp.getEntityId());
 	}
 
 	@Nonnull

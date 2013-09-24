@@ -164,13 +164,13 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 	protected XmppAccount newRealm1() {
 		final String realmId = xmppRealmDef.getId() + "~01";
 		XmppAccountConfiguration instance = TestXmppConfiguration.getInstance();
-		return new XmppAccount(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newInstance(realmId, instance.getLogin())), instance, AccountState.enabled);
+		return new XmppAccount(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newEntity(realmId, instance.getLogin())), instance, AccountState.enabled);
 	}
 
 	@Nonnull
 	protected XmppAccount newRealm2() {
 		final String realmId = xmppRealmDef.getId() + "~02";
 		XmppAccountConfiguration instance2 = TestXmppConfiguration.getInstance2();
-		return new XmppAccount(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newInstance(realmId, instance2.getLogin())), instance2, AccountState.enabled);
+		return new XmppAccount(realmId, xmppRealmDef, Users.newEmptyUser(EntityImpl.newEntity(realmId, instance2.getLogin())), instance2, AccountState.enabled);
 	}
 }

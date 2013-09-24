@@ -32,7 +32,7 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfigurat
 	@Override
 	protected User getAccountUser(@Nonnull String accountId) {
 		final String userId = getConfiguration().getUserId();
-		final User defaultUser = Users.newEmptyUser(EntityImpl.newInstance(accountId, userId));
+		final User defaultUser = Users.newEmptyUser(EntityImpl.newEntity(accountId, userId));
 
 		User result;
 		try {

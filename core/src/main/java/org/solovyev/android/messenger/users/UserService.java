@@ -15,6 +15,8 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.listeners.JEventListener;
 
+import static org.solovyev.android.messenger.App.newTag;
+
 /**
  * User: serso
  * Date: 5/24/12
@@ -27,7 +29,10 @@ import org.solovyev.common.listeners.JEventListener;
 @ThreadSafe
 public interface UserService {
 
-	static final String TAG = "UserService";
+	final String TAG = newTag("UserService");
+
+	final String NO_ACCOUNT_USER_ID = "empty";
+
 
 	// initial initialization: will be called once on application start
 	void init();

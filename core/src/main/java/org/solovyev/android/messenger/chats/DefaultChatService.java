@@ -500,7 +500,7 @@ public class DefaultChatService implements ChatService {
 				if (first) {
 					first = false;
 				} else {
-					return EntityImpl.newInstance(chat.getEntity().getAccountId(), userId);
+					return EntityImpl.newEntity(chat.getEntity().getAccountId(), userId);
 				}
 			}
 		}
@@ -540,7 +540,7 @@ public class DefaultChatService implements ChatService {
 		if (realmEntityId1.equals(realmEntityId2)) {
 			Log.e(TAG, "Same user in private chat " + Strings.fromStackTrace(Thread.currentThread().getStackTrace()));
 		}
-		return EntityImpl.newInstance(user1.getAccountId(), realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
+		return EntityImpl.newEntity(user1.getAccountId(), realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
 	}
 
 	@Nonnull

@@ -42,7 +42,7 @@ public class TestRealm extends AbstractRealm {
 
 	@Nonnull
 	public static Entity newEntity(@Nonnull String realmEntityId) {
-		return EntityImpl.newInstance(REALM_ID, realmEntityId);
+		return EntityImpl.newEntity(REALM_ID, realmEntityId);
 	}
 
 	@Nonnull

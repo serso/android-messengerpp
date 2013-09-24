@@ -43,9 +43,13 @@ import com.google.common.collect.Multimap;
 
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.App.getChatMessageService;
+import static org.solovyev.android.messenger.entities.EntityImpl.generateEntityId;
+import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_RECEIVED;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
+import static org.solovyev.android.messenger.users.UserService.NO_ACCOUNT_USER_ID;
+import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
@@ -191,7 +195,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 		final List<AProperty> properties = new ArrayList<AProperty>();
 		properties.add(newProperty(User.PROPERTY_PHONES, phone));
 
-		return Users.newUser(account.getRealm().getId(), phone, Users.newNeverSyncedUserSyncData(), properties);
+		return newUser(newEntity(account.getId(), NO_ACCOUNT_USER_ID, generateEntityId(account.getId(), phone)), Users.newNeverSyncedUserSyncData(), properties);
 	}
 
 	@Nullable
