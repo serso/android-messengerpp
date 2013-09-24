@@ -5,8 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+
 import org.solovyev.android.messenger.MessengerPreferences;
 import org.solovyev.android.security.Security;
 import org.solovyev.android.security.base64.ABase64StringDecoder;
@@ -15,10 +20,8 @@ import org.solovyev.common.security.CiphererException;
 import org.solovyev.common.security.SaltGenerator;
 import org.solovyev.common.security.SecurityService;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-import java.util.UUID;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

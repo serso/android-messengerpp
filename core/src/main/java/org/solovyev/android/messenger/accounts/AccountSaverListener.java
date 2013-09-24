@@ -2,14 +2,16 @@ package org.solovyev.android.messenger.accounts;
 
 import android.app.Activity;
 import android.widget.Toast;
-import com.google.common.util.concurrent.FutureCallback;
-import org.solovyev.android.messenger.MessengerContextCallback;
-import org.solovyev.android.messenger.security.InvalidCredentialsException;
-import org.solovyev.android.tasks.Tasks;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.MessengerContextCallback;
+import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.tasks.Tasks;
+
+import com.google.common.util.concurrent.FutureCallback;
 
 /**
  * User: serso

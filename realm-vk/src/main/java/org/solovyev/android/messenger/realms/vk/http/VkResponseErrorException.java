@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.realms.vk.http;
 
 import android.util.Log;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkError;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

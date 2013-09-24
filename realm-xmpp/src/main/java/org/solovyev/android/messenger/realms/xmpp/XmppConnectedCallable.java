@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
+import javax.annotation.Nonnull;
+
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

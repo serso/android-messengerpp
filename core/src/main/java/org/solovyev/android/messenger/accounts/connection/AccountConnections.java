@@ -2,24 +2,35 @@ package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
 import android.util.Log;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.solovyev.android.PredicateSpy;
-import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 /**
  * User: serso
@@ -106,29 +117,29 @@ final class AccountConnections {
 			}
 
 			private void startAccountConnection(int attempt, @Nullable AccountConnectionException lastError) {
-				Log.d(MessengerApplication.TAG, "Realm start requested, attempt: " + attempt);
+				Log.d(App.TAG, "Realm start requested, attempt: " + attempt);
 
 				if (attempt > RETRY_CONNECTION_ATTEMPT_COUNT) {
-					Log.d(MessengerApplication.TAG, "Max retry count reached => stopping...");
+					Log.d(App.TAG, "Max retry count reached => stopping...");
 
 					if (!accountConnection.isStopped()) {
 						accountConnection.stop();
 					}
 
 					if (lastError != null) {
-						MessengerApplication.getServiceLocator().getExceptionHandler().handleException(lastError);
+						App.getExceptionHandler().handleException(lastError);
 					}
 
-					MessengerApplication.getServiceLocator().getAccountService().changeAccountState(accountConnection.getAccount(), AccountState.disabled_by_app);
+					App.getAccountService().changeAccountState(accountConnection.getAccount(), AccountState.disabled_by_app);
 				} else {
 					if (accountConnection.isStopped()) {
 						try {
 							if (accountConnection.getAccount().isEnabled()) {
-								Log.d(MessengerApplication.TAG, "Realm is enabled => starting connection...");
+								Log.d(App.TAG, "Realm is enabled => starting connection...");
 								accountConnection.start();
 							}
 						} catch (AccountConnectionException e) {
-							Log.w(MessengerApplication.TAG, "Realm connection error occurred, connection attempt: " + attempt, e);
+							Log.w(App.TAG, "Realm connection error occurred, connection attempt: " + attempt, e);
 
 							if (!accountConnection.isStopped()) {
 								accountConnection.stop();
@@ -138,7 +149,7 @@ final class AccountConnections {
 								// let's wait a little bit - may be the exception was caused by connectivity problem
 								Thread.sleep(5000);
 							} catch (InterruptedException e1) {
-								Log.e(MessengerApplication.TAG, e1.getMessage(), e1);
+								Log.e(App.TAG, e1.getMessage(), e1);
 							} finally {
 								startAccountConnection(attempt + 1, e);
 							}
@@ -156,7 +167,7 @@ final class AccountConnections {
 			public void run() {
 				try {
 					// after realm connection is started we have to check user presences
-					MessengerApplication.getServiceLocator().getSyncService().sync(SyncTask.user_contacts_statuses, null);
+					App.getSyncService().sync(SyncTask.user_contacts_statuses, null);
 				} catch (TaskIsAlreadyRunningException e) {
 					// do not care
 				}

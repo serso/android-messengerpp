@@ -2,13 +2,14 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.tasks.ContextCallback;
 import org.solovyev.android.tasks.Tasks;
 import org.solovyev.tasks.NoSuchTaskException;
 import org.solovyev.tasks.TaskFinishedException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -40,7 +41,7 @@ public final class TaskOverlayDialog<V> implements ContextCallback<Activity, V> 
 	public static TaskOverlayDialog<?> attachToTask(@Nonnull Activity activity, @Nonnull String taskName, int titleResId, int messageResId) {
 		TaskOverlayDialog<Object> taskOverlayDialog = newInstance(activity, titleResId, messageResId);
 		try {
-			MessengerApplication.getServiceLocator().getTaskService().tryAddTaskListener(taskName, Tasks.toFutureCallback(activity, taskOverlayDialog));
+			App.getTaskService().tryAddTaskListener(taskName, Tasks.toFutureCallback(activity, taskOverlayDialog));
 			// attached to task => can show dialog
 			taskOverlayDialog.show();
 		} catch (NoSuchTaskException e) {

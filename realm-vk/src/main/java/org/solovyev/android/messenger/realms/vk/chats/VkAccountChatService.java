@@ -1,24 +1,31 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
 import android.util.Log;
-import org.solovyev.android.http.HttpRuntimeIoException;
-import org.solovyev.android.http.HttpTransaction;
-import org.solovyev.android.http.HttpTransactions;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.realms.vk.VkAccount;
-import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserService;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.http.HttpRuntimeIoException;
+import org.solovyev.android.http.HttpTransaction;
+import org.solovyev.android.http.HttpTransactions;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.chats.AccountChatService;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.Chats;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.vk.VkAccount;
+import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 
 /**
  * User: serso
@@ -157,12 +164,12 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	private UserService getUserService() {
-		return MessengerApplication.getServiceLocator().getUserService();
+		return App.getUserService();
 	}
 
 	@Nonnull
 	private ChatService getChatService() {
-		return MessengerApplication.getServiceLocator().getChatService();
+		return App.getChatService();
 	}
 
 
@@ -170,7 +177,7 @@ public class VkAccountChatService implements AccountChatService {
 	@Override
 	public List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException {
 		try {
-			final User user = MessengerApplication.getServiceLocator().getUserService().getUserById(account.newUserEntity(accountUserId));
+			final User user = App.getUserService().getUserById(account.newUserEntity(accountUserId));
 			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(account, user));
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);

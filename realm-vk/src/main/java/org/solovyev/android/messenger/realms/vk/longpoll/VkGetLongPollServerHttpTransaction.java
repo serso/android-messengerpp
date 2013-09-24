@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
-import com.google.gson.Gson;
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 
-import javax.annotation.Nonnull;
+import com.google.gson.Gson;
 
 /**
  * User: serso

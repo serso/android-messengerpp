@@ -1,16 +1,21 @@
 package org.solovyev.android.messenger.chats;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
 
 /**
  * User: serso
@@ -160,7 +165,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 	public Entity getSecondUser() {
 		assert isPrivate();
 
-		return MessengerApplication.getServiceLocator().getChatService().getSecondUser(this);
+		return App.getChatService().getSecondUser(this);
 	}
 
 	@Override

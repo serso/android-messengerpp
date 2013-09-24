@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.sync;
 
-import org.solovyev.android.messenger.accounts.Account;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.accounts.Account;
 
 /**
  * User: serso

@@ -4,8 +4,9 @@ import android.database.DataSetObserver;
 import android.util.SparseIntArray;
 import android.widget.SectionIndexer;
 
-import javax.annotation.Nonnull;
 import java.text.Collator;
+
+import javax.annotation.Nonnull;
 
 /**
  * A helper class for adapters that implement the SectionIndexer interface.

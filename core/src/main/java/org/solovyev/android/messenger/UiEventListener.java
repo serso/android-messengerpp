@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger;
 
-import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 
 /**
  * User: serso

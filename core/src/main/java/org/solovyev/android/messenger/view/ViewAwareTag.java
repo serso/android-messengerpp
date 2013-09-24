@@ -2,9 +2,10 @@ package org.solovyev.android.messenger.view;
 
 import android.view.View;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso

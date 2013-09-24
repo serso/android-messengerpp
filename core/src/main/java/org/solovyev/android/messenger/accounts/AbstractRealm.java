@@ -1,14 +1,16 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * User: serso

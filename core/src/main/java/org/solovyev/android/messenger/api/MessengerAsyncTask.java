@@ -3,10 +3,11 @@ package org.solovyev.android.messenger.api;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import org.solovyev.android.async.CommonAsyncTask;
-import org.solovyev.android.messenger.MessengerApplication;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.async.CommonAsyncTask;
+import org.solovyev.android.messenger.App;
 
 /**
  * User: serso
@@ -24,7 +25,7 @@ public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsync
 
 	@Override
 	protected void onFailurePostExecute(@Nonnull Exception e) {
-		MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+		App.getExceptionHandler().handleException(e);
 	}
 
 	@Nonnull

@@ -1,8 +1,8 @@
 package org.solovyev.android.view;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-
 import javax.annotation.Nonnull;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
 /**
  * User: serso

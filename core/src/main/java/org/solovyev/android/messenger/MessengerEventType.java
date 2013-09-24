@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger;
 
-import org.solovyev.common.msg.Message;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.common.msg.Message;
 
 /**
  * User: serso

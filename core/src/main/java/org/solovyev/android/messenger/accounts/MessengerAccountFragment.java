@@ -8,9 +8,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
-import org.solovyev.android.messenger.MessengerApplication;
+import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.core.R;
@@ -19,10 +22,9 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.Activities.restartActivity;
@@ -87,7 +89,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	private AccountEventListener accountEventListener;
 
 	@Nonnull
-	private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
+	private final TaskListeners taskListeners = new TaskListeners(App.getTaskService());
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +102,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 				try {
 					account = accountService.getAccountById(accountId);
 				} catch (UnsupportedAccountException e) {
-					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+					App.getExceptionHandler().handleException(e);
 					restartActivity(getActivity());
 				}
 			}

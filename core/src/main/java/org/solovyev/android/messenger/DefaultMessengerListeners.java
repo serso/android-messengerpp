@@ -1,12 +1,14 @@
 package org.solovyev.android.messenger;
 
-import com.google.inject.Singleton;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import javax.annotation.Nonnull;
-import java.util.Collection;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

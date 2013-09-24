@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.longpoll;
 
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.users.User;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso

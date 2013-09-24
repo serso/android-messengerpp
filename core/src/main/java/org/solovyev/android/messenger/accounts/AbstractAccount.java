@@ -1,6 +1,13 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
@@ -9,11 +16,6 @@ import org.solovyev.android.messenger.users.CompositeUser;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.JObject;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 public abstract class AbstractAccount<C extends AccountConfiguration> extends JObject implements Account<C> {
 

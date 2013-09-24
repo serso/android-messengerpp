@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.realms.vk.registration;
 
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.registration.RegistrationService;
 
-import javax.annotation.Nonnull;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

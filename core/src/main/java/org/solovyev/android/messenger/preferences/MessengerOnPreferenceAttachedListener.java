@@ -3,11 +3,12 @@ package org.solovyev.android.messenger.preferences;
 import android.content.Context;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

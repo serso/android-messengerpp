@@ -1,10 +1,12 @@
 package org.solovyev.android.messenger.preferences;
 
 import android.content.Context;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 
 /**
  * User: serso

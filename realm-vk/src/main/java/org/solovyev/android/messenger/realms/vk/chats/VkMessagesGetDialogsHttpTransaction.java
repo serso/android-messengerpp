@@ -1,17 +1,18 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.android.messenger.users.User;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: serso
@@ -67,6 +68,6 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
 
 	@Override
 	protected List<ApiChat> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-		return new JsonChatConverter(user, null, null, MessengerApplication.getServiceLocator().getUserService(), getRealm()).convert(json);
+		return new JsonChatConverter(user, null, null, App.getUserService(), getRealm()).convert(json);
 	}
 }

@@ -1,10 +1,12 @@
 package org.solovyev.android.messenger.accounts;
 
-import com.google.common.base.Predicate;
-import org.solovyev.android.messenger.entities.Entity;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
+
+import org.solovyev.android.messenger.entities.Entity;
+
+import com.google.common.base.Predicate;
 
 /**
  * User: serso

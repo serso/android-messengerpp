@@ -1,16 +1,19 @@
 package org.solovyev.android.messenger.realms;
 
 import android.app.Application;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.messenger.MessengerConfiguration;
-import org.solovyev.android.messenger.accounts.AccountConfiguration;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.MessengerConfiguration;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultRealmService implements RealmService {

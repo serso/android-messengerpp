@@ -5,13 +5,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
-import org.solovyev.android.messenger.icons.RealmIconService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.security.base64.ABase64StringDecoder;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.security.base64.ABase64StringDecoder;
 
 /**
  * User: serso

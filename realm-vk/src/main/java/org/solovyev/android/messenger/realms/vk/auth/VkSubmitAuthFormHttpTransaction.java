@@ -1,5 +1,11 @@
 package org.solovyev.android.messenger.realms.vk.auth;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -9,11 +15,6 @@ import org.jsoup.nodes.Element;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: serso

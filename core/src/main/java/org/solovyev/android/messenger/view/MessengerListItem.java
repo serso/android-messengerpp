@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.view;
 
-import org.solovyev.android.list.ListItem;
-
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.list.ListItem;
 
 /**
  * User: serso

@@ -2,18 +2,21 @@ package org.solovyev.android.messenger;
 
 import android.os.Bundle;
 import android.widget.TextView;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
-import com.google.inject.Inject;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.Threads;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 
-import javax.annotation.Nonnull;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import com.google.inject.Inject;
 
 /**
  * User: serso

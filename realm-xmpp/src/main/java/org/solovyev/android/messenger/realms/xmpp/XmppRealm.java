@@ -2,14 +2,20 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.app.Application;
 import android.content.Context;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+
 import org.jivesfotware.smackx.enitycaps.provider.MessengerCapsExtensionProvider;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
@@ -20,11 +26,8 @@ import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso
@@ -113,7 +116,7 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	@Nullable
 	@Override
 	public Cipherer<XmppAccountConfiguration, XmppAccountConfiguration> getCipherer() {
-		return new XmppRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
+		return new XmppRealmConfigurationCipherer(App.getSecurityService().getStringSecurityService().getCipherer());
 	}
 
     /*

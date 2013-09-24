@@ -3,11 +3,21 @@ package org.solovyev.android.messenger.accounts;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.messenger.MessengerApplication;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
@@ -24,12 +34,10 @@ import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso
@@ -232,7 +240,7 @@ public class DefaultAccountService implements AccountService {
 		} catch (AccountBuilder.ConnectionException e) {
 			throw new InvalidCredentialsException(e);
 		} catch (AccountException e) {
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+			App.getExceptionHandler().handleException(e);
 			throw new InvalidCredentialsException(e);
 		} finally {
 			try {
@@ -270,7 +278,7 @@ public class DefaultAccountService implements AccountService {
 
 				return result;
 			} catch (AccountException e) {
-				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+				App.getExceptionHandler().handleException(e);
 				// return old unchanged value in case of error
 				return account;
 			}

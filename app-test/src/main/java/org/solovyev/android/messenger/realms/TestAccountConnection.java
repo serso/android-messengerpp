@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 
 /**
  * User: serso

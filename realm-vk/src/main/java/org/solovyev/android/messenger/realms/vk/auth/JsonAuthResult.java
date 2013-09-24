@@ -1,10 +1,11 @@
 package org.solovyev.android.messenger.realms.vk.auth;
 
-import com.google.gson.Gson;
-import org.solovyev.android.messenger.http.IllegalJsonException;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.http.IllegalJsonException;
+
+import com.google.gson.Gson;
 
 /**
  * User: serso

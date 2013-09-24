@@ -1,8 +1,12 @@
 package org.solovyev.android.messenger.realms.vk.messages;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.gson.Gson;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.chats.Chat;
@@ -13,11 +17,9 @@ import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 
 /**
  * User: serso

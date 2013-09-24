@@ -1,13 +1,20 @@
 package org.solovyev.android.messenger.users;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
 import junit.framework.Assert;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.TestAccount;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.properties.AProperty;
@@ -16,9 +23,9 @@ import org.solovyev.common.Objects;
 import org.solovyev.common.equals.CollectionEqualizer;
 import org.solovyev.common.equals.ListEqualizer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 
 /**
  * User: serso

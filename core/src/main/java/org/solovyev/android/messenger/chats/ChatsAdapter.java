@@ -1,22 +1,25 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import org.solovyev.android.messenger.MessengerApplication;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserEventType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * User: serso
@@ -74,7 +77,7 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
 
 	@Nonnull
 	private ChatService getChatService() {
-		return MessengerApplication.getServiceLocator().getChatService();
+		return App.getChatService();
 	}
 
 	/*@Override*/
@@ -86,14 +89,14 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
 			case last_message_changed:
 			case unread_message_count_changed:
 				try {
-					final User user = MessengerApplication.getServiceLocator().getAccountService().getAccountById(eventChat.getEntity().getAccountId()).getUser();
+					final User user = App.getAccountService().getAccountById(eventChat.getEntity().getAccountId()).getUser();
 					final ChatListItem chatListItem = findInAllElements(user, eventChat);
 					if (chatListItem != null) {
 						chatListItem.onEvent(event);
 						notifyDataSetChanged();
 					}
 				} catch (UnsupportedAccountException e) {
-					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+					App.getExceptionHandler().handleException(e);
 				}
 				break;
 		}

@@ -6,33 +6,42 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.*;
+import org.solovyev.android.db.AbstractDbQuery;
+import org.solovyev.android.db.AbstractObjectDbExec;
+import org.solovyev.android.db.AbstractSQLiteHelper;
+import org.solovyev.android.db.AndroidDbUtils;
+import org.solovyev.android.db.DbExec;
+import org.solovyev.android.db.DeleteAllRowsDbExec;
+import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
+import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 
 /**
  * User: serso

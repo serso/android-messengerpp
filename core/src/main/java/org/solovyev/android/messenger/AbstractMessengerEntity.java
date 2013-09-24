@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger;
 
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.JObject;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

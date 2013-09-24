@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.realms.vk;
 
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
-
-import javax.annotation.Nonnull;
 
 public class VkAccountConfiguration extends JObject implements AccountConfiguration {
 

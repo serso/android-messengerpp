@@ -1,13 +1,16 @@
 package org.solovyev.android.messenger.notifications;
 
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.common.msg.AbstractMessage;
-import org.solovyev.common.msg.MessageLevel;
+import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Locale;
+
+import org.solovyev.common.msg.AbstractMessage;
+import org.solovyev.common.msg.MessageLevel;
+
+import static org.solovyev.android.messenger.App.getApplication;
+import static org.solovyev.android.messenger.App.getNotificationService;
 
 public final class Notification extends AbstractMessage {
 
@@ -39,14 +42,14 @@ public final class Notification extends AbstractMessage {
 	protected String getMessagePattern(@Nonnull Locale locale) {
 		final int messageResId = Integer.valueOf(getMessageCode());
 		final List<Object> parameters = getParameters();
-		return MessengerApplication.getApp().getString(messageResId, parameters.toArray(new Object[parameters.size()]));
+		return getApplication().getString(messageResId, parameters.toArray(new Object[parameters.size()]));
 	}
 
 	public void solveOnClick() {
 		if (solution != null) {
 			solution.solve(this);
 		} else {
-			MessengerApplication.getServiceLocator().getNotificationService().remove(this);
+			getNotificationService().remove(this);
 		}
 	}
 
@@ -75,6 +78,6 @@ public final class Notification extends AbstractMessage {
 	}
 
 	public void dismiss() {
-		MessengerApplication.getServiceLocator().getNotificationService().remove(this);
+		getNotificationService().remove(this);
 	}
 }

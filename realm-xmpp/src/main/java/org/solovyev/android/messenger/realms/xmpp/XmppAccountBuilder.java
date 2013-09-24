@@ -1,21 +1,22 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.util.Log;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
-import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfiguration> {
 

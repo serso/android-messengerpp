@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -18,11 +17,12 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
 import com.google.inject.Inject;
@@ -120,7 +120,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 			try {
 				account = accountService.getAccountByEntityAware(user);
 			} catch (UnsupportedAccountException e) {
-				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+				App.getExceptionHandler().handleException(e);
 			}
 		}
 	}

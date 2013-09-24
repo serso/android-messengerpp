@@ -11,9 +11,10 @@ import android.preference.PreferenceScreen;
 import android.support.v4.app.ListFragment;
 import android.widget.ListView;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso

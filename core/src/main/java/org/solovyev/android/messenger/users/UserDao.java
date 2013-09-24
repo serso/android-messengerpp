@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.properties.AProperty;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.properties.AProperty;
 
 /**
  * User: serso

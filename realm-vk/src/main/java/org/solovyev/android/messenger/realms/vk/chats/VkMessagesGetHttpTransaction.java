@@ -1,19 +1,20 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.android.messenger.users.User;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: serso
@@ -47,7 +48,7 @@ public class VkMessagesGetHttpTransaction extends AbstractVkHttpTransaction<List
 
 	@Override
 	protected List<ChatMessage> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-		final List<ApiChat> chats = new JsonChatConverter(user, null, null, MessengerApplication.getServiceLocator().getUserService(), getRealm()).convert(json);
+		final List<ApiChat> chats = new JsonChatConverter(user, null, null, App.getUserService(), getRealm()).convert(json);
 
 		// todo serso: optimize - convert json to the messages directly
 		final List<ChatMessage> messages = new ArrayList<ChatMessage>(chats.size() * 10);

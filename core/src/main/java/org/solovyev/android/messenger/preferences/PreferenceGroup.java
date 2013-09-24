@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.preferences;
 
-import org.solovyev.android.messenger.MessengerEntity;
-
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.MessengerEntity;
 
 /**
  * User: serso

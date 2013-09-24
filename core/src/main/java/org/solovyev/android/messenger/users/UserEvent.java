@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.common.listeners.AbstractTypedJEvent;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**
  * User: serso

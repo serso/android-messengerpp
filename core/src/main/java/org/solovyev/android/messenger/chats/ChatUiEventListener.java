@@ -1,25 +1,28 @@
 package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.ActionBar;
+import roboguice.event.EventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
+import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.MessengerContactFragment;
 import org.solovyev.android.messenger.users.MessengerContactsInfoFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Builder;
-import roboguice.event.EventListener;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import com.actionbarsherlock.app.ActionBar;
 
 /**
  * User: serso
@@ -121,7 +124,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 								final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
 								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity()));
 							} catch (UnsupportedAccountException e) {
-								MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+								App.getExceptionHandler().handleException(e);
 							}
 							return new MessengerContactsInfoFragment(participants);
 						}

@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.MessengerEntity;
-import org.solovyev.android.messenger.users.User;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.users.User;
 
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI

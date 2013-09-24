@@ -1,16 +1,5 @@
 package org.solovyev.android.messenger.sync;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountEvent;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -18,6 +7,19 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountEvent;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso
@@ -194,7 +196,7 @@ public class DefaultSyncService implements SyncService {
 						} catch (TaskIsAlreadyRunningException e) {
 							// ok, task is already running => start another task
 						} catch (RuntimeException e) {
-							MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+							App.getExceptionHandler().handleException(e);
 						}
 					}
 				}

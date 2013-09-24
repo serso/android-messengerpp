@@ -1,7 +1,13 @@
 package org.solovyev.android.messenger.realms.vk.http;
 
 import android.util.Log;
-import com.google.gson.JsonParseException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -10,14 +16,11 @@ import org.apache.http.util.EntityUtils;
 import org.solovyev.android.http.AbstractHttpTransaction;
 import org.solovyev.android.http.HttpMethod;
 import org.solovyev.android.http.HttpRuntimeIoException;
-import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
+import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.JsonParseException;
 
 /**
  * User: serso

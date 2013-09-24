@@ -6,18 +6,21 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.db.ListMapper;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import static org.solovyev.android.messenger.App.getApplication;
 
 /**
  * User: serso
@@ -36,7 +39,7 @@ final class SmsAccountUserService implements AccountUserService {
 	@Nullable
 	@Override
 	public User getUserById(@Nonnull String accountUserId) throws AccountConnectionException {
-		final Context context = MessengerApplication.getApp();
+		final Context context = getApplication();
 
 		if (!SmsRealm.USER_ID.equals(accountUserId)) {
 			final String selection = ContactsContract.Contacts._ID + " = ? and " + ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
@@ -85,7 +88,7 @@ final class SmsAccountUserService implements AccountUserService {
 	@Override
 	public List<User> getUserContacts(@Nonnull String accountUserId) throws AccountConnectionException {
 		final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
-		final ContentResolver cr = MessengerApplication.getApp().getContentResolver();
+		final ContentResolver cr = getApplication().getContentResolver();
 		final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, null, null);
 		return new ListMapper<User>(new SmsUserMapper(realm, cr)).convert(cursor);
 	}

@@ -1,23 +1,26 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.util.Log;
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * User: serso
@@ -60,7 +63,7 @@ class XmppRosterListener implements RosterListener {
 			getUserService().mergeUserContacts(account.getUser().getEntity(), contacts, false, true);
 
 		} catch (AccountRuntimeException e) {
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(new AccountException(e));
+			App.getExceptionHandler().handleException(new AccountException(e));
 		}
 	}
 
@@ -85,6 +88,6 @@ class XmppRosterListener implements RosterListener {
 
 	@Nonnull
 	private UserService getUserService() {
-		return MessengerApplication.getServiceLocator().getUserService();
+		return App.getUserService();
 	}
 }

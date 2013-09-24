@@ -1,15 +1,17 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.AccountService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.solovyev.android.list.ListAdapter;
+import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.AccountService;
 
 /**
  * User: serso
@@ -33,7 +35,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 	protected List<UiContact> getElements(@Nonnull Context context) {
 		final List<UiContact> result = new ArrayList<UiContact>();
 
-		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
+		final UserService userService = App.getUserService();
 
 		for (User user : accountService.getEnabledAccountUsers()) {
 			for (User contact : userService.getOnlineUserContacts(user.getEntity())) {

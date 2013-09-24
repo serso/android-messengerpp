@@ -1,24 +1,24 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.android.Fragments2;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatUiEventType;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-
 import roboguice.RoboGuice;
 import roboguice.event.EventListener;
 import roboguice.event.EventManager;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.List;
+import org.solovyev.android.Fragments2;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatUiEventType;
 
 /**
  * User: serso
@@ -66,7 +66,7 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 			}
 		} catch (UnsupportedAccountException e) {
 			// should not happen
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+			App.getExceptionHandler().handleException(e);
 		}
 	}
 
@@ -84,7 +84,7 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 
 				try {
 					final User user = activity.getAccountService().getAccountById(contact.getEntity().getAccountId()).getUser();
-					result = MessengerApplication.getServiceLocator().getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
+					result = App.getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
 				} catch (AccountException e) {
 					throwException(e);
 				}

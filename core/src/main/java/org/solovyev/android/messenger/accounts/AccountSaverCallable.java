@@ -1,10 +1,11 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Callable;
+
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.security.InvalidCredentialsException;
 
 /**
  * User: serso
@@ -25,6 +26,6 @@ class AccountSaverCallable implements Callable<Account> {
 
 	@Override
 	public Account call() throws InvalidCredentialsException, AccountAlreadyExistsException {
-		return MessengerApplication.getServiceLocator().getAccountService().saveAccount(accountBuilder);
+		return App.getAccountService().saveAccount(accountBuilder);
 	}
 }

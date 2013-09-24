@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import junit.framework.Assert;
+
 import org.junit.Test;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;

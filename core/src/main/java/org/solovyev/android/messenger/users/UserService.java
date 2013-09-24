@@ -1,17 +1,19 @@
 package org.solovyev.android.messenger.users;
 
 import android.widget.ImageView;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.common.listeners.JEventListener;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.List;
+
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.common.listeners.JEventListener;
 
 /**
  * User: serso

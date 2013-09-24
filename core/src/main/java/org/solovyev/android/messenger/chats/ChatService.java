@@ -1,19 +1,21 @@
 package org.solovyev.android.messenger.chats;
 
 import android.widget.ImageView;
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.listeners.JEventListeners;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.listeners.JEventListeners;
 
 /**
  * User: serso

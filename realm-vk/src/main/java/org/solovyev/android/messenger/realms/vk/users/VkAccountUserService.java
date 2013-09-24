@@ -1,5 +1,12 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
@@ -7,12 +14,6 @@ import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.collections.Collections;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: serso

@@ -3,9 +3,10 @@ package org.solovyev.android.messenger.messages;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import org.solovyev.android.messenger.MessengerPreferences;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.MessengerPreferences;
 
 final class MessageListItemStyle {
 

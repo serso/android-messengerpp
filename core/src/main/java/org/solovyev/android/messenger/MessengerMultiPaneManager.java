@@ -3,10 +3,11 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.view.View;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 /**
  * User: serso

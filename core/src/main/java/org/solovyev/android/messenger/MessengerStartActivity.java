@@ -3,19 +3,22 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.inject.Inject;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
-import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.User;
 import roboguice.activity.RoboActivity;
+
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
+
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
+import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.messenger.users.User;
+
+import com.google.inject.Inject;
 
 /**
  * User: serso
@@ -85,8 +88,8 @@ public class MessengerStartActivity extends RoboActivity {
 			Context context = getContext();
 			if (context != null) {
 				for (User user : users) {
-					MessengerApplication.getServiceLocator().getUserService().getUserContacts(user.getEntity());
-					MessengerApplication.getServiceLocator().getUserService().getUserChats(user.getEntity());
+					App.getUserService().getUserContacts(user.getEntity());
+					App.getUserService().getUserChats(user.getEntity());
 				}
 			}
 

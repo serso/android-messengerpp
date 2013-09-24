@@ -4,17 +4,19 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Checkable;
 import android.widget.SectionIndexer;
+
+import java.util.Comparator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.list.AlphabetIndexer;
 import org.solovyev.android.list.EmptySectionIndexer;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.common.Objects;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * User: serso

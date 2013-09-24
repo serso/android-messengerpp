@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger;
 
-import org.solovyev.tasks.NamedTask;
-
 import javax.annotation.Nonnull;
+
+import org.solovyev.tasks.NamedTask;
 
 /**
  * User: serso
@@ -20,7 +20,7 @@ public abstract class MessengerTask<V> implements NamedTask<V> {
 
 	@Override
 	public void onFailure(Throwable t) {
-		MessengerApplication.getServiceLocator().getExceptionHandler().handleException(t);
+		App.getExceptionHandler().handleException(t);
 	}
 
 	@Nonnull

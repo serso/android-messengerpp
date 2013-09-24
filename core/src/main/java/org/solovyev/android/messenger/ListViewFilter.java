@@ -11,12 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.text.Strings;
 
 /**
  * User: serso

@@ -4,19 +4,20 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.messages.Messages;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
-import org.solovyev.android.messenger.view.ViewAwareTag;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.list.ListAdapter;
+import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.messages.Messages;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.ViewAwareTag;
 
 /**
  * User: serso
@@ -120,7 +121,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 
 	@Nonnull
 	private static ChatService getChatService() {
-		return MessengerApplication.getServiceLocator().getChatService();
+		return App.getChatService();
 	}
 
 	/*@Override*/

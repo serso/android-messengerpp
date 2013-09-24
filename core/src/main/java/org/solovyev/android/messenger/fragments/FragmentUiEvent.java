@@ -2,9 +2,10 @@ package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.Fragment;
 import android.view.View;
-import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**
  * User: serso

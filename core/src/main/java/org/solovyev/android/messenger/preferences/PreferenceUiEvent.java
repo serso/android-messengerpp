@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.preferences;
 
-import org.solovyev.common.listeners.AbstractTypedJEvent;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**
  * User: serso

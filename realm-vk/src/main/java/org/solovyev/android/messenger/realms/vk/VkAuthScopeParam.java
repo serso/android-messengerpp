@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.realms.vk;
 
-import org.solovyev.common.text.Strings;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.common.text.Strings;
 
 /**
  * User: serso

@@ -2,25 +2,32 @@ package org.solovyev.android.messenger.messages;
 
 import android.app.Application;
 import android.widget.ImageView;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.joda.time.DateTime;
-import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.users.PersistenceLock;
-import org.solovyev.android.messenger.users.UserService;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import java.util.Arrays;
-import java.util.List;
+
+import org.joda.time.DateTime;
+import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.chats.AccountChatService;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.MessageDirection;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.users.PersistenceLock;
+import org.solovyev.android.messenger.users.UserService;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

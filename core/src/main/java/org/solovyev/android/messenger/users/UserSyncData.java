@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.users;
 
-import org.joda.time.DateTime;
-import org.solovyev.common.JCloneable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.joda.time.DateTime;
+import org.solovyev.common.JCloneable;
 
 /**
  * User: serso

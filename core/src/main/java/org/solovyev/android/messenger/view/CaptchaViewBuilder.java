@@ -7,6 +7,11 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.captcha.Captcha;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.DownloadFileAsyncTask;
@@ -17,9 +22,6 @@ import org.solovyev.android.view.DrawableFromIsConverter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.Builder;
 import org.solovyev.common.collections.Collections;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * User: serso

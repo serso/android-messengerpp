@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger;
 
-import org.solovyev.android.messenger.realms.Realm;
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+
+import org.solovyev.android.messenger.realms.Realm;
 
 /**
  * User: serso

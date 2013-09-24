@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.entities;
 
 import android.database.Cursor;
-import org.solovyev.common.Converter;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.common.Converter;
 
 /**
  * User: serso

@@ -2,9 +2,12 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
@@ -14,9 +17,9 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * User: serso

@@ -1,12 +1,15 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import com.actionbarsherlock.view.MenuItem;
+
+import java.lang.ref.WeakReference;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.messenger.core.R;
 
-import javax.annotation.Nonnull;
-import java.lang.ref.WeakReference;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * User: serso

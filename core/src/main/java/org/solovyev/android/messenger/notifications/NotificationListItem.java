@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.core.R;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.list.ListAdapter;
+import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.core.R;
 
 public final class NotificationListItem implements ListItem {
 

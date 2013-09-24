@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.sync;
 
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.accounts.Account;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 /**
  * User: serso
@@ -26,7 +27,7 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doWork(@Nonnull List<Void> voids) {
-		for (Account account : MessengerApplication.getServiceLocator().getAccountService().getEnabledAccounts()) {
+		for (Account account : App.getAccountService().getEnabledAccounts()) {
 			final SyncData syncData = new SyncDataImpl(account.getId());
 
 			for (SyncTask syncTask : syncTasks) {

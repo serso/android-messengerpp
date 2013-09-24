@@ -1,19 +1,25 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
-import com.google.gson.*;
-import org.solovyev.android.messenger.MessengerApplication;
+import java.lang.reflect.Type;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Type;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 /**
  * User: serso
@@ -114,7 +120,7 @@ public interface LongPollUpdate {
 
 		@Nonnull
 		private static ChatService getChatService() {
-			return MessengerApplication.getServiceLocator().getChatService();
+			return App.getChatService();
 		}
 	}
 
@@ -144,7 +150,7 @@ public interface LongPollUpdate {
 
 		@Nonnull
 		private static ChatService getChatService() {
-			return MessengerApplication.getServiceLocator().getChatService();
+			return App.getChatService();
 		}
 	}
 
@@ -165,7 +171,7 @@ public interface LongPollUpdate {
 
 		@Nonnull
 		private ChatService getChatService() {
-			return MessengerApplication.getServiceLocator().getChatService();
+			return App.getChatService();
 		}
 	}
 
@@ -223,7 +229,7 @@ public interface LongPollUpdate {
 
 		@Nonnull
 		private ChatService getChatService() {
-			return MessengerApplication.getServiceLocator().getChatService();
+			return App.getChatService();
 		}
 	}
 
@@ -246,7 +252,7 @@ public interface LongPollUpdate {
 		}
 
 		private UserService getUserService() {
-			return MessengerApplication.getServiceLocator().getUserService();
+			return App.getUserService();
 		}
 	}
 

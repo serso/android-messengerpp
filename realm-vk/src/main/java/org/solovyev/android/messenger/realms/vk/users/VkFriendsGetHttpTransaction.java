@@ -1,5 +1,9 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.http.IllegalJsonException;
@@ -7,9 +11,6 @@ import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.android.messenger.users.User;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * User: serso

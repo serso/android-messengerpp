@@ -3,12 +3,13 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.prefs.BooleanPreference;
 import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
-
-import javax.annotation.Nonnull;
 
 public final class MessengerPreferences {
 

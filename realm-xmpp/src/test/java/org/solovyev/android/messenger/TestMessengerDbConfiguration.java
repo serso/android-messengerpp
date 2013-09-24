@@ -1,10 +1,11 @@
 package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteDatabase;
-import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
 /**
  * User: serso

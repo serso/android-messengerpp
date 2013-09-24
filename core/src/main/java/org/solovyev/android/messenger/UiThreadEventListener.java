@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.Threads;
 import org.solovyev.common.listeners.JEvent;
 import org.solovyev.common.listeners.JEventListener;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

@@ -2,13 +2,15 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.widget.Toast;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.accounts.Account;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

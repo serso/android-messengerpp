@@ -1,7 +1,8 @@
 package org.solovyev.android.messenger.notifications;
 
-import javax.annotation.Nonnull;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public interface NotificationService {
 

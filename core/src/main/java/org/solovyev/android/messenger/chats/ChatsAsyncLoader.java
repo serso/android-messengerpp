@@ -1,17 +1,19 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import org.solovyev.android.list.ListItemAdapter;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.solovyev.android.list.ListItemAdapter;
+import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 
 /**
  * User: serso
@@ -29,9 +31,9 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 	protected List<UiChat> getElements(@Nonnull Context context) {
 		final List<UiChat> result = new ArrayList<UiChat>();
 
-		final UserService userService = MessengerApplication.getServiceLocator().getUserService();
-		final ChatService chatService = MessengerApplication.getServiceLocator().getChatService();
-		final AccountService accountService = MessengerApplication.getServiceLocator().getAccountService();
+		final UserService userService = App.getUserService();
+		final ChatService chatService = App.getChatService();
+		final AccountService accountService = App.getAccountService();
 
 		for (User user : accountService.getEnabledAccountUsers()) {
 			final List<Chat> chats = userService.getUserChats(user.getEntity());

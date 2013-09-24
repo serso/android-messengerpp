@@ -1,17 +1,18 @@
 package org.solovyev.android.messenger.realms;
 
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.AccountUserService;
-import org.solovyev.android.messenger.users.User;
+import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
+
+import org.solovyev.android.messenger.chats.AccountChatService;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.AccountUserService;
+import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso

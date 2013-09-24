@@ -2,11 +2,13 @@ package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
 import android.widget.ImageView;
-import org.solovyev.android.messenger.icons.RealmIconService;
-import org.solovyev.android.messenger.users.User;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso

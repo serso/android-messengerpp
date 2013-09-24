@@ -1,7 +1,8 @@
 package org.solovyev.android.messenger.accounts;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
+
+import javax.annotation.Nonnull;
 
 public interface AccountDao {
 

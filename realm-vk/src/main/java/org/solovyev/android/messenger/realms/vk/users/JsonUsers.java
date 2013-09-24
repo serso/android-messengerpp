@@ -1,7 +1,8 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
-import javax.annotation.Nullable;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * User: serso

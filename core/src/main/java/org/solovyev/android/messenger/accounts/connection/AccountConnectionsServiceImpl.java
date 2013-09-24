@@ -1,8 +1,13 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.app.Application;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.MessengerListeners;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountEvent;
@@ -15,10 +20,8 @@ import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static org.solovyev.android.messenger.notifications.Notifications.NO_INTERNET_NOTIFICATION;
 import static org.solovyev.android.messenger.notifications.Notifications.newRealmConnectionErrorNotification;

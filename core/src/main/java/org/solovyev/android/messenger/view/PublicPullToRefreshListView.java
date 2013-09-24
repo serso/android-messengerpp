@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**

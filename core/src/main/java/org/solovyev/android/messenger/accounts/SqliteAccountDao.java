@@ -6,21 +6,32 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.gson.Gson;
-import com.google.inject.Singleton;
-import org.solovyev.android.db.*;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.security.Cipherer;
-import org.solovyev.common.security.CiphererException;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+
+import org.solovyev.android.db.AbstractDbQuery;
+import org.solovyev.android.db.AbstractObjectDbExec;
+import org.solovyev.android.db.AbstractSQLiteHelper;
+import org.solovyev.android.db.AndroidDbUtils;
+import org.solovyev.android.db.DbExec;
+import org.solovyev.android.db.DeleteAllRowsDbExec;
+import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.security.Cipherer;
+import org.solovyev.common.security.CiphererException;
+
+import com.google.gson.Gson;
+import com.google.inject.Singleton;
+
+import static org.solovyev.android.messenger.App.getSecurityService;
 
 @Singleton
 public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao {
@@ -47,7 +58,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 
 	@Override
 	public void init() {
-		secret = MessengerApplication.getServiceLocator().getSecurityService().getSecretKey();
+		secret = getSecurityService().getSecretKey();
 	}
 
 	@Override
@@ -70,7 +81,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+			App.getExceptionHandler().handleException(e);
 			return Collections.emptyList();
 		}
 	}
@@ -95,7 +106,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		try {
 			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+			App.getExceptionHandler().handleException(e);
 			return Collections.emptyList();
 		}
 	}

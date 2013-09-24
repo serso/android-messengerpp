@@ -1,8 +1,8 @@
 package org.solovyev.android.view;
 
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
 import javax.annotation.Nullable;
+
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * User: serso

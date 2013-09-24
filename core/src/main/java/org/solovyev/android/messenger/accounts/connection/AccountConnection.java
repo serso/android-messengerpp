@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.accounts.connection;
 
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

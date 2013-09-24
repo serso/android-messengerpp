@@ -1,15 +1,16 @@
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
-import org.solovyev.android.http.HttpRuntimeIoException;
-import org.solovyev.android.http.HttpTransactions;
-import org.solovyev.android.messenger.longpoll.LongPollResult;
-import org.solovyev.android.messenger.longpoll.RealmLongPollService;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.realms.vk.VkAccount;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
+
+import org.solovyev.android.http.HttpRuntimeIoException;
+import org.solovyev.android.http.HttpTransactions;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.longpoll.LongPollResult;
+import org.solovyev.android.messenger.longpoll.RealmLongPollService;
+import org.solovyev.android.messenger.realms.vk.VkAccount;
 
 /**
  * User: serso

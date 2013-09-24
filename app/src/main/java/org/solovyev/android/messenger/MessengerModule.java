@@ -1,8 +1,9 @@
 package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
@@ -39,8 +40,8 @@ import org.solovyev.android.network.NetworkStateServiceImpl;
 import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 
 /**
  * User: serso

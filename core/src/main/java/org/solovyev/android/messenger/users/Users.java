@@ -1,19 +1,21 @@
 package org.solovyev.android.messenger.users;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 /**
  * User: serso
@@ -27,7 +29,7 @@ public final class Users {
 
 	@Nonnull
 	public static String getDisplayNameFor(@Nonnull Entity user) {
-		return MessengerApplication.getServiceLocator().getUserService().getUserById(user).getDisplayName();
+		return App.getUserService().getUserById(user).getDisplayName();
 	}
 
 	@Nonnull

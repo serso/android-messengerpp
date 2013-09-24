@@ -3,6 +3,47 @@ package org.solovyev.android.messenger.users;
 import android.app.Application;
 import android.util.Log;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
+import org.solovyev.android.Threads;
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.MessengerExceptionHandler;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.EntityMapEntryMatcher;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
+import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
+import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
+import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
+import org.solovyev.common.collections.multimap.ObjectsAddedUpdater;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
+import org.solovyev.common.collections.multimap.WholeListUpdater;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.listeners.JEventListeners;
+import org.solovyev.common.listeners.Listeners;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -10,28 +51,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.Threads;
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MessengerExceptionHandler;
-import org.solovyev.android.messenger.accounts.*;
-import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
-import org.solovyev.android.messenger.icons.RealmIconService;
-import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.common.collections.multimap.*;
-import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.listeners.JEventListeners;
-import org.solovyev.common.listeners.Listeners;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
 
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 

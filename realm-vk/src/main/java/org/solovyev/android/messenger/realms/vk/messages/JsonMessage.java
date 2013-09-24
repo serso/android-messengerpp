@@ -1,7 +1,16 @@
 package org.solovyev.android.messenger.realms.vk.messages;
 
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.http.IllegalJsonException;
@@ -9,15 +18,8 @@ import org.solovyev.android.messenger.messages.ChatMessageImpl;
 import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * User: serso

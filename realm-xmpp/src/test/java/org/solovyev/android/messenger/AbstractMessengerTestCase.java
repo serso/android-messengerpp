@@ -1,15 +1,17 @@
 package org.solovyev.android.messenger;
 
 import android.app.Application;
-import com.google.inject.Inject;
-import com.xtremelabs.robolectric.Robolectric;
+
+import javax.annotation.Nonnull;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
-import javax.annotation.Nonnull;
+import com.google.inject.Inject;
+import com.xtremelabs.robolectric.Robolectric;
 
 /**
  * User: serso

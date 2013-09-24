@@ -4,26 +4,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
-import com.google.inject.Inject;
+import roboguice.event.EventListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
+import org.solovyev.android.messenger.accounts.AccountUiEventListener;
 import org.solovyev.android.messenger.chats.ChatUiEvent;
 import org.solovyev.android.messenger.chats.ChatUiEventListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.FragmentUiEvent;
 import org.solovyev.android.messenger.preferences.MessengerOnPreferenceAttachedListener;
+import org.solovyev.android.messenger.preferences.PreferenceListFragment;
 import org.solovyev.android.messenger.preferences.PreferenceUiEvent;
 import org.solovyev.android.messenger.preferences.PreferenceUiEventListener;
-import org.solovyev.android.messenger.preferences.PreferenceListFragment;
-import org.solovyev.android.messenger.accounts.AccountUiEventListener;
 import org.solovyev.android.messenger.realms.RealmUiEvent;
 import org.solovyev.android.messenger.realms.RealmUiEventListener;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.ContactUiEventListener;
-import roboguice.event.EventListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.inject.Inject;
 
 /**
  * User: serso

@@ -5,19 +5,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
-import org.solovyev.android.messenger.view.ViewAwareTag;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.list.ListAdapter;
+import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.ViewAwareTag;
 
 /**
  * User: serso
@@ -35,7 +36,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	}
 
 	private static int getUnreadMessagesCount(@Nonnull User contact) {
-		return MessengerApplication.getServiceLocator().getUserService().getUnreadMessagesCount(contact.getEntity());
+		return App.getUserService().getUnreadMessagesCount(contact.getEntity());
 	}
 
 	@Nonnull
@@ -96,12 +97,12 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	@Override
 	protected void fillView(@Nonnull UiContact contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
 		final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
-		MessengerApplication.getServiceLocator().getUserService().setUserIcon(contact.getContact(), contactIcon);
+		App.getUserService().setUserIcon(contact.getContact(), contactIcon);
 
 		final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
 		contactName.setText(getDisplayName());
 
-		final AccountService accountService = MessengerApplication.getServiceLocator().getAccountService();
+		final AccountService accountService = App.getAccountService();
 
 		final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
 		if (accountService.isOneAccount()) {
@@ -113,7 +114,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 				accountName.setText("[" + account.getUser().getDisplayName() + "]");
 			} catch (UnsupportedAccountException e) {
 				// cannot do anything => just handle exception
-				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+				App.getExceptionHandler().handleException(e);
 			}
 		}
 

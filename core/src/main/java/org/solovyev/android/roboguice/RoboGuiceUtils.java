@@ -1,11 +1,12 @@
 package org.solovyev.android.roboguice;
 
 import android.content.Context;
-import com.google.inject.Provider;
 import roboguice.RoboGuice;
 import roboguice.inject.ContextScope;
 
 import javax.annotation.Nonnull;
+
+import com.google.inject.Provider;
 
 /**
  * User: serso

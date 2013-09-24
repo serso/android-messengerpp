@@ -10,18 +10,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import com.google.inject.Inject;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.Activities;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.*;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.AbstractMessengerListFragment;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
@@ -33,9 +46,7 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
+import com.google.inject.Inject;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
 
@@ -140,7 +151,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 				}
 			}
 		} catch (UnsupportedAccountException e) {
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+			App.getExceptionHandler().handleException(e);
 			Activities.restartActivity(getActivity());
 		}
 	}
@@ -413,7 +424,7 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 		@Nonnull
 		@Override
 		protected List<ChatMessage> getElements(@Nonnull Context context) {
-			return MessengerApplication.getServiceLocator().getChatMessageService().getChatMessages(chat.getEntity());
+			return App.getChatMessageService().getChatMessages(chat.getEntity());
 		}
 
 		@Nonnull

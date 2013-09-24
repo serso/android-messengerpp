@@ -1,14 +1,20 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
-import org.jivesoftware.smack.*;
-import org.jivesoftware.smackx.ChatStateManager;
-import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.accounts.connection.LoopedAbstractAccountConnection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.ChatStateManager;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.connection.LoopedAbstractAccountConnection;
 
 /**
  * User: serso

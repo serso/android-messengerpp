@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.realms;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.inject.Inject;
 
 /**
  * User: serso

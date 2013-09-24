@@ -4,13 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewBuilder;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class NotificationsViewBuilder implements ViewBuilder<View> {
 

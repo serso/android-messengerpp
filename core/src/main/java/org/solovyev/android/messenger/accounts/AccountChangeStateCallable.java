@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.MessengerApplication;
+import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Callable;
+
+import org.solovyev.android.messenger.App;
 
 /**
  * User: serso
@@ -24,7 +25,7 @@ final class AccountChangeStateCallable implements Callable<Account> {
 
 	@Override
 	public Account call() throws Exception {
-		final AccountService accountService = MessengerApplication.getServiceLocator().getAccountService();
+		final AccountService accountService = App.getAccountService();
 		return accountService.changeAccountState(account, account.isEnabled() ? AccountState.disabled_by_user : AccountState.enabled);
 	}
 }

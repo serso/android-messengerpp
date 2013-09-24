@@ -1,20 +1,22 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.util.Log;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.ChatState;
 import org.jivesoftware.smackx.ChatStateListener;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.Account;
-
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * User: serso
@@ -66,7 +68,7 @@ final class XmppMessageListener implements ChatStateListener {
 
 	@Nonnull
 	private static ChatService getChatService() {
-		return MessengerApplication.getServiceLocator().getChatService();
+		return App.getChatService();
 	}
 
 	@Override

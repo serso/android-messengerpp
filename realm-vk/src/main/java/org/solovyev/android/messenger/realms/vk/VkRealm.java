@@ -2,19 +2,25 @@ package org.solovyev.android.messenger.realms.vk;
 
 import android.app.Application;
 import android.content.Context;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.AbstractRealm;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountBuilder;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.icons.HttpRealmIconService;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.notifications.Notifications;
-import org.solovyev.android.messenger.accounts.AbstractRealm;
-import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
@@ -24,11 +30,8 @@ import org.solovyev.common.msg.MessageType;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
 import static org.solovyev.android.messenger.notifications.Notifications.newOpenRealmConfSolution;
@@ -162,7 +165,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	@Nullable
 	@Override
 	public Cipherer<VkAccountConfiguration, VkAccountConfiguration> getCipherer() {
-		return new VkRealmConfigurationCipherer(MessengerApplication.getServiceLocator().getSecurityService().getStringSecurityService().getCipherer());
+		return new VkRealmConfigurationCipherer(App.getSecurityService().getStringSecurityService().getCipherer());
 	}
 
 	@Override

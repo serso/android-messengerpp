@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.User;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.users.User;
 
 public abstract class AbstractAccountBuilder<C extends AccountConfiguration> implements AccountBuilder {
 

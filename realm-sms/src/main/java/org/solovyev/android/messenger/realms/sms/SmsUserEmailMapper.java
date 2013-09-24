@@ -2,15 +2,17 @@ package org.solovyev.android.messenger.realms.sms;
 
 import android.database.Cursor;
 import android.provider.ContactsContract;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.Converter;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: serso

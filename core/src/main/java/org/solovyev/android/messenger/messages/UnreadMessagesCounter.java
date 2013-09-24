@@ -1,21 +1,5 @@
 package org.solovyev.android.messenger.messages;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.messenger.MessengerEventType;
-import org.solovyev.android.messenger.MessengerListeners;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.users.PersistenceLock;
-import org.solovyev.common.listeners.JEventListener;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +8,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
+import org.solovyev.android.messenger.MessengerEventType;
+import org.solovyev.android.messenger.MessengerListeners;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.PersistenceLock;
+import org.solovyev.common.listeners.JEventListener;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

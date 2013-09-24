@@ -1,17 +1,19 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
-import org.solovyev.android.messenger.accounts.connection.AccountConnection;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 public interface Account<C extends AccountConfiguration> extends MessengerEntity {
 

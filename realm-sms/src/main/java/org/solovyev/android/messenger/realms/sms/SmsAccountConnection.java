@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.realms.sms;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +15,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -31,15 +35,14 @@ import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 
+import static org.solovyev.android.messenger.App.getApplication;
+import static org.solovyev.android.messenger.App.getChatMessageService;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_RECEIVED;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
@@ -63,12 +66,13 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 	protected void tryConnect() throws AccountConnectionException {
 		if (receiver == null) {
 			receiver = new ReportsBroadcastReceiver();
-			MessengerApplication.getApp().registerReceiver(receiver, new IntentFilter(INTENT_SENT));
-			MessengerApplication.getApp().registerReceiver(receiver, new IntentFilter(INTENT_DELIVERED));
+			final Application application = getApplication();
+			application.registerReceiver(receiver, new IntentFilter(INTENT_SENT));
+			application.registerReceiver(receiver, new IntentFilter(INTENT_DELIVERED));
 
 			final IntentFilter intentReceivedFilter = new IntentFilter(INTENT_RECEIVED);
 			intentReceivedFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-			MessengerApplication.getApp().registerReceiver(receiver, intentReceivedFilter);
+			application.registerReceiver(receiver, intentReceivedFilter);
 		}
 	}
 
@@ -79,7 +83,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 
 	private void unregisterReceiver() {
 		if (receiver != null) {
-			MessengerApplication.getApp().unregisterReceiver(receiver);
+			getApplication().unregisterReceiver(receiver);
 			receiver = null;
 		}
 	}
@@ -106,8 +110,8 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 		if (!messagesByPhoneNumber.isEmpty()) {
 			final SmsAccount account = getAccount();
 			final User user = account.getUser();
-			final UserService userService = MessengerApplication.getServiceLocator().getUserService();
-			final ChatService chatService = MessengerApplication.getServiceLocator().getChatService();
+			final UserService userService = App.getUserService();
+			final ChatService chatService = App.getChatService();
 
 			final List<User> contacts = userService.getUserContacts(user.getEntity());
 
@@ -156,7 +160,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 	@Nullable
 	private ChatMessage toChatMessage(@Nonnull String message, @Nonnull Account account, @Nonnull User from, @Nonnull User to) {
 		if (!Strings.isEmpty(message)) {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(MessengerApplication.getApp().getChatMessageService().generateEntity(account));
+			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(account));
 			liteChatMessage.setBody(message);
 			liteChatMessage.setAuthor(account.newUserEntity(from.getEntity().getAccountEntityId()));
 			liteChatMessage.setRecipient(account.newUserEntity(to.getEntity().getAccountEntityId()));
@@ -175,7 +179,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 			result = toUser(phone);
 
 			final SmsAccount account = getAccount();
-			MessengerApplication.getServiceLocator().getUserService().mergeUserContacts(account.getUser().getEntity(), Arrays.asList(result), false, false);
+			App.getUserService().mergeUserContacts(account.getUser().getEntity(), Arrays.asList(result), false, false);
 		}
 		return result;
 	}

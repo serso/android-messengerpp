@@ -7,15 +7,17 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.TextView;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 /**
  * User: serso

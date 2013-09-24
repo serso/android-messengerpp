@@ -1,18 +1,20 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.messenger.accounts.connection.AccountConnection;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 
-import javax.annotation.Nonnull;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 @Singleton
 public class TestAccount extends AbstractAccount<TestAccountConfiguration> {

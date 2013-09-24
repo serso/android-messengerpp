@@ -2,13 +2,15 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.util.Log;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmService;
 import roboguice.RoboGuice;
 
-import javax.annotation.Nonnull;
 import java.lang.ref.WeakReference;
 import java.util.TimerTask;
+
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
 
 /**
  * User: serso

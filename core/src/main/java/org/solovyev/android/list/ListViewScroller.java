@@ -5,8 +5,9 @@ import android.support.v4.app.ListFragment;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso

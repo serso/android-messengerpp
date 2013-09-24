@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 
-import javax.annotation.Nonnull;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
 
 /**
  * User: serso

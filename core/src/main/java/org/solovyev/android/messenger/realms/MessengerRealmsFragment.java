@@ -1,17 +1,20 @@
 package org.solovyev.android.messenger.realms;
 
 import android.os.Bundle;
-import com.google.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
 
 public class MessengerRealmsFragment extends AbstractMessengerListFragment<Realm, RealmListItem> implements DetachableFragment {
 

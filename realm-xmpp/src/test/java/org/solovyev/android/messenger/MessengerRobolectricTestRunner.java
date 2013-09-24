@@ -1,10 +1,11 @@
 package org.solovyev.android.messenger;
 
-import com.xtremelabs.robolectric.RobolectricConfig;
-import com.xtremelabs.robolectric.RobolectricTestRunner;
+import java.io.File;
+
 import org.junit.runners.model.InitializationError;
 
-import java.io.File;
+import com.xtremelabs.robolectric.RobolectricConfig;
+import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 /**
  * User: serso

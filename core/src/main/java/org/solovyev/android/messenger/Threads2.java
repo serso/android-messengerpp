@@ -2,9 +2,10 @@ package org.solovyev.android.messenger;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import org.solovyev.android.Threads;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.Threads;
 
 /**
  * User: serso

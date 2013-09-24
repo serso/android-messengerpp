@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.chats;
 
 import android.database.Cursor;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

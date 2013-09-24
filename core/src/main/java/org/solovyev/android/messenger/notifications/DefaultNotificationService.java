@@ -1,24 +1,26 @@
 package org.solovyev.android.messenger.notifications;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
+import org.solovyev.android.PredicateSpy;
+import org.solovyev.android.messenger.MessengerEventType;
+import org.solovyev.android.messenger.MessengerListeners;
+import org.solovyev.common.msg.Message;
+
 import com.google.common.base.Predicate;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.PredicateSpy;
-import org.solovyev.android.messenger.MessengerEventType;
-import org.solovyev.android.messenger.MessengerListeners;
-import org.solovyev.common.msg.Message;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 @Singleton
 public final class DefaultNotificationService implements NotificationService {

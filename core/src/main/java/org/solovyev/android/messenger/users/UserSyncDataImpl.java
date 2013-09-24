@@ -1,12 +1,12 @@
 package org.solovyev.android.messenger.users;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.common.JObject;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * User: serso

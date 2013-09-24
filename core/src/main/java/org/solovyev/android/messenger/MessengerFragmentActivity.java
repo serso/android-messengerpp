@@ -6,27 +6,29 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
-import com.google.inject.Inject;
+import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.view.SwipeGestureListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+import com.google.inject.Inject;
 
 /**
  * User: serso

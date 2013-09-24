@@ -8,19 +8,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
+
+import java.util.Arrays;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.chats.ChatUiEventType;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-import java.util.Arrays;
 
 /**
  * User: serso

@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

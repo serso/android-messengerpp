@@ -1,19 +1,23 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
 import android.util.Log;
-import com.google.common.base.Function;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.solovyev.android.messenger.MessengerApplication;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessages;
@@ -23,12 +27,11 @@ import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * User: serso
@@ -99,7 +102,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 							// vk allows to have messages sent to person self himself - we don't
 							if (!secondUser.getAccountEntityId().equals(user.getEntity().getAccountEntityId())) {
 								final Entity realmUser = user.getEntity();
-								final Entity realmChat = MessengerApplication.getServiceLocator().getChatService().getPrivateChatId(realmUser, secondUser);
+								final Entity realmChat = App.getChatService().getPrivateChatId(realmUser, secondUser);
 
 								ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
 								if (chat == null) {

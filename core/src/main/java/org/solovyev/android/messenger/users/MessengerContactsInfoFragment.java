@@ -9,20 +9,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.common.base.Splitter;
-import com.google.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.Views;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.common.base.Splitter;
+import com.google.inject.Inject;
 
 /**
  * User: serso
@@ -127,8 +130,7 @@ public class MessengerContactsInfoFragment extends RoboSherlockFragment {
 			contactName.setText(contact.getDisplayName());
 
 			final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon_imageview);
-			MessengerApplication.getServiceLocator().getUserService().setUserPhoto(contact, contactIcon);
-
+			App.getUserService().setUserPhoto(contact, contactIcon);
 		}
 	}
 

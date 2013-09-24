@@ -1,7 +1,12 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.http.IllegalJsonException;
@@ -12,11 +17,8 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 /**
  * User: serso

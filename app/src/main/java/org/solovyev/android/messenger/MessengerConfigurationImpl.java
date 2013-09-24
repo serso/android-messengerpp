@@ -1,16 +1,18 @@
 package org.solovyev.android.messenger;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.sms.SmsRealm;
 import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

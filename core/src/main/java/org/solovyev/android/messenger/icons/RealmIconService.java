@@ -1,10 +1,12 @@
 package org.solovyev.android.messenger.icons;
 
 import android.widget.ImageView;
-import org.solovyev.android.messenger.users.User;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso

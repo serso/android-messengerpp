@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import org.solovyev.android.messenger.accounts.AccountService;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.accounts.AccountService;
 
 /**
  * User: serso

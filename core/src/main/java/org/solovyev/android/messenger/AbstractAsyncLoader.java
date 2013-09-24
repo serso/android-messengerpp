@@ -1,14 +1,16 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
+
+import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
+
+import org.solovyev.android.list.ListAdapter;
+import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 /**
  * User: serso

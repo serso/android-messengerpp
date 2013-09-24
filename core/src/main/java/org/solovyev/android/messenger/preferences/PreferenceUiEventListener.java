@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.preferences;
 
 import android.support.v4.app.Fragment;
-import org.solovyev.android.messenger.MessengerFragmentActivity;
-import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.common.Builder;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
+import org.solovyev.common.Builder;
 
 /**
  * User: serso

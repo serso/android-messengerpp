@@ -1,8 +1,9 @@
 package org.solovyev.android.list;
 
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso

@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.entities.Entity;
 
 /**
  * User: serso

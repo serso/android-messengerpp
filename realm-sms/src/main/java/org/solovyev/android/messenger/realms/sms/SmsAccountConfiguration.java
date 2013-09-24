@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.realms.sms;
 
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.users;
 
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

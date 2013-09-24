@@ -1,7 +1,11 @@
 package org.solovyev.android.messenger.chats;
 
-import com.google.inject.Inject;
 import junit.framework.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.entities.Entity;
@@ -15,9 +19,7 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.inject.Inject;
 
 public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 

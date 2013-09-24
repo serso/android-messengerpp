@@ -3,16 +3,28 @@ package org.solovyev.android.messenger.chats;
 import android.app.Application;
 import android.util.Log;
 import android.widget.ImageView;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.*;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
 import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.*;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.EntityMapEntryMatcher;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
@@ -20,19 +32,32 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.android.messenger.users.*;
-import org.solovyev.common.collections.multimap.*;
+import org.solovyev.android.messenger.users.PersistenceLock;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserEvent;
+import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
+import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
+import org.solovyev.common.collections.multimap.ObjectRemovedUpdater;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
+import org.solovyev.common.collections.multimap.WholeListUpdater;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso
@@ -503,7 +528,7 @@ public class DefaultChatService implements ChatService {
 			}
 		} catch (UnsupportedAccountException e) {
 			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_app_icon));
-			MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+			App.getExceptionHandler().handleException(e);
 		}
 	}
 

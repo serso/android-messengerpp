@@ -4,23 +4,25 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Filter;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
 

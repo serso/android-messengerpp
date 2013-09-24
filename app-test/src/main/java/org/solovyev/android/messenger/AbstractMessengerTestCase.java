@@ -2,11 +2,13 @@ package org.solovyev.android.messenger;
 
 import android.app.Application;
 import android.test.InstrumentationTestCase;
-import com.google.inject.Inject;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.realms.RealmService;
 
-import javax.annotation.Nonnull;
+import com.google.inject.Inject;
 
 /**
  * User: serso

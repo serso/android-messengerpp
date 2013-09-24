@@ -5,8 +5,15 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupWindow;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.menu.AMenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -21,13 +28,12 @@ import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.APopupWindow;
 import org.solovyev.android.view.AbsoluteAPopupWindow;
 import org.solovyev.android.view.AnchorAPopupWindow;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+import static org.solovyev.android.messenger.App.getChatService;
+import static org.solovyev.android.messenger.App.getUnreadMessagesCounter;
 
 /**
  * User: serso
@@ -49,8 +55,8 @@ final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 	public boolean onPrepareOptionsMenu(@Nonnull Activity activity, @Nonnull Menu menu) {
 		boolean result = this.menu.onPrepareOptionsMenu(activity, menu);
 
-		onUnreadMessagesCountChanged(menu, MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadMessagesCount());
-		onNewNotificationsAdded(menu, MessengerApplication.getServiceLocator().getNotificationService().existNotifications());
+		onUnreadMessagesCountChanged(menu, getUnreadMessagesCounter().getUnreadMessagesCount());
+		onNewNotificationsAdded(menu, App.getNotificationService().existNotifications());
 
 		return result;
 	}
@@ -134,7 +140,7 @@ final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-			MessengerApplication.getApp().exit(activity);
+			App.exit(activity);
 		}
 	}
 
@@ -151,9 +157,9 @@ final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-			final Entity chatEntity = MessengerApplication.getServiceLocator().getUnreadMessagesCounter().getUnreadChat();
+			final Entity chatEntity = getUnreadMessagesCounter().getUnreadChat();
 			if (chatEntity != null) {
-				final Chat chat = MessengerApplication.getServiceLocator().getChatService().getChatById(chatEntity);
+				final Chat chat = getChatService().getChatById(chatEntity);
 				if (chat != null) {
 					final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
 					eventManager.fire(ChatUiEventType.chat_open_requested.newEvent(chat));
@@ -183,7 +189,7 @@ final class MessengerMenu implements ActivityMenu<Menu, MenuItem> {
 		@Override
 		public void onClick(@Nonnull final MenuItem menuItem, @Nonnull Context context) {
 			if (notificationPopupWindow == null) {
-				final List<Notification> notifications = MessengerApplication.getServiceLocator().getNotificationService().getNotifications();
+				final List<Notification> notifications = App.getNotificationService().getNotifications();
 				if (!notifications.isEmpty()) {
 					final NotificationsViewBuilder viewBuilder = new NotificationsViewBuilder(notifications);
 

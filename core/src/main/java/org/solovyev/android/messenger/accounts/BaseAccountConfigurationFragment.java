@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
+import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.Activities;
-import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
@@ -18,10 +20,12 @@ import org.solovyev.android.messenger.realms.RealmUiEventType;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.tasks.TaskService;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
+
+import static org.solovyev.android.messenger.App.getExceptionHandler;
+import static org.solovyev.android.messenger.App.getTaskService;
 
 public abstract class BaseAccountConfigurationFragment<T extends Account<?>> extends RoboSherlockFragment {
 
@@ -96,7 +100,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	private Button removeButton;
 
 	@Nonnull
-	private final TaskListeners taskListeners = new TaskListeners(MessengerApplication.getServiceLocator().getTaskService());
+	private final TaskListeners taskListeners = new TaskListeners(getTaskService());
 
 	protected BaseAccountConfigurationFragment(int layoutResId) {
 		this.layoutResId = layoutResId;
@@ -113,7 +117,7 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 				try {
 					editedRealm = (T) accountService.getAccountById(accountId);
 				} catch (UnsupportedAccountException e) {
-					MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+					getExceptionHandler().handleException(e);
 					Activities.restartActivity(getActivity());
 				}
 			}

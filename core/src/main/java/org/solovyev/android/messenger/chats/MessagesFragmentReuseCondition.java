@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
-import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
-import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
+import org.solovyev.common.JPredicate;
 
 /**
  * User: serso

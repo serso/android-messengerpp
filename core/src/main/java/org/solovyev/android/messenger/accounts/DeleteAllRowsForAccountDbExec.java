@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.database.sqlite.SQLiteDatabase;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.messenger.entities.EntityImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.db.DbExec;
+import org.solovyev.android.messenger.entities.EntityImpl;
 
 /**
  * User: serso

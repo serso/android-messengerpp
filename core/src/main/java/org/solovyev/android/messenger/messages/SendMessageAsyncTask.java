@@ -1,23 +1,25 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerApplication;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: serso
@@ -66,22 +68,22 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 	@Nonnull
 	private static ChatService getChatService() {
-		return MessengerApplication.getServiceLocator().getChatService();
+		return App.getChatService();
 	}
 
 	@Nonnull
 	private static ChatMessageService getChatMessageService() {
-		return MessengerApplication.getServiceLocator().getChatMessageService();
+		return App.getChatMessageService();
 	}
 
 	@Nonnull
 	private static UserService getUserService() {
-		return MessengerApplication.getServiceLocator().getUserService();
+		return App.getUserService();
 	}
 
 	@Nonnull
 	private static AccountService getRealmService() {
-		return MessengerApplication.getServiceLocator().getAccountService();
+		return App.getAccountService();
 	}
 
 	public static class Input {

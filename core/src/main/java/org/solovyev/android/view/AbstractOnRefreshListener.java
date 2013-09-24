@@ -1,10 +1,11 @@
 package org.solovyev.android.view;
 
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import java.lang.ref.WeakReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.ref.WeakReference;
+
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * User: serso

@@ -3,10 +3,17 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.Scopes;
-import com.google.inject.util.Modules;
+import roboguice.RoboGuice;
+import roboguice.inject.RoboInjector;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
@@ -41,15 +48,11 @@ import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
 import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
-import roboguice.RoboGuice;
-import roboguice.inject.RoboInjector;
 
-import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.Scopes;
+import com.google.inject.util.Modules;
 
 public class TestMessengerModule extends AbstractModule {
 

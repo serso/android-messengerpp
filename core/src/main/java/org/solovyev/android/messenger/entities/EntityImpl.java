@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.entities;
 
 import android.os.Parcel;
-import org.solovyev.common.JCloneable;
-import org.solovyev.common.JObject;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.common.JCloneable;
+import org.solovyev.common.JObject;
+import org.solovyev.common.text.Strings;
 
 public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entity {
 

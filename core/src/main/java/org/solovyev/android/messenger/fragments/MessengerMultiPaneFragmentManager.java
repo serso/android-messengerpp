@@ -2,7 +2,14 @@ package org.solovyev.android.messenger.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.fragments.ReflectionFragmentBuilder;
@@ -11,11 +18,7 @@ import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager {
 

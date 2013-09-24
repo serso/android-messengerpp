@@ -1,12 +1,19 @@
 package org.solovyev.android.messenger.realms.vk;
 
 import android.util.Log;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.HttpTransactions;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
-import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkAuth;
@@ -14,11 +21,6 @@ import org.solovyev.android.messenger.realms.vk.users.VkUsersGetHttpTransaction;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.List;
 
 public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfiguration> {
 

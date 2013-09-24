@@ -4,15 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.google.inject.Inject;
-import org.solovyev.android.messenger.accounts.AccountConfiguration;
-import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.common.text.Strings;
+
+import com.google.inject.Inject;
 
 public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
 

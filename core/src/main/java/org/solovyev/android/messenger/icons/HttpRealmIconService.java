@@ -2,13 +2,15 @@ package org.solovyev.android.messenger.icons;
 
 import android.content.Context;
 import android.widget.ImageView;
-import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.text.Strings;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.common.text.Strings;
 
 /**
  * User: serso

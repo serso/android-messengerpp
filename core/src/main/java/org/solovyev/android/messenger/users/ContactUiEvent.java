@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.common.listeners.AbstractTypedJEvent;
-
 import javax.annotation.Nonnull;
+
+import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**
  * User: serso

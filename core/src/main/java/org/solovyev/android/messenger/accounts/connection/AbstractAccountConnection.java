@@ -1,11 +1,13 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 /**
  * User: serso

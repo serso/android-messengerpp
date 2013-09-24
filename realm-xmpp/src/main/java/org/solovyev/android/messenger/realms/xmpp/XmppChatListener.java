@@ -1,17 +1,19 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.util.Log;
+
+import java.util.Collections;
+
+import javax.annotation.Nonnull;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.packet.Message;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
-
-import javax.annotation.Nonnull;
-import java.util.Collections;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.ChatService;
 
 final class XmppChatListener implements ChatManagerListener {
 
@@ -32,13 +34,13 @@ final class XmppChatListener implements ChatManagerListener {
 				newChat = getChatService().saveChat(account.getUser().getEntity(), newChat);
 				chat.addMessageListener(new XmppMessageListener(account, newChat.getChat().getEntity()));
 			} catch (AccountException e) {
-				MessengerApplication.getServiceLocator().getExceptionHandler().handleException(e);
+				App.getExceptionHandler().handleException(e);
 			}
 		}
 	}
 
 	@Nonnull
 	private static ChatService getChatService() {
-		return MessengerApplication.getServiceLocator().getChatService();
+		return App.getChatService();
 	}
 }

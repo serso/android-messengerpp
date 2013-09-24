@@ -9,14 +9,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import org.solovyev.android.Views;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.MessengerPreferences;
-import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.Views;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.MessengerPreferences;
+import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.users.User;
 
 final class MessageBubbleViews {
 
@@ -104,7 +105,7 @@ final class MessageBubbleViews {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
 			messageIcon.setVisibility(View.VISIBLE);
-			MessengerApplication.getServiceLocator().getChatMessageService().setMessageIcon(message, messageIcon);
+			App.getChatMessageService().setMessageIcon(message, messageIcon);
 		} else {
 			messageIcon.setVisibility(View.GONE);
 		}
@@ -114,7 +115,7 @@ final class MessageBubbleViews {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
 			userIconImageView.setVisibility(View.VISIBLE);
-			MessengerApplication.getServiceLocator().getUserService().setUserIcon(user, userIconImageView);
+			App.getUserService().setUserIcon(user, userIconImageView);
 		} else {
 			userIconImageView.setVisibility(View.GONE);
 		}

@@ -1,10 +1,11 @@
 package org.solovyev.android;
 
-import com.google.common.base.Predicate;
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
+
+import com.google.common.base.Predicate;
 
 /**
  * User: serso

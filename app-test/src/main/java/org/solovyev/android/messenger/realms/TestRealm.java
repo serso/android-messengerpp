@@ -2,9 +2,19 @@ package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import android.widget.ImageView;
-import com.google.inject.Singleton;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.solovyev.android.messenger.accounts.AbstractRealm;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountBuilder;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.icons.RealmIconService;
@@ -13,10 +23,7 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
+import com.google.inject.Singleton;
 
 @Singleton
 public class TestRealm extends AbstractRealm {

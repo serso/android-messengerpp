@@ -12,23 +12,30 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.actionbarsherlock.app.ActionBar;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
-import com.google.inject.Inject;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+import android.widget.AdapterView;
+import android.widget.Filter;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import roboguice.event.EventManager;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.Threads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListViewScroller;
 import org.solovyev.android.list.ListViewScrollerListener;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.FragmentUiEventType;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
@@ -38,11 +45,13 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
+import com.actionbarsherlock.app.ActionBar;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
+import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 import static android.view.Gravity.CENTER_VERTICAL;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;

@@ -1,5 +1,11 @@
 package org.solovyev.android.messenger.realms.vk.auth;
 
+import java.io.IOException;
+import java.net.URI;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,11 +15,6 @@ import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.http.LastRedirectHandler;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.net.URI;
 
 /**
  * User: serso

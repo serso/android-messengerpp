@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.accounts.Account;
+import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Callable;
+
+import org.solovyev.android.messenger.App;
 
 /**
  * User: serso
@@ -25,7 +25,7 @@ final class AccountRemoverCallable implements Callable<Account> {
 
 	@Override
 	public Account call() {
-		MessengerApplication.getServiceLocator().getAccountService().removeAccount(account.getId());
+		App.getAccountService().removeAccount(account.getId());
 
 		return account;
 	}

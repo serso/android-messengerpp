@@ -1,15 +1,17 @@
 package org.solovyev.android.messenger.users;
 
 import android.database.Cursor;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * User: serso

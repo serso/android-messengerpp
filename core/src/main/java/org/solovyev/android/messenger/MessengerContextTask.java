@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import org.solovyev.android.tasks.NamedContextTask;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.tasks.NamedContextTask;
 
 /**
  * User: serso

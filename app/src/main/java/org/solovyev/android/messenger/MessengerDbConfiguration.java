@@ -1,10 +1,12 @@
 package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteDatabase;
-import com.google.inject.Singleton;
-import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
+
+import com.google.inject.Singleton;
 
 /**
  * User: serso

@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.realms;
 
-import org.solovyev.android.messenger.accounts.AccountConfiguration;
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
 
 public interface RealmService {
 

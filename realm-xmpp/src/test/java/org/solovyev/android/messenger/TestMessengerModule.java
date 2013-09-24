@@ -3,14 +3,21 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.Scopes;
-import com.google.inject.util.Modules;
+import roboguice.RoboGuice;
+import roboguice.inject.RoboInjector;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
+import org.solovyev.android.messenger.accounts.SqliteAccountDao;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
@@ -21,8 +28,6 @@ import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
-import org.solovyev.android.messenger.accounts.AccountDao;
-import org.solovyev.android.messenger.accounts.SqliteAccountDao;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DefaultUserService;
@@ -31,13 +36,11 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
-import roboguice.RoboGuice;
-import roboguice.inject.RoboInjector;
 
-import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.Scopes;
+import com.google.inject.util.Modules;
 
 public class TestMessengerModule extends AbstractModule {
 

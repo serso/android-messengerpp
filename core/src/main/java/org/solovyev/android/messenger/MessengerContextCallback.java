@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import org.solovyev.android.tasks.ContextCallback;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.tasks.ContextCallback;
 
 /**
  * User: serso
@@ -14,6 +15,6 @@ public abstract class MessengerContextCallback<C extends Context, V> implements 
 
 	@Override
 	public void onFailure(@Nonnull C context, Throwable t) {
-		MessengerApplication.getServiceLocator().getExceptionHandler().handleException(t);
+		App.getExceptionHandler().handleException(t);
 	}
 }

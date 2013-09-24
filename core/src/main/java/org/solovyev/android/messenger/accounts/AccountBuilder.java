@@ -1,12 +1,12 @@
 package org.solovyev.android.messenger.accounts;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.common.BuilderWithData;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public interface AccountBuilder extends BuilderWithData<Account, AccountBuilder.Data> {
 

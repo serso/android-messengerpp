@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.messages;
 
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
+
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.chats.ChatMessage;
 
 /**
  * User: serso

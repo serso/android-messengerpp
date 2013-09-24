@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.widget.Button;
-import org.solovyev.android.messenger.core.R;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

@@ -1,23 +1,26 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
 import junit.framework.Assert;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.entities.EntityImpl;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 
 /**
  * User: serso

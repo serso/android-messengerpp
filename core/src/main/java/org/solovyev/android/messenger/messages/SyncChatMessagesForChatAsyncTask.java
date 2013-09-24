@@ -1,16 +1,20 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import org.solovyev.android.messenger.MessengerApplication;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.view.PullToRefreshListViewProvider;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.view.PullToRefreshListViewProvider;
+
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
+import static org.solovyev.android.messenger.App.getChatService;
 
 /**
  * User: serso
@@ -37,9 +41,9 @@ public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncCha
 		if (context != null) {
 			try {
 				if (!input.older) {
-					MessengerApplication.getServiceLocator().getChatService().syncNewerChatMessagesForChat(input.realmChat);
+					getChatService().syncNewerChatMessagesForChat(input.realmChat);
 				} else {
-					MessengerApplication.getServiceLocator().getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
+					getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
 				}
 			} catch (AccountException e) {
 				throwException(e);

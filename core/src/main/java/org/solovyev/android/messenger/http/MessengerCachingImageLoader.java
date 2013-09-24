@@ -1,11 +1,13 @@
 package org.solovyev.android.messenger.http;
 
 import android.app.Application;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.http.CachingImageLoader;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.http.CachingImageLoader;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

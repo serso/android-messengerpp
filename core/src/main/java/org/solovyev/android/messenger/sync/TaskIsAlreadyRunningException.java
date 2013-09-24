@@ -2,9 +2,10 @@ package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
 import android.widget.Toast;
-import org.solovyev.android.messenger.core.R;
 
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

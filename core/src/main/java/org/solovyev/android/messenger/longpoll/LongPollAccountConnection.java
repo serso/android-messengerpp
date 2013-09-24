@@ -2,13 +2,14 @@ package org.solovyev.android.messenger.longpoll;
 
 import android.content.Context;
 import android.util.Log;
-import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 import org.solovyev.android.messenger.users.User;
-
-import javax.annotation.Nonnull;
 
 /**
  * User: serso

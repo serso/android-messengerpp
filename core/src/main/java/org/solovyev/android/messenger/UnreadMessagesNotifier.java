@@ -8,14 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.common.listeners.AbstractJEventListener;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.common.listeners.AbstractJEventListener;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * User: serso

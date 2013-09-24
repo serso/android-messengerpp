@@ -4,8 +4,9 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import org.solovyev.android.messenger.core.R;
 import roboguice.service.RoboService;
+
+import org.solovyev.android.messenger.core.R;
 
 /**
  * User: serso

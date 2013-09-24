@@ -3,9 +3,10 @@ package org.solovyev.android.messenger;
 import roboguice.event.EventListener;
 import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso

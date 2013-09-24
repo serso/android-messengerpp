@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.chats.AccountChatService;
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.AccountUserService;
+import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
-
-import javax.annotation.Nonnull;
 
 import com.google.common.base.Splitter;
 

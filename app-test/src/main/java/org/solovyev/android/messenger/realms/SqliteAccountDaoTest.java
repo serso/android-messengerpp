@@ -1,7 +1,9 @@
 package org.solovyev.android.messenger.realms;
 
-import com.google.inject.Inject;
 import junit.framework.Assert;
+
+import java.util.Collection;
+
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
@@ -11,7 +13,7 @@ import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.collections.Collections;
 
-import java.util.Collection;
+import com.google.inject.Inject;
 
 public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 

@@ -1,6 +1,11 @@
 package org.solovyev.android.messenger.chats;
 
 import android.database.Cursor;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -8,9 +13,6 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * User: serso
