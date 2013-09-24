@@ -85,7 +85,9 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				})));
 				break;
 			case changed:
-				onContactChanged(event, eventUser);
+				// change of user is frequent operation - to avoid heavy work on main thread let's
+				// not change user in list (user still be persisted and changes will be shown later)
+				// onContactChanged(event, eventUser);
 				break;
 			case unread_messages_count_changed:
 				onContactChanged(event, eventUser);
