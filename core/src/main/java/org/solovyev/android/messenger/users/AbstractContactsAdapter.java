@@ -4,27 +4,25 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Filter;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
+import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
 
 /**
@@ -117,20 +115,34 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 		onContactChanged(event, contact, true);
 	}
 
-	private void onContactChanged(@Nonnull UserEvent event, @Nonnull User contact, boolean refilter) {
+	private boolean onContactChanged(@Nonnull UserEvent event, @Nonnull User contact, boolean refilter) {
+		boolean changed = false;
+
 		final ContactListItem listItem = findInAllElements(contact);
 		if (listItem != null) {
+			changed = true;
 			if(event.getType() == unread_messages_count_changed) {
 				listItem.onUnreadMessagesCountChanged(event.getDataAsInteger());
+			} else if(event.getType() == contacts_presence_changed) {
+				if(contact.isOnline() != listItem.getContact().isOnline()) {
+					listItem.onContactChanged(contact);
+				} else {
+					changed = false;
+				}
 			} else {
 				listItem.onContactChanged(contact);
 			}
-			onListItemChanged(contact);
 
-			if (refilter) {
-				refilter();
+			if (changed) {
+				onListItemChanged(contact);
+
+				if (refilter) {
+					refilter();
+				}
 			}
 		}
+
+		return changed;
 	}
 
 	public void refilter() {
@@ -143,11 +155,16 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	private void onContactsPresenceChanged(@Nonnull UserEvent event) {
+		boolean changed = false;
+
 		final List<User> contacts = event.getDataAsUsers();
 		for (User contact : contacts) {
-			onContactChanged(event, contact, false);
+			changed |= onContactChanged(event, contact, false);
 		}
-		refilter();
+
+		if (changed) {
+			refilter();
+		}
 	}
 
 	@Nullable

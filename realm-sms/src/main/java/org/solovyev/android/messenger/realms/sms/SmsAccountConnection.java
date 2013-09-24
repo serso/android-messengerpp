@@ -8,16 +8,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
@@ -35,19 +30,18 @@ import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.App.getChatMessageService;
 import static org.solovyev.android.messenger.entities.EntityImpl.generateEntityId;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_RECEIVED;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
+import static org.solovyev.android.messenger.users.User.PROPERTY_FIRST_NAME;
+import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
+import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
 import static org.solovyev.android.messenger.users.UserService.NO_ACCOUNT_USER_ID;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
@@ -193,7 +187,9 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 		final SmsAccount account = getAccount();
 
 		final List<AProperty> properties = new ArrayList<AProperty>();
-		properties.add(newProperty(User.PROPERTY_PHONES, phone));
+		properties.add(newProperty(PROPERTY_FIRST_NAME, phone));
+		properties.add(newProperty(PROPERTY_PHONE, phone));
+		properties.add(newProperty(PROPERTY_PHONES, phone));
 
 		return newUser(newEntity(account.getId(), NO_ACCOUNT_USER_ID, generateEntityId(account.getId(), phone)), Users.newNeverSyncedUserSyncData(), properties);
 	}
@@ -204,20 +200,20 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 			@Override
 			public boolean apply(@Nullable User contact) {
 				if (contact != null) {
-					// first try find by 'phones' property
-					final String phones = contact.getPropertyValueByName(User.PROPERTY_PHONES);
+					// first try to find by default phone property
+					final String contactPhone = contact.getPropertyValueByName(PROPERTY_PHONE);
+					if (contactPhone != null && contactPhone.equals(phone)) {
+						return true;
+					}
+
+					// then try find by 'phones' property
+					final String phones = contact.getPropertyValueByName(PROPERTY_PHONES);
 					if (phones != null) {
-						for (String contactPhone : Splitter.on(User.PROPERTY_PHONES_SEPARATOR).omitEmptyStrings().split(phones)) {
-							if (contactPhone.equals(phone)) {
+						for (String userPhone: Splitter.on(User.PROPERTY_PHONES_SEPARATOR).omitEmptyStrings().split(phones)) {
+							if (userPhone.equals(phone)) {
 								return true;
 							}
 						}
-					}
-
-					// then by default phone property
-					final String contactPhone = contact.getPropertyValueByName(User.PROPERTY_PHONE);
-					if (contactPhone != null && contactPhone.equals(phone)) {
-						return true;
 					}
 
 					return false;

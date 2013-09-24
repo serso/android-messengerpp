@@ -6,27 +6,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Singleton;
-
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.AbstractDbQuery;
-import org.solovyev.android.db.AbstractObjectDbExec;
-import org.solovyev.android.db.AbstractSQLiteHelper;
-import org.solovyev.android.db.AndroidDbUtils;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.db.DeleteAllRowsDbExec;
-import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
@@ -35,10 +22,14 @@ import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.collections.Collections;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * User: serso
@@ -196,6 +187,11 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
 
 		return result;
+	}
+
+	@Override
+	public void updateUserOnlineStatus(@Nonnull User user) {
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new InsertOrUpdateOnlineStatus(user));
 	}
 
     /*
@@ -454,6 +450,21 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		@Override
 		public boolean apply(@javax.annotation.Nullable User user) {
 			return user != null && userId.equals(user.getEntity().getEntityId());
+		}
+	}
+
+	private static class InsertOrUpdateOnlineStatus extends AbstractObjectDbExec<User> {
+
+		protected InsertOrUpdateOnlineStatus(@Nonnull User object) {
+			super(object);
+		}
+
+		@Override
+		public long exec(@Nonnull SQLiteDatabase db) {
+			final ContentValues values = new ContentValues();
+			values.put("property_name", User.PROPERTY_ONLINE);
+			values.put("property_value", String.valueOf(getNotNullObject().isOnline()));
+			return db.replace("user_properties", null, values);
 		}
 	}
 
