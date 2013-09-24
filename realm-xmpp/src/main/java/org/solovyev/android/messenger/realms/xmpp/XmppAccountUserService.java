@@ -24,8 +24,9 @@ import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.Properties;
 import org.solovyev.android.security.base64.ABase64StringEncoder;
+
+import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
  * User: serso
@@ -60,7 +61,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	private static boolean isUserOnline(@Nonnull Account account, @Nonnull Roster roster, @Nonnull final Entity entity) {
 		final boolean online;
-		if (account.getUser().getEntity().equals(entity)) {
+		if (account.isAccountUser(entity)) {
 			// realm user => always online
 			online = true;
 		} else {
@@ -107,23 +108,23 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		private final Account account;
 
 		@Nonnull
-		private final String realmUserId;
+		private final String accountUserId;
 
-		public UserLoader(@Nonnull Account account, @Nonnull String realmUserId) {
+		public UserLoader(@Nonnull Account account, @Nonnull String accountUserId) {
 			this.account = account;
-			this.realmUserId = realmUserId;
+			this.accountUserId = accountUserId;
 		}
 
 		@Override
 		public User call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 			final User result;
 
-			if (account.getUser().getEntity().getAccountEntityId().equals(realmUserId)) {
+			if (account.isAccountUser(accountUserId)) {
 				// realm user cannot be found in roster ->  information should be loaded separately
-				result = toAccountUser(account.getId(), realmUserId, null, connection);
+				result = toAccountUser(account.getId(), accountUserId, null, connection);
 			} else {
 				// try to find user contacts in roster
-				final RosterEntry entry = connection.getRoster().getEntry(realmUserId);
+				final RosterEntry entry = connection.getRoster().getEntry(accountUserId);
 				if (entry != null) {
 					result = toUser(account.getId(), entry.getUser(), entry.getName(), connection, account);
 				} else {
@@ -136,9 +137,9 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	}
 
 	@Nonnull
-	public static User toUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, @Nonnull Connection connection, @Nonnull Account account) throws XMPPException {
-		final Entity entity = EntityImpl.newInstance(realmId, realmUserId);
-		final List<AProperty> properties = loadUserProperties(true, realmUserId, isUserOnline(account, connection.getRoster(), entity), connection, name);
+	public static User toUser(@Nonnull String realmId, @Nonnull String accountUserId, @Nullable String name, @Nonnull Connection connection, @Nonnull Account account) throws XMPPException {
+		final Entity entity = EntityImpl.newInstance(realmId, accountUserId);
+		final List<AProperty> properties = loadUserProperties(true, accountUserId, isUserOnline(account, connection.getRoster(), entity), connection, name);
 		return Users.newUser(entity, Users.newNeverSyncedUserSyncData(), properties);
 	}
 
@@ -157,7 +158,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 													  @Nullable String name) throws XMPPException {
 		final List<AProperty> result = new ArrayList<AProperty>();
 
-		result.add(Properties.newProperty(User.PROPERTY_ONLINE, String.valueOf(available)));
+		result.add(newProperty(User.PROPERTY_ONLINE, String.valueOf(available)));
 
 		if (loadVCard) {
 			try {
@@ -166,16 +167,16 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 				userCard.load(connection, realmUserId);
 
-				result.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
-				result.add(Properties.newProperty(User.PROPERTY_LAST_NAME, userCard.getLastName()));
-				result.add(Properties.newProperty(User.PROPERTY_NICKNAME, userCard.getNickName()));
-				result.add(Properties.newProperty(User.PROPERTY_EMAIL, userCard.getEmailHome()));
-				result.add(Properties.newProperty(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
-				result.add(Properties.newProperty(XmppRealm.USER_PROPERTY_AVATAR_HASH, userCard.getAvatarHash()));
+				result.add(newProperty(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
+				result.add(newProperty(User.PROPERTY_LAST_NAME, userCard.getLastName()));
+				result.add(newProperty(User.PROPERTY_NICKNAME, userCard.getNickName()));
+				result.add(newProperty(User.PROPERTY_EMAIL, userCard.getEmailHome()));
+				result.add(newProperty(User.PROPERTY_PHONE, userCard.getPhoneHome("VOICE")));
+				result.add(newProperty(XmppRealm.USER_PROPERTY_AVATAR_HASH, userCard.getAvatarHash()));
 
 				final byte[] avatar = userCard.getAvatar();
 				if (avatar != null) {
-					result.add(Properties.newProperty(XmppRealm.USER_PROPERTY_AVATAR_BASE64, ABase64StringEncoder.getInstance().convert(avatar)));
+					result.add(newProperty(XmppRealm.USER_PROPERTY_AVATAR_BASE64, ABase64StringEncoder.getInstance().convert(avatar)));
 				}
 
 				// full name

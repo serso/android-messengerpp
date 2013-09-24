@@ -60,6 +60,9 @@ public interface Account<C extends AccountConfiguration> extends MessengerEntity
 	@Nonnull
 	Account copyForNewState(@Nonnull AccountState newState);
 
+	boolean isAccountUser(@Nonnull String accountUserId);
+	boolean isAccountUser(@Nonnull Entity entity);
+
 	/*
 	**********************************************************************
 	*

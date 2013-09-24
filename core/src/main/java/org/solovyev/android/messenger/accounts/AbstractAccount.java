@@ -221,4 +221,14 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 		// todo serso: set proper title
 		return 0;
 	}
+
+	@Override
+	public final boolean isAccountUser(@Nonnull String accountUserId) {
+		return getUser().getEntity().getAccountEntityId().equals(accountUserId);
+	}
+
+	@Override
+	public final boolean isAccountUser(@Nonnull Entity entity) {
+		return getUser().getEntity().equals(entity);
+	}
 }

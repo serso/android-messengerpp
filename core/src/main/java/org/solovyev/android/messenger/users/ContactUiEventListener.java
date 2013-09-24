@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.users;
 
+import android.support.v4.app.Fragment;
 import roboguice.RoboGuice;
 import roboguice.event.EventListener;
 import roboguice.event.EventManager;
@@ -19,6 +20,7 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatUiEventType;
+import org.solovyev.common.Builder;
 
 /**
  * User: serso
@@ -49,6 +51,15 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 				case contact_clicked:
 					if (account.isCompositeUser(contact)) {
 						if (!account.isCompositeUserDefined(contact)) {
+							if(activity.isDualPane()) {
+								activity.getMultiPaneFragmentManager().setSecondFragment(new Builder<Fragment>() {
+									@Nonnull
+									@Override
+									public Fragment build() {
+										return MessengerCompositeContactFragment.newForContact(contact);
+									}
+								}, null, MessengerCompositeContactFragment.FRAGMENT_TAG);
+							}
 							fireEvent(ContactUiEventType.newShowCompositeUserDialog(contact));
 						} else {
 							fireEvent(ContactUiEventType.newOpenContactChat(contact));
