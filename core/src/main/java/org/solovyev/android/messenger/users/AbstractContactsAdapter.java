@@ -24,6 +24,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
 
 /**
@@ -32,6 +33,9 @@ import static org.solovyev.android.messenger.users.UserEventType.unread_messages
  * Time: 5:55 PM
  */
 public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> {
+
+	@Nonnull
+	private static final String TAG = newTag("ContactsAdapter");
 
 	@Nonnull
 	private static final String MODE = "mode";
@@ -46,6 +50,9 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	@Override
 	public void onEvent(@Nonnull UserEvent event) {
 		super.onEvent(event);
+
+		Log.i(TAG, "Event received: " + event.getType());
+		Log.i(TAG, "Shown contacts before event: " + getCount());
 
 		final UserEventType type = event.getType();
 		final User eventUser = event.getUser();
@@ -89,7 +96,6 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				onContactsPresenceChanged(event);
 				break;
 		}
-
 	}
 
 	@Override
@@ -127,9 +133,13 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 		}
 	}
 
-	private void onContactPresenceChanged(@Nonnull UserEvent event) {
-		final User contact = event.getDataAsUser();
-		onContactChanged(event, contact);
+	public void refilter() {
+		this.getFilter().filter(getFilterText(), new Filter.FilterListener() {
+			@Override
+			public void onFilterComplete(int count) {
+				Log.i(TAG, "Shown contacts after filter: " + count);
+			}
+		});
 	}
 
 	private void onContactsPresenceChanged(@Nonnull UserEvent event) {

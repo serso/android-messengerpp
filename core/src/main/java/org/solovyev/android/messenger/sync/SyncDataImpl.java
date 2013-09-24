@@ -10,15 +10,15 @@ import javax.annotation.Nonnull;
 public class SyncDataImpl implements SyncData {
 
 	@Nonnull
-	private final String realmId;
+	private final String accountId;
 
-	public SyncDataImpl(@Nonnull String realmId) {
-		this.realmId = realmId;
+	public SyncDataImpl(@Nonnull String accountId) {
+		this.accountId = accountId;
 	}
 
 	@Nonnull
 	@Override
-	public String getRealmId() {
-		return this.realmId;
+	public String getAccountId() {
+		return this.accountId;
 	}
 }

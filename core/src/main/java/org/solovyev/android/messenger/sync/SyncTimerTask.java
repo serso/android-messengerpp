@@ -9,8 +9,11 @@ import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
+
+import static org.solovyev.android.messenger.App.getAccountService;
 
 /**
  * User: serso
@@ -30,17 +33,14 @@ public class SyncTimerTask extends TimerTask {
 	public void run() {
 		final Context context = this.contextRef.get();
 		if (context != null) {
-			for (Realm realm : RoboGuice.getInjector(context).getInstance(RealmService.class).getRealms()) {
-				final SyncData syncData = new SyncDataImpl(realm.getId());
+			for (Account account: getAccountService().getEnabledAccounts()) {
+				final SyncData syncData = new SyncDataImpl(account.getId());
 
 				for (SyncTask syncTask : SyncTask.values()) {
 					if (syncTask.isTime(syncData)) {
-						Log.i("SyncTask", "Sync task started: " + syncTask);
 						syncTask.doTask(syncData);
-						Log.i("SyncTask", "Sync task ended: " + syncTask);
 					}
 				}
-
 			}
 		}
 	}

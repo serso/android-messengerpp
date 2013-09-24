@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
@@ -23,6 +22,8 @@ import org.solovyev.common.security.CiphererException;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static org.solovyev.android.messenger.App.newTag;
 
 /**
  * User: serso
@@ -48,7 +49,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	public static final String INTENT_DELIVERED = "SMS_DELIVERED";
 	public static final String INTENT_EXTRA_SMS_ID = "sms_id";
 	public static final String INTENT_EXTRA_PDUS ="pdus";
-	public static final String TAG = App.TAG + "/SmsRealm";
+	public static final String TAG = newTag("SmsRealm");
 
 	/*
 	**********************************************************************

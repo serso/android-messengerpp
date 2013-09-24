@@ -119,6 +119,11 @@ public final class App {
 	**********************************************************************
 	*/
 
+	@Nonnull
+	public static String newTag(@Nonnull String tag) {
+		return TAG + "/" + tag;
+	}
+
 	public static void init(@Nonnull MessengerApplication application) {
 		instance.init0(application);
 	}

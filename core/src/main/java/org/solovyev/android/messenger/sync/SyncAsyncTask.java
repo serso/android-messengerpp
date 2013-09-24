@@ -9,6 +9,8 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
+import static org.solovyev.android.messenger.App.getAccountService;
+
 /**
  * User: serso
  * Date: 6/1/12
@@ -27,7 +29,7 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doWork(@Nonnull List<Void> voids) {
-		for (Account account : App.getAccountService().getEnabledAccounts()) {
+		for (Account account : getAccountService().getEnabledAccounts()) {
 			final SyncData syncData = new SyncDataImpl(account.getId());
 
 			for (SyncTask syncTask : syncTasks) {

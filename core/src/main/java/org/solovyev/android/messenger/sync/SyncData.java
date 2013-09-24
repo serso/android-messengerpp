@@ -10,5 +10,5 @@ import javax.annotation.Nonnull;
 public interface SyncData {
 
 	@Nonnull
-	String getRealmId();
+	String getAccountId();
 }
