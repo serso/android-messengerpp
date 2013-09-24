@@ -219,6 +219,15 @@ public class DefaultUserService implements UserService {
 			userDao.updateUser(user);
 		}
 
+		synchronized (usersCache) {
+			usersCache.put(user.getEntity(), user);
+		}
+		for (Account account : accountService.getAccounts()) {
+			if(account.getUser().equals(user)) {
+				account.setUser(user);
+			}
+		}
+
 		if (fireChangeEvent) {
 			listeners.fireEvent(UserEventType.changed.newEvent(user));
 		}
