@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +95,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 				}
 
 			} catch (AccountException e) {
-				e.printStackTrace();
+				Log.e(SmsRealm.TAG, e.getMessage(), e);
 			}
 		}
 	}

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.solovyev.android.messenger.MessengerApplication;
 import org.solovyev.android.messenger.accounts.AbstractRealm;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.accounts.Account;
@@ -44,6 +46,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	public static final String INTENT_DELIVERED = "SMS_DELIVERED";
 	public static final String INTENT_EXTRA_SMS_ID = "sms_id";
 	public static final String INTENT_EXTRA_PDUS ="pdus";
+	public static final String TAG = MessengerApplication.TAG + "/SmsRealm";
 
 	/*
 	**********************************************************************
