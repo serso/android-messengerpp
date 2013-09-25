@@ -60,7 +60,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 	private volatile ReportsBroadcastReceiver receiver;
 
 	SmsAccountConnection(@Nonnull SmsAccount account, @Nonnull Context context) {
-		super(account, context);
+		super(account, context, false);
 	}
 
 	@Override

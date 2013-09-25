@@ -113,7 +113,7 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 				break;
 			case NOT_CONNECTED:
 				notificationService.add(NO_INTERNET_NOTIFICATION);
-				accountConnections.tryStopAll();
+				accountConnections.onNoInternetConnection();
 				break;
 		}
 	}

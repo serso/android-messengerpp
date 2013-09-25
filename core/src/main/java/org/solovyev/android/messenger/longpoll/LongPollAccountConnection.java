@@ -25,7 +25,7 @@ public abstract class LongPollAccountConnection extends AbstractAccountConnectio
 	protected LongPollAccountConnection(@Nonnull Account account,
 										@Nonnull Context context,
 										@Nonnull RealmLongPollService realmLongPollService) {
-		super(account, context);
+		super(account, context, true);
 		this.realmLongPollService = realmLongPollService;
 	}
 

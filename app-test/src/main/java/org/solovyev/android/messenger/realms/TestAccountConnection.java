@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnect
 public class TestAccountConnection extends AbstractAccountConnection<TestAccount> {
 
 	public TestAccountConnection(@Nonnull TestAccount account, @Nonnull Context context) {
-		super(account, context);
+		super(account, context, false);
 	}
 
 	@Override

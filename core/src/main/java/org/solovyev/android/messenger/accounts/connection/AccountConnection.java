@@ -36,4 +36,6 @@ public interface AccountConnection {
 	void stop();
 
 	boolean isStopped();
+
+	boolean isInternetConnectionRequired();
 }

@@ -28,9 +28,12 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 	@Nonnull
 	private final AtomicBoolean stopped = new AtomicBoolean(true);
 
-	protected AbstractAccountConnection(@Nonnull A account, @Nonnull Context context) {
+	private final boolean internetConnectionRequired;
+
+	protected AbstractAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
 		this.account = account;
 		this.context = context;
+		this.internetConnectionRequired = internetConnectionRequired;
 	}
 
 	@Nonnull
@@ -66,5 +69,10 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 		if (stopped.compareAndSet(false, true)) {
 			stopWork();
 		}
+	}
+
+	@Override
+	public boolean isInternetConnectionRequired() {
+		return internetConnectionRequired;
 	}
 }

@@ -185,6 +185,16 @@ final class AccountConnections {
 		}
 	}
 
+	public void onNoInternetConnection() {
+		synchronized (this.accountConnections) {
+			for (AccountConnection accountConnection : accountConnections) {
+				if (accountConnection.isInternetConnectionRequired() && !accountConnection.isStopped()) {
+					accountConnection.stop();
+				}
+			}
+		}
+	}
+
 	public void tryStopFor(@Nonnull Account account) {
 		synchronized (this.accountConnections) {
 			for (AccountConnection accountConnection : accountConnections) {

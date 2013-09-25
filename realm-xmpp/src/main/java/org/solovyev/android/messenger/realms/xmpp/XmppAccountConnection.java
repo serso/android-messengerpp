@@ -37,7 +37,7 @@ public class XmppAccountConnection extends LoopedAbstractAccountConnection<XmppA
 	private final RosterListener rosterListener;
 
 	public XmppAccountConnection(@Nonnull XmppAccount account, @Nonnull Context context) {
-		super(account, context);
+		super(account, context, true);
 		chatListener = new XmppChatListener(account);
 		rosterListener = new XmppRosterListener(account);
 	}

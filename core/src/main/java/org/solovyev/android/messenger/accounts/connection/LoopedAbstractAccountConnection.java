@@ -9,8 +9,8 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 public abstract class LoopedAbstractAccountConnection<A extends Account> extends AbstractAccountConnection<A> {
 
-	protected LoopedAbstractAccountConnection(@Nonnull A account, @Nonnull Context context) {
-		super(account, context);
+	protected LoopedAbstractAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
+		super(account, context, internetConnectionRequired);
 	}
 
 	@Override
