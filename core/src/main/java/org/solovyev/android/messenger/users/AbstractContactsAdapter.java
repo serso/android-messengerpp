@@ -13,6 +13,7 @@ import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
+import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -24,6 +25,7 @@ import java.util.List;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
+import static org.solovyev.common.collections.Collections.isEmpty;
 
 /**
  * User: serso
@@ -70,19 +72,21 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				// first - filter contacts which can be added
 				// then - transform user objects to list items objects
 				final List<User> contacts = event.getDataAsUsers();
-				addAll(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
-					@Override
-					public boolean apply(@Nullable User contact) {
-						assert contact != null;
-						return canAddContact(contact);
-					}
-				}), new Function<User, ContactListItem>() {
-					@Override
-					public ContactListItem apply(@Nullable User contact) {
-						assert contact != null;
-						return ContactListItem.newInstance(contact);
-					}
-				})));
+				if (!Collections.isEmpty(contacts)) {
+					addAll(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
+						@Override
+						public boolean apply(@Nullable User contact) {
+							assert contact != null;
+							return canAddContact(contact);
+						}
+					}), new Function<User, ContactListItem>() {
+						@Override
+						public ContactListItem apply(@Nullable User contact) {
+							assert contact != null;
+							return ContactListItem.newInstance(contact);
+						}
+					})));
+				}
 				break;
 			case changed:
 				// change of user is frequent operation - to avoid heavy work on main thread let's

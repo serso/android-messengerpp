@@ -264,7 +264,7 @@ public class DefaultUserService implements UserService {
 			synchronized (lock) {
 				result = userDao.loadUserContacts(user.getEntityId());
 			}
-
+			calculateDisplayNames(result);
 			userContactsCache.update(user, new WholeListUpdater<User>(result));
 		}
 
@@ -311,6 +311,7 @@ public class DefaultUserService implements UserService {
 		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getAccountEntityId());
 
 		if (!contacts.isEmpty()) {
+			calculateDisplayNames(contacts);
 			userContactsCache.update(user, new WholeListUpdater<User>(contacts));
 
 			mergeUserContacts(user, contacts, false, true);
@@ -319,6 +320,13 @@ public class DefaultUserService implements UserService {
 		}
 
 		return java.util.Collections.unmodifiableList(contacts);
+	}
+
+	private void calculateDisplayNames(@Nonnull List<User> contacts) {
+		for (User contact : contacts) {
+			// update cached value
+			contact.getDisplayName();
+		}
 	}
 
 	@Override

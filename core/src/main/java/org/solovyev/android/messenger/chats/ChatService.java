@@ -10,12 +10,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
+
+import static org.solovyev.android.messenger.App.newTag;
 
 /**
  * User: serso
@@ -30,7 +33,7 @@ import org.solovyev.common.listeners.JEventListeners;
 public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, ChatEvent> {
 
 	@Nonnull
-	static final String TAG = "ChatService";
+	static final String TAG = newTag("ChatService");
 
 
 	// initial initialization: will be called once on application start

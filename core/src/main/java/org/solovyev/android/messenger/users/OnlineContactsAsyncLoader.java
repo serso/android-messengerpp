@@ -39,7 +39,7 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 
 		for (User user : accountService.getEnabledAccountUsers()) {
 			for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
-				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
+				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
 			}
 		}
 

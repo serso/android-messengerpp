@@ -35,7 +35,7 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactLi
 
 		for (User user : accountService.getEnabledAccountUsers()) {
 			for (User contact : userService.getUserContacts(user.getEntity())) {
-				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity()), contact.getDisplayName()));
+				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
 			}
 		}
 

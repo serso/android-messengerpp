@@ -647,9 +647,28 @@ public class DefaultChatService implements ChatService {
 		public void onEvent(@Nonnull UserEvent event) {
 			final User eventUser = event.getUser();
 
-			if (event.getType() == UserEventType.changed) {
-				chatParticipantsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
+			switch (event.getType()) {
+				case changed:
+					chatParticipantsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
+					break;
+				case contact_added:
+					onContactAdded(eventUser, event.getDataAsUser());
+					break;
+				case contact_added_batch:
+					for (User contact : event.getDataAsUsers()) {
+						onContactAdded(eventUser, contact);
+					}
+					break;
 			}
+		}
+	}
+
+	private void onContactAdded(@Nonnull User user, @Nonnull User contact) {
+		try {
+			final Entity contactEntity = contact.getEntity();
+			getPrivateChat(user.getEntity(), contactEntity);
+		} catch (AccountException e) {
+			Log.e(TAG, e.getMessage(), e);
 		}
 	}
 

@@ -462,8 +462,10 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
 			final ContentValues values = new ContentValues();
+			final User user = getNotNullObject();
+			values.put("user_id", user.getId());
 			values.put("property_name", User.PROPERTY_ONLINE);
-			values.put("property_value", String.valueOf(getNotNullObject().isOnline()));
+			values.put("property_value", String.valueOf(user.isOnline()));
 			return db.replace("user_properties", null, values);
 		}
 	}

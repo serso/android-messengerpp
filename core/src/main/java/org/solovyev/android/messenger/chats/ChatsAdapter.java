@@ -35,26 +35,25 @@ public class ChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*imple
 	/*@Override*/
 	public void onEvent(@Nonnull UserEvent event) {
 		final User eventUser = event.getUser();
-
-		if (event.isOfType(UserEventType.chat_removed)) {
-			final String chatId = event.getDataAsChatId();
-			removeListItem(eventUser, chatId);
-		}
-
-		if (event.isOfType(UserEventType.chat_added)) {
-			final Chat chat = event.getDataAsChat();
-			addListItem(eventUser, chat);
-		}
-
-		if (event.isOfType(UserEventType.chat_added_batch)) {
-			final List<Chat> chats = event.getDataAsChats();
-			addListItems(Lists.transform(chats, new Function<Chat, ChatListItem>() {
-				@Override
-				public ChatListItem apply(@javax.annotation.Nullable Chat chat) {
-					assert chat != null;
-					return ChatListItem.newInstance(eventUser, chat);
-				}
-			}));
+		switch (event.getType()) {
+			case chat_removed:
+				final String chatId = event.getDataAsChatId();
+				removeListItem(eventUser, chatId);
+				break;
+			case chat_added:
+				final Chat chat = event.getDataAsChat();
+				addListItem(eventUser, chat);
+				break;
+			case chat_added_batch:
+				final List<Chat> chats = event.getDataAsChats();
+				addAll(Lists.transform(chats, new Function<Chat, ChatListItem>() {
+					@Override
+					public ChatListItem apply(@javax.annotation.Nullable Chat chat) {
+						assert chat != null;
+						return ChatListItem.newInstance(eventUser, chat);
+					}
+				}));
+				break;
 		}
 	}
 
