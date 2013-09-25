@@ -16,6 +16,7 @@ import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.packet.VCard;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.entities.Entity;
@@ -26,6 +27,8 @@ import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.security.base64.ABase64StringEncoder;
 
+import static org.solovyev.android.messenger.App.newSubTag;
+import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
@@ -34,9 +37,6 @@ import static org.solovyev.android.properties.Properties.newProperty;
  * Time: 8:45 PM
  */
 class XmppAccountUserService extends AbstractXmppRealmService implements AccountUserService {
-
-	@Nonnull
-	private static final String TAG = "M++/" + XmppAccountUserService.class.getSimpleName();
 
 	XmppAccountUserService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware) {
 		super(realm, connectionAware);
@@ -56,7 +56,17 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	private static User checkPresence(@Nonnull Account account, @Nonnull Roster roster, @Nonnull final User user) {
-		return user.cloneWithNewStatus(isUserOnline(account, roster, user.getEntity()));
+		final boolean online = isUserOnline(account, roster, user.getEntity());
+		logUserPresence("XmppAccountUserService", account, online, user.getLogin());
+		return user.cloneWithNewStatus(online);
+	}
+
+	public static void logUserPresence(@Nonnull String subTag, @Nonnull Account account, boolean online, @Nonnull String userName) {
+		if(online) {
+			Log.d(newSubTag(TAG, subTag), "User online: " + userName + " in account: " + account.getUser().getDisplayName());
+		} else {
+			Log.d(newSubTag(TAG, subTag), "User offline: " + userName + " in account: " + account.getUser().getDisplayName());
+		}
 	}
 
 	private static boolean isUserOnline(@Nonnull Account account, @Nonnull Roster roster, @Nonnull final Entity entity) {

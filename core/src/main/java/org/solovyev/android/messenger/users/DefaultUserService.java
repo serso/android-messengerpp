@@ -284,7 +284,17 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, final boolean available) {
-		this.listeners.fireEvent(contacts_presence_changed.newEvent(user, Arrays.asList(contact)));
+		onContactsPresenceChanged(user, Arrays.asList(contact.cloneWithNewStatus(available)));
+	}
+
+	private void onContactsPresenceChanged(@Nonnull User user, @Nonnull List<User> contacts) {
+		synchronized (lock) {
+			for (User contact : contacts) {
+				userDao.updateUserOnlineStatus(contact);
+			}
+		}
+
+		listeners.fireEvent(contacts_presence_changed.newEvent(user, contacts));
 	}
 
     /*
@@ -446,11 +456,7 @@ public class DefaultUserService implements UserService {
 
 		final User user = getUserById(userEntity);
 
-		for (User contact : contacts) {
-			userDao.updateUserOnlineStatus(contact);
-		}
-
-		listeners.fireEvent(contacts_presence_changed.newEvent(user, contacts));
+		onContactsPresenceChanged(user, contacts);
 	}
 
     /*

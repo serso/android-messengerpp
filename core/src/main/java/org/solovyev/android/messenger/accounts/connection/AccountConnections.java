@@ -51,7 +51,7 @@ final class AccountConnections {
 	private static final int RETRY_CONNECTION_ATTEMPT_COUNT = 5;
 
 	// seconds
-	private static final int POST_START_DELAY = 3;
+	private static final int POST_START_DELAY = 20;
 
     /*
     **********************************************************************

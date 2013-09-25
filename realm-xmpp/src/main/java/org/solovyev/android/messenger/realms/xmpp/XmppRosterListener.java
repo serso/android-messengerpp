@@ -22,6 +22,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import static org.solovyev.android.messenger.realms.xmpp.XmppAccountUserService.logUserPresence;
+
 /**
  * User: serso
  * Date: 3/4/13
@@ -79,11 +81,12 @@ class XmppRosterListener implements RosterListener {
 
 	@Override
 	public void presenceChanged(@Nonnull final Presence presence) {
-		Log.d(TAG, "presenceChanged() called");
 		final String accountUserId = presence.getFrom();
 
 		final User contact = getUserService().getUserById(account.newUserEntity(accountUserId));
-		getUserService().onContactPresenceChanged(account.getUser(), contact, presence.isAvailable());
+		final boolean online = presence.isAvailable();
+		logUserPresence("XmppRosterListener", account, online, contact.getLogin());
+		getUserService().onContactPresenceChanged(account.getUser(), contact, online);
 	}
 
 	@Nonnull

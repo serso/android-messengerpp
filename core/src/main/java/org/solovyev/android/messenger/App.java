@@ -121,7 +121,12 @@ public final class App {
 
 	@Nonnull
 	public static String newTag(@Nonnull String tag) {
-		return TAG + "/" + tag;
+		return newSubTag(TAG, tag);
+	}
+
+	@Nonnull
+	public static String newSubTag(@Nonnull String tag, @Nonnull String subTag) {
+		return tag + "/" + subTag;
 	}
 
 	public static void init(@Nonnull MessengerApplication application) {

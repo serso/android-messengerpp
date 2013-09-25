@@ -29,6 +29,8 @@ import org.solovyev.common.security.CiphererException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static org.solovyev.android.messenger.App.newTag;
+
 /**
  * User: serso
  * Date: 2/24/13
@@ -50,6 +52,7 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 	@Nonnull
 	static final String REALM_ID = "xmpp";
+	public static final String TAG = newTag("XMPP");
 
     /*
     **********************************************************************
