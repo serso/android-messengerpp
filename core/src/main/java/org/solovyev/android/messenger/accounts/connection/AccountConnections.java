@@ -87,7 +87,7 @@ final class AccountConnections {
 		this.context = context.getApplicationContext();
 	}
 
-	public void startConnectionsFor(@Nonnull Collection<Account> accounts, boolean start) {
+	public void startConnectionsFor(@Nonnull Collection<Account> accounts, boolean internetConnectionExists) {
 		synchronized (accountConnections) {
 			for (final Account account : accounts) {
 				// are there any realm connections for current realm?
@@ -99,7 +99,7 @@ final class AccountConnections {
 
 					accountConnections.add(accountConnection);
 
-					if (start) {
+					if (internetConnectionExists || !accountConnection.isInternetConnectionRequired()) {
 						startAccountConnection(accountConnection);
 					}
 				}

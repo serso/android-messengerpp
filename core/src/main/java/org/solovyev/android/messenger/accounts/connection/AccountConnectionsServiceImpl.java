@@ -92,8 +92,8 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 	}
 
 	private void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
-		final boolean start = canStartConnection();
-		accountConnections.startConnectionsFor(accounts, start);
+		final boolean internetConnectionExists = canStartConnection();
+		accountConnections.startConnectionsFor(accounts, internetConnectionExists);
 	}
 
 	private boolean canStartConnection() {
