@@ -96,8 +96,8 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public Entity newRealmEntity(@Nonnull String realmEntityId) {
-		return EntityImpl.newEntity(getId(), realmEntityId);
+	public Entity newRealmEntity(@Nonnull String accountEntityId) {
+		return EntityImpl.newEntity(getId(), accountEntityId);
 	}
 
 	@Nonnull
@@ -108,26 +108,26 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public Entity newUserEntity(@Nonnull String realmUserId) {
-		return newRealmEntity(realmUserId);
+	public Entity newUserEntity(@Nonnull String accountUserId) {
+		return newRealmEntity(accountUserId);
 	}
 
 	@Nonnull
 	@Override
-	public Entity newChatEntity(@Nonnull String realmUserId) {
-		return newRealmEntity(realmUserId);
+	public Entity newChatEntity(@Nonnull String accountUserId) {
+		return newRealmEntity(accountUserId);
 	}
 
 	@Nonnull
 	@Override
-	public Entity newMessageEntity(@Nonnull String realmMessageId) {
-		return newRealmEntity(realmMessageId);
+	public Entity newMessageEntity(@Nonnull String accountMessageId) {
+		return newRealmEntity(accountMessageId);
 	}
 
 	@Nonnull
 	@Override
-	public Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId) {
-		return newRealmEntity(realmMessageId, entityId);
+	public Entity newMessageEntity(@Nonnull String accountMessageId, @Nonnull String entityId) {
+		return newRealmEntity(accountMessageId, entityId);
 	}
 
 	@Nonnull

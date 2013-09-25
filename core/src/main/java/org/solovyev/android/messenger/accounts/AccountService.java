@@ -24,6 +24,8 @@ public interface AccountService {
 	@Nonnull
 	static String TAG = "AccountService";
 
+	String NO_ACCOUNT_ID = "empty";
+
 	/**
 	 * Method initializes service, must be called once before any other operations with current service
 	 */

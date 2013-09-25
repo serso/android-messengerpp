@@ -165,6 +165,16 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		if (user != null) {
+			final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
+			eventManager.fire(ContactUiEventType.newContactClicked(user));
+		}
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
@@ -192,13 +202,10 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 	private void onChoiceSelected(@Nonnull CompositeUserChoice compositeUserChoice) {
 		if (user != null && account != null) {
-			final User newUser = account.applyCompositeChoice(compositeUserChoice, user);
+			user = account.applyCompositeChoice(compositeUserChoice, this.user);
 			if (account.isCompositeUserChoicePersisted() && doNotAskAgain) {
-				userService.updateUser(newUser);
+				userService.updateUser(user);
 			}
-
-			final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
-			eventManager.fire(ContactUiEventType.newContactClicked(newUser));
 		}
 	}
 }

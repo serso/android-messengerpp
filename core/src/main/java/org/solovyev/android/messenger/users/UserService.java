@@ -31,8 +31,6 @@ public interface UserService {
 
 	final String TAG = newTag("UserService");
 
-	final String NO_ACCOUNT_USER_ID = "empty";
-
 
 	// initial initialization: will be called once on application start
 	void init();

@@ -28,23 +28,26 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static android.telephony.SmsMessage.createFromPdu;
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.App.getChatMessageService;
 import static org.solovyev.android.messenger.entities.EntityImpl.generateEntityId;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.User.PROPERTY_FIRST_NAME;
+import static org.solovyev.android.messenger.users.User.PROPERTY_ONLINE;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
-import static org.solovyev.android.messenger.users.UserService.NO_ACCOUNT_USER_ID;
+import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 /**
  * User: serso
@@ -142,13 +145,18 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 		final Bundle extras = intent.getExtras();
 		if (extras != null) {
 			final Object[] smsExtras = (Object[]) extras.get(SmsRealm.INTENT_EXTRA_PDUS);
+			final String smsFormat = extras.getString(SmsRealm.INTENT_EXTRA_FORMAT);
 
+			String fromAddress = null;
+			final StringBuilder message = new StringBuilder(255 * smsExtras.length);
 			for (Object smsExtra : smsExtras) {
-				final SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra);
-				final String message = sms.getMessageBody();
-				if (!Strings.isEmpty(message)) {
-					smss.put(sms.getOriginatingAddress(), message);
-				}
+				final SmsMessage smsPart = createFromPdu((byte[]) smsExtra);
+				message.append(smsPart.getMessageBody());
+				fromAddress = smsPart.getOriginatingAddress();
+			}
+
+			if (!isEmpty(message) && !isEmpty(fromAddress)) {
+				smss.put(fromAddress, message.toString());
 			}
 		}
 
@@ -157,11 +165,11 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 
 	@Nullable
 	private ChatMessage toChatMessage(@Nonnull String message, @Nonnull Account account, @Nonnull User from, @Nonnull User to) {
-		if (!Strings.isEmpty(message)) {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(account));
+		if (!isEmpty(message)) {
+			final LiteChatMessageImpl liteChatMessage = newMessage(getChatMessageService().generateEntity(account));
 			liteChatMessage.setBody(message);
-			liteChatMessage.setAuthor(account.newUserEntity(from.getEntity().getAccountEntityId()));
-			liteChatMessage.setRecipient(account.newUserEntity(to.getEntity().getAccountEntityId()));
+			liteChatMessage.setAuthor(from.getEntity());
+			liteChatMessage.setRecipient(to.getEntity());
 			liteChatMessage.setSendDate(DateTime.now());
 			// new message by default unread
 			return Messages.newInstance(liteChatMessage, false);
@@ -190,8 +198,9 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 		properties.add(newProperty(PROPERTY_FIRST_NAME, phone));
 		properties.add(newProperty(PROPERTY_PHONE, phone));
 		properties.add(newProperty(PROPERTY_PHONES, phone));
+		properties.add(newProperty(PROPERTY_ONLINE, String.valueOf(true)));
 
-		return newUser(newEntity(account.getId(), NO_ACCOUNT_USER_ID, generateEntityId(account.getId(), phone)), Users.newNeverSyncedUserSyncData(), properties);
+		return newUser(newEntity(account.getId(), NO_ACCOUNT_ID, generateEntityId(account.getId(), phone)), Users.newNeverSyncedUserSyncData(), properties);
 	}
 
 	@Nullable

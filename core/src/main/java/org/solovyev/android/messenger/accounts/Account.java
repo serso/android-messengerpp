@@ -35,22 +35,22 @@ public interface Account<C extends AccountConfiguration> extends MessengerEntity
 	boolean isEnabled();
 
 	@Nonnull
-	Entity newRealmEntity(@Nonnull String realmEntityId);
+	Entity newRealmEntity(@Nonnull String accountEntityId);
 
 	@Nonnull
-	Entity newRealmEntity(@Nonnull String realmEntityId, @Nonnull String entityId);
+	Entity newRealmEntity(@Nonnull String accountEntityId, @Nonnull String entityId);
 
 	@Nonnull
-	Entity newUserEntity(@Nonnull String realmUserId);
+	Entity newUserEntity(@Nonnull String accountUserId);
 
 	@Nonnull
-	Entity newChatEntity(@Nonnull String realmUserId);
+	Entity newChatEntity(@Nonnull String accountUserId);
 
 	@Nonnull
-	Entity newMessageEntity(@Nonnull String realmMessageId);
+	Entity newMessageEntity(@Nonnull String accountMessageId);
 
 	@Nonnull
-	Entity newMessageEntity(@Nonnull String realmMessageId, @Nonnull String entityId);
+	Entity newMessageEntity(@Nonnull String accountMessageId, @Nonnull String entityId);
 
 	boolean same(@Nonnull Account that);
 

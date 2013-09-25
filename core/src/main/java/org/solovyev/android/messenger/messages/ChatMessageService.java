@@ -26,8 +26,6 @@ import org.solovyev.android.messenger.entities.Entity;
 @ThreadSafe
 public interface ChatMessageService {
 
-	final String NO_ACCOUNT_MESSAGE_ID = "empty";
-
 	void init();
 
 	@Nonnull

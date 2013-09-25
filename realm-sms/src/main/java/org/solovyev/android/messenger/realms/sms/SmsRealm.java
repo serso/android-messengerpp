@@ -49,6 +49,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	public static final String INTENT_DELIVERED = "SMS_DELIVERED";
 	public static final String INTENT_EXTRA_SMS_ID = "sms_id";
 	public static final String INTENT_EXTRA_PDUS ="pdus";
+	public static final String INTENT_EXTRA_FORMAT ="format";
 	public static final String TAG = newTag("SmsRealm");
 
 	/*

@@ -92,8 +92,8 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	public Entity newUserEntity(@Nonnull String realmUserId) {
-		return newEntity(realmUserId);
+	public Entity newUserEntity(@Nonnull String accountUserId) {
+		return newEntity(accountUserId);
 	}
 
 	@Nonnull
@@ -107,8 +107,8 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	public Entity newChatEntity(@Nonnull String realmUserId) {
-		return newEntity(realmUserId);
+	public Entity newChatEntity(@Nonnull String accountUserId) {
+		return newEntity(accountUserId);
 	}
 
     /*

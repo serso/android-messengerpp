@@ -22,13 +22,13 @@ import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 /**
@@ -91,7 +91,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 		final Entity tmp = newEntity(account.getId(), String.valueOf(System.currentTimeMillis()));
 
 		// NOTE: empty account entity id in order to get real from realm service
-		return newEntity(account.getId(), ChatMessageService.NO_ACCOUNT_MESSAGE_ID, tmp.getEntityId());
+		return newEntity(account.getId(), NO_ACCOUNT_ID, tmp.getEntityId());
 	}
 
 	@Nonnull
@@ -118,7 +118,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_MESSAGE_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
+		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
 
 		message.setAuthor(user);
 		if (chat.isPrivate()) {

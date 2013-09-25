@@ -28,14 +28,12 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
-import org.solovyev.android.messenger.users.UserEventType;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
 import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
@@ -58,6 +56,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 /**
  * User: serso
@@ -500,7 +500,7 @@ public class DefaultChatService implements ChatService {
 				if (first) {
 					first = false;
 				} else {
-					return EntityImpl.newEntity(chat.getEntity().getAccountId(), userId);
+					return newEntity(chat.getEntity().getAccountId(), userId);
 				}
 			}
 		}
@@ -535,12 +535,20 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2) {
-		final String realmEntityId1 = user1.getAccountEntityId();
-		final String realmEntityId2 = user2.getAccountEntityId();
-		if (realmEntityId1.equals(realmEntityId2)) {
+		String firstPart = user1.getAccountEntityId();
+		if(AccountService.NO_ACCOUNT_ID.equals(firstPart)) {
+			firstPart = user1.getAppAccountEntityId();
+		}
+
+		String secondPart = user2.getAccountEntityId();
+		if(AccountService.NO_ACCOUNT_ID.equals(secondPart)) {
+			secondPart = user2.getAppAccountEntityId();
+		}
+
+		if (firstPart.equals(secondPart)) {
 			Log.e(TAG, "Same user in private chat " + Strings.fromStackTrace(Thread.currentThread().getStackTrace()));
 		}
-		return EntityImpl.newEntity(user1.getAccountId(), realmEntityId1 + PRIVATE_CHAT_DELIMITER + realmEntityId2);
+		return newEntity(user1.getAccountId(), firstPart + PRIVATE_CHAT_DELIMITER + secondPart);
 	}
 
 	@Nonnull

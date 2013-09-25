@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -98,10 +101,25 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
 
 		if (isDualPane()) {
 			getMultiPaneFragmentManager().emptifySecondFragment();
+		} else {
+			removeFragmentByViewId(R.id.content_second_pane);
 		}
 
 		if (isTriplePane()) {
 			getMultiPaneFragmentManager().emptifyThirdFragment();
+		} else {
+			removeFragmentByViewId(R.id.content_third_pane);
+		}
+	}
+
+	private void removeFragmentByViewId(int viewId) {
+		final FragmentManager fm = getSupportFragmentManager();
+		final Fragment fragmentById = fm.findFragmentById(viewId);
+		if (fragmentById != null) {
+			final FragmentTransaction ft = fm.beginTransaction();
+			ft.remove(fragmentById);
+			ft.commitAllowingStateLoss();
+			fm.executePendingTransactions();
 		}
 	}
 
@@ -137,15 +155,15 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
 				case shown:
 					break;
 				case started:
-                    /*if (event.getParentViewId() == R.id.content_first_pane) {
-                        // if new fragment is shown on the first pane => emptify other panes
-                        if (activity.isDualPane()) {
-                            activity.emptifySecondFragment();
-                            if ( activity.isTriplePane() ) {
-                                activity.emptifyThirdFragment();
-                            }
-                        }
-                    }*/
+/*					if (event.getParentViewId() == R.id.content_first_pane) {
+						// if new fragment is shown on the first pane => emptify other panes
+						if (activity.isDualPane()) {
+							activity.getMultiPaneFragmentManager().emptifySecondFragment();
+							if (activity.isTriplePane()) {
+								activity.getMultiPaneFragmentManager().emptifyThirdFragment();
+							}
+						}
+					}*/
 					break;
 			}
 		}

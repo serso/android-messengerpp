@@ -10,9 +10,10 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.ImageView;
+
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
@@ -56,7 +57,7 @@ final class SmsRealmIconService implements RealmIconService {
 	private Drawable loadContactPhoto(@Nonnull User user) {
 		final String accountEntityId = user.getEntity().getAccountEntityId();
 
-		if (!UserService.NO_ACCOUNT_USER_ID.equals(accountEntityId)) {
+		if (!AccountService.NO_ACCOUNT_ID.equals(accountEntityId)) {
 			try {
 				final Integer contactId = Integer.valueOf(accountEntityId);
 				final Bitmap bitmap = loadContactPhoto(contactId);
