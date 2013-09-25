@@ -83,6 +83,10 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 		return this.configuration;
 	}
 
+	public void setConfiguration(@Nonnull C configuration) {
+		this.configuration = configuration;
+	}
+
 	@Nonnull
 	@Override
 	public final AccountState getState() {
@@ -169,7 +173,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	public boolean same(@Nonnull Account r) {
 		if (r instanceof AbstractAccount) {
 			final AbstractAccount that = (AbstractAccount) r;
-			return this.configuration.equals(that.configuration);
+			return this.configuration.isSameAccount(that.configuration);
 		} else {
 			return false;
 		}

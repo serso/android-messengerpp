@@ -34,7 +34,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 		TestAccountConfiguration expectedConfig1 = new TestAccountConfiguration("test_config_field", 42);
 		final Account expected1 = testRealmDef.newAccount("test~01", Users.newEmptyUser(EntityImpl.newEntity("test~01", "user01")), expectedConfig1, AccountState.enabled);
-		accountDao.insertRealm(expected1);
+		accountDao.insertAccount(expected1);
 
 		accounts = accountDao.loadAccounts();
 		Assert.assertTrue(accounts.size() == 1);
@@ -45,7 +45,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		Assert.assertEquals("test_config_field", actual1.getConfiguration().getTestStringField());
 		Assert.assertEquals(42, actual1.getConfiguration().getTestIntField());
 
-		accountDao.deleteRealm(expected1.getId());
+		accountDao.deleteAccount(expected1.getId());
 
 		accounts = accountDao.loadAccounts();
 		Assert.assertTrue(accounts.isEmpty());
@@ -55,9 +55,9 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		int index = 0;
 		for (Realm realm : getRealmService().getRealms()) {
 			final AccountConfiguration accountConfiguration = (AccountConfiguration) realm.getConfigurationClass().newInstance();
-			final String realmId = EntityImpl.getRealmId(realm.getId(), index);
+			final String realmId = EntityImpl.getAccountId(realm.getId(), index);
 			Account expected = realm.newAccount(realmId, Users.newEmptyUser(EntityImpl.newEntity(realmId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
-			accountDao.insertRealm(expected);
+			accountDao.insertAccount(expected);
 		}
 
 		Collection<Account> accounts = accountDao.loadAccounts();

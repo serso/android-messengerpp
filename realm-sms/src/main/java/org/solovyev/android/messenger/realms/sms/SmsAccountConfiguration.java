@@ -12,6 +12,8 @@ import org.solovyev.common.JObject;
  */
 public final class SmsAccountConfiguration extends JObject implements AccountConfiguration {
 
+	private boolean stopFurtherProcessing = false;
+
 	@Nonnull
 	@Override
 	public SmsAccountConfiguration clone() {
@@ -19,12 +21,24 @@ public final class SmsAccountConfiguration extends JObject implements AccountCon
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		return o instanceof SmsAccountConfiguration;
+	public boolean isSameAccount(AccountConfiguration c) {
+		return true;
 	}
 
 	@Override
-	public int hashCode() {
-		return 0;
+	public boolean isSameCredentials(AccountConfiguration c) {
+		return isSameAccount(c);
+	}
+
+	@Override
+	public void applySystemData(AccountConfiguration oldConfiguration) {
+	}
+
+	public boolean isStopFurtherProcessing() {
+		return stopFurtherProcessing;
+	}
+
+	void setStopFurtherProcessing(boolean stopFurtherProcessing) {
+		this.stopFurtherProcessing = stopFurtherProcessing;
 	}
 }

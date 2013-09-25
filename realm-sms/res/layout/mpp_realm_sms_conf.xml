@@ -10,6 +10,11 @@
 			a:id="@+id/mpp_fragment_title"
 			style="?mpp_fragment_title" />
 
+		<CheckBox
+			a:id="@+id/mpp_sms_conf_stop_processing_checkbox"
+			a:text="Do not put SMS into system inbox"
+			style="?mpp_form_checkbox"/>
+
 		<LinearLayout
 			a:orientation="horizontal"
 			a:layout_width="match_parent"

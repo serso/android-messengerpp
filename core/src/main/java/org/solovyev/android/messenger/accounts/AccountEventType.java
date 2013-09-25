@@ -20,6 +20,8 @@ public enum AccountEventType {
 	 */
 	changed,
 
+	configuration_changed,
+
 	/**
 	 * Fires when account state is changed
 	 */

@@ -21,6 +21,7 @@
 	<attr name="mpp_form_edittext" format="reference" />
 	<attr name="mpp_form_buttons" format="reference" />
 	<attr name="mpp_form_button" format="reference" />
+	<attr name="mpp_form_checkbox" format="reference" />
 	<attr name="mpp_list_fragment" format="reference" />
 	<attr name="mpp_fragment" format="reference" />
 	<attr name="mpp_fragment_icon" format="reference" />

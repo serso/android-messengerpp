@@ -152,7 +152,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	private static List<AProperty> loadUserProperties(boolean loadVCard,
-													  @Nonnull String realmUserId,
+													  @Nonnull String accountUserId,
 													  boolean available,
 													  @Nonnull Connection connection,
 													  @Nullable String name) throws XMPPException {
@@ -165,7 +165,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 				final VCard userCard = new VCard();
 
-				userCard.load(connection, realmUserId);
+				userCard.load(connection, accountUserId);
 
 				result.add(newProperty(User.PROPERTY_FIRST_NAME, userCard.getFirstName()));
 				result.add(newProperty(User.PROPERTY_LAST_NAME, userCard.getLastName()));

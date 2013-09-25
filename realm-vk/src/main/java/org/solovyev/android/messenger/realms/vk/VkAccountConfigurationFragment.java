@@ -26,7 +26,7 @@ public class VkAccountConfigurationFragment extends BaseAccountConfigurationFrag
 
 	@Inject
 	@Nonnull
-	private VkRealm realmDef;
+	private VkRealm realm;
 
     /*
     **********************************************************************
@@ -89,6 +89,6 @@ public class VkAccountConfigurationFragment extends BaseAccountConfigurationFrag
 	@Nonnull
 	@Override
 	public Realm getRealm() {
-		return realmDef;
+		return realm;
 	}
 }

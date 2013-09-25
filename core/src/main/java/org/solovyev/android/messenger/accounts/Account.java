@@ -29,6 +29,8 @@ public interface Account<C extends AccountConfiguration> extends MessengerEntity
 	@Nonnull
 	C getConfiguration();
 
+	void setConfiguration(@Nonnull C configuration);
+
 	@Nonnull
 	AccountState getState();
 

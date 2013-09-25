@@ -62,16 +62,16 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Override
-	public void insertRealm(@Nonnull Account account) throws AccountException {
+	public void insertAccount(@Nonnull Account account) throws AccountException {
 		try {
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertRealm(account, secret)));
+			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertAccount(account, secret)));
 		} catch (AccountRuntimeException e) {
 			throw new AccountException(e);
 		}
 	}
 
 	@Override
-	public void deleteRealm(@Nonnull String accountId) {
+	public void deleteAccount(@Nonnull String accountId) {
 		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteAccount(accountId)));
 	}
 
@@ -79,7 +79,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	@Override
 	public Collection<Account> loadAccounts() {
 		try {
-			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), null, getSqliteOpenHelper()));
+			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadAccount(getContext(), null, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {
 			App.getExceptionHandler().handleException(e);
 			return Collections.emptyList();
@@ -94,7 +94,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	@Override
 	public void updateAccount(@Nonnull Account account) throws AccountException {
 		try {
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateRealm(account, secret)));
+			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateAccount(account, secret)));
 		} catch (AccountRuntimeException e) {
 			throw new AccountException(e);
 		}
@@ -104,7 +104,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	@Override
 	public Collection<Account> loadAccountsInState(@Nonnull AccountState state) {
 		try {
-			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadRealm(getContext(), state, getSqliteOpenHelper()));
+			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadAccount(getContext(), state, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {
 			App.getExceptionHandler().handleException(e);
 			return Collections.emptyList();
@@ -119,12 +119,12 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
     **********************************************************************
     */
 
-	private static class InsertRealm extends AbstractObjectDbExec<Account> {
+	private static class InsertAccount extends AbstractObjectDbExec<Account> {
 
 		@Nullable
 		private final SecretKey secret;
 
-		public InsertRealm(@Nonnull Account account, @Nullable SecretKey secret) {
+		public InsertAccount(@Nonnull Account account, @Nullable SecretKey secret) {
 			super(account);
 			this.secret = secret;
 		}
@@ -139,12 +139,12 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		}
 	}
 
-	private static class UpdateRealm extends AbstractObjectDbExec<Account> {
+	private static class UpdateAccount extends AbstractObjectDbExec<Account> {
 
 		@Nullable
 		private final SecretKey secret;
 
-		public UpdateRealm(@Nonnull Account account, @Nullable SecretKey secret) {
+		public UpdateAccount(@Nonnull Account account, @Nullable SecretKey secret) {
 			super(account);
 			this.secret = secret;
 		}
@@ -186,12 +186,12 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		return values;
 	}
 
-	private class LoadRealm extends AbstractDbQuery<Collection<Account>> {
+	private class LoadAccount extends AbstractDbQuery<Collection<Account>> {
 
 		@Nullable
 		private final AccountState state;
 
-		protected LoadRealm(@Nonnull Context context, @Nullable AccountState state, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+		protected LoadAccount(@Nonnull Context context, @Nullable AccountState state, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 			super(context, sqliteOpenHelper);
 			this.state = state;
 		}

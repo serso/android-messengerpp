@@ -2,8 +2,12 @@ package org.solovyev.android.messenger.realms.vk;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
+import org.solovyev.common.security.SecurityService;
+
+import static org.solovyev.android.messenger.App.getSecurityService;
 
 public class VkAccountConfiguration extends JObject implements AccountConfiguration {
 
@@ -60,5 +64,41 @@ public class VkAccountConfiguration extends JObject implements AccountConfigurat
 	@Nonnull
 	public String getUserId() {
 		return userId;
+	}
+
+	@Override
+	public boolean isSameAccount(AccountConfiguration c) {
+		if(c == this) return true;
+		if (!(c instanceof VkAccountConfiguration)) return false;
+
+		final VkAccountConfiguration that = (VkAccountConfiguration) c;
+
+		if (!login.equals(that.login)) return false;
+
+		return true;
+	}
+
+	@Override
+	public boolean isSameCredentials(AccountConfiguration c) {
+		boolean sameAccount = isSameAccount(c);
+		if(sameAccount) {
+			final VkAccountConfiguration that = (VkAccountConfiguration) c;
+			if(!this.password.equals(that.password)) {
+				sameAccount = false;
+			}
+		}
+		return sameAccount;
+	}
+
+	@Override
+	public void applySystemData(AccountConfiguration oldConfiguration) {
+		if(oldConfiguration instanceof VkAccountConfiguration) {
+			applySystemData((VkAccountConfiguration)oldConfiguration);
+		}
+	}
+
+	public void applySystemData(VkAccountConfiguration oldConfiguration) {
+		this.accessToken = oldConfiguration.accessToken;
+		this.userId = oldConfiguration.userId;
 	}
 }

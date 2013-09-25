@@ -94,7 +94,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 		public void onReceive(Context context, Intent intent) {
 			try {
 				if (intent.getAction().equals(INTENT_RECEIVED)) {
-					onSmsReceived(intent);
+					onSmsReceived(this, intent);
 				} else {
 					// todo serso: sent/delivered report
 				}
@@ -105,11 +105,11 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 		}
 	}
 
-	private void onSmsReceived(@Nonnull Intent intent) throws AccountException {
+	private void onSmsReceived(@Nonnull BroadcastReceiver broadcastReceiver, @Nonnull Intent intent) throws AccountException {
+		final SmsAccount account = getAccount();
 		final Multimap<String, String> messagesByPhoneNumber = getMessagesByPhoneNumber(intent);
 
 		if (!messagesByPhoneNumber.isEmpty()) {
-			final SmsAccount account = getAccount();
 			final User user = account.getUser();
 			final UserService userService = App.getUserService();
 			final ChatService chatService = App.getChatService();
@@ -132,10 +132,9 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 			}
 		}
 
-		// WARNING!!!
-		// If you uncomment the next line then received SMS will not be put to incoming.
-		// Be careful!
-		// this.abortBroadcast();
+		if (account.getConfiguration().isStopFurtherProcessing()) {
+			broadcastReceiver.abortBroadcast();
+		}
 	}
 
 	@Nonnull

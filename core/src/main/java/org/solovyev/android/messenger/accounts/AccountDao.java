@@ -8,9 +8,9 @@ public interface AccountDao {
 
 	final String TAG = AccountDao.class.getSimpleName();
 
-	void insertRealm(@Nonnull Account account) throws AccountException;
+	void insertAccount(@Nonnull Account account) throws AccountException;
 
-	void deleteRealm(@Nonnull String accountId);
+	void deleteAccount(@Nonnull String accountId);
 
 	@Nonnull
 	Collection<Account> loadAccounts();

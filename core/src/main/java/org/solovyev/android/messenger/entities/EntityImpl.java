@@ -215,7 +215,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     */
 
 	@Nonnull
-	public static String getRealmId(@Nonnull String realmDefId, int index) {
-		return realmDefId + DELIMITER_REALM + index;
+	public static String getAccountId(@Nonnull String realmId, int index) {
+		return realmId + DELIMITER_REALM + index;
 	}
 }

@@ -37,11 +37,11 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof TestAccountConfiguration)) return false;
+	public boolean isSameAccount(AccountConfiguration c) {
+		if (this == c) return true;
+		if (!(c instanceof TestAccountConfiguration)) return false;
 
-		TestAccountConfiguration that = (TestAccountConfiguration) o;
+		TestAccountConfiguration that = (TestAccountConfiguration) c;
 
 		if (testIntField != that.testIntField) return false;
 		if (!testStringField.equals(that.testStringField)) return false;
@@ -50,9 +50,11 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Override
-	public int hashCode() {
-		int result = testStringField.hashCode();
-		result = 31 * result + testIntField;
-		return result;
+	public boolean isSameCredentials(AccountConfiguration c) {
+		return isSameAccount(c);
+	}
+
+	@Override
+	public void applySystemData(AccountConfiguration oldConfiguration) {
 	}
 }

@@ -85,11 +85,10 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof XmppAccountConfiguration)) return false;
+	public boolean isSameAccount(AccountConfiguration c) {
+		if (!(c instanceof XmppAccountConfiguration)) return false;
 
-		XmppAccountConfiguration that = (XmppAccountConfiguration) o;
+		XmppAccountConfiguration that = (XmppAccountConfiguration) c;
 
 		if (!login.equals(that.login)) return false;
 		if (!port.equals(that.port)) return false;
@@ -99,11 +98,19 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Override
-	public int hashCode() {
-		int result = server.hashCode();
-		result = 31 * result + login.hashCode();
-		result = 31 * result + port.hashCode();
-		return result;
+	public boolean isSameCredentials(AccountConfiguration c) {
+		boolean sameAccount = isSameAccount(c);
+		if(sameAccount) {
+			final XmppAccountConfiguration that = (XmppAccountConfiguration) c;
+			if(!this.password.equals(that.password)) {
+				sameAccount = false;
+			}
+		}
+		return sameAccount;
+	}
+
+	@Override
+	public void applySystemData(AccountConfiguration oldConfiguration) {
 	}
 
 	@Nonnull

@@ -97,10 +97,10 @@ public class DefaultAccountService implements AccountService {
 
 	@Inject
 	public DefaultAccountService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
-		this(context, configuration.getRealms(), lock, eventExecutor);
+		this(context, lock, eventExecutor);
 	}
 
-	public DefaultAccountService(@Nonnull Application context, @Nonnull Collection<? extends Realm> realms, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+	public DefaultAccountService(@Nonnull Application context, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
 		this.context = context;
 		this.lock = lock;
 		this.listeners = Listeners.newEventListenersBuilderFor(AccountEvent.class).withHardReferences().withExecutor(eventExecutor).create();
@@ -121,7 +121,7 @@ public class DefaultAccountService implements AccountService {
 				this.messageService.removeAllMessagesInRealm(account.getId());
 				this.chatService.removeChatsInRealm(account.getId());
 				this.userService.removeUsersInAccount(account.getId());
-				this.accountDao.deleteRealm(account.getId());
+				this.accountDao.deleteAccount(account.getId());
 				this.accounts.remove(account.getId());
 			}
 		}
@@ -192,8 +192,10 @@ public class DefaultAccountService implements AccountService {
 		try {
 			final AccountConfiguration configuration = accountBuilder.getConfiguration();
 			final Account oldAccount = accountBuilder.getEditedAccount();
-			if (oldAccount != null && oldAccount.getConfiguration().equals(configuration)) {
-				// new realm configuration is exactly the same => can omit saving the realm
+			final boolean sameCredentials = oldAccount != null && oldAccount.getConfiguration().isSameCredentials(configuration);
+			if (sameCredentials) {
+				// new account configuration is exactly the same => we need just to save new configuration
+				updateAccountConfiguration(oldAccount, configuration);
 				result = oldAccount;
 			} else {
 				// saving realm (realm either new or changed)
@@ -202,36 +204,26 @@ public class DefaultAccountService implements AccountService {
 
 				accountBuilder.loginUser(null);
 
-				final String newRealmId;
+				final String newAccountId;
 				if (oldAccount != null) {
-					newRealmId = oldAccount.getId();
+					newAccountId = oldAccount.getId();
 				} else {
-					newRealmId = generateRealmId(accountBuilder.getRealm());
+					newAccountId = generateAccountId(accountBuilder.getRealm());
 				}
-				final Account newAccount = accountBuilder.build(new AccountBuilder.Data(newRealmId));
+				final Account newAccount = accountBuilder.build(new AccountBuilder.Data(newAccountId));
 
 				synchronized (accounts) {
 					final boolean alreadyExists = Iterables.any(accounts.values(), new Predicate<Account>() {
 						@Override
-						public boolean apply(@Nullable Account realm) {
-							return realm != null && realm.getState() != AccountState.removed && newAccount.same(realm);
+						public boolean apply(@Nullable Account account) {
+							return account != null && account.getState() != AccountState.removed && newAccount.same(account);
 						}
 					});
 
 					if (alreadyExists) {
 						throw new AccountAlreadyExistsException();
 					} else {
-						synchronized (lock) {
-							if (oldAccount != null) {
-								accountDao.updateAccount(newAccount);
-								accounts.put(newAccount.getId(), newAccount);
-								listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
-							} else {
-								accountDao.insertRealm(newAccount);
-								accounts.put(newAccount.getId(), newAccount);
-								listeners.fireEvent(AccountEventType.created.newEvent(newAccount, null));
-							}
-						}
+						createOrUpdateAccount(oldAccount, newAccount);
 					}
 				}
 
@@ -251,6 +243,32 @@ public class DefaultAccountService implements AccountService {
 		}
 
 		return result;
+	}
+
+	private void updateAccountConfiguration(@Nonnull Account account, @Nonnull AccountConfiguration newConfiguration) throws AccountException {
+		assert account.getConfiguration().isSameAccount(newConfiguration);
+		newConfiguration.applySystemData(account.getConfiguration());
+		synchronized (lock) {
+			account.setConfiguration(newConfiguration);
+			accountDao.updateAccount(account);
+			listeners.fireEvent(AccountEventType.configuration_changed.newEvent(account, null));
+		}
+	}
+
+	private void createOrUpdateAccount(@Nullable Account oldAccount, @Nonnull Account newAccount) throws AccountException {
+		assert Thread.holdsLock(accounts);
+
+		synchronized (lock) {
+			if (oldAccount != null) {
+				accountDao.updateAccount(newAccount);
+				accounts.put(newAccount.getId(), newAccount);
+				listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
+			} else {
+				accountDao.insertAccount(newAccount);
+				accounts.put(newAccount.getId(), newAccount);
+				listeners.fireEvent(AccountEventType.created.newEvent(newAccount, null));
+			}
+		}
 	}
 
 	@Nonnull
@@ -320,8 +338,8 @@ public class DefaultAccountService implements AccountService {
 	}
 
 	@Nonnull
-	private String generateRealmId(@Nonnull Realm realm) {
-		return EntityImpl.getRealmId(realm.getId(), accountCounter.getAndIncrement());
+	private String generateAccountId(@Nonnull Realm realm) {
+		return EntityImpl.getAccountId(realm.getId(), accountCounter.getAndIncrement());
 	}
 
 	@Override
