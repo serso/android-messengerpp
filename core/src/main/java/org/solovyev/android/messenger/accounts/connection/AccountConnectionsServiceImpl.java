@@ -1,13 +1,8 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.app.Application;
-
-import java.util.Arrays;
-import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.messenger.MessengerListeners;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountEvent;
@@ -20,8 +15,10 @@ import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.solovyev.android.messenger.notifications.Notifications.NO_INTERNET_NOTIFICATION;
 import static org.solovyev.android.messenger.notifications.Notifications.newRealmConnectionErrorNotification;
@@ -92,11 +89,10 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 	}
 
 	private void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
-		final boolean internetConnectionExists = canStartConnection();
-		accountConnections.startConnectionsFor(accounts, internetConnectionExists);
+		accountConnections.startConnectionsFor(accounts, isInternetConnectionExists());
 	}
 
-	private boolean canStartConnection() {
+	private boolean isInternetConnectionExists() {
 		final NetworkData networkData = networkStateService.getNetworkData();
 		return networkData.getState() == NetworkState.CONNECTED;
 	}
@@ -109,7 +105,7 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 			case CONNECTED:
 				notificationService.remove(NO_INTERNET_NOTIFICATION);
 				notificationService.remove(newRealmConnectionErrorNotification());
-				accountConnections.tryStartAll();
+				accountConnections.tryStartAll(true);
 				break;
 			case NOT_CONNECTED:
 				notificationService.add(NO_INTERNET_NOTIFICATION);
@@ -132,7 +128,7 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 					tryStartConnectionsFor(Arrays.asList(account));
 					break;
 				case changed:
-					accountConnections.updateAccount(account, canStartConnection());
+					accountConnections.updateAccount(account, isInternetConnectionExists());
 					break;
 				case state_changed:
 					switch (account.getState()) {

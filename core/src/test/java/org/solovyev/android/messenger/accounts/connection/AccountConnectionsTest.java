@@ -93,7 +93,7 @@ public class AccountConnectionsTest {
 				}
 			}).when(connection).start();
 		} catch (AccountConnectionException e) {
-			fail(e.getMessage());
+			throw new AssertionError(e);
 		}
 
 		doAnswer(new Answer() {
@@ -205,6 +205,96 @@ public class AccountConnectionsTest {
 		c.assertStoppedFrom(runningUpTo);
 	}
 
+	@Test
+	public void testShouldStopConnectionsFromAccount() throws Exception {
+		final Connections c = new Connections(10);
+
+		connections.startConnectionsFor(c.accounts, true);
+		c.assertAllRunning();
+
+		int stoppedUpTo = c.count / 2;
+		tryStopAndCheck(c, stoppedUpTo);
+
+		// check if stop called only once
+		tryStopAndCheck(c, stoppedUpTo);
+	}
+
+	private void tryStopAndCheck(Connections c, int stoppedUpTo) {
+		for(int i = 0; i < stoppedUpTo; i++) {
+			connections.tryStopFor(c.getAccount(i));
+		}
+		c.assertStoppedUpTo(stoppedUpTo);
+		c.assertRunningFrom(stoppedUpTo);
+	}
+
+	@Test
+	public void testShouldStartAllStoppedConnections() throws Exception {
+		final Connections c = new Connections(10);
+		connections.startConnectionsFor(c.accounts, true);
+		connections.onNoInternetConnection();
+		c.assertAllStopped();
+
+		connections.tryStartAll(true);
+		c.assertAllRunning();
+	}
+
+	@Test
+	public void testShouldNotStartNotStoppedConnections() throws Exception {
+		final Connections c = new Connections(10);
+		connections.startConnectionsFor(c.accounts, true);
+
+		int stoppedUpTo = c.count / 2;
+		for (int i = 0; i < stoppedUpTo; i++) {
+			c.getConnection(i).stop();
+		}
+
+		connections.tryStartAll(true);
+		c.assertAllRunning();
+		for (int i = 0; i < stoppedUpTo; i++) {
+			verify(c.getConnection(i), times(2)).start();
+		}
+
+		for (int i = stoppedUpTo; i < c.count; i++) {
+			verify(c.getConnection(i), times(1)).start();
+		}
+	}
+
+	@Test
+	public void testShouldRemoveConnectionForAccount() throws Exception {
+		final Connections c = new Connections(10);
+		connections.startConnectionsFor(c.accounts, true);
+
+		connections.removeConnectionFor(c.getAccount(0));
+		c.assertRunningFrom(1);
+		c.assertStoppedUpTo(1);
+
+		// restart should not restart removed connections
+		connections.tryStopAll();
+		connections.tryStartAll(true);
+
+		c.assertRunningFrom(1);
+		c.assertStoppedUpTo(1);
+	}
+
+	@Test
+	public void testShouldUpdateConnectionForAccount() throws Exception {
+		final Connections c = new Connections(10);
+		connections.startConnectionsFor(c.accounts, true);
+
+		connections.updateAccount(c.getAccount(0), true);
+		c.assertAllRunning();
+
+		verify(c.getConnection(0), times(1)).stop();
+		for (int i = 1; i < c.count; i++) {
+			verify(c.getConnection(i), times(0)).stop();
+		}
+
+		verify(c.getConnection(0), times(2)).start();
+		for (int i = 1; i < c.count; i++) {
+			verify(c.getConnection(i), times(1)).start();
+		}
+	}
+
 	private static final class Connections {
 		@Nonnull
 		private final List<Account> accounts = new ArrayList<Account>();
@@ -244,6 +334,8 @@ public class AccountConnectionsTest {
 				assertTrue(connection.isStopped());
 			}
 		}
+
+
 
 		public void assertStoppedUpTo(int upTo) {
 			for(int i = 0; i < upTo; i++) {

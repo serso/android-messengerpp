@@ -1,31 +1,23 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
+import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.concurrent.Executors.newCachedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
@@ -157,11 +149,13 @@ final class AccountConnections {
 		}
 	}
 
-	public void tryStartAll() {
+	public void tryStartAll(boolean internetConnectionExists) {
 		synchronized (this.connections) {
 			for (AccountConnection connection : connections) {
 				if (connection.isStopped()) {
-					startConnection(connection);
+					if(!connection.isInternetConnectionRequired() || internetConnectionExists) {
+						startConnection(connection);
+					}
 				}
 			}
 		}
@@ -184,10 +178,10 @@ final class AccountConnections {
 		}
 	}
 
-	public void updateAccount(@Nonnull Account account, boolean start) {
+	public void updateAccount(@Nonnull Account account, boolean internetConnectionExists) {
 		synchronized (this.connections) {
 			removeConnectionFor(account);
-			startConnectionsFor(Arrays.asList(account), start);
+			startConnectionsFor(Arrays.asList(account), internetConnectionExists);
 		}
 	}
 
