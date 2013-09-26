@@ -1,10 +1,6 @@
 package org.solovyev.android.messenger.notifications;
 
 import android.content.Intent;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.acra.ACRA;
 import org.solovyev.android.Activities2;
 import org.solovyev.android.messenger.App;
@@ -12,6 +8,9 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.msg.MessageLevel;
 import org.solovyev.common.msg.MessageType;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static android.provider.Settings.ACTION_WIRELESS_SETTINGS;
 
@@ -57,7 +56,7 @@ public final class Notifications {
 
 	@Nonnull
 	public static NotificationSolution newOpenRealmConfSolution(@Nonnull Account account) {
-		return new OpenRealmConfSolution(account);
+		return new OpenAccountConfSolution(account);
 	}
 
 	/*
@@ -99,11 +98,11 @@ public final class Notifications {
 		}
 	}
 
-	private static class OpenRealmConfSolution implements NotificationSolution {
+	private static class OpenAccountConfSolution implements NotificationSolution {
 		@Nonnull
 		private final Account account;
 
-		public OpenRealmConfSolution(@Nonnull Account account) {
+		public OpenAccountConfSolution(@Nonnull Account account) {
 			this.account = account;
 		}
 
