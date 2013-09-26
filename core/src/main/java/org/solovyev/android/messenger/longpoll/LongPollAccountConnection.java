@@ -30,7 +30,7 @@ public abstract class LongPollAccountConnection extends AbstractAccountConnectio
 	}
 
 	@Override
-	public void doWork() throws AccountConnectionException {
+	public void start0() throws AccountConnectionException {
 		// first loop guarantees that if something gone wrong we will initiate new long polling session
 		while (!isStopped()) {
 			try {
@@ -62,7 +62,7 @@ public abstract class LongPollAccountConnection extends AbstractAccountConnectio
 	}
 
 	@Override
-	protected void stopWork() {
+	protected void stop0() {
 	}
 
 }

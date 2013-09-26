@@ -4,11 +4,8 @@ import android.content.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -42,70 +39,8 @@ public class AccountConnectionsTest {
 				command.run();
 			}
 		});
-		account = newMockAccountWithStaticConnection();
-		connection = prepareStaticConnectionForAccount(account);
-	}
-
-	@Nonnull
-	private static Account newMockAccountWithStaticConnection() {
-		final Account account = mock(Account.class);
-		when(account.isEnabled()).thenReturn(true);
-		prepareStaticConnectionForAccount(account);
-		return account;
-	}
-
-	@Nonnull
-	private static AccountConnection prepareStaticConnectionForAccount(@Nonnull final Account account) {
-		final AccountConnection connection = newMockConnection(account);
-		when(account.newConnection(any(Context.class))).thenReturn(connection);
-		return connection;
-	}
-
-	@Nonnull
-	private static Account newMockAccount() {
-		final Account account = mock(Account.class);
-		when(account.isEnabled()).thenReturn(true);
-		prepareConnectionForAccount(account);
-		return account;
-	}
-
-	private static void prepareConnectionForAccount(@Nonnull final Account account) {
-		when(account.newConnection(any(Context.class))).thenAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				return newMockConnection(account);
-			}
-		});
-	}
-
-	@Nonnull
-	private static AccountConnection newMockConnection(@Nonnull Account account) {
-		final AccountConnection connection = mock(AccountConnection.class);
-
-		when(connection.isStopped()).thenReturn(true);
-		when(connection.isInternetConnectionRequired()).thenReturn(true);
-		try {
-			doAnswer(new Answer() {
-				@Override
-				public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-					when(connection.isStopped()).thenReturn(false);
-					return null;
-				}
-			}).when(connection).start();
-		} catch (AccountConnectionException e) {
-			throw new AssertionError(e);
-		}
-
-		doAnswer(new Answer() {
-			@Override
-			public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-				when(connection.isStopped()).thenReturn(true);
-				return null;
-			}
-		}).when(connection).stop();
-		when(connection.getAccount()).thenReturn(account);
-
-		return connection;
+		account = Accounts.newMockAccountWithStaticConnection();
+		connection = Accounts.prepareStaticConnectionForAccount(account);
 	}
 
 	@Test
@@ -307,7 +242,7 @@ public class AccountConnectionsTest {
 		private Connections(int count) {
 			this.count = count;
 			for(int i = 0; i < count; i++) {
-				final Account account = newMockAccountWithStaticConnection();
+				final Account account = Accounts.newMockAccountWithStaticConnection();
 				accounts.add(account);
 				connections.add(account.newConnection(application));
 			}

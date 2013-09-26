@@ -18,7 +18,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.connection.LoopedAbstractAccountConnection;
+import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -36,15 +36,12 @@ import java.util.*;
 import static android.telephony.SmsMessage.createFromPdu;
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.App.getChatMessageService;
+import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.EntityImpl.generateEntityId;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
-import static org.solovyev.android.messenger.users.User.PROPERTY_FIRST_NAME;
-import static org.solovyev.android.messenger.users.User.PROPERTY_ONLINE;
-import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
-import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
-import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
+import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -54,7 +51,7 @@ import static org.solovyev.common.text.Strings.isEmpty;
  * Date: 5/27/13
  * Time: 9:22 PM
  */
-final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAccount> {
+final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 	@Nullable
 	private volatile ReportsBroadcastReceiver receiver;
@@ -64,7 +61,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 	}
 
 	@Override
-	protected void tryConnect() throws AccountConnectionException {
+	protected void start0() throws AccountConnectionException {
 		if (receiver == null) {
 			receiver = new ReportsBroadcastReceiver();
 			final Application application = getApplication();
@@ -78,7 +75,7 @@ final class SmsAccountConnection extends LoopedAbstractAccountConnection<SmsAcco
 	}
 
 	@Override
-	protected void disconnect() {
+	protected void stop0() {
 		unregisterReceiver();
 	}
 

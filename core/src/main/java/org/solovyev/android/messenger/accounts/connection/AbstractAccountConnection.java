@@ -1,13 +1,11 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
+
+import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -54,22 +52,19 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 
 	@Override
 	public final void start() throws AccountConnectionException {
-		stopped.set(false);
-		try {
-			doWork();
-		} finally {
-			stop();
+		if(stopped.compareAndSet(true, false)) {
+			start0();
 		}
 	}
 
-	protected abstract void doWork() throws AccountConnectionException;
+	protected abstract void start0() throws AccountConnectionException;
 
-	protected abstract void stopWork();
+	protected abstract void stop0();
 
 	@Override
 	public final void stop() {
 		if (stopped.compareAndSet(false, true)) {
-			stopWork();
+			stop0();
 		}
 	}
 

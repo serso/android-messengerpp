@@ -18,12 +18,12 @@ public class TestAccountConnection extends AbstractAccountConnection<TestAccount
 	}
 
 	@Override
-	protected void doWork() {
+	protected void start0() {
 
 	}
 
 	@Override
-	protected void stopWork() {
+	protected void stop0() {
 		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }

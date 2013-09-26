@@ -1,27 +1,20 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smackx.ChatStateManager;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterListener;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.ChatStateManager;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.accounts.connection.LoopedAbstractAccountConnection;
 
 /**
  * User: serso
  * Date: 2/24/13
  * Time: 8:13 PM
  */
-public class XmppAccountConnection extends LoopedAbstractAccountConnection<XmppAccount> implements XmppConnectionAware {
+public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount> implements XmppConnectionAware {
 
 	private static final String TAG = XmppAccountConnection.class.getSimpleName();
 
@@ -43,7 +36,7 @@ public class XmppAccountConnection extends LoopedAbstractAccountConnection<XmppA
 	}
 
 	@Override
-	protected void tryConnect() throws AccountConnectionException {
+	protected void start0() throws AccountConnectionException {
 		if (this.connection == null) {
 			tryToConnect(0);
 		}
@@ -95,7 +88,7 @@ public class XmppAccountConnection extends LoopedAbstractAccountConnection<XmppA
 	}
 
 	@Override
-	protected void disconnect() {
+	protected void stop0() {
 		final Connection localConnection = connection;
 		if (localConnection != null) {
 			final Roster roster = localConnection.getRoster();

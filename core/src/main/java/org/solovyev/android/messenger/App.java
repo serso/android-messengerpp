@@ -26,7 +26,8 @@ public final class App {
 	@Nonnull
 	public static final String TAG = "M++";
 
-	private static final App instance = new App();
+	@Nonnull
+	private static App instance = new App();
 
 	@Nonnull
 	private MessengerApplication application;
@@ -215,5 +216,78 @@ public final class App {
 	@Nonnull
 	public static EventManager getEventManager(@Nonnull Context context) {
 		return RoboGuice.getInjector(context).getInstance(EventManager.class);
+	}
+
+	/*
+	**********************************************************************
+	*
+	*                           FOR TESTS ONLY
+	*
+	**********************************************************************
+	*/
+
+	@Nonnull
+	static App getInstance() {
+		return instance;
+	}
+
+	public void setApplication(@Nonnull MessengerApplication application) {
+		this.application = application;
+	}
+
+	public void setChatMessageService(@Nonnull ChatMessageService chatMessageService) {
+		this.chatMessageService = chatMessageService;
+	}
+
+	public void setUserService(@Nonnull UserService userService) {
+		this.userService = userService;
+	}
+
+	public void setChatService(@Nonnull ChatService chatService) {
+		this.chatService = chatService;
+	}
+
+	public void setSyncService(@Nonnull SyncService syncService) {
+		this.syncService = syncService;
+	}
+
+	public void setAccountService(@Nonnull AccountService accountService) {
+		this.accountService = accountService;
+	}
+
+	public void setRealmService(@Nonnull RealmService realmService) {
+		this.realmService = realmService;
+	}
+
+	public void setAccountConnectionsService(@Nonnull AccountConnectionsService accountConnectionsService) {
+		this.accountConnectionsService = accountConnectionsService;
+	}
+
+	public void setUnreadMessagesCounter(@Nonnull UnreadMessagesCounter unreadMessagesCounter) {
+		this.unreadMessagesCounter = unreadMessagesCounter;
+	}
+
+	public void setUnreadMessagesNotifier(@Nonnull UnreadMessagesNotifier unreadMessagesNotifier) {
+		this.unreadMessagesNotifier = unreadMessagesNotifier;
+	}
+
+	public void setExceptionHandler(@Nonnull MessengerExceptionHandler exceptionHandler) {
+		this.exceptionHandler = exceptionHandler;
+	}
+
+	public void setNotificationService(@Nonnull NotificationService notificationService) {
+		this.notificationService = notificationService;
+	}
+
+	public void setNetworkStateService(@Nonnull NetworkStateService networkStateService) {
+		this.networkStateService = networkStateService;
+	}
+
+	public void setTaskService(@Nonnull TaskService taskService) {
+		this.taskService = taskService;
+	}
+
+	public void setSecurityService(@Nonnull MessengerSecurityService securityService) {
+		this.securityService = securityService;
 	}
 }
