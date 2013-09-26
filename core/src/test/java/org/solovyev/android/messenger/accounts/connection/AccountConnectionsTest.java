@@ -1,14 +1,6 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Executor;
-
-import javax.annotation.Nonnull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,14 +10,15 @@ import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executor;
+
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricTestRunner.class)
@@ -49,37 +42,59 @@ public class AccountConnectionsTest {
 				command.run();
 			}
 		});
-		account = newMockAccount();
-		connection = prepareConnectionForAccount(account);
+		account = newMockAccountWithStaticConnection();
+		connection = prepareStaticConnectionForAccount(account);
 	}
 
 	@Nonnull
-	private static Account newMockAccount() {
+	private static Account newMockAccountWithStaticConnection() {
 		final Account account = mock(Account.class);
 		when(account.isEnabled()).thenReturn(true);
+		prepareStaticConnectionForAccount(account);
 		return account;
 	}
 
 	@Nonnull
-	private AccountConnection prepareConnectionForAccount(@Nonnull Account account) throws AccountConnectionException {
+	private static AccountConnection prepareStaticConnectionForAccount(@Nonnull final Account account) {
 		final AccountConnection connection = newMockConnection(account);
 		when(account.newConnection(any(Context.class))).thenReturn(connection);
 		return connection;
 	}
 
 	@Nonnull
-	private static AccountConnection newMockConnection(@Nonnull Account account) throws AccountConnectionException {
+	private static Account newMockAccount() {
+		final Account account = mock(Account.class);
+		when(account.isEnabled()).thenReturn(true);
+		prepareConnectionForAccount(account);
+		return account;
+	}
+
+	private static void prepareConnectionForAccount(@Nonnull final Account account) {
+		when(account.newConnection(any(Context.class))).thenAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) throws Throwable {
+				return newMockConnection(account);
+			}
+		});
+	}
+
+	@Nonnull
+	private static AccountConnection newMockConnection(@Nonnull Account account) {
 		final AccountConnection connection = mock(AccountConnection.class);
 
 		when(connection.isStopped()).thenReturn(true);
 		when(connection.isInternetConnectionRequired()).thenReturn(true);
-		doAnswer(new Answer() {
-			@Override
-			public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-				when(connection.isStopped()).thenReturn(false);
-				return null;
-			}
-		}).when(connection).start();
+		try {
+			doAnswer(new Answer() {
+				@Override
+				public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+					when(connection.isStopped()).thenReturn(false);
+					return null;
+				}
+			}).when(connection).start();
+		} catch (AccountConnectionException e) {
+			fail(e.getMessage());
+		}
 
 		doAnswer(new Answer() {
 			@Override
@@ -156,31 +171,104 @@ public class AccountConnectionsTest {
 
 	@Test
 	public void testShouldStopAllConnections() throws Exception {
-		final List<Account> accounts = new ArrayList<Account>();
-		final List<AccountConnection> connections = new ArrayList<AccountConnection>();
-		final int count = 10;
-		for(int i = 0; i < count; i++) {
-			final Account account = newMockAccount();
-			accounts.add(account);
-			connections.add(prepareConnectionForAccount(account));
-		}
+		final Connections c = new Connections(10);
 
-		this.connections.startConnectionsFor(accounts, true);
-		for(int i = 0; i < count; i++) {
-			final AccountConnection connection = connections.get(i);
+		this.connections.startConnectionsFor(c.accounts, true);
+		for(int i = 0; i < c.count; i++) {
+			final AccountConnection connection = c.getConnection(i);
 			verify(connection, times(1)).start();
 			assertFalse(connection.isStopped());
 		}
 
-		for(int i = 0; i < count/2; i++) {
-			connections.get(i).stop();
+		for(int i = 0; i < c.count/2; i++) {
+			c.getConnection(i).stop();
 		}
 
 		this.connections.tryStopAll();
-		for(int i = 0; i < count; i++) {
-			final AccountConnection connection = connections.get(i);
-			verify(connection, times(1)).stop();
-			assertTrue(connection.isStopped());
+		c.assertAllStopped();
+	}
+
+	@Test
+	public void testShouldStopInternetDependantConnections() throws Exception {
+		final Connections c = new Connections(10);
+
+		int runningUpTo = c.count / 2;
+		for(int i = 0; i < runningUpTo; i++) {
+			when(c.getConnection(i).isInternetConnectionRequired()).thenReturn(false);
+		}
+
+		connections.startConnectionsFor(c.accounts, true);
+		c.assertAllRunning();
+
+		connections.onNoInternetConnection();
+		c.assertRunningUpTo(runningUpTo);
+		c.assertStoppedFrom(runningUpTo);
+	}
+
+	private static final class Connections {
+		@Nonnull
+		private final List<Account> accounts = new ArrayList<Account>();
+
+		@Nonnull
+		private final List<AccountConnection> connections = new ArrayList<AccountConnection>();
+
+		private final int count;
+
+		private Connections(int count) {
+			this.count = count;
+			for(int i = 0; i < count; i++) {
+				final Account account = newMockAccountWithStaticConnection();
+				accounts.add(account);
+				connections.add(account.newConnection(application));
+			}
+		}
+
+		@Nonnull
+		public AccountConnection getConnection(int i) {
+			return this.connections.get(i);
+		}
+
+		@Nonnull
+		public Account getAccount(int i) {
+			return this.accounts.get(i);
+		}
+
+		public void assertAllStopped() {
+			assertStoppedUpTo(this.count);
+		}
+
+		public void assertStoppedFrom(int from) {
+			for(int i = from; i < this.count; i++) {
+				final AccountConnection connection = connections.get(i);
+				verify(connection, times(1)).stop();
+				assertTrue(connection.isStopped());
+			}
+		}
+
+		public void assertStoppedUpTo(int upTo) {
+			for(int i = 0; i < upTo; i++) {
+				final AccountConnection connection = connections.get(i);
+				verify(connection, times(1)).stop();
+				assertTrue(connection.isStopped());
+			}
+		}
+
+		public void assertAllRunning() {
+			assertRunningUpTo(this.count);
+		}
+
+		public void assertRunningFrom(int from) {
+			for(int i = from; i < this.count; i++) {
+				final AccountConnection connection = connections.get(i);
+				assertFalse(connection.isStopped());
+			}
+		}
+
+		public void assertRunningUpTo(int upTo) {
+			for(int i = 0; i < upTo; i++) {
+				final AccountConnection connection = connections.get(i);
+				assertFalse(connection.isStopped());
+			}
 		}
 	}
 }
