@@ -2,10 +2,8 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.app.Application;
-import roboguice.RoboGuice;
-
-import javax.annotation.Nonnull;
-
+import android.content.Context;
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -18,8 +16,10 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.tasks.TaskService;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 public final class App {
 
@@ -210,5 +210,10 @@ public final class App {
 
 	public static void exit(Activity activity) {
 		instance.application.exit(activity);
+	}
+
+	@Nonnull
+	public static EventManager getEventManager(@Nonnull Context context) {
+		return RoboGuice.getInjector(context).getInstance(EventManager.class);
 	}
 }

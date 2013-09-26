@@ -2,16 +2,16 @@ package org.solovyev.android.messenger.accounts;
 
 import android.app.Activity;
 import android.widget.Toast;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.util.concurrent.FutureCallback;
 import org.solovyev.android.messenger.MessengerContextCallback;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.tasks.Tasks;
 
-import com.google.common.util.concurrent.FutureCallback;
+import javax.annotation.Nonnull;
+
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.saved;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
 
 /**
  * User: serso
@@ -30,8 +30,7 @@ final class AccountSaverListener extends MessengerContextCallback<Activity, Acco
 
 	@Override
 	public void onSuccess(@Nonnull Activity context, Account account) {
-		final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-		eventManager.fire(AccountUiEventType.newAccountEditFinishedEvent(account, AccountUiEventType.FinishedState.saved));
+		getEventManager(context).fire(account_edit_finished.newEvent(account, saved));
 	}
 
 	@Override

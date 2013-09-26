@@ -6,17 +6,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_requested;
 
 public final class AccountListItem extends AbstractMessengerListItem<Account> {
 
@@ -42,14 +42,13 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(AccountUiEventType.newAccountViewRequestedEvent(getRealm()));
+				getEventManager(context).fire(account_view_requested.newEvent(getAccount()));
 			}
 		};
 	}
 
 	@Nonnull
-	private Account getRealm() {
+	private Account getAccount() {
 		return getData();
 	}
 
@@ -60,7 +59,7 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 	}
 
 	public void onAccountChangedEvent(@Nonnull Account eventAccount) {
-		final Account account = getRealm();
+		final Account account = getAccount();
 		if (account.equals(eventAccount)) {
 			setData(eventAccount);
 		}

@@ -7,25 +7,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
+import org.solovyev.android.Activities;
+import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.tasks.TaskListeners;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.tasks.TaskService;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.Activities;
-import org.solovyev.android.messenger.MessengerMultiPaneManager;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmUiEventType;
-import org.solovyev.android.tasks.TaskListeners;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.tasks.TaskService;
-
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
-
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.App.getTaskService;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.back;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
+import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_edit_finished;
 
 public abstract class BaseAccountConfigurationFragment<T extends Account<?>> extends RoboSherlockFragment {
 
@@ -226,9 +226,9 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	protected void backButtonPressed() {
 		T editedRealm = getEditedRealm();
 		if (editedRealm != null) {
-			eventManager.fire(AccountUiEventType.newAccountEditFinishedEvent(editedRealm, AccountUiEventType.FinishedState.back));
+			eventManager.fire(account_edit_finished.newEvent(editedRealm, back));
 		} else {
-			eventManager.fire(RealmUiEventType.newAccountEditFinishedEvent(getRealm()));
+			eventManager.fire(realm_edit_finished.newEvent(getRealm()));
 		}
 	}
 

@@ -1,16 +1,13 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
-
-import java.util.List;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import java.util.List;
 
 public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 
@@ -30,7 +27,7 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 		final Account account = accountEvent.getAccount();
 		switch (accountEvent.getType()) {
 			case created:
-				addListItem(createListItem(account));
+				add(createListItem(account));
 				break;
 			case changed:
 				final AccountListItem listItem = findInAllElements(account);
@@ -49,7 +46,7 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 						}
 						break;
 					case removed:
-						removeListItem(createListItem(account));
+						remove(createListItem(account));
 						break;
 				}
 				break;

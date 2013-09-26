@@ -33,7 +33,7 @@ public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 					activity.getMultiPaneFragmentManager().setMainFragment(realm.getConfigurationFragmentClass(), null, new RealmFragmentReuseCondition(realm), BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 				}
 				break;
-			case account_edit_finished:
+			case realm_edit_finished:
 				activity.getMultiPaneFragmentManager().goBack();
 				break;
 		}

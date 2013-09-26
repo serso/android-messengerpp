@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.accounts;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -28,32 +29,32 @@ public enum AccountUiEventType {
 	 * Fired when editing of account is finished (e.g. user pressed 'Back' or 'Save' button)
 	 * Data; state (FinishedState)
 	 */
-	account_edit_finished;
+	account_edit_finished {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof FinishedState;
+		}
+	};
 
 	@Nonnull
-	public static AccountUiEvent newAccountViewRequestedEvent(@Nonnull Account account) {
-		return new AccountUiEvent(account, account_view_requested, null);
+	public AccountUiEvent newEvent(@Nonnull Account account) {
+		return newEvent(account, null);
 	}
 
 	@Nonnull
-	public static AccountUiEvent newAccountViewCancelledEvent(@Nonnull Account account) {
-		return new AccountUiEvent(account, account_view_cancelled, null);
+	public AccountUiEvent newEvent(@Nonnull Account account, @Nullable Object data) {
+		checkData(data);
+		return new AccountUiEvent(account, this, data);
 	}
 
-	@Nonnull
-	public static AccountUiEvent newAccountEditRequestedEvent(@Nonnull Account account) {
-		return new AccountUiEvent(account, account_edit_requested, null);
-	}
-
-	@Nonnull
-	public static AccountUiEvent newAccountEditFinishedEvent(@Nonnull Account account, @Nonnull FinishedState state) {
-		return new AccountUiEvent(account, account_edit_finished, state);
+	protected void checkData(@Nullable Object data) {
+		assert data == null;
 	}
 
 	public static enum FinishedState {
 		back,
 		removed,
 		status_changed,
-		saved;
+		saved
 	}
 }

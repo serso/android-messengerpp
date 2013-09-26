@@ -5,17 +5,19 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import roboguice.RoboGuice;
+import org.solovyev.android.list.ListAdapter;
+import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.ViewAwareTag;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
-import org.solovyev.android.messenger.view.ViewAwareTag;
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_clicked;
 
 class RealmListItem extends AbstractMessengerListItem<Realm> {
 
@@ -32,14 +34,13 @@ class RealmListItem extends AbstractMessengerListItem<Realm> {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(RealmUiEventType.newRealmClickedEvent(getRealmDef()));
+				getEventManager(context).fire(realm_clicked.newEvent(getRealm()));
 			}
 		};
 	}
 
 	@Nonnull
-	private Realm getRealmDef() {
+	private Realm getRealm() {
 		return getData();
 	}
 

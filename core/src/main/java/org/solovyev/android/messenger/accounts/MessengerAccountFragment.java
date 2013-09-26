@@ -8,11 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
@@ -22,12 +19,15 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
+import roboguice.event.EventManager;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.Activities.restartActivity;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_requested;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_cancelled;
 
 /**
  * User: serso
@@ -143,7 +143,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 		backButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(AccountUiEventType.newAccountViewCancelledEvent(account));
+				eventManager.fire(account_view_cancelled.newEvent(account));
 			}
 		});
 		if (multiPaneManager.isDualPane(getActivity())) {
@@ -231,7 +231,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 	}
 
 	private void editAccount() {
-		eventManager.fire(AccountUiEventType.newAccountEditRequestedEvent(account));
+		eventManager.fire(account_edit_requested.newEvent(account));
 	}
 
 	@Nonnull

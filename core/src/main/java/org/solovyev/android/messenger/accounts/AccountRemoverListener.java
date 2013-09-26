@@ -1,15 +1,15 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.app.Activity;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.util.concurrent.FutureCallback;
 import org.solovyev.android.messenger.MessengerContextCallback;
 import org.solovyev.android.tasks.Tasks;
 
-import com.google.common.util.concurrent.FutureCallback;
+import javax.annotation.Nonnull;
+
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.removed;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
 
 /**
  * User: serso
@@ -28,7 +28,6 @@ final class AccountRemoverListener extends MessengerContextCallback<Activity, Ac
 
 	@Override
 	public void onSuccess(@Nonnull Activity activity, Account account) {
-		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
-		eventManager.fire(AccountUiEventType.newAccountEditFinishedEvent(account, AccountUiEventType.FinishedState.removed));
+		getEventManager(activity).fire(account_edit_finished.newEvent(account, removed));
 	}
 }

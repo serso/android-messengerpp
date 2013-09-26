@@ -11,29 +11,32 @@ import javax.annotation.Nullable;
 public enum AccountEventType {
 
 	/**
-	 * Fires when account is created
+	 * Fired when account is created
 	 */
 	created,
 
 	/**
-	 * Fires when account is changed
+	 * Fired when account is changed
 	 */
 	changed,
 
+	/**
+	 * Fired when only account configuration has been changed
+	 */
 	configuration_changed,
 
 	/**
-	 * Fires when account state is changed
+	 * Fired when account state is changed
 	 */
 	state_changed,
 
 	/**
-	 * Fires when account connection should be stopped for account
+	 * Fired when account connection should be stopped for account
 	 */
 	stop,
 
 	/**
-	 * Fires when account connection should be started for account
+	 * Fired when account connection should be started for account
 	 */
 	start;
 

@@ -1,16 +1,15 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
-
-import java.util.List;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.Properties;
-import org.solovyev.common.text.Strings;
+import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 /**
  * User: serso
@@ -50,34 +49,34 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 
 	@Nonnull
 	@Override
-	public String getId() {
+	public final String getId() {
 		return this.id;
 	}
 
 	@Override
-	public int getNameResId() {
+	public final int getNameResId() {
 		return this.nameResId;
 	}
 
 	@Override
-	public int getIconResId() {
+	public final int getIconResId() {
 		return this.iconResId;
 	}
 
 	@Override
 	@Nonnull
-	public Class<? extends C> getConfigurationClass() {
+	public final Class<? extends C> getConfigurationClass() {
 		return configurationClass;
 	}
 
 	@Nonnull
 	@Override
-	public Class<? extends BaseAccountConfigurationFragment> getConfigurationFragmentClass() {
+	public final Class<? extends BaseAccountConfigurationFragment> getConfigurationFragmentClass() {
 		return this.configurationFragmentClass;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public final boolean equals(Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -93,13 +92,13 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		return id.hashCode();
 	}
 
-	protected void addUserProperty(@Nonnull Context context, @Nonnull List<AProperty> properties, int propertyNameResId, @Nullable String propertyValue) {
-		if (!Strings.isEmpty(propertyValue)) {
-			properties.add(Properties.newProperty(context.getString(propertyNameResId), propertyValue));
+	protected final void addUserProperty(@Nonnull Context context, @Nonnull List<AProperty> properties, int propertyNameResId, @Nullable String propertyValue) {
+		if (!isEmpty(propertyValue)) {
+			properties.add(newProperty(context.getString(propertyNameResId), propertyValue));
 		}
 	}
 
@@ -108,7 +107,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	}
 
 	@Override
-	public boolean notifySentMessagesImmediately() {
+	public final boolean notifySentMessagesImmediately() {
 		return notifySentMessagesImmediately;
 	}
 

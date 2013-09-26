@@ -4,12 +4,6 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.App;
@@ -18,6 +12,12 @@ import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_clicked;
 
 /**
  * User: serso
@@ -63,8 +63,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(ChatUiEventType.chat_clicked.newEvent(getChat()));
+				getEventManager(context).fire(chat_clicked.newEvent(getChat()));
 			}
 		};
 	}
