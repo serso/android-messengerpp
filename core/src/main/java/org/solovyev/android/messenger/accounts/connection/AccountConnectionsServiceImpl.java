@@ -69,7 +69,7 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 	private AccountConnections accountConnections;
 
 	@Nullable
-	private RealmEventListener realmEventListener;
+	private AccountEventListener accountEventListener;
 
 	@Inject
 	public AccountConnectionsServiceImpl(@Nonnull Application context) {
@@ -82,8 +82,8 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 
 		networkStateService.addListener(this);
 
-		realmEventListener = new RealmEventListener();
-		accountService.addListener(realmEventListener);
+		accountEventListener = new AccountEventListener();
+		accountService.addListener(accountEventListener);
 
 		tryStartConnectionsFor(accountService.getEnabledAccounts());
 	}
@@ -114,9 +114,9 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 		}
 	}
 
-	private final class RealmEventListener extends AbstractJEventListener<AccountEvent> implements JEventListener<AccountEvent> {
+	private final class AccountEventListener extends AbstractJEventListener<AccountEvent> implements JEventListener<AccountEvent> {
 
-		private RealmEventListener() {
+		private AccountEventListener() {
 			super(AccountEvent.class);
 		}
 
