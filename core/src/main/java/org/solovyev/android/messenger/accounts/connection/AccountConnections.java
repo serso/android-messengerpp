@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -82,7 +81,7 @@ final class AccountConnections {
 		this.context = context.getApplicationContext();
 	}
 
-	public void setExecutor(@Nonnull Executor executor) {
+	void setExecutor(@Nonnull Executor executor) {
 		this.executor = executor;
 	}
 
