@@ -22,7 +22,7 @@ public final class VkAccount extends AbstractAccount<VkAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	protected AccountConnection newRealmConnection0(@Nonnull Context context) {
+	protected AccountConnection createConnection(@Nonnull Context context) {
 		return new VkLongPollAccountConnection(this, context);
 	}
 

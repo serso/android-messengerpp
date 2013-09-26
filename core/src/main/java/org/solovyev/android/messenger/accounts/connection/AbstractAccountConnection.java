@@ -9,6 +9,8 @@ import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
+import static org.solovyev.android.messenger.App.newTag;
+
 /**
  * User: serso
  * Date: 7/25/12
@@ -17,7 +19,7 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 public abstract class AbstractAccountConnection<A extends Account> implements AccountConnection {
 
 	@Nonnull
-	private static final String TAG = "AccountConnection";
+	protected final String TAG = newTag(getClass().getName());
 
 	@Nonnull
 	private volatile A account;

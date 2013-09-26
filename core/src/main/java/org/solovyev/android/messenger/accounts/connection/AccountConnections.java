@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,8 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -22,15 +21,17 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.solovyev.android.PredicateSpy;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+
+import static java.util.concurrent.Executors.newCachedThreadPool;
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
+import static org.solovyev.android.messenger.App.getSyncService;
+import static org.solovyev.android.messenger.App.newTag;
 
 /**
  * User: serso
@@ -48,10 +49,10 @@ final class AccountConnections {
     **********************************************************************
     */
 
-	private static final int RETRY_CONNECTION_ATTEMPT_COUNT = 5;
-
 	// seconds
 	private static final int POST_START_DELAY = 20;
+
+	static final String TAG = newTag("AccountConnections");
 
     /*
     **********************************************************************
@@ -64,110 +65,62 @@ final class AccountConnections {
 	@Nonnull
 	private final Context context;
 
-	@GuardedBy("realmConnections")
+	@GuardedBy("connections")
 	@Nonnull
-	private final Set<AccountConnection> accountConnections = new HashSet<AccountConnection>();
+	private final Set<AccountConnection> connections = new HashSet<AccountConnection>();
 
 	@Nonnull
 	private final AtomicInteger threadCounter = new AtomicInteger(0);
 
 	@Nonnull
-	private final ScheduledExecutorService postStartExecutor = Executors.newSingleThreadScheduledExecutor();
+	private final ScheduledExecutorService postStartExecutor = newSingleThreadScheduledExecutor();
 
 	@Nonnull
-	private final ExecutorService executor = Executors.newCachedThreadPool(new ThreadFactory() {
-
-		@Override
-		public Thread newThread(Runnable r) {
-			return new Thread(r, "Account connection thread: " + threadCounter.incrementAndGet());
-		}
-	});
+	private Executor executor = newCachedThreadPool(new ConnectionThreadFactory());
 
 	AccountConnections(@Nonnull Context context) {
 		this.context = context.getApplicationContext();
 	}
 
+	public void setExecutor(@Nonnull Executor executor) {
+		this.executor = executor;
+	}
+
 	public void startConnectionsFor(@Nonnull Collection<Account> accounts, boolean internetConnectionExists) {
-		synchronized (accountConnections) {
+		synchronized (connections) {
 			for (final Account account : accounts) {
-				// are there any realm connections for current realm?
-				boolean contains = Iterables.any(accountConnections, new AccountConnectionFinder(account));
+				// are there any connections for current account?
+				AccountConnection connection = Iterables.find(connections, new ConnectionFinder(account), null);
 
-				if (!contains) {
-					// there is no realm connection for current realm => need to add
-					final AccountConnection accountConnection = account.newRealmConnection(context);
+				if (connection == null) {
+					// there is no connection for current account => need to add
+					connection = account.newConnection(context);
+					connections.add(connection);
+				}
 
-					accountConnections.add(accountConnection);
-
-					if (internetConnectionExists || !accountConnection.isInternetConnectionRequired()) {
-						startAccountConnection(accountConnection);
+				if (connection.isStopped()) {
+					if (internetConnectionExists || !connection.isInternetConnectionRequired()) {
+						startConnection(connection);
 					}
 				}
 			}
 		}
 
-		onAccountConnectionsStarted();
+		onConnectionsStarted();
 	}
 
-	private void startAccountConnection(@Nonnull final AccountConnection accountConnection) {
-		executor.execute(new Runnable() {
-			@Override
-			public void run() {
-				startAccountConnection(0, null);
-			}
-
-			private void startAccountConnection(int attempt, @Nullable AccountConnectionException lastError) {
-				Log.d(App.TAG, "Realm start requested, attempt: " + attempt);
-
-				if (attempt > RETRY_CONNECTION_ATTEMPT_COUNT) {
-					Log.d(App.TAG, "Max retry count reached => stopping...");
-
-					if (!accountConnection.isStopped()) {
-						accountConnection.stop();
-					}
-
-					if (lastError != null) {
-						App.getExceptionHandler().handleException(lastError);
-					}
-
-					App.getAccountService().changeAccountState(accountConnection.getAccount(), AccountState.disabled_by_app);
-				} else {
-					if (accountConnection.isStopped()) {
-						try {
-							if (accountConnection.getAccount().isEnabled()) {
-								Log.d(App.TAG, "Realm is enabled => starting connection...");
-								accountConnection.start();
-							}
-						} catch (AccountConnectionException e) {
-							Log.w(App.TAG, "Realm connection error occurred, connection attempt: " + attempt, e);
-
-							if (!accountConnection.isStopped()) {
-								accountConnection.stop();
-							}
-
-							try {
-								// let's wait a little bit - may be the exception was caused by connectivity problem
-								Thread.sleep(5000);
-							} catch (InterruptedException e1) {
-								Log.e(App.TAG, e1.getMessage(), e1);
-							} finally {
-								startAccountConnection(attempt + 1, e);
-							}
-						}
-					}
-				}
-			}
-		});
+	private void startConnection(@Nonnull final AccountConnection connection) {
+		executor.execute(new ConnectionRunnable(connection));
 	}
 
 	// todo serso: better approach is to fire "realm_connected" events from realm connection and do sync for each realm separately (as soon as it is connected)
-	private void onAccountConnectionsStarted() {
+	private void onConnectionsStarted() {
 		postStartExecutor.schedule(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					// after realm connection is started we have to check user presences
-					App.getSyncService().sync(SyncTask.user_contacts_statuses, null);
+					getSyncService().sync(SyncTask.user_contacts_statuses, null);
 				} catch (TaskIsAlreadyRunningException e) {
 					// do not care
 				}
@@ -176,52 +129,52 @@ final class AccountConnections {
 	}
 
 	public void tryStopAll() {
-		synchronized (this.accountConnections) {
-			for (AccountConnection accountConnection : accountConnections) {
-				if (!accountConnection.isStopped()) {
-					accountConnection.stop();
+		synchronized (this.connections) {
+			for (AccountConnection connection : connections) {
+				if (!connection.isStopped()) {
+					connection.stop();
 				}
 			}
 		}
 	}
 
 	public void onNoInternetConnection() {
-		synchronized (this.accountConnections) {
-			for (AccountConnection accountConnection : accountConnections) {
-				if (accountConnection.isInternetConnectionRequired() && !accountConnection.isStopped()) {
-					accountConnection.stop();
+		synchronized (this.connections) {
+			for (AccountConnection connection : connections) {
+				if (connection.isInternetConnectionRequired() && !connection.isStopped()) {
+					connection.stop();
 				}
 			}
 		}
 	}
 
 	public void tryStopFor(@Nonnull Account account) {
-		synchronized (this.accountConnections) {
-			for (AccountConnection accountConnection : accountConnections) {
-				if (account.equals(accountConnection.getAccount()) && !accountConnection.isStopped()) {
-					accountConnection.stop();
+		synchronized (this.connections) {
+			for (AccountConnection connection : connections) {
+				if (account.equals(connection.getAccount()) && !connection.isStopped()) {
+					connection.stop();
 				}
 			}
 		}
 	}
 
 	public void tryStartAll() {
-		synchronized (this.accountConnections) {
-			for (AccountConnection accountConnection : accountConnections) {
-				if (accountConnection.isStopped()) {
-					startAccountConnection(accountConnection);
+		synchronized (this.connections) {
+			for (AccountConnection connection : connections) {
+				if (connection.isStopped()) {
+					startConnection(connection);
 				}
 			}
 		}
 
-		onAccountConnectionsStarted();
+		onConnectionsStarted();
 	}
 
 	public void removeConnectionFor(@Nonnull Account account) {
-		synchronized (this.accountConnections) {
+		synchronized (this.connections) {
 			// remove realm connections belonged to specified realm
 			final List<AccountConnection> removedConnections = new ArrayList<AccountConnection>();
-			Iterables.removeIf(this.accountConnections, PredicateSpy.spyOn(new AccountConnectionFinder(account), removedConnections));
+			Iterables.removeIf(this.connections, PredicateSpy.spyOn(new ConnectionFinder(account), removedConnections));
 
 			// stop them
 			for (AccountConnection removedConnection : removedConnections) {
@@ -233,25 +186,33 @@ final class AccountConnections {
 	}
 
 	public void updateAccount(@Nonnull Account account, boolean start) {
-		synchronized (this.accountConnections) {
+		synchronized (this.connections) {
 			removeConnectionFor(account);
 			startConnectionsFor(Arrays.asList(account), start);
 		}
 	}
 
-	private static class AccountConnectionFinder implements Predicate<AccountConnection> {
+	private static class ConnectionFinder implements Predicate<AccountConnection> {
 
 		@Nonnull
 		private final Account account;
 
-		public AccountConnectionFinder(@Nonnull Account account) {
+		public ConnectionFinder(@Nonnull Account account) {
 			this.account = account;
 		}
 
 		@Override
-		public boolean apply(@Nullable AccountConnection accountConnection) {
-			return accountConnection != null && accountConnection.getAccount().equals(account);
+		public boolean apply(@Nullable AccountConnection connection) {
+			return connection != null && connection.getAccount().equals(account);
 		}
 	}
 
+	private class ConnectionThreadFactory implements ThreadFactory {
+
+		@Nonnull
+		@Override
+		public Thread newThread(@Nonnull Runnable r) {
+			return new Thread(r, "Account connection thread: " + threadCounter.incrementAndGet());
+		}
+	}
 }

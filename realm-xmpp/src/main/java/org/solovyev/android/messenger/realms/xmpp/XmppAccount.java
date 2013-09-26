@@ -48,7 +48,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 
 	@Nonnull
 	@Override
-	protected AccountConnection newRealmConnection0(@Nonnull Context context) {
+	protected AccountConnection createConnection(@Nonnull Context context) {
 		return new XmppAccountConnection(this, context);
 	}
 

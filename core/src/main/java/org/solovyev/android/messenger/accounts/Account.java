@@ -105,7 +105,7 @@ public interface Account<C extends AccountConfiguration> extends MessengerEntity
 	AccountChatService getAccountChatService();
 
 	@Nonnull
-	AccountConnection newRealmConnection(@Nonnull Context context);
+	AccountConnection newConnection(@Nonnull Context context);
 
 	int getCompositeDialogTitleResId();
 }

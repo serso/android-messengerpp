@@ -155,14 +155,14 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public final synchronized AccountConnection newRealmConnection(@Nonnull Context context) {
-		final AccountConnection accountConnection = newRealmConnection0(context);
-		this.accountConnection = accountConnection;
-		return accountConnection;
+	public final synchronized AccountConnection newConnection(@Nonnull Context context) {
+		final AccountConnection connection = createConnection(context);
+		this.accountConnection = connection;
+		return connection;
 	}
 
 	@Nonnull
-	protected abstract AccountConnection newRealmConnection0(@Nonnull Context context);
+	protected abstract AccountConnection createConnection(@Nonnull Context context);
 
 	@Nullable
 	protected synchronized AccountConnection getAccountConnection() {

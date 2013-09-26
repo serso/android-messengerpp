@@ -51,7 +51,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 	}
 
 	public void testGetUserById() throws Exception {
-		final AccountConnection accountConnection2 = realm2.newRealmConnection(getInstrumentation().getContext());
+		final AccountConnection accountConnection2 = realm2.newConnection(getInstrumentation().getContext());
 
 		try {
 			new Thread(new Runnable() {
@@ -112,7 +112,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 	}
 
 	public void testCheckOnlineUsers() throws Exception {
-		final AccountConnection accountConnection2 = realm2.newRealmConnection(getInstrumentation().getContext());
+		final AccountConnection accountConnection2 = realm2.newConnection(getInstrumentation().getContext());
 
 		try {
 			new Thread(new Runnable() {
