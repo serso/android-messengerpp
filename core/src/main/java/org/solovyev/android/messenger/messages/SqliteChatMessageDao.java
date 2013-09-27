@@ -376,7 +376,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery("select id from messages where chat_id = ? group by id having min(send_time)", new String[]{chatId});
+			return db.rawQuery("select id from messages where chat_id = ? order by send_time asc", new String[]{chatId});
 		}
 
 		@Nonnull
@@ -403,7 +403,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery("select id from messages where chat_id = ? group by id having max(send_time)", new String[]{chatId});
+			return db.rawQuery("select id from messages where chat_id = ? order by send_time desc", new String[]{chatId});
 		}
 
 		@Nonnull
