@@ -6,11 +6,14 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.fragments.FragmentDef;
 import org.solovyev.android.messenger.accounts.MessengerAccountsFragment;
-import org.solovyev.android.messenger.chats.MessengerChatsFragment;
+import org.solovyev.android.messenger.chats.Chats;
+import org.solovyev.android.messenger.chats.MessengerRecentChatsFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.MessengerPreferenceGroupsFragment;
 import org.solovyev.android.messenger.realms.MessengerRealmsFragment;
 import org.solovyev.android.messenger.users.MessengerContactsFragment;
+
+import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 
 /**
  * User: serso
@@ -20,7 +23,8 @@ import org.solovyev.android.messenger.users.MessengerContactsFragment;
 public enum MessengerPrimaryFragment implements FragmentDef {
 
 	contacts(MessengerContactsFragment.class, MessengerContactsFragment.FRAGMENT_TAG, R.string.mpp_tab_contacts),
-	messages(MessengerChatsFragment.class, MessengerChatsFragment.FRAGMENT_TAG, R.string.mpp_tab_messages),
+	//messages(MessengerChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
+	messages(MessengerRecentChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
 	realms(MessengerAccountsFragment.class, MessengerAccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms),
 	realm_defs(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms, true),
 	settings(MessengerPreferenceGroupsFragment.class, MessengerPreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences);

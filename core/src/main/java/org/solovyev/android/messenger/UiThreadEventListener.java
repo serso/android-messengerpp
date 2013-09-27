@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 
 import javax.annotation.Nonnull;
 
@@ -15,20 +16,26 @@ import org.solovyev.common.listeners.JEventListener;
  */
 public final class UiThreadEventListener<E extends JEvent> implements JEventListener<E> {
 
-	@Nonnull
 	private final Activity activity;
+	private final Fragment fragment;
 
 	@Nonnull
 	private final JEventListener<E> eventListener;
 
-	private UiThreadEventListener(@Nonnull Activity activity, @Nonnull JEventListener<E> eventListener) {
+	private UiThreadEventListener(Activity activity, Fragment fragment, @Nonnull JEventListener<E> eventListener) {
 		this.activity = activity;
+		this.fragment = fragment;
 		this.eventListener = eventListener;
 	}
 
 	@Nonnull
-	public static <E extends JEvent> UiThreadEventListener<E> wrap(@Nonnull Activity activity, @Nonnull JEventListener<E> eventListener) {
-		return new UiThreadEventListener<E>(activity, eventListener);
+	public static <E extends JEvent> UiThreadEventListener<E> onUiThread(@Nonnull Activity activity, @Nonnull JEventListener<E> eventListener) {
+		return new UiThreadEventListener<E>(activity, null, eventListener);
+	}
+
+	@Nonnull
+	public static <E extends JEvent> UiThreadEventListener<E> onUiThread(@Nonnull Fragment fragment, @Nonnull JEventListener<E> eventListener) {
+		return new UiThreadEventListener<E>(null, fragment, eventListener);
 	}
 
 	@Nonnull
@@ -39,11 +46,20 @@ public final class UiThreadEventListener<E extends JEvent> implements JEventList
 
 	@Override
 	public void onEvent(@Nonnull final E event) {
-		Threads.tryRunOnUiThread(activity, new Runnable() {
-			@Override
-			public void run() {
-				eventListener.onEvent(event);
-			}
-		});
+		if (activity != null) {
+			Threads.tryRunOnUiThread(activity, new Runnable() {
+				@Override
+				public void run() {
+					eventListener.onEvent(event);
+				}
+			});
+		} else {
+			Threads2.tryRunOnUiThread(fragment, new Runnable() {
+				@Override
+				public void run() {
+					eventListener.onEvent(event);
+				}
+			});
+		}
 	}
 }

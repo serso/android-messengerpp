@@ -45,7 +45,9 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 
 	@Nonnull
 	public static ChatListItem newInstance(@Nonnull User user, @Nonnull Chat chat) {
-		return new ChatListItem(UiChat.newInstance(user, chat, getLastChatMessage(chat), getUnreadMessagesCount(chat), ""));
+		final ChatMessage lastChatMessage = getLastChatMessage(chat);
+		final int unreadMessagesCount = getUnreadMessagesCount(chat);
+		return new ChatListItem(UiChat.newInstance(user, chat, lastChatMessage, unreadMessagesCount, Chats.getDisplayName(chat, lastChatMessage, user, unreadMessagesCount)));
 	}
 
 	@Nonnull

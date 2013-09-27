@@ -95,7 +95,7 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 
 				try {
 					final User user = activity.getAccountService().getAccountById(contact.getEntity().getAccountId()).getUser();
-					result = App.getChatService().getPrivateChat(user.getEntity(), contact.getEntity());
+					result = App.getChatService().getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 				} catch (AccountException e) {
 					throwException(e);
 				}

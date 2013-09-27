@@ -24,6 +24,8 @@ import org.solovyev.common.Builder;
 
 import com.actionbarsherlock.app.ActionBar;
 
+import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
+
 /**
  * User: serso
  * Date: 3/5/13
@@ -66,14 +68,14 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 	private void handleChatOpenRequestedEvent(@Nonnull final Chat chat) {
 		final MultiPaneFragmentManager fragmentService = activity.getMultiPaneFragmentManager();
 		if (activity.getMultiPaneManager().isDualPane(activity)) {
-			if (!fragmentService.isFragmentShown(MessengerChatsFragment.FRAGMENT_TAG)) {
-				final ActionBar.Tab tab = activity.findTabByTag(MessengerChatsFragment.FRAGMENT_TAG);
+			if (!fragmentService.isFragmentShown(CHATS_FRAGMENT_TAG)) {
+				final ActionBar.Tab tab = activity.findTabByTag(CHATS_FRAGMENT_TAG);
 				if (tab != null) {
 					tab.select();
 				}
 			}
 
-			final MessengerChatsFragment fragment = fragmentService.getFragment(MessengerChatsFragment.FRAGMENT_TAG);
+			final AbstractChatsFragment fragment = fragmentService.getFragment(CHATS_FRAGMENT_TAG);
 			if (fragment != null) {
 				fragment.selectListItem(chat.getId());
 			}

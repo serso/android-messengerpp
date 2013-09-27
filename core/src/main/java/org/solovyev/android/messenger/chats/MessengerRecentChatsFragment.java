@@ -36,22 +36,21 @@ import com.actionbarsherlock.view.MenuItem;
  * Date: 6/7/12
  * Time: 5:37 PM
  */
-public final class MessengerChatsFragment extends AbstractChatsFragment {
+public final class MessengerRecentChatsFragment extends AbstractChatsFragment {
 
-	public MessengerChatsFragment() {
+	public MessengerRecentChatsFragment() {
 		super();
 	}
 
 	@Nonnull
 	@Override
-	protected ChatsAdapter createAdapter() {
-		return new ChatsAdapter(getActivity());
+	protected RecentChatsAdapter createAdapter() {
+		return new RecentChatsAdapter(getActivity());
 	}
 
-	@Nonnull
+	@Nullable
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute);
+		return new RecentChatsAsyncLoader(getActivity(), adapter, onPostExecute);
 	}
-
 }

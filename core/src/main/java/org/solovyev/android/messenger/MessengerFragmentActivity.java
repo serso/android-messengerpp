@@ -30,6 +30,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 
+import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
+
 /**
  * User: serso
  * Date: 6/1/12
@@ -268,7 +270,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 			}
 		});
 
-		this.messengerEventListener = UiThreadEventListener.wrap(this, new MessengerEventListener());
+		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
 		this.messengerListeners.addListener(messengerEventListener);
 	}
 

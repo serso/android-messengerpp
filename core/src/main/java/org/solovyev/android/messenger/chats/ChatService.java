@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.entities.Entity;
@@ -103,6 +102,11 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	void onChatMessageRead(@Nonnull Chat chat, @Nonnull ChatMessage message);
 
+	@Nonnull
+	List<UiChat> getLastUserChats(@Nonnull User user, int count);
+
+	void removeEmptyChats(@Nonnull User user);
+
     /*
     **********************************************************************
     *
@@ -124,6 +128,9 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	@Nonnull
 	Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2);
 
+	@Nullable
+	Chat getPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException;
+
 	/**
 	 * Method returns private chat for specified users. In case if such chat doesn't exist new empty chat is created.
 	 *
@@ -132,7 +139,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return private chat
 	 */
 	@Nonnull
-	Chat getPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException;
+	Chat getOrCreatePrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException;
 
 	/**
 	 * Method returns second user in private chat (first user is always realm user)

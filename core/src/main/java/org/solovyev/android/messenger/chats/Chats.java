@@ -12,12 +12,19 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
 
+import static java.lang.Math.min;
+import static java.util.Collections.sort;
+
 /**
  * User: serso
  * Date: 3/7/13
  * Time: 3:49 PM
  */
 public final class Chats {
+
+	@Nonnull
+	public static final String CHATS_FRAGMENT_TAG = "chats";
+	static final int MAX_RECENT_CHATS = 20;
 
 	private Chats() {
 		throw new AssertionError();
@@ -69,5 +76,12 @@ public final class Chats {
 	@Nonnull
 	public static ApiChat newEmptyApiChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
 		return ApiChatImpl.newInstance(chat, Collections.<ChatMessage>emptyList(), participants);
+	}
+
+	@Nonnull
+	static List<UiChat> getLastChatsByDate(@Nonnull List<UiChat> result, int count) {
+		sort(result, new LastMessageDateChatComparator());
+
+		return result.subList(0, min(result.size(), count));
 	}
 }

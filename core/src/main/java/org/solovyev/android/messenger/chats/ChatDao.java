@@ -58,4 +58,6 @@ public interface ChatDao {
 	 */
 	@Nonnull
 	Map<Entity, Integer> getUnreadChats();
+
+	void deleteChat(@Nonnull User user, @Nonnull Chat chat);
 }

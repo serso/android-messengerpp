@@ -542,7 +542,11 @@ public class DefaultUserService implements UserService {
 		try {
 			if (!Threads.isUiThread()) {
 				final Chat chat = chatService.getPrivateChat(getRealmByEntity(contact).getUser().getEntity(), contact);
-				return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
+				if (chat != null) {
+					return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
+				} else {
+					return 0;
+				}
 			} else {
 				return 0;
 			}

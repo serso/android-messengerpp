@@ -57,6 +57,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 /**
@@ -389,7 +390,7 @@ public class DefaultChatService implements ChatService {
 			if (message.isPrivate()) {
 				final Entity participant = message.getSecondUser(user);
 				assert participant != null;
-				final Chat chat = getPrivateChat(user, participant);
+				final Chat chat = getOrCreatePrivateChat(user, participant);
 				messagesByChats.put(chat, message);
 			} else {
 				// todo serso: we need link to chat here
@@ -466,6 +467,39 @@ public class DefaultChatService implements ChatService {
 		if (changedReadStatus) {
 			fireEvent(ChatEventType.message_changed.newEvent(chat, message));
 			fireEvent(ChatEventType.message_read.newEvent(chat, message));
+		}
+	}
+
+	@Nonnull
+	@Override
+	public List<UiChat> getLastUserChats(@Nonnull User user, int count) {
+		final List<UiChat> result = new ArrayList<UiChat>();
+
+		final List<Chat> chats = userService.getUserChats(user.getEntity());
+
+		for (Chat chat : chats) {
+			final ChatMessage lastMessage = getLastMessage(chat.getEntity());
+			if (lastMessage != null) {
+				final int unreadMessagesCount = getUnreadMessagesCount(chat.getEntity());
+				final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
+				result.add(UiChat.newInstance(user, chat, lastMessage, unreadMessagesCount, displayName));
+			} else {
+				Log.i(TAG, "Empty chat detected, chat id " + chat.getId());
+			}
+		}
+
+		return getLastChatsByDate(result, count);
+	}
+
+	@Override
+	public void removeEmptyChats(@Nonnull User user) {
+		final List<Chat> chats = userService.getUserChats(user.getEntity());
+
+		for (Chat chat : chats) {
+			final ChatMessage lastMessage = getLastMessage(chat.getEntity());
+			if (lastMessage == null) {
+				chatDao.deleteChat(user, chat);
+			}
 		}
 	}
 
@@ -556,12 +590,16 @@ public class DefaultChatService implements ChatService {
 		return this.chatMessageService;
 	}
 
-	@Nonnull
+	@Nullable
 	@Override
 	public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) throws AccountException {
-		final Entity chat = this.getPrivateChatId(user1, user2);
+		return this.getChatById(getPrivateChatId(user1, user2));
+	}
 
-		Chat result = this.getChatById(chat);
+	@Nonnull
+	@Override
+	public Chat getOrCreatePrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException {
+		Chat result = this.getPrivateChat(user1, user2);
 		if (result == null) {
 			result = this.newPrivateChat(user1, user2);
 		}
@@ -659,24 +697,7 @@ public class DefaultChatService implements ChatService {
 				case changed:
 					chatParticipantsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
 					break;
-				case contact_added:
-					onContactAdded(eventUser, event.getDataAsUser());
-					break;
-				case contact_added_batch:
-					for (User contact : event.getDataAsUsers()) {
-						onContactAdded(eventUser, contact);
-					}
-					break;
 			}
-		}
-	}
-
-	private void onContactAdded(@Nonnull User user, @Nonnull User contact) {
-		try {
-			final Entity contactEntity = contact.getEntity();
-			getPrivateChat(user.getEntity(), contactEntity);
-		} catch (AccountException e) {
-			Log.e(TAG, e.getMessage(), e);
 		}
 	}
 

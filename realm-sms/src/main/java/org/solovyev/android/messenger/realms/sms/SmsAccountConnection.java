@@ -115,7 +115,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 			for (Map.Entry<String, Collection<String>> entry : messagesByPhoneNumber.asMap().entrySet()) {
 				final User contact = findOrCreateContact(entry.getKey(), contacts);
-				final Chat chat = chatService.getPrivateChat(user.getEntity(), contact.getEntity());
+				final Chat chat = chatService.getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 
 				final List<ChatMessage> messages = new ArrayList<ChatMessage>(entry.getValue().size());
 				for (String message : entry.getValue()) {

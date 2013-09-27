@@ -112,6 +112,11 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new UnreadChatsLoader(getContext(), getSqliteOpenHelper()));
 	}
 
+	@Override
+	public void deleteChat(@Nonnull User user, @Nonnull Chat chat) {
+		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new RemoveChats(user.getId(), chat));
+	}
+
 	@Nonnull
 	@Override
 	public List<String> loadChatIds() {
@@ -348,6 +353,11 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		private RemoveChats(@Nonnull String userId, @Nonnull List<String> chatIds) {
 			this.userId = userId;
 			this.chatIds = chatIds;
+		}
+
+		private RemoveChats(@Nonnull String userId, @Nonnull Chat chat) {
+			this.userId = userId;
+			this.chatIds = Arrays.asList(chat.getId());
 		}
 
 		@Nonnull

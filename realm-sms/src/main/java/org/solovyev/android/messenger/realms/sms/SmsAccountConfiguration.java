@@ -22,7 +22,7 @@ public final class SmsAccountConfiguration extends JObject implements AccountCon
 
 	@Override
 	public boolean isSameAccount(AccountConfiguration c) {
-		return true;
+		return c instanceof SmsAccountConfiguration;
 	}
 
 	@Override
