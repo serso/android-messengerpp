@@ -10,7 +10,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.solovyev.android.list.AdapterFilter;
-import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.collections.Collections;
@@ -25,7 +24,6 @@ import java.util.List;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
-import static org.solovyev.common.collections.Collections.isEmpty;
 
 /**
  * User: serso
@@ -41,7 +39,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	private static final String MODE = "mode";
 
 	@Nonnull
-	private MessengerContactsMode mode = MessengerContactsFragment.DEFAULT_CONTACTS_MODE;
+	private MessengerContactsMode mode = Users.DEFAULT_CONTACTS_MODE;
 
 	public AbstractContactsAdapter(@Nonnull Context context) {
 		super(context, new ArrayList<ContactListItem>());
@@ -212,10 +210,8 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 	private class ContactsFilter extends AdapterFilter<ContactListItem> {
 
-		private final String TAG = newTag("ContactFilter");
-
 		@Nonnull
-		private ContactFilter emptyPrefixFilter = new ContactFilter(null);
+		private ContactListItemFilter emptyPrefixFilter = new ContactListItemFilter(null, mode);
 
 		private ContactsFilter(@Nonnull Helper<ContactListItem> helper) {
 			super(helper);
@@ -232,56 +228,23 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				return emptyPrefixFilter;
 			} else {
 				assert prefix != null;
-				return new ContactFilter(prefix.toString().toLowerCase());
-			}
-		}
-
-		private class ContactFilter implements JPredicate<ContactListItem> {
-
-			@Nullable
-			private final String prefix;
-
-			@Nullable
-			private final PrefixFilter<String> prefixFilter;
-
-			public ContactFilter(@Nullable String prefix) {
-				this.prefix = prefix;
-				if (!Strings.isEmpty(prefix)) {
-					assert prefix != null;
-					prefixFilter = new PrefixFilter<String>(prefix);
-				} else {
-					prefixFilter = null;
-				}
-			}
-
-			@Override
-			public boolean apply(@Nullable ContactListItem listItem) {
-				if (listItem != null) {
-					final User contact = listItem.getContact();
-
-					boolean shown = true;
-					if (mode == MessengerContactsMode.all_contacts) {
-						shown = true;
-					} else if (mode == MessengerContactsMode.only_online_contacts) {
-						shown = contact.isOnline();
-					}
-
-					if (shown) {
-						if (prefixFilter != null) {
-							shown = prefixFilter.apply(listItem.getDisplayName().toString());
-							if (!shown) {
-								Log.d(TAG, contact.getDisplayName() + " is filtered due to filter " + prefix);
-							}
-						}
-					} else {
-						Log.d(TAG, contact.getDisplayName() + " is filtered due to mode " + mode);
-					}
-
-					return shown;
-				}
-
-				return true;
+				return new ContactListItemFilter(prefix.toString().toLowerCase(), mode);
 			}
 		}
 	}
+
+	private static final class ContactListItemFilter implements JPredicate<ContactListItem> {
+
+		private final JPredicate<User> filter;
+
+		private ContactListItemFilter(@Nullable String query, @Nonnull MessengerContactsMode mode) {
+			filter = new ContactFilter(query, mode);
+		}
+
+		@Override
+		public boolean apply(@Nullable ContactListItem contactListItem) {
+			return contactListItem == null || filter.apply(contactListItem.getContact());
+		}
+	}
+
 }

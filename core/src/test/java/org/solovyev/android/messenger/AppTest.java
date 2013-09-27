@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.chats.ChatService;
 
 import javax.annotation.Nonnull;
 
@@ -13,6 +14,7 @@ public class AppTest {
 		final App app = App.getInstance();
 		app.setExceptionHandler(mock(MessengerExceptionHandler.class));
 		app.setAccountService(mock(AccountService.class));
+		app.setChatService(mock(ChatService.class));
 		return app;
 	}
 }

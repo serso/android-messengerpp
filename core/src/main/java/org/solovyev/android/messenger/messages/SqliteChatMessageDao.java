@@ -182,7 +182,15 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		return this.chatService;
 	}
 
-    /*
+	public void setChatService(@Nonnull ChatService chatService) {
+		this.chatService = chatService;
+	}
+
+	public void setUserService(@Nonnull UserService userService) {
+		this.userService = userService;
+	}
+
+	/*
     **********************************************************************
     *
     *                           STATIC

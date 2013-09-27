@@ -167,6 +167,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	@Nonnull
 	private final Handler uiHandler = Threads.newUiHandler();
 
+	@Nonnull
+	private PostListLoadingRunnable onPostLoading;
+
     /*
     **********************************************************************
     *
@@ -302,6 +305,12 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	public void toggleFilterBox() {
 		if (listViewFilter != null) {
 			listViewFilter.toggleView();
+		}
+	}
+
+	protected void setFilterBoxVisible() {
+		if (listViewFilter != null) {
+			listViewFilter.setFilterBoxVisible(true);
 		}
 	}
 
@@ -476,22 +485,27 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			}
 		}
 
-		final PostListLoadingRunnable onPostExecute = new PostListLoadingRunnable(selectedPosition, selectedListItem, lv);
-
-		this.listLoader = createAsyncLoader(adapter, onPostExecute);
-		if (this.listLoader != null) {
-			this.listLoader.executeInParallel();
-		} else {
-			// we need to schedule onPostExecute in order to be after all pending transaction in fragment manager
-			uiHandler.post(onPostExecute);
-		}
+		onPostLoading = new PostListLoadingRunnable(selectedPosition, selectedListItem, getListView());
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 
+		this.listLoader = createAsyncLoader(adapter, onPostLoading);
+		if (this.listLoader != null) {
+			this.listLoader.executeInParallel();
+		} else {
+			// we need to schedule onPostLoading in order to be after all pending transaction in fragment manager
+			uiHandler.post(onPostLoading);
+		}
+
 		eventManager.fire(FragmentUiEventType.started.newEvent(this));
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
 	}
 
 	@Override
@@ -508,13 +522,23 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	}
 
 	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
+	public void onStop() {
 		if (listLoader != null) {
 			listLoader.cancel(false);
 			listLoader = null;
 		}
+
+		super.onStop();
+	}
+
+	@Nullable
+	protected CharSequence getFilterText() {
+		return listViewFilter != null ? listViewFilter.getFilterText() : null;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
 
 		if (userEventListener != null) {
 			this.userService.removeListener(userEventListener);

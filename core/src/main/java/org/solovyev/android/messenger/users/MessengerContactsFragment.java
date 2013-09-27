@@ -29,16 +29,10 @@ import com.actionbarsherlock.view.MenuItem;
 public final class MessengerContactsFragment extends AbstractMessengerContactsFragment {
 
 	@Nonnull
-	public static final String FRAGMENT_TAG = "contacts";
-
-	@Nonnull
 	private static final String MODE = "mode";
 
 	@Nonnull
-	static final MessengerContactsMode DEFAULT_CONTACTS_MODE = MessengerContactsMode.only_online_contacts;
-
-	@Nonnull
-	private MessengerContactsMode mode = DEFAULT_CONTACTS_MODE;
+	private MessengerContactsMode mode = Users.DEFAULT_CONTACTS_MODE;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.solovyev.android.messenger.accounts.Account;
@@ -115,6 +116,9 @@ public interface UserService {
 	 * @param available new presence value
 	 */
 	void onContactPresenceChanged(@Nonnull User user, @Nonnull User contact, boolean available);
+
+	@Nonnull
+	List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count);
 
     /*
     **********************************************************************

@@ -2,6 +2,8 @@ package org.solovyev.android.messenger.chats;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.messages.Messages.compareSendDatesLatestFirst;
+
 /**
  * User: serso
  * Date: 3/7/13
@@ -22,16 +24,8 @@ final class ChatListItemComparator implements java.util.Comparator<ChatListItem>
 
 	@Override
 	public int compare(@Nonnull ChatListItem lhs, @Nonnull ChatListItem rhs) {
-		final ChatMessage llm = lhs.getLastMessage();
-		final ChatMessage rlm = rhs.getLastMessage();
-		if (llm != null && rlm != null) {
-			return -llm.getSendDate().compareTo(rlm.getSendDate());
-		} else if (llm != null) {
-			return -1;
-		} else if (rlm != null) {
-			return 1;
-		} else {
-			return 0;
-		}
+		final ChatMessage lm = lhs.getLastMessage();
+		final ChatMessage rm = rhs.getLastMessage();
+		return compareSendDatesLatestFirst(lm, rm);
 	}
 }

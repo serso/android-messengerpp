@@ -57,6 +57,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
@@ -765,11 +766,7 @@ public class DefaultChatService implements ChatService {
 				switch (event.getType()) {
 					case message_added: {
 						final ChatMessage message = event.getDataAsChatMessage();
-						final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-						if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate())) {
-							lastMessagesCache.put(eventChat.getEntity(), message);
-							changedLastMessages.put(eventChat, message);
-						}
+						tryPutNewLastMessage(eventChat, changedLastMessages, message);
 					}
 					break;
 					case message_added_batch: {
@@ -784,11 +781,7 @@ public class DefaultChatService implements ChatService {
 							}
 						}
 
-						final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-						if (newestMessage != null && (messageFromCache == null || newestMessage.getSendDate().isAfter(messageFromCache.getSendDate()))) {
-							lastMessagesCache.put(eventChat.getEntity(), newestMessage);
-							changedLastMessages.put(eventChat, newestMessage);
-						}
+						tryPutNewLastMessage(eventChat, changedLastMessages, newestMessage);
 					}
 					break;
 					case message_changed: {
@@ -805,8 +798,20 @@ public class DefaultChatService implements ChatService {
 				}
 			}
 
-			for (Map.Entry<Chat, ChatMessage> changedLastMessageEntry : changedLastMessages.entrySet()) {
-				fireEvent(ChatEventType.last_message_changed.newEvent(changedLastMessageEntry.getKey(), changedLastMessageEntry.getValue()));
+			for (Map.Entry<Chat, ChatMessage> entry : changedLastMessages.entrySet()) {
+				fireEvent(last_message_changed.newEvent(entry.getKey(), entry.getValue()));
+			}
+		}
+	}
+
+	private void tryPutNewLastMessage(@Nonnull Chat chat,
+									  @Nonnull Map<Chat, ChatMessage> changedLastMessages,
+									  @Nullable ChatMessage message) {
+		if (message != null) {
+			final ChatMessage messageFromCache = lastMessagesCache.get(chat.getEntity());
+			if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate())) {
+				lastMessagesCache.put(chat.getEntity(), message);
+				changedLastMessages.put(chat, message);
 			}
 		}
 	}

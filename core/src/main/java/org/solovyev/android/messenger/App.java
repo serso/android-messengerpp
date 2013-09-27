@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
+
+import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -16,6 +18,8 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.tasks.TaskService;
+
+import android.os.Handler;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -88,6 +92,9 @@ public final class App {
 	@Nonnull
 	private MessengerSecurityService securityService;
 
+	@Nonnull
+	private Handler uiHandler;
+
 	private void init0(@Nonnull MessengerApplication application) {
 		this.application = application;
 
@@ -110,6 +117,8 @@ public final class App {
 		accountConnectionsService.init();
 
 		networkStateService.startListening(application);
+
+		uiHandler = Threads.newUiHandler();
 	}
 
 	/*
@@ -216,6 +225,11 @@ public final class App {
 	@Nonnull
 	public static EventManager getEventManager(@Nonnull Context context) {
 		return RoboGuice.getInjector(context).getInstance(EventManager.class);
+	}
+
+	@Nonnull
+	public static Handler getUiHandler() {
+		return instance.uiHandler;
 	}
 
 	/*

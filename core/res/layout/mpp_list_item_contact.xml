@@ -21,6 +21,7 @@
 		<TextView
 			a:id="@+id/mpp_li_contact_account_textview"
 			a:visibility="gone"
+			a:ellipsize="end"
 			style="?mpp_list_item_text_secondary" />
 
 	</LinearLayout>

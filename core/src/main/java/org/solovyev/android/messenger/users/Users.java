@@ -26,6 +26,14 @@ import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
  */
 public final class Users {
 
+	@Nonnull
+	public static final String CONTACTS_FRAGMENT_TAG = "contacts";
+
+	static final int MAX_SEARCH_CONTACTS = 20;
+
+	@Nonnull
+	static final MessengerContactsMode DEFAULT_CONTACTS_MODE = MessengerContactsMode.all_contacts;
+
 	private Users() {
 	}
 

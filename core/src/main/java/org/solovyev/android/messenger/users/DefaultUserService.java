@@ -33,6 +33,8 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 
+import static java.lang.Math.min;
+import static org.solovyev.android.messenger.users.MessengerContactsMode.all_contacts;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 
 /**
@@ -297,7 +299,31 @@ public class DefaultUserService implements UserService {
 		listeners.fireEvent(contacts_presence_changed.newEvent(user, contacts));
 	}
 
-    /*
+	@Nonnull
+	@Override
+	public List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count) {
+		Log.d(TAG, "Find contacts for user: " + user.getLogin() + ", query: " + query);
+		final List<UiContact> result = new ArrayList<UiContact>();
+
+		final List<User> contacts = getUserContacts(user.getEntity());
+		final ContactFilter filter = new ContactFilter(query, all_contacts);
+
+		for (int i = 0; i < min(contacts.size(), count); i++) {
+			final User contact = contacts.get(i);
+			if(filter.apply(contact)) {
+				result.add(UiContact.newInstance(contact, getUnreadMessagesCount(contact.getEntity())));
+				if(result.size() >= count) {
+					break;
+				}
+			}
+		}
+
+		Log.d(TAG, "Find contacts result: " + result.size());
+
+		return result;
+	}
+
+	/*
     **********************************************************************
     *
     *                           SYNC

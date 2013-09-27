@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.messages;
 import android.text.Html;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -88,5 +89,29 @@ public final class Messages {
 	@Nonnull
 	public static ChatMessage newEmpty(@Nonnull String messageId) {
 		return newInstance(newEmptyMessage(messageId), false);
+	}
+
+	public static int compareSendDatesLatestFirst(@Nullable ChatMessage lm, @Nullable ChatMessage rm) {
+		if(lm == null && rm == null) {
+			return 0;
+		} else if (lm == null) {
+			return 1;
+		} else if (rm == null) {
+			return -1;
+		} else {
+			return lm.getSendDate().compareTo(rm.getSendDate());
+		}
+	}
+
+	public static int compareSendDates(@Nullable ChatMessage lm, @Nullable ChatMessage rm) {
+		if(lm == null && rm == null) {
+			return 0;
+		} else if (lm == null) {
+			return 1;
+		} else if (rm == null) {
+			return -1;
+		} else {
+			return -lm.getSendDate().compareTo(rm.getSendDate());
+		}
 	}
 }
