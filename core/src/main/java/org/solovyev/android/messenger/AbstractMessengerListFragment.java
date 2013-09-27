@@ -563,15 +563,32 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	public void onTopReached() {
 	}
 
-	public final void selectListItem(@Nonnull String listItemId) {
+	public final void clickItemById(@Nonnull String listItemId) {
 		if (adapter != null && adapter.isInitialized()) {
 			final int size = adapter.getCount();
 			for (int i = 0; i < size; i++) {
 				final MessengerListItem listItem = adapter.getItem(i);
 				if (listItem.getId().equals(listItemId)) {
-					adapter.getSelectedItemListener().onItemClick(i);
+					clickItem(i);
 					break;
 				}
+			}
+		}
+	}
+
+	private void clickItem(int position) {
+		final View root = getView();
+		if (root != null) {
+			clickItem(this.getActivity(), position, getListView(root));
+		}
+	}
+
+	private void clickItem(@Nonnull Activity activity, int position, @Nonnull ListView listView) {
+		if (position >= 0 && position < adapter.getCount()) {
+			adapter.getSelectedItemListener().onItemClick(position);
+			final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
+			if (onClickAction != null) {
+				onClickAction.onClick(activity, adapter, listView);
 			}
 		}
 	}
@@ -667,16 +684,10 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 						position = selectedPosition;
 					}
 
-					if (multiPaneManager.isDualPane(activity)) {
-						if (position >= 0 && position < adapter.getCount()) {
-							adapter.getSelectedItemListener().onItemClick(position);
-							final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
-							if (onClickAction != null) {
-								onClickAction.onClick(activity, adapter, listView);
-							}
-						}
+					if(multiPaneManager.isDualPane(activity)) {
+						// in case of dual pane we need to make a real click (call click listener)
+						clickItem(activity, position, listView);
 					}
-
 				}
 			}
 		}
