@@ -41,7 +41,7 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 				final ChatMessage lastMessage = chatService.getLastMessage(chat.getEntity());
 				final int unreadMessagesCount = chatService.getUnreadMessagesCount(chat.getEntity());
 				final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
-				result.add(UiChat.newInstance(user, chat, lastMessage, unreadMessagesCount, displayName));
+				result.add(UiChat.newUiChat(user, chat, lastMessage, unreadMessagesCount, displayName));
 			}
 		}
 

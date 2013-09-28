@@ -96,7 +96,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView);
 
-	void saveChatMessages(@Nonnull Entity realmChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate);
+	void saveChatMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate);
 
 	void onChatMessageRead(@Nonnull Chat chat, @Nonnull ChatMessage message);
 

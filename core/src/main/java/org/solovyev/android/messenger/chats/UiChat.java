@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.chats;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI
@@ -35,7 +35,7 @@ final class UiChat implements MessengerEntity {
 	}
 
 	@Nonnull
-	static UiChat newInstance(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName) {
+	static UiChat newUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName) {
 		return new UiChat(user, chat, lastMessage, unreadMessagesCount, displayName);
 	}
 
@@ -95,16 +95,16 @@ final class UiChat implements MessengerEntity {
 
 	@Nonnull
 	public UiChat copyForNewChat(@Nonnull Chat newChat) {
-		return UiChat.newInstance(this.user, newChat, this.lastMessage, this.unreadMessagesCount, this.displayName);
+		return UiChat.newUiChat(this.user, newChat, this.lastMessage, this.unreadMessagesCount, this.displayName);
 	}
 
 	@Nonnull
 	public UiChat copyForNewLastMessage(@Nonnull ChatMessage newLastMessage) {
-		return UiChat.newInstance(this.user, this.chat, newLastMessage, this.unreadMessagesCount, this.displayName);
+		return UiChat.newUiChat(this.user, this.chat, newLastMessage, this.unreadMessagesCount, this.displayName);
 	}
 
 	@Nonnull
 	public UiChat copyForNewUnreadMessageCount(@Nonnull Integer unreadMessagesCount) {
-		return UiChat.newInstance(this.user, this.chat, this.lastMessage, unreadMessagesCount, this.displayName);
+		return UiChat.newUiChat(this.user, this.chat, this.lastMessage, unreadMessagesCount, this.displayName);
 	}
 }

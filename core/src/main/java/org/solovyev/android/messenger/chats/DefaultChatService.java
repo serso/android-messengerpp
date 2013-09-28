@@ -36,6 +36,7 @@ import java.util.concurrent.Executor;
 import static com.google.common.collect.Lists.transform;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
+import static org.solovyev.android.messenger.chats.UiChat.newUiChat;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 /**
@@ -447,13 +448,13 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void saveChatMessages(@Nonnull Entity realmChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate) {
-		Chat chat = this.getChatById(realmChat);
+	public void saveChatMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate) {
+		Chat chat = this.getChatById(accountChat);
 
 		if (chat != null) {
 			final MergeDaoResult<ChatMessage, String> result;
 			synchronized (lock) {
-				result = getChatMessageDao().mergeChatMessages(realmChat.getEntityId(), messages, false);
+				result = getChatMessageDao().mergeChatMessages(accountChat.getEntityId(), messages, false);
 
 				// update sync data
 				if (updateChatSyncDate) {
@@ -477,7 +478,7 @@ public class DefaultChatService implements ChatService {
 
 			fireEvents(chatEvents);
 		} else {
-			Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + realmChat.getEntityId());
+			Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + accountChat.getEntityId());
 		}
 	}
 
@@ -510,7 +511,7 @@ public class DefaultChatService implements ChatService {
 			if (lastMessage != null) {
 				final int unreadMessagesCount = getUnreadMessagesCount(chat.getEntity());
 				final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
-				result.add(UiChat.newInstance(user, chat, lastMessage, unreadMessagesCount, displayName));
+				result.add(newUiChat(user, chat, lastMessage, unreadMessagesCount, displayName));
 			} else {
 				Log.i(TAG, "Empty chat detected, chat id " + chat.getId());
 			}
