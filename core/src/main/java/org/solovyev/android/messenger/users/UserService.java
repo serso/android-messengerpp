@@ -1,13 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.widget.ImageView;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
@@ -15,6 +8,12 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.listeners.JEventListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
+import java.util.Collection;
+import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -230,4 +229,6 @@ public interface UserService {
 	void onUnreadMessagesCountChanged(@Nonnull Entity contact, @Nonnull Integer unreadMessagesCount);
 
 	int getUnreadMessagesCount(@Nonnull Entity contact);
+
+	void fireEvents(@Nonnull Collection<UserEvent> userEvents);
 }

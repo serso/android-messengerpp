@@ -14,7 +14,10 @@ import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerExceptionHandler;
 import org.solovyev.android.messenger.accounts.*;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
@@ -425,55 +428,11 @@ public class DefaultUserService implements UserService {
 	public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends ApiChat> apiChats) throws AccountException {
 		User user = this.getUserById(userEntity);
 
-		final MergeDaoResult<ApiChat, String> result;
-		synchronized (lock) {
-			result = chatService.mergeUserChats(userEntity, apiChats);
+		chatService.mergeUserChats(userEntity, apiChats);
 
-			// update sync data
-			user = user.updateChatsSyncDate();
-			updateUser(user, false);
-		}
-
-		final List<UserEvent> userEvents = new ArrayList<UserEvent>(apiChats.size());
-		final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>(apiChats.size());
-
-		final List<Chat> addedChatLinks = Lists.transform(result.getAddedObjectLinks(), new Function<ApiChat, Chat>() {
-			@Override
-			public Chat apply(@javax.annotation.Nullable ApiChat apiChat) {
-				assert apiChat != null;
-				return apiChat.getChat();
-			}
-		});
-
-		if (!addedChatLinks.isEmpty()) {
-			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChatLinks));
-		}
-
-		final List<Chat> addedChats = Lists.transform(result.getAddedObjects(), new Function<ApiChat, Chat>() {
-			@Override
-			public Chat apply(@javax.annotation.Nullable ApiChat apiChat) {
-				assert apiChat != null;
-				return apiChat.getChat();
-			}
-		});
-
-		for (Chat addedChat : addedChats) {
-			chatEvents.add(ChatEventType.added.newEvent(addedChat));
-		}
-		if (!addedChats.isEmpty()) {
-			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChats));
-		}
-
-		for (String removedChatId : result.getRemovedObjectIds()) {
-			userEvents.add(UserEventType.chat_removed.newEvent(user, removedChatId));
-		}
-
-		for (ApiChat updatedChat : result.getUpdatedObjects()) {
-			chatEvents.add(ChatEventType.changed.newEvent(updatedChat.getChat()));
-		}
-
-		listeners.fireEvents(userEvents);
-		chatService.fireEvents(chatEvents);
+		// update sync data
+		user = user.updateChatsSyncDate();
+		updateUser(user, false);
 	}
 
 	@Override
@@ -579,6 +538,11 @@ public class DefaultUserService implements UserService {
 		} catch (AccountException e) {
 			return 0;
 		}
+	}
+
+	@Override
+	public void fireEvents(@Nonnull Collection<UserEvent> userEvents) {
+		this.listeners.fireEvents(userEvents);
 	}
 
 	private final class UserEventListener extends AbstractJEventListener<UserEvent> {

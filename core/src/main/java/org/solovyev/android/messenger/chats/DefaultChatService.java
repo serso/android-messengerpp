@@ -19,10 +19,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.android.messenger.users.PersistenceLock;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEvent;
-import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.collections.multimap.*;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -36,6 +33,7 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import static com.google.common.collect.Lists.transform;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
@@ -308,6 +306,8 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException {
+		final MergeDaoResult<ApiChat, String> result;
+
 		synchronized (lock) {
 			final List<ApiChat> preparedChats;
 			try {
@@ -325,8 +325,56 @@ public class DefaultChatService implements ChatService {
 			} catch (AccountRuntimeException e) {
 				throw new AccountException(e);
 			}
-			return chatDao.mergeUserChats(user.getEntityId(), preparedChats);
+			result = chatDao.mergeUserChats(user.getEntityId(), preparedChats);
 		}
+
+		fireChatEvents(userService.getUserById(user), result);
+
+		return result;
+
+	}
+
+	private void fireChatEvents(@Nonnull User user, @Nonnull MergeDaoResult<ApiChat, String> mergeResult) {
+		final List<UserEvent> userEvents = new ArrayList<UserEvent>();
+		final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>();
+
+		final List<Chat> addedChatLinks = transform(mergeResult.getAddedObjectLinks(), new Function<ApiChat, Chat>() {
+			@Override
+			public Chat apply(@Nullable ApiChat apiChat) {
+				assert apiChat != null;
+				return apiChat.getChat();
+			}
+		});
+
+		if (!addedChatLinks.isEmpty()) {
+			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChatLinks));
+		}
+
+		final List<Chat> addedChats = transform(mergeResult.getAddedObjects(), new Function<ApiChat, Chat>() {
+			@Override
+			public Chat apply(@Nullable ApiChat apiChat) {
+				assert apiChat != null;
+				return apiChat.getChat();
+			}
+		});
+
+		for (Chat addedChat : addedChats) {
+			chatEvents.add(ChatEventType.added.newEvent(addedChat));
+		}
+		if (!addedChats.isEmpty()) {
+			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChats));
+		}
+
+		for (String removedChatId : mergeResult.getRemovedObjectIds()) {
+			userEvents.add(UserEventType.chat_removed.newEvent(user, removedChatId));
+		}
+
+		for (ApiChat updatedChat : mergeResult.getUpdatedObjects()) {
+			chatEvents.add(ChatEventType.changed.newEvent(updatedChat.getChat()));
+		}
+
+		userService.fireEvents(userEvents);
+		fireEvents(chatEvents);
 	}
 
 	@Nullable

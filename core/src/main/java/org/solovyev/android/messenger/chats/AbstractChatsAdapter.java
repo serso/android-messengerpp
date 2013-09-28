@@ -1,27 +1,24 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.solovyev.android.messenger.App.getAccountService;
 
 
 abstract class AbstractChatsAdapter extends MessengerListItemAdapter<ChatListItem> /*implements ChatEventListener, UserEventListener*/ {
@@ -99,7 +96,7 @@ abstract class AbstractChatsAdapter extends MessengerListItemAdapter<ChatListIte
 			case last_message_changed:
 			case unread_message_count_changed:
 				try {
-					final User user = App.getAccountService().getAccountById(eventChat.getEntity().getAccountId()).getUser();
+					final User user = getAccountService().getAccountById(eventChat.getEntity().getAccountId()).getUser();
 					final ChatListItem chatListItem = findInAllElements(user, eventChat);
 					if (chatListItem != null) {
 						chatListItem.onEvent(event);
