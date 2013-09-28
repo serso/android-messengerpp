@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -418,6 +419,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_RIGHT);
 		}
+		lv.setDivider(new ColorDrawable(Color.LTGRAY));
 		lv.setDividerHeight(1);
 	}
 
