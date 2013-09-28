@@ -3,7 +3,7 @@ package org.solovyev.android.messenger;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ public class MessengerTestActivity extends RoboSherlockActivity {
 	private AccountService accountService;
 
 	@Nonnull
-	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+	private final Executor executorService = Executors.newSingleThreadExecutor();
 
 	@Nonnull
 	private TextView console;

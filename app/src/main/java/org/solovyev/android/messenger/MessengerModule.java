@@ -1,10 +1,8 @@
 package org.solovyev.android.messenger;
 
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
@@ -12,7 +10,7 @@ import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
 import org.solovyev.android.messenger.accounts.SqliteAccountDao;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
-import org.solovyev.android.messenger.accounts.connection.AccountConnectionsServiceImpl;
+import org.solovyev.android.messenger.accounts.connection.DefaultAccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
@@ -40,8 +38,8 @@ import org.solovyev.android.network.NetworkStateServiceImpl;
 import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Scopes;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * User: serso
@@ -52,7 +50,7 @@ public class MessengerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(ExecutorService.class).toInstance(Executors.newSingleThreadExecutor());
+		bind(Executor.class).toInstance(Executors.newSingleThreadExecutor());
 		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
@@ -65,7 +63,7 @@ public class MessengerModule extends AbstractModule {
 		bind(AccountService.class).to(DefaultAccountService.class);
 		bind(AccountDao.class).to(SqliteAccountDao.class);
 
-		bind(AccountConnectionsService.class).to(AccountConnectionsServiceImpl.class);
+		bind(AccountConnectionsService.class).to(DefaultAccountConnectionsService.class);
 		bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
 		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
 		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);

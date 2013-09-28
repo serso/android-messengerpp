@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.accounts;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class AbstractAccountBuilder<C extends AccountConfiguration> implements AccountBuilder {
 
@@ -33,11 +33,11 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 	@Nonnull
 	@Override
 	public final Account build(@Nonnull Data data) {
-		final String realmId = data.getAccountId();
+		final String accountId = data.getAccountId();
 
-		final User user = getAccountUser(realmId);
+		final User user = getAccountUser(accountId);
 
-		return newRealm(realmId, user, AccountState.enabled);
+		return newRealm(accountId, user, AccountState.enabled);
 	}
 
 	@Nonnull

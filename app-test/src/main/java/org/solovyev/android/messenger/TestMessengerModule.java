@@ -3,17 +3,10 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
-import roboguice.RoboGuice;
-import roboguice.inject.RoboInjector;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.Scopes;
+import com.google.inject.util.Modules;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
@@ -21,7 +14,7 @@ import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
 import org.solovyev.android.messenger.accounts.SqliteAccountDao;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
-import org.solovyev.android.messenger.accounts.connection.AccountConnectionsServiceImpl;
+import org.solovyev.android.messenger.accounts.connection.DefaultAccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
@@ -48,11 +41,15 @@ import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
 import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
+import roboguice.RoboGuice;
+import roboguice.inject.RoboInjector;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.Scopes;
-import com.google.inject.util.Modules;
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class TestMessengerModule extends AbstractModule {
 
@@ -67,7 +64,7 @@ public class TestMessengerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(ExecutorService.class).toInstance(Executors.newSingleThreadExecutor());
+		bind(Executor.class).toInstance(Executors.newSingleThreadExecutor());
 		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
@@ -80,7 +77,7 @@ public class TestMessengerModule extends AbstractModule {
 		bind(RealmService.class).to(DefaultRealmService.class);
 		bind(AccountService.class).to(DefaultAccountService.class);
 		bind(AccountDao.class).to(SqliteAccountDao.class);
-		bind(AccountConnectionsService.class).to(AccountConnectionsServiceImpl.class);
+		bind(AccountConnectionsService.class).to(DefaultAccountConnectionsService.class);
 
 		bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
 		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);

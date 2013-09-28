@@ -3,18 +3,16 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import roboguice.RoboGuice;
-
-import javax.annotation.Nonnull;
-
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.joda.time.DateTimeZone;
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
+import roboguice.RoboGuice;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+
+import static org.solovyev.android.messenger.App.getAccountService;
 
 /**
  * User: serso
@@ -26,18 +24,6 @@ import com.google.inject.Inject;
 		mailTo = "se.solovyev+programming+messengerpp+crashes+1.0@gmail.com",
 		mode = ReportingInteractionMode.SILENT)
 public class MessengerApplication extends Application {
-
-	/*
-	**********************************************************************
-    *
-    *                           AUTO INJECTED FIELDS
-    *
-    **********************************************************************
-    */
-
-	@Inject
-	@Nonnull
-	private AccountService accountService;
 
 	public MessengerApplication() {
 	}
@@ -60,12 +46,12 @@ public class MessengerApplication extends Application {
 		RoboGuice.getBaseApplicationInjector(this).injectMembers(this);
 	}
 
-	public void exit(@Nonnull Activity activity) {
-		accountService.stopAllRealmConnections();
+	public static void exit(@Nonnull Application application, @Nonnull Activity activity) {
+		getAccountService().stopAllRealmConnections();
 
 		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(this, OngoingNotificationService.class);
-		stopService(serviceIntent);
+		serviceIntent.setClass(application, OngoingNotificationService.class);
+		application.stopService(serviceIntent);
 
 		activity.finish();
 	}

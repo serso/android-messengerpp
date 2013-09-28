@@ -6,25 +6,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
-
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.AbstractDbQuery;
-import org.solovyev.android.db.AbstractObjectDbExec;
-import org.solovyev.android.db.AbstractSQLiteHelper;
-import org.solovyev.android.db.AndroidDbUtils;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.db.DeleteAllRowsDbExec;
-import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
@@ -38,10 +26,16 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
+import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
 
 /**
  * User: serso
@@ -75,27 +69,27 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 	@Nonnull
 	@Override
 	public List<String> loadChatMessageIds(@Nonnull String chatId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessageIdsByChatId(getContext(), chatId, getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadChatMessageIdsByChatId(getContext(), chatId, getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
 	public List<ChatMessage> loadChatMessages(@Nonnull String chatId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessages(getContext(), chatId, this.userService, getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadChatMessages(getContext(), chatId, this.userService, getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
 	public String getOldestMessageForChat(@Nonnull String chatId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new OldestChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
+		return doDbQuery(getSqliteOpenHelper(), new OldestChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
 	}
 
 	@Nullable
 	@Override
 	public ChatMessage loadLastChatMessage(@Nonnull String chatId) {
-		final String lastChatMessageId = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
+		final String lastChatMessageId = doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
 		if (!Strings.isEmpty(lastChatMessageId)) {
-			final List<ChatMessage> messages = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
+			final List<ChatMessage> messages = doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
 			return Collections.getFirstListElement(messages);
 		} else {
 			return null;
@@ -104,23 +98,23 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 	@Override
 	public int getUnreadMessagesCount() {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new UnreadMessagesCountLoader(getContext(), getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new UnreadMessagesCountLoader(getContext(), getSqliteOpenHelper()));
 	}
 
 	@Override
 	public boolean changeReadStatus(@Nonnull String messageId, boolean read) {
-		final Long rows = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new ReadMessageStatusUpdater(messageId, read));
+		final Long rows = doDbExec(getSqliteOpenHelper(), new ReadMessageStatusUpdater(messageId, read));
 		return rows != 0;
 	}
 
 	@Override
 	public void deleteAllMessages() {
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("messages"));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("messages"));
 	}
 
 	@Override
 	public void deleteAllMessagesForAccount(@Nonnull String accountId) {
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("messages", "account_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("messages", "account_id", accountId));
 	}
 
 	@Nonnull
@@ -418,24 +412,25 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 	}
 
 	@Nonnull
-	private static ContentValues toContentValues(@Nonnull Chat chat, @Nonnull ChatMessage chatMessage) {
+	private static ContentValues toContentValues(@Nonnull Chat chat, @Nonnull ChatMessage message) {
 		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
 		final ContentValues values = new ContentValues();
 
-		values.put("id", chatMessage.getEntity().getEntityId());
-		values.put("account_id", chatMessage.getEntity().getAccountId());
-		values.put("realm_message_id", chatMessage.getEntity().getAccountEntityId());
+		final Entity entity = message.getEntity();
+		values.put("id", entity.getEntityId());
+		values.put("account_id", entity.getAccountId());
+		values.put("realm_message_id", entity.getAccountEntityId());
 
 		values.put("chat_id", chat.getEntity().getEntityId());
-		values.put("author_id", chatMessage.getAuthor().getEntityId());
-		final Entity recipient = chatMessage.getRecipient();
+		values.put("author_id", message.getAuthor().getEntityId());
+		final Entity recipient = message.getRecipient();
 		values.put("recipient_id", recipient == null ? null : recipient.getEntityId());
-		values.put("send_date", dateTimeFormatter.print(chatMessage.getSendDate()));
-		values.put("send_time", chatMessage.getSendDate().getMillis());
-		values.put("title", chatMessage.getTitle());
-		values.put("body", chatMessage.getBody());
-		values.put("read", chatMessage.isRead() ? 1 : 0);
+		values.put("send_date", dateTimeFormatter.print(message.getSendDate()));
+		values.put("send_time", message.getSendDate().getMillis());
+		values.put("title", message.getTitle());
+		values.put("body", message.getBody());
+		values.put("read", message.isRead() ? 1 : 0);
 		return values;
 	}
 

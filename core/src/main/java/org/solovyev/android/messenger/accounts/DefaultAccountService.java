@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
@@ -90,11 +90,11 @@ public class DefaultAccountService implements AccountService {
 	private final JEventListeners<JEventListener<? extends AccountEvent>, AccountEvent> listeners;
 
 	@Inject
-	public DefaultAccountService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+	public DefaultAccountService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this(context, lock, eventExecutor);
 	}
 
-	public DefaultAccountService(@Nonnull Application context, @Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+	public DefaultAccountService(@Nonnull Application context, @Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this.context = context;
 		this.lock = lock;
 		this.listeners = Listeners.newEventListenersBuilderFor(AccountEvent.class).withHardReferences().withExecutor(eventExecutor).create();

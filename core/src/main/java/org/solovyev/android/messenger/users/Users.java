@@ -1,20 +1,18 @@
 package org.solovyev.android.messenger.users;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static org.solovyev.android.messenger.entities.EntityImpl.fromEntityId;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
@@ -43,17 +41,17 @@ public final class Users {
 	}
 
 	@Nonnull
-	public static User newUser(@Nonnull String realmId,
+	public static User newUser(@Nonnull String accountId,
 							   @Nonnull String accountUserId,
 							   @Nonnull UserSyncData userSyncData,
 							   @Nonnull List<AProperty> properties) {
-		final Entity entity = newEntity(realmId, accountUserId);
+		final Entity entity = newEntity(accountId, accountUserId);
 		return newUser(entity, userSyncData, properties);
 	}
 
 	@Nonnull
-	public static User newEmptyUser(@Nonnull Entity realmUser) {
-		return newUser(realmUser, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
+	public static User newEmptyUser(@Nonnull Entity accountUser) {
+		return newUser(accountUser, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
 	}
 
 	@Nonnull

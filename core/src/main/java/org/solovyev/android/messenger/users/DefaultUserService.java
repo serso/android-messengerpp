@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 import static java.lang.Math.min;
 import static org.solovyev.android.messenger.users.MessengerContactsMode.all_contacts;
@@ -108,7 +108,7 @@ public class DefaultUserService implements UserService {
 	private final Map<Entity, User> usersCache = new HashMap<Entity, User>();
 
 	@Inject
-	public DefaultUserService(@Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+	public DefaultUserService(@Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this.listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().withExecutor(eventExecutor).create();
 		this.listeners.addListener(new UserEventListener());
 		this.lock = lock;

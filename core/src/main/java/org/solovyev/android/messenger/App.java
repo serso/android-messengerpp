@@ -34,7 +34,7 @@ public final class App {
 	private static App instance = new App();
 
 	@Nonnull
-	private MessengerApplication application;
+	private Application application;
 
 	@Inject
 	@Nonnull
@@ -95,7 +95,7 @@ public final class App {
 	@Nonnull
 	private Handler uiHandler;
 
-	private void init0(@Nonnull MessengerApplication application) {
+	private void init0(@Nonnull Application application) {
 		this.application = application;
 
 		RoboGuice.getBaseApplicationInjector(application).injectMembers(this);
@@ -139,7 +139,7 @@ public final class App {
 		return tag + "/" + subTag;
 	}
 
-	public static void init(@Nonnull MessengerApplication application) {
+	public static void init(@Nonnull Application application) {
 		instance.init0(application);
 	}
 
@@ -219,7 +219,7 @@ public final class App {
 	}
 
 	public static void exit(Activity activity) {
-		instance.application.exit(activity);
+		MessengerApplication.exit(instance.application, activity);
 	}
 
 	@Nonnull
@@ -245,7 +245,7 @@ public final class App {
 		return instance;
 	}
 
-	public void setApplication(@Nonnull MessengerApplication application) {
+	public void setApplication(@Nonnull Application application) {
 		this.application = application;
 	}
 

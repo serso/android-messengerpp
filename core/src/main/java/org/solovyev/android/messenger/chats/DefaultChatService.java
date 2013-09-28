@@ -3,28 +3,16 @@ package org.solovyev.android.messenger.chats;
 import android.app.Application;
 import android.util.Log;
 import android.widget.ImageView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.*;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountRuntimeException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.EntityMapEntryMatcher;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
@@ -35,27 +23,18 @@ import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
-import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
-import org.solovyev.common.collections.multimap.ObjectRemovedUpdater;
-import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
-import org.solovyev.common.collections.multimap.WholeListUpdater;
+import org.solovyev.common.collections.multimap.*;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.*;
+import java.util.concurrent.Executor;
 
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
@@ -149,7 +128,7 @@ public class DefaultChatService implements ChatService {
 	private final Object lock;
 
 	@Inject
-	public DefaultChatService(@Nonnull PersistenceLock lock, @Nonnull ExecutorService eventExecutor) {
+	public DefaultChatService(@Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this.listeners = Listeners.newEventListenersBuilderFor(ChatEvent.class).withHardReferences().withExecutor(eventExecutor).create();
 		this.listeners.addListener(new ChatEventListener());
 		this.lock = lock;
@@ -603,6 +582,9 @@ public class DefaultChatService implements ChatService {
 		Chat result = this.getPrivateChat(user1, user2);
 		if (result == null) {
 			result = this.newPrivateChat(user1, user2);
+			synchronized (chatsById) {
+				chatsById.put(result.getEntity(), result);
+			}
 		}
 
 		return result;

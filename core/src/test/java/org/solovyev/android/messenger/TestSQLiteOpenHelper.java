@@ -26,24 +26,21 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.Scanner;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.db.BatchDbTransaction;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import java.text.DecimalFormat;
+import java.util.Scanner;
 
 /**
  * User: serso
  * Date: 6/3/12
  * Time: 4:35 PM
  */
+@Singleton
 public class TestSQLiteOpenHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = "DbOperation";
@@ -55,6 +52,8 @@ public class TestSQLiteOpenHelper extends SQLiteOpenHelper {
 	private String databaseName;
 
 	private int version;
+
+	private boolean finished = false;
 
 	@Inject
 	public TestSQLiteOpenHelper(@Nonnull Context context, @Nonnull SQLiteOpenHelperConfiguration configuration) {
@@ -71,26 +70,29 @@ public class TestSQLiteOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(@Nonnull SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.d(TAG, "Upgrading database, old version: " + oldVersion + ", new version: " + newVersion);
+		if (!finished) {
+			Log.d(TAG, "Upgrading database, old version: " + oldVersion + ", new version: " + newVersion);
 
-		final DecimalFormat decimalFormat = new DecimalFormat("000");
+			final DecimalFormat decimalFormat = new DecimalFormat("000");
 
-		for (int version = oldVersion + 1; version <= newVersion; version++) {
-			// prepare version based postfix
-			final String fileVersionPostfix = decimalFormat.format(version);
+			for (int version = oldVersion + 1; version <= newVersion; version++) {
+				// prepare version based postfix
+				final String fileVersionPostfix = decimalFormat.format(version);
 
-			final String fileName = "db_" + databaseName + "_" + fileVersionPostfix + ".sql";
+				final String fileName = "db_" + databaseName + "_" + fileVersionPostfix + ".sql";
 
-			Log.d(TAG, "Reading " + fileName + "...");
+				Log.d(TAG, "Reading " + fileName + "...");
 
-			// read sqls from file
-			final String sqls = convertStreamToString(TestSQLiteOpenHelper.class.getResourceAsStream(fileName));
+				// read sqls from file
+				final String sqls = convertStreamToString(TestSQLiteOpenHelper.class.getResourceAsStream(fileName));
 
-			Log.d(TAG, fileName + " successfully read, size: " + sqls.length());
+				Log.d(TAG, fileName + " successfully read, size: " + sqls.length());
 
 
-			// batch execute
-			new BatchDbTransaction(sqls, ";\n").batchQuery(db);
+				// batch execute
+				new BatchDbTransaction(sqls, ";\n").batchQuery(db);
+			}
+			finished = true;
 		}
 	}
 

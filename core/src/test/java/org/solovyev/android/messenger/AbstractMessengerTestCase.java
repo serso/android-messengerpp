@@ -1,17 +1,14 @@
 package org.solovyev.android.messenger;
 
 import android.app.Application;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.solovyev.android.messenger.accounts.AccountService;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -22,20 +19,23 @@ import com.google.inject.Inject;
 public abstract class AbstractMessengerTestCase {
 
 	@Nonnull
+	@Inject
 	private Application application = Robolectric.application;
 
 	@Nonnull
-	@Inject
-	private AccountService accountService;
-
-	@Nonnull
-	private TestMessengerModule module;
+	private AbstractTestMessengerModule module;
 
 	@Before
 	public void setUp() throws Exception {
-		module = new TestMessengerModule(application);
+		module = newModule(application);
 		module.setUp(this, module);
+		App.init(application);
+		populateDatabase();
 	}
+
+	protected abstract void populateDatabase() throws Exception;
+
+	protected abstract AbstractTestMessengerModule newModule(@Nonnull Application application);
 
 	@After
 	public void tearDown() throws Exception {
@@ -45,10 +45,5 @@ public abstract class AbstractMessengerTestCase {
 	@Nonnull
 	public Application getApplication() {
 		return application;
-	}
-
-	@Nonnull
-	public AccountService getAccountService() {
-		return accountService;
 	}
 }

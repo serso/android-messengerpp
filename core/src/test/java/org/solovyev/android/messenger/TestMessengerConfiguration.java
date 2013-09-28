@@ -1,25 +1,25 @@
 package org.solovyev.android.messenger;
 
-import java.util.Arrays;
-import java.util.Collection;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.TestRealm;
 
 import javax.annotation.Nonnull;
-
-import org.solovyev.android.messenger.realms.Realm;
-
-import com.google.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * User: serso
  * Date: 2/27/13
  * Time: 9:42 PM
  */
-@Singleton
 public class TestMessengerConfiguration implements MessengerConfiguration {
 
 	@Nonnull
 	@Override
 	public Collection<Realm> getRealms() {
-		return Arrays.<Realm>asList();
+		final List<Realm> realms = new ArrayList<Realm>();
+		realms.add(new TestRealm());
+		return realms;
 	}
 }

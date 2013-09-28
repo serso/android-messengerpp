@@ -6,27 +6,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
-
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.AbstractDbQuery;
-import org.solovyev.android.db.AbstractObjectDbExec;
-import org.solovyev.android.db.AbstractSQLiteHelper;
-import org.solovyev.android.db.AndroidDbUtils;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.db.DeleteAllRowsDbExec;
-import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
@@ -40,10 +27,12 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.collections.Collections;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.inject.Singleton;
+import java.util.*;
+
+import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
+import static org.solovyev.common.collections.Collections.getFirstListElement;
 
 /**
  * User: serso
@@ -77,7 +66,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	@Nonnull
 	@Override
 	public List<String> loadUserChatIds(@Nonnull String userId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadChatIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
 	}
 
 	@Override
@@ -109,7 +98,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	@Nonnull
 	@Override
 	public Map<Entity, Integer> getUnreadChats() {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new UnreadChatsLoader(getContext(), getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new UnreadChatsLoader(getContext(), getSqliteOpenHelper()));
 	}
 
 	@Override
@@ -120,30 +109,30 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	@Nonnull
 	@Override
 	public List<String> loadChatIds() {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatIds(getContext(), getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadChatIds(getContext(), getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
 	public List<AProperty> loadChatPropertiesById(@Nonnull String chatId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatPropertiesDbQuery(chatId, getContext(), getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadChatPropertiesDbQuery(chatId, getContext(), getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
 	public List<Chat> loadUserChats(@Nonnull String userId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
+		return doDbQuery(getSqliteOpenHelper(), new LoadChatsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
 	}
 
 	@Nonnull
 	@Override
 	public List<User> loadChatParticipants(@Nonnull String chatId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadChatParticipants(getContext(), chatId, userService, getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadChatParticipants(getContext(), chatId, userService, getSqliteOpenHelper()));
 	}
 
 	@Override
 	public Chat loadChatById(@Nonnull String chatId) {
-		return Collections.getFirstListElement(AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadByChatId(getContext(), chatId, getSqliteOpenHelper(), this)));
+		return getFirstListElement(doDbQuery(getSqliteOpenHelper(), new LoadByChatId(getContext(), chatId, getSqliteOpenHelper(), this)));
 	}
 
 	private static final class LoadChatParticipants extends AbstractDbQuery<List<User>> {

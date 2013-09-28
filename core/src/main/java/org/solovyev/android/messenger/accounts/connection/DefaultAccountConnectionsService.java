@@ -29,7 +29,7 @@ import static org.solovyev.android.messenger.notifications.Notifications.newReal
  * Time: 8:17 PM
  */
 @Singleton
-public final class AccountConnectionsServiceImpl implements AccountConnectionsService, NetworkStateListener {
+public final class DefaultAccountConnectionsService implements AccountConnectionsService, NetworkStateListener {
 
     /*
 	**********************************************************************
@@ -72,7 +72,7 @@ public final class AccountConnectionsServiceImpl implements AccountConnectionsSe
 	private AccountEventListener accountEventListener;
 
 	@Inject
-	public AccountConnectionsServiceImpl(@Nonnull Application context) {
+	public DefaultAccountConnectionsService(@Nonnull Application context) {
 		this.context = context;
 	}
 
