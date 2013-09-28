@@ -14,7 +14,7 @@ import static org.solovyev.android.messenger.App.getUiHandler;
 
 public class MessengerFindContactsFragment extends AbstractMessengerContactsFragment {
 
-	private final long SEARCH_DELAY_MILLIS = 300;
+	private final long SEARCH_DELAY_MILLIS = 500;
 
 	@Nonnull
 	private final FindContactsRunnable runnable = new FindContactsRunnable();
