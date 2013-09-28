@@ -36,7 +36,6 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.Executor;
 
-import static java.lang.Math.min;
 import static org.solovyev.android.messenger.users.MessengerContactsMode.all_contacts;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 
@@ -311,11 +310,10 @@ public class DefaultUserService implements UserService {
 		final List<User> contacts = getUserContacts(user.getEntity());
 		final ContactFilter filter = new ContactFilter(query, all_contacts);
 
-		for (int i = 0; i < min(contacts.size(), count); i++) {
-			final User contact = contacts.get(i);
-			if(filter.apply(contact)) {
+		for (final User contact : contacts) {
+			if (filter.apply(contact)) {
 				result.add(UiContact.newInstance(contact, getUnreadMessagesCount(contact.getEntity())));
-				if(result.size() >= count) {
+				if (result.size() >= count) {
 					break;
 				}
 			}
