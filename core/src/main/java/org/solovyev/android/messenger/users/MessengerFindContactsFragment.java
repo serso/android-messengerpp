@@ -3,15 +3,12 @@ package org.solovyev.android.messenger.users;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Filter;
-
-import java.util.List;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import java.util.List;
 
 import static org.solovyev.android.messenger.App.getUiHandler;
 
@@ -65,13 +62,14 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 		public void run() {
 			final MessengerListItemAdapter adapter = getAdapter();
 			if (adapter.isInitialized()) {
-				adapter.clear();
-				createAsyncLoader(adapter, new Runnable() {
-					@Override
-					public void run() {
-					}
-				}).executeInParallel();
+				createAsyncLoader(adapter, new EmptyRunnable()).executeInParallel();
 			}
+		}
+	}
+
+	private static class EmptyRunnable implements Runnable {
+		@Override
+		public void run() {
 		}
 	}
 }

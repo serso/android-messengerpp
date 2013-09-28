@@ -1,18 +1,15 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.solovyev.android.list.ListAdapter;
+import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.accounts.AccountService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.accounts.AccountService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -55,6 +52,15 @@ final class FindContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Conta
 		}
 
 		return result.subList(0, min(result.size(), MAX_SEARCH_CONTACTS));
+	}
+
+	@Override
+	protected void onSuccessPostExecute(@Nullable List<UiContact> elements) {
+		final ListAdapter<ContactListItem> adapter = getAdapter();
+		if(adapter != null) {
+			adapter.clear();
+		}
+		super.onSuccessPostExecute(elements);
 	}
 
 	@Nonnull

@@ -1,16 +1,15 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: serso
@@ -20,7 +19,7 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends MessengerAsyncTask<Void, Void, List<R>> {
 
 	@Nonnull
-	private ListAdapter<LI> adapter;
+	private final WeakReference<ListAdapter<LI>> adapterRef;
 
 	@Nullable
 	private Runnable onPostExecute;
@@ -29,7 +28,7 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 							   @Nonnull ListAdapter<LI> adapter,
 							   @Nullable Runnable onPostExecute) {
 		super(context);
-		this.adapter = adapter;
+		this.adapterRef = new WeakReference<ListAdapter<LI>>(adapter);
 		this.onPostExecute = onPostExecute;
 	}
 
@@ -50,20 +49,28 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 	@Override
 	protected void onSuccessPostExecute(@Nullable final List<R> elements) {
 
-		if (elements != null) {
-			adapter.doWork(new Runnable() {
-				@Override
-				public void run() {
-					for (R element : elements) {
-						adapter.add(createListItem(element));
+		if (elements != null && !elements.isEmpty()) {
+			final ListAdapter<LI> adapter = adapterRef.get();
+			if (adapter != null) {
+				adapter.doWork(new Runnable() {
+					@Override
+					public void run() {
+						for (R element : elements) {
+							adapter.add(createListItem(element));
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 
 		if (onPostExecute != null) {
 			onPostExecute.run();
 		}
+	}
+
+	@Nullable
+	public ListAdapter<LI> getAdapter() {
+		return adapterRef.get();
 	}
 
 	@Nonnull

@@ -3,6 +3,7 @@ package org.solovyev.android.messenger;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import org.solovyev.android.MessengerExecutor;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
@@ -39,7 +40,6 @@ import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * User: serso
@@ -50,7 +50,7 @@ public class MessengerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(Executor.class).toInstance(Executors.newSingleThreadExecutor());
+		bind(Executor.class).to(MessengerExecutor.class);
 		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
