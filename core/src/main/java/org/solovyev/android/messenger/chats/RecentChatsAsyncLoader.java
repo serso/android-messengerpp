@@ -36,7 +36,7 @@ public class RecentChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatList
 		final AccountService accountService = getAccountService();
 
 		for (User user : accountService.getEnabledAccountUsers()) {
-			result.addAll(chatService.getLastUserChats(user, maxCount));
+			result.addAll(chatService.getLastChats(user, maxCount));
 		}
 
 		return getLastChatsByDate(result, maxCount);

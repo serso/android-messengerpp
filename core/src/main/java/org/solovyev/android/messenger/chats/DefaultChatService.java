@@ -500,7 +500,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<UiChat> getLastUserChats(@Nonnull User user, int count) {
+	public List<UiChat> getLastChats(@Nonnull User user, int count) {
 		final List<UiChat> result = new ArrayList<UiChat>();
 
 		final List<Chat> chats = userService.getUserChats(user.getEntity());
