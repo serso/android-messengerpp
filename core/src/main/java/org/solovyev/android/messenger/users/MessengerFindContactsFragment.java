@@ -31,7 +31,7 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 		return new FoundContactsAdapter(getActivity());
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
 		final CharSequence filterText = getFilterText();
@@ -62,14 +62,8 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 		public void run() {
 			final MessengerListItemAdapter adapter = getAdapter();
 			if (adapter.isInitialized()) {
-				createAsyncLoader(adapter, new EmptyRunnable()).executeInParallel();
+				createAsyncLoader(adapter).executeInParallel();
 			}
-		}
-	}
-
-	private static class EmptyRunnable implements Runnable {
-		@Override
-		public void run() {
 		}
 	}
 }

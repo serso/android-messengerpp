@@ -54,15 +54,6 @@ final class FindContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Conta
 		return result.subList(0, min(result.size(), MAX_SEARCH_CONTACTS));
 	}
 
-	@Override
-	protected void onSuccessPostExecute(@Nullable List<UiContact> elements) {
-		final ListAdapter<ContactListItem> adapter = getAdapter();
-		if(adapter != null) {
-			adapter.clear();
-		}
-		super.onSuccessPostExecute(elements);
-	}
-
 	@Nonnull
 	@Override
 	protected ContactListItem createListItem(@Nonnull UiContact uiContact) {

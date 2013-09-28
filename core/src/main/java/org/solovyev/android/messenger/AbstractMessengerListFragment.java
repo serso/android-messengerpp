@@ -12,20 +12,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Filter;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import roboguice.event.EventManager;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import android.widget.*;
+import com.actionbarsherlock.app.ActionBar;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
+import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.solovyev.android.Threads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListViewScroller;
@@ -45,13 +38,11 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import roboguice.event.EventManager;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
-import com.google.inject.Inject;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 import static android.view.Gravity.CENTER_VERTICAL;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -566,6 +557,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	@Nullable
 	protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull MessengerListItemAdapter<LI> adapter, @Nonnull Runnable onPostExecute);
 
+	@Nullable
+	protected MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull MessengerListItemAdapter<LI> adapter) {
+		return createAsyncLoader(adapter, new EmptyRunnable());
+	}
+
     /*
     **********************************************************************
     *
@@ -757,6 +753,12 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			}
 
 			return false;
+		}
+	}
+
+	private static class EmptyRunnable implements Runnable {
+		@Override
+		public void run() {
 		}
 	}
 }

@@ -55,6 +55,7 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 				adapter.doWork(new Runnable() {
 					@Override
 					public void run() {
+						adapter.clear();
 						for (R element : elements) {
 							adapter.add(createListItem(element));
 						}
