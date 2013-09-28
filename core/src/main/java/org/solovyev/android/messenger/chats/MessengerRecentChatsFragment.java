@@ -38,8 +38,13 @@ public final class MessengerRecentChatsFragment extends AbstractChatsFragment {
 	public void onBottomReached() {
 		super.onBottomReached();
 
-		maxRecentChats += MAX_RECENT_CHATS;
-		reloadRecentChats();
+		final int count = getAdapter().getCount();
+		if (count < maxRecentChats) {
+			// no more chats
+		} else {
+			maxRecentChats += MAX_RECENT_CHATS;
+			reloadRecentChats();
+		}
 	}
 
 	private void reloadRecentChats() {
