@@ -31,7 +31,7 @@
 		<item name="mpp_fragment_title">@style/mpp_fragment_title</item>
 	</style>
 
-	<style name="mpp_theme_metro_preferences" parent="Theme.Sherlock.Light">
+	<style name="mpp_theme_metro_fragment" parent="Theme.Sherlock.Light">
 		<item name="mpp_list_item">@style/mpp_list_item</item>
 		<item name="mpp_list_item_block">@style/mpp_list_item_block</item>
 		<item name="mpp_list_item_icon">@style/mpp_list_item_icon</item>

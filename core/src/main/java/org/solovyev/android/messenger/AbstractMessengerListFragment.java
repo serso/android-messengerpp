@@ -9,10 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
@@ -45,9 +42,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static android.view.Gravity.CENTER;
 import static android.view.Gravity.CENTER_VERTICAL;
+import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static android.widget.FrameLayout.LayoutParams;
+import static android.widget.LinearLayout.VERTICAL;
 
 /**
  * User: serso
@@ -162,6 +163,9 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	@Nonnull
 	private PostListLoadingRunnable onPostLoading;
 
+	@Nonnull
+	private Context themeContext;
+
     /*
     **********************************************************************
     *
@@ -254,10 +258,15 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_metro_fragment);
+	}
 
-		final LinearLayout root = new LinearLayout(this.getActivity());
-		root.setOrientation(LinearLayout.VERTICAL);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		final LinearLayout root = new LinearLayout(themeContext);
+		root.setOrientation(VERTICAL);
 		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		if (listViewFilter != null) {
@@ -279,6 +288,11 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 		multiPaneManager.onCreatePane(getActivity(), container, root);
 
 		return root;
+	}
+
+	@Nonnull
+	public Context getThemeContext() {
+		return themeContext;
 	}
 
 	@Override
@@ -308,7 +322,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 	@Nonnull
 	private View createListView() {
-		final Context context = getActivity();
+		final Context context = getThemeContext();
 
 		final FrameLayout root = new FrameLayout(context);
 
@@ -316,14 +330,14 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 		final LinearLayout progressContainer = new LinearLayout(context);
 		progressContainer.setId(INTERNAL_PROGRESS_CONTAINER_ID);
-		progressContainer.setOrientation(LinearLayout.VERTICAL);
-		progressContainer.setVisibility(View.GONE);
-		progressContainer.setGravity(Gravity.CENTER);
+		progressContainer.setOrientation(VERTICAL);
+		progressContainer.setVisibility(GONE);
+		progressContainer.setGravity(CENTER);
 
 		final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
-		progressContainer.addView(progress, new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+		progressContainer.addView(progress, new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
-		root.addView(progressContainer, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+		root.addView(progressContainer, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		// ------------------------------------------------------------------
 
@@ -332,8 +346,8 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 		final TextView emptyListCaption = new TextView(context);
 		emptyListCaption.setId(INTERNAL_EMPTY_ID);
-		emptyListCaption.setGravity(Gravity.CENTER);
-		listViewContainer.addView(emptyListCaption, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+		emptyListCaption.setGravity(CENTER);
+		listViewContainer.addView(emptyListCaption, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 
 		final ListViewAwareOnRefreshListener topRefreshListener = getTopPullRefreshListener();
@@ -392,13 +406,13 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 			listView = pullToRefreshListView;
 		}
 
-		listViewContainer.addView(listView, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+		listViewContainer.addView(listView, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
-		root.addView(listViewContainer, new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+		root.addView(listViewContainer, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		// ------------------------------------------------------------------
 
-		root.setLayoutParams(new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+		root.setLayoutParams(new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		return root;
 	}

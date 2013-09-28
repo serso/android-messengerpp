@@ -7,15 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -31,11 +26,13 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessengerAccountsFragment extends AbstractMessengerListFragment<Account, AccountListItem> implements DetachableFragment {
 
@@ -66,14 +63,13 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View root = super.onCreateView(inflater, container, savedInstanceState);
 
-		final View realmsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_accounts_footer).build(this.getActivity());
+		final View realmsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_accounts_footer).build(getThemeContext());
 
 		final View addRealmButton = realmsFooter.findViewById(R.id.mpp_add_account_button);
 		addRealmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
-				eventManager.fire(UiEventType.show_realm_defs.newEvent());
+				getEventManager().fire(UiEventType.show_realm_defs.newEvent());
 			}
 		});
 

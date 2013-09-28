@@ -1,6 +1,9 @@
 package org.solovyev.android.messenger.accounts;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.App.getTaskService;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.back;
@@ -82,6 +86,9 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 
 	private int layoutResId;
 
+	@Nonnull
+	private Context themeContext;
+
     /*
     **********************************************************************
     *
@@ -125,12 +132,18 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_metro_fragment);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(this.getActivity());
+		final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(themeContext);
 
 		getMultiPaneManager().onCreatePane(this.getActivity(), container, result);
 
-		result.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		result.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		return result;
 	}
@@ -187,6 +200,11 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
 
 		taskListeners.addTaskListener(AccountSaverCallable.TASK_NAME, AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+	}
+
+	@Nonnull
+	public Context getThemeContext() {
+		return themeContext;
 	}
 
 	public T getEditedRealm() {

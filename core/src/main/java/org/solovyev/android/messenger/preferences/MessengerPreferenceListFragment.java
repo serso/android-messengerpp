@@ -7,15 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import roboguice.RoboGuice;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
+import roboguice.RoboGuice;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -37,7 +35,7 @@ public final class MessengerPreferenceListFragment extends PreferenceListFragmen
 	private MessengerMultiPaneManager multiPaneManager;
 
 	public MessengerPreferenceListFragment(int preferencesResId) {
-		super(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_preferences);
+		super(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_fragment);
 	}
 
 	public MessengerPreferenceListFragment() {
