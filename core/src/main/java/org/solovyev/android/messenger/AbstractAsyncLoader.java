@@ -62,6 +62,11 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 					}
 				});
 			}
+		} else {
+			final ListAdapter<LI> adapter = adapterRef.get();
+			if (adapter != null) {
+				adapter.clear();
+			}
 		}
 
 		if (onPostExecute != null) {

@@ -1,13 +1,12 @@
 package org.solovyev.android.messenger.users;
 
 import android.util.Log;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.text.Strings;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -29,7 +28,7 @@ final class ContactFilter implements JPredicate<User> {
 		this.mode = mode;
 		if (!Strings.isEmpty(prefix)) {
 			assert prefix != null;
-			prefixFilter = new PrefixFilter<String>(prefix);
+			prefixFilter = new PrefixFilter<String>(prefix.toLowerCase());
 		} else {
 			prefixFilter = null;
 		}
