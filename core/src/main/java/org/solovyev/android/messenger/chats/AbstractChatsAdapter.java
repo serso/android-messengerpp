@@ -100,7 +100,7 @@ abstract class AbstractChatsAdapter extends MessengerListItemAdapter<ChatListIte
 					final ChatListItem chatListItem = findInAllElements(user, eventChat);
 					if (chatListItem != null) {
 						chatListItem.onEvent(event);
-						notifyDataSetChanged();
+						onDataSetChanged();
 					}
 				} catch (UnsupportedAccountException e) {
 					App.getExceptionHandler().handleException(e);

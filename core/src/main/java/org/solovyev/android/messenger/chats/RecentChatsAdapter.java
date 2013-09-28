@@ -1,13 +1,13 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getAccountService;
+import static org.solovyev.android.messenger.App.getExceptionHandler;
 
 public class RecentChatsAdapter extends AbstractChatsAdapter {
 
@@ -35,7 +35,7 @@ public class RecentChatsAdapter extends AbstractChatsAdapter {
 						addListItem(user, eventChat);
 					}
 				} catch (UnsupportedAccountException e) {
-					App.getExceptionHandler().handleException(e);
+					getExceptionHandler().handleException(e);
 				}
 				break;
 		}

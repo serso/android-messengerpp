@@ -134,6 +134,40 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		return sectionIndexer.getSectionForPosition(position);
 	}
 
+	@Override
+	public void notifyDataSetChanged() {
+		if (selectedItem != null) {
+			if (!isAlreadySelected()) {
+				findAndSelectItem(selectedItem);
+			}
+		}
+		super.notifyDataSetChanged();
+	}
+
+	private boolean isAlreadySelected() {
+		boolean alreadySelected = false;
+		if(selectedItemPosition >= 0 && selectedItemPosition < getCount()) {
+			if(selectedItem == getItem(selectedItemPosition)) {
+				alreadySelected = true;
+			}
+		}
+		return alreadySelected;
+	}
+
+	private void findAndSelectItem(@Nonnull ListItem selectedItem) {
+		for (int i = 0; i < getCount(); i++) {
+			final LI item = getItem(i);
+			if(selectedItem == item) {
+				selectedItemPosition = i;
+				if(!isSelected(item)) {
+					selectItem(item, true);
+				}
+			} else if (isSelected(item)) {
+				selectItem(item, false);
+			}
+		}
+	}
+
 	public static final class ListItemComparator implements Comparator<ListItem> {
 
 		@Nonnull
@@ -185,14 +219,22 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 			}
 		}
 
-		private void selectItem(@Nullable ListItem item, boolean selected) {
-			if (item instanceof Checkable) {
-				((Checkable) item).setChecked(selected);
-			}
-		}
 	}
 
 	public int getSelectedItemPosition() {
 		return selectedItemPosition;
+	}
+
+	private static void selectItem(@Nullable ListItem item, boolean selected) {
+		if (item instanceof Checkable) {
+			((Checkable) item).setChecked(selected);
+		}
+	}
+
+	private static boolean isSelected(@Nullable ListItem item) {
+		if (item instanceof Checkable) {
+			return ((Checkable) item).isChecked();
+		}
+		return false;
 	}
 }
