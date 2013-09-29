@@ -120,6 +120,8 @@
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:hint">@string/mpp_search_hint</item>
+		<!-- disable changing focus after editing search query + disable keyboard to be shown full screen-->
+		<item name="android:imeOptions">actionDone|flagNoFullscreen</item>
 	</style>
 
 	<style name="mpp_list_item_last_message_time" parent="mpp_list_item_text_secondary">

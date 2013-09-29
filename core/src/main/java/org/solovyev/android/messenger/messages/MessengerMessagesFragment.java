@@ -5,33 +5,22 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.Threads2;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
@@ -46,8 +35,14 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.text.Strings;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
+import static org.solovyev.android.messenger.messages.MessageBubbleViews.setMessageBubbleUserIcon;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
 
 /**
@@ -166,6 +161,25 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 	}
 
 	@Override
+	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
+		final Context context = getThemeContext();
+
+		final View messageLayoutParent = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(context);
+		final View messageLayout = messageLayoutParent.findViewById(R.id.mpp_message_bubble_linearlayout);
+		final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
+
+		fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, null, true, true);
+
+		// setting user icon
+		setMessageBubbleUserIcon(context, getUser(), (ImageView) messageLayoutParent.findViewById(R.id.mpp_message_bubble_icon_imageview));
+
+		root.addView(messageLayoutParent, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+
+		return root;
+	}
+
+	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
@@ -235,17 +249,6 @@ public final class MessengerMessagesFragment extends AbstractMessengerListFragme
 
 		lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		lv.setStackFromBottom(true);
-
-		final View messageLayoutParent = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(this.getActivity());
-		final View messageLayout = messageLayoutParent.findViewById(R.id.mpp_message_bubble_linearlayout);
-		final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
-
-		MessageBubbleViews.fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, null, true, true);
-
-		// setting user icon
-		MessageBubbleViews.setMessageBubbleUserIcon(context, getUser(), (ImageView) messageLayoutParent.findViewById(R.id.mpp_message_bubble_icon_imageview));
-
-		lv.addFooterView(messageLayoutParent, null, false);
 	}
 
 	@Override
