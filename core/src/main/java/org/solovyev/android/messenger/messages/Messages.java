@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.messages;
 
 import android.text.Html;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
@@ -14,6 +14,11 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.TimeZone;
+
+import static org.joda.time.DateTime.now;
+import static org.joda.time.format.DateTimeFormat.shortDate;
+import static org.joda.time.format.DateTimeFormat.shortTime;
 
 /**
  * User: serso
@@ -28,21 +33,25 @@ public final class Messages {
 
 	@Nonnull
 	public static CharSequence getMessageTime(@Nonnull ChatMessage message) {
-		final LocalDate sendDate = message.getSendDate().toLocalDate();
-		final LocalDate today = DateTime.now().toLocalDate();
-		final LocalDate yesterday = today.minusDays(1);
+		final DateTimeZone localTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
 
-		if (sendDate.toDateTimeAtStartOfDay().compareTo(today.toDateTimeAtStartOfDay()) == 0) {
+		final DateTime localSendDateTime = message.getLocalSendDateTime();
+		final LocalDate localSendDate = message.getLocalSendDate();
+
+		final LocalDate localToday = now(localTimeZone).toLocalDate();
+		final LocalDate localYesterday = localToday.minusDays(1);
+
+		if (localSendDate.toDateTimeAtStartOfDay().compareTo(localToday.toDateTimeAtStartOfDay()) == 0) {
 			// today
 			// print time
-			return DateTimeFormat.shortTime().print(message.getSendDate());
-		} else if (sendDate.toDateTimeAtStartOfDay().compareTo(yesterday.toDateTimeAtStartOfDay()) == 0) {
+			return shortTime().print(localSendDateTime);
+		} else if (localSendDate.toDateTimeAtStartOfDay().compareTo(localYesterday.toDateTimeAtStartOfDay()) == 0) {
 			// yesterday
 			// todo serso: translate
 			return "Yesterday";// + ", " + DateTimeFormat.shortTime().print(sendDate);
 		} else {
 			// the days before yesterday
-			return DateTimeFormat.shortDate().print(sendDate);
+			return shortDate().print(localSendDateTime);
 		}
 	}
 

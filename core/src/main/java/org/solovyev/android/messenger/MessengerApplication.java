@@ -12,6 +12,7 @@ import roboguice.RoboGuice;
 
 import javax.annotation.Nonnull;
 
+import static org.joda.time.DateTimeZone.UTC;
 import static org.solovyev.android.messenger.App.getAccountService;
 
 /**
@@ -37,7 +38,7 @@ public class MessengerApplication extends Application {
 		// initialize Joda time for android
 		System.setProperty("org.joda.time.DateTimeZone.Provider", FastDateTimeZoneProvider.class.getName());
 
-		DateTimeZone.setDefault(DateTimeZone.UTC);
+		DateTimeZone.setDefault(UTC);
 
 		MessengerPreferences.setDefaultValues(this);
 

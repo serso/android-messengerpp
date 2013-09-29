@@ -1,11 +1,12 @@
 package org.solovyev.android.messenger.messages;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -30,6 +31,12 @@ public interface LiteChatMessage extends MessengerEntity {
 
 	@Nonnull
 	DateTime getSendDate();
+
+	@Nonnull
+	DateTime getLocalSendDateTime();
+
+	@Nonnull
+	LocalDate getLocalSendDate();
 
 	@Nonnull
 	String getTitle();

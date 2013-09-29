@@ -1,11 +1,14 @@
 package org.solovyev.android.messenger.messages;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.TimeZone;
 
 /**
  * User: serso
@@ -22,6 +25,12 @@ public final class LiteChatMessageImpl extends AbstractMessengerEntity implement
 
 	@Nonnull
 	private DateTime sendDate;
+
+	@Nullable
+	private DateTime localSendDateTime;
+
+	@Nullable
+	private LocalDate localSendDate;
 
 	@Nonnull
 	private String title = "";
@@ -54,6 +63,27 @@ public final class LiteChatMessageImpl extends AbstractMessengerEntity implement
 
 	public void setSendDate(@Nonnull DateTime sendDate) {
 		this.sendDate = sendDate;
+		this.localSendDateTime = null;
+		this.localSendDate = null;
+	}
+
+	@Nonnull
+	@Override
+	public DateTime getLocalSendDateTime() {
+		if(localSendDateTime == null) {
+			final DateTimeZone localTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+			localSendDateTime = sendDate.toDateTime(localTimeZone);
+		}
+		return localSendDateTime;
+	}
+
+	@Nonnull
+	@Override
+	public LocalDate getLocalSendDate() {
+		if (localSendDate == null) {
+			localSendDate = getLocalSendDateTime().toLocalDate();
+		}
+		return localSendDate;
 	}
 
 	@Nonnull

@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
@@ -135,6 +136,18 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 	@Override
 	public String getId() {
 		return liteChatMessage.getId();
+	}
+
+	@Override
+	@Nonnull
+	public DateTime getLocalSendDateTime() {
+		return liteChatMessage.getLocalSendDateTime();
+	}
+
+	@Override
+	@Nonnull
+	public LocalDate getLocalSendDate() {
+		return liteChatMessage.getLocalSendDate();
 	}
 
 	@Override
