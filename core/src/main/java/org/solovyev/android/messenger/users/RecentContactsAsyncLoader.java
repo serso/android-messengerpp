@@ -25,7 +25,12 @@ final class RecentContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Con
 	@Nonnull
 	@Override
 	protected List<UiContact> getElements(@Nonnull Context context) {
-		return getUserService().getLastChatedContacts(maxCount);
+		final List<UiContact> contacts = getUserService().getLastChatedContacts(maxCount);
+		final int spaceLeft = maxCount - contacts.size();
+		if (spaceLeft > 0) {
+			contacts.addAll(getUserService().findContacts(null, spaceLeft, contacts));
+		}
+		return contacts;
 	}
 
 	@Nonnull

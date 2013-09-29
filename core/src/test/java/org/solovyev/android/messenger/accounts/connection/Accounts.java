@@ -9,15 +9,15 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import javax.annotation.Nonnull;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.solovyev.android.messenger.entities.EntityImpl.getAccountId;
 
 public class Accounts {
 
 	@Nonnull
 	static Account newMockAccountWithStaticConnection() {
 		final Account account = mock(Account.class);
+		when(account.getId()).thenReturn(getAccountId("test", 0));
 		when(account.isEnabled()).thenReturn(true);
 		prepareStaticConnectionForAccount(account);
 		return account;

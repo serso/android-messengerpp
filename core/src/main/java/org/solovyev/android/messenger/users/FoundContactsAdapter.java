@@ -2,34 +2,42 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.widget.Filter;
+import org.solovyev.android.list.AdapterFilter;
+import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Comparator;
 
-import org.solovyev.android.list.AdapterFilter;
-import org.solovyev.common.JPredicate;
-import org.solovyev.common.Objects;
+import static org.solovyev.android.messenger.users.Users.DEFAULT_CONTACTS_MODE;
+import static org.solovyev.common.Objects.areEqual;
 
 public class FoundContactsAdapter extends AbstractContactsAdapter {
 
 	@Nonnull
-	private ContactFilter contactFilter = new ContactFilter(null, Users.DEFAULT_CONTACTS_MODE);
+	private ContactFilter contactFilter = new ContactFilter(null, DEFAULT_CONTACTS_MODE);
 
-	public FoundContactsAdapter(@Nonnull Context context) {
+	private boolean recentContacts;
+
+	public FoundContactsAdapter(@Nonnull Context context, boolean recentContacts) {
 		super(context);
+		this.recentContacts = recentContacts;
 	}
 
 	@Override
 	protected void onListItemChanged(@Nonnull User contact) {
+	}
 
+	public void setRecentContacts(boolean recentContacts) {
+		this.recentContacts = recentContacts;
 	}
 
 	@Override
 	protected boolean canAddContact(@Nonnull User contact) {
 		final CharSequence filterText = getFilterText();
 		final String prefix = filterText == null ? null : filterText.toString();
-		if(!Objects.areEqual(contactFilter.getPrefix(), prefix)) {
-			contactFilter = new ContactFilter(prefix, Users.DEFAULT_CONTACTS_MODE);
+		if(!areEqual(contactFilter.getPrefix(), prefix)) {
+			contactFilter = new ContactFilter(prefix, DEFAULT_CONTACTS_MODE);
 		}
 		return contactFilter.apply(contact);
 	}
@@ -48,5 +56,11 @@ public class FoundContactsAdapter extends AbstractContactsAdapter {
 				};
 			}
 		};
+	}
+
+	@Nullable
+	@Override
+	protected Comparator<? super ContactListItem> getComparator() {
+		return recentContacts ? null : super.getComparator();
 	}
 }

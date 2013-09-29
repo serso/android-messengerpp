@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:installLocation="auto"
-	android:versionCode="1"
-	android:versionName="1.0"
-	package="org.solovyev.android.messenger">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionCode="3" android:versionName="1.0" package="org.solovyev.android.messenger">
 
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.GET_TASKS" />
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.GET_TASKS"/>
 
 	<!-- SMS realm -->
 	<uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -18,27 +14,15 @@
 
 	<!--<uses-permission android:name="com.android.vending.BILLING"/>-->
 
-	<uses-sdk
-			android:minSdkVersion="7"
-			android:targetSdkVersion="17"/>
+	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="18"/>
 
-	<application
-		android:debuggable="true"
-		android:allowBackup="true"
-		android:hardwareAccelerated="true"
-		android:icon="@drawable/mpp_app_icon"
-		android:label="@string/mpp_app_name"
-		android:name=".MessengerApplication"
-		android:theme="@style/mpp_theme_metro">
+	<application android:allowBackup="true" android:debuggable="false" android:hardwareAccelerated="true" android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/mpp_theme_metro">
 
-		<activity
-			android:label="@string/mpp_app_name"
-			android:name="org.solovyev.android.messenger.MessengerStartActivity"
-			android:windowSoftInputMode="adjustPan">
+		<activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerStartActivity" android:windowSoftInputMode="adjustPan">
 
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 
 		</activity>
@@ -46,36 +30,16 @@
 		<!--
 			Test
 		-->
-		<activity
-			android:label="@string/mpp_app_name"
-			android:name=".MessengerTestActivity">
+		<activity android:label="@string/mpp_app_name" android:name=".MessengerTestActivity">
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
+				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
 		</activity>
 
 
-		<activity
-			android:label="@string/mpp_app_name"
-			android:name="org.solovyev.android.messenger.MessengerMainActivity"
-			android:windowSoftInputMode="stateHidden"
-			android:launchMode="singleTask" />
+		<activity android:label="@string/mpp_app_name" android:launchMode="singleTask" android:name="org.solovyev.android.messenger.MessengerMainActivity" android:windowSoftInputMode="stateHidden"/>
 
-		<activity
-			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-			android:name="com.google.ads.AdActivity" />
-
-		<service android:name=".OngoingNotificationService" />
-
-		<service android:name="net.robotmedia.billing.BillingService" />
-
-		<receiver android:name="net.robotmedia.billing.BillingReceiver">
-			<intent-filter>
-				<action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
-				<action android:name="com.android.vending.billing.RESPONSE_CODE" />
-				<action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
-			</intent-filter>
-		</receiver>
+		<service android:name=".OngoingNotificationService"/>
 
 	</application>
 </manifest>

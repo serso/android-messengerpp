@@ -120,6 +120,15 @@ public interface UserService {
 	List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count);
 
 	@Nonnull
+	List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count, @Nonnull Collection<UiContact> except);
+
+	@Nonnull
+	List<UiContact> findContacts(@Nullable String query, int count);
+
+	@Nonnull
+	List<UiContact> findContacts(@Nullable String query, int count, @Nonnull Collection<UiContact> except);
+
+	@Nonnull
 	List<UiContact> getLastChatedContacts(int count);
 
     /*

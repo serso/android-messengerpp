@@ -33,6 +33,9 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import static com.google.common.collect.Iterables.find;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static org.solovyev.android.messenger.users.MessengerContactsMode.all_contacts;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 
@@ -300,7 +303,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count) {
+	public List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count, @Nonnull Collection<UiContact> except) {
 		Log.d(TAG, "Find contacts for user: " + user.getLogin() + ", query: " + query);
 		final List<UiContact> result = new ArrayList<UiContact>();
 
@@ -308,10 +311,12 @@ public class DefaultUserService implements UserService {
 		final ContactFilter filter = new ContactFilter(query, all_contacts);
 
 		for (final User contact : contacts) {
-			if (filter.apply(contact)) {
-				result.add(UiContact.newInstance(contact, getUnreadMessagesCount(contact.getEntity())));
-				if (result.size() >= count) {
-					break;
+			if (!isExceptedUser(except, contact)) {
+				if (filter.apply(contact)) {
+					result.add(UiContact.newInstance(contact, getUnreadMessagesCount(contact.getEntity())));
+					if (result.size() >= count) {
+						break;
+					}
 				}
 			}
 		}
@@ -319,6 +324,43 @@ public class DefaultUserService implements UserService {
 		Log.d(TAG, "Find contacts result: " + result.size());
 
 		return result;
+	}
+
+	private boolean isExceptedUser(@Nonnull Collection<UiContact> exceptions, @Nonnull final User contact) {
+		return find(exceptions, new Predicate<UiContact>() {
+			@Override
+			public boolean apply(@Nullable UiContact uiContact) {
+				return uiContact != null && uiContact.getContact().equals(contact);
+			}
+		}, null) != null;
+	}
+
+	@Nonnull
+	@Override
+	public List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count) {
+		return findContacts(user, query, count, Collections.<UiContact>emptyList());
+	}
+
+	@Nonnull
+	@Override
+	public List<UiContact> findContacts(@Nullable String query, int count, @Nonnull Collection<UiContact> except) {
+		final List<UiContact> result = new ArrayList<UiContact>();
+
+		final Collection<User> accountUsers = accountService.getEnabledAccountUsers();
+		if (accountUsers.size() > 0) {
+			final int accountCount = max(count / accountUsers.size(), 1);
+			for (User user : accountUsers) {
+				result.addAll(findContacts(user, query, accountCount, except));
+			}
+		}
+
+		return result.subList(0, min(result.size(), count));
+	}
+
+	@Nonnull
+	@Override
+	public List<UiContact> findContacts(@Nullable String query, int count) {
+		return findContacts(query, count, Collections.<UiContact>emptyList());
 	}
 
 	@Nonnull
@@ -674,7 +716,7 @@ public class DefaultUserService implements UserService {
 
 				for (int i = 0; i < result.size(); i++) {
 					final User user = result.get(i);
-					final User contact = Iterables.find(contacts, new Predicate<User>() {
+					final User contact = find(contacts, new Predicate<User>() {
 						@Override
 						public boolean apply(@Nullable User contact) {
 							return user.equals(contact);

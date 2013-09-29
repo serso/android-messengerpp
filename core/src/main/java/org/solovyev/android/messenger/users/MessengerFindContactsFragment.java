@@ -34,7 +34,11 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 	@Nonnull
 	@Override
 	protected MessengerListItemAdapter<ContactListItem> createAdapter() {
-		return new FoundContactsAdapter(getActivity());
+		return new FoundContactsAdapter(getActivity(), isRecentContacts());
+	}
+
+	private boolean isRecentContacts() {
+		return isEmpty(getFilterText());
 	}
 
 	@Nonnull
@@ -42,9 +46,11 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 	protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
 		final CharSequence filterText = getFilterText();
 		if (!isEmpty(filterText)) {
+			((FoundContactsAdapter) adapter).setRecentContacts(false);
 			return new FindContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
 		} else {
 			// in case of empty query we need to reset maxContacts
+			((FoundContactsAdapter) adapter).setRecentContacts(true);
 			maxContacts = MAX_SEARCH_CONTACTS;
 			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, maxContacts);
 		}
@@ -89,8 +95,7 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 	public void onBottomReached() {
 		super.onBottomReached();
 
-		final CharSequence filterText = getFilterText();
-		if (!isEmpty(filterText)) {
+		if (!isRecentContacts()) {
 			maxContacts += MAX_SEARCH_CONTACTS;
 			getUiHandler().post(runnable);
 		}
