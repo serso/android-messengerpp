@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -17,11 +16,7 @@ import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.sync.SyncTask;
-import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
-import org.solovyev.android.view.AbstractOnRefreshListener;
-import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -88,51 +83,6 @@ public abstract class AbstractChatsFragment extends AbstractMessengerListFragmen
 		if (chatEventListener != null) {
 			getChatService().removeListener(chatEventListener);
 		}
-	}
-
-	@Override
-	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-		return new AbstractOnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				try {
-					getSyncService().sync(SyncTask.user_chats, new Runnable() {
-						@Override
-						public void run() {
-							completeRefresh();
-						}
-					});
-					Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
-				} catch (TaskIsAlreadyRunningException e) {
-					e.showMessage(getActivity());
-				}
-			}
-		};
-	}
-
-	@Override
-	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
-		return new AbstractOnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				try {
-					getSyncService().sync(SyncTask.user_chats, new Runnable() {
-						@Override
-						public void run() {
-							completeRefresh();
-						}
-					});
-					Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
-				} catch (TaskIsAlreadyRunningException e) {
-					e.showMessage(getActivity());
-				}
-			}
-		};
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
 	}
 
 	private class UiThreadUserChatListener extends AbstractJEventListener<ChatEvent> {

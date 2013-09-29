@@ -1,35 +1,15 @@
 package org.solovyev.android.messenger.chats;
 
-import android.os.Bundle;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.menu.ActivityMenu;
-import org.solovyev.android.menu.IdentifiableMenuItem;
-import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.Threads2;
-import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
-import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
-import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * User: serso
@@ -54,4 +34,30 @@ public final class MessengerChatsFragment extends AbstractChatsFragment {
 		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute);
 	}
 
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return new ChatSyncRefreshListener();
+	}
+
+	@Override
+	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
+		return new ChatSyncRefreshListener();
+	}
+
+	private class ChatSyncRefreshListener extends AbstractOnRefreshListener {
+		@Override
+		public void onRefresh() {
+			try {
+				getSyncService().sync(SyncTask.user_chats, new Runnable() {
+					@Override
+					public void run() {
+						completeRefresh();
+					}
+				});
+				Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
+			} catch (TaskIsAlreadyRunningException e) {
+				e.showMessage(getActivity());
+			}
+		}
+	}
 }

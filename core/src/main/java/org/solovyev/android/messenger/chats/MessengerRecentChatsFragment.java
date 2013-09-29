@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,6 +21,18 @@ public final class MessengerRecentChatsFragment extends AbstractChatsFragment {
 
 	public MessengerRecentChatsFragment() {
 		super();
+	}
+
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return null;
+	}
+
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
+		return null;
 	}
 
 	@Nonnull
