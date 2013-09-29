@@ -54,8 +54,8 @@
 	<string name="mpp_settings_other">Other settings</string>
 	<string name="c_settings">Settings</string>
 
-	<string name="mpp_realm_icon">Account icon</string>
-	<string name="mpp_realm_add">Add account</string>
+	<string name="mpp_account_icon">Account icon</string>
+	<string name="mpp_account_add">Add account</string>
 	<string name="mpp_menu_app_exit">Exit</string>
 	<string name="mpp_back">Back</string>
 	<string name="mpp_save">Save</string>
@@ -96,6 +96,8 @@
 	</string>
 	<string name="mpp_notification_realm_unsupported_exception">Account is not defined in the app</string>
 	<string name="mpp_dialog_do_not_ask_again">Do not ask again</string>
+
+	<string name="mpp_new_message">New message</string>
 
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message.</item>

@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -25,12 +22,18 @@ import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static org.solovyev.android.messenger.UiEventType.new_message;
 
 public abstract class AbstractChatsFragment extends AbstractMessengerListFragment<UiChat, ChatListItem> implements DetachableFragment {
 
@@ -49,6 +52,25 @@ public abstract class AbstractChatsFragment extends AbstractMessengerListFragmen
 		super.onCreate(savedInstanceState);
 
 		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
+
+		final View footer = ViewFromLayoutBuilder.newInstance(R.layout.mpp_chats_footer).build(getThemeContext());
+
+		final View newMessageButton = footer.findViewById(R.id.mpp_new_message_button);
+		newMessageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getEventManager().fire(new_message.newEvent());
+			}
+		});
+
+		root.addView(footer, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+
+		return root;
 	}
 
 	@Override

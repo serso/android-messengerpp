@@ -31,6 +31,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 import com.google.inject.Inject;
 
 import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
+import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager.tabFragments;
 
 /**
  * User: serso
@@ -229,7 +230,7 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 		if (showActionBarTabs) {
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-			for (MessengerPrimaryFragment tabFragment : MessengerMultiPaneFragmentManager.tabFragments) {
+			for (MessengerPrimaryFragment tabFragment : tabFragments) {
 				addTab(tabFragment);
 			}
 
@@ -382,8 +383,8 @@ public abstract class MessengerFragmentActivity extends RoboSherlockFragmentActi
 		return this.menu.onOptionsItemSelected(this, item);
 	}
 
-	/*@Nullable*/
-	public ActionBar.Tab findTabByTag(/*@NotNull*/ String tag) {
+	@Nullable
+	public ActionBar.Tab findTabByTag(@Nonnull String tag) {
 		final ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			for (int i = 0; i < actionBar.getTabCount(); i++) {

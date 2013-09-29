@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -34,6 +33,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static android.widget.LinearLayout.LayoutParams;
+import static org.solovyev.android.messenger.UiEventType.show_realms;
+
 public class MessengerAccountsFragment extends AbstractMessengerListFragment<Account, AccountListItem> implements DetachableFragment {
 
 	@Nonnull
@@ -60,22 +64,20 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View root = super.onCreateView(inflater, container, savedInstanceState);
+	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
 
-		final View realmsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_accounts_footer).build(getThemeContext());
+		final View accountsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_accounts_footer).build(getThemeContext());
 
-		final View addRealmButton = realmsFooter.findViewById(R.id.mpp_add_account_button);
-		addRealmButton.setOnClickListener(new View.OnClickListener() {
+		final View addAccountButton = accountsFooter.findViewById(R.id.mpp_add_account_button);
+		addAccountButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getEventManager().fire(UiEventType.show_realm_defs.newEvent());
+				getEventManager().fire(show_realms.newEvent());
 			}
 		});
 
-		final ListView lv = getListView(root);
-
-		lv.addFooterView(realmsFooter, null, false);
+		root.addView(accountsFooter, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
 		return root;
 	}
@@ -158,7 +160,7 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 			@Override
 			public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
 				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(UiEventType.show_realm_defs.newEvent());
+				eventManager.fire(show_realms.newEvent());
 			}
 		};
 

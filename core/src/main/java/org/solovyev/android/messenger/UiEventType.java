@@ -8,7 +8,8 @@ import javax.annotation.Nonnull;
  * Time: 10:29 PM
  */
 public enum UiEventType {
-	show_realm_defs,
+	show_realms,
+	new_message,
 	app_exit;
 
 	@Nonnull

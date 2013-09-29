@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Button xmlns:a="http://schemas.android.com/apk/res/android"
-	a:id="@+id/mpp_add_account_button"
-	a:text="@string/mpp_account_add"
+	a:id="@+id/mpp_new_message_button"
+	a:text="@string/mpp_new_message"
 	style="?mpp_button_bright"/>

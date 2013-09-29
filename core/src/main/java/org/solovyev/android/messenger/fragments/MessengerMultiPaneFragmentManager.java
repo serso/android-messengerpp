@@ -2,14 +2,7 @@ package org.solovyev.android.messenger.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.fragments.ReflectionFragmentBuilder;
@@ -18,7 +11,13 @@ import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
+import static org.solovyev.android.messenger.fragments.MessengerPrimaryFragment.*;
 
 public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager {
 
@@ -26,11 +25,11 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 
 	static {
 		final List<MessengerPrimaryFragment> mutableTabFragments = new ArrayList<MessengerPrimaryFragment>();
-		mutableTabFragments.add(MessengerPrimaryFragment.contacts);
-		mutableTabFragments.add(MessengerPrimaryFragment.messages);
-		mutableTabFragments.add(MessengerPrimaryFragment.realms);
-		mutableTabFragments.add(MessengerPrimaryFragment.settings);
-		tabFragments = Collections.unmodifiableList(mutableTabFragments);
+		mutableTabFragments.add(contacts);
+		mutableTabFragments.add(messages);
+		mutableTabFragments.add(accounts);
+		mutableTabFragments.add(settings);
+		tabFragments = unmodifiableList(mutableTabFragments);
 	}
 
 	public MessengerMultiPaneFragmentManager(@Nonnull SherlockFragmentActivity activity) {

@@ -264,7 +264,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final LinearLayout root = new LinearLayout(themeContext);
 		root.setOrientation(VERTICAL);
 		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -276,7 +276,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 		final View listViewParent = createListView();
 
-		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, 0, 1);
 		params.gravity = CENTER_VERTICAL;
 		root.addView(listViewParent, params);
 

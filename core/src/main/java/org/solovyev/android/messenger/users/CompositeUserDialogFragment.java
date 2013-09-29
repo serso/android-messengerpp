@@ -9,14 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -24,8 +18,11 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
+
+import static org.solovyev.android.messenger.App.getEventManager;
 
 public final class CompositeUserDialogFragment extends RoboSherlockDialogFragment {
 
@@ -168,9 +165,8 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	public void onDestroy() {
 		super.onDestroy();
 
-		if (user != null) {
-			final EventManager eventManager = RoboGuice.getInjector(getActivity()).getInstance(EventManager.class);
-			eventManager.fire(ContactUiEventType.newContactClicked(user));
+		if (user != null && account != null && account.isCompositeUserDefined(user)) {
+			getEventManager(getActivity()).fire(ContactUiEventType.newContactClicked(user));
 		}
 	}
 

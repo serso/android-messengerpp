@@ -1,10 +1,12 @@
 package org.solovyev.android.messenger;
 
+import com.actionbarsherlock.app.ActionBar;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.fragments.MessengerPrimaryFragment;
+import static org.solovyev.android.messenger.fragments.MessengerPrimaryFragment.realms;
+import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 
 /**
  * User: serso
@@ -23,13 +25,23 @@ public class UiEventListener implements EventListener<UiEvent> {
 	@Override
 	public void onEvent(@Nonnull UiEvent event) {
 		switch (event.getType()) {
-			case show_realm_defs:
-				handleShowRealmDefsEvent();
+			case show_realms:
+				onShowRealmsEvent();
+				break;
+			case new_message:
+				onNewMessageEvent();
 				break;
 		}
 	}
 
-	private void handleShowRealmDefsEvent() {
-		activity.getMultiPaneFragmentManager().setMainFragment(MessengerPrimaryFragment.realm_defs);
+	private void onNewMessageEvent() {
+		final ActionBar.Tab tab = activity.findTabByTag(CONTACTS_FRAGMENT_TAG);
+		if(tab != null) {
+			tab.select();
+		}
+	}
+
+	private void onShowRealmsEvent() {
+		activity.getMultiPaneFragmentManager().setMainFragment(realms);
 	}
 }

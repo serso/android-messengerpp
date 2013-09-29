@@ -4,7 +4,7 @@
 
 	<item
 		a:id="@+id/mpp_menu_account_add"
-		a:title="@string/mpp_realm_add"
+		a:title="@string/mpp_account_add"
 		a:icon="@drawable/mpp_ab_add"
 		a:showAsAction="always" />
 </menu>
