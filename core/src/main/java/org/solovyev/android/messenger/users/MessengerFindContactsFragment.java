@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Filter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,6 +52,11 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 		if (filterListener != null) {
 			filterListener.onFilterComplete(0);
 		}
+	}
+
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return null;
 	}
 
 	private class FindContactsRunnable implements Runnable {

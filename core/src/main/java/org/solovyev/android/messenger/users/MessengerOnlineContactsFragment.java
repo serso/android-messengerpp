@@ -1,9 +1,10 @@
 package org.solovyev.android.messenger.users;
 
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -21,5 +22,10 @@ public class MessengerOnlineContactsFragment extends AbstractMessengerContactsFr
 	@Nonnull
 	protected AbstractContactsAdapter createAdapter() {
 		return new OnlineContactsAdapter(getActivity(), getAccountService());
+	}
+
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return new ContactsSyncRefreshListener();
 	}
 }
