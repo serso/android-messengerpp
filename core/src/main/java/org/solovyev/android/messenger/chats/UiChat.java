@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI
  */
-final class UiChat implements MessengerEntity {
+public final class UiChat implements MessengerEntity {
 
 	@Nonnull
 	private final User user;

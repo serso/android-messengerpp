@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Filter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
@@ -12,8 +13,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.getUiHandler;
+import static org.solovyev.android.messenger.users.Users.MAX_SEARCH_CONTACTS;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 public class MessengerFindContactsFragment extends AbstractMessengerContactsFragment {
+
+	private int maxContacts = MAX_SEARCH_CONTACTS;
 
 	private final long SEARCH_DELAY_MILLIS = 500;
 
@@ -36,14 +41,21 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
 		final CharSequence filterText = getFilterText();
-		return new FindContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText == null ? null : filterText.toString());
+		if (!isEmpty(filterText)) {
+			return new FindContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
+		} else {
+			// in case of empty query we need to reset maxContacts
+			maxContacts = MAX_SEARCH_CONTACTS;
+			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, maxContacts);
+		}
 	}
 
 	@Override
 	public void filter(@Nullable CharSequence filterText) {
 		if (getAdapter().isInitialized()) {
-			getUiHandler().removeCallbacks(runnable);
-			getUiHandler().postDelayed(runnable, SEARCH_DELAY_MILLIS);
+			final Handler handler = getUiHandler();
+			handler.removeCallbacks(runnable);
+			handler.postDelayed(runnable, SEARCH_DELAY_MILLIS);
 		}
 	}
 
@@ -70,6 +82,17 @@ public class MessengerFindContactsFragment extends AbstractMessengerContactsFrag
 			if (adapter.isInitialized()) {
 				createAsyncLoader(adapter).executeInParallel();
 			}
+		}
+	}
+
+	@Override
+	public void onBottomReached() {
+		super.onBottomReached();
+
+		final CharSequence filterText = getFilterText();
+		if (!isEmpty(filterText)) {
+			maxContacts += MAX_SEARCH_CONTACTS;
+			getUiHandler().post(runnable);
 		}
 	}
 }

@@ -15,7 +15,6 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getUserService;
-import static org.solovyev.android.messenger.users.Users.MAX_SEARCH_CONTACTS;
 
 /**
  * User: serso
@@ -26,13 +25,16 @@ final class FindContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Conta
 
 	@Nullable
 	private String query;
+	private final int maxCount;
 
 	FindContactsAsyncLoader(@Nonnull Context context,
 							@Nonnull ListAdapter<ContactListItem> adapter,
 							@Nullable Runnable onPostExecute,
-							@Nullable String query) {
+							@Nullable String query,
+							int maxCount) {
 		super(context, adapter, onPostExecute);
 		this.query = query;
+		this.maxCount = maxCount;
 	}
 
 	@Nonnull
@@ -42,16 +44,16 @@ final class FindContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Conta
 		final AccountService accountService = getAccountService();
 		final UserService userService = getUserService();
 
-		final Collection<User> enabledAccount = accountService.getEnabledAccountUsers();
-		if (enabledAccount.size() > 0) {
-			final int count = max(MAX_SEARCH_CONTACTS / enabledAccount.size(), 1);
-			for (User user : enabledAccount) {
+		final Collection<User> accountUsers = accountService.getEnabledAccountUsers();
+		if (accountUsers.size() > 0) {
+			final int count = max(maxCount / accountUsers.size(), 1);
+			for (User user : accountUsers) {
 				result.addAll(userService.findContacts(user, query, count));
 			}
 
 		}
 
-		return result.subList(0, min(result.size(), MAX_SEARCH_CONTACTS));
+		return result.subList(0, min(result.size(), maxCount));
 	}
 
 	@Nonnull

@@ -103,6 +103,9 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	@Nonnull
 	List<UiChat> getLastChats(@Nonnull User user, int count);
 
+	@Nonnull
+	List<UiChat> getLastChats(int count);
+
 	void removeEmptyChats(@Nonnull User user);
 
     /*

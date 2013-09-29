@@ -14,10 +14,7 @@ import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MessengerExceptionHandler;
 import org.solovyev.android.messenger.accounts.*;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
@@ -321,6 +318,21 @@ public class DefaultUserService implements UserService {
 
 		Log.d(TAG, "Find contacts result: " + result.size());
 
+		return result;
+	}
+
+	@Nonnull
+	@Override
+	public List<UiContact> getLastChatedContacts(int count) {
+		final List<UiChat> chats = chatService.getLastChats(count);
+		final List<UiContact> result = new ArrayList<UiContact>(chats.size());
+		for (UiChat uiChat : chats) {
+			final Chat chat = uiChat.getChat();
+			if (chat.isPrivate()) {
+				final User contact = getUserById(chat.getSecondUser());
+				result.add(UiContact.newInstance(contact, getUnreadMessagesCount(contact.getEntity())));
+			}
+		}
 		return result;
 	}
 

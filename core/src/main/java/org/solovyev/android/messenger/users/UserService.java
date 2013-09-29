@@ -119,6 +119,9 @@ public interface UserService {
 	@Nonnull
 	List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count);
 
+	@Nonnull
+	List<UiContact> getLastChatedContacts(int count);
+
     /*
     **********************************************************************
     *

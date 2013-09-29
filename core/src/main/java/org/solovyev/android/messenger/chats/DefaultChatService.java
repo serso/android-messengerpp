@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.Executor;
 
 import static com.google.common.collect.Lists.transform;
+import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.chats.UiChat.newUiChat;
@@ -515,6 +516,20 @@ public class DefaultChatService implements ChatService {
 			} else {
 				Log.i(TAG, "Empty chat detected, chat id " + chat.getId());
 			}
+		}
+
+		return getLastChatsByDate(result, count);
+	}
+
+	@Nonnull
+	@Override
+	public List<UiChat> getLastChats(int count) {
+		final List<UiChat> result = new ArrayList<UiChat>(count);
+
+		final AccountService accountService = getAccountService();
+
+		for (User user : accountService.getEnabledAccountUsers()) {
+			result.addAll(getLastChats(user, count));
 		}
 
 		return getLastChatsByDate(result, count);
