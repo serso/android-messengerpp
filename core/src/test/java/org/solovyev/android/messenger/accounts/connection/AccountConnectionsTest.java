@@ -22,7 +22,7 @@ import static org.robolectric.Robolectric.application;
 public class AccountConnectionsTest {
 
 	@Nonnull
-	private SetAccountConnections connections;
+	private DefaultAccountConnections connections;
 
 	@Nonnull
 	private Account account;
@@ -32,7 +32,7 @@ public class AccountConnectionsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		connections = new SetAccountConnections(application);
+		connections = new DefaultAccountConnections(application);
 		connections.setExecutor(new Executor() {
 			@Override
 			public void execute(@Nonnull Runnable command) {

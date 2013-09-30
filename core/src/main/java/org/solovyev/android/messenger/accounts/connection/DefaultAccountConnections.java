@@ -32,7 +32,7 @@ import static org.solovyev.android.messenger.App.newTag;
  * Time: 10:47 PM
  */
 @Singleton
-public final class SetAccountConnections implements AccountConnections {
+public final class DefaultAccountConnections implements AccountConnections {
 
     /*
 	**********************************************************************
@@ -72,7 +72,7 @@ public final class SetAccountConnections implements AccountConnections {
 	private Executor executor = newCachedThreadPool(new ConnectionThreadFactory());
 
 	@Inject
-	public SetAccountConnections(@Nonnull Context context) {
+	public DefaultAccountConnections(@Nonnull Context context) {
 		this.context = context.getApplicationContext();
 	}
 

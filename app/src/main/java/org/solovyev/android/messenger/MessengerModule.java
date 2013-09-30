@@ -12,8 +12,8 @@ import org.solovyev.android.messenger.accounts.DefaultAccountService;
 import org.solovyev.android.messenger.accounts.SqliteAccountDao;
 import org.solovyev.android.messenger.accounts.connection.AccountConnections;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
+import org.solovyev.android.messenger.accounts.connection.DefaultAccountConnections;
 import org.solovyev.android.messenger.accounts.connection.DefaultAccountConnectionsService;
-import org.solovyev.android.messenger.accounts.connection.SetAccountConnections;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
@@ -62,7 +62,7 @@ public class MessengerModule extends AbstractModule {
 		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
 
 		bind(RealmService.class).to(DefaultRealmService.class);
-		bind(AccountConnections.class).to(SetAccountConnections.class);
+		bind(AccountConnections.class).to(DefaultAccountConnections.class);
 		bind(AccountService.class).to(DefaultAccountService.class);
 		bind(AccountDao.class).to(SqliteAccountDao.class);
 

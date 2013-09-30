@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;
-import static org.solovyev.android.messenger.accounts.connection.SetAccountConnections.TAG;
+import static org.solovyev.android.messenger.accounts.connection.DefaultAccountConnections.TAG;
 
 class ConnectionRunnable implements Runnable {
 
