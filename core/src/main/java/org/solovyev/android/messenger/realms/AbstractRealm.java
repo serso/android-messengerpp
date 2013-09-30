@@ -1,7 +1,9 @@
-package org.solovyev.android.messenger.accounts;
+package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;

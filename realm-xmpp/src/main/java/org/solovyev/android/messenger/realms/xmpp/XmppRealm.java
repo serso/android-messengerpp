@@ -16,7 +16,7 @@ import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.accounts.AbstractRealm;
+import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;

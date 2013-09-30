@@ -12,7 +12,7 @@ import javax.crypto.SecretKey;
 
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.accounts.AbstractRealm;
+import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
