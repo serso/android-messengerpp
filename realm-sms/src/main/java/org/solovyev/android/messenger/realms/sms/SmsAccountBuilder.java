@@ -34,7 +34,7 @@ final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccountConfigura
 
 	@Nonnull
 	@Override
-	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+	protected Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new SmsAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 

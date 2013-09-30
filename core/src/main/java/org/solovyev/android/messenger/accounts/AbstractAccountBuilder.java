@@ -37,7 +37,7 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 
 		final User user = getAccountUser(accountId);
 
-		return newRealm(accountId, user, AccountState.enabled);
+		return newAccount(accountId, user, AccountState.enabled);
 	}
 
 	@Nonnull
@@ -55,5 +55,5 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 	}
 
 	@Nonnull
-	protected abstract Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
+	protected abstract Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
 }

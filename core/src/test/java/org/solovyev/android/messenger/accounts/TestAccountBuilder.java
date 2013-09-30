@@ -25,7 +25,7 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccountConfig
 
 	@Nonnull
 	@Override
-	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+	protected Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new TestAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 

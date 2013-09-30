@@ -52,7 +52,7 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfigurat
 
 	@Nonnull
 	@Override
-	protected Account newRealm(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+	protected Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new VkAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 
