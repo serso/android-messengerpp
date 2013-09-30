@@ -41,7 +41,7 @@ public enum AccountEventType {
 	start;
 
 	@Nonnull
-	AccountEvent newEvent(@Nonnull Account account, @Nullable Object data) {
+	public AccountEvent newEvent(@Nonnull Account account, @Nullable Object data) {
 		assert data == null;
 		return new AccountEvent(account, this, null);
 	}

@@ -16,7 +16,7 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -65,11 +65,9 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 	*
 	**********************************************************************
 	*/
+	@Inject
 	@Nonnull
 	private AccountConnections accountConnections;
-
-	@Nullable
-	private AccountEventListener accountEventListener;
 
 	@Inject
 	public DefaultAccountConnectionsService(@Nonnull Application context) {
@@ -78,21 +76,17 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 
 	@Override
 	public void init() {
-		accountConnections = new AccountConnections(context);
-
 		networkStateService.addListener(this);
 
-		accountEventListener = new AccountEventListener();
-		accountService.addListener(accountEventListener);
-
+		accountService.addListener(new AccountEventListener());
 		tryStartConnectionsFor(accountService.getEnabledAccounts());
 	}
 
-	private void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
+	void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
 		accountConnections.startConnectionsFor(accounts, isInternetConnectionExists());
 	}
 
-	private boolean isInternetConnectionExists() {
+	boolean isInternetConnectionExists() {
 		final NetworkData networkData = networkStateService.getNetworkData();
 		return networkData.getState() == NetworkState.CONNECTED;
 	}
@@ -100,13 +94,12 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 	@Override
 	public void onNetworkEvent(@Nonnull NetworkData networkData) {
 		switch (networkData.getState()) {
-			case UNKNOWN:
-				break;
 			case CONNECTED:
 				notificationService.remove(NO_INTERNET_NOTIFICATION);
 				notificationService.remove(newRealmConnectionErrorNotification());
 				accountConnections.tryStartAll(true);
 				break;
+			case UNKNOWN:
 			case NOT_CONNECTED:
 				notificationService.add(NO_INTERNET_NOTIFICATION);
 				accountConnections.onNoInternetConnection();
@@ -127,6 +120,7 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 				case created:
 					tryStartConnectionsFor(Arrays.asList(account));
 					break;
+				case configuration_changed:
 				case changed:
 					accountConnections.updateAccount(account, isInternetConnectionExists());
 					break;
@@ -152,5 +146,21 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 					break;
 			}
 		}
+	}
+
+	void setAccountService(@Nonnull AccountService accountService) {
+		this.accountService = accountService;
+	}
+
+	void setNetworkStateService(@Nonnull NetworkStateService networkStateService) {
+		this.networkStateService = networkStateService;
+	}
+
+	void setAccountConnections(@Nonnull AccountConnections accountConnections) {
+		this.accountConnections = accountConnections;
+	}
+
+	void setNotificationService(@Nonnull NotificationService notificationService) {
+		this.notificationService = notificationService;
 	}
 }
