@@ -11,6 +11,9 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 
 	private int testIntField;
 
+	@Nonnull
+	private String anotherTestStringField = "";
+
 	// for json
 	public TestAccountConfiguration() {
 	}
@@ -29,6 +32,19 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 		return testIntField;
 	}
 
+	public void setTestStringField(@Nonnull String testStringField) {
+		this.testStringField = testStringField;
+	}
+
+	@Nonnull
+	public String getAnotherTestStringField() {
+		return anotherTestStringField;
+	}
+
+	public void setAnotherTestStringField(@Nonnull String anotherTestStringField) {
+		this.anotherTestStringField = anotherTestStringField;
+	}
+
 	@Nonnull
 	@Override
 	public TestAccountConfiguration clone() {
@@ -43,14 +59,28 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 		TestAccountConfiguration that = (TestAccountConfiguration) c;
 
 		if (testIntField != that.testIntField) return false;
-		if (!testStringField.equals(that.testStringField)) return false;
 
 		return true;
 	}
 
 	@Override
 	public boolean isSameCredentials(AccountConfiguration c) {
-		return isSameAccount(c);
+		boolean same = isSameAccount(c);
+		if(same) {
+			final TestAccountConfiguration that = (TestAccountConfiguration) c;
+			same = this.testStringField.equals(that.testStringField);
+		}
+		return same;
+	}
+
+	@Override
+	public boolean isSame(AccountConfiguration c) {
+		boolean same = isSameCredentials(c);
+		if(same) {
+			final TestAccountConfiguration that = (TestAccountConfiguration) c;
+			same = this.anotherTestStringField.equals(that.anotherTestStringField);
+		}
+		return same;
 	}
 
 	@Override

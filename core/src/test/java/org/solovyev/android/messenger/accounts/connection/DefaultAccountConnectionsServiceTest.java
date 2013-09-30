@@ -1,10 +1,5 @@
 package org.solovyev.android.messenger.accounts.connection;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +9,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountEvent;
-import org.solovyev.android.messenger.accounts.AccountEventType;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.notifications.NotificationService;
@@ -25,24 +19,17 @@ import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.common.MutableObject;
 import org.solovyev.common.listeners.JEventListener;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.solovyev.android.messenger.accounts.AccountEventType.changed;
-import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
-import static org.solovyev.android.messenger.accounts.AccountEventType.created;
-import static org.solovyev.android.messenger.accounts.AccountEventType.start;
-import static org.solovyev.android.messenger.accounts.AccountEventType.state_changed;
-import static org.solovyev.android.messenger.accounts.AccountEventType.stop;
-import static org.solovyev.android.messenger.accounts.connection.Accounts.newMockAccountWithStaticConnection;
-import static org.solovyev.android.network.NetworkState.CONNECTED;
-import static org.solovyev.android.network.NetworkState.NOT_CONNECTED;
-import static org.solovyev.android.network.NetworkState.UNKNOWN;
+import static org.mockito.Mockito.*;
+import static org.solovyev.android.messenger.accounts.AccountEventType.*;
+import static org.solovyev.android.messenger.accounts.Accounts.newMockAccountWithStaticConnection;
+import static org.solovyev.android.network.NetworkState.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class DefaultAccountConnectionsServiceTest {

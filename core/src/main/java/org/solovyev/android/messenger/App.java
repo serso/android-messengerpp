@@ -3,8 +3,9 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Handler;
 import com.google.inject.Inject;
-
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
@@ -18,12 +19,12 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.tasks.TaskService;
-
-import android.os.Handler;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public final class App {
 
@@ -225,6 +226,11 @@ public final class App {
 	@Nonnull
 	public static EventManager getEventManager(@Nonnull Context context) {
 		return RoboGuice.getInjector(context).getInstance(EventManager.class);
+	}
+
+	@Nonnull
+	public static SharedPreferences getPreferences() {
+		return getDefaultSharedPreferences(getApplication());
 	}
 
 	@Nonnull

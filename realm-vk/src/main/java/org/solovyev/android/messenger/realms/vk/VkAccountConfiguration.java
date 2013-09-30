@@ -1,13 +1,9 @@
 package org.solovyev.android.messenger.realms.vk;
 
-import javax.annotation.Nonnull;
-
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
-import org.solovyev.common.security.SecurityService;
 
-import static org.solovyev.android.messenger.App.getSecurityService;
+import javax.annotation.Nonnull;
 
 public class VkAccountConfiguration extends JObject implements AccountConfiguration {
 
@@ -80,14 +76,22 @@ public class VkAccountConfiguration extends JObject implements AccountConfigurat
 
 	@Override
 	public boolean isSameCredentials(AccountConfiguration c) {
-		boolean sameAccount = isSameAccount(c);
-		if(sameAccount) {
+		boolean same = isSameAccount(c);
+		if(same) {
 			final VkAccountConfiguration that = (VkAccountConfiguration) c;
-			if(!this.password.equals(that.password)) {
-				sameAccount = false;
-			}
+			same = this.password.equals(that.password);
 		}
-		return sameAccount;
+		return same;
+	}
+
+	@Override
+	public boolean isSame(AccountConfiguration c) {
+		boolean same = isSameCredentials(c);
+		if(same) {
+			final VkAccountConfiguration that = (VkAccountConfiguration) c;
+			same = this.userId.equals(that.userId) && this.accessToken.equals(that.accessToken);
+		}
+		return same;
 	}
 
 	@Override

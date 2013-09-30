@@ -1,12 +1,13 @@
 package org.solovyev.android.messenger.accounts;
 
-import java.util.Collection;
-
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 public interface AccountDao {
 
 	final String TAG = AccountDao.class.getSimpleName();
+
+	void init();
 
 	void insertAccount(@Nonnull Account account) throws AccountException;
 
@@ -21,6 +22,4 @@ public interface AccountDao {
 
 	@Nonnull
 	Collection<Account> loadAccountsInState(@Nonnull AccountState state);
-
-	void init();
 }

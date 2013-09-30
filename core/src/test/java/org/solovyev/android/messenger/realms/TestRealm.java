@@ -41,7 +41,7 @@ public class TestRealm extends AbstractRealm {
 	@Nonnull
 	@Override
 	public Account<TestAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull AccountState state) {
-		return new TestAccount(accountId, this, user, (TestAccountConfiguration) configuration, AccountState.enabled);
+		return new TestAccount(accountId, this, user, (TestAccountConfiguration) configuration, state);
 	}
 
 	@Nonnull
@@ -82,8 +82,7 @@ public class TestRealm extends AbstractRealm {
 
 	@Nullable
 	@Override
-	public Cipherer<AccountConfiguration, AccountConfiguration> getCipherer() {
+	public Cipherer<TestAccountConfiguration, TestAccountConfiguration> getCipherer() {
 		return null;
 	}
-
 }

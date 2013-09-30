@@ -30,6 +30,8 @@ import org.solovyev.android.messenger.realms.DefaultRealmService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
 import org.solovyev.android.messenger.registration.RegistrationService;
+import org.solovyev.android.messenger.security.DefaultSecurityService;
+import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DefaultUserService;
@@ -55,6 +57,7 @@ public class MessengerModule extends AbstractModule {
 		bind(Executor.class).to(MessengerExecutor.class);
 		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
+		bind(MessengerSecurityService.class).to(DefaultSecurityService.class);
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
 		bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
 		bind(NotificationService.class).to(DefaultNotificationService.class);

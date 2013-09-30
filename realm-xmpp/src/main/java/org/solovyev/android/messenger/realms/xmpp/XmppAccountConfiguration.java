@@ -1,12 +1,11 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
-import javax.annotation.Nonnull;
-
+import com.google.gson.Gson;
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
 
-import com.google.gson.Gson;
+import javax.annotation.Nonnull;
 
 public class XmppAccountConfiguration extends JObject implements AccountConfiguration {
 
@@ -99,14 +98,22 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	@Override
 	public boolean isSameCredentials(AccountConfiguration c) {
-		boolean sameAccount = isSameAccount(c);
-		if(sameAccount) {
+		boolean same = isSameAccount(c);
+		if(same) {
 			final XmppAccountConfiguration that = (XmppAccountConfiguration) c;
-			if(!this.password.equals(that.password)) {
-				sameAccount = false;
-			}
+			same = this.password.equals(that.password);
 		}
-		return sameAccount;
+		return same;
+	}
+
+	@Override
+	public boolean isSame(AccountConfiguration c) {
+		boolean same = isSameCredentials(c);
+		if(same) {
+			final XmppAccountConfiguration that = (XmppAccountConfiguration) c;
+			same = this.resource.equals(that.resource);
+		}
+		return same;
 	}
 
 	@Override

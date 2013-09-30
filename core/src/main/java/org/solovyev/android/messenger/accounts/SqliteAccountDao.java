@@ -6,31 +6,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import com.google.gson.Gson;
+import com.google.inject.Singleton;
+import org.solovyev.android.db.*;
+import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.security.Cipherer;
+import org.solovyev.common.security.CiphererException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
-import org.solovyev.android.db.AbstractDbQuery;
-import org.solovyev.android.db.AbstractObjectDbExec;
-import org.solovyev.android.db.AbstractSQLiteHelper;
-import org.solovyev.android.db.AndroidDbUtils;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.db.DeleteAllRowsDbExec;
-import org.solovyev.android.db.ListMapper;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.security.Cipherer;
-import org.solovyev.common.security.CiphererException;
-
-import com.google.gson.Gson;
-import com.google.inject.Singleton;
-
+import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
+import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
+import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.App.getSecurityService;
 
 @Singleton
@@ -64,7 +57,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	@Override
 	public void insertAccount(@Nonnull Account account) throws AccountException {
 		try {
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertAccount(account, secret)));
+			doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new InsertAccount(account, secret)));
 		} catch (AccountRuntimeException e) {
 			throw new AccountException(e);
 		}
@@ -72,29 +65,29 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 
 	@Override
 	public void deleteAccount(@Nonnull String accountId) {
-		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteAccount(accountId)));
+		doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteAccount(accountId)));
 	}
 
 	@Nonnull
 	@Override
 	public Collection<Account> loadAccounts() {
 		try {
-			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadAccount(getContext(), null, getSqliteOpenHelper()));
+			return doDbQuery(getSqliteOpenHelper(), new LoadAccount(getContext(), null, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {
-			App.getExceptionHandler().handleException(e);
+			getExceptionHandler().handleException(e);
 			return Collections.emptyList();
 		}
 	}
 
 	@Override
 	public void deleteAllAccounts() {
-		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(DeleteAllRowsDbExec.newInstance("accounts")));
+		doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(DeleteAllRowsDbExec.newInstance("accounts")));
 	}
 
 	@Override
 	public void updateAccount(@Nonnull Account account) throws AccountException {
 		try {
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateAccount(account, secret)));
+			doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new UpdateAccount(account, secret)));
 		} catch (AccountRuntimeException e) {
 			throw new AccountException(e);
 		}
@@ -104,9 +97,9 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	@Override
 	public Collection<Account> loadAccountsInState(@Nonnull AccountState state) {
 		try {
-			return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadAccount(getContext(), state, getSqliteOpenHelper()));
+			return doDbQuery(getSqliteOpenHelper(), new LoadAccount(getContext(), state, getSqliteOpenHelper()));
 		} catch (AccountRuntimeException e) {
-			App.getExceptionHandler().handleException(e);
+			getExceptionHandler().handleException(e);
 			return Collections.emptyList();
 		}
 	}

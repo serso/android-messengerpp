@@ -30,6 +30,7 @@ import org.solovyev.android.messenger.notifications.DefaultNotificationService;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.DefaultRealmService;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DefaultUserService;
@@ -72,6 +73,7 @@ public abstract class AbstractTestMessengerModule extends AbstractModule {
 		bind(SQLiteOpenHelperConfiguration.class).to(TestMessengerDbConfiguration.class);
 		bind(SQLiteOpenHelper.class).to(TestSQLiteOpenHelper.class);
 
+		bind(MessengerSecurityService.class).to(TestSecurityService.class);
 		bind(TaskService.class).toInstance(newTaskService());
 
 		bind(RealmService.class).to(DefaultRealmService.class);

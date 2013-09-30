@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import static org.mockito.Mockito.*;
 import static org.robolectric.Robolectric.application;
 import static org.solovyev.android.messenger.AppTest.mockApp;
-import static org.solovyev.android.messenger.accounts.connection.Accounts.newMockAccountWithStaticConnection;
+import static org.solovyev.android.messenger.accounts.Accounts.newMockAccountWithStaticConnection;
 
 @RunWith(RobolectricTestRunner.class)
 public class ConnectionRunnableTest {

@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.realms.sms;
 
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -28,6 +28,16 @@ public final class SmsAccountConfiguration extends JObject implements AccountCon
 	@Override
 	public boolean isSameCredentials(AccountConfiguration c) {
 		return isSameAccount(c);
+	}
+
+	@Override
+	public boolean isSame(AccountConfiguration c) {
+		boolean same = isSameCredentials(c);
+		if(same) {
+			final SmsAccountConfiguration that = (SmsAccountConfiguration) c;
+			same = this.stopFurtherProcessing == that.stopFurtherProcessing;
+		}
+		return same;
 	}
 
 	@Override

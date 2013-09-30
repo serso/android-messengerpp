@@ -1,10 +1,10 @@
-package org.solovyev.android.messenger.accounts.connection;
+package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
+import org.junit.Assert;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 
 import javax.annotation.Nonnull;
 
@@ -15,7 +15,7 @@ import static org.solovyev.android.messenger.entities.EntityImpl.getAccountId;
 public class Accounts {
 
 	@Nonnull
-	static Account newMockAccountWithStaticConnection() {
+	public static Account newMockAccountWithStaticConnection() {
 		final Account account = mock(Account.class);
 		when(account.getId()).thenReturn(getAccountId("test", 0));
 		when(account.isEnabled()).thenReturn(true);
@@ -24,7 +24,7 @@ public class Accounts {
 	}
 
 	@Nonnull
-	static AccountConnection prepareStaticConnectionForAccount(@Nonnull final Account account) {
+	public static AccountConnection prepareStaticConnectionForAccount(@Nonnull final Account account) {
 		final AccountConnection connection = newMockConnection(account);
 		when(account.newConnection(any(Context.class))).thenReturn(connection);
 		return connection;
@@ -75,5 +75,19 @@ public class Accounts {
 		when(connection.getAccount()).thenReturn(account);
 
 		return connection;
+	}
+
+	public static void assertEquals(@Nonnull Account expected, @Nonnull Account actual) {
+		assertEquals(expected, actual, true);
+	}
+
+	public static void assertEquals(@Nonnull Account expected, @Nonnull Account actual, boolean checkState) {
+		Assert.assertEquals(expected.getId(), actual.getId());
+		Assert.assertEquals(expected.getRealm(), actual.getRealm());
+		if (checkState) {
+			Assert.assertEquals(expected.getState(), actual.getState());
+		}
+		Assert.assertTrue(expected.getConfiguration().isSame(actual.getConfiguration()));
+		Assert.assertEquals(expected.getUser(), actual.getUser());
 	}
 }
