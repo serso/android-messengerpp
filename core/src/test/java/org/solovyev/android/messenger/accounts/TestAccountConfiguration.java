@@ -45,6 +45,10 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 		this.anotherTestStringField = anotherTestStringField;
 	}
 
+	public void setTestIntField(int testIntField) {
+		this.testIntField = testIntField;
+	}
+
 	@Nonnull
 	@Override
 	public TestAccountConfiguration clone() {

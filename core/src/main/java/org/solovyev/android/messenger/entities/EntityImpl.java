@@ -206,7 +206,18 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 		out.writeString(entityId);
 	}
 
-    /*
+	@Override
+	public String toString() {
+		return "Entity{" +
+				"accountId='" + accountId + '\'' +
+				", realmId='" + realmId + '\'' +
+				", accountEntityId='" + accountEntityId + '\'' +
+				", appAccountEntityId='" + appAccountEntityId + '\'' +
+				", entityId='" + entityId + '\'' +
+				'}';
+	}
+
+	/*
     **********************************************************************
     *
     *                           STATIC

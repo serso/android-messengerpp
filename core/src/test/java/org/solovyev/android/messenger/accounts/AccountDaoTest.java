@@ -6,6 +6,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTestCase;
 import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
+import org.solovyev.android.properties.Properties;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
@@ -21,6 +24,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;
 import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_user;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
+import static org.solovyev.android.properties.Properties.newProperty;
 
 public class AccountDaoTest extends DefaultMessengerTestCase {
 
@@ -120,7 +125,39 @@ public class AccountDaoTest extends DefaultMessengerTestCase {
 	@Test
 	public void testShouldRemoveAllAccounts() throws Exception {
 		dao.deleteAllAccounts();
-		Assert.assertEquals(0, dao.loadAccounts().size());
+		assertEquals(0, dao.loadAccounts().size());
 	}
-	// todo serso: test update
+
+	@Test
+	public void testShouldNotUpdateIfAccountDoesntExist() throws Exception {
+		final Account account = new TestAccount(realm, 100);
+		final Collection<Account> accountsBefore = dao.loadAccounts();
+
+		dao.updateAccount(account);
+
+		final Collection<Account> accountsAfter = dao.loadAccounts();
+		assertEquals(accountsBefore, accountsAfter);
+	}
+
+
+	@Test
+	public void testShouldUpdateState() throws Exception {
+		final Account excepted = getAccount1().copyForNewState(disabled_by_app);
+		dao.updateAccount(excepted);
+
+		Accounts.assertEquals(excepted, findAccountInDao(excepted));
+	}
+
+	@Test
+	public void testShouldUpdateConfiguration() throws Exception {
+		final TestAccount excepted = getAccount1();
+		final TestAccountConfiguration configuration = excepted.getConfiguration().clone();
+		configuration.setAnotherTestStringField("tseadsgdgafdgadg");
+		configuration.setTestStringField("3333");
+		configuration.setTestIntField(2);
+		excepted.setConfiguration(configuration);
+
+		dao.updateAccount(excepted);
+		Accounts.assertEquals(excepted, findAccountInDao(excepted));
+	}
 }

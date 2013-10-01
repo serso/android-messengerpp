@@ -18,6 +18,9 @@ import org.solovyev.common.security.CiphererException;
 
 import com.google.gson.Gson;
 
+import static org.solovyev.android.messenger.App.getRealmService;
+import static org.solovyev.android.messenger.App.getUserService;
+
 public class AccountMapper<C extends AccountConfiguration> implements Converter<Cursor, Account<C>> {
 
 	@Nullable
@@ -37,9 +40,9 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 		final String state = cursor.getString(4);
 
 		try {
-			final Realm<C> realm = (Realm<C>) App.getRealmService().getRealmById(realmId);
+			final Realm<C> realm = (Realm<C>) getRealmService().getRealmById(realmId);
 			// realm is not loaded => no way we can find user in realm services
-			final User user = App.getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
+			final User user = getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
 
 			final C encryptedConfiguration = new Gson().fromJson(configuration, realm.getConfigurationClass());
 
