@@ -11,6 +11,17 @@ import static java.util.Arrays.asList;
 
 public abstract class BaseCreateUserFragment<A extends Account<?>> extends BaseAccountFragment<A> {
 
+	/*
+	**********************************************************************
+	*
+	*                           CONSTANTS
+	*
+	**********************************************************************
+	*/
+
+	@Nonnull
+	public static final String ARG_USER_ID = "user_id";
+
 	@Inject
 	@Nonnull
 	private UserService userService;

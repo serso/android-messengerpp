@@ -89,7 +89,7 @@ public class UiEventListener implements EventListener<UiEvent> {
 				final Bundle fragmentArgs = new Bundle();
 				fragmentArgs.putString(ARG_ACCOUNT_ID, account.getId());
 				final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
-				fm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), null, CREATE_USER_FRAGMENT_TAG);
+				fm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), fragmentArgs, CREATE_USER_FRAGMENT_TAG);
 			}
 		}
 	}
