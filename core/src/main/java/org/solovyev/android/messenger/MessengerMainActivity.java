@@ -138,6 +138,11 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
 		new MessengerOnPreferenceAttachedListener(this, syncService).onPreferenceAttached(preferenceScreen, preferenceResId);
 	}
 
+	@Nullable
+	public RoboListeners getListeners() {
+		return listeners;
+	}
+
 	private static final class FragmentUiEventListener implements EventListener<FragmentUiEvent> {
 
 		@Nonnull

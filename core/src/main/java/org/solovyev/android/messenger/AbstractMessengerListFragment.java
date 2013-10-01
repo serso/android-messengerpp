@@ -50,6 +50,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
+import static org.solovyev.android.messenger.App.newTag;
 
 /**
  * User: serso
@@ -176,7 +177,7 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
     */
 
 	public AbstractMessengerListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
-		this.tag = tag;
+		this.tag = newTag(tag);
 		if (filterEnabled) {
 			this.listViewFilter = new ListViewFilter(this, this);
 		} else {

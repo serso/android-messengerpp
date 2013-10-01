@@ -75,6 +75,9 @@ public interface AccountService {
 
 	boolean canCreateUsers();
 
+	@Nonnull
+	Collection<Account> getAccountsCreatingUsers();
+
     /*
 	**********************************************************************
     *

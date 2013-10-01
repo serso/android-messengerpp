@@ -15,13 +15,17 @@ import org.solovyev.android.messenger.view.ViewAwareTag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_requested;
 
 public final class AccountListItem extends AbstractMessengerListItem<Account> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "account_list_item_";
+
+	@Nonnull
+	private final AccountUiEventType eventType;
 
     /*
 	**********************************************************************
@@ -32,8 +36,9 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
     */
 
 
-	public AccountListItem(@Nonnull Account account) {
+	public AccountListItem(@Nonnull Account account, @Nonnull AccountUiEventType eventType) {
 		super(TAG_PREFIX, account, R.layout.mpp_list_item_account);
+		this.eventType = eventType;
 	}
 
 	@Nullable
@@ -42,7 +47,7 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-				getEventManager(context).fire(account_view_requested.newEvent(getAccount()));
+				getEventManager(context).fire(eventType.newEvent(getAccount()));
 			}
 		};
 	}
@@ -86,9 +91,9 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 
 		final View warningView = viewTag.getViewById(R.id.mpp_li_account_warning_imageview);
 		if (account.isEnabled()) {
-			warningView.setVisibility(View.GONE);
+			warningView.setVisibility(GONE);
 		} else {
-			warningView.setVisibility(View.VISIBLE);
+			warningView.setVisibility(VISIBLE);
 		}
 	}
 }

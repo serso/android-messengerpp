@@ -2,10 +2,11 @@ package org.solovyev.android.messenger.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.fragments.ReflectionFragmentBuilder;
+import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
 import org.solovyev.common.Builder;
@@ -32,8 +33,14 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		tabFragments = unmodifiableList(mutableTabFragments);
 	}
 
-	public MessengerMultiPaneFragmentManager(@Nonnull SherlockFragmentActivity activity) {
+	public MessengerMultiPaneFragmentManager(@Nonnull MessengerFragmentActivity activity) {
 		super(activity, R.id.content_first_pane, MessengerEmptyFragment.class, MessengerEmptyFragment.FRAGMENT_TAG, R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
+	}
+
+	@Nonnull
+	@Override
+	public MessengerFragmentActivity getActivity() {
+		return (MessengerFragmentActivity) super.getActivity();
 	}
 
 	public void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,
@@ -69,5 +76,13 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 
 	public void emptifyThirdFragment() {
 		emptifyFragmentPane(R.id.content_third_pane);
+	}
+
+	public void setSecondOrMainFragment(Class<? extends Fragment> fragmentClass, Bundle fragmentArgs, String fragmentTag, boolean addToBackStack) {
+		if (getActivity().isDualPane()) {
+			setSecondFragment(fragmentClass, fragmentArgs, null, fragmentTag, addToBackStack);
+		} else {
+			setMainFragment(fragmentClass, fragmentArgs, null, fragmentTag, addToBackStack);
+		}
 	}
 }

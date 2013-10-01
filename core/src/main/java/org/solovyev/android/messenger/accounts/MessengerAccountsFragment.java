@@ -5,52 +5,36 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.menu.IdentifiableMenuItem;
+import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.inject.Inject;
-import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.menu.ActivityMenu;
-import org.solovyev.android.menu.IdentifiableMenuItem;
-import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.Threads2;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
-import org.solovyev.android.view.ListViewAwareOnRefreshListener;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static android.widget.LinearLayout.LayoutParams;
 import static org.solovyev.android.messenger.UiEventType.show_realms;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_requested;
 
-public class MessengerAccountsFragment extends AbstractMessengerListFragment<Account, AccountListItem> implements DetachableFragment {
+public class MessengerAccountsFragment extends AbstractAccountsFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "accounts";
 
-	@Inject
-	@Nonnull
-	private AccountService accountService;
-
 	private ActivityMenu<Menu, MenuItem> menu;
-
-	@Nullable
-	private JEventListener<AccountEvent> accountEventListener;
 
 	public MessengerAccountsFragment() {
 		super("Accounts", false, true);
@@ -77,44 +61,16 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 		return root;
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		accountEventListener = new UiAccountEventListener();
-		accountService.addListener(accountEventListener);
-	}
-
-	@Override
-	public void onDestroyView() {
-		if (accountEventListener != null) {
-			accountService.removeListener(accountEventListener);
-		}
-		super.onDestroyView();
-	}
-
-	@Nullable
-	@Override
-	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-		return null;
-	}
-
-	@Nullable
-	@Override
-	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
-		return null;
-	}
-
 	@Nonnull
 	@Override
 	protected MessengerListItemAdapter<AccountListItem> createAdapter() {
 		final List<AccountListItem> listItems = new ArrayList<AccountListItem>();
-		for (Account account : accountService.getAccounts()) {
+		for (Account account : getAccountService().getAccounts()) {
 			if (account.getState() != AccountState.removed) {
-				listItems.add(new AccountListItem(account));
+				listItems.add(new AccountListItem(account, account_view_requested));
 			}
 		}
-		return new AccountsAdapter(getActivity(), listItems);
+		return new AccountsAdapter(getActivity(), listItems, true, account_view_requested);
 	}
 
 	@Nullable
@@ -169,29 +125,6 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 		@Override
 		public Integer getItemId() {
 			return this.menuItemId;
-		}
-	}
-
-	@Nonnull
-	@Override
-	protected AccountsAdapter getAdapter() {
-		return (AccountsAdapter) super.getAdapter();
-	}
-
-	private class UiAccountEventListener extends AbstractJEventListener<AccountEvent> {
-
-		private UiAccountEventListener() {
-			super(AccountEvent.class);
-		}
-
-		@Override
-		public void onEvent(@Nonnull final AccountEvent accountEvent) {
-			Threads2.tryRunOnUiThread(MessengerAccountsFragment.this, new Runnable() {
-				@Override
-				public void run() {
-					getAdapter().onAccountEvent(accountEvent);
-				}
-			});
 		}
 	}
 }

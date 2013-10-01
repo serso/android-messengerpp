@@ -31,6 +31,10 @@ import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.contains;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
 
 /**
@@ -388,12 +392,19 @@ public class DefaultAccountService implements AccountService {
 
 	@Override
 	public boolean canCreateUsers() {
-		for (Account account : this.getEnabledAccounts()) {
-			if(account.getRealm().canCreateUsers()) {
-				return true;
-			}
-		}
+		return any(getEnabledAccounts(), new CanCreateUserPredicate());
+	}
 
-		return false;
+	@Nonnull
+	@Override
+	public Collection<Account> getAccountsCreatingUsers() {
+		return newArrayList(filter(getEnabledAccounts(), new CanCreateUserPredicate()));
+	}
+
+	private static class CanCreateUserPredicate implements Predicate<Account> {
+		@Override
+		public boolean apply(@Nullable Account account) {
+			return account != null && account.getRealm().canCreateUsers();
+		}
 	}
 }

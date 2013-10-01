@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.common.JPredicate;
 
 /**
@@ -29,39 +30,36 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 
 	@Override
 	public void onEvent(@Nonnull AccountUiEvent event) {
-		final Account account = event.getRealm();
+		final Account account = event.getAccount();
 
 		switch (event.getType()) {
 			case account_view_requested:
-				handleRealmViewRequestedEvent(account);
+				onAccountViewRequestedEvent(account);
 				break;
 			case account_view_cancelled:
-				handleRealmViewCancelledEvent(account);
+				onAccountViewCancelledEvent(account);
 				break;
 			case account_edit_requested:
-				handleRealmEditRequestedEvent(account);
+				onAccountEditRequestedEvent(account);
 				break;
 			case account_edit_finished:
-				handleRealmEditFinishedEvent(event);
+				onAccountEditFinishedEvent(event);
 				break;
 		}
 	}
 
-	private void handleRealmViewCancelledEvent(@Nonnull Account account) {
+	private void onAccountViewCancelledEvent(@Nonnull Account account) {
 		activity.getSupportFragmentManager().popBackStack();
 	}
 
-	private void handleRealmEditRequestedEvent(@Nonnull Account account) {
+	private void onAccountEditRequestedEvent(@Nonnull Account account) {
 		final Bundle fragmentArgs = new Bundle();
 		fragmentArgs.putString(BaseAccountConfigurationFragment.ARGS_ACCOUNT_ID, account.getId());
-		if (activity.isDualPane()) {
-			activity.getMultiPaneFragmentManager().setSecondFragment(account.getRealm().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
-		} else {
-			activity.getMultiPaneFragmentManager().setMainFragment(account.getRealm().getConfigurationFragmentClass(), fragmentArgs, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
-		}
+		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
+		fm.setSecondOrMainFragment(account.getRealm().getConfigurationFragmentClass(), null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 	}
 
-	private void handleRealmViewRequestedEvent(@Nonnull Account account) {
+	private void onAccountViewRequestedEvent(@Nonnull Account account) {
 		if (activity.isDualPane()) {
 			showRealmFragment(account, false);
 			if (activity.isTriplePane()) {
@@ -82,7 +80,7 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 		}
 	}
 
-	private void handleRealmEditFinishedEvent(@Nonnull AccountUiEvent event) {
+	private void onAccountEditFinishedEvent(@Nonnull AccountUiEvent event) {
 		final AccountUiEventType.FinishedState state = (AccountUiEventType.FinishedState) event.getData();
 		assert state != null;
 		switch (state) {

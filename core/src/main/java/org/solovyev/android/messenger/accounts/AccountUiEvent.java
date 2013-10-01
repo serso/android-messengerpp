@@ -17,7 +17,7 @@ public final class AccountUiEvent extends AbstractTypedJEvent<Account, AccountUi
 	}
 
 	@Nonnull
-	public Account getRealm() {
+	public Account getAccount() {
 		return getEventObject();
 	}
 }

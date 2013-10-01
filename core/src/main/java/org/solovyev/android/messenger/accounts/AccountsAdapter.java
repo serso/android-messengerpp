@@ -11,8 +11,18 @@ import java.util.List;
 
 public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 
-	public AccountsAdapter(@Nonnull Context context, @Nonnull List<? extends AccountListItem> listItems) {
+	private final boolean canAddAccounts;
+
+	@Nonnull
+	private final AccountUiEventType eventType;
+
+	public AccountsAdapter(@Nonnull Context context,
+						   @Nonnull List<? extends AccountListItem> listItems,
+						   boolean canAddAccounts,
+						   @Nonnull AccountUiEventType eventType) {
 		super(context, listItems);
+		this.canAddAccounts = canAddAccounts;
+		this.eventType = eventType;
 	}
 
     /*
@@ -27,7 +37,9 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 		final Account account = accountEvent.getAccount();
 		switch (accountEvent.getType()) {
 			case created:
-				add(createListItem(account));
+				if (canAddAccounts) {
+					add(createListItem(account));
+				}
 				break;
 			case changed:
 				final AccountListItem listItem = findInAllElements(account);
@@ -60,6 +72,6 @@ public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
 
 	@Nonnull
 	private AccountListItem createListItem(@Nonnull Account account) {
-		return new AccountListItem(account);
+		return new AccountListItem(account, eventType);
 	}
 }

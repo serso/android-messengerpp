@@ -30,6 +30,10 @@ public class RoboListeners {
 		listeners.add(new EventEventListener(eventClass, listener));
 	}
 
+	public <T> void remove(@Nonnull Class<T> eventClass, @Nonnull EventListener<T> listener) {
+		eventManager.unregisterObserver(eventClass, listener);
+	}
+
 	public void clearAll() {
 		for (EventEventListener listener : listeners) {
 			eventManager.unregisterObserver(listener.eventClass, listener.eventListener);
