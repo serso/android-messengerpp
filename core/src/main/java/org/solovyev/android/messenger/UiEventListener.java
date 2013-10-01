@@ -31,7 +31,14 @@ public class UiEventListener implements EventListener<UiEvent> {
 			case new_message:
 				onNewMessageEvent();
 				break;
+			case new_contact:
+				onNewContactEvent();
+				break;
 		}
+	}
+
+	private void onNewContactEvent() {
+		// todo serso:
 	}
 
 	private void onNewMessageEvent() {

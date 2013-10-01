@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 public enum UiEventType {
 	show_realms,
 	new_message,
+	new_contact,
 	app_exit;
 
 	@Nonnull

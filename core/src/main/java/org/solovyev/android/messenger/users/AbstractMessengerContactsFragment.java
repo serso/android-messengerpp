@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
@@ -17,9 +15,8 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.newTag;
-import static org.solovyev.android.messenger.UiEventType.new_message;
+import static org.solovyev.android.messenger.UiEventType.new_contact;
 
 /**
  * User: serso
@@ -48,7 +45,7 @@ public abstract class AbstractMessengerContactsFragment extends AbstractMessenge
 			addFooterButton(root, R.string.mpp_contact_add, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// todo serso:
+					getEventManager().fire(new_contact.newEvent());
 				}
 			});
 		}
