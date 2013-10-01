@@ -27,6 +27,9 @@ public final class Users {
 	@Nonnull
 	public static final String CONTACTS_FRAGMENT_TAG = "contacts";
 
+	@Nonnull
+	public static final String CREATE_USER_FRAGMENT_TAG = "create_user";
+
 	static final int MAX_SEARCH_CONTACTS = 20;
 
 	@Nonnull

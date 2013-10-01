@@ -7,11 +7,7 @@ import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import roboguice.event.EventListener;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
 import org.solovyev.android.messenger.chats.ChatUiEvent;
@@ -27,8 +23,9 @@ import org.solovyev.android.messenger.realms.RealmUiEventListener;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.ContactUiEventListener;
+import roboguice.event.EventListener;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -57,7 +54,6 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
     **********************************************************************
     */
 
-	@Nullable
 	private RoboListeners listeners;
 
     /*
@@ -138,7 +134,6 @@ public final class MessengerMainActivity extends MessengerFragmentActivity imple
 		new MessengerOnPreferenceAttachedListener(this, syncService).onPreferenceAttached(preferenceScreen, preferenceResId);
 	}
 
-	@Nullable
 	public RoboListeners getListeners() {
 		return listeners;
 	}

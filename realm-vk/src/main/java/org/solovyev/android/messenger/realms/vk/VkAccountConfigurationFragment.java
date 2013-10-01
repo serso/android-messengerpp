@@ -4,15 +4,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.text.Strings;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 public class VkAccountConfigurationFragment extends BaseAccountConfigurationFragment<VkAccount> {
 
@@ -54,8 +52,8 @@ public class VkAccountConfigurationFragment extends BaseAccountConfigurationFrag
 		loginEditText = (EditText) root.findViewById(R.id.mpp_vk_login_edittext);
 		passwordEditText = (EditText) root.findViewById(R.id.mpp_vk_password_edittext);
 
-		if (!isNewRealm()) {
-			final VkAccount realm = getEditedRealm();
+		if (!isNewAccount()) {
+			final VkAccount realm = getEditedAccount();
 			final VkAccountConfiguration configuration = realm.getConfiguration();
 
 			loginEditText.setText(configuration.getLogin());

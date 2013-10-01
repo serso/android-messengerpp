@@ -1,15 +1,9 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -20,6 +14,13 @@ import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 
 /**
  * User: serso
@@ -126,7 +127,8 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 		@Nullable
 		public ChatMessage sendChatMessage() throws AccountException {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(getRealmService().getAccountById(author.getEntity().getAccountId())));
+			final Account account = getRealmService().getAccountById(author.getEntity().getAccountId());
+			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(generateEntity(account));
 			liteChatMessage.setAuthor(author.getEntity());
 			liteChatMessage.setBody(message);
 

@@ -1,37 +1,16 @@
 package org.solovyev.android.messenger.accounts;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
-import org.solovyev.android.Activities;
-import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.tasks.TaskListeners;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.tasks.TaskService;
-import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static org.solovyev.android.messenger.App.getExceptionHandler;
-import static org.solovyev.android.messenger.App.getTaskService;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.back;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
 import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_edit_finished;
 
-public abstract class BaseAccountConfigurationFragment<T extends Account<?>> extends RoboSherlockFragment {
+public abstract class BaseAccountConfigurationFragment<A extends Account<?>> extends BaseAccountFragment<A> {
 
     /*
 	**********************************************************************
@@ -42,52 +21,10 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
     */
 
 	@Nonnull
-	public static final String ARGS_ACCOUNT_ID = "account_id";
-
-	@Nonnull
 	public static final String FRAGMENT_TAG = "account-configuration";
 
 	@Nonnull
 	private static final String TAG = "AccountConfiguration";
-
-    /*
-    **********************************************************************
-    *
-    *                           AUTO INJECTED FIELDS
-    *
-    **********************************************************************
-    */
-
-	@Inject
-	@Nonnull
-	private AccountService accountService;
-
-	@Inject
-	@Nonnull
-	private MessengerMultiPaneManager multiPaneManager;
-
-	@Inject
-	@Nonnull
-	private EventManager eventManager;
-
-	@Inject
-	@Nonnull
-	private TaskService taskService;
-
-    /*
-    **********************************************************************
-    *
-    *                           FIELDS
-    *
-    **********************************************************************
-    */
-
-	private T editedRealm;
-
-	private int layoutResId;
-
-	@Nonnull
-	private Context themeContext;
 
     /*
     **********************************************************************
@@ -97,166 +34,72 @@ public abstract class BaseAccountConfigurationFragment<T extends Account<?>> ext
     **********************************************************************
     */
 
-	@Nonnull
-	private Button backButton;
-
-	@Nonnull
-	private Button saveButton;
-
-	@Nonnull
-	private Button removeButton;
-
-	@Nonnull
-	private final TaskListeners taskListeners = new TaskListeners(getTaskService());
-
 	protected BaseAccountConfigurationFragment(int layoutResId) {
-		this.layoutResId = layoutResId;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		final Bundle arguments = getArguments();
-		if (arguments != null) {
-			final String accountId = arguments.getString(ARGS_ACCOUNT_ID);
-			if (accountId != null) {
-				try {
-					editedRealm = (T) accountService.getAccountById(accountId);
-				} catch (UnsupportedAccountException e) {
-					getExceptionHandler().handleException(e);
-					Activities.restartActivity(getActivity());
-				}
-			}
-		}
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_metro_fragment);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(themeContext);
-
-		getMultiPaneManager().onCreatePane(this.getActivity(), container, result);
-
-		result.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-
-		return result;
-	}
-
-	@Override
-	public void onViewCreated(View root, Bundle savedInstanceState) {
-		super.onViewCreated(root, savedInstanceState);
-
-		removeButton = (Button) root.findViewById(R.id.mpp_realm_conf_remove_button);
-		if (isNewRealm()) {
-			removeButton.setVisibility(View.GONE);
-		} else {
-			removeButton.setVisibility(View.VISIBLE);
-			removeButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					removeRealm(getEditedRealm());
-				}
-			});
-		}
-
-		backButton = (Button) root.findViewById(R.id.mpp_realm_conf_back_button);
-		backButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				backButtonPressed();
-			}
-		});
-		if (isNewRealm() && getMultiPaneManager().isDualPane(getActivity())) {
-			// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-			backButton.setVisibility(View.GONE);
-		} else {
-			backButton.setVisibility(View.VISIBLE);
-		}
-
-
-		saveButton = (Button) root.findViewById(R.id.mpp_realm_conf_save_button);
-		saveButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				saveRealm();
-			}
-		});
-
-		final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
-		fragmentTitle.setText(getFragmentTitle());
-
-		getMultiPaneManager().onPaneCreated(getActivity(), root);
+		super(layoutResId);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		taskListeners.addTaskListener(AccountSaverCallable.TASK_NAME, AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		getTaskListeners().addTaskListener(AccountSaverCallable.TASK_NAME, AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
-	@Nonnull
-	public Context getThemeContext() {
-		return themeContext;
+	public A getEditedAccount() {
+		return getAccount();
 	}
 
-	public T getEditedRealm() {
-		return editedRealm;
+	public boolean isNewAccount() {
+		return getEditedAccount() == null;
 	}
 
-	public boolean isNewRealm() {
-		return editedRealm == null;
+	@Override
+	protected boolean isRemoveButtonVisible() {
+		return isNewAccount();
 	}
 
-	protected final void removeRealm(@Nonnull Account account) {
-		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+	@Override
+	protected void onRemoveButtonPressed() {
+		removeAccount(getEditedAccount());
 	}
 
-	private void saveRealm(@Nonnull AccountBuilder accountBuilder) {
-		taskListeners.run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+	protected final void removeAccount(@Nonnull Account account) {
+		getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
-	protected final void saveRealm() {
+	private void saveAccount(@Nonnull AccountBuilder accountBuilder) {
+		getTaskListeners().run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+	}
+
+	protected final void onSaveButtonPressed() {
 		final AccountConfiguration configuration = validateData();
 		if (configuration != null) {
-			final AccountBuilder accountBuilder = getRealm().newAccountBuilder(configuration, getEditedRealm());
-			saveRealm(accountBuilder);
+			final AccountBuilder accountBuilder = getRealm().newAccountBuilder(configuration, getEditedAccount());
+			saveAccount(accountBuilder);
 		}
 	}
 
 	@Nullable
 	protected abstract AccountConfiguration validateData();
 
-	@Override
-	public void onPause() {
-		taskListeners.removeAllTaskListeners();
-
-		super.onPause();
-	}
-
-	protected void backButtonPressed() {
-		T editedRealm = getEditedRealm();
+	protected void onBackButtonPressed() {
+		A editedRealm = getEditedAccount();
 		if (editedRealm != null) {
-			eventManager.fire(account_edit_finished.newEvent(editedRealm, back));
+			getEventManager().fire(account_edit_finished.newEvent(editedRealm, back));
 		} else {
-			eventManager.fire(realm_edit_finished.newEvent(getRealm()));
+			getEventManager().fire(realm_edit_finished.newEvent(getRealm()));
 		}
 	}
 
 	@Nonnull
-	protected MessengerMultiPaneManager getMultiPaneManager() {
-		return multiPaneManager;
-	}
-
-	@Nonnull
 	public abstract Realm getRealm();
+
+	@Override
+	protected boolean isBackButtonVisible() {
+		// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
+		return isNewAccount() && getMultiPaneManager().isDualPane(getActivity());
+	}
 
 	@Nonnull
 	protected CharSequence getFragmentTitle() {

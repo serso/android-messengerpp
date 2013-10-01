@@ -4,17 +4,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.text.Strings;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
 
@@ -77,8 +75,8 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 		passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
 		resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
 
-		if (!isNewRealm()) {
-			final XmppAccount realm = getEditedRealm();
+		if (!isNewAccount()) {
+			final XmppAccount realm = getEditedAccount();
 			final XmppAccountConfiguration configuration = realm.getConfiguration();
 
 			serverEditText.setText(configuration.getServer());

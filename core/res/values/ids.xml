@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<item name="mpp_realm_conf_remove_button" type="id" />
-	<item name="mpp_realm_conf_back_button" type="id" />
-	<item name="mpp_realm_conf_save_button" type="id" />
+	<item name="mpp_account_remove_button" type="id" />
+	<item name="mpp_account_back_button" type="id" />
+	<item name="mpp_account_save_button" type="id" />
 </resources>

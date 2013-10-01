@@ -78,11 +78,11 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		emptifyFragmentPane(R.id.content_third_pane);
 	}
 
-	public void setSecondOrMainFragment(Class<? extends Fragment> fragmentClass, Bundle fragmentArgs, String fragmentTag, boolean addToBackStack) {
+	public void setSecondOrMainFragment(Class<? extends Fragment> fragmentClass, Bundle fragmentArgs, String fragmentTag) {
 		if (getActivity().isDualPane()) {
-			setSecondFragment(fragmentClass, fragmentArgs, null, fragmentTag, addToBackStack);
+			setSecondFragment(fragmentClass, fragmentArgs, null, fragmentTag, false);
 		} else {
-			setMainFragment(fragmentClass, fragmentArgs, null, fragmentTag, addToBackStack);
+			setMainFragment(fragmentClass, fragmentArgs, null, fragmentTag, true);
 		}
 	}
 }

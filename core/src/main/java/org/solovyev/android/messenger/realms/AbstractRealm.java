@@ -1,9 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountConfiguration;
-import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
@@ -35,7 +33,8 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 
 	private final boolean notifySentMessagesImmediately;
 
-	private final boolean canCreateUsers;
+	@Nullable
+	private final Class<? extends BaseCreateUserFragment<?>> createUserFragmentClass;
 
 	protected AbstractRealm(@Nonnull String id,
 							int nameResId,
@@ -43,14 +42,14 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 							@Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
 							@Nonnull Class<? extends C> configurationClass,
 							boolean notifySentMessagesImmediately,
-							boolean canCreateUsers) {
+							@Nullable Class<? extends BaseCreateUserFragment<?>> createUserFragmentClass) {
 		this.id = id;
 		this.nameResId = nameResId;
 		this.iconResId = iconResId;
 		this.configurationFragmentClass = configurationFragmentClass;
 		this.configurationClass = configurationClass;
 		this.notifySentMessagesImmediately = notifySentMessagesImmediately;
-		this.canCreateUsers = canCreateUsers;
+		this.createUserFragmentClass = createUserFragmentClass;
 	}
 
 	@Nonnull
@@ -124,6 +123,12 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 
 	@Override
 	public boolean canCreateUsers() {
-		return canCreateUsers;
+		return createUserFragmentClass != null;
+	}
+
+	@Nullable
+	@Override
+	public Class<? extends BaseCreateUserFragment> getCreateUserFragmentClass() {
+		return createUserFragmentClass;
 	}
 }

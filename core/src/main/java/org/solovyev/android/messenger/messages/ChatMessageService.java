@@ -1,18 +1,15 @@
 package org.solovyev.android.messenger.messages;
 
 import android.widget.ImageView;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
+import java.util.List;
 
 /**
  * User: serso
@@ -27,9 +24,6 @@ import org.solovyev.android.messenger.entities.Entity;
 public interface ChatMessageService {
 
 	void init();
-
-	@Nonnull
-	Entity generateEntity(@Nonnull Account account);
 
 	@Nonnull
 	List<ChatMessage> getChatMessages(@Nonnull Entity realmChat);

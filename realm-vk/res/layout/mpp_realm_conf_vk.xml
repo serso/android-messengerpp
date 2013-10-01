@@ -27,28 +27,7 @@
 			a:id="@+id/mpp_vk_password_edittext"
 			style="?mpp_form_edittext" />
 
-		<LinearLayout
-			a:orientation="horizontal"
-			a:layout_width="match_parent"
-			a:layout_height="wrap_content">
-
-			<Button
-				a:id="@+id/mpp_realm_conf_back_button"
-				a:text="@string/mpp_back"
-				style="?mpp_form_button" />
-
-			<Button
-				a:id="@+id/mpp_realm_conf_remove_button"
-				a:visibility="gone"
-				a:text="@string/mpp_remove"
-				style="?mpp_form_button" />
-
-			<Button
-				a:id="@+id/mpp_realm_conf_save_button"
-				a:text="@string/mpp_save"
-				style="?mpp_form_button" />
-
-		</LinearLayout>
+		<include layout="@layout/mpp_fragment_realm_conf_buttons"/>
 
 	</LinearLayout>
 </ScrollView>

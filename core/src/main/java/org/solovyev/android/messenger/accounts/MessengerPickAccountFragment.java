@@ -2,23 +2,19 @@ package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
 import android.util.Log;
+import com.google.common.base.Function;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-
-import com.google.common.base.Function;
-
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_picked;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_requested;
 import static org.solovyev.common.collections.Collections.isEmpty;
 
 public class MessengerPickAccountFragment extends AbstractAccountsFragment {
@@ -29,7 +25,7 @@ public class MessengerPickAccountFragment extends AbstractAccountsFragment {
 	private static final String ARG_ACCOUNT_IDS = "account_ids";
 
 	public MessengerPickAccountFragment() {
-		super("PickAccount", false, false);
+		super("PickAccount", false, true);
 	}
 
 	@Nonnull

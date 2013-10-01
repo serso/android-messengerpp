@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.jivesoftware.smack.packet.Message.Type.error;
+import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 
 public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration> {
 
@@ -168,7 +169,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Account account) {
 		final String body = message.getBody();
 		if (!Strings.isEmpty(body)) {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(getChatMessageService().generateEntity(account));
+			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(generateEntity(account));
 			liteChatMessage.setBody(body);
 			liteChatMessage.setAuthor(account.newUserEntity(message.getFrom()));
 			liteChatMessage.setRecipient(account.newUserEntity(message.getTo()));

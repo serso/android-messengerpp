@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.fragments;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.FragmentDef;
 import org.solovyev.android.messenger.accounts.MessengerAccountsFragment;
+import org.solovyev.android.messenger.accounts.MessengerPickAccountFragment;
 import org.solovyev.android.messenger.chats.MessengerRecentChatsFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.MessengerPreferenceGroupsFragment;
@@ -25,8 +26,9 @@ public enum MessengerPrimaryFragment implements FragmentDef {
 	contacts(MessengerFindContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_tab_contacts),
 	//messages(MessengerChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
 	messages(MessengerRecentChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
-	accounts(MessengerAccountsFragment.class, MessengerAccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms),
-	realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_realms, true),
+	accounts(MessengerAccountsFragment.class, MessengerAccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts),
+	pick_account(MessengerPickAccountFragment.class, MessengerPickAccountFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, true),
+	realms(MessengerRealmsFragment.class, MessengerRealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, true),
 	settings(MessengerPreferenceGroupsFragment.class, MessengerPreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences);
 
 	@Nonnull

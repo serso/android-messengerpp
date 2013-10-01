@@ -2,34 +2,26 @@ package org.solovyev.android.messenger.messages;
 
 import android.app.Application;
 import android.widget.ImageView;
-
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatMessage;
-import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.chats.MessageDirection;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
-import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 /**
  * User: serso
@@ -82,16 +74,6 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 	@Override
 	public void init() {
-	}
-
-	@Nonnull
-	@Override
-	public synchronized Entity generateEntity(@Nonnull Account account) {
-		// todo serso: create normal way of generating ids
-		final Entity tmp = newEntity(account.getId(), String.valueOf(System.currentTimeMillis()));
-
-		// NOTE: empty account entity id in order to get real from realm service
-		return newEntity(account.getId(), NO_ACCOUNT_ID, tmp.getEntityId());
 	}
 
 	@Nonnull

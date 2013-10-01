@@ -3,15 +3,13 @@ package org.solovyev.android.messenger.realms.sms;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.Realm;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -44,8 +42,8 @@ public final class SmsAccountConfigurationFragment extends BaseAccountConfigurat
 
 		stopFurtherProcessingCheckbox = (CheckBox) root.findViewById(R.id.mpp_sms_conf_stop_processing_checkbox);
 
-		if (!isNewRealm()) {
-			final SmsAccount account = getEditedRealm();
+		if (!isNewAccount()) {
+			final SmsAccount account = getEditedAccount();
 			final SmsAccountConfiguration configuration = account.getConfiguration();
 
 			stopFurtherProcessingCheckbox.setChecked(configuration.isStopFurtherProcessing());

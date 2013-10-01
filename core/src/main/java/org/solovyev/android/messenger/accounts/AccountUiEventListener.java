@@ -2,14 +2,15 @@ package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import roboguice.event.EventListener;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.common.JPredicate;
+import roboguice.event.EventListener;
+
+import javax.annotation.Nonnull;
+
+import static org.solovyev.android.messenger.accounts.BaseAccountFragment.ARG_ACCOUNT_ID;
 
 /**
  * User: serso
@@ -54,9 +55,9 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 
 	private void onAccountEditRequestedEvent(@Nonnull Account account) {
 		final Bundle fragmentArgs = new Bundle();
-		fragmentArgs.putString(BaseAccountConfigurationFragment.ARGS_ACCOUNT_ID, account.getId());
+		fragmentArgs.putString(ARG_ACCOUNT_ID, account.getId());
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
-		fm.setSecondOrMainFragment(account.getRealm().getConfigurationFragmentClass(), null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
+		fm.setSecondOrMainFragment(account.getRealm().getConfigurationFragmentClass(), null, BaseAccountConfigurationFragment.FRAGMENT_TAG);
 	}
 
 	private void onAccountViewRequestedEvent(@Nonnull Account account) {

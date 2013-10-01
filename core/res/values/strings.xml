@@ -25,7 +25,7 @@
 
 	<string name="mpp_tab_contacts">Contacts</string>
 	<string name="mpp_tab_messages">Messages</string>
-	<string name="mpp_tab_realms">Accounts</string>
+	<string name="mpp_tab_accounts">Accounts</string>
 	<string name="mpp_tab_preferences">Settings</string>
 
 	<string name="c_online_contacts">Online contacts</string>
