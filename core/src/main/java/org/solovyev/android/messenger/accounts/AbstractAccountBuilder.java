@@ -6,7 +6,7 @@ import org.solovyev.android.messenger.users.User;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class AbstractAccountBuilder<C extends AccountConfiguration> implements AccountBuilder {
+public abstract class AbstractAccountBuilder<A extends Account<C>, C extends AccountConfiguration> implements AccountBuilder<A> {
 
 	@Nonnull
 	private Realm realm;
@@ -15,11 +15,11 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 	private C configuration;
 
 	@Nullable
-	private Account editedAccount;
+	private A editedAccount;
 
 	protected AbstractAccountBuilder(@Nonnull Realm realm,
 									 @Nonnull C configuration,
-									 @Nullable Account editedAccount) {
+									 @Nullable A editedAccount) {
 		this.realm = realm;
 		this.editedAccount = editedAccount;
 		this.configuration = configuration;
@@ -32,7 +32,7 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 
 	@Nonnull
 	@Override
-	public final Account build(@Nonnull Data data) {
+	public final A build(@Nonnull Data data) {
 		final String accountId = data.getAccountId();
 
 		final User user = getAccountUser(accountId);
@@ -50,10 +50,10 @@ public abstract class AbstractAccountBuilder<C extends AccountConfiguration> imp
 
 	@Nullable
 	@Override
-	public Account getEditedAccount() {
+	public A getEditedAccount() {
 		return this.editedAccount;
 	}
 
 	@Nonnull
-	protected abstract Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
+	protected abstract A newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
 }

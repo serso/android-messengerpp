@@ -22,9 +22,9 @@ import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 
-public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfiguration> {
+public class VkAccountBuilder extends AbstractAccountBuilder<VkAccount, VkAccountConfiguration> {
 
-	protected VkAccountBuilder(@Nonnull Realm realm, @Nullable Account editedAccount, @Nonnull VkAccountConfiguration configuration) {
+	protected VkAccountBuilder(@Nonnull Realm realm, @Nullable VkAccount editedAccount, @Nonnull VkAccountConfiguration configuration) {
 		super(realm, configuration, editedAccount);
 	}
 
@@ -52,7 +52,7 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccountConfigurat
 
 	@Nonnull
 	@Override
-	protected Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+	protected VkAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new VkAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 

@@ -180,8 +180,8 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	@Override
-	public Account saveAccount(@Nonnull AccountBuilder accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException {
-		Account result;
+	public <A extends Account> A saveAccount(@Nonnull AccountBuilder<A> accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException {
+		A result;
 
 		try {
 			final AccountConfiguration configuration = accountBuilder.getConfiguration();
@@ -190,7 +190,7 @@ public class DefaultAccountService implements AccountService {
 			if (sameCredentials) {
 				// new account configuration is exactly the same => we need just to save new configuration
 				updateAccountConfiguration(oldAccount, configuration);
-				result = oldAccount;
+				result = (A) oldAccount;
 			} else {
 				// saving realm (realm either new or changed)
 
@@ -204,7 +204,7 @@ public class DefaultAccountService implements AccountService {
 				} else {
 					newAccountId = generateAccountId(accountBuilder.getRealm());
 				}
-				final Account newAccount = accountBuilder.build(new AccountBuilder.Data(newAccountId));
+				final A newAccount = accountBuilder.build(new AccountBuilder.Data(newAccountId));
 
 				synchronized (accounts) {
 					final boolean alreadyExists = Iterables.any(accounts.values(), new Predicate<Account>() {

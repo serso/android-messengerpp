@@ -64,7 +64,7 @@ public interface AccountService {
 	Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedAccountException;
 
 	@Nonnull
-	Account saveAccount(@Nonnull AccountBuilder accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException;
+	<A extends Account> A saveAccount(@Nonnull AccountBuilder<A> accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException;
 
 	@Nonnull
 	Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState);

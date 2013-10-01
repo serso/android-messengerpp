@@ -11,9 +11,9 @@ import org.solovyev.android.messenger.users.Users;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TestAccountBuilder extends AbstractAccountBuilder<TestAccountConfiguration> {
+public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, TestAccountConfiguration> {
 
-	public TestAccountBuilder(@Nonnull Realm realm, @Nonnull TestAccountConfiguration configuration, @Nullable Account editedAccount) {
+	public TestAccountBuilder(@Nonnull Realm realm, @Nonnull TestAccountConfiguration configuration, @Nullable TestAccount editedAccount) {
 		super(realm, configuration, editedAccount);
 	}
 
@@ -25,7 +25,7 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccountConfig
 
 	@Nonnull
 	@Override
-	protected Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+	protected TestAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new TestAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 

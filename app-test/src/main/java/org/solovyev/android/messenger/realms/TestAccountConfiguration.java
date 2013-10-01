@@ -55,6 +55,11 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Override
+	public boolean isSame(AccountConfiguration c) {
+		return isSameCredentials(c);
+	}
+
+	@Override
 	public void applySystemData(AccountConfiguration oldConfiguration) {
 	}
 }

@@ -42,10 +42,10 @@ public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase
 	private TestAccount account1;
 
 	@Nonnull
-	private Account account2;
+	private TestAccount account2;
 
 	@Nonnull
-	private Account account3;
+	private TestAccount account3;
 
 	@Nonnull
 	protected AbstractTestMessengerModule newModule(@Nonnull Application application) {
@@ -53,7 +53,7 @@ public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase
 	}
 
 	protected void populateDatabase() throws Exception {
-		account1 = (TestAccount)accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_0", 0), null));
+		account1 = accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_0", 0), null));
 		account2 = accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_1", 1), null));
 		account3 = accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_2", 2), null));
 
@@ -85,12 +85,12 @@ public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase
 	}
 
 	@Nonnull
-	public Account getAccount2() {
+	public TestAccount getAccount2() {
 		return account2;
 	}
 
 	@Nonnull
-	public Account getAccount3() {
+	public TestAccount getAccount3() {
 		return account3;
 	}
 }

@@ -8,13 +8,13 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.common.BuilderWithData;
 
-public interface AccountBuilder extends BuilderWithData<Account, AccountBuilder.Data> {
+public interface AccountBuilder<A extends Account> extends BuilderWithData<A, AccountBuilder.Data> {
 
 	@Nonnull
 	Realm getRealm();
 
 	@Nullable
-	Account getEditedAccount();
+	A getEditedAccount();
 
 	void connect() throws ConnectionException;
 

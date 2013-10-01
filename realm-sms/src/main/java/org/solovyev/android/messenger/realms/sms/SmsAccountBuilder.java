@@ -20,9 +20,9 @@ import org.solovyev.android.properties.AProperty;
  * Date: 5/27/13
  * Time: 8:47 PM
  */
-final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccountConfiguration> {
+final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccount, SmsAccountConfiguration> {
 
-	SmsAccountBuilder(@Nonnull Realm realm, @Nullable Account editedAccount, @Nonnull SmsAccountConfiguration configuration) {
+	SmsAccountBuilder(@Nonnull Realm realm, @Nullable SmsAccount editedAccount, @Nonnull SmsAccountConfiguration configuration) {
 		super(realm, configuration, editedAccount);
 	}
 
@@ -34,7 +34,7 @@ final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccountConfigura
 
 	@Nonnull
 	@Override
-	protected Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+	protected SmsAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new SmsAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 

@@ -121,7 +121,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	@Nonnull
 	@Override
 	public AccountBuilder newAccountBuilder(@Nonnull VkAccountConfiguration configuration, @Nullable Account editedAccount) {
-		return new VkAccountBuilder(this, editedAccount, configuration);
+		return new VkAccountBuilder(this, (VkAccount) editedAccount, configuration);
 	}
 
 	@Nonnull

@@ -18,13 +18,13 @@ import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 
-public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfiguration> {
+public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, XmppAccountConfiguration> {
 
 	@Nullable
 	private Connection connection;
 
 	public XmppAccountBuilder(@Nonnull Realm realm,
-							  @Nullable Account editedAccount,
+							  @Nullable XmppAccount editedAccount,
 							  @Nonnull XmppAccountConfiguration configuration) {
 		super(realm, configuration, editedAccount);
 	}
@@ -50,7 +50,7 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccountConfig
 
 	@Nonnull
 	@Override
-	protected Account newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
+	protected XmppAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
 		return new XmppAccount(id, getRealm(), user, getConfiguration(), state);
 	}
 

@@ -47,7 +47,7 @@ public class TestRealm extends AbstractRealm {
 	@Nonnull
 	@Override
 	public AccountBuilder newAccountBuilder(@Nonnull AccountConfiguration configuration, @Nullable Account editedAccount) {
-		return new TestAccountBuilder(this, (TestAccountConfiguration)configuration, editedAccount);
+		return new TestAccountBuilder(this, (TestAccountConfiguration)configuration, (TestAccount) editedAccount);
 	}
 
 	@Nonnull

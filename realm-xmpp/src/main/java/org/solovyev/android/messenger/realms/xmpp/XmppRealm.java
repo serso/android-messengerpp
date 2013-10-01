@@ -79,7 +79,7 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	@Override
 	@Nonnull
 	public AccountBuilder newAccountBuilder(@Nonnull XmppAccountConfiguration configuration, @Nullable Account editedAccount) {
-		return new XmppAccountBuilder(this, editedAccount, configuration);
+		return new XmppAccountBuilder(this, (XmppAccount) editedAccount, configuration);
 	}
 
 	@Override

@@ -78,7 +78,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	@Nonnull
 	@Override
 	public AccountBuilder newAccountBuilder(@Nonnull SmsAccountConfiguration configuration, @Nullable Account editedAccount) {
-		return new SmsAccountBuilder(this, editedAccount, configuration);
+		return new SmsAccountBuilder(this, (SmsAccount) editedAccount, configuration);
 	}
 
 	@Nonnull
