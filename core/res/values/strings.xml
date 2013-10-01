@@ -56,6 +56,7 @@
 
 	<string name="mpp_account_icon">Account icon</string>
 	<string name="mpp_account_add">Add account</string>
+	<string name="mpp_contact_add">Add contact</string>
 	<string name="mpp_menu_app_exit">Exit</string>
 	<string name="mpp_back">Back</string>
 	<string name="mpp_save">Save</string>

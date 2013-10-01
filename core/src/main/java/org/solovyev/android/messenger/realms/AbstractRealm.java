@@ -35,18 +35,22 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 
 	private final boolean notifySentMessagesImmediately;
 
+	private final boolean canCreateUsers;
+
 	protected AbstractRealm(@Nonnull String id,
 							int nameResId,
 							int iconResId,
 							@Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
 							@Nonnull Class<? extends C> configurationClass,
-							boolean notifySentMessagesImmediately) {
+							boolean notifySentMessagesImmediately,
+							boolean canCreateUsers) {
 		this.id = id;
 		this.nameResId = nameResId;
 		this.iconResId = iconResId;
 		this.configurationFragmentClass = configurationFragmentClass;
 		this.configurationClass = configurationClass;
 		this.notifySentMessagesImmediately = notifySentMessagesImmediately;
+		this.canCreateUsers = canCreateUsers;
 	}
 
 	@Nonnull
@@ -116,5 +120,10 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	@Override
 	public boolean handleException(@Nonnull Throwable e, @Nonnull Account account) {
 		return false;
+	}
+
+	@Override
+	public boolean canCreateUsers() {
+		return canCreateUsers;
 	}
 }

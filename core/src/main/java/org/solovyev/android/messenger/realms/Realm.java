@@ -92,6 +92,8 @@ public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 
 	boolean handleException(@Nonnull Throwable e, @Nonnull Account account);
 
+	boolean canCreateUsers();
+
     /*
 	**********************************************************************
     *

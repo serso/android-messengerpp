@@ -73,6 +73,8 @@ public interface AccountService {
 
 	boolean isOneAccount();
 
+	boolean canCreateUsers();
+
     /*
 	**********************************************************************
     *

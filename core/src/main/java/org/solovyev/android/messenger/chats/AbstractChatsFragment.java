@@ -53,17 +53,12 @@ public abstract class AbstractChatsFragment extends AbstractMessengerListFragmen
 	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
 
-		final View footer = ViewFromLayoutBuilder.newInstance(R.layout.mpp_chats_footer).build(getThemeContext());
-
-		final View newMessageButton = footer.findViewById(R.id.mpp_new_message_button);
-		newMessageButton.setOnClickListener(new View.OnClickListener() {
+		addFooterButton(root, R.string.mpp_new_message, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getEventManager().fire(new_message.newEvent());
 			}
 		});
-
-		root.addView(footer, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
 		return root;
 	}

@@ -34,6 +34,7 @@ import org.solovyev.android.messenger.view.MessengerListItem;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import roboguice.event.EventManager;
@@ -448,6 +449,15 @@ public abstract class AbstractMessengerListFragment<T, LI extends MessengerListI
 
 	@Nullable
 	protected abstract ListViewAwareOnRefreshListener getBottomPullRefreshListener();
+
+	protected void addFooterButton(@Nonnull ViewGroup root, int textResId, @Nonnull View.OnClickListener onClick) {
+		final Button footerButton = ViewFromLayoutBuilder.<Button>newInstance(R.layout.mpp_fragment_footer_button).build(getThemeContext());
+
+		footerButton.setText(textResId);
+		footerButton.setOnClickListener(onClick);
+
+		root.addView(footerButton, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

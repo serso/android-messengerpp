@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.Button;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -17,7 +18,6 @@ import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.AbstractMessengerListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.Threads2;
-import org.solovyev.android.messenger.UiEventType;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
@@ -67,17 +67,12 @@ public class MessengerAccountsFragment extends AbstractMessengerListFragment<Acc
 	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
 
-		final View accountsFooter = ViewFromLayoutBuilder.<RelativeLayout>newInstance(R.layout.mpp_accounts_footer).build(getThemeContext());
-
-		final View addAccountButton = accountsFooter.findViewById(R.id.mpp_add_account_button);
-		addAccountButton.setOnClickListener(new View.OnClickListener() {
+		addFooterButton(root, R.string.mpp_account_add, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getEventManager().fire(show_realms.newEvent());
 			}
 		});
-
-		root.addView(accountsFooter, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
 		return root;
 	}

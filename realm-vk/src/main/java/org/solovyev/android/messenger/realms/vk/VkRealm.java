@@ -101,7 +101,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
     */
 
 	public VkRealm() {
-		super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkAccountConfigurationFragment.class, VkAccountConfiguration.class, false);
+		super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkAccountConfigurationFragment.class, VkAccountConfiguration.class, false, false);
 	}
 
     /*

@@ -385,4 +385,15 @@ public class DefaultAccountService implements AccountService {
 			return Collections.emptyList();
 		}
 	}
+
+	@Override
+	public boolean canCreateUsers() {
+		for (Account account : this.getEnabledAccounts()) {
+			if(account.getRealm().canCreateUsers()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
