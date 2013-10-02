@@ -61,10 +61,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	@Nonnull
 	private EventManager eventManager;
 
-	@Inject
-	@Nonnull
-	private TaskService taskService;
-
 	/*
 	**********************************************************************
 	*
@@ -216,11 +212,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	@Nonnull
 	protected EventManager getEventManager() {
 		return eventManager;
-	}
-
-	@Nonnull
-	protected TaskService getTaskService() {
-		return taskService;
 	}
 
 	public A getAccount() {
