@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
@@ -97,7 +98,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	private Context themeContext;
 
 	@Nonnull
-	private final TaskListeners taskListeners = new TaskListeners(getTaskService());
+	private final TaskListeners taskListeners = new TaskListeners(App.getTaskService());
 
 	protected BaseAccountFragment(int layoutResId) {
 		this.layoutResId = layoutResId;
