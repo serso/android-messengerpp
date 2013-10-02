@@ -18,7 +18,6 @@ import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import org.solovyev.tasks.TaskService;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
@@ -27,6 +26,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.messenger.App.getExceptionHandler;
+import static org.solovyev.android.messenger.App.getTaskService;
 
 public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSherlockFragment {
 
@@ -94,7 +94,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	private Context themeContext;
 
 	@Nonnull
-	private final TaskListeners taskListeners = new TaskListeners(App.getTaskService());
+	private final TaskListeners taskListeners = new TaskListeners(getTaskService());
 
 	protected BaseAccountFragment(int layoutResId) {
 		this.layoutResId = layoutResId;
