@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
@@ -17,7 +18,7 @@ import org.solovyev.common.text.Strings;
  * Date: 5/24/12
  * Time: 10:30 PM
  */
-final class UserImpl extends AbstractMessengerEntity implements User {
+final class UserImpl extends AbstractMessengerEntity implements MutableUser {
 
 	@Nonnull
 	private String login;
@@ -36,7 +37,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 	}
 
 	@Nonnull
-	static User newInstance(@Nonnull Entity entity,
+	static MutableUser newInstance(@Nonnull Entity entity,
 							@Nonnull UserSyncData userSyncData,
 							@Nonnull Collection<AProperty> properties) {
 		final UserImpl result = new UserImpl(entity);
@@ -144,7 +145,7 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 
 	@Override
 	@Nonnull
-	public Collection<AProperty> getProperties() {
+	public Collection<AProperty> getPropertiesCollection() {
 		return properties.getPropertiesCollection();
 	}
 
@@ -192,5 +193,22 @@ final class UserImpl extends AbstractMessengerEntity implements User {
 		clone.properties.setProperty(property);
 
 		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public User cloneWithNewProperties(@Nonnull AProperties properties) {
+		final UserImpl clone = clone();
+
+		clone.properties.clearProperties();
+		clone.properties.setPropertiesFrom(properties.getPropertiesCollection());
+
+		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public MutableAProperties getProperties() {
+		return properties;
 	}
 }

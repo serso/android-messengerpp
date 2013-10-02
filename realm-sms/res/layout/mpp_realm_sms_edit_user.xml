@@ -40,7 +40,7 @@
 			a:text="Do not save into phone contacts"
 			style="?mpp_form_checkbox"/>
 
-		<include layout="@layout/mpp_fragment_create_user_buttons"/>
+		<include layout="@layout/mpp_fragment_edit_buttons"/>
 
 	</LinearLayout>
 </ScrollView>

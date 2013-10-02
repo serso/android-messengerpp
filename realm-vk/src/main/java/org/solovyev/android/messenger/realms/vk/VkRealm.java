@@ -127,9 +127,9 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	@Nonnull
 	@Override
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
-		final List<AProperty> result = new ArrayList<AProperty>(user.getProperties().size());
+		final List<AProperty> result = new ArrayList<AProperty>(user.getPropertiesCollection().size());
 
-		for (AProperty property : user.getProperties()) {
+		for (AProperty property : user.getPropertiesCollection()) {
 			final String name = property.getName();
 			if (name.equals(User.PROPERTY_NICKNAME)) {
 				addUserProperty(context, result, R.string.mpp_nickname, property.getValue());

@@ -10,14 +10,14 @@ import javax.annotation.Nonnull;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.solovyev.android.messenger.entities.EntityImpl.getAccountId;
+import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
 
 public class Accounts {
 
 	@Nonnull
 	public static Account newMockAccountWithStaticConnection() {
 		final Account account = mock(Account.class);
-		when(account.getId()).thenReturn(getAccountId("test", 0));
+		when(account.getId()).thenReturn(makeAccountId("test", 0));
 		when(account.isEnabled()).thenReturn(true);
 		prepareStaticConnectionForAccount(account);
 		return account;

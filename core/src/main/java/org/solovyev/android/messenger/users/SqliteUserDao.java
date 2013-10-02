@@ -420,7 +420,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 			final User user = getNotNullObject();
 
-			for (AProperty property : user.getProperties()) {
+			for (AProperty property : user.getPropertiesCollection()) {
 				final ContentValues values = new ContentValues();
 				final String value = property.getValue();
 				if (value != null) {

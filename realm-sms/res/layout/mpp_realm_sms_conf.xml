@@ -15,7 +15,7 @@
 			a:text="Do not put SMS into system inbox"
 			style="?mpp_form_checkbox"/>
 
-		<include layout="@layout/mpp_fragment_realm_conf_buttons"/>
+		<include layout="@layout/mpp_fragment_edit_buttons"/>
 
 	</LinearLayout>
 </ScrollView>

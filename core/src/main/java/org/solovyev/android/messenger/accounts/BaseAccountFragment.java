@@ -143,23 +143,21 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 		super.onViewCreated(root, savedInstanceState);
 
 		backButton = (Button) root.findViewById(R.id.mpp_account_back_button);
-		backButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onBackButtonPressed();
-			}
-		});
 
 		if (isBackButtonVisible()) {
-			backButton.setVisibility(GONE);
-		} else {
 			backButton.setVisibility(VISIBLE);
+			backButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onBackButtonPressed();
+				}
+			});
+		} else {
+			backButton.setVisibility(GONE);
 		}
 
 		removeButton = (Button) root.findViewById(R.id.mpp_account_remove_button);
 		if (isRemoveButtonVisible()) {
-			removeButton.setVisibility(GONE);
-		} else {
 			removeButton.setVisibility(VISIBLE);
 			removeButton.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -167,6 +165,8 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 					onRemoveButtonPressed();
 				}
 			});
+		} else {
+			removeButton.setVisibility(GONE);
 		}
 
 

@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.db.DbExec;
-import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.Entities;
 
 /**
  * User: serso
@@ -54,7 +54,7 @@ public class DeleteAllRowsForAccountDbExec implements DbExec {
 			return db.delete(tableName, realmColumnName + " = ?", new String[]{accountId});
 		} else if (foreignKeyColumnName != null) {
 			// todo serso: use ?
-			return db.delete(tableName, foreignKeyColumnName + " like '" + accountId + EntityImpl.DELIMITER + "%'", null);
+			return db.delete(tableName, foreignKeyColumnName + " like '" + accountId + Entities.DELIMITER + "%'", null);
 		}
 
 		return 0;

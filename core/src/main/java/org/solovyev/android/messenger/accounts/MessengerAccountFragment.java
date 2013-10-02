@@ -13,6 +13,8 @@ import com.google.inject.Inject;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerMultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
+import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
+import org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -195,7 +197,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 		super.onResume();
 
 		taskListeners.addTaskListener(AccountChangeStateCallable.TASK_NAME, AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		taskListeners.addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	@Override
@@ -241,7 +243,7 @@ public class MessengerAccountFragment extends RoboSherlockFragment {
 
 
 	private void removeAccount() {
-		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		taskListeners.run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), AccountRemoverListener.newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	private final class AccountEventListener extends AbstractJEventListener<AccountEvent> {

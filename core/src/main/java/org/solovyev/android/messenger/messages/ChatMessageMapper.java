@@ -7,8 +7,8 @@ import javax.annotation.Nonnull;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
@@ -35,10 +35,10 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
 		final String chatId = c.getString(3);
 
 		final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(messageEntity);
-		liteChatMessage.setAuthor(EntityImpl.fromEntityId(c.getString(4)));
+		liteChatMessage.setAuthor(Entities.newEntityFromEntityId(c.getString(4)));
 		if (!c.isNull(5)) {
 			final String recipientId = c.getString(5);
-			liteChatMessage.setRecipient(EntityImpl.fromEntityId(recipientId));
+			liteChatMessage.setRecipient(Entities.newEntityFromEntityId(recipientId));
 		}
 		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 

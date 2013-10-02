@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import org.solovyev.android.messenger.MessengerEntity;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
+import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
 
 /**
@@ -81,7 +82,10 @@ public interface User extends MutableUserSyncData, MessengerEntity, EntityAware 
 	boolean isOnline();
 
 	@Nonnull
-	Collection<AProperty> getProperties();
+	Collection<AProperty> getPropertiesCollection();
+
+	@Nonnull
+	AProperties getProperties();
 
 	@Nonnull
 	Entity getEntity();
@@ -103,6 +107,9 @@ public interface User extends MutableUserSyncData, MessengerEntity, EntityAware 
 
 	@Nonnull
 	User cloneWithNewProperty(@Nonnull AProperty property);
+
+	@Nonnull
+	User cloneWithNewProperties(@Nonnull AProperties properties);
 
     /*
     **********************************************************************

@@ -1,10 +1,13 @@
-package org.solovyev.android.messenger.accounts;
+package org.solovyev.android.messenger.accounts.tasks;
 
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountAlreadyExistsException;
+import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 
 /**
@@ -12,15 +15,15 @@ import org.solovyev.android.messenger.security.InvalidCredentialsException;
  * Date: 4/13/13
  * Time: 1:05 PM
  */
-class AccountSaverCallable implements Callable<Account> {
+public class AccountSaverCallable implements Callable<Account> {
 
 	@Nonnull
-	static final String TASK_NAME = "realm-save";
+	public static final String TASK_NAME = "realm-save";
 
 	@Nonnull
 	private final AccountBuilder accountBuilder;
 
-	AccountSaverCallable(@Nonnull AccountBuilder accountBuilder) {
+	public AccountSaverCallable(@Nonnull AccountBuilder accountBuilder) {
 		this.accountBuilder = accountBuilder;
 	}
 

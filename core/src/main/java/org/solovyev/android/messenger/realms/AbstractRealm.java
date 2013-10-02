@@ -34,7 +34,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	private final boolean notifySentMessagesImmediately;
 
 	@Nullable
-	private final Class<? extends BaseCreateUserFragment<?>> createUserFragmentClass;
+	private final Class<? extends BaseEditUserFragment<?>> createUserFragmentClass;
 
 	protected AbstractRealm(@Nonnull String id,
 							int nameResId,
@@ -42,7 +42,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 							@Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
 							@Nonnull Class<? extends C> configurationClass,
 							boolean notifySentMessagesImmediately,
-							@Nullable Class<? extends BaseCreateUserFragment<?>> createUserFragmentClass) {
+							@Nullable Class<? extends BaseEditUserFragment<?>> createUserFragmentClass) {
 		this.id = id;
 		this.nameResId = nameResId;
 		this.iconResId = iconResId;
@@ -128,7 +128,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 
 	@Nullable
 	@Override
-	public Class<? extends BaseCreateUserFragment> getCreateUserFragmentClass() {
+	public Class<? extends BaseEditUserFragment> getCreateUserFragmentClass() {
 		return createUserFragmentClass;
 	}
 }

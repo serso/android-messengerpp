@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerEntity;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 
@@ -81,7 +81,7 @@ public class ChatImpl extends AbstractMessengerEntity implements Chat {
 
 	@Nonnull
 	public static Chat newFakeChat(@Nonnull String chatId) {
-		return new ChatImpl(EntityImpl.fromEntityId(chatId), false);
+		return new ChatImpl(Entities.newEntityFromEntityId(chatId), false);
 	}
 
 	@Nonnull

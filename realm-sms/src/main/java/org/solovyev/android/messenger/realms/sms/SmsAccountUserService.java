@@ -80,7 +80,7 @@ final class SmsAccountUserService implements AccountUserService {
 				}
 			}
 
-			return user == null ? realm.getUser() : Users.newUser(realm.newRealmEntity(SmsRealm.USER_ID), Users.newNeverSyncedUserSyncData(), user.getProperties());
+			return user == null ? realm.getUser() : Users.newUser(realm.newRealmEntity(SmsRealm.USER_ID), Users.newNeverSyncedUserSyncData(), user.getPropertiesCollection());
 		}
 	}
 

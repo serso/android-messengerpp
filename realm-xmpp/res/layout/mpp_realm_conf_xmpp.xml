@@ -47,7 +47,7 @@
 			a:text="Messenger++"
 			style="?mpp_form_edittext" />
 
-		<include layout="@layout/mpp_fragment_realm_conf_buttons"/>
+		<include layout="@layout/mpp_fragment_edit_buttons"/>
 
 	</LinearLayout>
 </ScrollView>

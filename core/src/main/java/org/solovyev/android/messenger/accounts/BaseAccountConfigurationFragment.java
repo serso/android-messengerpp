@@ -1,11 +1,15 @@
 package org.solovyev.android.messenger.accounts;
 
+import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
+import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
+import static org.solovyev.android.messenger.accounts.tasks.AccountSaverListener.newAccountSaverListener;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.back;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
 import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_edit_finished;
@@ -42,8 +46,8 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	public void onResume() {
 		super.onResume();
 
-		getTaskListeners().addTaskListener(AccountSaverCallable.TASK_NAME, AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		getTaskListeners().addTaskListener(AccountSaverCallable.TASK_NAME, newAccountSaverListener(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	public A getEditedAccount() {
@@ -65,11 +69,11 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	}
 
 	protected final void removeAccount(@Nonnull Account account) {
-		getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), AccountRemoverListener.newInstance(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	private void saveAccount(@Nonnull AccountBuilder accountBuilder) {
-		getTaskListeners().run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), AccountSaverListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+		getTaskListeners().run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), newAccountSaverListener(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 	}
 
 	protected final void onSaveButtonPressed() {
@@ -98,7 +102,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	@Override
 	protected boolean isBackButtonVisible() {
 		// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-		return isNewAccount() && getMultiPaneManager().isDualPane(getActivity());
+		return !(isNewAccount() && getMultiPaneManager().isDualPane(getActivity()));
 	}
 
 	@Nonnull

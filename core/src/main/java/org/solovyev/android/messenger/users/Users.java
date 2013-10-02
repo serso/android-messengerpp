@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 
@@ -14,7 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static org.solovyev.android.messenger.entities.EntityImpl.fromEntityId;
+import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 /**
@@ -53,20 +54,27 @@ public final class Users {
 	}
 
 	@Nonnull
-	public static User newEmptyUser(@Nonnull Entity accountUser) {
+	public static MutableUser newEmptyUser(@Nonnull Entity accountUser) {
 		return newUser(accountUser, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
 	}
 
 	@Nonnull
 	public static User newEmptyUser(@Nonnull String userId) {
-		return newEmptyUser(fromEntityId(userId));
+		return newEmptyUser(newEntityFromEntityId(userId));
+	}
+
+	@Nonnull
+	public static MutableUser newUser(@Nonnull Entity entity,
+							   @Nonnull UserSyncData userSyncData,
+							   @Nonnull Collection<AProperty> properties) {
+		return UserImpl.newInstance(entity, userSyncData, properties);
 	}
 
 	@Nonnull
 	public static User newUser(@Nonnull Entity entity,
 							   @Nonnull UserSyncData userSyncData,
-							   @Nonnull Collection<AProperty> properties) {
-		return UserImpl.newInstance(entity, userSyncData, properties);
+							   @Nonnull AProperties properties) {
+		return UserImpl.newInstance(entity, userSyncData, properties.getPropertiesCollection());
 	}
 
 	@Nonnull

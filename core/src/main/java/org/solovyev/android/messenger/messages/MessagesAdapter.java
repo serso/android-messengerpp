@@ -21,8 +21,8 @@ import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 
 import com.google.common.base.Function;
@@ -164,7 +164,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				// 'Typing' message is not shown yet => show it
 
 				// create fake message
-				final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(user.getEntityId() + "_typing"));
+				final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(Entities.newEntityFromEntityId(user.getEntityId() + "_typing"));
 				liteChatMessage.setSendDate(DateTime.now());
 				liteChatMessage.setAuthor(user);
 				liteChatMessage.setBody(getContext().getString(R.string.mpp_user_starts_typing));

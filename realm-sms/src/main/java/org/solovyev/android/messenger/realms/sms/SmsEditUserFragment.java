@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import org.solovyev.android.messenger.accounts.BaseCreateUserFragment;
+import org.solovyev.android.messenger.accounts.BaseEditUserFragment;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.Users;
+import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -15,12 +17,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
-public class SmsCreateUserFragment extends BaseCreateUserFragment<SmsAccount> {
+public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 
 	@Nonnull
 	private EditText firstNameEditText;
@@ -31,8 +33,8 @@ public class SmsCreateUserFragment extends BaseCreateUserFragment<SmsAccount> {
 	@Nonnull
 	private EditText phoneEditText;
 
-	public SmsCreateUserFragment() {
-		super(R.layout.mpp_realm_sms_create_user);
+	public SmsEditUserFragment() {
+		super(R.layout.mpp_realm_sms_edit_user);
 	}
 
 	@Override
@@ -46,34 +48,43 @@ public class SmsCreateUserFragment extends BaseCreateUserFragment<SmsAccount> {
 
 	@Nullable
 	@Override
-	protected User validateData() {
+	protected MutableUser validateData() {
 		final String firstName = firstNameEditText.getText().toString();
 		final String lastName = lastNameEditText.getText().toString();
 		final String phone = phoneEditText.getText().toString();
 		return validateData(firstName, lastName, phone);
 	}
 
-	private User validateData(@Nullable String firstName, @Nullable String lastName, @Nullable String phone) {
+	@Nullable
+	private MutableUser validateData(@Nullable String firstName, @Nullable String lastName, @Nullable String phone) {
 		boolean ok = true;
 
-		if (Strings.isEmpty(phone)) {
+		if (isEmpty(phone)) {
 			Toast.makeText(getActivity(), "Phone must be set!", Toast.LENGTH_SHORT).show();
 			ok = false;
 		}
 
 		if (ok) {
-			final List<AProperty> properties = new ArrayList<AProperty>();
-			properties.add(newProperty(PROPERTY_PHONE, phone));
-			if (firstName != null) {
-				properties.add(newProperty(PROPERTY_FIRST_NAME, firstName));
+			final MutableUser user = getOrCreateUser();
+
+			final MutableAProperties properties = user.getProperties();
+			properties.setProperty(PROPERTY_PHONE, phone);
+			if (!isEmpty(firstName)) {
+				properties.setProperty(PROPERTY_FIRST_NAME, firstName);
+			} else {
+				properties.removeProperty(PROPERTY_FIRST_NAME);
 			}
 
-			if (lastName != null) {
-				properties.add(newProperty(PROPERTY_LAST_NAME, lastName));
+			if (!isEmpty(lastName)) {
+				properties.setProperty(PROPERTY_LAST_NAME, lastName);
+			} else {
+				properties.removeProperty(PROPERTY_LAST_NAME);
 			}
-			return newUser(generateEntity(getAccount()), Users.newNeverSyncedUserSyncData(), properties);
+
+			return user;
 		} else {
 			return null;
 		}
 	}
+
 }

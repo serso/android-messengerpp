@@ -28,9 +28,9 @@ public class EntityMapper implements Converter<Cursor, Entity> {
 	@Override
 	public final Entity convert(@Nonnull Cursor cursor) {
 		final String entityId = cursor.getString(cursorPosition);
-		final String realmId = cursor.getString(cursorPosition + 1);
-		final String realmEntityId = cursor.getString(cursorPosition + 2);
+		final String accountId = cursor.getString(cursorPosition + 1);
+		final String accountEntityId = cursor.getString(cursorPosition + 2);
 
-		return EntityImpl.newEntity(realmId, realmEntityId, entityId);
+		return EntityImpl.newEntity(accountId, accountEntityId, entityId);
 	}
 }

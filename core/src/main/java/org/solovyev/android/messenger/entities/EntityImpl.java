@@ -5,6 +5,7 @@ import android.os.Parcel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.common.JCloneable;
 import org.solovyev.common.JObject;
 import org.solovyev.common.text.Strings;
@@ -18,9 +19,6 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     *
     **********************************************************************
     */
-
-	public static final String DELIMITER = ":";
-	public static final String DELIMITER_REALM = "~";
 
 	public static final Creator<Entity> CREATOR = new Creator<Entity>() {
 		@Override
@@ -100,24 +98,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 
 	@Nonnull
 	public static Entity newEntity(@Nonnull String accountId, @Nonnull String accountEntityId) {
-		return newEntity(accountId, accountEntityId, generateEntityId(accountId, accountEntityId));
-	}
-
-	@Nonnull
-	public static String generateEntityId(@Nonnull String accountId, String appAccountEntityId) {
-		return accountId + DELIMITER + appAccountEntityId;
-	}
-
-	@Nonnull
-	public static Entity fromEntityId(@Nonnull String entityId) {
-		final int index = entityId.indexOf(DELIMITER);
-		if (index >= 0) {
-			final String realmId = entityId.substring(0, index);
-			final String realmUserId = entityId.substring(index + 1);
-			return newEntity(realmId, realmUserId);
-		} else {
-			throw new IllegalArgumentException("No account id is stored in entityId!");
-		}
+		return newEntity(accountId, accountEntityId, Entities.makeEntityId(accountId, accountEntityId));
 	}
 
 	@Nonnull
@@ -139,7 +120,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	@Override
 	public String getRealmId() {
 		if (this.realmId == null) {
-			final int index = accountId.indexOf(DELIMITER_REALM);
+			final int index = accountId.indexOf(Realms.DELIMITER_REALM);
 			if (index >= 0) {
 				this.realmId = entityId.substring(0, index);
 			} else {
@@ -159,7 +140,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	@Override
 	public String getAppAccountEntityId() {
 		if (appAccountEntityId == null) {
-			final int index = entityId.indexOf(DELIMITER);
+			final int index = entityId.indexOf(Entities.DELIMITER);
 			if (index >= 0) {
 				appAccountEntityId = entityId.substring(index + 1);
 			} else {
@@ -225,8 +206,4 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
     **********************************************************************
     */
 
-	@Nonnull
-	public static String getAccountId(@Nonnull String realmId, int index) {
-		return realmId + DELIMITER_REALM + index;
-	}
 }

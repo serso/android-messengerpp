@@ -15,6 +15,8 @@ import org.solovyev.common.collections.Collections;
 
 import com.google.inject.Inject;
 
+import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
+
 public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 	@Inject
@@ -55,8 +57,8 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		int index = 0;
 		for (Realm realm : getRealmService().getRealms()) {
 			final AccountConfiguration accountConfiguration = (AccountConfiguration) realm.getConfigurationClass().newInstance();
-			final String realmId = EntityImpl.getAccountId(realm.getId(), index);
-			Account expected = realm.newAccount(realmId, Users.newEmptyUser(EntityImpl.newEntity(realmId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
+			final String accountId = makeAccountId(realm.getId(), index);
+			Account expected = realm.newAccount(accountId, Users.newEmptyUser(EntityImpl.newEntity(accountId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
 			accountDao.insertAccount(expected);
 		}
 

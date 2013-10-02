@@ -37,7 +37,7 @@ import static android.telephony.SmsMessage.createFromPdu;
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
-import static org.solovyev.android.messenger.entities.EntityImpl.generateEntityId;
+import static org.solovyev.android.messenger.entities.Entities.makeEntityId;
 import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
@@ -196,7 +196,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		properties.add(newProperty(PROPERTY_PHONES, phone));
 		properties.add(newProperty(PROPERTY_ONLINE, String.valueOf(true)));
 
-		return newUser(newEntity(account.getId(), NO_ACCOUNT_ID, generateEntityId(account.getId(), phone)), Users.newNeverSyncedUserSyncData(), properties);
+		return newUser(newEntity(account.getId(), NO_ACCOUNT_ID, makeEntityId(account.getId(), phone)), Users.newNeverSyncedUserSyncData(), properties);
 	}
 
 	@Nullable

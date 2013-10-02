@@ -6,9 +6,10 @@ import javax.annotation.Nonnull;
 
 import static java.lang.System.currentTimeMillis;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
-import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
 
 public final class Entities {
+
+	public static final String DELIMITER = ":";
 
 	private Entities() {
 	}
@@ -16,9 +17,27 @@ public final class Entities {
 	@Nonnull
 	public static synchronized Entity generateEntity(@Nonnull Account account) {
 		// todo serso: create normal way of generating ids
-		final Entity tmp = newEntity(account.getId(), String.valueOf(currentTimeMillis()));
+		final Entity tmp = EntityImpl.newEntity(account.getId(), String.valueOf(currentTimeMillis()));
 
 		// NOTE: empty account entity id in order to get real from realm service
-		return newEntity(account.getId(), NO_ACCOUNT_ID, tmp.getEntityId());
+		return EntityImpl.newEntity(account.getId(), NO_ACCOUNT_ID, tmp.getEntityId());
 	}
+
+	@Nonnull
+	public static String makeEntityId(@Nonnull String accountId, String appAccountEntityId) {
+		return accountId + DELIMITER + appAccountEntityId;
+	}
+
+	@Nonnull
+	public static Entity newEntityFromEntityId(@Nonnull String entityId) {
+		final int index = entityId.indexOf(DELIMITER);
+		if (index >= 0) {
+			final String accountId = entityId.substring(0, index);
+			final String accountUserId = entityId.substring(index + 1);
+			return EntityImpl.newEntity(accountId, accountUserId);
+		} else {
+			throw new IllegalArgumentException("No account id is stored in entityId!");
+		}
+	}
+
 }

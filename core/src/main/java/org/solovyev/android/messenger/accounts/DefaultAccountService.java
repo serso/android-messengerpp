@@ -12,9 +12,9 @@ import org.solovyev.android.messenger.MessengerConfiguration;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
@@ -32,7 +32,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
@@ -337,7 +336,7 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	private String generateAccountId(@Nonnull Realm realm) {
-		return EntityImpl.getAccountId(realm.getId(), accountCounter.getAndIncrement());
+		return Realms.makeAccountId(realm.getId(), accountCounter.getAndIncrement());
 	}
 
 	@Override

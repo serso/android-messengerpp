@@ -89,7 +89,7 @@ public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
 	boolean canCreateUsers();
 
 	@Nullable
-	Class<? extends BaseCreateUserFragment> getCreateUserFragmentClass();
+	Class<? extends BaseEditUserFragment> getCreateUserFragmentClass();
 
 
     /*

@@ -7,8 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
@@ -42,7 +41,7 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 		try {
 			final Realm<C> realm = (Realm<C>) getRealmService().getRealmById(realmId);
 			// realm is not loaded => no way we can find user in realm services
-			final User user = getUserService().getUserById(EntityImpl.fromEntityId(userId), false);
+			final User user = getUserService().getUserById(Entities.newEntityFromEntityId(userId), false);
 
 			final C encryptedConfiguration = new Gson().fromJson(configuration, realm.getConfigurationClass());
 

@@ -6,8 +6,8 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -82,7 +82,7 @@ public final class Messages {
 
 	@Nonnull
 	public static LiteChatMessage newEmptyMessage(@Nonnull String messageId) {
-		return LiteChatMessageImpl.newInstance(EntityImpl.fromEntityId(messageId));
+		return LiteChatMessageImpl.newInstance(Entities.newEntityFromEntityId(messageId));
 	}
 
 	@Nonnull
