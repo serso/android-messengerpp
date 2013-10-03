@@ -93,4 +93,9 @@ public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase
 	public TestAccount getAccount3() {
 		return account3;
 	}
+
+	@Nonnull
+	protected AccountService getAccountService() {
+		return accountService;
+	}
 }

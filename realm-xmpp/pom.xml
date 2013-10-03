@@ -69,6 +69,14 @@
 			<artifactId>common-core-jodatime</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.solovyev.android.messenger</groupId>
+			<artifactId>android-messenger-core</artifactId>
+			<version>1.0</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
