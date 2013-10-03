@@ -39,7 +39,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	private static final String MODE = "mode";
 
 	@Nonnull
-	private MessengerContactsMode mode = Users.DEFAULT_CONTACTS_MODE;
+	private ContactsDisplayMode mode = Users.DEFAULT_CONTACTS_MODE;
 
 	public AbstractContactsAdapter(@Nonnull Context context) {
 		super(context, new ArrayList<ContactListItem>());
@@ -103,8 +103,8 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	@Override
 	public void restoreState(@Nonnull Bundle savedInstanceState) {
 		final Serializable mode = savedInstanceState.getSerializable(MODE);
-		if (mode instanceof MessengerContactsMode) {
-			this.mode = (MessengerContactsMode) mode;
+		if (mode instanceof ContactsDisplayMode) {
+			this.mode = (ContactsDisplayMode) mode;
 		}
 	}
 
@@ -194,7 +194,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 	protected abstract boolean canAddContact(@Nonnull User contact);
 
-	public void setMode(@Nonnull MessengerContactsMode newMode) {
+	public void setMode(@Nonnull ContactsDisplayMode newMode) {
 		boolean changed = this.mode != newMode;
 		this.mode = newMode;
 		if (changed) {
@@ -237,7 +237,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 		private final JPredicate<User> filter;
 
-		private ContactListItemFilter(@Nullable String query, @Nonnull MessengerContactsMode mode) {
+		private ContactListItemFilter(@Nullable String query, @Nonnull ContactsDisplayMode mode) {
 			filter = new ContactFilter(query, mode);
 		}
 

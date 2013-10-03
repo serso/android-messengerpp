@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.messages;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.solovyev.android.messenger.AbstractMessengerEntity;
+import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.entities.Entity;
 
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ import java.util.TimeZone;
  * Date: 6/6/12
  * Time: 2:04 PM
  */
-public final class LiteChatMessageImpl extends AbstractMessengerEntity implements LiteChatMessage {
+public final class LiteChatMessageImpl extends AbstractIdentifiable implements LiteChatMessage {
 
 	@Nonnull
 	private Entity author;

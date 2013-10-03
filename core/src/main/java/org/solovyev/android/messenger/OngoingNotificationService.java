@@ -42,7 +42,7 @@ public final class OngoingNotificationService extends RoboService {
 		nb.setSmallIcon(R.drawable.mpp_sb_icon);
 		nb.setContentTitle(getString(R.string.mpp_notification_title));
 		nb.setContentText(getString(R.string.mpp_notification_text));
-		nb.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MessengerStartActivity.class), 0));
+		nb.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, StartActivity.class), 0));
 		startForeground(NOTIFICATION_ID_APP_IS_RUNNING, nb.getNotification());
 	}
 }

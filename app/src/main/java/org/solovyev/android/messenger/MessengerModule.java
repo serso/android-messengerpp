@@ -1,11 +1,17 @@
 package org.solovyev.android.messenger;
 
-import android.database.sqlite.SQLiteOpenHelper;
+import android.app.Application;
+import android.content.Context;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Scopes;
-import org.solovyev.android.MessengerExecutor;
+import com.google.inject.Singleton;
+
+import org.solovyev.android.TimeLoggingExecutor;
+import org.solovyev.android.db.CommonSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
-import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.http.CachingImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
@@ -18,8 +24,6 @@ import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
-import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
-import org.solovyev.android.messenger.http.MessengerCachingImageLoader;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
@@ -45,6 +49,8 @@ import org.solovyev.tasks.Tasks;
 
 import java.util.concurrent.Executor;
 
+import javax.annotation.Nonnull;
+
 /**
  * User: serso
  * Date: 8/12/12
@@ -54,15 +60,15 @@ public class MessengerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(Executor.class).to(MessengerExecutor.class);
+		bind(Executor.class).to(TimeLoggingExecutor.class);
 		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
 		bind(MessengerSecurityService.class).to(DefaultSecurityService.class);
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
-		bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
+		bind(ExceptionHandler.class).to(DefaultExceptionHandler.class);
 		bind(NotificationService.class).to(DefaultNotificationService.class);
-		bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
-		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
+		bind(SQLiteOpenHelperConfiguration.class).to(DbConfiguration.class);
+		bind(android.database.sqlite.SQLiteOpenHelper.class).to(SQLiteOpenHelper.class);
 
 		bind(RealmService.class).to(DefaultRealmService.class);
 		bind(AccountConnections.class).to(DefaultAccountConnections.class);
@@ -70,8 +76,8 @@ public class MessengerModule extends AbstractModule {
 		bind(AccountDao.class).to(SqliteAccountDao.class);
 
 		bind(AccountConnectionsService.class).to(DefaultAccountConnectionsService.class);
-		bind(MessengerConfiguration.class).to(MessengerConfigurationImpl.class);
-		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
+		bind(Configuration.class).to(DefaultConfiguration.class);
+		bind(org.solovyev.android.http.ImageLoader.class).to(ImageLoader.class);
 		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
 		bind(UserDao.class).to(SqliteUserDao.class);
@@ -86,6 +92,30 @@ public class MessengerModule extends AbstractModule {
 		bind(SyncService.class).to(DefaultSyncService.class);
 		bind(RegistrationService.class).to(DummyRegistrationService.class);
 
-		bind(MessengerMultiPaneManager.class).to(MessengerMultiPaneManagerImpl.class);
+		bind(MultiPaneManager.class).to(DefaultMultiPaneManager.class);
+	}
+
+	@Singleton
+	public static class SQLiteOpenHelper extends CommonSQLiteOpenHelper {
+
+		@Inject
+		public SQLiteOpenHelper(@Nonnull Application context,
+								@Nonnull SQLiteOpenHelperConfiguration configuration) {
+			super(context, configuration);
+		}
+
+		public SQLiteOpenHelper(@Nonnull Context context,
+								@Nonnull SQLiteOpenHelperConfiguration configuration) {
+			super(context, configuration);
+		}
+	}
+
+	@Singleton
+	public static class ImageLoader extends CachingImageLoader {
+
+		@Inject
+		public ImageLoader(@Nonnull Application context) {
+			super(context, "messenger");
+		}
 	}
 }

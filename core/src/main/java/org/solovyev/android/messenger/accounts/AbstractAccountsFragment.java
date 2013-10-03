@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
+import org.solovyev.android.messenger.AbstractListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -14,7 +14,7 @@ import org.solovyev.common.listeners.JEventListener;
 
 import com.google.inject.Inject;
 
-public abstract class AbstractAccountsFragment extends AbstractMessengerListFragment<Account, AccountListItem> implements DetachableFragment {
+public abstract class AbstractAccountsFragment extends AbstractListFragment<Account, AccountListItem> implements DetachableFragment {
 
 	@Inject
 	@Nonnull

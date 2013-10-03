@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI
  */
-public final class UiChat implements MessengerEntity {
+public final class UiChat implements Identifiable {
 
 	@Nonnull
 	private final User user;

@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.accounts;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
-import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.AbstractFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
@@ -23,9 +23,9 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 	private static final String TAG = AccountUiEventListener.class.getSimpleName();
 
 	@Nonnull
-	private final MessengerFragmentActivity activity;
+	private final AbstractFragmentActivity activity;
 
-	public AccountUiEventListener(@Nonnull MessengerFragmentActivity activity) {
+	public AccountUiEventListener(@Nonnull AbstractFragmentActivity activity) {
 		this.activity = activity;
 	}
 
@@ -73,11 +73,11 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 
 	private void showRealmFragment(@Nonnull Account account, boolean firstPane) {
 		final Bundle fragmentArgs = new Bundle();
-		fragmentArgs.putString(MessengerAccountFragment.ARGS_ACCOUNT_ID, account.getId());
+		fragmentArgs.putString(AccountFragment.ARGS_ACCOUNT_ID, account.getId());
 		if (firstPane) {
-			activity.getMultiPaneFragmentManager().setMainFragment(MessengerAccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), MessengerAccountFragment.FRAGMENT_TAG, true);
+			activity.getMultiPaneFragmentManager().setMainFragment(AccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), AccountFragment.FRAGMENT_TAG, true);
 		} else {
-			activity.getMultiPaneFragmentManager().setSecondFragment(MessengerAccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), MessengerAccountFragment.FRAGMENT_TAG, false);
+			activity.getMultiPaneFragmentManager().setSecondFragment(AccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), AccountFragment.FRAGMENT_TAG, false);
 		}
 	}
 
@@ -112,16 +112,16 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
     */
 
 	/**
-	 * Fragment will be reused if it's instance of {@link MessengerAccountFragment} and
+	 * Fragment will be reused if it's instance of {@link AccountFragment} and
 	 * contains same realm as one passed in constructor
 	 */
-	private static class RealmFragmentReuseCondition extends AbstractFragmentReuseCondition<MessengerAccountFragment> {
+	private static class RealmFragmentReuseCondition extends AbstractFragmentReuseCondition<AccountFragment> {
 
 		@Nonnull
 		private final Account account;
 
 		private RealmFragmentReuseCondition(@Nonnull Account account) {
-			super(MessengerAccountFragment.class);
+			super(AccountFragment.class);
 			this.account = account;
 		}
 
@@ -131,7 +131,7 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 		}
 
 		@Override
-		protected boolean canReuseFragment(@Nonnull MessengerAccountFragment fragment) {
+		protected boolean canReuseFragment(@Nonnull AccountFragment fragment) {
 			return account.equals(fragment.getAccount());
 		}
 	}

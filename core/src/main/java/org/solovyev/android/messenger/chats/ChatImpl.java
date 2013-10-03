@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.AbstractMessengerEntity;
+import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
@@ -22,7 +22,7 @@ import org.solovyev.android.properties.Properties;
  * Date: 6/11/12
  * Time: 7:59 PM
  */
-public class ChatImpl extends AbstractMessengerEntity implements Chat {
+public class ChatImpl extends AbstractIdentifiable implements Chat {
 
     /*
 	**********************************************************************

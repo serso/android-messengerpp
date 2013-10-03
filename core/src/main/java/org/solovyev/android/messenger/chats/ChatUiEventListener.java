@@ -10,15 +10,15 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
+import org.solovyev.android.messenger.AbstractFragmentActivity;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
+import org.solovyev.android.messenger.messages.MessagesFragment;
+import org.solovyev.android.messenger.users.ContactFragment;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
-import org.solovyev.android.messenger.users.MessengerContactFragment;
-import org.solovyev.android.messenger.users.MessengerContactsInfoFragment;
+import org.solovyev.android.messenger.users.ContactsInfoFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Builder;
 
@@ -37,12 +37,12 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 	private static final String TAG = ChatUiEventListener.class.getSimpleName();
 
 	@Nonnull
-	private final MessengerFragmentActivity activity;
+	private final AbstractFragmentActivity activity;
 
 	@Nonnull
 	private final ChatService chatService;
 
-	public ChatUiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull ChatService chatService) {
+	public ChatUiEventListener(@Nonnull AbstractFragmentActivity activity, @Nonnull ChatService chatService) {
 		this.activity = activity;
 		this.chatService = chatService;
 	}
@@ -81,11 +81,11 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 			}
 		} else {
 			fragmentService.goBackTillStart();
-			fragmentService.setMainFragment(MultiPaneFragmentDef.newInstance(MessengerMessagesFragment.FRAGMENT_TAG, true, new Builder<Fragment>() {
+			fragmentService.setMainFragment(MultiPaneFragmentDef.newInstance(MessagesFragment.FRAGMENT_TAG, true, new Builder<Fragment>() {
 				@Nonnull
 				@Override
 				public Fragment build() {
-					return new MessengerMessagesFragment(chat);
+					return new MessagesFragment(chat);
 				}
 			}, MessagesFragmentReuseCondition.forChat(chat)));
 		}
@@ -103,9 +103,9 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 				@Nonnull
 				@Override
 				public Fragment build() {
-					return new MessengerMessagesFragment(chat);
+					return new MessagesFragment(chat);
 				}
-			}, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG);
+			}, MessagesFragmentReuseCondition.forChat(chat), MessagesFragment.FRAGMENT_TAG);
 
 			if (activity.isTriplePane()) {
 				if (chat.isPrivate()) {
@@ -113,9 +113,9 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 						@Nonnull
 						@Override
 						public Fragment build() {
-							return MessengerContactFragment.newForContact(chat.getSecondUser());
+							return ContactFragment.newForContact(chat.getSecondUser());
 						}
-					}, ContactFragmentReuseCondition.forContact(chat.getSecondUser()), MessengerContactFragment.FRAGMENT_TAG);
+					}, ContactFragmentReuseCondition.forContact(chat.getSecondUser()), ContactFragment.FRAGMENT_TAG);
 				} else {
 					fm.setThirdFragment(new Builder<Fragment>() {
 						@Nonnull
@@ -128,9 +128,9 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 							} catch (UnsupportedAccountException e) {
 								App.getExceptionHandler().handleException(e);
 							}
-							return new MessengerContactsInfoFragment(participants);
+							return new ContactsInfoFragment(participants);
 						}
-					}, null, MessengerContactsInfoFragment.FRAGMENT_TAG);
+					}, null, ContactsInfoFragment.FRAGMENT_TAG);
 				}
 			}
 
@@ -139,9 +139,9 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 				@Nonnull
 				@Override
 				public Fragment build() {
-					return new MessengerMessagesFragment(chat);
+					return new MessagesFragment(chat);
 				}
-			}, MessagesFragmentReuseCondition.forChat(chat), MessengerMessagesFragment.FRAGMENT_TAG, true);
+			}, MessagesFragmentReuseCondition.forChat(chat), MessagesFragment.FRAGMENT_TAG, true);
 		}
 	}
 }

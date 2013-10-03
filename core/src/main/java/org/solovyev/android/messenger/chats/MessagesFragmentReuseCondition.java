@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.messages.MessengerMessagesFragment;
+import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.common.JPredicate;
 
 /**
@@ -31,8 +31,8 @@ public final class MessagesFragmentReuseCondition implements JPredicate<Fragment
 	public boolean apply(@Nullable Fragment fragment) {
 		boolean reuse = false;
 
-		if (fragment instanceof MessengerMessagesFragment) {
-			final MessengerMessagesFragment mmf = (MessengerMessagesFragment) fragment;
+		if (fragment instanceof MessagesFragment) {
+			final MessagesFragment mmf = (MessagesFragment) fragment;
 			if (chat.equals(mmf.getChat())) {
 				reuse = true;
 			}

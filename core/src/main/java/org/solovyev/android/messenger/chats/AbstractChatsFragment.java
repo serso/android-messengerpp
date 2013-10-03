@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -12,12 +12,11 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.AbstractMessengerListFragment;
+import org.solovyev.android.messenger.AbstractListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -28,7 +27,7 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.UiEventType.new_message;
 
-public abstract class AbstractChatsFragment extends AbstractMessengerListFragment<UiChat, ChatListItem> implements DetachableFragment {
+public abstract class AbstractChatsFragment extends AbstractListFragment<UiChat, ChatListItem> implements DetachableFragment {
 
 	@Nonnull
 	protected static final String TAG = "ChatsFragment";

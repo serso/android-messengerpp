@@ -1,7 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
@@ -17,7 +17,7 @@ import java.util.List;
  * Date: 7/22/12
  * Time: 12:56 AM
  */
-public interface Realm<C extends AccountConfiguration> extends MessengerEntity {
+public interface Realm<C extends AccountConfiguration> extends Identifiable {
 
 	@Nonnull
 	String FAKE_REALM_ID = "fake";

@@ -2,14 +2,14 @@ package org.solovyev.android.messenger.users;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.Identifiable;
 
 /**
  * User: serso
  * Date: 3/25/13
  * Time: 10:09 PM
  */
-final class UiContact implements MessengerEntity {
+final class UiContact implements Identifiable {
 
 	@Nonnull
 	private final User contact;

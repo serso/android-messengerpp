@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.MessengerConfiguration;
+import org.solovyev.android.messenger.Configuration;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 
 import com.google.inject.Inject;
@@ -25,7 +25,7 @@ public class DefaultRealmService implements RealmService {
 	private final Application context;
 
 	@Inject
-	public DefaultRealmService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration) {
+	public DefaultRealmService(@Nonnull Application context, @Nonnull Configuration configuration) {
 		this(context, configuration.getRealms());
 	}
 

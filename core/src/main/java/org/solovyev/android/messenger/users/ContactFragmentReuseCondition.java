@@ -13,13 +13,13 @@ import org.solovyev.common.JPredicate;
  * Date: 3/5/13
  * Time: 1:57 PM
  */
-public final class ContactFragmentReuseCondition extends AbstractFragmentReuseCondition<MessengerContactFragment> {
+public final class ContactFragmentReuseCondition extends AbstractFragmentReuseCondition<ContactFragment> {
 
 	@Nonnull
 	private final Entity contact;
 
 	public ContactFragmentReuseCondition(@Nonnull Entity contact) {
-		super(MessengerContactFragment.class);
+		super(ContactFragment.class);
 		this.contact = contact;
 	}
 
@@ -29,7 +29,7 @@ public final class ContactFragmentReuseCondition extends AbstractFragmentReuseCo
 	}
 
 	@Override
-	protected boolean canReuseFragment(@Nonnull MessengerContactFragment fragment) {
+	protected boolean canReuseFragment(@Nonnull ContactFragment fragment) {
 		return contact.equals(fragment.getContact());
 	}
 }

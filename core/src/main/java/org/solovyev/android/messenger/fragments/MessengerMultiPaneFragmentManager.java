@@ -6,9 +6,9 @@ import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.fragments.ReflectionFragmentBuilder;
-import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.AbstractFragmentActivity;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.messages.MessengerEmptyFragment;
+import org.solovyev.android.messenger.messages.EmptyFragment;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 
@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
-import static org.solovyev.android.messenger.fragments.MessengerPrimaryFragment.*;
+import static org.solovyev.android.messenger.fragments.PrimaryFragment.*;
 
 public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager {
 
-	public static final List<MessengerPrimaryFragment> tabFragments;
+	public static final List<PrimaryFragment> tabFragments;
 
 	static {
-		final List<MessengerPrimaryFragment> mutableTabFragments = new ArrayList<MessengerPrimaryFragment>();
+		final List<PrimaryFragment> mutableTabFragments = new ArrayList<PrimaryFragment>();
 		mutableTabFragments.add(contacts);
 		mutableTabFragments.add(messages);
 		mutableTabFragments.add(accounts);
@@ -33,14 +33,14 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		tabFragments = unmodifiableList(mutableTabFragments);
 	}
 
-	public MessengerMultiPaneFragmentManager(@Nonnull MessengerFragmentActivity activity) {
-		super(activity, R.id.content_first_pane, MessengerEmptyFragment.class, MessengerEmptyFragment.FRAGMENT_TAG, R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
+	public MessengerMultiPaneFragmentManager(@Nonnull AbstractFragmentActivity activity) {
+		super(activity, R.id.content_first_pane, EmptyFragment.class, EmptyFragment.FRAGMENT_TAG, R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
 	}
 
 	@Nonnull
 	@Override
-	public MessengerFragmentActivity getActivity() {
-		return (MessengerFragmentActivity) super.getActivity();
+	public AbstractFragmentActivity getActivity() {
+		return (AbstractFragmentActivity) super.getActivity();
 	}
 
 	public void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,

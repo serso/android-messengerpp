@@ -18,7 +18,7 @@
 
 	<application android:allowBackup="true" android:hardwareAccelerated="true" android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/mpp_theme_metro">
 
-		<activity android:label="@string/mpp_app_name" android:name="org.solovyev.android.messenger.MessengerStartActivity" android:windowSoftInputMode="adjustPan">
+		<activity android:label="@string/mpp_app_name" android:name=".StartActivity" android:windowSoftInputMode="adjustPan">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -30,14 +30,14 @@
 		<!--
 			Test
 		-->
-		<activity android:label="@string/mpp_app_name" android:name=".MessengerTestActivity">
+		<activity android:label="@string/mpp_app_name" android:name=".TestActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
 		</activity>
 
 
-		<activity android:label="@string/mpp_app_name" android:launchMode="singleTask" android:name="org.solovyev.android.messenger.MessengerMainActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_app_name" android:launchMode="singleTask" android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
 
 		<service android:name=".OngoingNotificationService"/>
 

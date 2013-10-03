@@ -11,8 +11,8 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.Threads;
+import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MessengerExceptionHandler;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
@@ -36,7 +36,7 @@ import java.util.concurrent.Executor;
 import static com.google.common.collect.Iterables.find;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static org.solovyev.android.messenger.users.MessengerContactsMode.all_contacts;
+import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 
 /**
@@ -73,7 +73,7 @@ public class DefaultUserService implements UserService {
 
 	@Inject
 	@Nonnull
-	private MessengerExceptionHandler exceptionHandler;
+	private ExceptionHandler exceptionHandler;
 
 	@Inject
 	@Nonnull

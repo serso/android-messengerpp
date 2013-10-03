@@ -75,7 +75,7 @@ public final class App {
 
 	@Inject
 	@Nonnull
-	private MessengerExceptionHandler exceptionHandler;
+	private ExceptionHandler exceptionHandler;
 
 	@Inject
 	@Nonnull
@@ -190,7 +190,7 @@ public final class App {
 	}
 
 	@Nonnull
-	public static MessengerExceptionHandler getExceptionHandler() {
+	public static ExceptionHandler getExceptionHandler() {
 		return instance.exceptionHandler;
 	}
 
@@ -291,7 +291,7 @@ public final class App {
 		this.unreadMessagesNotifier = unreadMessagesNotifier;
 	}
 
-	public void setExceptionHandler(@Nonnull MessengerExceptionHandler exceptionHandler) {
+	public void setExceptionHandler(@Nonnull ExceptionHandler exceptionHandler) {
 		this.exceptionHandler = exceptionHandler;
 	}
 

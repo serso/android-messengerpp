@@ -2,13 +2,12 @@ package org.solovyev.android.messenger;
 
 import android.app.Application;
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
-import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
@@ -19,8 +18,6 @@ import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
-import org.solovyev.android.messenger.db.MessengerSQLiteOpenHelper;
-import org.solovyev.android.messenger.http.MessengerCachingImageLoader;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
@@ -68,19 +65,19 @@ public class TestMessengerModule extends AbstractModule {
 		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
-		bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
+		bind(ExceptionHandler.class).to(DefaultExceptionHandler.class);
 		bind(NotificationService.class).to(DefaultNotificationService.class);
 
-		bind(SQLiteOpenHelperConfiguration.class).to(MessengerDbConfiguration.class);
-		bind(SQLiteOpenHelper.class).to(MessengerSQLiteOpenHelper.class);
+		bind(SQLiteOpenHelperConfiguration.class).to(DbConfiguration.class);
+		bind(android.database.sqlite.SQLiteOpenHelper.class).to(MessengerModule.SQLiteOpenHelper.class);
 
 		bind(RealmService.class).to(DefaultRealmService.class);
 		bind(AccountService.class).to(DefaultAccountService.class);
 		bind(AccountDao.class).to(SqliteAccountDao.class);
 		bind(AccountConnectionsService.class).to(DefaultAccountConnectionsService.class);
 
-		bind(MessengerConfiguration.class).to(TestMessengerConfiguration.class);
-		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
+		bind(Configuration.class).to(TestConfiguration.class);
+		bind(org.solovyev.android.http.ImageLoader.class).to(MessengerModule.ImageLoader.class);
 		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
 		bind(UserDao.class).to(SqliteUserDao.class);

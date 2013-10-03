@@ -34,7 +34,7 @@ public final class Users {
 	static final int MAX_SEARCH_CONTACTS = 20;
 
 	@Nonnull
-	static final MessengerContactsMode DEFAULT_CONTACTS_MODE = MessengerContactsMode.all_contacts;
+	static final ContactsDisplayMode DEFAULT_CONTACTS_MODE = ContactsDisplayMode.all_contacts;
 
 	private Users() {
 	}

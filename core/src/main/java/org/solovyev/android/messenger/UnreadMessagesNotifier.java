@@ -58,7 +58,7 @@ public final class UnreadMessagesNotifier extends AbstractJEventListener<Messeng
 						final NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
 						nb.setSmallIcon(R.drawable.mpp_sb_unread_messages_counter);
 						nb.setContentText(context.getResources().getQuantityString(R.plurals.mpp_unread_messages_count_notification, unreadMessagesCount, unreadMessagesCount));
-						nb.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, MessengerStartActivity.class), 0));
+						nb.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, StartActivity.class), 0));
 						nb.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 						final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 						nm.notify(NOTIFICATION_ID_UNREAD_MESSAGES, nb.getNotification());

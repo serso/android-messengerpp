@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.Fragments2;
+import org.solovyev.android.messenger.AbstractFragmentActivity;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -30,12 +30,12 @@ import org.solovyev.common.Builder;
 public final class ContactUiEventListener implements EventListener<ContactUiEvent> {
 
 	@Nonnull
-	private final MessengerFragmentActivity activity;
+	private final AbstractFragmentActivity activity;
 
 	@Nonnull
 	private final AccountService accountService;
 
-	public ContactUiEventListener(@Nonnull MessengerFragmentActivity activity, @Nonnull AccountService accountService) {
+	public ContactUiEventListener(@Nonnull AbstractFragmentActivity activity, @Nonnull AccountService accountService) {
 		this.activity = activity;
 		this.accountService = accountService;
 	}
@@ -56,9 +56,9 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 									@Nonnull
 									@Override
 									public Fragment build() {
-										return MessengerCompositeContactFragment.newForContact(contact);
+										return CompositeContactFragment.newForContact(contact);
 									}
-								}, null, MessengerCompositeContactFragment.FRAGMENT_TAG);
+								}, null, CompositeContactFragment.FRAGMENT_TAG);
 							}
 							fireEvent(ContactUiEventType.newShowCompositeUserDialog(contact));
 						} else {

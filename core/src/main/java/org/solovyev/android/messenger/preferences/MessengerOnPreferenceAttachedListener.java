@@ -7,7 +7,7 @@ import android.preference.PreferenceScreen;
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.sync.MessengerSyncAllAsyncTask;
+import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
 
 /**
@@ -42,7 +42,7 @@ public final class MessengerOnPreferenceAttachedListener implements PreferenceLi
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				// todo serso: show user message that action has been started
-				MessengerSyncAllAsyncTask.newForAllAccounts(context, syncService).executeInParallel((Void) null);
+				SyncAllAsyncTask.newForAllAccounts(context, syncService).executeInParallel((Void) null);
 				return true;
 			}
 		});

@@ -4,10 +4,13 @@ import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.google.inject.util.Modules;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
+import org.solovyev.android.http.CachingImageLoader;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -21,7 +24,6 @@ import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
-import org.solovyev.android.messenger.http.MessengerCachingImageLoader;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.DefaultChatMessageService;
@@ -84,9 +86,9 @@ public abstract class AbstractTestMessengerModule extends AbstractModule {
 
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
 		bind(NotificationService.class).to(DefaultNotificationService.class);
-		bind(MessengerExceptionHandler.class).to(DefaultMessengerExceptionHandler.class);
-		bind(MessengerConfiguration.class).toInstance(newAppConfiguration());
-		bind(ImageLoader.class).to(MessengerCachingImageLoader.class);
+		bind(ExceptionHandler.class).to(DefaultExceptionHandler.class);
+		bind(Configuration.class).toInstance(newAppConfiguration());
+		bind(org.solovyev.android.http.ImageLoader.class).to(ImageLoader.class);
 		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
 		bind(UserDao.class).to(SqliteUserDao.class);
@@ -109,7 +111,7 @@ public abstract class AbstractTestMessengerModule extends AbstractModule {
 	}
 
 	@Nonnull
-	protected abstract MessengerConfiguration newAppConfiguration();
+	protected abstract Configuration newAppConfiguration();
 
 	public void addBinding(Class<?> type, Object object) {
 		bindings.put(type, object);
@@ -126,5 +128,14 @@ public abstract class AbstractTestMessengerModule extends AbstractModule {
 
 	public void tearDown() {
 		RoboGuice.util.reset();
+	}
+
+	@Singleton
+	public static class ImageLoader extends CachingImageLoader {
+
+		@Inject
+		public ImageLoader(@Nonnull Application context) {
+			super(context, "messenger");
+		}
 	}
 }

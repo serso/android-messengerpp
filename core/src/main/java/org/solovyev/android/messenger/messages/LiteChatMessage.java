@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.entities.Entity;
 
 import javax.annotation.Nonnull;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
  * Date: 6/6/12
  * Time: 1:58 PM
  */
-public interface LiteChatMessage extends MessengerEntity {
+public interface LiteChatMessage extends Identifiable {
 
 	@Nonnull
 	Entity getEntity();

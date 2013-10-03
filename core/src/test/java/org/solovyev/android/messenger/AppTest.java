@@ -12,7 +12,7 @@ public class AppTest {
 	@Nonnull
 	public static App mockApp() {
 		final App app = App.getInstance();
-		app.setExceptionHandler(mock(MessengerExceptionHandler.class));
+		app.setExceptionHandler(mock(ExceptionHandler.class));
 		app.setAccountService(mock(AccountService.class));
 		app.setChatService(mock(ChatService.class));
 		return app;

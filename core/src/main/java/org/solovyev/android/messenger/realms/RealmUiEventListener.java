@@ -4,7 +4,7 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.AbstractFragmentActivity;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 
 /**
@@ -15,9 +15,9 @@ import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 
 	@Nonnull
-	private MessengerFragmentActivity activity;
+	private AbstractFragmentActivity activity;
 
-	public RealmUiEventListener(@Nonnull MessengerFragmentActivity activity) {
+	public RealmUiEventListener(@Nonnull AbstractFragmentActivity activity) {
 		this.activity = activity;
 	}
 

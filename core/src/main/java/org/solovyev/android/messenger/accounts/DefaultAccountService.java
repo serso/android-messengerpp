@@ -8,7 +8,7 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerConfiguration;
+import org.solovyev.android.messenger.Configuration;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
@@ -93,7 +93,7 @@ public class DefaultAccountService implements AccountService {
 	private final JEventListeners<JEventListener<? extends AccountEvent>, AccountEvent> listeners;
 
 	@Inject
-	public DefaultAccountService(@Nonnull Application context, @Nonnull MessengerConfiguration configuration, @Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
+	public DefaultAccountService(@Nonnull Application context, @Nonnull Configuration configuration, @Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this(context, lock, eventExecutor);
 	}
 

@@ -5,7 +5,7 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.AbstractMessengerEntity;
+import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
@@ -18,7 +18,7 @@ import org.solovyev.common.text.Strings;
  * Date: 5/24/12
  * Time: 10:30 PM
  */
-final class UserImpl extends AbstractMessengerEntity implements MutableUser {
+final class UserImpl extends AbstractIdentifiable implements MutableUser {
 
 	@Nonnull
 	private String login;

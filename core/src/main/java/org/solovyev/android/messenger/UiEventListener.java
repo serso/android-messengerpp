@@ -4,7 +4,7 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
-import org.solovyev.android.messenger.accounts.MessengerPickAccountFragment;
+import org.solovyev.android.messenger.accounts.PickAccountFragment;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.realms.Realm;
 import roboguice.event.EventListener;
@@ -14,8 +14,8 @@ import java.util.Collection;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.accounts.BaseAccountFragment.ARG_ACCOUNT_ID;
-import static org.solovyev.android.messenger.fragments.MessengerPrimaryFragment.pick_account;
-import static org.solovyev.android.messenger.fragments.MessengerPrimaryFragment.realms;
+import static org.solovyev.android.messenger.fragments.PrimaryFragment.pick_account;
+import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
 import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.users.Users.CREATE_USER_FRAGMENT_TAG;
 
@@ -27,12 +27,12 @@ import static org.solovyev.android.messenger.users.Users.CREATE_USER_FRAGMENT_TA
 public class UiEventListener implements EventListener<UiEvent> {
 
 	@Nonnull
-	private final MessengerMainActivity activity;
+	private final MainActivity activity;
 
 	@Nonnull
 	private final EventListener<AccountUiEvent> accountEventListener = new AccountUiEventListener();
 
-	public UiEventListener(@Nonnull MessengerMainActivity activity) {
+	public UiEventListener(@Nonnull MainActivity activity) {
 		this.activity = activity;
 	}
 
@@ -58,7 +58,7 @@ public class UiEventListener implements EventListener<UiEvent> {
 			final RoboListeners listeners = activity.getListeners();
 			listeners.remove(AccountUiEvent.class, accountEventListener);
 			listeners.add(AccountUiEvent.class, accountEventListener);
-			activity.getMultiPaneFragmentManager().setMainFragment(pick_account, MessengerPickAccountFragment.createArguments(accounts));
+			activity.getMultiPaneFragmentManager().setMainFragment(pick_account, PickAccountFragment.createArguments(accounts));
 		}
 	}
 

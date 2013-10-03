@@ -12,7 +12,7 @@ public class DefaultTestMessengerModule extends AbstractTestMessengerModule {
 
 	@Nonnull
 	@Override
-	protected MessengerConfiguration newAppConfiguration() {
-		return new TestMessengerConfiguration();
+	protected Configuration newAppConfiguration() {
+		return new TestConfiguration();
 	}
 }

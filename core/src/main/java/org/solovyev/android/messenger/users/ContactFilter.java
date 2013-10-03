@@ -21,9 +21,9 @@ final class ContactFilter implements JPredicate<User> {
 	private final PrefixFilter<String> prefixFilter;
 
 	@Nonnull
-	private final MessengerContactsMode mode;
+	private final ContactsDisplayMode mode;
 
-	public ContactFilter(@Nullable String prefix, @Nonnull MessengerContactsMode mode) {
+	public ContactFilter(@Nullable String prefix, @Nonnull ContactsDisplayMode mode) {
 		this.prefix = prefix;
 		this.mode = mode;
 		if (!Strings.isEmpty(prefix)) {
@@ -38,9 +38,9 @@ final class ContactFilter implements JPredicate<User> {
 	public boolean apply(@Nullable User contact) {
 		if (contact != null) {
 			boolean shown = true;
-			if (mode == MessengerContactsMode.all_contacts) {
+			if (mode == ContactsDisplayMode.all_contacts) {
 				shown = true;
-			} else if (mode == MessengerContactsMode.only_online_contacts) {
+			} else if (mode == ContactsDisplayMode.only_online_contacts) {
 				shown = contact.isOnline();
 			}
 

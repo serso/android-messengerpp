@@ -13,8 +13,7 @@ import android.widget.TextView;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerMultiPaneManager;
+import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -55,7 +54,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 
 	@Inject
 	@Nonnull
-	private MessengerMultiPaneManager multiPaneManager;
+	private MultiPaneManager multiPaneManager;
 
 	@Inject
 	@Nonnull
@@ -205,7 +204,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	}
 
 	@Nonnull
-	protected MessengerMultiPaneManager getMultiPaneManager() {
+	protected MultiPaneManager getMultiPaneManager() {
 		return multiPaneManager;
 	}
 

@@ -9,6 +9,8 @@ import javax.annotation.Nonnull;
 import org.solovyev.android.async.CommonAsyncTask;
 import org.solovyev.android.messenger.App;
 
+import static org.solovyev.android.messenger.App.getExceptionHandler;
+
 /**
  * User: serso
  * Date: 6/7/12
@@ -25,7 +27,7 @@ public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsync
 
 	@Override
 	protected void onFailurePostExecute(@Nonnull Exception e) {
-		App.getExceptionHandler().handleException(e);
+		getExceptionHandler().handleException(e);
 	}
 
 	@Nonnull

@@ -5,7 +5,7 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.MessengerFragmentActivity;
+import org.solovyev.android.messenger.AbstractFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.common.Builder;
 
@@ -17,9 +17,9 @@ import org.solovyev.common.Builder;
 public final class PreferenceUiEventListener implements EventListener<PreferenceUiEvent> {
 
 	@Nonnull
-	private final MessengerFragmentActivity activity;
+	private final AbstractFragmentActivity activity;
 
-	public PreferenceUiEventListener(@Nonnull MessengerFragmentActivity activity) {
+	public PreferenceUiEventListener(@Nonnull AbstractFragmentActivity activity) {
 		this.activity = activity;
 	}
 
@@ -36,7 +36,7 @@ public final class PreferenceUiEventListener implements EventListener<Preference
 					@Nonnull
 					@Override
 					public Fragment build() {
-						return new MessengerPreferenceListFragment(preferencesResId);
+						return new MainPreferenceListFragment(preferencesResId);
 					}
 				}, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG);
 				if (activity.isTriplePane()) {
@@ -47,7 +47,7 @@ public final class PreferenceUiEventListener implements EventListener<Preference
 					@Nonnull
 					@Override
 					public Fragment build() {
-						return new MessengerPreferenceListFragment(preferencesResId);
+						return new MainPreferenceListFragment(preferencesResId);
 					}
 				}, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG, true);
 			}

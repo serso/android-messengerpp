@@ -15,7 +15,7 @@ import android.widget.TextView;
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.Views;
-import org.solovyev.android.messenger.MessengerEntity;
+import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
@@ -24,7 +24,7 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
  * Date: 3/6/13
  * Time: 11:57 PM
  */
-public abstract class AbstractMessengerListItem<D extends MessengerEntity> implements MessengerListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
+public abstract class AbstractMessengerListItem<D extends Identifiable> implements MessengerListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
 
 	private boolean checked;
 
