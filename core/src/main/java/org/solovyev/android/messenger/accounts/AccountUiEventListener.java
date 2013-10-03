@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.accounts;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
-import org.solovyev.android.messenger.AbstractFragmentActivity;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
@@ -23,9 +23,9 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 	private static final String TAG = AccountUiEventListener.class.getSimpleName();
 
 	@Nonnull
-	private final AbstractFragmentActivity activity;
+	private final BaseFragmentActivity activity;
 
-	public AccountUiEventListener(@Nonnull AbstractFragmentActivity activity) {
+	public AccountUiEventListener(@Nonnull BaseFragmentActivity activity) {
 		this.activity = activity;
 	}
 

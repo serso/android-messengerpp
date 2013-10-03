@@ -1,9 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.support.v4.app.Fragment;
-import roboguice.RoboGuice;
 import roboguice.event.EventListener;
-import roboguice.event.EventManager;
 
 import java.util.List;
 
@@ -11,7 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.Fragments2;
-import org.solovyev.android.messenger.AbstractFragmentActivity;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -22,6 +20,10 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatUiEventType;
 import org.solovyev.common.Builder;
 
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.users.ContactUiEventType.open_contact_chat;
+import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
+
 /**
  * User: serso
  * Date: 3/5/13
@@ -30,12 +32,12 @@ import org.solovyev.common.Builder;
 public final class ContactUiEventListener implements EventListener<ContactUiEvent> {
 
 	@Nonnull
-	private final AbstractFragmentActivity activity;
+	private final BaseFragmentActivity activity;
 
 	@Nonnull
 	private final AccountService accountService;
 
-	public ContactUiEventListener(@Nonnull AbstractFragmentActivity activity, @Nonnull AccountService accountService) {
+	public ContactUiEventListener(@Nonnull BaseFragmentActivity activity, @Nonnull AccountService accountService) {
 		this.activity = activity;
 		this.accountService = accountService;
 	}
@@ -60,16 +62,19 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 									}
 								}, null, CompositeContactFragment.FRAGMENT_TAG);
 							}
-							fireEvent(ContactUiEventType.newShowCompositeUserDialog(contact));
+							fireEvent(show_composite_user_dialog.newEvent(contact));
 						} else {
-							fireEvent(ContactUiEventType.newOpenContactChat(contact));
+							fireEvent(open_contact_chat.newEvent(contact));
 						}
 					} else {
-						fireEvent(ContactUiEventType.newOpenContactChat(contact));
+						fireEvent(open_contact_chat.newEvent(contact));
 					}
 					break;
 				case open_contact_chat:
 					onOpenContactChat(contact);
+					break;
+				case edit_contact:
+					onEditContact(contact);
 					break;
 				case show_composite_user_dialog:
 					Fragments2.showDialog(new CompositeUserDialogFragment(contact), CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
@@ -81,9 +86,12 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 		}
 	}
 
+	private void onEditContact(@Nonnull User contact) {
+		Users.tryShowEditUserFragment(contact, activity);
+	}
+
 	private void fireEvent(@Nonnull ContactUiEvent event) {
-		final EventManager eventManager = RoboGuice.getInjector(activity).getInstance(EventManager.class);
-		eventManager.fire(event);
+		getEventManager(activity).fire(event);
 	}
 
 	private void onOpenContactChat(final User contact) {

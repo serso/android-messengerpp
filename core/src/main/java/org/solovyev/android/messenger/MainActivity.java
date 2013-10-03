@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * Date: 6/2/12
  * Time: 3:52 PM
  */
-public final class MainActivity extends AbstractFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
+public final class MainActivity extends BaseFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
 
     /*
 	**********************************************************************
@@ -141,9 +141,9 @@ public final class MainActivity extends AbstractFragmentActivity implements Pref
 	private static final class FragmentUiEventListener implements EventListener<FragmentUiEvent> {
 
 		@Nonnull
-		private final AbstractFragmentActivity activity;
+		private final BaseFragmentActivity activity;
 
-		private FragmentUiEventListener(@Nonnull AbstractFragmentActivity activity) {
+		private FragmentUiEventListener(@Nonnull BaseFragmentActivity activity) {
 			this.activity = activity;
 		}
 

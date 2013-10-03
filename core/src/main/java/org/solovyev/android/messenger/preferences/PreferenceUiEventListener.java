@@ -5,7 +5,7 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.AbstractFragmentActivity;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.common.Builder;
 
@@ -17,9 +17,9 @@ import org.solovyev.common.Builder;
 public final class PreferenceUiEventListener implements EventListener<PreferenceUiEvent> {
 
 	@Nonnull
-	private final AbstractFragmentActivity activity;
+	private final BaseFragmentActivity activity;
 
-	public PreferenceUiEventListener(@Nonnull AbstractFragmentActivity activity) {
+	public PreferenceUiEventListener(@Nonnull BaseFragmentActivity activity) {
 		this.activity = activity;
 	}
 

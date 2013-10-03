@@ -7,6 +7,14 @@
 	<version>1.0</version>
 	<name>Android Messenger</name>
 
+	<repositories>
+		<repository>
+			<id>in-project-repository</id>
+			<name>In Project Repo</name>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<modules>
 		<module>core</module>
 		<module>realm-vk</module>

@@ -18,6 +18,8 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
+import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
+
 /**
  * User: serso
  * Date: 8/17/12
@@ -148,7 +150,7 @@ public class CompositeContactFragment extends RoboSherlockFragment {
 		openCompositeChoiceDialogButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(ContactUiEventType.newShowCompositeUserDialog(contact));
+				eventManager.fire(show_composite_user_dialog.newEvent(contact));
 			}
 		});
 

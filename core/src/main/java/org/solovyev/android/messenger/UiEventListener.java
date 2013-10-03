@@ -1,23 +1,20 @@
 package org.solovyev.android.messenger;
 
-import android.os.Bundle;
 import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.PickAccountFragment;
-import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.users.Users;
+
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
 import static org.solovyev.android.messenger.App.getAccountService;
-import static org.solovyev.android.messenger.accounts.BaseAccountFragment.ARG_ACCOUNT_ID;
 import static org.solovyev.android.messenger.fragments.PrimaryFragment.pick_account;
 import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
 import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
-import static org.solovyev.android.messenger.users.Users.CREATE_USER_FRAGMENT_TAG;
 
 /**
  * User: serso
@@ -84,13 +81,8 @@ public class UiEventListener implements EventListener<UiEvent> {
 		}
 
 		private void onAccountPicked(@Nonnull Account account) {
-			final Realm realm = account.getRealm();
-			if(realm.canCreateUsers()) {
-				final Bundle fragmentArgs = new Bundle();
-				fragmentArgs.putString(ARG_ACCOUNT_ID, account.getId());
-				final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
-				fm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), fragmentArgs, CREATE_USER_FRAGMENT_TAG);
-			}
+			Users.tryShowCreateUserFragment(account, activity);
 		}
 	}
+
 }

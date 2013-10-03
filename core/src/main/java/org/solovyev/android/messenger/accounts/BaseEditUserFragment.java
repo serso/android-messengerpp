@@ -66,6 +66,11 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
 	protected boolean isBackButtonVisible() {
 		return true;
 	}
@@ -83,6 +88,15 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 			getUserService().mergeUserContacts(getAccount().getUser().getEntity(), users, false, true);
 			getFragmentManager().popBackStack();
 		}
+	}
+
+	protected boolean isNewUser() {
+		return user == null;
+	}
+
+	@Nullable
+	protected User getUser() {
+		return user;
 	}
 
 	@Nullable
@@ -112,5 +126,20 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 			result = newEmptyUser(generateEntity(getAccount()));
 		}
 		return result;
+	}
+
+	@Nonnull
+	public static Bundle newCreateUserArguments(@Nonnull Account account) {
+		final Bundle arguments = new Bundle();
+		arguments.putString(ARG_ACCOUNT_ID, account.getId());
+		return arguments;
+	}
+
+	@Nonnull
+	public static Bundle newEditUserArguments(@Nonnull Account account, @Nonnull User user) {
+		final Bundle arguments = new Bundle();
+		arguments.putString(ARG_USER_ID, user.getId());
+		arguments.putString(ARG_ACCOUNT_ID, account.getId());
+		return arguments;
 	}
 }

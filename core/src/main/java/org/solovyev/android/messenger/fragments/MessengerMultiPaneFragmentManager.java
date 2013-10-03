@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.fragments.ReflectionFragmentBuilder;
-import org.solovyev.android.messenger.AbstractFragmentActivity;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.EmptyFragment;
 import org.solovyev.common.Builder;
@@ -33,14 +33,14 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		tabFragments = unmodifiableList(mutableTabFragments);
 	}
 
-	public MessengerMultiPaneFragmentManager(@Nonnull AbstractFragmentActivity activity) {
+	public MessengerMultiPaneFragmentManager(@Nonnull BaseFragmentActivity activity) {
 		super(activity, R.id.content_first_pane, EmptyFragment.class, EmptyFragment.FRAGMENT_TAG, R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
 	}
 
 	@Nonnull
 	@Override
-	public AbstractFragmentActivity getActivity() {
-		return (AbstractFragmentActivity) super.getActivity();
+	public BaseFragmentActivity getActivity() {
+		return (BaseFragmentActivity) super.getActivity();
 	}
 
 	public void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,
@@ -80,7 +80,7 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 
 	public void setSecondOrMainFragment(Class<? extends Fragment> fragmentClass, Bundle fragmentArgs, String fragmentTag) {
 		if (getActivity().isDualPane()) {
-			setSecondFragment(fragmentClass, fragmentArgs, null, fragmentTag, false);
+			setSecondFragment(fragmentClass, fragmentArgs, null, fragmentTag, true);
 		} else {
 			setMainFragment(fragmentClass, fragmentArgs, null, fragmentTag, true);
 		}

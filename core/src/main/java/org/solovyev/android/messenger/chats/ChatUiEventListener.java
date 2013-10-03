@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
-import org.solovyev.android.messenger.AbstractFragmentActivity;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
@@ -37,12 +37,12 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 	private static final String TAG = ChatUiEventListener.class.getSimpleName();
 
 	@Nonnull
-	private final AbstractFragmentActivity activity;
+	private final BaseFragmentActivity activity;
 
 	@Nonnull
 	private final ChatService chatService;
 
-	public ChatUiEventListener(@Nonnull AbstractFragmentActivity activity, @Nonnull ChatService chatService) {
+	public ChatUiEventListener(@Nonnull BaseFragmentActivity activity, @Nonnull ChatService chatService) {
 		this.activity = activity;
 		this.chatService = chatService;
 	}

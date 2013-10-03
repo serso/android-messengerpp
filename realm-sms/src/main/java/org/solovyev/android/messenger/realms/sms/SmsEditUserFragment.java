@@ -44,6 +44,13 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 		firstNameEditText = (EditText) root.findViewById(R.id.mpp_sms_firstname_edittext);
 		lastNameEditText = (EditText) root.findViewById(R.id.mpp_sms_lastname_edittext);
 		phoneEditText = (EditText) root.findViewById(R.id.mpp_sms_phone_edittext);
+
+		if (!isNewUser()) {
+			final User user = getUser();
+			firstNameEditText.setText(user.getPropertyValueByName(PROPERTY_FIRST_NAME));
+			lastNameEditText.setText(user.getPropertyValueByName(PROPERTY_LAST_NAME));
+			phoneEditText.setText(user.getPropertyValueByName(PROPERTY_PHONE));
+		}
 	}
 
 	@Nullable

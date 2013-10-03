@@ -8,10 +8,16 @@ import android.widget.TextView;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
+import org.solovyev.android.list.ListItemOnClickData;
+import org.solovyev.android.list.SimpleMenuOnClick;
+import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -19,6 +25,13 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
+
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
+import static org.solovyev.android.messenger.users.ContactUiEventType.edit_contact;
 
 /**
  * User: serso
@@ -59,16 +72,17 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(ContactUiEventType.newContactClicked(getContact()));
-
+				getEventManager(context).fire(contact_clicked.newEvent(getContact()));
 			}
 		};
 	}
 
 	@Override
 	public OnClickAction getOnLongClickAction() {
-		return null;
+		final List<LabeledMenuItem<ListItemOnClickData<User>>> menuItems = new ArrayList<LabeledMenuItem<ListItemOnClickData<User>>>();
+		menuItems.add(Menu.edit);
+		final User contact = getContact();
+		return new SimpleMenuOnClick<User>(menuItems, contact, "contact-menu");
 	}
 
 	public void onUnreadMessagesCountChanged(@Nonnull Integer unreadMessagesCount) {
@@ -106,9 +120,9 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
 		final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
 		if (accountService.isOneAccount()) {
-			accountName.setVisibility(View.GONE);
+			accountName.setVisibility(GONE);
 		} else {
-			accountName.setVisibility(View.VISIBLE);
+			accountName.setVisibility(VISIBLE);
 			try {
 				final Account account = accountService.getAccountById(getContact().getEntity().getAccountId());
 				accountName.setText("[" + account.getDisplayName(context) + "/" + account.getUser().getDisplayName() + "]");
@@ -120,9 +134,40 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
 		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
 		if (contact.getContact().isOnline()) {
-			contactOnline.setVisibility(View.VISIBLE);
+			contactOnline.setVisibility(VISIBLE);
 		} else {
-			contactOnline.setVisibility(View.INVISIBLE);
+			contactOnline.setVisibility(INVISIBLE);
+		}
+	}
+
+	/*
+	**********************************************************************
+	*
+	*                           STATIC/INNER
+	*
+	**********************************************************************
+	*/
+
+	private enum Menu implements LabeledMenuItem<ListItemOnClickData<User>> {
+		edit("Edit") {
+			@Override
+			public void onClick(@Nonnull ListItemOnClickData<User> data, @Nonnull Context context) {
+				final User contact = data.getDataObject();
+				getEventManager(context).fire(edit_contact.newEvent(contact));
+			}
+		};
+
+		@Nonnull
+		private final String caption;
+
+		Menu(@Nonnull String caption) {
+			this.caption = caption;
+		}
+
+		@Nonnull
+		@Override
+		public String getCaption(@Nonnull Context context) {
+			return caption;
 		}
 	}
 }

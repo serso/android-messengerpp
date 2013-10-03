@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 
 public final class CompositeUserDialogFragment extends RoboSherlockDialogFragment {
 
@@ -166,7 +167,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 		super.onDestroy();
 
 		if (user != null && account != null && account.isCompositeUserDefined(user)) {
-			getEventManager(getActivity()).fire(ContactUiEventType.newContactClicked(user));
+			getEventManager(getActivity()).fire(contact_clicked.newEvent(user));
 		}
 	}
 

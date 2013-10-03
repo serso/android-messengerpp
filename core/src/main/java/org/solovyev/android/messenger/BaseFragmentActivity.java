@@ -38,7 +38,7 @@ import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmen
  * Date: 6/1/12
  * Time: 7:28 PM
  */
-public abstract class AbstractFragmentActivity extends RoboSherlockFragmentActivity {
+public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity {
 
     /*
 	**********************************************************************
@@ -134,12 +134,12 @@ public abstract class AbstractFragmentActivity extends RoboSherlockFragmentActiv
     **********************************************************************
     */
 
-	protected AbstractFragmentActivity(int layoutId) {
+	protected BaseFragmentActivity(int layoutId) {
 		this.layoutId = layoutId;
 		this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
 	}
 
-	protected AbstractFragmentActivity(int layoutId, boolean showActionBarTabs, boolean actionBarIconAsUp) {
+	protected BaseFragmentActivity(int layoutId, boolean showActionBarTabs, boolean actionBarIconAsUp) {
 		this.layoutId = layoutId;
 		this.showActionBarTabs = showActionBarTabs;
 		this.actionBarIconAsUp = actionBarIconAsUp;
