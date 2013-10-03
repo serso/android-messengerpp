@@ -2,24 +2,21 @@ package org.solovyev.android.messenger.realms.sms;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-import org.solovyev.android.messenger.accounts.BaseEditUserFragment;
-import org.solovyev.android.messenger.users.MutableUser;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.properties.AProperties;
-import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.MutableAProperties;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.solovyev.android.messenger.users.User.*;
-import static org.solovyev.android.messenger.users.Users.newUser;
-import static org.solovyev.android.properties.Properties.newProperty;
+import org.solovyev.android.messenger.accounts.BaseEditUserFragment;
+import org.solovyev.android.messenger.users.MutableUser;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.properties.MutableAProperties;
+
+import static org.solovyev.android.messenger.users.User.PROPERTY_FIRST_NAME;
+import static org.solovyev.android.messenger.users.User.PROPERTY_LAST_NAME;
+import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
@@ -33,6 +30,9 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 	@Nonnull
 	private EditText phoneEditText;
 
+	@Nonnull
+	private CheckBox dontSaveInPhoneCheckbox;
+
 	public SmsEditUserFragment() {
 		super(R.layout.mpp_realm_sms_edit_user);
 	}
@@ -41,6 +41,7 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
+		dontSaveInPhoneCheckbox = (CheckBox) root.findViewById(R.id.mpp_sms_dont_save_into_phone_checkbox);
 		firstNameEditText = (EditText) root.findViewById(R.id.mpp_sms_firstname_edittext);
 		lastNameEditText = (EditText) root.findViewById(R.id.mpp_sms_lastname_edittext);
 		phoneEditText = (EditText) root.findViewById(R.id.mpp_sms_phone_edittext);
@@ -50,6 +51,8 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 			firstNameEditText.setText(user.getPropertyValueByName(PROPERTY_FIRST_NAME));
 			lastNameEditText.setText(user.getPropertyValueByName(PROPERTY_LAST_NAME));
 			phoneEditText.setText(user.getPropertyValueByName(PROPERTY_PHONE));
+
+			dontSaveInPhoneCheckbox.setChecked(!user.getEntity().isAccountEntityIdSet());
 		}
 	}
 
@@ -86,6 +89,12 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 				properties.setProperty(PROPERTY_LAST_NAME, lastName);
 			} else {
 				properties.removeProperty(PROPERTY_LAST_NAME);
+			}
+
+			if (!user.getEntity().isAccountEntityIdSet()) {
+				if (!dontSaveInPhoneCheckbox.isChecked()) {
+					// todo serso: save to phones contact
+				}
 			}
 
 			return user;

@@ -72,7 +72,8 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 
 	@Override
 	protected boolean isBackButtonVisible() {
-		return true;
+		// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
+		return !(isNewUser() && getMultiPaneManager().isDualPane(getActivity()));
 	}
 
 	@Override

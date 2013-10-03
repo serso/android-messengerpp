@@ -37,9 +37,9 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	}
 
 	@Nonnull
-	static MutableUser newInstance(@Nonnull Entity entity,
-							@Nonnull UserSyncData userSyncData,
-							@Nonnull Collection<AProperty> properties) {
+	static MutableUser newInstance( @Nonnull Entity entity,
+									@Nonnull UserSyncData userSyncData,
+									@Nonnull Collection<AProperty> properties) {
 		final UserImpl result = new UserImpl(entity);
 
 		result.login = entity.getAccountEntityId();

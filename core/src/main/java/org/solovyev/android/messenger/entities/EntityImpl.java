@@ -5,12 +5,15 @@ import android.os.Parcel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.common.JCloneable;
 import org.solovyev.common.JObject;
 import org.solovyev.common.text.Strings;
 
-public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entity {
+import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
+
+public class EntityImpl extends JObject implements JCloneable<EntityImpl>, MutableEntity {
 
     /*
 	**********************************************************************
@@ -134,6 +137,16 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Entit
 	@Nonnull
 	public String getAccountEntityId() {
 		return this.accountEntityId;
+	}
+
+	@Override
+	public boolean isAccountEntityIdSet() {
+		return !NO_ACCOUNT_ID.equals(accountEntityId);
+	}
+
+	@Override
+	public void setAccountEntityId(@Nonnull String accountEntityId) {
+		this.accountEntityId = accountEntityId;
 	}
 
 	@Nonnull

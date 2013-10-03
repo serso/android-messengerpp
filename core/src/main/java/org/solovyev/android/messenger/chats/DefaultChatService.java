@@ -614,12 +614,12 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2) {
 		String firstPart = user1.getAccountEntityId();
-		if(AccountService.NO_ACCOUNT_ID.equals(firstPart)) {
+		if(!user1.isAccountEntityIdSet()) {
 			firstPart = user1.getAppAccountEntityId();
 		}
 
 		String secondPart = user2.getAccountEntityId();
-		if(AccountService.NO_ACCOUNT_ID.equals(secondPart)) {
+		if(!user2.isAccountEntityIdSet()) {
 			secondPart = user2.getAppAccountEntityId();
 		}
 

@@ -57,7 +57,7 @@ final class SmsRealmIconService implements RealmIconService {
 	private Drawable loadContactPhoto(@Nonnull User user) {
 		final String accountEntityId = user.getEntity().getAccountEntityId();
 
-		if (!AccountService.NO_ACCOUNT_ID.equals(accountEntityId)) {
+		if (user.getEntity().isAccountEntityIdSet()) {
 			try {
 				final Integer contactId = Integer.valueOf(accountEntityId);
 				final Bitmap bitmap = loadContactPhoto(contactId);

@@ -3,6 +3,8 @@ package org.solovyev.android.messenger;
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.MutableEntity;
 import org.solovyev.common.JObject;
 
 /**
@@ -13,10 +15,14 @@ import org.solovyev.common.JObject;
 public abstract class AbstractIdentifiable extends JObject implements Identifiable {
 
 	@Nonnull
-	private /*final*/ Entity entity;
+	private /*final*/ MutableEntity entity;
 
 	protected AbstractIdentifiable(@Nonnull Entity entity) {
-		this.entity = entity;
+		if(entity instanceof MutableEntity) {
+			this.entity = (MutableEntity) entity;
+		} else {
+			this.entity = EntityImpl.newEntity(entity.getAccountId(), entity.getAccountEntityId(), entity.getEntityId());
+		}
 	}
 
 	@Nonnull
@@ -26,7 +32,7 @@ public abstract class AbstractIdentifiable extends JObject implements Identifiab
 	}
 
 	@Nonnull
-	public Entity getEntity() {
+	public MutableEntity getEntity() {
 		return entity;
 	}
 
