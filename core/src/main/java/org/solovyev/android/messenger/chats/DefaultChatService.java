@@ -38,7 +38,7 @@ import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.chats.UiChat.newUiChat;
-import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 
 /**
  * User: serso

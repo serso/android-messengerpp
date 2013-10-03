@@ -2,8 +2,8 @@ package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.CompositeUser;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
@@ -101,13 +101,13 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	@Nonnull
 	@Override
 	public Entity newRealmEntity(@Nonnull String accountEntityId) {
-		return EntityImpl.newEntity(getId(), accountEntityId);
+		return Entities.newEntity(getId(), accountEntityId);
 	}
 
 	@Nonnull
 	@Override
 	public Entity newRealmEntity(@Nonnull String accountEntityId, @Nonnull String entityId) {
-		return EntityImpl.newEntity(getId(), accountEntityId, entityId);
+		return Entities.newEntity(getId(), accountEntityId, entityId);
 	}
 
 	@Nonnull

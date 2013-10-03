@@ -8,7 +8,6 @@ import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MainActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.entities.Entity;
@@ -28,7 +27,7 @@ import static org.solovyev.android.messenger.App.TAG;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newCreateUserArguments;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newEditUserArguments;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
-import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 
 /**
  * User: serso

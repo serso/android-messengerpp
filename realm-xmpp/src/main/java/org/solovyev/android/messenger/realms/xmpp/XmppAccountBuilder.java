@@ -10,9 +10,8 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
@@ -39,10 +38,10 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 				user = XmppAccountUserService.toAccountUser(accountId, getConfiguration().getLogin(), null, connection);
 			} catch (XMPPException e) {
 				Log.e("XmppRealmBuilder", e.getMessage(), e);
-				user = Users.newEmptyUser(EntityImpl.newEntity(accountId, getConfiguration().getLogin()));
+				user = Users.newEmptyUser(Entities.newEntity(accountId, getConfiguration().getLogin()));
 			}
 		} else {
-			user = Users.newEmptyUser(EntityImpl.newEntity(accountId, getConfiguration().getLogin()));
+			user = Users.newEmptyUser(Entities.newEntity(accountId, getConfiguration().getLogin()));
 		}
 
 		return user;

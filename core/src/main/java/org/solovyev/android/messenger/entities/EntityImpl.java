@@ -5,11 +5,9 @@ import android.os.Parcel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.common.JCloneable;
 import org.solovyev.common.JObject;
-import org.solovyev.common.text.Strings;
 
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 
@@ -66,7 +64,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Mutab
     **********************************************************************
     */
 
-	private EntityImpl(@Nonnull String accountId, @Nonnull String accountEntityId, @Nonnull String entityId) {
+	EntityImpl(@Nonnull String accountId, @Nonnull String accountEntityId, @Nonnull String entityId) {
 		this.accountId = accountId;
 		this.accountEntityId = accountEntityId;
 		this.entityId = entityId;
@@ -75,38 +73,18 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Mutab
 	private EntityImpl(@Nonnull String accountId,
 					   @Nullable String realmId,
 					   @Nonnull String accountEntityId,
-					   @Nonnull String entityId) {
+					   @Nonnull String entityId,
+					   @Nullable String appAccountEntityId) {
 		this.accountId = accountId;
 		this.realmId = realmId;
 		this.accountEntityId = accountEntityId;
 		this.entityId = entityId;
-	}
-
-	@Nonnull
-	public static EntityImpl newEntity(@Nonnull String accountId, @Nonnull String accountEntityId, @Nonnull String entityId) {
-		if (Strings.isEmpty(accountId)) {
-			throw new IllegalArgumentException("Account cannot be empty!");
-		}
-
-		if (Strings.isEmpty(accountEntityId)) {
-			throw new IllegalArgumentException("Account entity id cannot be empty!");
-		}
-
-		if (Strings.isEmpty(entityId)) {
-			throw new IllegalArgumentException("Entity id cannot be empty!");
-		}
-
-		return new EntityImpl(accountId, accountEntityId, entityId);
-	}
-
-	@Nonnull
-	public static Entity newEntity(@Nonnull String accountId, @Nonnull String accountEntityId) {
-		return newEntity(accountId, accountEntityId, Entities.makeEntityId(accountId, accountEntityId));
+		this.appAccountEntityId = appAccountEntityId;
 	}
 
 	@Nonnull
 	private static Entity fromParcel(@Nonnull Parcel in) {
-		return new EntityImpl(in.readString(), in.readString(), in.readString(), in.readString());
+		return new EntityImpl(in.readString(), in.readString(), in.readString(), in.readString(), in.readString());
 	}
 
 	@Nonnull
@@ -198,6 +176,7 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Mutab
 		out.writeString(realmId);
 		out.writeString(accountEntityId);
 		out.writeString(entityId);
+		out.writeString(appAccountEntityId);
 	}
 
 	@Override

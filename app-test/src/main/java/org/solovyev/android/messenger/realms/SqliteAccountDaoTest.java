@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.collections.Collections;
 
@@ -35,7 +35,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		Assert.assertTrue(accounts.isEmpty());
 
 		TestAccountConfiguration expectedConfig1 = new TestAccountConfiguration("test_config_field", 42);
-		final Account expected1 = testRealmDef.newAccount("test~01", Users.newEmptyUser(EntityImpl.newEntity("test~01", "user01")), expectedConfig1, AccountState.enabled);
+		final Account expected1 = testRealmDef.newAccount("test~01", Users.newEmptyUser(Entities.newEntity("test~01", "user01")), expectedConfig1, AccountState.enabled);
 		accountDao.insertAccount(expected1);
 
 		accounts = accountDao.loadAccounts();
@@ -58,7 +58,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		for (Realm realm : getRealmService().getRealms()) {
 			final AccountConfiguration accountConfiguration = (AccountConfiguration) realm.getConfigurationClass().newInstance();
 			final String accountId = makeAccountId(realm.getId(), index);
-			Account expected = realm.newAccount(accountId, Users.newEmptyUser(EntityImpl.newEntity(accountId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
+			Account expected = realm.newAccount(accountId, Users.newEmptyUser(Entities.newEntity(accountId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
 			accountDao.insertAccount(expected);
 		}
 

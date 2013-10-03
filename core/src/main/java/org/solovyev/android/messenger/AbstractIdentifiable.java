@@ -2,8 +2,8 @@ package org.solovyev.android.messenger;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.entities.MutableEntity;
 import org.solovyev.common.JObject;
 
@@ -21,7 +21,7 @@ public abstract class AbstractIdentifiable extends JObject implements Identifiab
 		if(entity instanceof MutableEntity) {
 			this.entity = (MutableEntity) entity;
 		} else {
-			this.entity = EntityImpl.newEntity(entity.getAccountId(), entity.getAccountEntityId(), entity.getEntityId());
+			this.entity = Entities.newEntity(entity.getAccountId(), entity.getAccountEntityId(), entity.getEntityId());
 		}
 	}
 

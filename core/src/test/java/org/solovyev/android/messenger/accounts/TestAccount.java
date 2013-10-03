@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 @Singleton

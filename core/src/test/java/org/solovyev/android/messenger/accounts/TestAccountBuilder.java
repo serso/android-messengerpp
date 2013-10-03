@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.accounts;
 
 
 import org.solovyev.android.captcha.ResolvedCaptcha;
-import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
@@ -20,7 +20,7 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, Test
 	@Nonnull
 	@Override
 	protected User getAccountUser(@Nonnull String accountId) {
-		return Users.newEmptyUser(EntityImpl.newEntity(accountId, "test_user"));
+		return Users.newEmptyUser(Entities.newEntity(accountId, "test_user"));
 	}
 
 	@Nonnull

@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -25,7 +25,7 @@ public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 	}
 
 	public TestAccount(@Nonnull TestRealm realmDef, int index) {
-		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(EntityImpl.newEntity(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
+		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(Entities.newEntity(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
 	}
 
 

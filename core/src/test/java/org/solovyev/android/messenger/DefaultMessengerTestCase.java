@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase {

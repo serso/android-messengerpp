@@ -6,8 +6,8 @@ import com.google.inject.Singleton;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.accounts.connection.TestAccountConnection;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityImpl;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -35,7 +35,7 @@ public class TestRealm extends AbstractRealm {
 
 	@Nonnull
 	public static Entity newEntity(@Nonnull String realmEntityId) {
-		return EntityImpl.newEntity(REALM_ID, realmEntityId);
+		return Entities.newEntity(REALM_ID, realmEntityId);
 	}
 
 	@Nonnull

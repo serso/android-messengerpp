@@ -31,6 +31,6 @@ public class EntityMapper implements Converter<Cursor, Entity> {
 		final String accountId = cursor.getString(cursorPosition + 1);
 		final String accountEntityId = cursor.getString(cursorPosition + 2);
 
-		return EntityImpl.newEntity(accountId, accountEntityId, entityId);
+		return Entities.newEntity(accountId, accountEntityId, entityId);
 	}
 }

@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.solovyev.android.messenger.entities.EntityImpl.newEntity;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 
 public class MessagesMock {
 

@@ -11,9 +11,8 @@ import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.entities.EntityImpl;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkAuth;
@@ -32,7 +31,7 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccount, VkAccoun
 	@Override
 	protected User getAccountUser(@Nonnull String accountId) {
 		final String userId = getConfiguration().getUserId();
-		final User defaultUser = Users.newEmptyUser(EntityImpl.newEntity(accountId, userId));
+		final User defaultUser = Users.newEmptyUser(Entities.newEntity(accountId, userId));
 
 		User result;
 		try {
