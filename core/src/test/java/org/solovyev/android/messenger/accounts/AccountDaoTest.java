@@ -122,7 +122,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 
 	@Test
 	public void testShouldRemoveAllAccounts() throws Exception {
-		dao.deleteAllAccounts();
+		dao.deleteAll();
 		assertEquals(0, dao.readAll().size());
 	}
 

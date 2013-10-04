@@ -13,7 +13,7 @@ public interface AccountDao extends Dao<Account> {
 
 	void create(@Nonnull Account account) throws AccountRuntimeException;
 
-	void deleteAllAccounts();
+	void deleteAll();
 
 	void update(@Nonnull Account account) throws AccountRuntimeException;
 

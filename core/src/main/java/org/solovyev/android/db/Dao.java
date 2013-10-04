@@ -1,9 +1,8 @@
 package org.solovyev.android.db;
 
-import java.util.Collection;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public interface Dao<E> {
 
@@ -20,4 +19,6 @@ public interface Dao<E> {
 	void delete(@Nonnull E entity);
 
 	void deleteById(@Nonnull String id);
+
+	void deleteAll();
 }

@@ -27,7 +27,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 	public void setUp() throws Exception {
 		super.setUp();
-		accountDao.deleteAllAccounts();
+		accountDao.deleteAll();
 	}
 
 	public void testRealmOperations() throws Exception {
@@ -67,7 +67,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 	}
 
 	public void tearDown() throws Exception {
-		accountDao.deleteAllAccounts();
+		accountDao.deleteAll();
 		super.tearDown();
 	}
 }
