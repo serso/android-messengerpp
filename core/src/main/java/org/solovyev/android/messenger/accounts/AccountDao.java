@@ -3,22 +3,19 @@ package org.solovyev.android.messenger.accounts;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
-public interface AccountDao {
+import org.solovyev.android.db.Dao;
+
+public interface AccountDao extends Dao<Account> {
 
 	final String TAG = AccountDao.class.getSimpleName();
 
 	void init();
 
-	void insertAccount(@Nonnull Account account) throws AccountException;
-
-	void deleteAccount(@Nonnull String accountId);
-
-	@Nonnull
-	Collection<Account> loadAccounts();
+	void create(@Nonnull Account account) throws AccountRuntimeException;
 
 	void deleteAllAccounts();
 
-	void updateAccount(@Nonnull Account account) throws AccountException;
+	void update(@Nonnull Account account) throws AccountRuntimeException;
 
 	@Nonnull
 	Collection<Account> loadAccountsInState(@Nonnull AccountState state);

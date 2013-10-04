@@ -118,7 +118,7 @@ public class DefaultAccountService implements AccountService {
 				this.messageService.removeAllMessagesInRealm(account.getId());
 				this.chatService.removeChatsInRealm(account.getId());
 				this.userService.removeUsersInAccount(account.getId());
-				this.accountDao.deleteAccount(account.getId());
+				this.accountDao.deleteById(account.getId());
 				this.accounts.remove(account.getId());
 			}
 		}
@@ -244,11 +244,16 @@ public class DefaultAccountService implements AccountService {
 
 	private void updateAccountConfiguration(@Nonnull Account account, @Nonnull AccountConfiguration newConfiguration) throws AccountException {
 		assert account.getConfiguration().isSameAccount(newConfiguration);
-		newConfiguration.applySystemData(account.getConfiguration());
-		synchronized (lock) {
-			account.setConfiguration(newConfiguration);
-			accountDao.updateAccount(account);
-			listeners.fireEvent(configuration_changed.newEvent(account, null));
+
+		try {
+			newConfiguration.applySystemData(account.getConfiguration());
+			synchronized (lock) {
+				account.setConfiguration(newConfiguration);
+				accountDao.update(account);
+				listeners.fireEvent(configuration_changed.newEvent(account, null));
+			}
+		} catch (AccountRuntimeException e) {
+			throw new AccountException(e);
 		}
 	}
 
@@ -256,14 +261,18 @@ public class DefaultAccountService implements AccountService {
 		assert Thread.holdsLock(accounts);
 
 		synchronized (lock) {
-			if (oldAccount != null) {
-				accountDao.updateAccount(newAccount);
-				accounts.put(newAccount.getId(), newAccount);
-				listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
-			} else {
-				accountDao.insertAccount(newAccount);
-				accounts.put(newAccount.getId(), newAccount);
-				listeners.fireEvent(AccountEventType.created.newEvent(newAccount, null));
+			try {
+				if (oldAccount != null) {
+					accountDao.update(newAccount);
+					accounts.put(newAccount.getId(), newAccount);
+					listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
+				} else {
+					accountDao.create(newAccount);
+					accounts.put(newAccount.getId(), newAccount);
+					listeners.fireEvent(AccountEventType.created.newEvent(newAccount, null));
+				}
+			} catch (AccountRuntimeException e) {
+				throw new AccountException(e);
 			}
 		}
 	}
@@ -283,7 +292,7 @@ public class DefaultAccountService implements AccountService {
 				synchronized (accounts) {
 					this.accounts.put(account.getId(), result);
 					synchronized (lock) {
-						this.accountDao.updateAccount(result);
+						this.accountDao.update(result);
 					}
 				}
 
@@ -292,7 +301,7 @@ public class DefaultAccountService implements AccountService {
 				}
 
 				return result;
-			} catch (AccountException e) {
+			} catch (AccountRuntimeException e) {
 				App.getExceptionHandler().handleException(e);
 				// return old unchanged value in case of error
 				return account;
@@ -341,7 +350,7 @@ public class DefaultAccountService implements AccountService {
 
 	@Override
 	public void load() {
-		final Collection<Account> realmsFromDb = accountDao.loadAccounts();
+		final Collection<Account> realmsFromDb = accountDao.readAll();
 		synchronized (accounts) {
 			int maxRealmIndex = 0;
 

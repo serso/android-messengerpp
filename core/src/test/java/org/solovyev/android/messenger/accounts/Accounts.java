@@ -5,12 +5,14 @@ import org.junit.Assert;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
+import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
+import static org.solovyev.common.Objects.areEqual;
 
 public class Accounts {
 
@@ -89,5 +91,14 @@ public class Accounts {
 		}
 		Assert.assertTrue(expected.getConfiguration().isSame(actual.getConfiguration()));
 		Assert.assertEquals(expected.getUser(), actual.getUser());
+	}
+
+	public static boolean areSame(@Nonnull Account expected, @Nonnull Account actual) {
+		boolean same = areEqual(expected.getId(), actual.getId());
+		same &= areEqual(expected.getRealm(), actual.getRealm());
+		same &= areEqual(expected.getState(), actual.getState());
+		same &= expected.getConfiguration().isSame(actual.getConfiguration());
+		same &= areEqual(expected.getUser(), actual.getUser());
+		return same;
 	}
 }
