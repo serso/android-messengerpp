@@ -3,15 +3,10 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.google.inject.Scopes;
-import com.google.inject.Singleton;
+import com.google.inject.*;
 import com.google.inject.util.Modules;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 import org.solovyev.android.http.CachingImageLoader;
-import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
@@ -33,7 +28,6 @@ import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.DefaultRealmService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
-import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
@@ -51,6 +45,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
+import static org.mockito.Mockito.mock;
 import static org.solovyev.tasks.Tasks.newTaskService;
 
 public abstract class AbstractTestMessengerModule extends AbstractModule {
@@ -100,7 +95,7 @@ public abstract class AbstractTestMessengerModule extends AbstractModule {
 		bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
 		bind(ChatMessageService.class).to(DefaultChatMessageService.class);
 
-		bind(SyncService.class).to(DefaultSyncService.class);
+		bind(SyncService.class).toInstance(mock(SyncService.class));
 
 		bind(Context.class).toInstance(application);
 

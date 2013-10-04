@@ -141,7 +141,7 @@ public class DefaultUserService implements UserService {
 		if (result == null) {
 
 			synchronized (lock) {
-				result = userDao.loadUserById(user.getEntityId());
+				result = userDao.read(user.getEntityId());
 			}
 
 			if (result == null) {
@@ -186,9 +186,9 @@ public class DefaultUserService implements UserService {
 		boolean inserted = false;
 
 		synchronized (lock) {
-			final User userFromDb = userDao.loadUserById(user.getEntity().getEntityId());
+			final User userFromDb = userDao.read(user.getEntity().getEntityId());
 			if (userFromDb == null) {
-				userDao.insertUser(user);
+				userDao.create(user);
 				inserted = true;
 			}
 		}
@@ -220,7 +220,7 @@ public class DefaultUserService implements UserService {
 
 	private void updateUser(@Nonnull User user, boolean fireChangeEvent) {
 		synchronized (lock) {
-			userDao.updateUser(user);
+			userDao.update(user);
 		}
 
 		synchronized (usersCache) {
@@ -391,7 +391,7 @@ public class DefaultUserService implements UserService {
 		User user = getRealmByEntity(userEntity).getAccountUserService().getUserById(userEntity.getAccountEntityId());
 		if (user != null) {
 			user = user.updatePropertiesSyncDate();
-			updateUser(user, true);
+			updateUser(user, false);
 		}
 	}
 

@@ -6,7 +6,8 @@ import java.util.Collection;
 
 public interface Dao<E> {
 
-	void create(@Nonnull E entity);
+	// identifier
+	long create(@Nonnull E entity);
 
 	@Nullable
 	E read(@Nonnull String id);
@@ -14,7 +15,8 @@ public interface Dao<E> {
 	@Nonnull
 	Collection<E> readAll();
 
-	void update(@Nonnull E entity);
+	// return number of updated rows
+	long update(@Nonnull E entity);
 
 	void delete(@Nonnull E entity);
 

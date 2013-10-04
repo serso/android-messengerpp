@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.Accounts;
+import org.solovyev.android.messenger.accounts.AccountsTest;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -40,8 +40,8 @@ public class AccountConnectionsTest {
 				command.run();
 			}
 		});
-		account = Accounts.newMockAccountWithStaticConnection();
-		connection = Accounts.prepareStaticConnectionForAccount(account);
+		account = AccountsTest.newMockAccountWithStaticConnection();
+		connection = AccountsTest.prepareStaticConnectionForAccount(account);
 	}
 
 	@Test
@@ -243,7 +243,7 @@ public class AccountConnectionsTest {
 		private Connections(int count) {
 			this.count = count;
 			for(int i = 0; i < count; i++) {
-				final Account account = Accounts.newMockAccountWithStaticConnection();
+				final Account account = AccountsTest.newMockAccountWithStaticConnection();
 				accounts.add(account);
 				connections.add(account.newConnection(application));
 			}

@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -14,7 +13,7 @@ import static org.mockito.Mockito.*;
 import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
 import static org.solovyev.common.Objects.areEqual;
 
-public class Accounts {
+public class AccountsTest {
 
 	@Nonnull
 	public static Account newMockAccountWithStaticConnection() {

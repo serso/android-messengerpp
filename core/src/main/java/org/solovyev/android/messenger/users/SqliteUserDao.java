@@ -20,16 +20,18 @@ import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+
+import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
+import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
+import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
 
 /**
  * User: serso
@@ -44,80 +46,95 @@ import java.util.NoSuchElementException;
 @Singleton
 public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
+	@Nonnull
+	private final Dao<User> dao;
+
 	@Inject
 	public SqliteUserDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
+		dao = new SqliteDao<User>("users", "id", new UserDaoMapper(this), context, sqliteOpenHelper);
 	}
 
-	SqliteUserDao(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
-		super(context, sqliteOpenHelper);
-	}
-
-	@Nonnull
 	@Override
-	public User insertUser(@Nonnull User user) {
-		final long result = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new InsertUser(user));
+	public long create(@Nonnull User user) {
+		final long result = dao.create(user);
 		if (result != DbExec.SQL_ERROR) {
-			AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new InsertUserProperties(user));
+			doDbExec(getSqliteOpenHelper(), new InsertUserProperties(user));
 		}
-		return user;
+		return result;
 	}
 
 	@Nullable
 	@Override
-	public User loadUserById(@Nonnull String userId) {
-		final List<User> users = AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadByUserId(getContext(), userId, getSqliteOpenHelper(), this));
-		return Collections.getFirstListElement(users);
+	public User read(@Nonnull String userId) {
+		return dao.read(userId);
+	}
+
+	@Nonnull
+	@Override
+	public Collection<User> readAll() {
+		return dao.readAll();
 	}
 
 	@Nonnull
 	@Override
 	public List<AProperty> loadUserPropertiesById(@Nonnull String userId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadUserPropertiesDbQuery(userId, getContext(), getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadUserPropertiesDbQuery(userId, getContext(), getSqliteOpenHelper()));
 	}
 
 	@Override
-	public void updateUser(@Nonnull User user) {
-		final long rows = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new UpdateUser(user));
+	public long update(@Nonnull User user) {
+		final long rows = dao.update(user);
 		if (rows > 0) {
 			// user exists => can remove/insert properties
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteUserProperties(user), new InsertUserProperties(user)));
+			doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteUserProperties(user), new InsertUserProperties(user)));
 		}
+		return rows;
+	}
+
+	@Override
+	public void delete(@Nonnull User user) {
+		deleteById(user.getId());
+	}
+
+	@Override
+	public void deleteById(@Nonnull String id) {
+		throw new UnsupportedOperationException("Delete by id is not supported for user!");
 	}
 
 	@Nonnull
 	@Override
 	public List<String> loadUserIds() {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadUserIds(getContext(), getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadUserIds(getContext(), getSqliteOpenHelper()));
 	}
 
 	@Override
-	public void deleteAllUsers() {
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_contacts"));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_properties"));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("users"));
+	public void deleteAll() {
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_contacts"));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_properties"));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
+		dao.deleteAll();
 	}
 
 	@Override
 	public void deleteAllUsersForAccount(@Nonnull String accountId) {
 		// todo serso: startWith must be replaced with equals!
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_contacts", "user_id", accountId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_properties", "user_id", accountId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "user_id", accountId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("users", "account_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_contacts", "user_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_properties", "user_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "user_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("users", "account_id", accountId));
 	}
 
 	@Nonnull
 	@Override
 	public List<String> loadUserContactIds(@Nonnull String userId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadContactIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadContactIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
 	public List<User> loadUserContacts(@Nonnull String userId) {
-		return AndroidDbUtils.doDbQuery(getSqliteOpenHelper(), new LoadContactsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
+		return doDbQuery(getSqliteOpenHelper(), new LoadContactsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
 	}
 
 	@Nonnull
@@ -184,14 +201,14 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 			execs.add(new InsertContact(userId, addedContact.getEntity().getEntityId()));
 		}
 
-		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
+		doDbExecs(getSqliteOpenHelper(), execs);
 
 		return result;
 	}
 
 	@Override
 	public void updateUserOnlineStatus(@Nonnull User user) {
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new InsertOrUpdateOnlineStatus(user));
+		doDbExec(getSqliteOpenHelper(), new InsertOrUpdateOnlineStatus(user));
 	}
 
     /*
@@ -315,36 +332,6 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
 			return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? ) ", new String[]{userId}, null, null, null);
-		}
-
-		@Nonnull
-		@Override
-		public List<User> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<User>(new UserMapper(userDao)).convert(cursor);
-		}
-	}
-
-	private static final class LoadByUserId extends AbstractDbQuery<List<User>> {
-
-		@Nonnull
-		private final String userId;
-
-		@Nonnull
-		private final UserDao userDao;
-
-		private LoadByUserId(@Nonnull Context context,
-							 @Nonnull String userId,
-							 @Nonnull SQLiteOpenHelper sqliteOpenHelper,
-							 @Nonnull UserDao userDao) {
-			super(context, sqliteOpenHelper);
-			this.userId = userId;
-			this.userDao = userDao;
-		}
-
-		@Nonnull
-		@Override
-		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("users", null, "id = ? ", new String[]{userId}, null, null, null);
 		}
 
 		@Nonnull
@@ -487,4 +474,33 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 		return values;
 	}
+
+	private static final class UserDaoMapper implements SqliteDaoEntityMapper<User> {
+
+		@Nonnull
+		private final UserMapper userMapper;
+
+		private UserDaoMapper(@Nonnull UserDao dao) {
+			userMapper = new UserMapper(dao);
+		}
+
+		@Nonnull
+		@Override
+		public ContentValues toContentValues(@Nonnull User user) {
+			return SqliteUserDao.toContentValues(user);
+		}
+
+		@Nonnull
+		@Override
+		public Converter<Cursor, User> getCursorMapper() {
+			return userMapper;
+		}
+
+		@Nonnull
+		@Override
+		public String getId(@Nonnull User user) {
+			return user.getId();
+		}
+	}
+
 }

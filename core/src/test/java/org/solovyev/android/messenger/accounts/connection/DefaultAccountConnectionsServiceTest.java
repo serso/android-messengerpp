@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.solovyev.android.messenger.accounts.AccountEventType.*;
-import static org.solovyev.android.messenger.accounts.Accounts.newMockAccountWithStaticConnection;
+import static org.solovyev.android.messenger.accounts.AccountsTest.newMockAccountWithStaticConnection;
 import static org.solovyev.android.network.NetworkState.*;
 
 @RunWith(RobolectricTestRunner.class)

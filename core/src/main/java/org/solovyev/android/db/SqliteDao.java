@@ -39,8 +39,8 @@ public final class SqliteDao<E> extends AbstractSQLiteHelper implements Dao<E> {
 	}
 
 	@Override
-	public void create(@Nonnull E entity) {
-		doDbExec(getSqliteOpenHelper(), new InsertEntity(entity));
+	public long create(@Nonnull E entity) {
+		return doDbExec(getSqliteOpenHelper(), new InsertEntity(entity));
 	}
 
 	@Nullable
@@ -57,8 +57,8 @@ public final class SqliteDao<E> extends AbstractSQLiteHelper implements Dao<E> {
 	}
 
 	@Override
-	public void update(@Nonnull E entity) {
-		doDbExec(getSqliteOpenHelper(), new UpdateEntity(entity));
+	public long update(@Nonnull E entity) {
+		return doDbExec(getSqliteOpenHelper(), new UpdateEntity(entity));
 	}
 
 	@Override

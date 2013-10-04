@@ -40,7 +40,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	private SecretKey secret;
 
 	@Nonnull
-	private SqliteDao<Account> dao;
+	private Dao<Account> dao;
 
 	@Inject
 	public SqliteAccountDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
@@ -58,8 +58,8 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Override
-	public void create(@Nonnull Account account) throws AccountRuntimeException {
-		dao.create(account);
+	public long create(@Nonnull Account account) throws AccountRuntimeException {
+		return dao.create(account);
 	}
 
 	@Nullable
@@ -90,8 +90,8 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 	}
 
 	@Override
-	public void update(@Nonnull Account account) throws AccountRuntimeException {
-		dao.update(account);
+	public long update(@Nonnull Account account) throws AccountRuntimeException {
+		return dao.update(account);
 	}
 
 	@Override

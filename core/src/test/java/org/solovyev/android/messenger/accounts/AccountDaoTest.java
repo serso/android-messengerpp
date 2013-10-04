@@ -43,7 +43,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 		final Account actual = findAccountInDao(expected);
 		assertNotNull(actual);
 
-		Accounts.assertEquals(expected, actual);
+		AccountsTest.assertEquals(expected, actual);
 		assertEquals(disabled_by_user, actual.getState());
 	}
 
@@ -104,9 +104,9 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 
 	@Test
 	public void testShouldLoadAccounts() throws Exception {
-		Accounts.assertEquals(getAccount1(), findAccountInDao(getAccount1()));
-		Accounts.assertEquals(getAccount2(), findAccountInDao(getAccount2()));
-		Accounts.assertEquals(getAccount3(), findAccountInDao(getAccount3()));
+		AccountsTest.assertEquals(getAccount1(), findAccountInDao(getAccount1()));
+		AccountsTest.assertEquals(getAccount2(), findAccountInDao(getAccount2()));
+		AccountsTest.assertEquals(getAccount3(), findAccountInDao(getAccount3()));
 	}
 
 	@Test
@@ -117,7 +117,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 		final Collection<Account> accountsInState = dao.loadAccountsInState(disabled_by_app);
 		assertNotNull(accountsInState);
 		assertEquals(1, accountsInState.size());
-		Accounts.assertEquals(excepted, getLast(accountsInState));
+		AccountsTest.assertEquals(excepted, getLast(accountsInState));
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 		final Account excepted = getAccount1().copyForNewState(disabled_by_app);
 		dao.update(excepted);
 
-		Accounts.assertEquals(excepted, findAccountInDao(excepted));
+		AccountsTest.assertEquals(excepted, findAccountInDao(excepted));
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 		excepted.setConfiguration(configuration);
 
 		dao.update(excepted);
-		Accounts.assertEquals(excepted, findAccountInDao(excepted));
+		AccountsTest.assertEquals(excepted, findAccountInDao(excepted));
 	}
 
 	@Nonnull
@@ -186,6 +186,6 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 
 	@Override
 	protected boolean areSame(@Nonnull Account e1, @Nonnull Account e2) {
-		return Accounts.areSame(e1, e2);
+		return AccountsTest.areSame(e1, e2);
 	}
 }

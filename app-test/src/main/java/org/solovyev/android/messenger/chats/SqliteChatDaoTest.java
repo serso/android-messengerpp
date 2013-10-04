@@ -51,7 +51,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		final Entity realmUser = testRealm.newUserEntity("01");
 		final String userId = realmUser.getEntityId();
 
-		userDao.insertUser(Users.newEmptyUser(realmUser));
+		userDao.create(Users.newEmptyUser(realmUser));
 
 		chatDao.mergeUserChats(userId, chats);
 

@@ -6,10 +6,11 @@ import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, TestAccountConfiguration> {
 
@@ -20,7 +21,7 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, Test
 	@Nonnull
 	@Override
 	protected User getAccountUser(@Nonnull String accountId) {
-		return Users.newEmptyUser(Entities.newEntity(accountId, "test_user"));
+		return newEmptyUser(Entities.newEntity(accountId, "test_user"));
 	}
 
 	@Nonnull

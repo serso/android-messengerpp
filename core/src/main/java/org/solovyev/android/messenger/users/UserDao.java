@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.properties.AProperty;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Time: 9:12 PM
  */
 
-public interface UserDao {
+public interface UserDao extends Dao<User> {
 
     /*
 	**********************************************************************
@@ -28,10 +29,8 @@ public interface UserDao {
 	 * Note: this method doesn't check if user with same ID is already in the storage.
 	 *
 	 * @param user user to be inserted in persistence storage
-	 * @return newly inserted user
 	 */
-	@Nonnull
-	User insertUser(@Nonnull User user);
+	long create(@Nonnull User user);
 
 	/**
 	 * Method loads user by if from storage
@@ -40,7 +39,7 @@ public interface UserDao {
 	 * @return user previously saved into storage identified by <var>userId</var>, null if no such user exists in storage
 	 */
 	@Nullable
-	User loadUserById(@Nonnull String userId);
+	User read(@Nonnull String userId);
 
 	/**
 	 * Method loads user properties
@@ -56,7 +55,7 @@ public interface UserDao {
 	 *
 	 * @param user user to be save in the storage, nothing is done if user is not yet in the storage
 	 */
-	void updateUser(@Nonnull User user);
+	long update(@Nonnull User user);
 
 	/**
 	 * @return all ids of users saved in the storage
@@ -67,14 +66,14 @@ public interface UserDao {
 	/**
 	 * Method deletes all users and their properties from the storage
 	 */
-	void deleteAllUsers();
+	void deleteAll();
 
 	/**
-	 * Method deletes all users from realm identified by realm id
+	 * Method deletes all users from realm identified by account id
 	 *
-	 * @param realmId realm id
+	 * @param accountId account id
 	 */
-	void deleteAllUsersForAccount(@Nonnull String realmId);
+	void deleteAllUsersForAccount(@Nonnull String accountId);
 
     /*
     **********************************************************************

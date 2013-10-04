@@ -7,7 +7,7 @@ import org.solovyev.android.messenger.realms.TestRealm;
 import static org.junit.Assert.assertNotSame;
 import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;
 import static org.solovyev.android.messenger.accounts.AccountState.enabled;
-import static org.solovyev.android.messenger.accounts.Accounts.assertEquals;
+import static org.solovyev.android.messenger.accounts.AccountsTest.assertEquals;
 
 public class AbstractAccountTest {
 
