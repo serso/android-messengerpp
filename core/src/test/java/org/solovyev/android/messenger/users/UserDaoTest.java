@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
 import static org.solovyev.android.messenger.users.Users.newUser;
@@ -51,6 +52,26 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 			final User user = dao.read(getEntityForUser(account, i).getEntityId());
 			assertTrue(UsersTest.areSame(users.get(1 + i), user));
 		}
+	}
+
+	@Test
+	public void testShouldRemoveContactsIfUserIsRemoved() throws Exception {
+		final String userId = getAccount1().getUser().getId();
+		dao.deleteById(userId);
+		assertTrue(dao.readUserContacts(userId).isEmpty());
+	}
+
+	@Test
+	public void testContactShouldBeRemoved() throws Exception {
+		final String userId = getAccount1().getUser().getId();
+		final List<String> contactIdsBefore = dao.readUserContactIds(userId);
+
+		final String removeUserId = contactIdsBefore.get(0);
+		dao.deleteById(removeUserId);
+		contactIdsBefore.remove(removeUserId);
+
+		final List<String> contactIdsAfter = dao.readUserContactIds(userId);
+		assertEquals(contactIdsBefore, contactIdsAfter);
 	}
 
 	@Nonnull

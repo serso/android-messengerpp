@@ -99,7 +99,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Override
 	public void deleteById(@Nonnull String id) {
-		throw new UnsupportedOperationException("Delete by id is not supported for user!");
+		dao.deleteById(id);
 	}
 
 	@Nonnull

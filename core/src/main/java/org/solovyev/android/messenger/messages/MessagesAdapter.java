@@ -169,7 +169,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				liteChatMessage.setBody(getContext().getString(R.string.mpp_user_starts_typing));
 
 				// create fake list item
-				listItem = createListItem(Messages.newInstance(liteChatMessage, true));
+				listItem = createListItem(Messages.newMessage(liteChatMessage, true));
 				addListItem(listItem);
 
 				// add list item to the map

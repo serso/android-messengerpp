@@ -89,13 +89,13 @@ public final class Messages {
 		return LiteChatMessageImpl.newInstance(entity);
 	}
 
-	public static ChatMessageImpl newInstance(@Nonnull LiteChatMessage liteChatMessage, boolean read) {
+	public static ChatMessageImpl newMessage(@Nonnull LiteChatMessage liteChatMessage, boolean read) {
 		return ChatMessageImpl.newInstance(liteChatMessage, read);
 	}
 
 	@Nonnull
 	public static ChatMessage newEmpty(@Nonnull String messageId) {
-		return newInstance(newEmptyMessage(messageId), false);
+		return newMessage(newEmptyMessage(messageId), false);
 	}
 
 	public static int compareSendDatesLatestFirst(@Nullable ChatMessage lm, @Nullable ChatMessage rm) {

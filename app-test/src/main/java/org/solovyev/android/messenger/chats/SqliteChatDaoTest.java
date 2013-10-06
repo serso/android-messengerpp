@@ -1,11 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
+import com.google.inject.Inject;
 import junit.framework.Assert;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.entities.Entity;
@@ -16,7 +12,9 @@ import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
 
-import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
@@ -88,13 +86,13 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		chatMessageDao.mergeChatMessages(realmChat2.getEntityId(), messages, false);
 
 		final Map<Entity, Integer> actualUnreadChats = chatDao.getUnreadChats();
-		Assert.assertFalse(actualUnreadChats.isEmpty());
-		Assert.assertTrue(actualUnreadChats.containsKey(realmChat1));
-		Assert.assertTrue(actualUnreadChats.containsKey(realmChat4));
-		Assert.assertFalse(actualUnreadChats.containsKey(realmChat2));
-		Assert.assertFalse(actualUnreadChats.containsKey(realmChat3));
-		Assert.assertEquals(Integer.valueOf(2), actualUnreadChats.get(realmChat4));
-		Assert.assertEquals(Integer.valueOf(1), actualUnreadChats.get(realmChat1));
+		assertFalse(actualUnreadChats.isEmpty());
+		assertTrue(actualUnreadChats.containsKey(realmChat1));
+		assertTrue(actualUnreadChats.containsKey(realmChat4));
+		assertFalse(actualUnreadChats.containsKey(realmChat2));
+		assertFalse(actualUnreadChats.containsKey(realmChat3));
+		assertEquals(Integer.valueOf(2), actualUnreadChats.get(realmChat4));
+		assertEquals(Integer.valueOf(1), actualUnreadChats.get(realmChat1));
 	}
 
 	private ChatMessageImpl newMessage(String realmMessageId, boolean read) {
@@ -103,7 +101,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		liteChatMessage.setRecipient(testRealm.newUserEntity("user_03"));
 		liteChatMessage.setSendDate(DateTime.now());
 		liteChatMessage.setBody(Strings.generateRandomString(10));
-		return Messages.newInstance(liteChatMessage, read);
+		return Messages.newMessage(liteChatMessage, read);
 	}
 
 	@Override

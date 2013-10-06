@@ -168,7 +168,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			liteChatMessage.setRecipient(to.getEntity());
 			liteChatMessage.setSendDate(DateTime.now());
 			// new message by default unread
-			return Messages.newInstance(liteChatMessage, false);
+			return Messages.newMessage(liteChatMessage, false);
 		} else {
 			return null;
 		}

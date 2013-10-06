@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
+import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.common.Objects.areEqual;
 
 /**
@@ -57,7 +59,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		final Entity realmUser = testAccount.newUserEntity("2");
 
-		User expected = Users.newUser(realmUser, Users.newNeverSyncedUserSyncData(), expectedProperties);
+		User expected = newUser(realmUser, newNeverSyncedUserSyncData(), expectedProperties);
 
 		userDao.create(expected);
 		userDao.create(expected);
@@ -82,7 +84,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		final Entity realmUser2 = testAccount.newUserEntity("3");
 
-		expected = Users.newUser(realmUser2, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+		expected = newUser(realmUser2, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.create(expected);
 		Assert.assertTrue(areEqual(newArrayList(userDao.readAllIds()), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
@@ -91,7 +93,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 		expectedProperties.remove(0);
 		expectedProperties.add(Properties.newProperty("prop_4", "prop_4_value"));
 
-		expected = Users.newUser(realmUser, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+		expected = newUser(realmUser, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.update(expected);
 		actual = userDao.read("test~1:2");
 
@@ -101,7 +103,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		Assert.assertTrue(areEqual(Lists.newArrayList(userDao.readAllIds()), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
-		expected = Users.newUser(TestRealm.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
+		expected = newUser(TestRealm.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.update(expected);
 
 		Collection<String> usersIds = userDao.readAllIds();
@@ -129,7 +131,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 				case 3:
 					final Account r = accounts.get(random.nextInt(REALMS_COUNT));
 					List<AProperty> newProperties = generateUserProperties(random);
-					final User newUser = Users.newUser(r.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), newProperties);
+					final User newUser = newUser(r.newUserEntity("user" + String.valueOf(i)), newNeverSyncedUserSyncData(), newProperties);
 					users.add(newUser);
 					userDao.create(newUser);
 					Assert.assertTrue(areEqual(newUser, userDao.read(newUser.getId())));
@@ -142,13 +144,13 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 						if (userPosition < users.size()) {
 							User updatedUser = users.get(userPosition);
 							List<AProperty> updatedProperties = generateUserProperties(random);
-							updatedUser = Users.newUser(updatedUser.getEntity(), Users.newNeverSyncedUserSyncData(), updatedProperties);
+							updatedUser = newUser(updatedUser.getEntity(), newNeverSyncedUserSyncData(), updatedProperties);
 							users.set(userPosition, updatedUser);
 							userDao.update(updatedUser);
 							Assert.assertTrue(areEqual(updatedProperties, userDao.readUserPropertiesById(updatedUser.getId()), new CollectionEqualizer<AProperty>(null)));
 						} else {
 							final Account r2 = accounts.get(random.nextInt(REALMS_COUNT));
-							final User newUser2 = Users.newUser(r2.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), generateUserProperties(random));
+							final User newUser2 = newUser(r2.newUserEntity("user" + String.valueOf(i)), newNeverSyncedUserSyncData(), generateUserProperties(random));
 							userDao.update(newUser2);
 							Assert.assertNull(userDao.read(newUser2.getId()));
 							Assert.assertTrue(userDao.readUserPropertiesById(newUser2.getId()).isEmpty());

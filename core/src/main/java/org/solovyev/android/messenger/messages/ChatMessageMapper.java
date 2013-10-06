@@ -47,6 +47,6 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
 		liteChatMessage.setBody(c.getString(9));
 		final boolean read = c.getInt(10) == 1;
 
-		return Messages.newInstance(liteChatMessage, read);
+		return Messages.newMessage(liteChatMessage, read);
 	}
 }

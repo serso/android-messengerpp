@@ -1,9 +1,7 @@
 package org.solovyev.android.messenger.realms;
 
+import com.google.inject.Inject;
 import junit.framework.Assert;
-
-import java.util.Collection;
-
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
@@ -13,7 +11,7 @@ import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.collections.Collections;
 
-import com.google.inject.Inject;
+import java.util.Collection;
 
 import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
 
@@ -43,7 +41,7 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		Account<TestAccountConfiguration> actual1 = Collections.getFirstCollectionElement(accounts);
 		Assert.assertNotNull(actual1);
 		Assert.assertTrue(expected1.same(actual1));
-		Assert.assertTrue(actual1.getConfiguration().equals(expectedConfig1));
+		Assert.assertTrue(actual1.getConfiguration().isSame(expectedConfig1));
 		Assert.assertEquals("test_config_field", actual1.getConfiguration().getTestStringField());
 		Assert.assertEquals(42, actual1.getConfiguration().getTestIntField());
 

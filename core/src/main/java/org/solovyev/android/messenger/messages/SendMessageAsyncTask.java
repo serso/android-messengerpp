@@ -139,7 +139,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			liteChatMessage.setTitle(title == null ? "" : title);
 			liteChatMessage.setSendDate(DateTime.now());
 
-			final ChatMessageImpl chatMessage = Messages.newInstance(liteChatMessage, true);
+			final ChatMessageImpl chatMessage = Messages.newMessage(liteChatMessage, true);
 			chatMessage.setDirection(MessageDirection.out);
 			for (LiteChatMessage fwdMessage : fwdMessages) {
 				chatMessage.addFwdMessage(fwdMessage);

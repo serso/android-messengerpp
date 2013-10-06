@@ -112,7 +112,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 		message.setSendDate(DateTime.now());
 
 		// user's message is read (he is an author)
-		final ChatMessageImpl result = Messages.newInstance(message, true);
+		final ChatMessageImpl result = Messages.newMessage(message, true);
 		for (LiteChatMessage fwtMessage : chatMessage.getFwdMessages()) {
 			result.addFwdMessage(fwtMessage);
 		}

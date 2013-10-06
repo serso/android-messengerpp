@@ -176,7 +176,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 			liteChatMessage.setRecipient(account.newUserEntity(message.getTo()));
 			liteChatMessage.setSendDate(DateTime.now());
 			// new message by default unread
-			return Messages.newInstance(liteChatMessage, false);
+			return Messages.newMessage(liteChatMessage, false);
 		} else {
 			return null;
 		}

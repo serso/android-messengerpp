@@ -176,7 +176,7 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final ChatMessageImpl result = Messages.newInstance(toLiteChatMessage(user, explicitUserId, account), isRead());
+		final ChatMessageImpl result = Messages.newMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
 		result.setDirection(getNotNullMessageDirection());
 		for (LiteChatMessage fwdMessage : getFwdMessages(user, account)) {
 			result.addFwdMessage(fwdMessage);

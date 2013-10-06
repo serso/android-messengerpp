@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
+import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
 import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
 
 /**
@@ -164,7 +165,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 				execs.add(new InsertMessage(chat, addedMessage));
 			}
 
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
+			doDbExecs(getSqliteOpenHelper(), execs);
 		}
 
 		return result;
