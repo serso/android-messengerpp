@@ -25,14 +25,14 @@ import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.*;
 
-import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
-import static org.solovyev.common.collections.Collections.getFirstListElement;
+import static org.solovyev.android.db.AndroidDbUtils.*;
 
 /**
  * User: serso
@@ -54,13 +54,21 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	@Nonnull
 	private UserService userService;
 
+	/*
+	**********************************************************************
+	*
+	*                           FIELDS
+	*
+	**********************************************************************
+	*/
+
+	@Nonnull
+	private final Dao<Chat> dao;
+
 	@Inject
 	public SqliteChatDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
-	}
-
-	SqliteChatDao(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
-		super(context, sqliteOpenHelper);
+		dao = new SqliteDao<Chat>("chats", "id", new ChatDaoMapper(this), context, sqliteOpenHelper);
 	}
 
 	@Nonnull
@@ -70,29 +78,28 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	}
 
 	@Override
-	public boolean updateChat(@Nonnull Chat chat) {
-		final long rows = AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new UpdateChat(chat));
+	public long update(@Nonnull Chat chat) {
+		final long rows = dao.update(chat);
 		if (rows >= 0) {
-			AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteChatProperties(chat), new InsertChatProperties(chat)));
-			return true;
-		} else {
-			return false;
+			doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteChatProperties(chat), new InsertChatProperties(chat)));
 		}
+
+		return rows;
 	}
 
 	@Override
-	public void deleteAllChats() {
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chat_properties"));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chats"));
+	public void deleteAll() {
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chat_properties"));
+		dao.deleteAll();
 	}
 
 	@Override
 	public void deleteAllChatsForAccount(@Nonnull String accountId) {
 		// todo serso: startWith must be replaced with equals!
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "chat_id", accountId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("chat_properties", "chat_id", accountId));
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("chats", "account_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "chat_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("chat_properties", "chat_id", accountId));
+		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("chats", "account_id", accountId));
 	}
 
 	@Nonnull
@@ -102,8 +109,8 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	}
 
 	@Override
-	public void deleteChat(@Nonnull User user, @Nonnull Chat chat) {
-		AndroidDbUtils.doDbExec(getSqliteOpenHelper(), new RemoveChats(user.getId(), chat));
+	public void delete(@Nonnull User user, @Nonnull Chat chat) {
+		doDbExec(getSqliteOpenHelper(), new RemoveChats(user.getId(), chat));
 	}
 
 	@Nonnull
@@ -131,8 +138,29 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	}
 
 	@Override
-	public Chat loadChatById(@Nonnull String chatId) {
-		return getFirstListElement(doDbQuery(getSqliteOpenHelper(), new LoadByChatId(getContext(), chatId, getSqliteOpenHelper(), this)));
+	public Chat read(@Nonnull String chatId) {
+		return dao.read(chatId);
+	}
+
+	@Nonnull
+	@Override
+	public Collection<Chat> readAll() {
+		return dao.readAll();
+	}
+
+	@Override
+	public long create(@Nonnull Chat chat) {
+		return dao.create(chat);
+	}
+
+	@Override
+	public void delete(@Nonnull Chat chat) {
+		deleteById(chat.getId());
+	}
+
+	@Override
+	public void deleteById(@Nonnull String id) {
+		throw new UnsupportedOperationException("Delete by id is not supported");
 	}
 
 	private static final class LoadChatParticipants extends AbstractDbQuery<List<User>> {
@@ -268,7 +296,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 			}
 		}
 
-		AndroidDbUtils.doDbExecs(getSqliteOpenHelper(), execs);
+		doDbExecs(getSqliteOpenHelper(), execs);
 
 		return result;
 	}
@@ -477,33 +505,6 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		}
 	}
 
-	private static final class LoadByChatId extends AbstractDbQuery<List<Chat>> {
-
-		@Nonnull
-		private final String chatId;
-
-		@Nonnull
-		private final ChatDao chatDao;
-
-		private LoadByChatId(@Nonnull Context context, @Nonnull String chatId, @Nonnull SQLiteOpenHelper sqliteOpenHelper, @Nonnull ChatDao chatDao) {
-			super(context, sqliteOpenHelper);
-			this.chatId = chatId;
-			this.chatDao = chatDao;
-		}
-
-		@Nonnull
-		@Override
-		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("chats", null, "id = ? ", new String[]{String.valueOf(chatId)}, null, null, null);
-		}
-
-		@Nonnull
-		@Override
-		public List<Chat> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<Chat>(new ChatMapper(chatDao)).convert(cursor);
-		}
-	}
-
 	private static final class UnreadChatsLoader extends AbstractDbQuery<Map<Entity, Integer>> {
 
 		protected UnreadChatsLoader(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
@@ -532,6 +533,34 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 			}
 
 			return result;
+		}
+	}
+
+	private static final class ChatDaoMapper implements SqliteDaoEntityMapper<Chat> {
+
+		@Nonnull
+		private final ChatMapper chatMapper;
+
+		private ChatDaoMapper(@Nonnull ChatDao dao) {
+			chatMapper = new ChatMapper(dao);
+		}
+
+		@Nonnull
+		@Override
+		public ContentValues toContentValues(@Nonnull Chat chat) {
+			return SqliteChatDao.toContentValues(chat);
+		}
+
+		@Nonnull
+		@Override
+		public Converter<Cursor, Chat> getCursorMapper() {
+			return chatMapper;
+		}
+
+		@Nonnull
+		@Override
+		public String getId(@Nonnull Chat chat) {
+			return chat.getId();
 		}
 	}
 }

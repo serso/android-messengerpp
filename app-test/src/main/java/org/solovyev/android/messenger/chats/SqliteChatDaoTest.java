@@ -41,7 +41,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		chatMessageDao.deleteAllMessages();
-		chatDao.deleteAllChats();
+		chatDao.deleteAll();
 	}
 
 	public void testChatOperations() throws Exception {
@@ -67,7 +67,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		chats.add(ApiChatImpl.newInstance(realmChat4, 10, false));
 		chatDao.mergeUserChats(userId, chats);
 
-		Chat chat = chatDao.loadChatById(realmChat4.getEntityId());
+		Chat chat = chatDao.read(realmChat4.getEntityId());
 		Assert.assertNotNull(chat);
 		Assert.assertEquals(realmChat4.getEntityId(), chat.getEntity().getEntityId());
 
@@ -112,7 +112,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 	@Override
 	public void tearDown() throws Exception {
 		chatMessageDao.deleteAllMessages();
-		chatDao.deleteAllChats();
+		chatDao.deleteAll();
 		super.tearDown();
 	}
 }

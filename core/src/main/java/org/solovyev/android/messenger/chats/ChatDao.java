@@ -1,22 +1,22 @@
 package org.solovyev.android.messenger.chats;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: serso
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface ChatDao {
+public interface ChatDao extends Dao<Chat> {
 
 	@Nonnull
 	MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
@@ -37,19 +37,19 @@ public interface ChatDao {
 	List<User> loadChatParticipants(@Nonnull String chatId);
 
 	@Nullable
-	Chat loadChatById(@Nonnull String chatId);
+	Chat read(@Nonnull String chatId);
 
 	/**
 	 * Method updates chat in the storage
 	 *
 	 * @param chat chat to be updated
-	 * @return true if chat was updated, false if no chat exists in storage
+	 * @return number of updated rows
 	 */
-	boolean updateChat(@Nonnull Chat chat);
+	long update(@Nonnull Chat chat);
 
-	void deleteAllChats();
+	void deleteAll();
 
-	void deleteAllChatsForAccount(@Nonnull String realmId);
+	void deleteAllChatsForAccount(@Nonnull String accountId);
 
 	/**
 	 * Key: chat for which unread messages exist, value: number of unread messages
@@ -59,5 +59,5 @@ public interface ChatDao {
 	@Nonnull
 	Map<Entity, Integer> getUnreadChats();
 
-	void deleteChat(@Nonnull User user, @Nonnull Chat chat);
+	void delete(@Nonnull User user, @Nonnull Chat chat);
 }

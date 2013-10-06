@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
+import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
@@ -54,7 +55,7 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTestCase {
 	}
 
 	private void onUnsupportedOperationException(@Nonnull UnsupportedOperationException e) {
-		System.out.println("Delete test skipped due to following error at ");
+		System.out.println("Delete test skipped due to unsupported operation exception: ");
 		e.printStackTrace(System.out);
 	}
 
@@ -143,6 +144,11 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTestCase {
 			this.entity = entity;
 			this.id = id;
 		}
+	}
+
+	@Nonnull
+	protected static <E extends EntityAware> Entity<E> newEntity(@Nonnull E entity) {
+		return new Entity<E>(entity, entity.getEntity().getEntityId());
 	}
 
 	@Nonnull

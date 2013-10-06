@@ -63,7 +63,7 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		final MutableAProperties properties = newProperties(Collections.<String, AProperty>emptyMap());
 		final org.solovyev.android.messenger.entities.Entity entity = getAccount1().newUserEntity("test");
 		final User user = newUser(entity, newNeverSyncedUserSyncData(), properties);
-		return newEntity(user, entity.getEntityId());
+		return newEntity(user);
 	}
 
 	@Override

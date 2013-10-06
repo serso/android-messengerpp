@@ -1,14 +1,5 @@
 package org.solovyev.android.messenger.chats;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.App;
@@ -16,6 +7,10 @@ import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * User: serso
@@ -123,8 +118,8 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
 
 	@Nonnull
 	@Override
-	public Chat copyWithNew(@Nonnull Entity realmChat) {
-		return new ChatImpl(realmChat, this.properties, this.lastMessageSyncDate);
+	public Chat copyWithNew(@Nonnull Entity accountChat) {
+		return new ChatImpl(accountChat, this.properties, this.lastMessageSyncDate);
 	}
 
 	@Nullable

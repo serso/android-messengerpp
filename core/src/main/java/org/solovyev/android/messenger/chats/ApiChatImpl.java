@@ -1,20 +1,18 @@
 package org.solovyev.android.messenger.chats;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
@@ -132,8 +130,8 @@ public class ApiChatImpl implements ApiChat {
 
 	@Nonnull
 	@Override
-	public ApiChat copyWithNew(@Nonnull Entity realmChat) {
-		return new ApiChatImpl(chat.copyWithNew(realmChat), messages, participants);
+	public ApiChat copyWithNew(@Nonnull Entity newAccountChat) {
+		return new ApiChatImpl(chat.copyWithNew(newAccountChat), messages, participants);
 	}
 
 }

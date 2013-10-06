@@ -144,7 +144,7 @@ public class DefaultChatService implements ChatService {
 	public Chat updateChat(@Nonnull Chat chat) {
 		final boolean changed;
 		synchronized (lock) {
-			changed = chatDao.updateChat(chat);
+			changed = chatDao.update(chat) >= 0;
 		}
 
 		if (changed) {
@@ -390,7 +390,7 @@ public class DefaultChatService implements ChatService {
 
 		if (result == null) {
 			synchronized (lock) {
-				result = chatDao.loadChatById(chat.getEntityId());
+				result = chatDao.read(chat.getEntityId());
 			}
 
 			if (result != null) {
@@ -542,7 +542,7 @@ public class DefaultChatService implements ChatService {
 		for (Chat chat : chats) {
 			final ChatMessage lastMessage = getLastMessage(chat.getEntity());
 			if (lastMessage == null) {
-				chatDao.deleteChat(user, chat);
+				chatDao.delete(user, chat);
 			}
 		}
 	}
