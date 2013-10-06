@@ -8,6 +8,7 @@ import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public interface ChatDao extends Dao<Chat> {
 	List<String> loadUserChatIds(@Nonnull String userId);
 
 	@Nonnull
-	List<String> loadChatIds();
+	Collection<String> readAllIds();
 
 	@Nonnull
 	List<AProperty> loadChatPropertiesById(@Nonnull String chatId);

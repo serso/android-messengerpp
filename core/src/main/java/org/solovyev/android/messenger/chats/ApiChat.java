@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;

@@ -1,10 +1,9 @@
-package org.solovyev.android.messenger.chats;
+package org.solovyev.android.messenger.messages;
 
-import java.util.List;
+import org.solovyev.android.messenger.chats.MessageDirection;
 
 import javax.annotation.Nonnull;
-
-import org.solovyev.android.messenger.messages.LiteChatMessage;
+import java.util.List;
 
 /**
  * User: serso

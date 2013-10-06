@@ -10,8 +10,11 @@ import org.solovyev.common.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.find;
 import static org.junit.Assert.*;
 
 public abstract class DefaultDaoTest<E> extends DefaultMessengerTestCase {
@@ -77,6 +80,27 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTestCase {
 		final Collection<E> entities = populateEntities(dao);
 		assertEntitiesSame(entities, dao.readAll());
 	}
+
+	@Test
+	public void testShouldLoadAllIds() throws Exception {
+		final Collection<E> entities = populateEntities(dao);
+		final Collection<String> ids = dao.readAllIds();
+
+		final Set<String> idSet = new HashSet<String>(ids);
+		assertEquals(ids.size(), idSet.size());
+
+		for (final String id : ids) {
+			find(entities, new Predicate<E>() {
+				@Override
+				public boolean apply(@Nullable E e) {
+					return getId(e).equals(id);
+				}
+			});
+		}
+	}
+
+	@Nonnull
+	protected abstract String getId(E entity);
 
 	@Test
 	public void testShouldReadEntityById() throws Exception {

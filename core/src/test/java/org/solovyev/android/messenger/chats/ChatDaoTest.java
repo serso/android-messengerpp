@@ -25,6 +25,12 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 
 	@Nonnull
 	@Override
+	protected String getId(Chat chat) {
+		return chat.getId();
+	}
+
+	@Nonnull
+	@Override
 	protected Collection<Chat> populateEntities(@Nonnull Dao<Chat> dao) {
 		final List<Chat> chats = new ArrayList<Chat>();
 		for (int i = 0; i < 100; i++) {

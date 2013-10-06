@@ -16,6 +16,7 @@ import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;

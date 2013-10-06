@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;

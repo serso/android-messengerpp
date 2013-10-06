@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import org.solovyev.android.messenger.db.StringIdMapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static com.google.common.collect.Iterables.getFirst;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
@@ -54,6 +56,12 @@ public final class SqliteDao<E> extends AbstractSQLiteHelper implements Dao<E> {
 	@Override
 	public Collection<E> readAll() {
 		return doDbQuery(getSqliteOpenHelper(), new LoadEntity(getContext(), null, getSqliteOpenHelper()));
+	}
+
+	@Nonnull
+	@Override
+	public Collection<String> readAllIds() {
+		return doDbQuery(getSqliteOpenHelper(), new LoadIds(getContext(), getSqliteOpenHelper()));
 	}
 
 	@Override
@@ -162,6 +170,25 @@ public final class SqliteDao<E> extends AbstractSQLiteHelper implements Dao<E> {
 	@Nonnull
 	private String whereIdEqualsTo() {
 		return idColumnName + " = ?";
+	}
+
+	private final class LoadIds extends AbstractDbQuery<List<String>> {
+
+		private LoadIds(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+			super(context, sqliteOpenHelper);
+		}
+
+		@Nonnull
+		@Override
+		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
+			return db.query(tableName, new String[]{idColumnName}, null, null, null, null, null);
+		}
+
+		@Nonnull
+		@Override
+		public List<String> retrieveData(@Nonnull Cursor cursor) {
+			return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
+		}
 	}
 
 }

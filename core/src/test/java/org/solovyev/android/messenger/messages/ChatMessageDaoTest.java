@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTestCase;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
 import org.solovyev.android.messenger.entities.Entity;

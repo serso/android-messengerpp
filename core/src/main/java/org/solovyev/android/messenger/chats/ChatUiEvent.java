@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.chats;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**

@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import roboguice.event.EventListener;
 
 import java.util.ArrayList;

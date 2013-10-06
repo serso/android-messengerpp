@@ -10,7 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;

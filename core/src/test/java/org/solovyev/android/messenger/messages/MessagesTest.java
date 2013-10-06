@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.solovyev.android.messenger.chats.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.Comparator;

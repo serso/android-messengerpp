@@ -82,13 +82,13 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 		User actual3 = userDao.read("test_01");
 		Assert.assertNull(actual3);
 
-		Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2"), ListEqualizer.<String>newWithNaturalEquals(false)));
+		Assert.assertTrue(Objects.areEqual(userDao.readAllIds(), Arrays.asList("test~1:2"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
 		final Entity realmUser2 = testRealm.newUserEntity("3");
 
 		expected = Users.newUser(realmUser2, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.create(expected);
-		Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
+		Assert.assertTrue(Objects.areEqual(userDao.readAllIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
 		// UPDATE
 		expectedProperties = new ArrayList<AProperty>(expectedProperties);
@@ -103,15 +103,15 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 		Assert.assertEquals(expected, actual);
 		Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getPropertiesCollection(), new CollectionEqualizer<AProperty>(null)));
 
-		Assert.assertTrue(Objects.areEqual(userDao.loadUserIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
+		Assert.assertTrue(Objects.areEqual(userDao.readAllIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
 		expected = Users.newUser(TestRealm.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.update(expected);
 
-		List<String> usersIds = userDao.loadUserIds();
+		List<String> usersIds = userDao.readAllIds();
 		Assert.assertEquals(2, usersIds.size());
 		userDao.deleteAllUsersForAccount("test~1");
-		usersIds = userDao.loadUserIds();
+		usersIds = userDao.readAllIds();
 		Assert.assertEquals(0, usersIds.size());
 	}
 
@@ -175,7 +175,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 					break;
 			}
 
-			final List<String> userIds = userDao.loadUserIds();
+			final List<String> userIds = userDao.readAllIds();
 			Assert.assertEquals(users.size(), userIds.size());
 			for (User user : users) {
 				Assert.assertTrue(userIds.contains(user.getId()));

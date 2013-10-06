@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTestCase;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 

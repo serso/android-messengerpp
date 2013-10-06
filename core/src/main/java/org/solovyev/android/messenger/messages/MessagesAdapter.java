@@ -19,7 +19,6 @@ import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;

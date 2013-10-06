@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.ChatMessage;
 
 /**
  * User: serso

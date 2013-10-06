@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.messages;
 import android.widget.ImageView;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 
 import javax.annotation.Nonnull;

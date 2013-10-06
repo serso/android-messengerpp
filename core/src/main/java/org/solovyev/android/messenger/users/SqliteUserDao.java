@@ -104,8 +104,8 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Nonnull
 	@Override
-	public List<String> loadUserIds() {
-		return doDbQuery(getSqliteOpenHelper(), new LoadUserIds(getContext(), getSqliteOpenHelper()));
+	public Collection<String> readAllIds() {
+		return dao.readAllIds();
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 			}
 		}
 
-		final List<String> userIdsFromDb = loadUserIds();
+		final Collection<String> userIdsFromDb = readAllIds();
 		for (User contact : contacts) {
 			try {
 				// contact exists both in db and on remote server => case already covered above
@@ -286,25 +286,6 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
 			return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? )", new String[]{userId}, null, null, null);
-		}
-
-		@Nonnull
-		@Override
-		public List<String> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
-		}
-	}
-
-	private static final class LoadUserIds extends AbstractDbQuery<List<String>> {
-
-		private LoadUserIds(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
-			super(context, sqliteOpenHelper);
-		}
-
-		@Nonnull
-		@Override
-		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("users", new String[]{"id"}, null, null, null, null, null);
 		}
 
 		@Nonnull

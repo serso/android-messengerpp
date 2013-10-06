@@ -14,7 +14,7 @@ import org.jivesoftware.smackx.ChatStateListener;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 

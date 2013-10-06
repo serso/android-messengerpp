@@ -12,6 +12,7 @@ import org.solovyev.android.list.ListItemAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 

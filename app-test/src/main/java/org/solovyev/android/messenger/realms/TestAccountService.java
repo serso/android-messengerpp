@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;

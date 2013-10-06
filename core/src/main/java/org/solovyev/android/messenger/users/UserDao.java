@@ -6,6 +6,7 @@ import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public interface UserDao extends Dao<User> {
 	 * @return all ids of users saved in the storage
 	 */
 	@Nonnull
-	List<String> loadUserIds();
+	Collection<String> readAllIds();
 
 	/**
 	 * Method deletes all users and their properties from the storage

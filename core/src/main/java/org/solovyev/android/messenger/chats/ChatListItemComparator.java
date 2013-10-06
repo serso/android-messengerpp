@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
+import org.solovyev.android.messenger.messages.ChatMessage;
+
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.messages.Messages.compareSendDatesLatestFirst;

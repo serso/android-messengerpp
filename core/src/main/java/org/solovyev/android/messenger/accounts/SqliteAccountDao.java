@@ -84,6 +84,12 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		}
 	}
 
+	@Nonnull
+	@Override
+	public Collection<String> readAllIds() {
+		return dao.readAllIds();
+	}
+
 	@Override
 	public void deleteAll() {
 		dao.deleteAll();

@@ -15,6 +15,9 @@ public interface Dao<E> {
 	@Nonnull
 	Collection<E> readAll();
 
+	@Nonnull
+	Collection<String> readAllIds();
+
 	// return number of updated rows
 	long update(@Nonnull E entity);
 

@@ -21,6 +21,7 @@ import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
@@ -115,8 +116,8 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public List<String> loadChatIds() {
-		return doDbQuery(getSqliteOpenHelper(), new LoadChatIds(getContext(), getSqliteOpenHelper()));
+	public Collection<String> readAllIds() {
+		return dao.readAllIds();
 	}
 
 	@Nonnull
@@ -245,7 +246,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 			}
 		}
 
-		final List<String> chatIdsFromDb = loadChatIds();
+		final Collection<String> chatIdsFromDb = readAllIds();
 		for (ApiChat apiChat : apiChats) {
 			try {
 				// chat exists both in db and on remote server => case already covered above
@@ -300,26 +301,6 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 		return result;
 	}
-
-	private static final class LoadChatIds extends AbstractDbQuery<List<String>> {
-
-		private LoadChatIds(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
-			super(context, sqliteOpenHelper);
-		}
-
-		@Nonnull
-		@Override
-		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("chats", new String[]{"id"}, null, null, null, null, null);
-		}
-
-		@Nonnull
-		@Override
-		public List<String> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
-		}
-	}
-
 
 	private static final class LoadChatIdsByUserId extends AbstractDbQuery<List<String>> {
 

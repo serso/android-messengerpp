@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**

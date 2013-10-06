@@ -16,7 +16,6 @@ import javax.annotation.Nullable;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerPreferences;
-import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 
 final class MessageBubbleViews {

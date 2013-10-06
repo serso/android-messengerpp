@@ -167,6 +167,12 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 
 	@Nonnull
 	@Override
+	protected String getId(Account account) {
+		return account.getId();
+	}
+
+	@Nonnull
+	@Override
 	protected Collection<Account> populateEntities(@Nonnull Dao<Account> dao) {
 		return Arrays.<Account>asList(getAccount1(), getAccount2(), getAccount3());
 	}

@@ -8,6 +8,7 @@ import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;

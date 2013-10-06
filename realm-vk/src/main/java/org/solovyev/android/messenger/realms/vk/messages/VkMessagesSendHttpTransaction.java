@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatMessage;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.messages.LiteChatMessage;
 import org.solovyev.android.messenger.realms.vk.VkAccount;

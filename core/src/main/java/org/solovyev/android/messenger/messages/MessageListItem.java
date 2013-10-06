@@ -21,7 +21,6 @@ import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatUiEventType;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;

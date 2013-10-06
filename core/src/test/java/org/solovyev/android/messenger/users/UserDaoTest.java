@@ -31,6 +31,12 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		return dao;
 	}
 
+	@Nonnull
+	@Override
+	protected String getId(User user) {
+		return user.getId();
+	}
+
 	@Test
 	public void testShouldReadAllEntities() throws Exception {
 		testShouldReadAllEntitiesForAccount(getAccount1(), ACCOUNT_1_USER_COUNT, getUsers1());
