@@ -1,7 +1,5 @@
 package org.solovyev.android.messenger.users;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import junit.framework.Assert;
@@ -17,7 +15,6 @@ import org.solovyev.common.equals.CollectionEqualizer;
 import org.solovyev.common.equals.ListEqualizer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -108,9 +105,6 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		Collection<String> usersIds = userDao.readAllIds();
 		Assert.assertEquals(2, usersIds.size());
-		userDao.deleteAllUsersForAccount("test~1");
-		usersIds = userDao.readAllIds();
-		Assert.assertEquals(0, usersIds.size());
 	}
 
 	public void testRandomOperations() throws Exception {
@@ -123,7 +117,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		final Random random = new Random(new Date().getTime());
 		for (int i = 0; i < 1000; i++) {
-			final int operation = random.nextInt(7);
+			final int operation = random.nextInt(6);
 			switch (operation) {
 				case 0:
 				case 1:
@@ -135,7 +129,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 					users.add(newUser);
 					userDao.create(newUser);
 					Assert.assertTrue(areEqual(newUser, userDao.read(newUser.getId())));
-					Assert.assertTrue(areEqual(newProperties, userDao.readUserPropertiesById(newUser.getId()), new CollectionEqualizer<AProperty>(null)));
+					Assert.assertTrue(areEqual(newProperties, userDao.readPropertiesById(newUser.getId()), new CollectionEqualizer<AProperty>(null)));
 					break;
 				case 4:
 					if (!users.isEmpty()) {
@@ -147,27 +141,17 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 							updatedUser = newUser(updatedUser.getEntity(), newNeverSyncedUserSyncData(), updatedProperties);
 							users.set(userPosition, updatedUser);
 							userDao.update(updatedUser);
-							Assert.assertTrue(areEqual(updatedProperties, userDao.readUserPropertiesById(updatedUser.getId()), new CollectionEqualizer<AProperty>(null)));
+							Assert.assertTrue(areEqual(updatedProperties, userDao.readPropertiesById(updatedUser.getId()), new CollectionEqualizer<AProperty>(null)));
 						} else {
 							final Account r2 = accounts.get(random.nextInt(REALMS_COUNT));
 							final User newUser2 = newUser(r2.newUserEntity("user" + String.valueOf(i)), newNeverSyncedUserSyncData(), generateUserProperties(random));
 							userDao.update(newUser2);
 							Assert.assertNull(userDao.read(newUser2.getId()));
-							Assert.assertTrue(userDao.readUserPropertiesById(newUser2.getId()).isEmpty());
+							Assert.assertTrue(userDao.readPropertiesById(newUser2.getId()).isEmpty());
 						}
 					}
 					break;
 				case 5:
-					final Account account = accounts.get(random.nextInt(accounts.size()));
-					Iterables.removeIf(users, new Predicate<User>() {
-						@Override
-						public boolean apply(@Nullable User user) {
-							return user.getEntity().getAccountId().equals(account.getId());
-						}
-					});
-					userDao.deleteAllUsersForAccount(account.getId());
-					break;
-				case 6:
 					users.clear();
 					userDao.deleteAll();
 					break;

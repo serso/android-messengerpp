@@ -17,7 +17,6 @@ import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
 import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
@@ -74,7 +73,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public List<String> loadUserChatIds(@Nonnull String userId) {
+	public List<String> readUserChatIds(@Nonnull String userId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
 	}
 
@@ -93,14 +92,6 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("user_chats"));
 		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("chat_properties"));
 		dao.deleteAll();
-	}
-
-	@Override
-	public void deleteAllChatsForAccount(@Nonnull String accountId) {
-		// todo serso: startWith must be replaced with equals!
-		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("user_chats", "chat_id", accountId));
-		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newStartsWith("chat_properties", "chat_id", accountId));
-		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("chats", "account_id", accountId));
 	}
 
 	@Nonnull
@@ -122,19 +113,19 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public List<AProperty> loadChatPropertiesById(@Nonnull String chatId) {
+	public List<AProperty> readPropertiesById(@Nonnull String chatId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatPropertiesDbQuery(chatId, getContext(), getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
-	public List<Chat> loadUserChats(@Nonnull String userId) {
+	public List<Chat> readUserChats(@Nonnull String userId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
 	}
 
 	@Nonnull
 	@Override
-	public List<User> loadChatParticipants(@Nonnull String chatId) {
+	public List<User> readParticipants(@Nonnull String chatId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatParticipants(getContext(), chatId, userService, getSqliteOpenHelper()));
 	}
 
@@ -161,7 +152,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Override
 	public void deleteById(@Nonnull String id) {
-		throw new UnsupportedOperationException("Delete by id is not supported");
+		dao.deleteById(id);
 	}
 
 	private static final class LoadChatParticipants extends AbstractDbQuery<List<User>> {
@@ -233,7 +224,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> apiChats) {
 		final MergeDaoResultImpl<ApiChat, String> result = new MergeDaoResultImpl<ApiChat, String>(apiChats);
 
-		final List<String> chatsFromDb = loadUserChatIds(userId);
+		final List<String> chatsFromDb = readUserChatIds(userId);
 		for (final String chatIdFromDb : chatsFromDb) {
 			try {
 				// chat exists both in db and on remote server => just update chat properties

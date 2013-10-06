@@ -140,7 +140,7 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final LiteChatMessageImpl result = Messages.newMessage(account.newMessageEntity(mid));
+		final LiteChatMessageImpl result = Messages.newLiteMessage(account.newMessageEntity(mid));
 
 		final MessageDirection messageDirection = getMessageDirection();
 		if (messageDirection == MessageDirection.out) {

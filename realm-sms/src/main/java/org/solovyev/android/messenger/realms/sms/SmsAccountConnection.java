@@ -39,7 +39,6 @@ import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.makeEntityId;
-import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newUser;
@@ -162,7 +161,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	@Nullable
 	private ChatMessage toChatMessage(@Nonnull String message, @Nonnull Account account, @Nonnull User from, @Nonnull User to) {
 		if (!isEmpty(message)) {
-			final LiteChatMessageImpl liteChatMessage = newMessage(generateEntity(account));
+			final LiteChatMessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
 			liteChatMessage.setBody(message);
 			liteChatMessage.setAuthor(from.getEntity());
 			liteChatMessage.setRecipient(to.getEntity());

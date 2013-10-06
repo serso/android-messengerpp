@@ -4,11 +4,15 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static java.lang.System.currentTimeMillis;
+import static java.lang.System.nanoTime;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 
 public final class Entities {
+
+	@Nonnull
+	private static final AtomicLong lastId = new AtomicLong(0);
 
 	public static final String DELIMITER = ":";
 
@@ -17,8 +21,17 @@ public final class Entities {
 
 	@Nonnull
 	public static synchronized MutableEntity generateEntity(@Nonnull Account account) {
-		// todo serso: create normal way of generating ids
-		final Entity tmp = newEntity(account.getId(), String.valueOf(currentTimeMillis()));
+		final long id = lastId.get();
+
+		long newId = nanoTime();
+		if(id >= newId) {
+			newId = id + 1;
+		}
+
+		lastId.set(newId);
+
+		final Entity tmp = newEntity(account.getId(), String.valueOf(newId));
+
 
 		// NOTE: empty account entity id in order to get real from realm service
 		return newEntity(account.getId(), NO_ACCOUNT_ID, tmp.getEntityId());

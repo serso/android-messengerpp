@@ -46,17 +46,17 @@ public class ChatMessageDaoTest extends DefaultMessengerTestCase {
 		messages.add(newMockMessage(now.plusDays(2), from, to, account));
 		messages.add(newMockMessage(now.plusDays(3), from, to, account));
 		final Chat chat = chatService.getOrCreatePrivateChat(from, to);
-		dao.mergeChatMessages(chat.getId(), messages, false);
+		dao.mergeMessages(chat.getId(), messages, false);
 
 		checkLastMessage(chat, now.plusDays(3));
 
-		dao.mergeChatMessages(chat.getId(), Arrays.asList(newMockMessage(now.plusDays(4), from, to, account)), false);
+		dao.mergeMessages(chat.getId(), Arrays.asList(newMockMessage(now.plusDays(4), from, to, account)), false);
 		checkLastMessage(chat, now.plusDays(4));
 
 	}
 
 	private void checkLastMessage(@Nonnull Chat chat, @Nonnull DateTime expected) {
-		ChatMessage lastMessage = dao.loadLastChatMessage(chat.getId());
+		ChatMessage lastMessage = dao.readLastMessage(chat.getId());
 		assertNotNull(lastMessage);
 		assertEquals(lastMessage.getSendDate(), expected);
 	}

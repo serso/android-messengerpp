@@ -49,7 +49,7 @@ public interface UserDao extends Dao<User> {
 	 * @return properties of a user previously saved into storage, empty list if no such user exists in storage or no properties are set for him
 	 */
 	@Nonnull
-	List<AProperty> readUserPropertiesById(@Nonnull String userId);
+	List<AProperty> readPropertiesById(@Nonnull String userId);
 
 	/**
 	 * Method updates user and his properties in the storage
@@ -69,14 +69,7 @@ public interface UserDao extends Dao<User> {
 	 */
 	void deleteAll();
 
-	/**
-	 * Method deletes all users from realm identified by account id
-	 *
-	 * @param accountId account id
-	 */
-	void deleteAllUsersForAccount(@Nonnull String accountId);
-
-    /*
+	/*
     **********************************************************************
     *
     *                           CONTACTS

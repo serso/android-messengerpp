@@ -37,5 +37,4 @@ public interface ChatMessageService {
 	 */
 	int getUnreadMessagesCount();
 
-	void removeAllMessagesInAccount(@Nonnull String realmId);
 }

@@ -50,7 +50,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
 		chatDao.mergeUserChats(userId, chats);
 
-		Assert.assertTrue(chatDao.loadUserChats(userId).isEmpty());
+		Assert.assertTrue(chatDao.readUserChats(userId).isEmpty());
 
 		final Entity realmChat1 = testRealm.newChatEntity("01");
 		chats.add(ApiChatImpl.newInstance(realmChat1, 10, false));
@@ -71,19 +71,19 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		messages.add(newMessage("02", false));
 		messages.add(newMessage("03", true));
 		messages.add(newMessage("04", true));
-		chatMessageDao.mergeChatMessages(realmChat4.getEntityId(), messages, false);
+		chatMessageDao.mergeMessages(realmChat4.getEntityId(), messages, false);
 
 		messages = new ArrayList<ChatMessage>();
 		messages.add(newMessage("07", true));
 		messages.add(newMessage("08", false));
 		messages.add(newMessage("09", true));
 		messages.add(newMessage("06", true));
-		chatMessageDao.mergeChatMessages(realmChat1.getEntityId(), messages, false);
+		chatMessageDao.mergeMessages(realmChat1.getEntityId(), messages, false);
 
 		messages = new ArrayList<ChatMessage>();
 		messages.add(newMessage("10", true));
 		messages.add(newMessage("11", true));
-		chatMessageDao.mergeChatMessages(realmChat2.getEntityId(), messages, false);
+		chatMessageDao.mergeMessages(realmChat2.getEntityId(), messages, false);
 
 		final Map<Entity, Integer> actualUnreadChats = chatDao.getUnreadChats();
 		assertFalse(actualUnreadChats.isEmpty());
@@ -96,7 +96,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 	}
 
 	private ChatMessageImpl newMessage(String realmMessageId, boolean read) {
-		final LiteChatMessageImpl liteChatMessage = Messages.newMessage(testRealm.newMessageEntity(realmMessageId));
+		final LiteChatMessageImpl liteChatMessage = Messages.newLiteMessage(testRealm.newMessageEntity(realmMessageId));
 		liteChatMessage.setAuthor(testRealm.newUserEntity("user_01"));
 		liteChatMessage.setRecipient(testRealm.newUserEntity("user_03"));
 		liteChatMessage.setSendDate(DateTime.now());

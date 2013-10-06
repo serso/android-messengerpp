@@ -81,7 +81,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 	public List<ChatMessage> getChatMessages(@Nonnull Entity realmChat) {
 		// todo serso: think about lock
 		/*synchronized (lock) {*/
-			return chatMessageDao.loadChatMessages(realmChat.getEntityId());
+			return chatMessageDao.readMessages(realmChat.getEntityId());
 		/*}*/
 	}
 
@@ -130,13 +130,6 @@ public class DefaultChatMessageService implements ChatMessageService {
 	public int getUnreadMessagesCount() {
 		synchronized (lock) {
 			return this.chatMessageDao.getUnreadMessagesCount();
-		}
-	}
-
-	@Override
-	public void removeAllMessagesInAccount(@Nonnull String realmId) {
-		synchronized (lock) {
-			this.chatMessageDao.deleteAllMessagesForAccount(realmId);
 		}
 	}
 

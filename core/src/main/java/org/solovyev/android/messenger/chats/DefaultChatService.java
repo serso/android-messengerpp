@@ -14,7 +14,6 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.ChatMessageDao;
@@ -244,7 +243,7 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public List<Chat> loadUserChats(@Nonnull Entity user) {
 		synchronized (lock) {
-			return chatDao.loadUserChats(user.getEntityId());
+			return chatDao.readUserChats(user.getEntityId());
 		}
 	}
 
@@ -287,23 +286,6 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public int getUnreadMessagesCount(@Nonnull Entity chat) {
 		return unreadMessagesCounter.getUnreadMessagesCountForChat(chat);
-	}
-
-	@Override
-	public void removeChatsInAccount(@Nonnull String realmId) {
-		synchronized (lock) {
-			this.chatDao.deleteAllChatsForAccount(realmId);
-		}
-
-		chatParticipantsCache.update(EntitiesRemovedMapUpdater.<User>newInstance(realmId));
-
-		synchronized (lastMessagesCache) {
-			Iterators.removeIf(lastMessagesCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
-		}
-
-		synchronized (chatsById) {
-			Iterators.removeIf(chatsById.entrySet().iterator(), EntityMapEntryMatcher.forRealm(realmId));
-		}
 	}
 
 	@Nonnull
@@ -456,7 +438,7 @@ public class DefaultChatService implements ChatService {
 		if (chat != null) {
 			final MergeDaoResult<ChatMessage, String> result;
 			synchronized (lock) {
-				result = getChatMessageDao().mergeChatMessages(accountChat.getEntityId(), messages, false);
+				result = getChatMessageDao().mergeMessages(accountChat.getEntityId(), messages, false);
 
 				// update sync data
 				if (updateChatSyncDate) {
@@ -662,7 +644,7 @@ public class DefaultChatService implements ChatService {
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
-				result = chatDao.loadChatParticipants(chat.getEntityId());
+				result = chatDao.readParticipants(chat.getEntityId());
 			}
 
 			chatParticipantsCache.update(chat, new WholeListUpdater<User>(result));
@@ -691,7 +673,7 @@ public class DefaultChatService implements ChatService {
 		synchronized (lastMessagesCache) {
 			result = lastMessagesCache.get(chat);
 			if (result == null) {
-				result = getChatMessageDao().loadLastChatMessage(chat.getEntityId());
+				result = getChatMessageDao().readLastMessage(chat.getEntityId());
 				if (result != null) {
 					lastMessagesCache.put(chat, result);
 				}

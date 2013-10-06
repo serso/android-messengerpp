@@ -85,7 +85,7 @@ public final class Messages {
 	}
 
 	@Nonnull
-	public static LiteChatMessageImpl newMessage(@Nonnull Entity entity) {
+	public static LiteChatMessageImpl newLiteMessage(@Nonnull Entity entity) {
 		return LiteChatMessageImpl.newInstance(entity);
 	}
 

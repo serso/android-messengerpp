@@ -170,7 +170,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Account account) {
 		final String body = message.getBody();
 		if (!Strings.isEmpty(body)) {
-			final LiteChatMessageImpl liteChatMessage = Messages.newMessage(generateEntity(account));
+			final LiteChatMessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
 			liteChatMessage.setBody(body);
 			liteChatMessage.setAuthor(account.newUserEntity(message.getFrom()));
 			liteChatMessage.setRecipient(account.newUserEntity(message.getTo()));

@@ -23,19 +23,19 @@ public interface ChatDao extends Dao<Chat> {
 	MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
 
 	@Nonnull
-	List<String> loadUserChatIds(@Nonnull String userId);
+	List<String> readUserChatIds(@Nonnull String userId);
 
 	@Nonnull
 	Collection<String> readAllIds();
 
 	@Nonnull
-	List<AProperty> loadChatPropertiesById(@Nonnull String chatId);
+	List<AProperty> readPropertiesById(@Nonnull String chatId);
 
 	@Nonnull
-	List<Chat> loadUserChats(@Nonnull String userId);
+	List<Chat> readUserChats(@Nonnull String userId);
 
 	@Nonnull
-	List<User> loadChatParticipants(@Nonnull String chatId);
+	List<User> readParticipants(@Nonnull String chatId);
 
 	@Nullable
 	Chat read(@Nonnull String chatId);
@@ -49,8 +49,6 @@ public interface ChatDao extends Dao<Chat> {
 	long update(@Nonnull Chat chat);
 
 	void deleteAll();
-
-	void deleteAllChatsForAccount(@Nonnull String accountId);
 
 	/**
 	 * Key: chat for which unread messages exist, value: number of unread messages

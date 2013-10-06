@@ -68,13 +68,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 	@Nonnull
 	@Override
-	public List<String> loadChatMessageIds(@Nonnull String chatId) {
+	public List<String> readMessageIds(@Nonnull String chatId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatMessageIdsByChatId(getContext(), chatId, getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> loadChatMessages(@Nonnull String chatId) {
+	public List<ChatMessage> readMessages(@Nonnull String chatId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatMessages(getContext(), chatId, this.userService, getSqliteOpenHelper()));
 	}
 
@@ -86,7 +86,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 	@Nullable
 	@Override
-	public ChatMessage loadLastChatMessage(@Nonnull String chatId) {
+	public ChatMessage readLastMessage(@Nonnull String chatId) {
 		final String lastChatMessageId = doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
 		if (!Strings.isEmpty(lastChatMessageId)) {
 			final List<ChatMessage> messages = doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
@@ -119,13 +119,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete) {
+	public MergeDaoResult<ChatMessage, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete) {
 		final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>(messages);
 
 		final Chat chat = getChatService().getChatById(Entities.newEntityFromEntityId(chatId));
 
 		if (chat != null) {
-			final List<String> messageIdsFromDb = loadChatMessageIds(chatId);
+			final List<String> messageIdsFromDb = readMessageIds(chatId);
 			for (final String chatMessageIdFromDb : messageIdsFromDb) {
 				try {
 					// message exists both in db and on remote server => just update message properties

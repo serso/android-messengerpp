@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
 import org.solovyev.android.messenger.accounts.TestAccount;
+import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 
@@ -14,8 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperties;
@@ -25,6 +25,10 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	@Inject
 	@Nonnull
 	private UserDao dao;
+
+	@Inject
+	@Nonnull
+	private ChatDao chatDao;
 
 	@Nonnull
 	@Override
@@ -40,17 +44,19 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 
 	@Test
 	public void testShouldReadAllEntities() throws Exception {
-		testShouldReadAllEntitiesForAccount(getAccount1(), getUsers1());
-		testShouldReadAllEntitiesForAccount(getAccount2(), getUsers2());
-		testShouldReadAllEntitiesForAccount(getAccount3(), getUsers3());
-
+		testShouldReadAllEntitiesForAccount(getAccountData1());
+		testShouldReadAllEntitiesForAccount(getAccountData2());
+		testShouldReadAllEntitiesForAccount(getAccountData3());
 	}
 
-	private void testShouldReadAllEntitiesForAccount(@Nonnull TestAccount account, @Nonnull List<User> users) {
+	private void testShouldReadAllEntitiesForAccount(@Nonnull AccountData accountData) {
+		final TestAccount account = accountData.getAccount();
+		final List<User> contacts = accountData.getContacts();
+
 		assertTrue(UsersTest.areSame(account.getUser(), dao.read(account.getUser().getId())));
-		for(int i = 0; i < users.size() - 1; i++) {
-			final User user = dao.read(getEntityForUser(account, i).getEntityId());
-			assertTrue(UsersTest.areSame(users.get(i + 1), user));
+		for(int i = 0; i < contacts.size(); i++) {
+			final User user = dao.read(getEntityForContact(account, i).getEntityId());
+			assertTrue(UsersTest.areSame(contacts.get(i), user));
 		}
 	}
 
@@ -77,6 +83,21 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	@Test
 	public void testChatsShouldBeRemovedIfAccountUserRemoved() throws Exception {
 		final String userId = getAccount1().getUser().getId();
+		dao.deleteById(userId);
+
+		assertTrue(chatDao.readUserChatIds(userId).isEmpty());
+		assertFalse(chatDao.readUserChatIds(getAccount2().getUser().getId()).isEmpty());
+	}
+
+	@Test
+	public void testPropertiesShouldBeRemovedIfUserRemoved() throws Exception {
+		final String userId = getAccountData1().getContacts().get(0).getId();
+
+		assertFalse(dao.readPropertiesById(userId).isEmpty());
+
+		dao.deleteById(userId);
+
+		assertTrue(dao.readPropertiesById(userId).isEmpty());
 	}
 
 	@Nonnull

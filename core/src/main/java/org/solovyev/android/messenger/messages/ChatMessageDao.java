@@ -15,19 +15,19 @@ import java.util.List;
 public interface ChatMessageDao {
 
 	@Nonnull
-	List<ChatMessage> loadChatMessages(@Nonnull String chatId);
+	List<ChatMessage> readMessages(@Nonnull String chatId);
 
 	@Nonnull
-	MergeDaoResult<ChatMessage, String> mergeChatMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete);
+	MergeDaoResult<ChatMessage, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete);
 
 	@Nonnull
-	List<String> loadChatMessageIds(@Nonnull String chatId);
+	List<String> readMessageIds(@Nonnull String chatId);
 
 	@Nonnull
 	String getOldestMessageForChat(@Nonnull String chatId);
 
 	@Nullable
-	ChatMessage loadLastChatMessage(@Nonnull String chatId);
+	ChatMessage readLastMessage(@Nonnull String chatId);
 
 	/**
 	 * @return total number of unread messages in the application

@@ -37,7 +37,7 @@ public class ChatMapper implements Converter<Cursor, Chat> {
 		final String lastMessagesSyncDateString = c.getString(3);
 		final DateTime lastMessagesSyncDate = lastMessagesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastMessagesSyncDateString);
 
-		final List<AProperty> properties = chatDao.loadChatPropertiesById(realmChat.getEntityId());
+		final List<AProperty> properties = chatDao.readPropertiesById(realmChat.getEntityId());
 
 		//final List<ChatMessage> chatMessages = chatDao.loadChatMessages(chatId);
 		//final List<User> chatParticipants = chatDao.loadChatParticipants(chatId);
