@@ -76,14 +76,7 @@ public interface UserService {
 	 */
 	void updateUser(@Nonnull User user);
 
-	/**
-	 * Method removes all users in account identified by <var>accountId</var>
-	 *
-	 * @param accountId id of account for which users shall be removed
-	 */
-	void removeUsersInAccount(@Nonnull String accountId);
-
-    /*
+	/*
     **********************************************************************
     *
     *                           CONTACTS

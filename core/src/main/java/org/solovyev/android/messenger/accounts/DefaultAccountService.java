@@ -35,6 +35,9 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
+import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;
+import static org.solovyev.android.messenger.accounts.AccountState.enabled;
+import static org.solovyev.android.messenger.accounts.AccountState.removed;
 
 /**
  * User: serso
@@ -109,15 +112,14 @@ public class DefaultAccountService implements AccountService {
 
 		synchronized (lock) {
 			// reset status to enabled for temporary disable realms
-			for (Account account : accountDao.loadAccountsInState(AccountState.disabled_by_app)) {
-				changeAccountState(account, AccountState.enabled, false);
+			for (Account account : accountDao.loadAccountsInState(disabled_by_app)) {
+				changeAccountState(account, enabled, false);
 			}
 
 			// remove all scheduled to remove realms
-			for (Account account : accountDao.loadAccountsInState(AccountState.removed)) {
+			for (Account account : accountDao.loadAccountsInState(removed)) {
 				this.messageService.removeAllMessagesInAccount(account.getId());
 				this.chatService.removeChatsInAccount(account.getId());
-				this.userService.removeUsersInAccount(account.getId());
 				this.accountDao.deleteById(account.getId());
 				this.accounts.remove(account.getId());
 			}
@@ -213,7 +215,7 @@ public class DefaultAccountService implements AccountService {
 					final boolean alreadyExists = Iterables.any(accounts.values(), new Predicate<Account>() {
 						@Override
 						public boolean apply(@Nullable Account account) {
-							return account != null && account.getState() != AccountState.removed && newAccount.same(account);
+							return account != null && account.getState() != removed && newAccount.same(account);
 						}
 					});
 
@@ -320,7 +322,7 @@ public class DefaultAccountService implements AccountService {
 		}
 
 		if (account != null) {
-			changeAccountState(account, AccountState.removed);
+			changeAccountState(account, removed);
 		}
 	}
 

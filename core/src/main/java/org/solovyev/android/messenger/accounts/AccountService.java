@@ -1,18 +1,16 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
-
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.listeners.JEventListener;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * User: serso
@@ -78,6 +76,10 @@ public interface AccountService {
 	@Nonnull
 	Collection<Account> getAccountsCreatingUsers();
 
+	void stopAllRealmConnections();
+
+	List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
+
     /*
 	**********************************************************************
     *
@@ -89,8 +91,4 @@ public interface AccountService {
 	void addListener(@Nonnull JEventListener<AccountEvent> listener);
 
 	void removeListener(@Nonnull JEventListener<AccountEvent> listener);
-
-	void stopAllRealmConnections();
-
-	List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
 }

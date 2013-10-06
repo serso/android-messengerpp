@@ -7,6 +7,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -19,9 +20,9 @@ import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase {
 
-	public static final int ACCOUNT_1_USER_COUNT = 3;
-	public static final int ACCOUNT_2_USER_COUNT = 20;
-	public static final int ACCOUNT_3_USER_COUNT = 200;
+	private static final int ACCOUNT_1_USER_COUNT = 3;
+	private static final int ACCOUNT_2_USER_COUNT = 20;
+	private static final int ACCOUNT_3_USER_COUNT = 200;
 
 	@Nonnull
 	@Inject
@@ -44,22 +45,7 @@ public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase
 	private TestRealm realm;
 
 	@Nonnull
-	private TestAccount account1;
-
-	@Nonnull
-	private TestAccount account2;
-
-	@Nonnull
-	private TestAccount account3;
-
-	@Nonnull
-	private final List<User> users1 = new ArrayList<User>();
-
-	@Nonnull
-	private final List<User> users2 = new ArrayList<User>();
-
-	@Nonnull
-	private final List<User> users3 = new ArrayList<User>();
+	private final List<AccountData> accountDataList = new ArrayList<AccountData>();
 
 	@Nonnull
 	protected AbstractTestMessengerModule newModule(@Nonnull Application application) {
@@ -67,18 +53,17 @@ public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase
 	}
 
 	protected void populateDatabase() throws Exception {
-		account1 = accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_0", 0), null));
-		account2 = accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_1", 1), null));
-		account3 = accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_2", 2), null));
-
-		populateAccount(account1, ACCOUNT_1_USER_COUNT, users1);
-		populateAccount(account2, ACCOUNT_2_USER_COUNT, users2);
-		populateAccount(account3, ACCOUNT_3_USER_COUNT, users3);
+		accountDataList.add(createAccountData(0, ACCOUNT_1_USER_COUNT));
+		accountDataList.add(createAccountData(1, ACCOUNT_2_USER_COUNT));
+		accountDataList.add(createAccountData(2, ACCOUNT_3_USER_COUNT));
 	}
 
-	private void populateAccount(@Nonnull Account account, int count, @Nonnull List<User> users) throws AccountException {
-		users.addAll(addUsers(account, count));
-		users.add(0, account.getUser());
+	@Nonnull
+	private AccountData createAccountData(int index, int count) throws AccountException, InvalidCredentialsException, AccountAlreadyExistsException {
+		final AccountData result = new AccountData(accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration("test_" + index, index), null)));
+		result.users.addAll(addUsers(result.account, count));
+		result.users.add(0, result.account.getUser());
+		return result;
 	}
 
 	@Nonnull
@@ -103,36 +88,74 @@ public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase
 
 	@Nonnull
 	public TestAccount getAccount1() {
-		return account1;
+		return accountDataList.get(0).account;
 	}
 
 	@Nonnull
 	public TestAccount getAccount2() {
-		return account2;
+		return accountDataList.get(1).account;
 	}
 
 	@Nonnull
 	public TestAccount getAccount3() {
-		return account3;
+		return accountDataList.get(2).account;
 	}
 
 	@Nonnull
 	public List<User> getUsers1() {
-		return users1;
+		return accountDataList.get(0).users;
 	}
 
 	@Nonnull
 	public List<User> getUsers2() {
-		return users2;
+		return accountDataList.get(1).users;
 	}
 
 	@Nonnull
 	public List<User> getUsers3() {
-		return users3;
+		return accountDataList.get(2).users;
 	}
 
 	@Nonnull
 	protected AccountService getAccountService() {
 		return accountService;
+	}
+
+	@Nonnull
+	public AccountData getAccountData1() {
+		return accountDataList.get(0);
+	}
+
+	@Nonnull
+	public AccountData getAccountData2() {
+		return accountDataList.get(1);
+	}
+
+	@Nonnull
+	public AccountData getAccountData3() {
+		return accountDataList.get(2);
+	}
+
+	public static final class AccountData {
+
+		@Nonnull
+		private final TestAccount account;
+
+		@Nonnull
+		private final List<User> users = new ArrayList<User>();
+
+		private AccountData(@Nonnull TestAccount account) {
+			this.account = account;
+		}
+
+		@Nonnull
+		public TestAccount getAccount() {
+			return account;
+		}
+
+		@Nonnull
+		public List<User> getUsers() {
+			return users;
+		}
 	}
 }

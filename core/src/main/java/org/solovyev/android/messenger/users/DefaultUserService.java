@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -16,7 +15,6 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.EntitiesRemovedMapUpdater;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
 import org.solovyev.android.messenger.icons.RealmIconService;
@@ -237,21 +235,7 @@ public class DefaultUserService implements UserService {
 		}
 	}
 
-	@Override
-	public void removeUsersInAccount(@Nonnull final String accountId) {
-		synchronized (lock) {
-			this.userDao.deleteAllUsersForAccount(accountId);
-		}
-
-		userChatsCache.update(EntitiesRemovedMapUpdater.<Chat>newInstance(accountId));
-		userContactsCache.update(EntitiesRemovedMapUpdater.<User>newInstance(accountId));
-
-		synchronized (usersCache) {
-			Iterators.removeIf(usersCache.entrySet().iterator(), EntityMapEntryMatcher.forRealm(accountId));
-		}
-	}
-
-    /*
+	/*
     **********************************************************************
     *
     *                           CONTACTS

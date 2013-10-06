@@ -40,17 +40,17 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 
 	@Test
 	public void testShouldReadAllEntities() throws Exception {
-		testShouldReadAllEntitiesForAccount(getAccount1(), ACCOUNT_1_USER_COUNT, getUsers1());
-		testShouldReadAllEntitiesForAccount(getAccount2(), ACCOUNT_2_USER_COUNT, getUsers2());
-		testShouldReadAllEntitiesForAccount(getAccount3(), ACCOUNT_3_USER_COUNT, getUsers3());
+		testShouldReadAllEntitiesForAccount(getAccount1(), getUsers1());
+		testShouldReadAllEntitiesForAccount(getAccount2(), getUsers2());
+		testShouldReadAllEntitiesForAccount(getAccount3(), getUsers3());
 
 	}
 
-	private void testShouldReadAllEntitiesForAccount(@Nonnull TestAccount account, int count, @Nonnull List<User> users) {
+	private void testShouldReadAllEntitiesForAccount(@Nonnull TestAccount account, @Nonnull List<User> users) {
 		assertTrue(UsersTest.areSame(account.getUser(), dao.read(account.getUser().getId())));
-		for(int i = 0; i < count; i++) {
+		for(int i = 0; i < users.size() - 1; i++) {
 			final User user = dao.read(getEntityForUser(account, i).getEntityId());
-			assertTrue(UsersTest.areSame(users.get(1 + i), user));
+			assertTrue(UsersTest.areSame(users.get(i + 1), user));
 		}
 	}
 
@@ -72,6 +72,11 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 
 		final List<String> contactIdsAfter = dao.readUserContactIds(userId);
 		assertEquals(contactIdsBefore, contactIdsAfter);
+	}
+
+	@Test
+	public void testChatsShouldBeRemovedIfAccountUserRemoved() throws Exception {
+		final String userId = getAccount1().getUser().getId();
 	}
 
 	@Nonnull
