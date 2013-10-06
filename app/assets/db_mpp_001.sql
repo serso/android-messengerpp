@@ -1,5 +1,5 @@
 CREATE TABLE accounts (id text PRIMARY KEY, realm_id text NOT NULL, user_id text NOT NULL, configuration text NOT NULL, state text NOT NULL);
-CREATE TABLE users (id text PRIMARY KEY, account_id text NOT NULL, realm_user_id text NOT NULL, last_properties_sync_date datetime, last_contacts_sync_date datetime, last_chats_sync_date datetime, last_user_icons_sync_date datetime);
+CREATE TABLE users (id text PRIMARY KEY, account_id text NOT NULL, realm_user_id text NOT NULL, last_properties_sync_date datetime, last_contacts_sync_date datetime, last_chats_sync_date datetime, last_user_icons_sync_date datetime, FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE);
 CREATE TABLE user_properties (user_id text NOT NULL, property_name text NOT NULL, property_value text, FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE, UNIQUE (user_id, property_name));
 CREATE TABLE user_contacts (user_id text NOT NULL, contact_id text NOT NULL, FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE, FOREIGN KEY (contact_id) REFERENCES users (id) ON DELETE CASCADE, UNIQUE (user_id, contact_id));
 CREATE TABLE chats (id text PRIMARY KEY, account_id text NOT NULL, realm_chat_id text NOT NULL, last_messages_sync_date datetime);

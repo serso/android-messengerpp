@@ -1,16 +1,10 @@
 package org.solovyev.android.messenger.users;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import junit.framework.Assert;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractMessengerTestCase;
 import org.solovyev.android.messenger.accounts.Account;
@@ -19,13 +13,15 @@ import org.solovyev.android.messenger.realms.TestAccount;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.Properties;
-import org.solovyev.common.Objects;
 import org.solovyev.common.equals.CollectionEqualizer;
 import org.solovyev.common.equals.ListEqualizer;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.solovyev.common.Objects.areEqual;
 
 /**
  * User: serso
@@ -40,10 +36,10 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 	private UserDao userDao;
 
 	@Inject
-	private TestRealm testRealmDef;
+	private TestRealm testRealm;
 
 	@Inject
-	private TestAccount testRealm;
+	private TestAccount testAccount;
 
 	@Override
 	public void setUp() throws Exception {
@@ -59,7 +55,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 		expectedProperties.add(Properties.newProperty("prop_2", "prop_2_value"));
 		expectedProperties.add(Properties.newProperty("prop_3", "prop_3_value"));
 
-		final Entity realmUser = testRealm.newUserEntity("2");
+		final Entity realmUser = testAccount.newUserEntity("2");
 
 		User expected = Users.newUser(realmUser, Users.newNeverSyncedUserSyncData(), expectedProperties);
 
@@ -73,7 +69,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 		Assert.assertEquals(realmUser.getAccountId(), actual.getEntity().getAccountId());
 		Assert.assertEquals("2", actual.getEntity().getAccountEntityId());
 		Assert.assertEquals("test~1:2", actual.getEntity().getEntityId());
-		Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getPropertiesCollection(), new CollectionEqualizer<AProperty>(null)));
+		Assert.assertTrue(areEqual(expectedProperties, actual.getPropertiesCollection(), new CollectionEqualizer<AProperty>(null)));
 		Assert.assertEquals("prop_1_value", actual.getPropertyValueByName("prop_1"));
 
 		User actual2 = userDao.read("test~1:2");
@@ -82,13 +78,13 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 		User actual3 = userDao.read("test_01");
 		Assert.assertNull(actual3);
 
-		Assert.assertTrue(Objects.areEqual(userDao.readAllIds(), Arrays.asList("test~1:2"), ListEqualizer.<String>newWithNaturalEquals(false)));
+		Assert.assertTrue(areEqual(newArrayList(userDao.readAllIds()), Arrays.asList("test~1:2"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
-		final Entity realmUser2 = testRealm.newUserEntity("3");
+		final Entity realmUser2 = testAccount.newUserEntity("3");
 
 		expected = Users.newUser(realmUser2, Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.create(expected);
-		Assert.assertTrue(Objects.areEqual(userDao.readAllIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
+		Assert.assertTrue(areEqual(newArrayList(userDao.readAllIds()), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
 		// UPDATE
 		expectedProperties = new ArrayList<AProperty>(expectedProperties);
@@ -101,14 +97,14 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(expected, actual);
-		Assert.assertTrue(Objects.areEqual(expectedProperties, actual.getPropertiesCollection(), new CollectionEqualizer<AProperty>(null)));
+		Assert.assertTrue(areEqual(expectedProperties, actual.getPropertiesCollection(), new CollectionEqualizer<AProperty>(null)));
 
-		Assert.assertTrue(Objects.areEqual(userDao.readAllIds(), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
+		Assert.assertTrue(areEqual(Lists.newArrayList(userDao.readAllIds()), Arrays.asList("test~1:2", "test~1:3"), ListEqualizer.<String>newWithNaturalEquals(false)));
 
 		expected = Users.newUser(TestRealm.REALM_ID, "test_01dsfsdfsf", Users.newUserSyncData(DateTime.now(), DateTime.now(), DateTime.now(), DateTime.now()), expectedProperties);
 		userDao.update(expected);
 
-		List<String> usersIds = userDao.readAllIds();
+		Collection<String> usersIds = userDao.readAllIds();
 		Assert.assertEquals(2, usersIds.size());
 		userDao.deleteAllUsersForAccount("test~1");
 		usersIds = userDao.readAllIds();
@@ -118,7 +114,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 	public void testRandomOperations() throws Exception {
 		final List<Account> accounts = new ArrayList<Account>(REALMS_COUNT);
 		for (int i = 0; i < REALMS_COUNT; i++) {
-			accounts.add(new TestAccount(testRealmDef, i));
+			accounts.add(new TestAccount(testRealm, i));
 		}
 
 		final List<User> users = new ArrayList<User>();
@@ -136,8 +132,8 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 					final User newUser = Users.newUser(r.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), newProperties);
 					users.add(newUser);
 					userDao.create(newUser);
-					Assert.assertTrue(Objects.areEqual(newUser, userDao.read(newUser.getId())));
-					Assert.assertTrue(Objects.areEqual(newProperties, userDao.loadUserPropertiesById(newUser.getId()), new CollectionEqualizer<AProperty>(null)));
+					Assert.assertTrue(areEqual(newUser, userDao.read(newUser.getId())));
+					Assert.assertTrue(areEqual(newProperties, userDao.readUserPropertiesById(newUser.getId()), new CollectionEqualizer<AProperty>(null)));
 					break;
 				case 4:
 					if (!users.isEmpty()) {
@@ -149,13 +145,13 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 							updatedUser = Users.newUser(updatedUser.getEntity(), Users.newNeverSyncedUserSyncData(), updatedProperties);
 							users.set(userPosition, updatedUser);
 							userDao.update(updatedUser);
-							Assert.assertTrue(Objects.areEqual(updatedProperties, userDao.loadUserPropertiesById(updatedUser.getId()), new CollectionEqualizer<AProperty>(null)));
+							Assert.assertTrue(areEqual(updatedProperties, userDao.readUserPropertiesById(updatedUser.getId()), new CollectionEqualizer<AProperty>(null)));
 						} else {
 							final Account r2 = accounts.get(random.nextInt(REALMS_COUNT));
 							final User newUser2 = Users.newUser(r2.newUserEntity("user" + String.valueOf(i)), Users.newNeverSyncedUserSyncData(), generateUserProperties(random));
 							userDao.update(newUser2);
 							Assert.assertNull(userDao.read(newUser2.getId()));
-							Assert.assertTrue(userDao.loadUserPropertiesById(newUser2.getId()).isEmpty());
+							Assert.assertTrue(userDao.readUserPropertiesById(newUser2.getId()).isEmpty());
 						}
 					}
 					break;
@@ -175,7 +171,7 @@ public class SqliteUserDaoTest extends AbstractMessengerTestCase {
 					break;
 			}
 
-			final List<String> userIds = userDao.readAllIds();
+			final Collection<String> userIds = userDao.readAllIds();
 			Assert.assertEquals(users.size(), userIds.size());
 			for (User user : users) {
 				Assert.assertTrue(userIds.contains(user.getId()));

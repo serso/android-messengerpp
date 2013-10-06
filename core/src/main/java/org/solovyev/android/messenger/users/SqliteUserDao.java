@@ -78,7 +78,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Nonnull
 	@Override
-	public List<AProperty> loadUserPropertiesById(@Nonnull String userId) {
+	public List<AProperty> readUserPropertiesById(@Nonnull String userId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadUserPropertiesDbQuery(userId, getContext(), getSqliteOpenHelper()));
 	}
 
@@ -127,13 +127,13 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Nonnull
 	@Override
-	public List<String> loadUserContactIds(@Nonnull String userId) {
+	public List<String> readUserContactIds(@Nonnull String userId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadContactIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
-	public List<User> loadUserContacts(@Nonnull String userId) {
+	public List<User> readUserContacts(@Nonnull String userId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadContactsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
 	}
 
@@ -142,7 +142,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 	public MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
 		final MergeDaoResultImpl<User, String> result = new MergeDaoResultImpl<User, String>(contacts);
 
-		final List<String> contactIdsFromDb = loadUserContactIds(userId);
+		final List<String> contactIdsFromDb = readUserContactIds(userId);
 		for (final String contactIdFromDb : contactIdsFromDb) {
 			try {
 				// contact exists both in db and on remote server => just update contact properties

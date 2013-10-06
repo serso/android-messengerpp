@@ -2,18 +2,17 @@ package org.solovyev.android.messenger.accounts;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
-
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
 import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
-
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -30,6 +29,10 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Nonnull
 	@Inject
 	private AccountDao dao;
+
+	@Nonnull
+	@Inject
+	private UserDao userDao;
 
 	@Nonnull
 	@Inject
@@ -157,6 +160,15 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 
 		dao.update(excepted);
 		AccountsTest.assertEquals(excepted, findAccountInDao(excepted));
+	}
+
+	@Test
+	public void testShouldDeleteUsersIfAccountIsRemoved() throws Exception {
+		final TestAccount account1 = getAccount1();
+		dao.deleteById(account1.getId());
+
+		assertTrue(userDao.readUserContactIds(account1.getUser().getId()).isEmpty());
+		assertNull(userDao.read(account1.getUser().getId()));
 	}
 
 	@Nonnull

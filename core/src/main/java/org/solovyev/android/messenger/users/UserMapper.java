@@ -36,7 +36,7 @@ public class UserMapper implements Converter<Cursor, User> {
 
 		final List<AProperty> properties;
 		if (userDao != null) {
-			properties = userDao.loadUserPropertiesById(realmUser.getEntityId());
+			properties = userDao.readUserPropertiesById(realmUser.getEntityId());
 		} else {
 			properties = Collections.emptyList();
 		}

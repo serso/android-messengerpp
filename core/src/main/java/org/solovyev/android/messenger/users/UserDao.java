@@ -49,7 +49,7 @@ public interface UserDao extends Dao<User> {
 	 * @return properties of a user previously saved into storage, empty list if no such user exists in storage or no properties are set for him
 	 */
 	@Nonnull
-	List<AProperty> loadUserPropertiesById(@Nonnull String userId);
+	List<AProperty> readUserPropertiesById(@Nonnull String userId);
 
 	/**
 	 * Method updates user and his properties in the storage
@@ -89,14 +89,14 @@ public interface UserDao extends Dao<User> {
 	 * @return list of ids of contacts of a user identified by user id
 	 */
 	@Nonnull
-	List<String> loadUserContactIds(@Nonnull String userId);
+	List<String> readUserContactIds(@Nonnull String userId);
 
 	/**
 	 * @param userId id of a user for which list of contacts should be returned
 	 * @return list of contacts of a user identified by user id
 	 */
 	@Nonnull
-	List<User> loadUserContacts(@Nonnull String userId);
+	List<User> readUserContacts(@Nonnull String userId);
 
 	/**
 	 * Method merges passed user <var>contacts</var> with contacts stored in the storage.

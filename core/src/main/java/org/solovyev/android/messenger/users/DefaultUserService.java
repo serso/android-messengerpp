@@ -266,7 +266,7 @@ public class DefaultUserService implements UserService {
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
-				result = userDao.loadUserContacts(user.getEntityId());
+				result = userDao.readUserContacts(user.getEntityId());
 			}
 			calculateDisplayNames(result);
 			userContactsCache.update(user, new WholeListUpdater<User>(result));

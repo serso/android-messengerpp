@@ -11,7 +11,6 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.ImageView;
 
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
 

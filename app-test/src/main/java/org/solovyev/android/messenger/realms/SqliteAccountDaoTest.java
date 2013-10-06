@@ -20,25 +20,25 @@ import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
 public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 
 	@Inject
-	private AccountDao accountDao;
+	private AccountDao dao;
 
 	@Inject
-	private TestRealm testRealmDef;
+	private TestRealm testRealm;
 
 	public void setUp() throws Exception {
 		super.setUp();
-		accountDao.deleteAll();
+		dao.deleteAll();
 	}
 
 	public void testRealmOperations() throws Exception {
-		Collection<Account> accounts = accountDao.readAll();
+		Collection<Account> accounts = dao.readAll();
 		Assert.assertTrue(accounts.isEmpty());
 
 		TestAccountConfiguration expectedConfig1 = new TestAccountConfiguration("test_config_field", 42);
-		final Account expected1 = testRealmDef.newAccount("test~01", Users.newEmptyUser(Entities.newEntity("test~01", "user01")), expectedConfig1, AccountState.enabled);
-		accountDao.create(expected1);
+		final Account expected1 = testRealm.newAccount("test~01", Users.newEmptyUser(Entities.newEntity("test~01", "user01")), expectedConfig1, AccountState.enabled);
+		dao.create(expected1);
 
-		accounts = accountDao.readAll();
+		accounts = dao.readAll();
 		Assert.assertTrue(accounts.size() == 1);
 		Account<TestAccountConfiguration> actual1 = Collections.getFirstCollectionElement(accounts);
 		Assert.assertNotNull(actual1);
@@ -47,9 +47,9 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 		Assert.assertEquals("test_config_field", actual1.getConfiguration().getTestStringField());
 		Assert.assertEquals(42, actual1.getConfiguration().getTestIntField());
 
-		accountDao.deleteById(expected1.getId());
+		dao.deleteById(expected1.getId());
 
-		accounts = accountDao.readAll();
+		accounts = dao.readAll();
 		Assert.assertTrue(accounts.isEmpty());
 	}
 
@@ -59,15 +59,15 @@ public class SqliteAccountDaoTest extends AbstractMessengerTestCase {
 			final AccountConfiguration accountConfiguration = (AccountConfiguration) realm.getConfigurationClass().newInstance();
 			final String accountId = makeAccountId(realm.getId(), index);
 			Account expected = realm.newAccount(accountId, Users.newEmptyUser(Entities.newEntity(accountId, String.valueOf(index))), accountConfiguration, AccountState.enabled);
-			accountDao.create(expected);
+			dao.create(expected);
 		}
 
-		Collection<Account> accounts = accountDao.readAll();
+		Collection<Account> accounts = dao.readAll();
 		Assert.assertTrue(accounts.size() == 3);
 	}
 
 	public void tearDown() throws Exception {
-		accountDao.deleteAll();
+		dao.deleteAll();
 		super.tearDown();
 	}
 }

@@ -1,8 +1,6 @@
 package org.solovyev.android.messenger.sync;
 
 import android.content.Context;
-import android.util.Log;
-import roboguice.RoboGuice;
 
 import java.lang.ref.WeakReference;
 import java.util.TimerTask;
@@ -10,8 +8,6 @@ import java.util.TimerTask;
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.RealmService;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 

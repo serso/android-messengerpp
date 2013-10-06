@@ -2,7 +2,6 @@ package org.solovyev.android.messenger;
 
 import android.app.Application;
 import android.content.Context;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -12,7 +11,9 @@ import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
 import org.solovyev.android.messenger.accounts.SqliteAccountDao;
+import org.solovyev.android.messenger.accounts.connection.AccountConnections;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
+import org.solovyev.android.messenger.accounts.connection.DefaultAccountConnections;
 import org.solovyev.android.messenger.accounts.connection.DefaultAccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -28,6 +29,7 @@ import org.solovyev.android.messenger.realms.DefaultRealmService;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
 import org.solovyev.android.messenger.registration.RegistrationService;
+import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DefaultUserService;
@@ -64,6 +66,7 @@ public class TestMessengerModule extends AbstractModule {
 		bind(Executor.class).toInstance(Executors.newSingleThreadExecutor());
 		bind(TaskService.class).toInstance(Tasks.newTaskService());
 
+		bind(MessengerSecurityService.class).to(TestSecurityService.class);
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
 		bind(ExceptionHandler.class).to(DefaultExceptionHandler.class);
 		bind(NotificationService.class).to(DefaultNotificationService.class);
@@ -74,6 +77,7 @@ public class TestMessengerModule extends AbstractModule {
 		bind(RealmService.class).to(DefaultRealmService.class);
 		bind(AccountService.class).to(DefaultAccountService.class);
 		bind(AccountDao.class).to(SqliteAccountDao.class);
+		bind(AccountConnections.class).to(DefaultAccountConnections.class);
 		bind(AccountConnectionsService.class).to(DefaultAccountConnectionsService.class);
 
 		bind(Configuration.class).to(TestConfiguration.class);
