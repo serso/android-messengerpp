@@ -64,19 +64,19 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	public void testShouldRemoveContactsIfUserIsRemoved() throws Exception {
 		final String userId = getAccount1().getUser().getId();
 		dao.deleteById(userId);
-		assertTrue(dao.readUserContacts(userId).isEmpty());
+		assertTrue(dao.readContacts(userId).isEmpty());
 	}
 
 	@Test
 	public void testContactShouldBeRemoved() throws Exception {
 		final String userId = getAccount1().getUser().getId();
-		final List<String> contactIdsBefore = dao.readUserContactIds(userId);
+		final List<String> contactIdsBefore = dao.readContactIds(userId);
 
 		final String removeUserId = contactIdsBefore.get(0);
 		dao.deleteById(removeUserId);
 		contactIdsBefore.remove(removeUserId);
 
-		final List<String> contactIdsAfter = dao.readUserContactIds(userId);
+		final List<String> contactIdsAfter = dao.readContactIds(userId);
 		assertEquals(contactIdsBefore, contactIdsAfter);
 	}
 
@@ -85,8 +85,8 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		final String userId = getAccount1().getUser().getId();
 		dao.deleteById(userId);
 
-		assertTrue(chatDao.readUserChatIds(userId).isEmpty());
-		assertFalse(chatDao.readUserChatIds(getAccount2().getUser().getId()).isEmpty());
+		assertTrue(chatDao.readChatIdsByUserId(userId).isEmpty());
+		assertFalse(chatDao.readChatIdsByUserId(getAccount2().getUser().getId()).isEmpty());
 	}
 
 	@Test

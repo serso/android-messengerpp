@@ -20,10 +20,7 @@ import java.util.Map;
 public interface ChatDao extends Dao<Chat> {
 
 	@Nonnull
-	MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
-
-	@Nonnull
-	List<String> readUserChatIds(@Nonnull String userId);
+	MergeDaoResult<ApiChat, String> mergeChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
 
 	@Nonnull
 	Collection<String> readAllIds();
@@ -32,7 +29,10 @@ public interface ChatDao extends Dao<Chat> {
 	List<AProperty> readPropertiesById(@Nonnull String chatId);
 
 	@Nonnull
-	List<Chat> readUserChats(@Nonnull String userId);
+	List<Chat> readChatsByUserId(@Nonnull String userId);
+
+	@Nonnull
+	List<String> readChatIdsByUserId(@Nonnull String userId);
 
 	@Nonnull
 	List<User> readParticipants(@Nonnull String chatId);

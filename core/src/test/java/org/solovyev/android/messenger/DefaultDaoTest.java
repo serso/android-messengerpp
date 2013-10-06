@@ -17,7 +17,7 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.find;
 import static org.junit.Assert.*;
 
-public abstract class DefaultDaoTest<E> extends DefaultMessengerTestCase {
+public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 
 	@Nonnull
 	private Dao<E> dao;

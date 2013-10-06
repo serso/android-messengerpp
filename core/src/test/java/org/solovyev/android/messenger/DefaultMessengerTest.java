@@ -32,7 +32,7 @@ import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
-public abstract class DefaultMessengerTestCase extends AbstractMessengerTestCase {
+public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 
 	private static final int ACCOUNT_1_USER_COUNT = 3;
 	private static final int ACCOUNT_2_USER_COUNT = 20;

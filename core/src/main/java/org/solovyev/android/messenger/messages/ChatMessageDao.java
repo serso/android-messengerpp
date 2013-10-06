@@ -36,7 +36,5 @@ public interface ChatMessageDao {
 
 	boolean changeReadStatus(@Nonnull String messageId, boolean read);
 
-	void deleteAllMessages();
-
-	void deleteAllMessagesForAccount(@Nonnull String realmId);
+	void deleteAll();
 }

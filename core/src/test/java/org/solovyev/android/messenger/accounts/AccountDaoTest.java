@@ -167,7 +167,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 		final TestAccount account1 = getAccount1();
 		dao.deleteById(account1.getId());
 
-		assertTrue(userDao.readUserContactIds(account1.getUser().getId()).isEmpty());
+		assertTrue(userDao.readContactIds(account1.getUser().getId()).isEmpty());
 		assertNull(userDao.read(account1.getUser().getId()));
 	}
 

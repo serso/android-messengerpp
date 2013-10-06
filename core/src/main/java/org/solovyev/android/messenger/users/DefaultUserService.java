@@ -250,7 +250,7 @@ public class DefaultUserService implements UserService {
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
-				result = userDao.readUserContacts(user.getEntityId());
+				result = userDao.readContacts(user.getEntityId());
 			}
 			calculateDisplayNames(result);
 			userContactsCache.update(user, new WholeListUpdater<User>(result));
@@ -278,7 +278,7 @@ public class DefaultUserService implements UserService {
 	private void onContactsPresenceChanged(@Nonnull User user, @Nonnull List<User> contacts) {
 		synchronized (lock) {
 			for (User contact : contacts) {
-				userDao.updateUserOnlineStatus(contact);
+				userDao.updateOnlineStatus(contact);
 			}
 		}
 
@@ -409,7 +409,7 @@ public class DefaultUserService implements UserService {
 		User user = getUserById(userEntity);
 		final MergeDaoResult<User, String> result;
 		synchronized (lock) {
-			result = userDao.mergeUserContacts(userEntity.getEntityId(), contacts, allowRemoval, allowUpdate);
+			result = userDao.mergeContacts(userEntity.getEntityId(), contacts, allowRemoval, allowUpdate);
 
 			// update sync data
 			user = user.updateContactsSyncDate();

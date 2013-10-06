@@ -73,7 +73,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public List<String> readUserChatIds(@Nonnull String userId) {
+	public List<String> readChatIdsByUserId(@Nonnull String userId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
 	}
 
@@ -119,7 +119,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public List<Chat> readUserChats(@Nonnull String userId) {
+	public List<Chat> readChatsByUserId(@Nonnull String userId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatsByUserId(getContext(), userId, getSqliteOpenHelper(), this));
 	}
 
@@ -221,10 +221,10 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> apiChats) {
+	public MergeDaoResult<ApiChat, String> mergeChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> apiChats) {
 		final MergeDaoResultImpl<ApiChat, String> result = new MergeDaoResultImpl<ApiChat, String>(apiChats);
 
-		final List<String> chatsFromDb = readUserChatIds(userId);
+		final List<String> chatsFromDb = readChatIdsByUserId(userId);
 		for (final String chatIdFromDb : chatsFromDb) {
 			try {
 				// chat exists both in db and on remote server => just update chat properties

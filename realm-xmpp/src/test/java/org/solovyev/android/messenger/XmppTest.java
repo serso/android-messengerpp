@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
 import com.google.inject.Inject;
 
-public abstract class XmppTestCase extends DefaultMessengerTestCase {
+public abstract class XmppTest extends DefaultMessengerTest {
 
 	@Nonnull
 	@Inject

@@ -2,9 +2,9 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import org.jivesoftware.smack.packet.Presence;
 import org.junit.Test;
-import org.solovyev.android.messenger.XmppTestCase;
+import org.solovyev.android.messenger.XmppTest;
 
-public class XmppRosterListenerTest extends XmppTestCase {
+public class XmppRosterListenerTest extends XmppTest {
 
 	@Test
 	public void testShouldCallUserServiceOnPresenceChange() throws Exception {

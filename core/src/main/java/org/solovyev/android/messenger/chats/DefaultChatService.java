@@ -243,7 +243,7 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public List<Chat> loadUserChats(@Nonnull Entity user) {
 		synchronized (lock) {
-			return chatDao.readUserChats(user.getEntityId());
+			return chatDao.readChatsByUserId(user.getEntityId());
 		}
 	}
 
@@ -310,7 +310,7 @@ public class DefaultChatService implements ChatService {
 			} catch (AccountRuntimeException e) {
 				throw new AccountException(e);
 			}
-			result = chatDao.mergeUserChats(user.getEntityId(), preparedChats);
+			result = chatDao.mergeChats(user.getEntityId(), preparedChats);
 		}
 
 		fireChatEvents(userService.getUserById(user), result);

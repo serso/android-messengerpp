@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.messages;
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.solovyev.android.messenger.DefaultMessengerTestCase;
+import org.solovyev.android.messenger.DefaultMessengerTest;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
 
-public class ChatMessageDaoTest extends DefaultMessengerTestCase {
+public class ChatMessageDaoTest extends DefaultMessengerTest {
 
 	@Inject
 	@Nonnull

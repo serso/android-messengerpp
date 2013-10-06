@@ -82,14 +82,14 @@ public interface UserDao extends Dao<User> {
 	 * @return list of ids of contacts of a user identified by user id
 	 */
 	@Nonnull
-	List<String> readUserContactIds(@Nonnull String userId);
+	List<String> readContactIds(@Nonnull String userId);
 
 	/**
 	 * @param userId id of a user for which list of contacts should be returned
 	 * @return list of contacts of a user identified by user id
 	 */
 	@Nonnull
-	List<User> readUserContacts(@Nonnull String userId);
+	List<User> readContacts(@Nonnull String userId);
 
 	/**
 	 * Method merges passed user <var>contacts</var> with contacts stored in the storage.
@@ -103,10 +103,10 @@ public interface UserDao extends Dao<User> {
 	 * @see org.solovyev.android.messenger.MergeDaoResult
 	 */
 	@Nonnull
-	MergeDaoResult<User, String> mergeUserContacts(@Nonnull String userId,
-												   @Nonnull List<User> contacts,
-												   boolean allowRemoval,
-												   boolean allowUpdate);
+	MergeDaoResult<User, String> mergeContacts(@Nonnull String userId,
+											   @Nonnull List<User> contacts,
+											   boolean allowRemoval,
+											   boolean allowUpdate);
 
-	void updateUserOnlineStatus(@Nonnull User contact);
+	void updateOnlineStatus(@Nonnull User contact);
 }

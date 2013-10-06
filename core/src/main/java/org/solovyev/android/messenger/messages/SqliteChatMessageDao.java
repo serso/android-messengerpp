@@ -15,7 +15,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.accounts.DeleteAllRowsForAccountDbExec;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
@@ -108,13 +107,8 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 	}
 
 	@Override
-	public void deleteAllMessages() {
+	public void deleteAll() {
 		doDbExec(getSqliteOpenHelper(), DeleteAllRowsDbExec.newInstance("messages"));
-	}
-
-	@Override
-	public void deleteAllMessagesForAccount(@Nonnull String accountId) {
-		doDbExec(getSqliteOpenHelper(), DeleteAllRowsForAccountDbExec.newInstance("messages", "account_id", accountId));
 	}
 
 	@Nonnull

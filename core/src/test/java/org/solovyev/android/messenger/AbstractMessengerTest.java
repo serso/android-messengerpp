@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  * Time: 10:16 PM
  */
 @RunWith(RobolectricTestRunner.class)
-public abstract class AbstractMessengerTestCase {
+public abstract class AbstractMessengerTest {
 
 	@Nonnull
 	@Inject
