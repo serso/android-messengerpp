@@ -290,7 +290,7 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void removeChatsInRealm(@Nonnull String realmId) {
+	public void removeChatsInAccount(@Nonnull String realmId) {
 		synchronized (lock) {
 			this.chatDao.deleteAllChatsForAccount(realmId);
 		}

@@ -96,6 +96,12 @@ public class TestSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	@Override
+	public void onOpen(SQLiteDatabase db) {
+		super.onOpen(db);
+		db.execSQL("PRAGMA foreign_keys=ON");
+	}
+
 	@Nonnull
 	public String convertStreamToString(java.io.InputStream is) {
 		try {

@@ -2,12 +2,11 @@ package org.solovyev.android.messenger;
 
 import android.app.Application;
 import android.content.Context;
-
+import android.database.sqlite.SQLiteDatabase;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
-
 import org.solovyev.android.TimeLoggingExecutor;
 import org.solovyev.android.db.CommonSQLiteOpenHelper;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
@@ -47,9 +46,8 @@ import org.solovyev.android.network.NetworkStateServiceImpl;
 import org.solovyev.tasks.TaskService;
 import org.solovyev.tasks.Tasks;
 
-import java.util.concurrent.Executor;
-
 import javax.annotation.Nonnull;
+import java.util.concurrent.Executor;
 
 /**
  * User: serso
@@ -107,6 +105,12 @@ public class MessengerModule extends AbstractModule {
 		public SQLiteOpenHelper(@Nonnull Context context,
 								@Nonnull SQLiteOpenHelperConfiguration configuration) {
 			super(context, configuration);
+		}
+
+		@Override
+		public void onOpen(SQLiteDatabase db) {
+			super.onOpen(db);
+			db.execSQL("PRAGMA foreign_keys=ON");
 		}
 	}
 

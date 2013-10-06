@@ -232,5 +232,5 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	int getUnreadMessagesCount(@Nonnull Entity chat);
 
-	void removeChatsInRealm(@Nonnull String realmId);
+	void removeChatsInAccount(@Nonnull String realmId);
 }

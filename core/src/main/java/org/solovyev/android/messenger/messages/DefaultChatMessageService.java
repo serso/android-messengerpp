@@ -134,7 +134,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 	}
 
 	@Override
-	public void removeAllMessagesInRealm(@Nonnull String realmId) {
+	public void removeAllMessagesInAccount(@Nonnull String realmId) {
 		synchronized (lock) {
 			this.chatMessageDao.deleteAllMessagesForAccount(realmId);
 		}
