@@ -30,6 +30,10 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	@Nonnull
 	private ChatDao chatDao;
 
+	public UserDaoTest() {
+		super(new UserSameEqualizer());
+	}
+
 	@Nonnull
 	@Override
 	protected Dao<User> getDao() {
@@ -53,10 +57,10 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		final TestAccount account = accountData.getAccount();
 		final List<User> contacts = accountData.getContacts();
 
-		assertTrue(UsersTest.areSame(account.getUser(), dao.read(account.getUser().getId())));
+		assertTrue(areSame(account.getUser(), dao.read(account.getUser().getId())));
 		for(int i = 0; i < contacts.size(); i++) {
 			final User user = dao.read(getEntityForContact(account, i).getEntityId());
-			assertTrue(UsersTest.areSame(contacts.get(i), user));
+			assertTrue(areSame(contacts.get(i), user));
 		}
 	}
 
@@ -100,6 +104,17 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		assertTrue(dao.readPropertiesById(userId).isEmpty());
 	}
 
+
+	@Test
+	public void testShouldReadAllContacts() throws Exception {
+		for (AccountData accountData : getAccountDataList()) {
+			final String userId = accountData.getAccount().getUser().getId();
+			final List<User> contactsFromDao = dao.readContacts(userId);
+
+		}
+
+	}
+
 	@Nonnull
 	@Override
 	protected Collection<User> populateEntities(@Nonnull Dao<User> dao) {
@@ -117,11 +132,6 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		final org.solovyev.android.messenger.entities.Entity entity = getAccount1().newUserEntity("test");
 		final User user = newUser(entity, newNeverSyncedUserSyncData(), properties);
 		return newEntity(user);
-	}
-
-	@Override
-	protected boolean areSame(@Nonnull User e1, @Nonnull User e2) {
-		return UsersTest.areSame(e1, e2);
 	}
 
 	@Nonnull

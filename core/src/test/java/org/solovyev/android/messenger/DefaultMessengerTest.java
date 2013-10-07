@@ -132,6 +132,11 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 	}
 
 	@Nonnull
+	public List<AccountData> getAccountDataList() {
+		return accountDataList;
+	}
+
+	@Nonnull
 	public TestAccount getAccount1() {
 		return accountDataList.get(0).account;
 	}

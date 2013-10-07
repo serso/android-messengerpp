@@ -91,13 +91,4 @@ public class AccountsTest {
 		Assert.assertTrue(expected.getConfiguration().isSame(actual.getConfiguration()));
 		Assert.assertEquals(expected.getUser(), actual.getUser());
 	}
-
-	public static boolean areSame(@Nonnull Account expected, @Nonnull Account actual) {
-		boolean same = areEqual(expected.getId(), actual.getId());
-		same &= areEqual(expected.getRealm(), actual.getRealm());
-		same &= areEqual(expected.getState(), actual.getState());
-		same &= expected.getConfiguration().isSame(actual.getConfiguration());
-		same &= areEqual(expected.getUser(), actual.getUser());
-		return same;
-	}
 }

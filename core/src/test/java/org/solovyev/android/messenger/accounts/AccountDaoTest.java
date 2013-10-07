@@ -38,6 +38,10 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Inject
 	private TestRealm realm;
 
+	public AccountDaoTest() {
+		super(new AccountSameEqualizer());
+	}
+
 	@Test
 	public void testShouldInsertAccount() throws Exception {
 		final Account expected = new TestAccount(realm, 100).copyForNewState(disabled_by_user);
@@ -200,10 +204,5 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Override
 	protected Account changeEntity(@Nonnull Account entity) {
 		return entity.copyForNewState(AccountState.disabled_by_user);
-	}
-
-	@Override
-	protected boolean areSame(@Nonnull Account e1, @Nonnull Account e2) {
-		return AccountsTest.areSame(e1, e2);
 	}
 }

@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.common.Objects;
+import org.solovyev.common.equals.CollectionEqualizer;
+import org.solovyev.common.equals.Equalizer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,8 +21,27 @@ import static org.junit.Assert.*;
 
 public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 
+	@Nullable
+	private final Equalizer<E> equalsEqualizer;
+
+	@Nullable
+	private final Equalizer<E> sameEqualizer;
+
 	@Nonnull
 	private Dao<E> dao;
+
+	protected DefaultDaoTest(@Nullable Equalizer<E> equalsEqualizer, @Nullable Equalizer<E> sameEqualizer) {
+		this.equalsEqualizer = equalsEqualizer;
+		this.sameEqualizer = sameEqualizer;
+	}
+
+	protected DefaultDaoTest(@Nullable Equalizer<E> sameEqualizer) {
+		this(null, sameEqualizer);
+	}
+
+	protected DefaultDaoTest() {
+		this(null, null);
+	}
 
 	@Override
 	@Before
@@ -109,35 +130,19 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 	}
 
 	private void assertEntitiesSame(@Nonnull Collection<E> c1, @Nonnull Collection<E> c2) {
-		assertEquals(c1.size(), c2.size());
-		assertOneWaySame(c1, c2);
-		assertOneWaySame(c2, c1);
-	}
-
-	private void assertOneWaySame(@Nonnull Collection<E> c1, @Nonnull Collection<E> c2) {
-		for (E e1 : c1) {
-			boolean found = false;
-			for (E e2 : c2) {
-				found = areSame(e1, e2);
-				if (found) {
-					break;
-				}
-			}
-
-			assertTrue(found);
-		}
+		Objects.areEqual(c1, c2, new CollectionEqualizer<E>(sameEqualizer));
 	}
 
 	private void assertEntitiesSame(@Nonnull E e1, @Nonnull E e2) {
 		assertTrue(areSame(e1, e2));
 	}
 
-	protected boolean areSame(@Nonnull E e1, @Nonnull E e2) {
-		return Objects.areEqual(e1, e2);
+	protected final boolean areSame(@Nonnull E e1, @Nonnull E e2) {
+		return Objects.areEqual(e1, e2, sameEqualizer);
 	}
 
-	protected boolean areEqual(@Nonnull E e1, @Nonnull E e2) {
-		return Objects.areEqual(e1, e2);
+	protected final boolean areEqual(@Nonnull E e1, @Nonnull E e2) {
+		return Objects.areEqual(e1, e2, equalsEqualizer);
 	}
 
 	@Test
