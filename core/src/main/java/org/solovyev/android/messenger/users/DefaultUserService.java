@@ -409,7 +409,7 @@ public class DefaultUserService implements UserService {
 		User user = getUserById(userEntity);
 		final MergeDaoResult<User, String> result;
 		synchronized (lock) {
-			result = userDao.mergeContacts(userEntity.getEntityId(), contacts, allowRemoval, allowUpdate);
+			result = userDao.mergeLinkedEntities(userEntity.getEntityId(), contacts, allowRemoval, allowUpdate);
 
 			// update sync data
 			user = user.updateContactsSyncDate();

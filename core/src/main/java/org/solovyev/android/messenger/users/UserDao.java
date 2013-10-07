@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.android.db.Dao;
+import org.solovyev.android.messenger.LinkedEntitiesDao;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.properties.AProperty;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * Time: 9:12 PM
  */
 
-public interface UserDao extends Dao<User> {
+public interface UserDao extends LinkedEntitiesDao<User> {
 
     /*
 	**********************************************************************
@@ -82,7 +82,7 @@ public interface UserDao extends Dao<User> {
 	 * @return list of ids of contacts of a user identified by user id
 	 */
 	@Nonnull
-	List<String> readContactIds(@Nonnull String userId);
+	List<String> readLinkedEntityIds(@Nonnull String userId);
 
 	/**
 	 * @param userId id of a user for which list of contacts should be returned
@@ -103,10 +103,10 @@ public interface UserDao extends Dao<User> {
 	 * @see org.solovyev.android.messenger.MergeDaoResult
 	 */
 	@Nonnull
-	MergeDaoResult<User, String> mergeContacts(@Nonnull String userId,
-											   @Nonnull List<User> contacts,
-											   boolean allowRemoval,
-											   boolean allowUpdate);
+	MergeDaoResult<User, String> mergeLinkedEntities(@Nonnull String userId,
+													 @Nonnull List<User> contacts,
+													 boolean allowRemoval,
+													 boolean allowUpdate);
 
 	void updateOnlineStatus(@Nonnull User contact);
 }

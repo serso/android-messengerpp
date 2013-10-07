@@ -1,8 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
@@ -83,13 +81,13 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	@Test
 	public void testContactShouldBeRemoved() throws Exception {
 		final String userId = getAccount1().getUser().getId();
-		final List<String> contactIdsBefore = dao.readContactIds(userId);
+		final List<String> contactIdsBefore = dao.readLinkedEntityIds(userId);
 
 		final String removeUserId = contactIdsBefore.get(0);
 		dao.deleteById(removeUserId);
 		contactIdsBefore.remove(removeUserId);
 
-		final List<String> contactIdsAfter = dao.readContactIds(userId);
+		final List<String> contactIdsAfter = dao.readLinkedEntityIds(userId);
 		assertEquals(contactIdsBefore, contactIdsAfter);
 	}
 
@@ -130,7 +128,7 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		for (AccountData accountData : getAccountDataList()) {
 			final String userId = accountData.getAccount().getUser().getId();
 
-			final List<String> contactIdsFromDao = dao.readContactIds(userId);
+			final List<String> contactIdsFromDao = dao.readLinkedEntityIds(userId);
 			Objects.areEqual(contactIdsFromDao, newArrayList(transform(accountData.getContacts(), new Function<User, String>() {
 				@Override
 				public String apply(@Nullable User contact) {

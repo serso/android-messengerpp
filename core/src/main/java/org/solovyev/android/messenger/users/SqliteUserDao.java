@@ -13,11 +13,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
-import org.solovyev.android.messenger.EntityAwareByIdFinder;
+import org.solovyev.android.messenger.LinkedEntitiesDao;
 import org.solovyev.android.messenger.ReplacePropertyExec;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
@@ -28,8 +26,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Singleton;
 import java.util.*;
 
-import static com.google.common.base.Predicates.equalTo;
-import static com.google.common.collect.Iterables.find;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
 import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
@@ -48,12 +44,12 @@ import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
 public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
 	@Nonnull
-	private final Dao<User> dao;
+	private final LinkedEntitiesDao<User> dao;
 
 	@Inject
 	public SqliteUserDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
-		dao = new SqliteDao<User>("users", "id", new UserDaoMapper(this), context, sqliteOpenHelper);
+		dao = new SqliteLinkedEntitiesDao<User>("users", "id", new UserDaoMapper(this), context, sqliteOpenHelper, "user_contacts", "user_id", "contact_id");
 	}
 
 	@Override
@@ -119,8 +115,8 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Nonnull
 	@Override
-	public List<String> readContactIds(@Nonnull String userId) {
-		return doDbQuery(getSqliteOpenHelper(), new LoadContactIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
+	public List<String> readLinkedEntityIds(@Nonnull String userId) {
+		return dao.readLinkedEntityIds(userId);
 	}
 
 	@Nonnull
@@ -131,41 +127,8 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<User, String> mergeContacts(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
-		final MergeDaoResultImpl<User, String> result = new MergeDaoResultImpl<User, String>(contacts);
-
-		final List<String> contactIdsFromDb = readContactIds(userId);
-		for (final String contactIdFromDb : contactIdsFromDb) {
-			try {
-				// contact exists both in db and on remote server => just update contact properties
-				final User updatedObject = find(contacts, new EntityAwareByIdFinder(contactIdFromDb));
-				if (allowUpdate) {
-					result.addUpdatedObject(updatedObject);
-				}
-			} catch (NoSuchElementException e) {
-				if (allowRemoval) {
-					// contact was removed on remote server => need to remove from local db
-					result.addRemovedObjectId(contactIdFromDb);
-				}
-			}
-		}
-
-		final Collection<String> userIdsFromDb = readAllIds();
-		for (User contact : contacts) {
-			try {
-				// contact exists both in db and on remote server => case already covered above
-				find(contactIdsFromDb, equalTo(contact.getEntity().getEntityId()));
-			} catch (NoSuchElementException e) {
-				// contact was added on remote server => need to add to local db
-				if (userIdsFromDb.contains(contact.getEntity().getEntityId())) {
-					// only link must be added - user already in users table
-					result.addAddedObjectLink(contact);
-				} else {
-					// no user information in local db is available - full user insertion
-					result.addAddedObject(contact);
-				}
-			}
-		}
+	public MergeDaoResult<User, String> mergeLinkedEntities(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
+		final MergeDaoResult<User, String> result = dao.mergeLinkedEntities(userId, contacts, allowRemoval, allowUpdate);
 
 		final List<DbExec> execs = new ArrayList<DbExec>();
 
@@ -268,29 +231,6 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
 			return db.delete("user_contacts", "user_id = ? and contact_id in " + AndroidDbUtils.inClause(contactIds), AndroidDbUtils.inClauseValues(contactIds, userId));
-		}
-	}
-
-	private static final class LoadContactIdsByUserId extends AbstractDbQuery<List<String>> {
-
-		@Nonnull
-		private final String userId;
-
-		private LoadContactIdsByUserId(@Nonnull Context context, @Nonnull String userId, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
-			super(context, sqliteOpenHelper);
-			this.userId = userId;
-		}
-
-		@Nonnull
-		@Override
-		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("users", null, "id in (select contact_id from user_contacts where user_id = ? )", new String[]{userId}, null, null, null);
-		}
-
-		@Nonnull
-		@Override
-		public List<String> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
 		}
 	}
 

@@ -32,6 +32,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.*;
 
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.collect.Iterables.find;
 import static org.solovyev.android.db.AndroidDbUtils.*;
 
 /**
@@ -222,37 +224,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	@Nonnull
 	@Override
 	public MergeDaoResult<ApiChat, String> mergeChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> apiChats) {
-		final MergeDaoResultImpl<ApiChat, String> result = new MergeDaoResultImpl<ApiChat, String>(apiChats);
-
-		final List<String> chatsFromDb = readChatIdsByUserId(userId);
-		for (final String chatIdFromDb : chatsFromDb) {
-			try {
-				// chat exists both in db and on remote server => just update chat properties
-				result.addUpdatedObject(Iterables.find(apiChats, new ChatByIdFinder(chatIdFromDb)));
-			} catch (NoSuchElementException e) {
-				// !!! actually not all chats are loaded and we cannot delete the chat just because it is not in the list
-
-				// chat was removed on remote server => need to remove from local db
-				//result.addRemovedObjectId(chatIdFromDb);
-			}
-		}
-
-		final Collection<String> chatIdsFromDb = readAllIds();
-		for (ApiChat apiChat : apiChats) {
-			try {
-				// chat exists both in db and on remote server => case already covered above
-				Iterables.find(chatsFromDb, Predicates.equalTo(apiChat.getChat().getEntity().getEntityId()));
-			} catch (NoSuchElementException e) {
-				// chat was added on remote server => need to add to local db
-				if (chatIdsFromDb.contains(apiChat.getChat().getEntity().getEntityId())) {
-					// only link must be added - chat already in chats table
-					result.addAddedObjectLink(apiChat);
-				} else {
-					// no chat information in local db is available - full chat insertion
-					result.addAddedObject(apiChat);
-				}
-			}
-		}
+		final MergeDaoResultImpl<ApiChat, String> result = getMergeResult(userId, apiChats);
 
 		final List<DbExec> execs = new ArrayList<DbExec>();
 
@@ -290,6 +262,49 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 		doDbExecs(getSqliteOpenHelper(), execs);
 
+		return result;
+	}
+
+	private MergeDaoResultImpl<ApiChat, String> getMergeResult(@Nonnull String userId, List<? extends ApiChat> apiChats) {
+		// !!! actually not all chats are loaded and we cannot delete the chat just because it is not in the list
+		return getMergeResult(userId, apiChats, false, false);
+	}
+
+	private MergeDaoResultImpl<ApiChat, String> getMergeResult(@Nonnull String userId, List<? extends ApiChat> apiChats, boolean allowRemoval, boolean allowUpdate) {
+		final MergeDaoResultImpl<ApiChat, String> result = new MergeDaoResultImpl<ApiChat, String>(apiChats);
+
+		final List<String> idsFromDb = readChatIdsByUserId(userId);
+		for (final String idFromDb : idsFromDb) {
+			try {
+				// chat exists both in db and on remote server => just update chat properties
+				final ApiChat updatedObject = find(apiChats, new ChatByIdFinder(idFromDb));
+				if (allowUpdate) {
+					result.addUpdatedObject(updatedObject);
+				}
+			} catch (NoSuchElementException e) {
+				if (allowRemoval) {
+					// chat was removed on remote server => need to remove from local db
+					result.addRemovedObjectId(idFromDb);
+				}
+			}
+		}
+
+		final Collection<String> allIdsFromDb = readAllIds();
+		for (ApiChat apiChat : apiChats) {
+			try {
+				// chat exists both in db and on remote server => case already covered above
+				find(idsFromDb, equalTo(apiChat.getChat().getEntity().getEntityId()));
+			} catch (NoSuchElementException e) {
+				// chat was added on remote server => need to add to local db
+				if (allIdsFromDb.contains(apiChat.getChat().getEntity().getEntityId())) {
+					// only link must be added - chat already in chats table
+					result.addAddedObjectLink(apiChat);
+				} else {
+					// no chat information in local db is available - full chat insertion
+					result.addAddedObject(apiChat);
+				}
+			}
+		}
 		return result;
 	}
 
