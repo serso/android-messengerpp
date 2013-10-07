@@ -1,5 +1,6 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.LinkedEntitiesDao;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.properties.AProperty;
@@ -15,7 +16,7 @@ import java.util.List;
  * Time: 9:12 PM
  */
 
-public interface UserDao extends LinkedEntitiesDao<User> {
+public interface UserDao extends LinkedEntitiesDao<User>, Dao<User> {
 
     /*
 	**********************************************************************
@@ -82,7 +83,7 @@ public interface UserDao extends LinkedEntitiesDao<User> {
 	 * @return list of ids of contacts of a user identified by user id
 	 */
 	@Nonnull
-	List<String> readLinkedEntityIds(@Nonnull String userId);
+	Collection<String> readLinkedEntityIds(@Nonnull String userId);
 
 	/**
 	 * @param userId id of a user for which list of contacts should be returned
@@ -95,6 +96,7 @@ public interface UserDao extends LinkedEntitiesDao<User> {
 	 * Method merges passed user <var>contacts</var> with contacts stored in the storage.
 	 * The result of an operation might be adding, removal, updating of user contacts.
 	 *
+	 *
 	 * @param userId       id of a user for which merge should be done
 	 * @param contacts     list of ALL contacts of a user
 	 * @param allowRemoval allow contacts removal
@@ -104,7 +106,7 @@ public interface UserDao extends LinkedEntitiesDao<User> {
 	 */
 	@Nonnull
 	MergeDaoResult<User, String> mergeLinkedEntities(@Nonnull String userId,
-													 @Nonnull List<User> contacts,
+													 @Nonnull Iterable<User> contacts,
 													 boolean allowRemoval,
 													 boolean allowUpdate);
 

@@ -1,13 +1,20 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
-import org.jivesoftware.smack.*;
-import org.jivesoftware.smackx.ChatStateManager;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ChatManagerListener;
+import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.ChatStateManager;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 
 /**
  * User: serso
@@ -65,8 +72,8 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 		return this.connection;
 	}
 
-	private void prepareConnection(@Nonnull Connection connection, @Nonnull XmppAccount realm) throws XMPPException {
-		checkConnectionStatus(connection, realm);
+	private void prepareConnection(@Nonnull Connection connection, @Nonnull XmppAccount account) throws XMPPException {
+		checkConnectionStatus(connection, account);
 
 		// todo serso: investigate why we cannot add listeners in after connection constructor
 		// Attach listeners to connection

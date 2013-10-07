@@ -200,7 +200,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return merge result
 	 */
 	@Nonnull
-	MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException;
+	MergeDaoResult<Chat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException;
 
 	/**
 	 * Method tries to save chat.
@@ -212,7 +212,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return updated chat
 	 */
 	@Nonnull
-	ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException;
+	Chat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException;
 
 	/**
 	 * Key: chat for which unread messages exist, value: number of unread messages

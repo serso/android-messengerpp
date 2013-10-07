@@ -131,6 +131,41 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 		assertEntitiesSame(entity.entity, dao.read(entity.id));
 	}
 
+	@Test
+	public void testShouldUpdateEntity() throws Exception {
+		final Entity<E> e1 = insertEntity();
+		final Entity<E> e2 = newEntity(changeEntity(e1.entity), e1.id);
+		dao.update(e2.entity);
+		assertTrue(any(dao.readAll(), new SamePredicate(e2.entity)));
+	}
+
+	@Nonnull
+	protected abstract Collection<E> populateEntities(@Nonnull Dao<E> dao);
+
+	@Nonnull
+	protected abstract Entity<E> newInsertEntity();
+
+	@Nonnull
+	protected abstract E changeEntity(@Nonnull E entity);
+
+	@Nonnull
+	protected static <E extends EntityAware> Entity<E> newEntity(@Nonnull E entity) {
+		return new Entity<E>(entity, entity.getEntity().getEntityId());
+	}
+
+	@Nonnull
+	protected static <E> Entity<E> newEntity(@Nonnull E entity, @Nonnull String id) {
+		return new Entity<E>(entity, id);
+	}
+
+	/*
+	**********************************************************************
+	*
+	*                           COMPARISON
+	*
+	**********************************************************************
+	*/
+
 	protected final void assertEntitiesSame(@Nonnull Collection<E> c1, @Nonnull Collection<E> c2) {
 		Assert.assertTrue(Objects.areEqual(c1, c2, new CollectionEqualizer<E>(sameEqualizer)));
 	}
@@ -155,22 +190,13 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 		return Objects.areEqual(e1, e2, equalsEqualizer);
 	}
 
-	@Test
-	public void testShouldUpdateEntity() throws Exception {
-		final Entity<E> e1 = insertEntity();
-		final Entity<E> e2 = newEntity(changeEntity(e1.entity), e1.id);
-		dao.update(e2.entity);
-		assertTrue(any(dao.readAll(), new SamePredicate(e2.entity)));
-	}
-
-	@Nonnull
-	protected abstract Collection<E> populateEntities(@Nonnull Dao<E> dao);
-
-	@Nonnull
-	protected abstract Entity<E> newInsertEntity();
-
-	@Nonnull
-	protected abstract E changeEntity(@Nonnull E entity);
+	/*
+	**********************************************************************
+	*
+	*                           STATIC/INNER
+	*
+	**********************************************************************
+	*/
 
 	protected static final class Entity<E> {
 		@Nonnull
@@ -183,16 +209,6 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 			this.entity = entity;
 			this.id = id;
 		}
-	}
-
-	@Nonnull
-	protected static <E extends EntityAware> Entity<E> newEntity(@Nonnull E entity) {
-		return new Entity<E>(entity, entity.getEntity().getEntityId());
-	}
-
-	@Nonnull
-	protected static <E> Entity<E> newEntity(@Nonnull E entity, @Nonnull String id) {
-		return new Entity<E>(entity, id);
 	}
 
 	private class SamePredicate implements Predicate<E> {

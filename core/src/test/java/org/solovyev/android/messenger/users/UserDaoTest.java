@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
@@ -81,13 +82,13 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	@Test
 	public void testContactShouldBeRemoved() throws Exception {
 		final String userId = getAccount1().getUser().getId();
-		final List<String> contactIdsBefore = dao.readLinkedEntityIds(userId);
+		final Collection<String> contactIdsBefore = dao.readLinkedEntityIds(userId);
 
-		final String removeUserId = contactIdsBefore.get(0);
+		final String removeUserId = getFirst(contactIdsBefore, null);
 		dao.deleteById(removeUserId);
 		contactIdsBefore.remove(removeUserId);
 
-		final List<String> contactIdsAfter = dao.readLinkedEntityIds(userId);
+		final Collection<String> contactIdsAfter = dao.readLinkedEntityIds(userId);
 		assertEquals(contactIdsBefore, contactIdsAfter);
 	}
 
@@ -96,8 +97,8 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		final String userId = getAccount1().getUser().getId();
 		dao.deleteById(userId);
 
-		assertTrue(chatDao.readChatIdsByUserId(userId).isEmpty());
-		assertFalse(chatDao.readChatIdsByUserId(getAccount2().getUser().getId()).isEmpty());
+		assertTrue(chatDao.readLinkedEntityIds(userId).isEmpty());
+		assertFalse(chatDao.readLinkedEntityIds(getAccount2().getUser().getId()).isEmpty());
 	}
 
 	@Test
@@ -128,7 +129,7 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		for (AccountData accountData : getAccountDataList()) {
 			final String userId = accountData.getAccount().getUser().getId();
 
-			final List<String> contactIdsFromDao = dao.readLinkedEntityIds(userId);
+			final Collection<String> contactIdsFromDao = dao.readLinkedEntityIds(userId);
 			Objects.areEqual(contactIdsFromDao, newArrayList(transform(accountData.getContacts(), new Function<User, String>() {
 				@Override
 				public String apply(@Nullable User contact) {

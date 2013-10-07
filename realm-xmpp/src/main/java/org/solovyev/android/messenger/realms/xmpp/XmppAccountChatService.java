@@ -107,14 +107,14 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 		public String call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 			final ChatManager chatManager = connection.getChatManager();
 
-			final Entity realmChat = chat.getEntity();
-			org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(realmChat.getAccountEntityId());
+			final Entity accountChat = chat.getEntity();
+			org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(accountChat.getAccountEntityId());
 			if (smackChat == null) {
 				// smack forget about chat ids after restart => need to create chat here
-				smackChat = chatManager.createChat(chat.getSecondUser().getAccountEntityId(), realmChat.getAccountEntityId(), new XmppMessageListener(account, realmChat));
+				smackChat = chatManager.createChat(chat.getSecondUser().getAccountEntityId(), accountChat.getAccountEntityId(), new XmppMessageListener(account, accountChat));
 			} else {
 				// todo serso: remove if unnecessary
-				smackChat.addMessageListener(new XmppMessageListener(account, realmChat));
+				smackChat.addMessageListener(new XmppMessageListener(account, accountChat));
 			}
 
 			smackChat.sendMessage(message.getBody());

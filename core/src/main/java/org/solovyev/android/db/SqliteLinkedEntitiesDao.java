@@ -53,7 +53,8 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 								   @Nonnull SQLiteOpenHelper sqliteOpenHelper,
 								   @Nonnull String linkedTableName,
 								   @Nonnull String linkedIdColumnName,
-								   @Nonnull String linkedEntityIdColumnName) {
+								   @Nonnull String linkedEntityIdColumnName,
+								   @Nonnull Dao<E> dao) {
 		super(context, sqliteOpenHelper);
 		this.tableName = tableName;
 		this.idColumnName = idColumnName;
@@ -61,55 +62,15 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 		this.linkedTableName = linkedTableName;
 		this.linkedIdColumnName = linkedIdColumnName;
 		this.linkedEntityIdColumnName = linkedEntityIdColumnName;
-		this.dao = new SqliteDao<E>(tableName, idColumnName, mapper, context, sqliteOpenHelper);
-	}
-
-	public long create(@Nonnull E entity) {
-		return dao.create(entity);
-	}
-
-	@Override
-	@Nullable
-	public E read(@Nonnull String id) {
-		return dao.read(id);
-	}
-
-	@Override
-	@Nonnull
-	public Collection<E> readAll() {
-		return dao.readAll();
-	}
-
-	@Override
-	@Nonnull
-	public Collection<String> readAllIds() {
-		return dao.readAllIds();
-	}
-
-	public long update(@Nonnull E entity) {
-		return dao.update(entity);
-	}
-
-	public void delete(@Nonnull E entity) {
-		dao.delete(entity);
-	}
-
-	@Override
-	public void deleteById(@Nonnull String id) {
-		dao.deleteById(id);
-	}
-
-	@Override
-	public void deleteAll() {
-		dao.deleteAll();
+		this.dao = dao;
 	}
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<E, String> mergeLinkedEntities(@Nonnull String id, @Nonnull List<E> linkedEntities, boolean allowRemoval, boolean allowUpdate) {
-		final MergeDaoResultImpl<E, String> result = new MergeDaoResultImpl<E, String>(linkedEntities);
+	public MergeDaoResult<E, String> mergeLinkedEntities(@Nonnull String id, @Nonnull Iterable<E> linkedEntities, boolean allowRemoval, boolean allowUpdate) {
+		final MergeDaoResultImpl<E, String> result = new MergeDaoResultImpl<E, String>();
 
-		final List<String> idsFromDb = readLinkedEntityIds(id);
+		final Collection<String> idsFromDb = readLinkedEntityIds(id);
 		for (final String idFromDb : idsFromDb) {
 			try {
 				// entity exists both in db and on remote server => just update entity properties
@@ -131,7 +92,7 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 			}
 		}
 
-		final Collection<String> allIdsFromDb = readAllIds();
+		final Collection<String> allIdsFromDb = dao.readAllIds();
 		for (E entity : linkedEntities) {
 			final String entityId = mapper.getId(entity);
 			try {
@@ -153,7 +114,7 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 
 	@Nonnull
 	@Override
-	public List<String> readLinkedEntityIds(@Nonnull String id) {
+	public Collection<String> readLinkedEntityIds(@Nonnull String id) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadEntityIdsById(getContext(), id, getSqliteOpenHelper()));
 	}
 

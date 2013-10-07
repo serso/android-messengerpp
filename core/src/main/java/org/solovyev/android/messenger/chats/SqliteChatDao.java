@@ -6,18 +6,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
+import org.solovyev.android.messenger.LinkedEntitiesDao;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.messenger.messages.ChatMessage;
@@ -29,11 +28,12 @@ import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.*;
 
-import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.transform;
 import static org.solovyev.android.db.AndroidDbUtils.*;
 
 /**
@@ -67,16 +67,21 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	@Nonnull
 	private final Dao<Chat> dao;
 
+	@Nonnull
+	private final LinkedEntitiesDao<Chat> linkedEntitiesDao;
+
 	@Inject
 	public SqliteChatDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
-		dao = new SqliteDao<Chat>("chats", "id", new ChatDaoMapper(this), context, sqliteOpenHelper);
+		final ChatDaoMapper chatDaoMapper = new ChatDaoMapper(this);
+		dao = new SqliteDao<Chat>("chats", "id", chatDaoMapper, context, sqliteOpenHelper);
+		linkedEntitiesDao = new SqliteLinkedEntitiesDao<Chat>("chats", "id", chatDaoMapper, context, sqliteOpenHelper, "user_chats", "user_id", "chat_id", dao);
 	}
 
 	@Nonnull
 	@Override
-	public List<String> readChatIdsByUserId(@Nonnull String userId) {
-		return doDbQuery(getSqliteOpenHelper(), new LoadChatIdsByUserId(getContext(), userId, getSqliteOpenHelper()));
+	public Collection<String> readLinkedEntityIds(@Nonnull String userId) {
+		return linkedEntitiesDao.readLinkedEntityIds(userId);
 	}
 
 	@Override
@@ -223,39 +228,27 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<ApiChat, String> mergeChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> apiChats) {
-		final MergeDaoResultImpl<ApiChat, String> result = getMergeResult(userId, apiChats);
+	public MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends ApiChat> apiChats) {
+		final MergeDaoResult<Chat, String> result = mergeLinkedEntities(userId, apiChats);
 
 		final List<DbExec> execs = new ArrayList<DbExec>();
 
-		if (!result.getRemovedObjectIds().isEmpty()) {
-			execs.addAll(RemoveChats.newInstances(userId, result.getRemovedObjectIds()));
-		}
+		for (final Chat addedChat : result.getAddedObjects()) {
+			final ApiChat apiChat = find(apiChats, new Predicate<ApiChat>() {
+				@Override
+				public boolean apply(@Nullable ApiChat apiChat) {
+					assert apiChat != null;
+					return apiChat.getChat().equals(addedChat);
+				}
+			});
 
-		for (ApiChat updatedChat : result.getUpdatedObjects()) {
-			execs.add(new UpdateChat(updatedChat.getChat()));
-			execs.add(new DeleteChatProperties(updatedChat.getChat()));
-			execs.add(new InsertChatProperties(updatedChat.getChat()));
-		}
-
-		for (ApiChat addedChatLink : result.getAddedObjectLinks()) {
-			execs.add(new UpdateChat(addedChatLink.getChat()));
-			execs.add(new DeleteChatProperties(addedChatLink.getChat()));
-			execs.add(new InsertChatProperties(addedChatLink.getChat()));
-			execs.add(new InsertChatLink(userId, addedChatLink.getChat().getEntity().getEntityId()));
-		}
-
-		for (ApiChat addedChat : result.getAddedObjects()) {
-			execs.add(new InsertChat(addedChat.getChat()));
-			execs.add(new InsertChatProperties(addedChat.getChat()));
-			execs.add(new InsertChatLink(userId, addedChat.getChat().getEntity().getEntityId()));
-			for (ChatMessage chatMessage : addedChat.getMessages()) {
-				execs.add(new SqliteChatMessageDao.InsertMessage(addedChat.getChat(), chatMessage));
+			for (ChatMessage chatMessage : apiChat.getMessages()) {
+				execs.add(new SqliteChatMessageDao.InsertMessage(addedChat, chatMessage));
 			}
 
-			for (User participant : addedChat.getParticipants()) {
+			for (User participant : apiChat.getParticipants()) {
 				if (!participant.getEntity().getEntityId().equals(userId)) {
-					execs.add(new InsertChatLink(participant.getEntity().getEntityId(), addedChat.getChat().getEntity().getEntityId()));
+					execs.add(new InsertChatLink(participant.getEntity().getEntityId(), addedChat.getEntity().getEntityId()));
 				}
 			}
 		}
@@ -265,85 +258,50 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		return result;
 	}
 
-	private MergeDaoResultImpl<ApiChat, String> getMergeResult(@Nonnull String userId, List<? extends ApiChat> apiChats) {
+	private MergeDaoResult<Chat, String> mergeLinkedEntities(@Nonnull String userId, Iterable<? extends ApiChat> apiChats) {
 		// !!! actually not all chats are loaded and we cannot delete the chat just because it is not in the list
-		return getMergeResult(userId, apiChats, false, false);
+		return mergeLinkedEntities(userId, transform(apiChats, new Function<ApiChat, Chat>() {
+			@Override
+			public Chat apply(@Nullable ApiChat apiChat) {
+				assert apiChat != null;
+				return apiChat.getChat();
+			}
+		}), false, true);
 	}
 
-	private MergeDaoResultImpl<ApiChat, String> getMergeResult(@Nonnull String userId, List<? extends ApiChat> apiChats, boolean allowRemoval, boolean allowUpdate) {
-		final MergeDaoResultImpl<ApiChat, String> result = new MergeDaoResultImpl<ApiChat, String>(apiChats);
+	@Nonnull
+	@Override
+	public MergeDaoResult<Chat, String> mergeLinkedEntities(@Nonnull String userId, @Nonnull Iterable<Chat> linkedEntities, boolean allowRemoval, boolean allowUpdate) {
+		final MergeDaoResult<Chat, String> result = linkedEntitiesDao.mergeLinkedEntities(userId, linkedEntities, allowRemoval, allowUpdate);
 
-		final List<String> idsFromDb = readChatIdsByUserId(userId);
-		for (final String idFromDb : idsFromDb) {
-			try {
-				// chat exists both in db and on remote server => just update chat properties
-				final ApiChat updatedObject = find(apiChats, new ChatByIdFinder(idFromDb));
-				if (allowUpdate) {
-					result.addUpdatedObject(updatedObject);
-				}
-			} catch (NoSuchElementException e) {
-				if (allowRemoval) {
-					// chat was removed on remote server => need to remove from local db
-					result.addRemovedObjectId(idFromDb);
-				}
-			}
+		final List<DbExec> execs = new ArrayList<DbExec>();
+
+		if (!result.getRemovedObjectIds().isEmpty()) {
+			execs.addAll(RemoveChats.newInstances(userId, result.getRemovedObjectIds()));
 		}
 
-		final Collection<String> allIdsFromDb = readAllIds();
-		for (ApiChat apiChat : apiChats) {
-			try {
-				// chat exists both in db and on remote server => case already covered above
-				find(idsFromDb, equalTo(apiChat.getChat().getEntity().getEntityId()));
-			} catch (NoSuchElementException e) {
-				// chat was added on remote server => need to add to local db
-				if (allIdsFromDb.contains(apiChat.getChat().getEntity().getEntityId())) {
-					// only link must be added - chat already in chats table
-					result.addAddedObjectLink(apiChat);
-				} else {
-					// no chat information in local db is available - full chat insertion
-					result.addAddedObject(apiChat);
-				}
-			}
+		for (Chat updatedChat : result.getUpdatedObjects()) {
+			execs.add(new UpdateChat(updatedChat));
+			execs.add(new DeleteChatProperties(updatedChat));
+			execs.add(new InsertChatProperties(updatedChat));
 		}
+
+		for (Chat addedChatLink : result.getAddedObjectLinks()) {
+			execs.add(new UpdateChat(addedChatLink));
+			execs.add(new DeleteChatProperties(addedChatLink));
+			execs.add(new InsertChatProperties(addedChatLink));
+			execs.add(new InsertChatLink(userId, addedChatLink.getEntity().getEntityId()));
+		}
+
+		for (final Chat addedChat : result.getAddedObjects()) {
+			execs.add(new InsertChat(addedChat));
+			execs.add(new InsertChatProperties(addedChat));
+			execs.add(new InsertChatLink(userId, addedChat.getEntity().getEntityId()));
+		}
+
+		doDbExecs(getSqliteOpenHelper(), execs);
+
 		return result;
-	}
-
-	private static final class LoadChatIdsByUserId extends AbstractDbQuery<List<String>> {
-
-		@Nonnull
-		private final String userId;
-
-		private LoadChatIdsByUserId(@Nonnull Context context, @Nonnull String userId, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
-			super(context, sqliteOpenHelper);
-			this.userId = userId;
-		}
-
-		@Nonnull
-		@Override
-		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("chats", null, "id in (select chat_id from user_chats where user_id = ? ) ", new String[]{userId}, null, null, null);
-		}
-
-		@Nonnull
-		@Override
-		public List<String> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
-		}
-	}
-
-	private static class ChatByIdFinder implements Predicate<ApiChat> {
-
-		@Nonnull
-		private final String chatId;
-
-		public ChatByIdFinder(@Nonnull String chatId) {
-			this.chatId = chatId;
-		}
-
-		@Override
-		public boolean apply(@javax.annotation.Nullable ApiChat apiChat) {
-			return apiChat != null && chatId.equals(apiChat.getChat().getEntity().getEntityId());
-		}
 	}
 
 	private static final class RemoveChats implements DbExec {

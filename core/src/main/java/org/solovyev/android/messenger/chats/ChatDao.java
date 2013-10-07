@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.db.Dao;
+import org.solovyev.android.messenger.LinkedEntitiesDao;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
@@ -17,10 +18,10 @@ import java.util.Map;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface ChatDao extends Dao<Chat> {
+public interface ChatDao extends LinkedEntitiesDao<Chat>, Dao<Chat> {
 
 	@Nonnull
-	MergeDaoResult<ApiChat, String> mergeChats(@Nonnull String userId, @Nonnull List<? extends ApiChat> chats);
+	MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends ApiChat> chats);
 
 	@Nonnull
 	Collection<String> readAllIds();
@@ -32,7 +33,7 @@ public interface ChatDao extends Dao<Chat> {
 	List<Chat> readChatsByUserId(@Nonnull String userId);
 
 	@Nonnull
-	List<String> readChatIdsByUserId(@Nonnull String userId);
+	Collection<String> readLinkedEntityIds(@Nonnull String userId);
 
 	@Nonnull
 	List<User> readParticipants(@Nonnull String chatId);

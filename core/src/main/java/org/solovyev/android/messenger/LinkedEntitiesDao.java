@@ -1,19 +1,17 @@
 package org.solovyev.android.messenger;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.db.Dao;
-
-public interface LinkedEntitiesDao<E> extends Dao<E> {
+public interface LinkedEntitiesDao<E> {
 
 	@Nonnull
 	MergeDaoResult<E, String> mergeLinkedEntities(@Nonnull String id,
-												  @Nonnull List<E> linkedEntities,
+												  @Nonnull Iterable<E> linkedEntities,
 												  boolean allowRemoval,
 												  boolean allowUpdate);
 
 	@Nonnull
-	public List<String> readLinkedEntityIds(@Nonnull String id);
+	public Collection<String> readLinkedEntityIds(@Nonnull String id);
 }

@@ -29,15 +29,11 @@ public final class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
 	@Nonnull
 	private final List<T> updatedObjects;
 
-	@Nonnull
-	private final Collection<? extends T> objects;
-
-	public MergeDaoResultImpl(@Nonnull Collection<? extends T> objects) {
-		this.objects = objects;
-		this.removedObjectIds = new ArrayList<ID>(objects.size());
-		this.addedObjectLinks = new ArrayList<T>(objects.size());
-		this.addedObjects = new ArrayList<T>(objects.size());
-		this.updatedObjects = new ArrayList<T>(objects.size());
+	public MergeDaoResultImpl() {
+		this.removedObjectIds = new ArrayList<ID>();
+		this.addedObjectLinks = new ArrayList<T>();
+		this.addedObjects = new ArrayList<T>();
+		this.updatedObjects = new ArrayList<T>();
 	}
 
 	@Nonnull

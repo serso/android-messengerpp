@@ -33,6 +33,7 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
@@ -222,16 +223,16 @@ public class DefaultChatService implements ChatService {
 				final Entity participant1 = user.getEntity();
 				final Entity participant2 = participants.get(0).getEntity();
 
-				final Entity realmChat = getPrivateChatId(participant1, participant2);
+				final Entity accountChat = getPrivateChatId(participant1, participant2);
 
-				if (!realmChat.getAccountEntityId().equals(apiChat.getChat().getEntity().getAccountEntityId())) {
+				if (!accountChat.getAccountEntityId().equals(apiChat.getChat().getEntity().getAccountEntityId())) {
 					/**
 					 * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#getPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
 					 */
-					final String realmChatId = apiChat.getChat().getEntity().getAccountEntityId();
+					final String accountChatId = apiChat.getChat().getEntity().getAccountEntityId();
 
 					// copy with new id
-					apiChat = apiChat.copyWithNew(account.newRealmEntity(realmChatId, realmChat.getEntityId()));
+					apiChat = apiChat.copyWithNew(account.newRealmEntity(accountChatId, accountChat.getEntityId()));
 				}
 			}
 		}
@@ -249,14 +250,14 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public ApiChat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException {
-		final MergeDaoResult<ApiChat, String> result = mergeUserChats(user, Arrays.asList(chat));
+	public Chat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException {
+		final MergeDaoResult<Chat, String> result = mergeUserChats(user, Arrays.asList(chat));
 		if (result.getAddedObjects().size() > 0) {
 			return result.getAddedObjects().get(0);
 		} else if (result.getUpdatedObjects().size() > 0) {
 			return result.getUpdatedObjects().get(0);
 		} else {
-			return chat;
+			return chat.getChat();
 		}
 	}
 
@@ -290,13 +291,13 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<ApiChat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException {
-		final MergeDaoResult<ApiChat, String> result;
+	public MergeDaoResult<Chat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException {
+		final MergeDaoResult<Chat, String> result;
 
 		synchronized (lock) {
 			final List<ApiChat> preparedChats;
 			try {
-				preparedChats = Lists.transform(chats, new Function<ApiChat, ApiChat>() {
+				preparedChats = newArrayList(transform(chats, new Function<ApiChat, ApiChat>() {
 					@Override
 					public ApiChat apply(@Nullable ApiChat chat) {
 						assert chat != null;
@@ -306,10 +307,11 @@ public class DefaultChatService implements ChatService {
 							throw new AccountRuntimeException(e);
 						}
 					}
-				});
+				}));
 			} catch (AccountRuntimeException e) {
 				throw new AccountException(e);
 			}
+
 			result = chatDao.mergeChats(user.getEntityId(), preparedChats);
 		}
 
@@ -319,43 +321,29 @@ public class DefaultChatService implements ChatService {
 
 	}
 
-	private void fireChatEvents(@Nonnull User user, @Nonnull MergeDaoResult<ApiChat, String> mergeResult) {
+	private void fireChatEvents(@Nonnull User user, @Nonnull MergeDaoResult<Chat, String> mergeResult) {
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>();
 		final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>();
 
-		final List<Chat> addedChatLinks = transform(mergeResult.getAddedObjectLinks(), new Function<ApiChat, Chat>() {
-			@Override
-			public Chat apply(@Nullable ApiChat apiChat) {
-				assert apiChat != null;
-				return apiChat.getChat();
-			}
-		});
-
-		if (!addedChatLinks.isEmpty()) {
-			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChatLinks));
+		final List<Chat> addedObjectLinks = mergeResult.getAddedObjectLinks();
+		if (!addedObjectLinks.isEmpty()) {
+			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedObjectLinks));
 		}
 
-		final List<Chat> addedChats = transform(mergeResult.getAddedObjects(), new Function<ApiChat, Chat>() {
-			@Override
-			public Chat apply(@Nullable ApiChat apiChat) {
-				assert apiChat != null;
-				return apiChat.getChat();
-			}
-		});
-
-		for (Chat addedChat : addedChats) {
+		final List<Chat> addedObjects = mergeResult.getAddedObjects();
+		for (Chat addedChat : addedObjects) {
 			chatEvents.add(ChatEventType.added.newEvent(addedChat));
 		}
-		if (!addedChats.isEmpty()) {
-			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedChats));
+		if (!addedObjects.isEmpty()) {
+			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedObjects));
 		}
 
 		for (String removedChatId : mergeResult.getRemovedObjectIds()) {
 			userEvents.add(UserEventType.chat_removed.newEvent(user, removedChatId));
 		}
 
-		for (ApiChat updatedChat : mergeResult.getUpdatedObjects()) {
-			chatEvents.add(ChatEventType.changed.newEvent(updatedChat.getChat()));
+		for (Chat updatedChat : mergeResult.getUpdatedObjects()) {
+			chatEvents.add(ChatEventType.changed.newEvent(updatedChat));
 		}
 
 		userService.fireEvents(userEvents);
@@ -657,7 +645,7 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull final Entity user) {
 		final List<User> participants = getParticipants(chat);
-		return Lists.newArrayList(Iterables.filter(participants, new Predicate<User>() {
+		return newArrayList(Iterables.filter(participants, new Predicate<User>() {
 			@Override
 			public boolean apply(@javax.annotation.Nullable User input) {
 				return input != null && !input.getEntity().equals(user);

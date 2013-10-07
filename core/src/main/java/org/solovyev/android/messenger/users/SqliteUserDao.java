@@ -44,12 +44,17 @@ import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
 public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao {
 
 	@Nonnull
-	private final LinkedEntitiesDao<User> dao;
+	private final Dao<User> dao;
+
+	@Nonnull
+	private final LinkedEntitiesDao<User> linkedEntitiesDao;
 
 	@Inject
 	public SqliteUserDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
-		dao = new SqliteLinkedEntitiesDao<User>("users", "id", new UserDaoMapper(this), context, sqliteOpenHelper, "user_contacts", "user_id", "contact_id");
+		final UserDaoMapper userDaoMapper = new UserDaoMapper(this);
+		dao = new SqliteDao<User>("users", "id", userDaoMapper, context, sqliteOpenHelper);
+		linkedEntitiesDao = new SqliteLinkedEntitiesDao<User>("users", "id", userDaoMapper, context, sqliteOpenHelper, "user_contacts", "user_id", "contact_id", dao);
 	}
 
 	@Override
@@ -115,8 +120,8 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Nonnull
 	@Override
-	public List<String> readLinkedEntityIds(@Nonnull String userId) {
-		return dao.readLinkedEntityIds(userId);
+	public Collection<String> readLinkedEntityIds(@Nonnull String userId) {
+		return linkedEntitiesDao.readLinkedEntityIds(userId);
 	}
 
 	@Nonnull
@@ -127,8 +132,8 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<User, String> mergeLinkedEntities(@Nonnull String userId, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
-		final MergeDaoResult<User, String> result = dao.mergeLinkedEntities(userId, contacts, allowRemoval, allowUpdate);
+	public MergeDaoResult<User, String> mergeLinkedEntities(@Nonnull String userId, @Nonnull Iterable<User> contacts, boolean allowRemoval, boolean allowUpdate) {
+		final MergeDaoResult<User, String> result = linkedEntitiesDao.mergeLinkedEntities(userId, contacts, allowRemoval, allowUpdate);
 
 		final List<DbExec> execs = new ArrayList<DbExec>();
 
