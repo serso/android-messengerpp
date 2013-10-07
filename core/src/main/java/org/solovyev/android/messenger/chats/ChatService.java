@@ -209,9 +209,9 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 *
 	 * @param user user
 	 * @param chat chat
-	 * @return updated chat
+	 * @return updated chat, null if chat has not been saved due to some reason (for example, invalid data)
 	 */
-	@Nonnull
+	@Nullable
 	Chat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException;
 
 	/**

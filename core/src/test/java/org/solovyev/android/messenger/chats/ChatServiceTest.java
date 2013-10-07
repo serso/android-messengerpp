@@ -6,17 +6,21 @@ import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTest;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.TestAccount;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Integer.MAX_VALUE;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.solovyev.android.messenger.chats.Chats.newPrivateApiChat;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
 
 public class ChatServiceTest extends DefaultMessengerTest {
@@ -80,5 +84,32 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		for (UiChat chat : chats) {
 			assertNotNull(chat.getLastMessage());
 		}
+	}
+
+	@Test
+	public void testChatIdShouldBeSetOnSaveForNewPrivateChat() throws Exception {
+		final AccountData ad = getAccountData1();
+		final TestAccount account = ad.getAccount();
+		final User user = account.getUser();
+		final User contact = ad.getContacts().get(0);
+
+		final List<User> participants = Arrays.asList(user, contact);
+		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateApiChat(account.newChatEntity("test_api_chat"), participants, Collections.<ChatMessage>emptyList()));
+
+		assertNotNull(chat);
+		assertEquals(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), chat.getEntity());
+		assertEquals("test_api_chat", chat.getEntity().getAccountEntityId());
+	}
+
+	@Test
+	public void testSavedChatShouldNotBeNullForExistingChat() throws Exception {
+		final AccountData ad = getAccountData1();
+		final TestAccount account = ad.getAccount();
+		final User user = account.getUser();
+		final ApiChat apiChat = ad.getChats().get(0);
+
+		final Chat chat = chatService.saveChat(user.getEntity(), apiChat);
+
+		assertTrue(Objects.areEqual(chat, apiChat.getChat(), new ChatSameEqualizer()));
 	}
 }

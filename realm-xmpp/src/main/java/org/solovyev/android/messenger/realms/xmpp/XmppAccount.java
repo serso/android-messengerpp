@@ -95,18 +95,18 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	private Entity newEntity(@Nonnull String realmUserId) {
+	public Entity newEntity(@Nonnull String realmUserId) {
 		final int index = realmUserId.indexOf('/');
 		if (index >= 0) {
-			return newRealmEntity(realmUserId.substring(0, index));
+			return super.newEntity(realmUserId.substring(0, index));
 		} else {
-			return newRealmEntity(realmUserId);
+			return super.newEntity(realmUserId);
 		}
 	}
 
 	@Nonnull
-	public Entity newChatEntity(@Nonnull String accountUserId) {
-		return newEntity(accountUserId);
+	public Entity newChatEntity(@Nonnull String accountChatId) {
+		return newEntity(accountChatId);
 	}
 
     /*

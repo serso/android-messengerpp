@@ -100,38 +100,38 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public Entity newRealmEntity(@Nonnull String accountEntityId) {
+	public Entity newEntity(@Nonnull String accountEntityId) {
 		return Entities.newEntity(getId(), accountEntityId);
 	}
 
 	@Nonnull
 	@Override
-	public Entity newRealmEntity(@Nonnull String accountEntityId, @Nonnull String entityId) {
+	public Entity newEntity(@Nonnull String accountEntityId, @Nonnull String entityId) {
 		return Entities.newEntity(getId(), accountEntityId, entityId);
 	}
 
 	@Nonnull
 	@Override
 	public Entity newUserEntity(@Nonnull String accountUserId) {
-		return newRealmEntity(accountUserId);
+		return newEntity(accountUserId);
 	}
 
 	@Nonnull
 	@Override
-	public Entity newChatEntity(@Nonnull String accountUserId) {
-		return newRealmEntity(accountUserId);
+	public Entity newChatEntity(@Nonnull String accountChatId) {
+		return newEntity(accountChatId);
 	}
 
 	@Nonnull
 	@Override
 	public Entity newMessageEntity(@Nonnull String accountMessageId) {
-		return newRealmEntity(accountMessageId);
+		return newEntity(accountMessageId);
 	}
 
 	@Nonnull
 	@Override
 	public Entity newMessageEntity(@Nonnull String accountMessageId, @Nonnull String entityId) {
-		return newRealmEntity(accountMessageId, entityId);
+		return newEntity(accountMessageId, entityId);
 	}
 
 	@Nonnull

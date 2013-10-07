@@ -33,8 +33,10 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
+import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
@@ -177,7 +179,7 @@ public class DefaultChatService implements ChatService {
 				participants.add(getUserService().getUserById(user2));
 				final ApiChat apiChat = Chats.newEmptyApiChat(chat, participants);
 
-				getUserService().mergeUserChats(user1, Arrays.asList(apiChat));
+				getUserService().mergeUserChats(user1, asList(apiChat));
 
 				result = apiChat.getChat();
 			}
@@ -206,7 +208,7 @@ public class DefaultChatService implements ChatService {
 			final String realmChatId = chat.getEntity().getAccountEntityId();
 
 			// copy with new id
-			chat = chat.copyWithNew(account.newRealmEntity(realmChatId, chatEntity.getEntityId()));
+			chat = chat.copyWithNew(account.newEntity(realmChatId, chatEntity.getEntityId()));
 		}
 
 		return chat;
@@ -232,7 +234,7 @@ public class DefaultChatService implements ChatService {
 					final String accountChatId = apiChat.getChat().getEntity().getAccountEntityId();
 
 					// copy with new id
-					apiChat = apiChat.copyWithNew(account.newRealmEntity(accountChatId, accountChat.getEntityId()));
+					apiChat = apiChat.copyWithNew(account.newEntity(accountChatId, accountChat.getEntityId()));
 				}
 			}
 		}
@@ -248,17 +250,17 @@ public class DefaultChatService implements ChatService {
 		}
 	}
 
-	@Nonnull
+	@Nullable
 	@Override
 	public Chat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException {
-		final MergeDaoResult<Chat, String> result = mergeUserChats(user, Arrays.asList(chat));
-		if (result.getAddedObjects().size() > 0) {
-			return result.getAddedObjects().get(0);
-		} else if (result.getUpdatedObjects().size() > 0) {
-			return result.getUpdatedObjects().get(0);
-		} else {
-			return chat.getChat();
+		final MergeDaoResult<Chat, String> mergeResult = mergeUserChats(user, asList(chat));
+
+		Chat result = getFirst(mergeResult.getAddedObjects(), null);
+		if(result == null) {
+			result = getFirst(mergeResult.getUpdatedObjects(), null);
 		}
+
+		return result;
 	}
 
 	@Nonnull

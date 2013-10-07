@@ -37,16 +37,16 @@ public interface Account<C extends AccountConfiguration> extends Identifiable {
 	boolean isEnabled();
 
 	@Nonnull
-	Entity newRealmEntity(@Nonnull String accountEntityId);
+	Entity newEntity(@Nonnull String accountEntityId);
 
 	@Nonnull
-	Entity newRealmEntity(@Nonnull String accountEntityId, @Nonnull String entityId);
+	Entity newEntity(@Nonnull String accountEntityId, @Nonnull String entityId);
 
 	@Nonnull
 	Entity newUserEntity(@Nonnull String accountUserId);
 
 	@Nonnull
-	Entity newChatEntity(@Nonnull String accountUserId);
+	Entity newChatEntity(@Nonnull String accountChatId);
 
 	@Nonnull
 	Entity newMessageEntity(@Nonnull String accountMessageId);
