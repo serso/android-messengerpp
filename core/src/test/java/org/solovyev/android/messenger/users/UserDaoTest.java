@@ -1,5 +1,8 @@
 package org.solovyev.android.messenger.users;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
@@ -8,13 +11,19 @@ import org.solovyev.android.messenger.accounts.TestAccount;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
+import org.solovyev.common.Objects;
+import org.solovyev.common.equals.CollectionEqualizer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
 import static org.solovyev.android.messenger.users.Users.newUser;
@@ -106,13 +115,39 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 
 
 	@Test
-	public void testShouldReadAllContacts() throws Exception {
+	public void testShouldReadAllContactsForUser() throws Exception {
 		for (AccountData accountData : getAccountDataList()) {
 			final String userId = accountData.getAccount().getUser().getId();
+
 			final List<User> contactsFromDao = dao.readContacts(userId);
-
+			assertEntitiesSame(contactsFromDao, accountData.getContacts());
 		}
+	}
 
+
+	@Test
+	public void testShouldReadAllContactIdsForUser() throws Exception {
+		for (AccountData accountData : getAccountDataList()) {
+			final String userId = accountData.getAccount().getUser().getId();
+
+			final List<String> contactIdsFromDao = dao.readContactIds(userId);
+			Objects.areEqual(contactIdsFromDao, newArrayList(transform(accountData.getContacts(), new Function<User, String>() {
+				@Override
+				public String apply(@Nullable User contact) {
+					return contact.getId();
+				}
+			})), new CollectionEqualizer<String>(null));
+		}
+	}
+
+	@Test
+	public void testShouldChangeUserStatuses() throws Exception {
+		for (User user : getAccountData1().getUsers()) {
+			dao.updateOnlineStatus(user.cloneWithNewStatus(!user.isOnline()));
+			final User userFromDb = dao.read(user.getId());
+			assertNotNull(userFromDb);
+			assertTrue(user.isOnline() != userFromDb.isOnline());
+		}
 	}
 
 	@Nonnull

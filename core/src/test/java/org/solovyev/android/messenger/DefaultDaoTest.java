@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger;
 
 import com.google.common.base.Predicate;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
@@ -129,12 +131,20 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 		assertEntitiesSame(entity.entity, dao.read(entity.id));
 	}
 
-	private void assertEntitiesSame(@Nonnull Collection<E> c1, @Nonnull Collection<E> c2) {
-		Objects.areEqual(c1, c2, new CollectionEqualizer<E>(sameEqualizer));
+	protected final void assertEntitiesSame(@Nonnull Collection<E> c1, @Nonnull Collection<E> c2) {
+		Assert.assertTrue(Objects.areEqual(c1, c2, new CollectionEqualizer<E>(sameEqualizer)));
 	}
 
-	private void assertEntitiesSame(@Nonnull E e1, @Nonnull E e2) {
+	protected final void assertEntitiesEqual(@Nonnull Collection<E> c1, @Nonnull Collection<E> c2) {
+		Assert.assertTrue(Objects.areEqual(c1, c2, new CollectionEqualizer<E>(equalsEqualizer)));
+	}
+
+	protected final void assertEntitiesSame(@Nonnull E e1, @Nonnull E e2) {
 		assertTrue(areSame(e1, e2));
+	}
+
+	protected final void assertEntitiesEqual(@Nonnull E e1, @Nonnull E e2) {
+		assertTrue(areEqual(e1, e2));
 	}
 
 	protected final boolean areSame(@Nonnull E e1, @Nonnull E e2) {

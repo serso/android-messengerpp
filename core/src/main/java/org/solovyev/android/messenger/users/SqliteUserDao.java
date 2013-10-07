@@ -6,15 +6,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
+import org.solovyev.android.messenger.EntityAwareByIdFinder;
+import org.solovyev.android.messenger.ReplacePropertyExec;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.db.StringIdMapper;
@@ -28,6 +28,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Singleton;
 import java.util.*;
 
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.collect.Iterables.find;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
 import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
@@ -136,7 +138,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		for (final String contactIdFromDb : contactIdsFromDb) {
 			try {
 				// contact exists both in db and on remote server => just update contact properties
-				final User updatedObject = Iterables.find(contacts, new UserByIdFinder(contactIdFromDb));
+				final User updatedObject = find(contacts, new EntityAwareByIdFinder(contactIdFromDb));
 				if (allowUpdate) {
 					result.addUpdatedObject(updatedObject);
 				}
@@ -152,7 +154,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		for (User contact : contacts) {
 			try {
 				// contact exists both in db and on remote server => case already covered above
-				Iterables.find(contactIdsFromDb, Predicates.equalTo(contact.getEntity().getEntityId()));
+				find(contactIdsFromDb, equalTo(contact.getEntity().getEntityId()));
 			} catch (NoSuchElementException e) {
 				// contact was added on remote server => need to add to local db
 				if (userIdsFromDb.contains(contact.getEntity().getEntityId())) {
@@ -198,7 +200,14 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Override
 	public void updateOnlineStatus(@Nonnull User user) {
-		doDbExec(getSqliteOpenHelper(), new InsertOrUpdateOnlineStatus(user));
+		doDbExec(getSqliteOpenHelper(), newReplacePropertyExec(user, User.PROPERTY_ONLINE, String.valueOf(user.isOnline())));
+	}
+
+	@Nonnull
+	private ReplacePropertyExec newReplacePropertyExec(@Nonnull User user,
+															  @Nonnull String propertyName,
+															  @Nonnull String propertyValue) {
+		return new ReplacePropertyExec(user, "user_properties", "user_id", propertyName, propertyValue);
 	}
 
     /*
@@ -393,38 +402,6 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 			}
 
 			return result;
-		}
-	}
-
-	private static class UserByIdFinder implements Predicate<User> {
-
-		@Nonnull
-		private final String userId;
-
-		public UserByIdFinder(@Nonnull String userId) {
-			this.userId = userId;
-		}
-
-		@Override
-		public boolean apply(@javax.annotation.Nullable User user) {
-			return user != null && userId.equals(user.getEntity().getEntityId());
-		}
-	}
-
-	private static class InsertOrUpdateOnlineStatus extends AbstractObjectDbExec<User> {
-
-		protected InsertOrUpdateOnlineStatus(@Nonnull User object) {
-			super(object);
-		}
-
-		@Override
-		public long exec(@Nonnull SQLiteDatabase db) {
-			final ContentValues values = new ContentValues();
-			final User user = getNotNullObject();
-			values.put("user_id", user.getId());
-			values.put("property_name", User.PROPERTY_ONLINE);
-			values.put("property_value", String.valueOf(user.isOnline()));
-			return db.replace("user_properties", null, values);
 		}
 	}
 
