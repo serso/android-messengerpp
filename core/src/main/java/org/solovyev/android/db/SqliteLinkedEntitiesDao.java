@@ -4,20 +4,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.google.common.base.Predicate;
+import org.solovyev.android.messenger.LinkedEntitiesDao;
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.MergeDaoResultImpl;
+import org.solovyev.android.messenger.db.StringIdMapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MergeDaoResultImpl;
-import org.solovyev.android.messenger.LinkedEntitiesDao;
-import org.solovyev.android.messenger.db.StringIdMapper;
-
-import com.google.common.base.Predicate;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.find;
@@ -46,6 +43,8 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 	@Nonnull
 	private final String linkedEntityIdColumnName;
 
+	private final boolean idCanBeUsedInLink;
+
 	public SqliteLinkedEntitiesDao(@Nonnull String tableName,
 								   @Nonnull String idColumnName,
 								   @Nonnull SqliteDaoEntityMapper<E> mapper,
@@ -54,7 +53,8 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 								   @Nonnull String linkedTableName,
 								   @Nonnull String linkedIdColumnName,
 								   @Nonnull String linkedEntityIdColumnName,
-								   @Nonnull Dao<E> dao) {
+								   @Nonnull Dao<E> dao,
+								   boolean idCanBeUsedInLink) {
 		super(context, sqliteOpenHelper);
 		this.tableName = tableName;
 		this.idColumnName = idColumnName;
@@ -63,6 +63,7 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 		this.linkedIdColumnName = linkedIdColumnName;
 		this.linkedEntityIdColumnName = linkedEntityIdColumnName;
 		this.dao = dao;
+		this.idCanBeUsedInLink = idCanBeUsedInLink;
 	}
 
 	@Nonnull
@@ -100,9 +101,11 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 				find(idsFromDb, equalTo(entityId));
 			} catch (NoSuchElementException e) {
 				// entity was added on remote server => need to add to local db
-				if (allIdsFromDb.contains(entityId) && !entityId.equals(id)) {
+				if (allIdsFromDb.contains(entityId)) {
 					// only link must be added - entity already in entities table
-					result.addAddedObjectLink(entity);
+					if (idCanBeUsedInLink || !entityId.equals(id)) {
+						result.addAddedObjectLink(entity);
+					}
 				} else {
 					// no entity information in local db is available - full entity insertion
 					result.addAddedObject(entity);

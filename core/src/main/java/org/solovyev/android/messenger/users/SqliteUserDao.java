@@ -54,7 +54,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		super(context, sqliteOpenHelper);
 		final UserDaoMapper userDaoMapper = new UserDaoMapper(this);
 		dao = new SqliteDao<User>("users", "id", userDaoMapper, context, sqliteOpenHelper);
-		linkedEntitiesDao = new SqliteLinkedEntitiesDao<User>("users", "id", userDaoMapper, context, sqliteOpenHelper, "user_contacts", "user_id", "contact_id", dao);
+		linkedEntitiesDao = new SqliteLinkedEntitiesDao<User>("users", "id", userDaoMapper, context, sqliteOpenHelper, "user_contacts", "user_id", "contact_id", dao, false);
 	}
 
 	@Override

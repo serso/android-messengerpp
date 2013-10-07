@@ -75,7 +75,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		super(context, sqliteOpenHelper);
 		final ChatDaoMapper chatDaoMapper = new ChatDaoMapper(this);
 		dao = new SqliteDao<Chat>("chats", "id", chatDaoMapper, context, sqliteOpenHelper);
-		linkedEntitiesDao = new SqliteLinkedEntitiesDao<Chat>("chats", "id", chatDaoMapper, context, sqliteOpenHelper, "user_chats", "user_id", "chat_id", dao);
+		linkedEntitiesDao = new SqliteLinkedEntitiesDao<Chat>("chats", "id", chatDaoMapper, context, sqliteOpenHelper, "user_chats", "user_id", "chat_id", dao, true);
 	}
 
 	@Nonnull

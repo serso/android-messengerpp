@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
+import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.TestAccount;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.properties.AProperty;
@@ -14,11 +15,7 @@ import org.solovyev.common.equals.CollectionEqualizer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
@@ -172,5 +169,15 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	@Override
 	protected User changeEntity(@Nonnull User user) {
 		return user;
+	}
+
+	@Test
+	public void testForUserShouldNotBeCreatedLink() throws Exception {
+		final AccountData ad = getAccountData1();
+		final TestAccount account = ad.getAccount();
+		final User user = account.getUser();
+
+		final MergeDaoResult<User,String> mergeResult = dao.mergeLinkedEntities(user.getId(), Arrays.asList(user), false, true);
+		assertTrue(mergeResult.getAddedObjectLinks().isEmpty());
 	}
 }
