@@ -133,12 +133,13 @@ public class SqliteLinkedEntitiesDao<E> extends AbstractSQLiteHelper implements 
 
 		final Collection<String> allIdsFromDb = readAllIds();
 		for (E entity : linkedEntities) {
+			final String entityId = mapper.getId(entity);
 			try {
 				// entity exists both in db and on remote server => case already covered above
-				find(idsFromDb, equalTo(mapper.getId(entity)));
+				find(idsFromDb, equalTo(entityId));
 			} catch (NoSuchElementException e) {
 				// entity was added on remote server => need to add to local db
-				if (allIdsFromDb.contains(mapper.getId(entity))) {
+				if (allIdsFromDb.contains(entityId) && !entityId.equals(id)) {
 					// only link must be added - entity already in entities table
 					result.addAddedObjectLink(entity);
 				} else {
