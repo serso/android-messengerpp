@@ -168,7 +168,7 @@ public class DefaultUserService implements UserService {
 			}
 
 			if (!saved) {
-				insertUser(result);
+				saveUser(result);
 			}
 		}
 
@@ -180,18 +180,19 @@ public class DefaultUserService implements UserService {
 		return accountService.getAccountById(entity.getAccountId());
 	}
 
-	private void insertUser(@Nonnull User user) {
-		boolean inserted = false;
+	@Override
+	public void saveUser(@Nonnull User user) {
+		boolean saved = false;
 
 		synchronized (lock) {
 			final User userFromDb = userDao.read(user.getEntity().getEntityId());
 			if (userFromDb == null) {
 				userDao.create(user);
-				inserted = true;
+				saved = true;
 			}
 		}
 
-		if (inserted) {
+		if (saved) {
 			listeners.fireEvent(UserEventType.added.newEvent(user));
 		}
 	}

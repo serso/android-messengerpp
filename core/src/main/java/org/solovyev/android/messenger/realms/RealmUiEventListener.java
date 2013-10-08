@@ -27,10 +27,12 @@ public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 
 		switch (event.getType()) {
 			case realm_clicked:
+				// todo serso: reuse condition
+				// in case of creation of new account old accounts should not be used. For now - just recreate fragment (reuse condition is null)
 				if (activity.isDualPane()) {
-					activity.getMultiPaneFragmentManager().setSecondFragment(realm.getConfigurationFragmentClass(), null, new RealmFragmentReuseCondition(realm), BaseAccountConfigurationFragment.FRAGMENT_TAG, false);
+					activity.getMultiPaneFragmentManager().setSecondFragment(realm.getConfigurationFragmentClass(), null, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, false);
 				} else {
-					activity.getMultiPaneFragmentManager().setMainFragment(realm.getConfigurationFragmentClass(), null, new RealmFragmentReuseCondition(realm), BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
+					activity.getMultiPaneFragmentManager().setMainFragment(realm.getConfigurationFragmentClass(), null, null, BaseAccountConfigurationFragment.FRAGMENT_TAG, true);
 				}
 				break;
 			case realm_edit_finished:

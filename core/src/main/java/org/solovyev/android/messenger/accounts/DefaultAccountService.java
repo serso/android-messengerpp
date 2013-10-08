@@ -264,10 +264,12 @@ public class DefaultAccountService implements AccountService {
 			try {
 				if (oldAccount != null) {
 					accountDao.update(newAccount);
+					userService.saveUser(newAccount.getUser());
 					accounts.put(newAccount.getId(), newAccount);
 					listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
 				} else {
 					accountDao.create(newAccount);
+					userService.saveUser(newAccount.getUser());
 					accounts.put(newAccount.getId(), newAccount);
 					listeners.fireEvent(AccountEventType.created.newEvent(newAccount, null));
 				}

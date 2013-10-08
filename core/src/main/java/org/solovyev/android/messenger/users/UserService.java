@@ -76,6 +76,8 @@ public interface UserService {
 	 */
 	void updateUser(@Nonnull User user);
 
+	void saveUser(@Nonnull User user);
+
 	/*
     **********************************************************************
     *

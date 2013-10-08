@@ -21,7 +21,14 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, Test
 	@Nonnull
 	@Override
 	protected User getAccountUser(@Nonnull String accountId) {
-		return newEmptyUser(Entities.newEntity(accountId, "test_user"));
+		final TestAccountConfiguration configuration = getConfiguration();
+		String accountEntityId = "test_user";
+
+		final Integer accountUserId = configuration.getAccountUserId();
+		if(accountUserId != null) {
+			accountEntityId += "_" + accountUserId;
+		}
+		return newEmptyUser(Entities.newEntity(accountId, accountEntityId));
 	}
 
 	@Nonnull

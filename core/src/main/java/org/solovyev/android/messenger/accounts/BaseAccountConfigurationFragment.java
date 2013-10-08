@@ -60,7 +60,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 
 	@Override
 	protected boolean isRemoveButtonVisible() {
-		return isNewAccount();
+		return !isNewAccount();
 	}
 
 	@Override

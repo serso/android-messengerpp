@@ -1,8 +1,12 @@
 package org.solovyev.android.messenger.accounts;
 
 import org.solovyev.common.JObject;
+import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static org.solovyev.common.Objects.areEqual;
 
 public class TestAccountConfiguration extends JObject implements AccountConfiguration {
 
@@ -14,8 +18,15 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 	@Nonnull
 	private String anotherTestStringField = "";
 
+	@Nullable
+	private Integer accountUserId;
+
 	// for json
 	public TestAccountConfiguration() {
+	}
+
+	public TestAccountConfiguration(@Nullable Integer accountUserId) {
+		this.accountUserId = accountUserId;
 	}
 
 	public TestAccountConfiguration(@Nonnull String testStringField, int testIntField) {
@@ -63,6 +74,7 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 		TestAccountConfiguration that = (TestAccountConfiguration) c;
 
 		if (testIntField != that.testIntField) return false;
+		if (!areEqual(accountUserId, that.accountUserId)) return false;
 
 		return true;
 	}
@@ -89,5 +101,10 @@ public class TestAccountConfiguration extends JObject implements AccountConfigur
 
 	@Override
 	public void applySystemData(AccountConfiguration oldConfiguration) {
+	}
+
+	@Nullable
+	public Integer getAccountUserId() {
+		return accountUserId;
 	}
 }
