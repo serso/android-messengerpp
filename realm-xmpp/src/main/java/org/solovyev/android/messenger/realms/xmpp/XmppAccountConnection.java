@@ -1,27 +1,30 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
 import android.content.Context;
+import android.util.Log;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.jivesoftware.smack.AbstractConnectionListener;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
+import org.solovyev.android.messenger.accounts.connection.LoopedAccountConnection;
 
 /**
  * User: serso
  * Date: 2/24/13
  * Time: 8:13 PM
  */
-public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount> implements XmppConnectionAware {
+public class XmppAccountConnection extends LoopedAccountConnection<XmppAccount> implements XmppConnectionAware {
 
 	private static final String TAG = XmppAccountConnection.class.getSimpleName();
 
@@ -36,6 +39,9 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 	@Nonnull
 	private final RosterListener rosterListener;
 
+	@Nonnull
+	private final ConnectionListener connectionListener = new XmppConnectionListener();
+
 	public XmppAccountConnection(@Nonnull XmppAccount account, @Nonnull Context context) {
 		super(account, context, true);
 		chatListener = new XmppChatListener(account);
@@ -43,7 +49,7 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 	}
 
 	@Override
-	protected void start0() throws AccountConnectionException {
+	protected void reconnectIfDisconnected() throws AccountConnectionException {
 		if (this.connection == null) {
 			tryToConnect(0);
 		}
@@ -75,13 +81,16 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 	private void prepareConnection(@Nonnull Connection connection, @Nonnull XmppAccount account) throws XMPPException {
 		checkConnectionStatus(connection, account);
 
-		// todo serso: investigate why we cannot add listeners in after connection constructor
-		// Attach listeners to connection
-		connection.getChatManager().addChatListener(chatListener);
-		connection.getRoster().addRosterListener(rosterListener);
+		if (connection.isConnected()) {
+			connection.addConnectionListener(connectionListener);
+			// todo serso: investigate why we cannot add listeners in after connection constructor
+			// Attach listeners to connection
+			connection.getChatManager().addChatListener(chatListener);
+			connection.getRoster().addRosterListener(rosterListener);
 
-		// init chat state manager (listeners will be added inside this method)
-		ChatStateManager.getInstance(connection);
+			// init chat state manager (listeners will be added inside this method)
+			ChatStateManager.getInstance(connection);
+		}
 	}
 
 	static void checkConnectionStatus(@Nonnull Connection connection, @Nonnull XmppAccount realm) throws XMPPException {
@@ -95,18 +104,22 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 	}
 
 	@Override
-	protected void stop0() {
+	protected void disconnect() {
 		final Connection localConnection = connection;
 		if (localConnection != null) {
 			final Roster roster = localConnection.getRoster();
 			if (roster != null) {
 				roster.removeRosterListener(rosterListener);
 			}
+
 			final ChatManager chatManager = localConnection.getChatManager();
 			if (chatManager != null) {
 				chatManager.removeChatListener(chatListener);
 			}
-			localConnection.disconnect();
+
+			if (localConnection.isConnected()) {
+				localConnection.disconnect();
+			}
 		}
 		connection = null;
 	}
@@ -132,6 +145,18 @@ public class XmppAccountConnection extends AbstractAccountConnection<XmppAccount
 		final Connection connection = tryGetConnection();
 		synchronized (connection) {
 			return callable.call(connection);
+		}
+	}
+
+	private class XmppConnectionListener extends AbstractConnectionListener {
+		@Override
+		public void connectionClosedOnError(Exception e) {
+			super.connectionClosedOnError(e);
+
+			Log.e(TAG, e.getMessage(), e);
+
+			disconnect();
+			continueLoop();
 		}
 	}
 }

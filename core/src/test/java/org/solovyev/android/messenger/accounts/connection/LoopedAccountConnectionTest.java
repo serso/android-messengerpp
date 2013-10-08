@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -67,11 +68,6 @@ public class LoopedAccountConnectionTest {
 		assertFalse(connection.isStopped());
 		assertTrue(connection.count == maxCount);
 		assertFalse(connection.disconnectCalled);
-	}
-
-	@Test
-	public void testDisconnectShouldBeCalledOnStop() throws Exception {
-
 	}
 
 	private static final class TestLoopedConnection extends LoopedAccountConnection {

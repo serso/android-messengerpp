@@ -6,7 +6,11 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.concurrent.TimeUnit;
+
+import static java.lang.Thread.currentThread;
 
 public abstract class LoopedAccountConnection<A extends Account> extends AbstractAccountConnection<A> {
 
@@ -14,6 +18,9 @@ public abstract class LoopedAccountConnection<A extends Account> extends Abstrac
 	private static final long MIN_WAIT_MILLIS = 5L * 60L * 1000L;
 
 	private final long waitMillis;
+
+	@Nullable
+	private volatile Thread thread;
 
 	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
 		this(account, context, internetConnectionRequired, DEFAULT_WAIT_MILLIS);
@@ -32,6 +39,8 @@ public abstract class LoopedAccountConnection<A extends Account> extends Abstrac
 
 	@Override
 	protected final void start0() throws AccountConnectionException {
+		thread = currentThread();
+
 		// Try to create connection (if not exists)
 		while (!isStopped()) {
 			reconnectIfDisconnected();
@@ -39,6 +48,15 @@ public abstract class LoopedAccountConnection<A extends Account> extends Abstrac
 				Thread.sleep(waitMillis);
 			} catch (InterruptedException e) {
 			}
+		}
+
+		thread = null;
+	}
+
+	public void continueLoop() {
+		final Thread localThread = thread;
+		if (localThread != null) {
+			localThread.interrupt();
 		}
 	}
 
