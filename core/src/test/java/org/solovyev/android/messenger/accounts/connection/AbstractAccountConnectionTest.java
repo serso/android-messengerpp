@@ -2,6 +2,8 @@ package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
@@ -10,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+@RunWith(RobolectricTestRunner.class)
 public class AbstractAccountConnectionTest {
 
 	@Test

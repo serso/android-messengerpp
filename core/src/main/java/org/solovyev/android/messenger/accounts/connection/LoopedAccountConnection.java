@@ -43,6 +43,8 @@ public abstract class LoopedAccountConnection<A extends Account> extends Abstrac
 
 		// Try to create connection (if not exists)
 		while (!isStopped()) {
+			Log.d(TAG, "Connection is not stopped trying to reconnect");
+
 			reconnectIfDisconnected();
 			try {
 				Thread.sleep(waitMillis);

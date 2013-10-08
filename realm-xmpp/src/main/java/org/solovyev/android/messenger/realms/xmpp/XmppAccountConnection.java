@@ -19,14 +19,14 @@ import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.connection.LoopedAccountConnection;
 
+import static org.solovyev.android.messenger.App.getApplication;
+
 /**
  * User: serso
  * Date: 2/24/13
  * Time: 8:13 PM
  */
 public class XmppAccountConnection extends LoopedAccountConnection<XmppAccount> implements XmppConnectionAware {
-
-	private static final String TAG = XmppAccountConnection.class.getSimpleName();
 
 	private static final int CONNECTION_RETRIES = 3;
 
@@ -105,6 +105,8 @@ public class XmppAccountConnection extends LoopedAccountConnection<XmppAccount> 
 
 	@Override
 	protected void disconnect() {
+		Log.d(TAG, "Disconnecting from account: " + getAccount().getDisplayName(getApplication()));
+
 		final Connection localConnection = connection;
 		if (localConnection != null) {
 			final Roster roster = localConnection.getRoster();

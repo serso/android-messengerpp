@@ -1,12 +1,15 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
+import android.util.Log;
+
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.solovyev.android.messenger.App.TAG;
 import static org.solovyev.android.messenger.App.newTag;
 
 /**
@@ -53,7 +56,10 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 	@Override
 	public final void start() throws AccountConnectionException {
 		if(stopped.compareAndSet(true, false)) {
+			Log.d(TAG, "Trying to start connection");
 			start0();
+		} else {
+			Log.d(TAG, "Connection is already started");
 		}
 	}
 
@@ -64,7 +70,10 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 	@Override
 	public final void stop() {
 		if (stopped.compareAndSet(false, true)) {
+			Log.d(TAG, "Trying to stop connection");
 			stop0();
+		} else {
+			Log.d(TAG, "Connection is already stopped");
 		}
 	}
 

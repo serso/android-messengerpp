@@ -56,13 +56,13 @@ public class ConnectionRunnableTest {
 	}
 
 	@Test
-	public void testShouldNotStartConnectionOnlyIfNotStopped() throws Exception {
+	public void testShouldStartConnectionIfNotStopped() throws Exception {
 		final AccountConnection connection = account.newConnection(application);
 		when(connection.isStopped()).thenReturn(false);
 
 		runConnection(connection);
 
-		verify(connection, times(0)).start();
+		verify(connection, times(1)).start();
 	}
 
 	@Test

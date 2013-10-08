@@ -41,18 +41,16 @@ class ConnectionRunnable implements Runnable {
 		if (attempt > RETRY_CONNECTION_ATTEMPT_COUNT) {
 			onMaxAttemptsReached(lastError);
 		} else {
-			if (connection.isStopped()) {
-				try {
-					if (connection.getAccount().isEnabled()) {
-						Log.d(TAG, "Account is enabled => starting connection...");
-						connection.start();
-						Log.d(TAG, "Connection is successfully established => no more work is needed on background thread. Terminating...");
-					}
-				} catch (AccountConnectionException e) {
-					onConnectionException(attempt, e);
-				} catch (Throwable e) {
-					onConnectionException(attempt, e);
+			try {
+				if (connection.getAccount().isEnabled()) {
+					Log.d(TAG, "Account is enabled => starting connection...");
+					connection.start();
+					Log.d(TAG, "Connection is successfully established => no more work is needed on background thread. Terminating...");
 				}
+			} catch (AccountConnectionException e) {
+				onConnectionException(attempt, e);
+			} catch (Throwable e) {
+				onConnectionException(attempt, e);
 			}
 		}
 	}
@@ -63,10 +61,6 @@ class ConnectionRunnable implements Runnable {
 
 	private void onConnectionException(int attempt, AccountConnectionException e) {
 		Log.w(TAG, "Account connection error occurred, connection attempt: " + attempt, e);
-
-		if (!connection.isStopped()) {
-			connection.stop();
-		}
 
 		startConnectionDelayed(attempt, e);
 	}
@@ -92,7 +86,9 @@ class ConnectionRunnable implements Runnable {
 		} catch (InterruptedException e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {
-			startConnection(attempt + 1, lastException);
+			if (!connection.isStopped()) {
+				startConnection(attempt + 1, lastException);
+			}
 		}
 	}
 }
