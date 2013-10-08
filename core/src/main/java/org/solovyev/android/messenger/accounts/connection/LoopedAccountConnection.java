@@ -64,7 +64,12 @@ public abstract class LoopedAccountConnection<A extends Account> extends Abstrac
 
 	@Override
 	protected final void stop0() {
-		disconnect();
+		try {
+			disconnect();
+		} finally {
+			// finish loop
+   			continueLoop();
+		}
 	}
 
 	protected abstract void disconnect();

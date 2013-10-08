@@ -57,7 +57,7 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 		final Bundle fragmentArgs = new Bundle();
 		fragmentArgs.putString(ARG_ACCOUNT_ID, account.getId());
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
-		fm.setSecondOrMainFragment(account.getRealm().getConfigurationFragmentClass(), null, BaseAccountConfigurationFragment.FRAGMENT_TAG);
+		fm.setSecondOrMainFragment(account.getRealm().getConfigurationFragmentClass(), fragmentArgs, BaseAccountConfigurationFragment.FRAGMENT_TAG);
 	}
 
 	private void onAccountViewRequestedEvent(@Nonnull Account account) {

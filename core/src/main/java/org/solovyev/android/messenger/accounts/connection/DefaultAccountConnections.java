@@ -174,7 +174,7 @@ public final class DefaultAccountConnections implements AccountConnections {
 	@Override
 	public void removeConnectionFor(@Nonnull Account account) {
 		synchronized (this.connections) {
-			// remove realm connections belonged to specified realm
+			// remove account connections belonged to specified realm
 			final List<AccountConnection> removedConnections = new ArrayList<AccountConnection>();
 			Iterables.removeIf(this.connections, PredicateSpy.spyOn(new ConnectionFinder(account), removedConnections));
 

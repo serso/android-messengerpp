@@ -195,7 +195,7 @@ public class DefaultAccountService implements AccountService {
 				updateAccountConfiguration(oldAccount, configuration);
 				result = (A) oldAccount;
 			} else {
-				// saving realm (realm either new or changed)
+				// saving account (account either new or changed)
 
 				accountBuilder.connect();
 
@@ -257,16 +257,22 @@ public class DefaultAccountService implements AccountService {
 		}
 	}
 
-	private void createOrUpdateAccount(@Nullable Account oldAccount, @Nonnull Account newAccount) throws AccountException {
+	private void createOrUpdateAccount(@Nullable Account oldAccount, @Nonnull Account newAccount) throws AccountException, InvalidCredentialsException {
 		assert Thread.holdsLock(accounts);
 
 		synchronized (lock) {
 			try {
 				if (oldAccount != null) {
-					accountDao.update(newAccount);
-					userService.saveUser(newAccount.getUser());
-					accounts.put(newAccount.getId(), newAccount);
-					listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
+					final User oldUser = oldAccount.getUser();
+					final User newUser = newAccount.getUser();
+					if (oldUser.equals(newUser)) {
+						accountDao.update(newAccount);
+						userService.saveUser(newAccount.getUser());
+						accounts.put(newAccount.getId(), newAccount);
+						listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
+					} else {
+						throw new InvalidCredentialsException("Account user has been changed: remove account and create new");
+					}
 				} else {
 					accountDao.create(newAccount);
 					userService.saveUser(newAccount.getUser());

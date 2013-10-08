@@ -80,7 +80,10 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 			final XmppAccountConfiguration configuration = realm.getConfiguration();
 
 			serverEditText.setText(configuration.getServer());
+
 			loginEditText.setText(configuration.getLogin());
+			loginEditText.setEnabled(false);
+
 			passwordEditText.setText(configuration.getPassword());
 			resourceEditText.setText(configuration.getResource());
 		}
