@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,9 @@ import org.solovyev.android.messenger.view.ViewAwareTag;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 import static org.solovyev.android.messenger.users.ContactUiEventType.edit_contact;
 
@@ -80,8 +80,15 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	@Override
 	public OnClickAction getOnLongClickAction() {
 		final List<LabeledMenuItem<ListItemOnClickData<User>>> menuItems = new ArrayList<LabeledMenuItem<ListItemOnClickData<User>>>();
-		menuItems.add(Menu.edit);
 		final User contact = getContact();
+		try {
+			final Account account = getAccountService().getAccountByEntity(contact.getEntity());
+			if (account.getRealm().canEditUsers()) {
+				menuItems.add(Menu.edit);
+			}
+		} catch (UnsupportedAccountException e) {
+			getExceptionHandler().handleException(e);
+		}
 		return new SimpleMenuOnClick<User>(menuItems, contact, "contact-menu");
 	}
 
@@ -116,7 +123,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
 		contactName.setText(getDisplayName());
 
-		final AccountService accountService = App.getAccountService();
+		final AccountService accountService = getAccountService();
 
 		final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
 		if (accountService.isOneAccount()) {
@@ -128,7 +135,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 				accountName.setText("[" + account.getDisplayName(context) + "/" + account.getUser().getDisplayName() + "]");
 			} catch (UnsupportedAccountException e) {
 				// cannot do anything => just handle exception
-				App.getExceptionHandler().handleException(e);
+				getExceptionHandler().handleException(e);
 			}
 		}
 

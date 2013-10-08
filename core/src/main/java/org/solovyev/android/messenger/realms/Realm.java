@@ -87,6 +87,7 @@ public interface Realm<C extends AccountConfiguration> extends Identifiable {
 	boolean handleException(@Nonnull Throwable e, @Nonnull Account account);
 
 	boolean canCreateUsers();
+	boolean canEditUsers();
 
 	@Nullable
 	Class<? extends BaseEditUserFragment> getCreateUserFragmentClass();

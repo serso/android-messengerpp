@@ -126,6 +126,11 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 		return createUserFragmentClass != null;
 	}
 
+	@Override
+	public boolean canEditUsers() {
+		return canCreateUsers();
+	}
+
 	@Nullable
 	@Override
 	public Class<? extends BaseEditUserFragment> getCreateUserFragmentClass() {
