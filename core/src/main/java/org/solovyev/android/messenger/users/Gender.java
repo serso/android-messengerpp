@@ -9,8 +9,8 @@ import org.solovyev.android.messenger.core.R;
  * Time: 5:46 PM
  */
 public enum Gender implements Labeled {
-	male(R.string.male),
-	female(R.string.female);
+	male(R.string.mpp_male),
+	female(R.string.mpp_female);
 
 	private int captionResId;
 

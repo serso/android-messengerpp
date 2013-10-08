@@ -5,7 +5,7 @@
 
 	<Preference
 		a:key="reload_data"
-		a:title="@string/c_reload_local_data"
-		a:summary="@string/c_reload_local_data_summary" />
+		a:title="@string/mpp_reload_local_data"
+		a:summary="@string/mpp_reload_local_data_summary" />
 
 </PreferenceScreen>

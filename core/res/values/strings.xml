@@ -1,58 +1,44 @@
 <resources>
 	<string name="mpp_app_name">Messenger++</string>
-	<string name="c_login_label">Login</string>
-	<string name="c_password_label">Password</string>
 
-	<string name="c_register">Register</string>
-	<string name="c_login">Login</string>
+	<string name="mpp_captcha_message">Please enter the code on the image below</string>
+	<string name="mpp_captcha">Captcha</string>
 
-	<string name="c_phone_number_label">Phone number</string>
-	<string name="c_first_name_label">First name</string>
-	<string name="c_last_name_label">Last name</string>
-	<string name="c_verification_code">Verification code</string>
-	<string name="c_or">or</string>
-	<string name="c_next">Next</string>
-
-	<string name="c_captcha_label">Please enter the code on the image below</string>
-	<string name="c_captcha">Captcha</string>
-
-	<string name="c_refresh">Refresh</string>
-	<string name="c_search">Search</string>
-
-	<string name="c_task_is_already_running">Synchronization is already in progress!</string>
-	<string name="c_chats">Chats</string>
-	<string name="c_contact">Contact</string>
+	<string name="mpp_task_is_already_running">Synchronization is already in progress!</string>
+	<string name="mpp_chats">Chats</string>
+	<string name="mpp_contact">Contact</string>
 
 	<string name="mpp_tab_contacts">Contacts</string>
 	<string name="mpp_tab_messages">Messages</string>
 	<string name="mpp_tab_accounts">Accounts</string>
 	<string name="mpp_tab_preferences">Settings</string>
 
-	<string name="c_online_contacts">Online contacts</string>
+	<string name="mpp_online_contacts">Online contacts</string>
 
-	<string name="c_copy">Copy</string>
-	<string name="c_send">Send</string>
-	<string name="c_attach">Attach</string>
-	<string name="c_write_the_msg">Write the message</string>
-	<string name="c_message_copied">Message copied to clipboard!</string>
+	<string name="mpp_copy">Copy</string>
+	<string name="mpp_send">Send</string>
+	<string name="mpp_attach">Attach</string>
+	<string name="mpp_write_the_message">Write the message</string>
+	<string name="mpp_message_copied_to_clipboard">Message copied to clipboard!</string>
 
-	<string name="c_reload_local_data">Reload local data</string>
-	<string name="c_reload_local_data_summary">Clears data on devices and for full synchronization with server</string>
-	<string name="sync_task_is_running">Synchronization task is already running!</string>
-	<string name="type_message">Type message</string>
-	<string name="send">Send</string>
-	<string name="contact_icon">Contact icon</string>
-	<string name="phone">Phone</string>
-	<string name="filter_icon">Filter icon</string>
-	<string name="clear">Clear</string>
-	<string name="male">Male</string>
-	<string name="female">Female</string>
+	<string name="mpp_reload_local_data">Reload accounts data</string>
+	<string name="mpp_reload_local_data_summary">Synchronizes local data with server</string>
+
+	<string name="mpp_sync_is_already_running">Synchronization is already running!</string>
+	<string name="mpp_type_message_hint">Type message</string>
+	<string name="mpp_send">Send</string>
+	<string name="mpp_contact_icon">Contact icon</string>
+	<string name="mpp_phone">Phone</string>
+	<string name="mpp_filter_icon">Filter icon</string>
+	<string name="mpp_clear">Clear</string>
+	<string name="mpp_male">Male</string>
+	<string name="mpp_female">Female</string>
 	<string name="mpp_sex">Sex</string>
 	<string name="mpp_search_hint">Search</string>
 	<string name="mpp_menu_search">Search</string>
 	<string name="mpp_settings_appearance">Appearance settings</string>
 	<string name="mpp_settings_other">Other settings</string>
-	<string name="c_settings">Settings</string>
+	<string name="mpp_settings">Settings</string>
 
 	<string name="mpp_account_icon">Account icon</string>
 	<string name="mpp_account_add">Add account</string>

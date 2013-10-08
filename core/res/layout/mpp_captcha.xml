@@ -7,7 +7,7 @@
 
 	<TextView
 		a:id="@+id/captcha_label"
-		a:text="@string/c_captcha_label"
+		a:text="@string/mpp_captcha_message"
 		a:layout_width="fill_parent"
 		a:layout_height="wrap_content"
 		a:layout_alignParentTop="true" />
@@ -26,6 +26,6 @@
 		a:layout_above="@id/captcha_code"
 		a:layout_width="fill_parent"
 		a:layout_height="wrap_content"
-		a:contentDescription="@string/c_captcha" />
+		a:contentDescription="@string/mpp_captcha" />
 
 </RelativeLayout>

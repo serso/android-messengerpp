@@ -27,6 +27,6 @@ public class TaskIsAlreadyRunningException extends Exception {
 	}
 
 	public void showMessage(@Nonnull Context c) {
-		Toast.makeText(c, R.string.c_task_is_already_running, Toast.LENGTH_SHORT).show();
+		Toast.makeText(c, R.string.mpp_task_is_already_running, Toast.LENGTH_SHORT).show();
 	}
 }

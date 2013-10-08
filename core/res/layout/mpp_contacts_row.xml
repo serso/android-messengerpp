@@ -18,7 +18,7 @@
 			a:id="@+id/mpp_contact_icon_imageview"
 			a:layout_height="50dp"
 			a:layout_width="50dp"
-			a:contentDescription="@string/contact_icon" />
+			a:contentDescription="@string/mpp_contact_icon" />
 
 		<TextView
 			a:id="@+id/mpp_contact_name_textview"
@@ -40,7 +40,7 @@
 			a:id="@+id/mpp_contact_icon_imageview"
 			a:layout_height="50dp"
 			a:layout_width="50dp"
-			a:contentDescription="@string/contact_icon" />
+			a:contentDescription="@string/mpp_contact_icon" />
 
 		<TextView
 			a:id="@+id/mpp_contact_name_textview"

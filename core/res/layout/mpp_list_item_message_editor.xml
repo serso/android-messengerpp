@@ -36,7 +36,7 @@
 
 				<Button
 					a:id="@+id/mpp_message_bubble_send_button"
-					a:text="@string/send"
+					a:text="@string/mpp_send"
 					style="?mpp_button" />
 
 			</LinearLayout>

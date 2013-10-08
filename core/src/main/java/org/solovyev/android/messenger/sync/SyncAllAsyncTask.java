@@ -67,7 +67,7 @@ public class SyncAllAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 		if (e instanceof SyncAllTaskIsAlreadyRunning) {
 			final Context context = getContext();
 			if (context != null) {
-				Toast.makeText(context, context.getString(R.string.sync_task_is_running), Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, context.getString(R.string.mpp_sync_is_already_running), Toast.LENGTH_SHORT).show();
 			}
 		} else {
 			super.onFailurePostExecute(e);

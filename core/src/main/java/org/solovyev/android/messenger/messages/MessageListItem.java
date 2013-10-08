@@ -132,7 +132,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 
 	private static enum MenuItems implements LabeledMenuItem<ListItemOnClickData<MessageListItem>> {
 
-		copy(R.string.c_copy) {
+		copy(R.string.mpp_copy) {
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
 				final android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
@@ -140,7 +140,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 				final MessageListItem messageListItem = data.getDataObject();
 				clipboard.setText(messageListItem.getData().getBody());
 
-				Toast.makeText(context, context.getString(R.string.c_message_copied), Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, context.getString(R.string.mpp_message_copied_to_clipboard), Toast.LENGTH_SHORT).show();
 			}
 		};
 

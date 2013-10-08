@@ -50,8 +50,8 @@ public class CaptchaViewBuilder implements Builder<AlertDialog> {
 	public AlertDialog build() {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-		builder.setTitle(R.string.c_captcha);
-		final View view = ViewFromLayoutBuilder.newInstance(R.layout.captcha).build(context);
+		builder.setTitle(R.string.mpp_captcha);
+		final View view = ViewFromLayoutBuilder.newInstance(R.layout.mpp_captcha).build(context);
 
 		final ImageView captchaImage = (ImageView) view.findViewById(R.id.captcha_image);
 		final EditText captchaCodeInput = (EditText) view.findViewById(R.id.captcha_code);
