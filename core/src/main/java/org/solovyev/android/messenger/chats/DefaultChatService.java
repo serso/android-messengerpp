@@ -229,7 +229,7 @@ public class DefaultChatService implements ChatService {
 
 				if (!accountChat.getAccountEntityId().equals(apiChat.getChat().getEntity().getAccountEntityId())) {
 					/**
-					 * chat id that was created by realm (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#getPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
+					 * chat id that was created by account (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#getPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
 					 */
 					final String accountChatId = apiChat.getChat().getEntity().getAccountEntityId();
 
@@ -297,30 +297,34 @@ public class DefaultChatService implements ChatService {
 		final MergeDaoResult<Chat, String> result;
 
 		synchronized (lock) {
-			final List<ApiChat> preparedChats;
-			try {
-				preparedChats = newArrayList(transform(chats, new Function<ApiChat, ApiChat>() {
-					@Override
-					public ApiChat apply(@Nullable ApiChat chat) {
-						assert chat != null;
-						try {
-							return prepareChat(chat);
-						} catch (UnsupportedAccountException e) {
-							throw new AccountRuntimeException(e);
-						}
-					}
-				}));
-			} catch (AccountRuntimeException e) {
-				throw new AccountException(e);
-			}
-
-			result = chatDao.mergeChats(user.getEntityId(), preparedChats);
+			result = chatDao.mergeChats(user.getEntityId(), prepareChats(chats));
 		}
 
 		fireChatEvents(userService.getUserById(user), result);
 
 		return result;
 
+	}
+
+	@Nonnull
+	private List<ApiChat> prepareChats(List<? extends ApiChat> chats) throws AccountException {
+		final List<ApiChat> result;
+		try {
+			result = newArrayList(transform(chats, new Function<ApiChat, ApiChat>() {
+				@Override
+				public ApiChat apply(@Nullable ApiChat chat) {
+					assert chat != null;
+					try {
+						return prepareChat(chat);
+					} catch (UnsupportedAccountException e) {
+						throw new AccountRuntimeException(e);
+					}
+				}
+			}));
+		} catch (AccountRuntimeException e) {
+			throw new AccountException(e);
+		}
+		return result;
 	}
 
 	private void fireChatEvents(@Nonnull User user, @Nonnull MergeDaoResult<Chat, String> mergeResult) {

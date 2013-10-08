@@ -134,11 +134,11 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 
 		final Entity chat;
 
-		final String realmChatId = smackChat.getThreadID();
-		if (Strings.isEmpty(realmChatId)) {
+		final String accountChatId = smackChat.getThreadID();
+		if (Strings.isEmpty(accountChatId)) {
 			chat = getChatService().getPrivateChatId(account.getUser().getEntity(), participant.getEntity());
 		} else {
-			chat = account.newChatEntity(realmChatId);
+			chat = account.newChatEntity(accountChatId);
 		}
 
 		final List<ChatMessage> chatMessages = toMessages(account, messages);
