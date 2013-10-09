@@ -56,4 +56,10 @@ public class MessengerApplication extends Application {
 
 		activity.finish();
 	}
+
+	public static void startBackgroundService(@Nonnull Application application) {
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(application, OngoingNotificationService.class);
+		application.startService(serviceIntent);
+	}
 }

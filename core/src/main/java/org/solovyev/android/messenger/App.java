@@ -310,4 +310,8 @@ public final class App {
 	public void setSecurityService(@Nonnull MessengerSecurityService securityService) {
 		this.securityService = securityService;
 	}
+
+	public static void startBackgroundService() {
+		MessengerApplication.startBackgroundService(instance.application);
+	}
 }

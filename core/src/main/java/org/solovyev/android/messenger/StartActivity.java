@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import roboguice.activity.RoboActivity;
 
@@ -69,9 +68,7 @@ public class StartActivity extends RoboActivity {
 
 		// we must start service from here because Android can cache application
 		// and Application#onCreate() is never called!
-		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(this, OngoingNotificationService.class);
-		startService(serviceIntent);
+		App.startBackgroundService();
 
 		MainActivity.startActivity(this);
 		this.finish();
