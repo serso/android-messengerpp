@@ -77,7 +77,6 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 		if (defaultPhoneNumber != null) {
 			properties.add(newProperty(User.PROPERTY_PHONE, defaultPhoneNumber));
 		}
-		properties.add(newProperty(User.PROPERTY_ONLINE, String.valueOf(true)));
 		return Users.newUser(realm.getId(), userId, Users.newNeverSyncedUserSyncData(), properties);
 	}
 }

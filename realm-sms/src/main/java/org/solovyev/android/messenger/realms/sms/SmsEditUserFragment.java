@@ -48,8 +48,8 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 
 		if (!isNewUser()) {
 			final User user = getUser();
-			firstNameEditText.setText(user.getPropertyValueByName(PROPERTY_FIRST_NAME));
-			lastNameEditText.setText(user.getPropertyValueByName(PROPERTY_LAST_NAME));
+			firstNameEditText.setText(user.getFirstName());
+			lastNameEditText.setText(user.getLastName());
 			phoneEditText.setText(user.getPropertyValueByName(PROPERTY_PHONE));
 
 			dontSaveInPhoneCheckbox.setChecked(!user.getEntity().isAccountEntityIdSet());

@@ -167,7 +167,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 													  @Nullable String name) throws XMPPException {
 		final List<AProperty> result = new ArrayList<AProperty>();
 
-		result.add(newProperty(User.PROPERTY_ONLINE, String.valueOf(available)));
+		result.add(Users.newOnlineProperty(available));
 
 		if (loadVCard) {
 			try {

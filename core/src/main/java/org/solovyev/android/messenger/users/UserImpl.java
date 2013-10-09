@@ -13,6 +13,9 @@ import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
 
+import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
+import static org.solovyev.android.properties.Properties.newProperty;
+
 /**
  * User: serso
  * Date: 5/24/12
@@ -84,8 +87,8 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	private String createDisplayName() {
 		final StringBuilder result = new StringBuilder();
 
-		final String firstName = this.getPropertyValueByName(User.PROPERTY_FIRST_NAME);
-		final String lastName = this.getPropertyValueByName(User.PROPERTY_LAST_NAME);
+		final String firstName = getFirstName();
+		final String lastName = getLastName();
 
 		boolean firstNameExists = !Strings.isEmpty(firstName);
 		boolean lastNameExists = !Strings.isEmpty(lastName);
@@ -109,6 +112,18 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 		}
 
 		return result.toString();
+	}
+
+	@Override
+	@Nullable
+	public String getFirstName() {
+		return this.getPropertyValueByName(User.PROPERTY_FIRST_NAME);
+	}
+
+	@Override
+	@Nullable
+	public String getLastName() {
+		return this.getPropertyValueByName(User.PROPERTY_LAST_NAME);
 	}
 
 	@Nonnull
@@ -177,7 +192,7 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 		if (isOnline() != online) {
 			clone = clone();
 
-			clone.properties.setProperty(PROPERTY_ONLINE, Boolean.toString(online));
+			clone.properties.setProperty(newOnlineProperty(online));
 		} else {
 			clone = this;
 		}
@@ -210,5 +225,28 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	@Override
 	public MutableAProperties getProperties() {
 		return properties;
+	}
+
+	@Override
+	public void setOnline(boolean online) {
+		properties.setProperty(newOnlineProperty(online));
+	}
+
+	@Override
+	public void setLastName(@Nullable String lastName) {
+		if (lastName != null) {
+			properties.setProperty(PROPERTY_LAST_NAME, lastName);
+		} else {
+			properties.removeProperty(PROPERTY_LAST_NAME);
+		}
+	}
+
+	@Override
+	public void setFirstName(@Nullable String firstName) {
+		if (firstName != null) {
+			properties.setProperty(PROPERTY_FIRST_NAME, firstName);
+		} else {
+			properties.removeProperty(PROPERTY_FIRST_NAME);
+		}
 	}
 }

@@ -29,6 +29,7 @@ import java.util.*;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
 import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
+import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
 
 /**
  * User: serso
@@ -168,14 +169,13 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 	@Override
 	public void updateOnlineStatus(@Nonnull User user) {
-		doDbExec(getSqliteOpenHelper(), newReplacePropertyExec(user, User.PROPERTY_ONLINE, String.valueOf(user.isOnline())));
+		doDbExec(getSqliteOpenHelper(), newReplacePropertyExec(user, newOnlineProperty(user.isOnline())));
 	}
 
 	@Nonnull
-	private ReplacePropertyExec newReplacePropertyExec(@Nonnull User user,
-															  @Nonnull String propertyName,
-															  @Nonnull String propertyValue) {
-		return new ReplacePropertyExec(user, "user_properties", "user_id", propertyName, propertyValue);
+	private ReplacePropertyExec newReplacePropertyExec( @Nonnull User user,
+														@Nonnull AProperty property) {
+		return new ReplacePropertyExec(user, "user_properties", "user_id", property.getName(), property.getValue());
 	}
 
     /*

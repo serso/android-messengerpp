@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -10,10 +11,15 @@ import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.Gender;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserSyncData;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
+
+import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
  * User: serso
@@ -70,40 +76,64 @@ class JsonUser {
 			throw new IllegalJsonException();
 		}
 
-		final List<AProperty> properties = new ArrayList<AProperty>();
+		final UserSyncData userSyncData = Users.newUserSyncData(DateTime.now(), null, null, null);
+		final MutableUser user = Users.newUser(account.newUserEntity(uid), userSyncData, Collections.<AProperty>emptyList());
 
-		properties.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, first_name));
-		properties.add(Properties.newProperty(User.PROPERTY_LAST_NAME, last_name));
-		properties.add(Properties.newProperty(User.PROPERTY_NICKNAME, nickname));
+		if (first_name != null) {
+			user.setFirstName(first_name);
+		}
+
+		if (last_name != null) {
+			user.setLastName(last_name);
+		}
+
+		final MutableAProperties properties = user.getProperties();
+		if (nickname != null) {
+			properties.setProperty(User.PROPERTY_NICKNAME, nickname);
+		}
 
 		final String gender = getGender();
 		if (gender != null) {
-			properties.add(Properties.newProperty(User.PROPERTY_SEX, gender));
+			properties.setProperty(newProperty(User.PROPERTY_SEX, gender));
 		}
 
-		final String onlineProperty = getOnline();
-		if (onlineProperty != null) {
-			properties.add(Properties.newProperty(User.PROPERTY_ONLINE, onlineProperty));
+		final Boolean online = getOnline();
+		if (online != null) {
+			properties.setProperty(Users.newOnlineProperty(online));
 		}
-		properties.add(Properties.newProperty("bdate", bdate));
-		properties.add(Properties.newProperty("cityId", String.valueOf(city)));
-		properties.add(Properties.newProperty("countryId", String.valueOf(country)));
-		properties.add(Properties.newProperty("photo", photo));
-		properties.add(Properties.newProperty("photoMedium", photo_medium));
-		properties.add(Properties.newProperty("photoBig", photo_big));
-		properties.add(Properties.newProperty("photoRec", photo_rec));
+		if (bdate != null) {
+			properties.setProperty("bdate", bdate);
+		}
 
-		return Users.newUser(account.newUserEntity(uid), Users.newUserSyncData(DateTime.now(), null, null, null), properties);
+		properties.setProperty("cityId", String.valueOf(city));
+		properties.setProperty("countryId", String.valueOf(country));
+		if (photo != null) {
+			properties.setProperty("photo", photo);
+		}
+
+		if (photo_medium != null) {
+			properties.setProperty("photoMedium", photo_medium);
+		}
+
+		if (photo_big != null) {
+			properties.setProperty("photoBig", photo_big);
+		}
+
+		if (photo_rec != null) {
+			properties.setProperty("photoRec", photo_rec);
+		}
+
+		return user;
 	}
 
 	@Nullable
-	private String getOnline() {
+	private Boolean getOnline() {
 		if (online == null) {
 			return null;
 		} else if (online.equals(0)) {
-			return Boolean.FALSE.toString();
+			return Boolean.FALSE;
 		} else if (online.equals(1)) {
-			return Boolean.TRUE.toString();
+			return Boolean.TRUE;
 		} else {
 			return null;
 		}

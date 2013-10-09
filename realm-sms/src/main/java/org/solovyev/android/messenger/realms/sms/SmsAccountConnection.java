@@ -25,10 +25,12 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.MutableAProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,8 +41,10 @@ import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.makeEntityId;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.User.*;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -189,13 +193,14 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	private User toUser(@Nonnull String phone) {
 		final SmsAccount account = getAccount();
 
-		final List<AProperty> properties = new ArrayList<AProperty>();
-		properties.add(newProperty(PROPERTY_FIRST_NAME, phone));
-		properties.add(newProperty(PROPERTY_PHONE, phone));
-		properties.add(newProperty(PROPERTY_PHONES, phone));
-		properties.add(newProperty(PROPERTY_ONLINE, String.valueOf(true)));
+		final MutableUser user = newEmptyUser(newEntity(account.getId(), NO_ACCOUNT_ID, makeEntityId(account.getId(), phone)));
+		user.setFirstName(phone);
 
-		return newUser(Entities.newEntity(account.getId(), NO_ACCOUNT_ID, makeEntityId(account.getId(), phone)), Users.newNeverSyncedUserSyncData(), properties);
+		final MutableAProperties properties = user.getProperties();
+		properties.setProperty(PROPERTY_PHONE, phone);
+		properties.setProperty(PROPERTY_PHONES, phone);
+
+		return user;
 	}
 
 	@Nullable

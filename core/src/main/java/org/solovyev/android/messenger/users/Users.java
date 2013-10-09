@@ -3,8 +3,6 @@ package org.solovyev.android.messenger.users;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
@@ -15,7 +13,6 @@ import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManage
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +25,7 @@ import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newCr
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newEditUserArguments;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
  * User: serso
@@ -109,16 +107,6 @@ public final class Users {
 		return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
 	}
 
-	public static void setUserOnlineProperty(@Nonnull List<AProperty> properties, boolean online) {
-		Iterables.removeIf(properties, new Predicate<AProperty>() {
-			@Override
-			public boolean apply(@Nullable AProperty property) {
-				return property != null && property.getName().equals(User.PROPERTY_ONLINE);
-			}
-		});
-		properties.add(Properties.newProperty(User.PROPERTY_ONLINE, String.valueOf(online)));
-	}
-
 	public static void tryParseNameProperties(@Nonnull List<AProperty> properties, @Nullable String fullName) {
 		if (fullName != null) {
 			int firstSpaceSymbolIndex = fullName.indexOf(' ');
@@ -130,11 +118,11 @@ public final class Users {
 				// 2. if more than one spaces => both return different
 				final String firstName = fullName.substring(0, firstSpaceSymbolIndex);
 				final String lastName = fullName.substring(firstSpaceSymbolIndex + 1);
-				properties.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, firstName));
-				properties.add(Properties.newProperty(User.PROPERTY_LAST_NAME, lastName));
+				properties.add(newProperty(User.PROPERTY_FIRST_NAME, firstName));
+				properties.add(newProperty(User.PROPERTY_LAST_NAME, lastName));
 			} else {
 				// just store full name in first name field
-				properties.add(Properties.newProperty(User.PROPERTY_FIRST_NAME, fullName));
+				properties.add(newProperty(User.PROPERTY_FIRST_NAME, fullName));
 			}
 		}
 	}
@@ -165,5 +153,10 @@ public final class Users {
 		}
 
 		return false;
+	}
+
+	@Nonnull
+	public static AProperty newOnlineProperty(boolean online) {
+		return newProperty(User.PROPERTY_ONLINE, String.valueOf(online));
 	}
 }

@@ -72,23 +72,23 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 			Assert.assertNotNull(user2);
 			Assert.assertEquals(user2.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN2);
 			Assert.assertEquals(user2.getEntity().getAccountId(), realm1.getId());
-			Assert.assertEquals("Sergey II Solovyev", user2.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
-			Assert.assertNull(user2.getPropertyValueByName(User.PROPERTY_LAST_NAME));
+			Assert.assertEquals("Sergey II Solovyev", user2.getFirstName());
+			Assert.assertNull(user2.getLastName());
 
 			// load self
 			final User user1 = accountUserService.getUserById(realm1.getUser().getEntity().getAccountEntityId());
 			Assert.assertNotNull(user1);
 			Assert.assertEquals(user1.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN);
 			Assert.assertEquals(user1.getEntity().getAccountId(), realm1.getId());
-			Assert.assertEquals("Sergey I Solovyev", user1.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
-			Assert.assertNull(user1.getPropertyValueByName(User.PROPERTY_LAST_NAME));
+			Assert.assertEquals("Sergey I Solovyev", user1.getFirstName());
+			Assert.assertNull(user1.getLastName());
 
 			final User serso = accountUserService.getUserById("se.solovyev@gmail.com");
 			Assert.assertNotNull(serso);
 			Assert.assertEquals(serso.getEntity().getAccountEntityId(), "se.solovyev@gmail.com");
 			Assert.assertEquals(serso.getEntity().getAccountId(), realm1.getId());
-			Assert.assertEquals("Sergey", serso.getPropertyValueByName(User.PROPERTY_FIRST_NAME));
-			Assert.assertEquals("Solovyev", serso.getPropertyValueByName(User.PROPERTY_LAST_NAME));
+			Assert.assertEquals("Sergey", serso.getFirstName());
+			Assert.assertEquals("Solovyev", serso.getLastName());
 
 
 		} finally {

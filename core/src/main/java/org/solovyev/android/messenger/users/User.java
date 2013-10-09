@@ -81,6 +81,12 @@ public interface User extends MutableUserSyncData, Identifiable, EntityAware {
 
 	boolean isOnline();
 
+	@Nullable
+	String getFirstName();
+
+	@Nullable
+	String getLastName();
+
 	@Nonnull
 	Collection<AProperty> getPropertiesCollection();
 

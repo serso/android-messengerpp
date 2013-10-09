@@ -31,6 +31,7 @@ import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
+import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
 
 public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 
@@ -119,9 +120,9 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 	protected User getContactForAccount(@Nonnull Account account, int i) {
 		final MutableUser user = newEmptyUser(getEntityForContact(account, i));
 		final MutableAProperties properties = user.getProperties();
-		properties.setProperty(PROPERTY_LAST_NAME, "last_name_" + i);
-		properties.setProperty(PROPERTY_FIRST_NAME, "first_name_" + i);
-		properties.setProperty(PROPERTY_ONLINE, String.valueOf(i % 2));
+		user.setLastName("last_name_" + i);
+		user.setFirstName("first_name_" + i);
+		user.setOnline(i % 2 == 0);
 		properties.setProperty(PROPERTY_PHONE, "phone_" + i);
 		return user;
 	}
