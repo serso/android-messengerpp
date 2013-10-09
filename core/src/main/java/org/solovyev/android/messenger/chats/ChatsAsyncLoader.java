@@ -16,6 +16,8 @@ import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
+import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
+
 /**
  * User: serso
  * Date: 6/7/12
@@ -33,16 +35,12 @@ final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
 		final List<UiChat> result = new ArrayList<UiChat>();
 
 		final UserService userService = App.getUserService();
-		final ChatService chatService = App.getChatService();
 		final AccountService accountService = App.getAccountService();
 
 		for (User user : accountService.getEnabledAccountUsers()) {
 			final List<Chat> chats = userService.getUserChats(user.getEntity());
 			for (Chat chat : chats) {
-				final ChatMessage lastMessage = chatService.getLastMessage(chat.getEntity());
-				final int unreadMessagesCount = chatService.getUnreadMessagesCount(chat.getEntity());
-				final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
-				result.add(UiChat.newUiChat(user, chat, lastMessage, unreadMessagesCount, displayName));
+				result.add(loadUiChat(user, chat));
 			}
 		}
 

@@ -8,10 +8,11 @@
 		style="?mpp_list_item_icon" />
 
 	<LinearLayout
-		a:orientation="vertical"
-		a:layout_width="match_parent"
-		a:layout_height="wrap_content"
-		a:layout_gravity="center_vertical">
+			a:orientation="vertical"
+			a:layout_weight="1"
+			a:layout_width="0dp"
+			a:layout_height="wrap_content"
+			a:layout_gravity="center_vertical">
 
 		<TextView
 			a:id="@+id/mpp_li_chat_title_textview"
@@ -29,5 +30,9 @@
 			a:text="mpp_li_last_message_text_time_textview" />
 
 	</LinearLayout>
+
+	<ImageView
+			a:id="@+id/mpp_li_contact_online_view"
+			style="?mpp_list_item_contact_online"/>
 
 </LinearLayout>

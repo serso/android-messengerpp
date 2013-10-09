@@ -33,6 +33,7 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
@@ -40,7 +41,7 @@ import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
-import static org.solovyev.android.messenger.chats.UiChat.newUiChat;
+import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 
 /**
@@ -139,7 +140,6 @@ public class DefaultChatService implements ChatService {
 
 	@Override
 	public void init() {
-		userService.addListener(new UserEventListener());
 	}
 
 	@Nonnull
@@ -487,9 +487,7 @@ public class DefaultChatService implements ChatService {
 		for (Chat chat : chats) {
 			final ChatMessage lastMessage = getLastMessage(chat.getEntity());
 			if (lastMessage != null) {
-				final int unreadMessagesCount = getUnreadMessagesCount(chat.getEntity());
-				final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
-				result.add(newUiChat(user, chat, lastMessage, unreadMessagesCount, displayName));
+				result.add(loadUiChat(user, chat));
 			} else {
 				Log.i(TAG, "Empty chat detected, chat id " + chat.getId());
 			}
@@ -634,24 +632,36 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<User> getParticipants(@Nonnull Entity chat) {
-		List<User> result = chatParticipantsCache.get(chat);
+		List<User> participants = chatParticipantsCache.get(chat);
 
-		if (result == ThreadSafeMultimap.NO_VALUE) {
+		if (participants == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
-				result = chatDao.readParticipants(chat.getEntityId());
+				participants = chatDao.readParticipants(chat.getEntityId());
 			}
 
-			chatParticipantsCache.update(chat, new WholeListUpdater<User>(result));
+			chatParticipantsCache.update(chat, new WholeListUpdater<User>(participants));
+		} else {
+			participants = toActualUsers(participants);
 		}
 
-		return result;
+		return participants;
+	}
+
+	@Nonnull
+	private List<User> toActualUsers(@Nonnull List<User> users) {
+		return newArrayList(transform(users, new Function<User, User>() {
+			@Override
+			public User apply(User user) {
+				return userService.getUserById(user.getEntity());
+			}
+		}));
 	}
 
 	@Nonnull
 	@Override
 	public List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull final Entity user) {
 		final List<User> participants = getParticipants(chat);
-		return newArrayList(Iterables.filter(participants, new Predicate<User>() {
+		return newArrayList(filter(participants, new Predicate<User>() {
 			@Override
 			public boolean apply(@javax.annotation.Nullable User input) {
 				return input != null && !input.getEntity().equals(user);
@@ -705,24 +715,6 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public void removeListeners() {
 		this.listeners.removeListeners();
-	}
-
-	private final class UserEventListener extends AbstractJEventListener<UserEvent> {
-
-		private UserEventListener() {
-			super(UserEvent.class);
-		}
-
-		@Override
-		public void onEvent(@Nonnull UserEvent event) {
-			final User eventUser = event.getUser();
-
-			switch (event.getType()) {
-				case changed:
-					chatParticipantsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
-					break;
-			}
-		}
 	}
 
 	private final class ChatEventListener extends AbstractJEventListener<ChatEvent> {

@@ -7,37 +7,80 @@ import org.solovyev.android.messenger.users.User;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Predicate;
+
+import static com.google.common.collect.Iterables.any;
+import static org.solovyev.android.messenger.App.getChatService;
+
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI
  */
 public final class UiChat implements Identifiable {
 
 	@Nonnull
-	private final User user;
+	private User user;
 
 	@Nonnull
-	private final Chat chat;
+	private Chat chat;
 
-	private final int unreadMessagesCount;
+	private int unreadMessagesCount;
 
 	@Nullable
-	private final ChatMessage lastMessage;
+	private ChatMessage lastMessage;
 
 	// precached display name in order to calculate it before shown (e.g. for sorting)
 	@Nonnull
-	private final String displayName;
+	private String displayName;
 
-	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName) {
+	private boolean online;
+
+	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
 		this.user = user;
 		this.chat = chat;
 		this.lastMessage = lastMessage;
 		this.unreadMessagesCount = unreadMessagesCount;
 		this.displayName = displayName;
+		this.online = online;
 	}
 
 	@Nonnull
-	static UiChat newUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName) {
-		return new UiChat(user, chat, lastMessage, unreadMessagesCount, displayName);
+	static UiChat newUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
+		return new UiChat(user, chat, lastMessage, unreadMessagesCount, displayName, online);
+	}
+
+	@Nonnull
+	static UiChat loadUiChat(@Nonnull User user, @Nonnull Chat chat) {
+		final ChatMessage lastMessage = getLastChatMessage(chat);
+		final int unreadMessagesCount = getUnreadMessagesCount(chat);
+		final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
+		final boolean online = isParticipantsOnline(user, chat);
+
+		return new UiChat(user, chat, lastMessage, unreadMessagesCount, displayName, online);
+	}
+
+	@Nonnull
+	public static UiChat newEmptyUiChat(@Nonnull User user, @Nonnull Chat chat) {
+		return newUiChat(user, chat, null, 0, "", false);
+	}
+
+	@Nullable
+	private static ChatMessage getLastChatMessage(Chat chat) {
+		return getChatService().getLastMessage(chat.getEntity());
+	}
+
+	private static int getUnreadMessagesCount(@Nonnull Chat chat) {
+		return getChatService().getUnreadMessagesCount(chat.getEntity());
+	}
+
+	private static boolean isParticipantsOnline(@Nonnull User user, @Nonnull Chat chat) {
+		final Iterable<User> participants = getChatService().getParticipantsExcept(chat.getEntity(), user.getEntity());
+
+		return any(participants, new Predicate<User>() {
+			@Override
+			public boolean apply(User participant) {
+				return participant.isOnline();
+			}
+		});
 	}
 
 	@Nonnull
@@ -53,6 +96,10 @@ public final class UiChat implements Identifiable {
 	@Nullable
 	public ChatMessage getLastMessage() {
 		return lastMessage;
+	}
+
+	public boolean isOnline() {
+		return online;
 	}
 
 	@Override
@@ -94,18 +141,29 @@ public final class UiChat implements Identifiable {
 		return displayName;
 	}
 
-	@Nonnull
-	public UiChat copyForNewChat(@Nonnull Chat newChat) {
-		return UiChat.newUiChat(this.user, newChat, this.lastMessage, this.unreadMessagesCount, this.displayName);
+
+	public void setChat(@Nonnull Chat chat) {
+		this.chat = chat;
 	}
 
-	@Nonnull
-	public UiChat copyForNewLastMessage(@Nonnull ChatMessage newLastMessage) {
-		return UiChat.newUiChat(this.user, this.chat, newLastMessage, this.unreadMessagesCount, this.displayName);
+	public void setLastMessage(@Nullable ChatMessage lastMessage) {
+		this.lastMessage = lastMessage;
 	}
 
-	@Nonnull
-	public UiChat copyForNewUnreadMessageCount(@Nonnull Integer unreadMessagesCount) {
-		return UiChat.newUiChat(this.user, this.chat, this.lastMessage, unreadMessagesCount, this.displayName);
+	public void setUnreadMessagesCount(int unreadMessagesCount) {
+		this.unreadMessagesCount = unreadMessagesCount;
+	}
+
+	public boolean setOnline(boolean online) {
+		if (this.online != online) {
+			this.online = online;
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean updateOnlineStatus() {
+		return setOnline(isParticipantsOnline(this.user, this.chat));
 	}
 }

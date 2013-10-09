@@ -1,9 +1,11 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.App;
@@ -11,21 +13,26 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_clicked;
+import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
+import static org.solovyev.android.messenger.chats.UiChat.newEmptyUiChat;
 
 /**
  * User: serso
  * Date: 6/7/12
  * Time: 6:24 PM
  */
-public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements ChatEventListener*/ {
+public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "chat_list_item_";
@@ -35,20 +42,9 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 		setDisplayName(chat.getDisplayName());
 	}
 
-	@Nullable
-	private static ChatMessage getLastChatMessage(Chat chat) {
-		return getChatService().getLastMessage(chat.getEntity());
-	}
-
-	private static int getUnreadMessagesCount(@Nonnull Chat chat) {
-		return getChatService().getUnreadMessagesCount(chat.getEntity());
-	}
-
 	@Nonnull
-	public static ChatListItem newInstance(@Nonnull User user, @Nonnull Chat chat) {
-		final ChatMessage lastChatMessage = getLastChatMessage(chat);
-		final int unreadMessagesCount = getUnreadMessagesCount(chat);
-		return new ChatListItem(UiChat.newUiChat(user, chat, lastChatMessage, unreadMessagesCount, Chats.getDisplayName(chat, lastChatMessage, user, unreadMessagesCount)));
+	public static ChatListItem newChatListItem(@Nonnull User user, @Nonnull Chat chat) {
+		return new ChatListItem(loadUiChat(user, chat));
 	}
 
 	@Nonnull
@@ -58,7 +54,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 
 	@Nonnull
 	public static ChatListItem newEmpty(User user, Chat chat) {
-		return new ChatListItem(UiChat.newUiChat(user, chat, null, 0, ""));
+		return new ChatListItem(newEmptyUiChat(user, chat));
 	}
 
 	@Override
@@ -119,6 +115,13 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 			lastMessageText.setText("");
 			lastMessageTextTime.setText("");
 		}
+
+		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
+		if (uiChat.isOnline()) {
+			contactOnline.setVisibility(VISIBLE);
+		} else {
+			contactOnline.setVisibility(INVISIBLE);
+		}
 	}
 
 	@Nonnull
@@ -126,29 +129,52 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> /*implements
 		return App.getChatService();
 	}
 
-	/*@Override*/
-	public void onEvent(@Nonnull ChatEvent event) {
+	public boolean onEvent(@Nonnull UserEvent event) {
+		boolean changed = false;
+
+		switch (event.getType()) {
+			case contacts_presence_changed:
+				changed = getData().updateOnlineStatus();
+				if (changed) {
+					onDataChanged();
+				}
+				break;
+		}
+
+		return changed;
+	}
+
+	public boolean onEvent(@Nonnull ChatEvent event) {
+		boolean changed = false;
+
 		final Chat chat = getChat();
 		final Chat eventChat = event.getChat();
 
 		switch (event.getType()) {
 			case changed:
 				if (eventChat.equals(chat)) {
-					setData(getData().copyForNewChat(eventChat));
+					getData().setChat(eventChat);
+					onDataChanged();
+					changed = true;
 				}
 				break;
 
 			case last_message_changed:
 				if (eventChat.equals(chat)) {
-					setData(getData().copyForNewLastMessage(event.getDataAsChatMessage()));
+					getData().setLastMessage(event.getDataAsChatMessage());
+					onDataChanged();
+					changed = true;
 				}
 				break;
 			case unread_message_count_changed:
 				if (eventChat.equals(chat)) {
-					setData(getData().copyForNewUnreadMessageCount(event.getDataAsInteger()));
+					getData().setUnreadMessagesCount(event.getDataAsInteger());
+					onDataChanged();
+					changed = true;
 				}
 				break;
 		}
 
+		return changed;
 	}
 }
