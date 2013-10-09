@@ -71,4 +71,10 @@ public class VkAccountUserService implements AccountUserService {
 
 		return result;
 	}
+
+	@Nonnull
+	@Override
+	public User saveUser(@Nonnull User user) {
+		return user;
+	}
 }

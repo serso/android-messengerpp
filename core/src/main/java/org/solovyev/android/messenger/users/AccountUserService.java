@@ -37,4 +37,7 @@ public interface AccountUserService {
 	@Nonnull
 	List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException;
 
+	@Nonnull
+	User saveUser(@Nonnull User user);
+
 }

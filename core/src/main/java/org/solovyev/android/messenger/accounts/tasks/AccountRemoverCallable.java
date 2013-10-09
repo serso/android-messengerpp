@@ -15,7 +15,7 @@ import org.solovyev.android.messenger.accounts.Account;
 public final class AccountRemoverCallable implements Callable<Account> {
 
 	@Nonnull
-	public static final String TASK_NAME = "realm-remove";
+	public static final String TASK_NAME = "account-remove";
 
 	@Nonnull
 	private final Account account;

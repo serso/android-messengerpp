@@ -18,7 +18,7 @@ import org.solovyev.android.messenger.security.InvalidCredentialsException;
 public class AccountSaverCallable implements Callable<Account> {
 
 	@Nonnull
-	public static final String TASK_NAME = "realm-save";
+	public static final String TASK_NAME = "account-save";
 
 	@Nonnull
 	private final AccountBuilder accountBuilder;

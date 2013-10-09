@@ -2,20 +2,18 @@ package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.solovyev.android.messenger.accounts.tasks.UserSaverCallable;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.users.Users;
 
 import com.google.inject.Inject;
 
-import static org.solovyev.android.messenger.App.getUserService;
+import static org.solovyev.android.messenger.accounts.tasks.UserSaverCallback.newUserSaverCallback;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
@@ -67,6 +65,14 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		getTaskListeners().addTaskListener(UserSaverCallable.TASK_NAME, newUserSaverCallback(getActivity()), getActivity(), R.string.mpp_saving_user_title, R.string.mpp_saving_user_message);
+	}
+
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 	}
@@ -86,9 +92,7 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 	protected void onSaveButtonPressed() {
 		final MutableUser contact = validateData();
 		if (contact != null) {
-			final List<User> users = Arrays.<User>asList(contact);
-			getUserService().mergeUserContacts(getAccount().getUser().getEntity(), users, false, true);
-			getFragmentManager().popBackStack();
+			getTaskListeners().run(UserSaverCallable.TASK_NAME, new UserSaverCallable(getAccount(), contact), newUserSaverCallback(getActivity()), getActivity(), R.string.mpp_saving_user_title, R.string.mpp_saving_user_message);
 		}
 	}
 
@@ -144,4 +148,5 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 		arguments.putString(ARG_ACCOUNT_ID, account.getId());
 		return arguments;
 	}
+
 }

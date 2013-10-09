@@ -106,6 +106,12 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		return doOnConnection(new OnlineUsersChecker(getAccount(), users));
 	}
 
+	@Nonnull
+	@Override
+	public User saveUser(@Nonnull User user) {
+		return user;
+	}
+
     /*
 	**********************************************************************
     *
