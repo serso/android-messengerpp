@@ -149,7 +149,7 @@ public class DefaultUserService implements UserService {
 			if (result == null) {
 				if (tryFindInRealm) {
 					try {
-						final Account account = getRealmByEntity(user);
+						final Account account = getAccountByEntity(user);
 						result = account.getAccountUserService().getUserById(user.getAccountEntityId());
 					} catch (AccountException e) {
 						// unable to load from realm => just return empty user
@@ -176,7 +176,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Nonnull
-	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
+	private Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
 		return accountService.getAccountById(entity.getAccountId());
 	}
 
@@ -374,7 +374,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void syncUser(@Nonnull Entity userEntity) throws AccountException {
-		User user = getRealmByEntity(userEntity).getAccountUserService().getUserById(userEntity.getAccountEntityId());
+		User user = getAccountByEntity(userEntity).getAccountUserService().getUserById(userEntity.getAccountEntityId());
 		if (user != null) {
 			user = user.updatePropertiesSyncDate();
 			updateUser(user, false);
@@ -384,7 +384,7 @@ public class DefaultUserService implements UserService {
 	@Override
 	@Nonnull
 	public List<User> syncUserContacts(@Nonnull Entity user) throws AccountException {
-		final Account account = getRealmByEntity(user);
+		final Account account = getAccountByEntity(user);
 		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getAccountEntityId());
 
 		if (!contacts.isEmpty()) {
@@ -447,7 +447,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
-		final List<ApiChat> apiChats = getRealmByEntity(user).getAccountChatService().getUserChats(user.getAccountEntityId());
+		final List<ApiChat> apiChats = getAccountByEntity(user).getAccountChatService().getUserChats(user.getAccountEntityId());
 
 		final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
 			@Override
@@ -475,7 +475,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void syncUserContactsStatuses(@Nonnull Entity userEntity) throws AccountException {
-		final List<User> contacts = getRealmByEntity(userEntity).getAccountUserService().checkOnlineUsers(getUserContacts(userEntity));
+		final List<User> contacts = getAccountByEntity(userEntity).getAccountUserService().checkOnlineUsers(getUserContacts(userEntity));
 
 		final User user = getUserById(userEntity);
 
@@ -508,7 +508,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	private RealmIconService getRealmIconServiceByUser(@Nonnull User user) throws UnsupportedAccountException {
-		return getRealmByEntity(user.getEntity()).getRealm().getRealmIconService();
+		return getAccountByEntity(user.getEntity()).getRealm().getRealmIconService();
 	}
 
 	@Override
@@ -564,7 +564,7 @@ public class DefaultUserService implements UserService {
 	public int getUnreadMessagesCount(@Nonnull Entity contact) {
 		try {
 			if (!Threads.isUiThread()) {
-				final Chat chat = chatService.getPrivateChat(getRealmByEntity(contact).getUser().getEntity(), contact);
+				final Chat chat = chatService.getPrivateChat(getAccountByEntity(contact).getUser().getEntity(), contact);
 				if (chat != null) {
 					return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
 				} else {
