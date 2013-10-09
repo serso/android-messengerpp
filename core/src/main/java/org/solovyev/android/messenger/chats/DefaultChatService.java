@@ -163,14 +163,14 @@ public class DefaultChatService implements ChatService {
 
 		Chat result;
 
-		final Entity realmChat = getPrivateChatId(user1, user2);
+		final Entity accountChat = getPrivateChatId(user1, user2);
 		synchronized (lock) {
-			result = getChatById(realmChat);
+			result = getChatById(accountChat);
 			if (result == null) {
 				// no private chat exists => create one
-				final AccountChatService accountChatService = account.getAccountChatService();
+				final AccountChatService acs = account.getAccountChatService();
 
-				Chat chat = accountChatService.newPrivateChat(realmChat, user1.getAccountEntityId(), user2.getAccountEntityId());
+				Chat chat = acs.newPrivateChat(accountChat, user1.getAccountEntityId(), user2.getAccountEntityId());
 
 				chat = preparePrivateChat(chat, user1, user2);
 
