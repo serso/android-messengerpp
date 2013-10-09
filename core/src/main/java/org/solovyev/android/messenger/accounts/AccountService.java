@@ -9,6 +9,7 @@ import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,8 +56,14 @@ public interface AccountService {
 	@Nonnull
 	Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException;
 
+	@Nullable
+	Account getAccountByIdOrNull(@Nonnull String accountId);
+
 	@Nonnull
 	Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException;
+
+	@Nullable
+	Account getAccountByEntityOrNull(@Nonnull Entity entity);
 
 	@Nonnull
 	Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedAccountException;

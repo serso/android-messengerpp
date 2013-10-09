@@ -2,32 +2,29 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.app.Application;
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.jivesfotware.smackx.enitycaps.provider.MessengerCapsExtensionProvider;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
 

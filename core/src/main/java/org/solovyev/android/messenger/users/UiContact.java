@@ -1,8 +1,13 @@
 package org.solovyev.android.messenger.users;
 
-import javax.annotation.Nonnull;
-
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.Identifiable;
+import org.solovyev.android.messenger.accounts.Account;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static org.solovyev.android.messenger.App.getAccountService;
 
 /**
  * User: serso
@@ -16,14 +21,37 @@ final class UiContact implements Identifiable {
 
 	private final int unreadMessagesCount;
 
-	private UiContact(@Nonnull User contact, int unreadMessagesCount) {
+	@Nullable
+	private Account account;
+
+	private UiContact(@Nonnull User contact, int unreadMessagesCount, @Nullable Account account) {
 		this.contact = contact;
 		this.unreadMessagesCount = unreadMessagesCount;
+		this.account = account;
 	}
 
 	@Nonnull
-	static UiContact newInstance(@Nonnull User contact, int unreadMessagesCount) {
-		return new UiContact(contact, unreadMessagesCount);
+	static UiContact newUiContact(@Nonnull User contact, int unreadMessagesCount, @Nullable Account account) {
+		return new UiContact(contact, unreadMessagesCount, account);
+	}
+
+	@Nonnull
+	static UiContact loadUiContact(@Nonnull User contact) {
+		return newUiContact(contact, getUnreadMessagesCount(contact), getAccount(contact));
+	}
+
+	@Nonnull
+	static UiContact loadUiContact(@Nonnull User contact, @Nullable Account account) {
+		return newUiContact(contact, getUnreadMessagesCount(contact), account);
+	}
+
+	@Nullable
+	private static Account getAccount(@Nonnull User contact) {
+		return getAccountService().getAccountByEntityOrNull(contact.getEntity());
+	}
+
+	private static int getUnreadMessagesCount(@Nonnull User contact) {
+		return App.getUserService().getUnreadMessagesCount(contact.getEntity());
 	}
 
 	@Nonnull
@@ -65,6 +93,14 @@ final class UiContact implements Identifiable {
 		return unreadMessagesCount;
 	}
 
+	@Nullable
+	public Account getAccount() {
+		if (account == null) {
+			account = getAccount(contact);
+		}
+		return account;
+	}
+
 	@Nonnull
 	String getDisplayName() {
 		return this.contact.getDisplayName();
@@ -72,11 +108,11 @@ final class UiContact implements Identifiable {
 
 	@Nonnull
 	public UiContact copyForNewUser(@Nonnull User newContact) {
-		return UiContact.newInstance(newContact, this.unreadMessagesCount);
+		return newUiContact(newContact, this.unreadMessagesCount, this.account);
 	}
 
 	@Nonnull
 	public UiContact copyForNewUnreadMessagesCount(@Nonnull Integer unreadMessagesCount) {
-		return UiContact.newInstance(this.contact, unreadMessagesCount);
+		return newUiContact(this.contact, unreadMessagesCount, this.account);
 	}
 }

@@ -30,4 +30,9 @@
 		a:id="@+id/mpp_li_contact_online_view"
 		style="?mpp_list_item_contact_online"/>
 
+	<ImageButton
+		a:id="@+id/mpp_li_contact_call_view"
+		style="?mpp_list_item_contact_call"
+		a:visibility="gone"/>
+
 </LinearLayout>

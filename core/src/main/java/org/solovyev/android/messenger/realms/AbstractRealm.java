@@ -136,4 +136,9 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	public Class<? extends BaseEditUserFragment> getCreateUserFragmentClass() {
 		return createUserFragmentClass;
 	}
+
+	@Override
+	public boolean supportsVoiceCall() {
+		return false;
+	}
 }

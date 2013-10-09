@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
+import static org.solovyev.android.messenger.users.ContactListItem.loadContactListItem;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
 
@@ -81,7 +82,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 						@Override
 						public ContactListItem apply(@Nullable User contact) {
 							assert contact != null;
-							return ContactListItem.newInstance(contact);
+							return loadContactListItem(contact);
 						}
 					})));
 				}
@@ -187,7 +188,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	protected void addListItem(@Nonnull User contact) {
-		add(ContactListItem.newInstance(contact));
+		add(loadContactListItem(contact));
 	}
 
 	protected abstract void onListItemChanged(@Nonnull User contact);

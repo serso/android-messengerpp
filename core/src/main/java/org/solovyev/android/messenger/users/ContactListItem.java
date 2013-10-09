@@ -5,12 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemOnClickData;
@@ -24,14 +18,17 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static org.solovyev.android.messenger.App.getAccountService;
-import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.App.getExceptionHandler;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.view.View.*;
+import static org.solovyev.android.messenger.App.*;
+import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
 import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 import static org.solovyev.android.messenger.users.ContactUiEventType.edit_contact;
+import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
+import static org.solovyev.android.messenger.users.UiContact.newUiContact;
 
 /**
  * User: serso
@@ -48,22 +45,18 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		setDisplayName(contact.getDisplayName());
 	}
 
-	private static int getUnreadMessagesCount(@Nonnull User contact) {
-		return App.getUserService().getUnreadMessagesCount(contact.getEntity());
-	}
-
 	@Nonnull
 	public static ContactListItem newEmpty(@Nonnull User contact) {
-		return newInstance(UiContact.newInstance(contact, 0));
+		return newContactListItem(newUiContact(contact, 0, null));
 	}
 
 	@Nonnull
-	public static ContactListItem newInstance(@Nonnull User contact) {
-		return new ContactListItem(UiContact.newInstance(contact, getUnreadMessagesCount(contact)));
+	public static ContactListItem loadContactListItem(@Nonnull User contact) {
+		return new ContactListItem(loadUiContact(contact));
 	}
 
 	@Nonnull
-	public static ContactListItem newInstance(@Nonnull UiContact contact) {
+	public static ContactListItem newContactListItem(@Nonnull UiContact contact) {
 		return new ContactListItem(contact);
 	}
 
@@ -116,7 +109,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	}
 
 	@Override
-	protected void fillView(@Nonnull UiContact contact, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+	protected void fillView(@Nonnull final UiContact contact, @Nonnull final Context context, @Nonnull ViewAwareTag viewTag) {
 		final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
 		App.getUserService().setUserIcon(contact.getContact(), contactIcon);
 
@@ -124,26 +117,43 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		contactName.setText(getDisplayName());
 
 		final AccountService accountService = getAccountService();
+		final Account account = contact.getAccount();
 
 		final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
 		if (accountService.isOneAccount()) {
 			accountName.setVisibility(GONE);
 		} else {
 			accountName.setVisibility(VISIBLE);
-			try {
-				final Account account = accountService.getAccountById(getContact().getEntity().getAccountId());
+			if (account != null) {
 				accountName.setText("[" + account.getDisplayName(context) + "/" + account.getUser().getDisplayName() + "]");
-			} catch (UnsupportedAccountException e) {
-				// cannot do anything => just handle exception
-				getExceptionHandler().handleException(e);
 			}
 		}
 
 		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
-		if (contact.getContact().isOnline()) {
-			contactOnline.setVisibility(VISIBLE);
+		final View contactCall = viewTag.getViewById(R.id.mpp_li_contact_call_view);
+		if (account == null || !account.getRealm().supportsVoiceCall()) {
+			contactCall.setOnClickListener(null);
+			contactCall.setVisibility(GONE);
+
+			if (contact.getContact().isOnline()) {
+				contactOnline.setVisibility(VISIBLE);
+			} else {
+				contactOnline.setVisibility(INVISIBLE);
+			}
 		} else {
-			contactOnline.setVisibility(INVISIBLE);
+			contactOnline.setVisibility(GONE);
+
+			// for some reason following properties set from styles xml are not applied => apply them manually
+			contactCall.setFocusable(false);
+			contactCall.setFocusableInTouchMode(false);
+
+			contactCall.setVisibility(VISIBLE);
+			contactCall.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getEventManager(context).fire(call_contact.newEvent(contact.getContact()));
+				}
+			});
 		}
 	}
 

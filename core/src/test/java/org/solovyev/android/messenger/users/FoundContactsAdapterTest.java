@@ -23,7 +23,7 @@ public class FoundContactsAdapterTest extends DefaultMessengerTest {
 		final List<User> contacts = ad.getContacts();
 		final Map<User, ContactListItem> contactListItems = new HashMap<User, ContactListItem>();
 		for (User contact : contacts) {
-			contactListItems.put(contact, ContactListItem.newInstance(contact));
+			contactListItems.put(contact, ContactListItem.loadContactListItem(contact));
 		}
 		adapter.addAll(contactListItems.values());
 

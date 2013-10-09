@@ -1,17 +1,19 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
+import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 
 /**
  * User: serso
@@ -37,9 +39,10 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 
 		final UserService userService = App.getUserService();
 
-		for (User user : accountService.getEnabledAccountUsers()) {
+		for (Account account : accountService.getEnabledAccounts()) {
+			final User user = account.getUser();
 			for (User contact : userService.getOnlineUserContacts(user.getEntity())) {
-				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
+				result.add(loadUiContact(contact, account));
 			}
 		}
 
@@ -49,6 +52,6 @@ public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Co
 	@Nonnull
 	@Override
 	protected ContactListItem createListItem(@Nonnull UiContact contact) {
-		return ContactListItem.newInstance(contact);
+		return newContactListItem(contact);
 	}
 }

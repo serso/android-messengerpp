@@ -171,6 +171,12 @@ public class DefaultAccountService implements AccountService {
 		return result;
 	}
 
+	@Nullable
+	@Override
+	public Account getAccountByIdOrNull(@Nonnull String accountId) {
+		return this.accounts.get(accountId);
+	}
+
 	@Nonnull
 	@Override
 	public Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException {
@@ -343,6 +349,11 @@ public class DefaultAccountService implements AccountService {
 	@Override
 	public Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
 		return getAccountById(entity.getAccountId());
+	}
+
+	@Override
+	public Account getAccountByEntityOrNull(@Nonnull Entity entity) {
+		return getAccountByIdOrNull(entity.getAccountId());
 	}
 
 	@Nonnull

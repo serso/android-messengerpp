@@ -9,6 +9,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
+
 /**
  * User: serso
  * Date: 6/2/12
@@ -38,6 +40,6 @@ final class FindContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Conta
 	@Nonnull
 	@Override
 	protected ContactListItem createListItem(@Nonnull UiContact uiContact) {
-		return ContactListItem.newInstance(uiContact);
+		return newContactListItem(uiContact);
 	}
 }

@@ -36,6 +36,6 @@ final class RecentContactsAsyncLoader extends AbstractAsyncLoader<UiContact, Con
 	@Nonnull
 	@Override
 	protected ContactListItem createListItem(@Nonnull UiContact uiContact) {
-		return ContactListItem.newInstance(uiContact);
+		return ContactListItem.newContactListItem(uiContact);
 	}
 }

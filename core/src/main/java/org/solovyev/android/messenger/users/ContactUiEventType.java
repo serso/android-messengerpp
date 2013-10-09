@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 public enum ContactUiEventType {
 
 	contact_clicked,
+	call_contact,
 	edit_contact,
 	open_contact_chat,
 	show_composite_user_dialog

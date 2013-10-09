@@ -12,7 +12,10 @@ import com.google.inject.Singleton;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.accounts.*;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
@@ -36,6 +39,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
+import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 
 /**
@@ -181,6 +185,11 @@ public class DefaultUserService implements UserService {
 		return accountService.getAccountById(entity.getAccountId());
 	}
 
+	@Nullable
+	private Account getAccountByEntityOrNull(@Nonnull Entity entity){
+		return accountService.getAccountByIdOrNull(entity.getAccountId());
+	}
+
 	@Override
 	public void saveUser(@Nonnull User user) {
 		boolean saved = false;
@@ -296,10 +305,12 @@ public class DefaultUserService implements UserService {
 		final List<User> contacts = getUserContacts(user.getEntity());
 		final ContactFilter filter = new ContactFilter(query, all_contacts);
 
+		final Account account = accountService.getAccountByEntityOrNull(user.getEntity());
+
 		for (final User contact : contacts) {
 			if (!isExceptedUser(except, contact)) {
 				if (filter.apply(contact)) {
-					result.add(UiContact.newInstance(contact, getUnreadMessagesCount(contact.getEntity())));
+					result.add(loadUiContact(contact, account));
 					if (result.size() >= count) {
 						break;
 					}
@@ -359,7 +370,7 @@ public class DefaultUserService implements UserService {
 			final Chat chat = uiChat.getChat();
 			if (chat.isPrivate()) {
 				final User contact = getUserById(chat.getSecondUser());
-				result.add(UiContact.newInstance(contact, getUnreadMessagesCount(contact.getEntity())));
+				result.add(loadUiContact(contact));
 			}
 		}
 		return result;

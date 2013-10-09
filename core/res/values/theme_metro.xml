@@ -17,6 +17,7 @@
 		<item name="mpp_list_item_message_date">@style/mpp_list_item_message_date</item>
 		<item name="mpp_list_item_message_text_editor">@style/mpp_list_item_message_text_editor</item>
 		<item name="mpp_list_item_contact_online">@style/mpp_list_item_contact_online</item>
+		<item name="mpp_list_item_contact_call">@style/mpp_list_item_contact_call</item>
 		<item name="mpp_button">@style/mpp_button</item>
 		<item name="mpp_button_bright">@style/mpp_button_bright</item>
 		<item name="mpp_form_label">@style/mpp_form_label</item>
@@ -45,6 +46,7 @@
 		<item name="mpp_list_item_message_date">@style/mpp_list_item_message_date</item>
 		<item name="mpp_list_item_message_text_editor">@style/mpp_list_item_message_text_editor</item>
 		<item name="mpp_list_item_contact_online">@style/mpp_list_item_contact_online</item>
+		<item name="mpp_list_item_contact_call">@style/mpp_list_item_contact_call</item>
 		<item name="mpp_button">@style/mpp_button</item>
 		<item name="mpp_button_bright">@style/mpp_button_bright</item>
 		<item name="mpp_form_label">@style/mpp_form_label</item>

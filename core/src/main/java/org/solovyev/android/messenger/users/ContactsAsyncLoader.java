@@ -1,17 +1,18 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.messenger.AbstractAsyncLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountService;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
+import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 
 /**
  * User: serso
@@ -35,7 +36,7 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactLi
 
 		for (User user : accountService.getEnabledAccountUsers()) {
 			for (User contact : userService.getUserContacts(user.getEntity())) {
-				result.add(UiContact.newInstance(contact, userService.getUnreadMessagesCount(contact.getEntity())));
+				result.add(loadUiContact(contact));
 			}
 		}
 
@@ -45,6 +46,6 @@ final class ContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactLi
 	@Nonnull
 	@Override
 	protected ContactListItem createListItem(@Nonnull UiContact uiContact) {
-		return ContactListItem.newInstance(uiContact);
+		return newContactListItem(uiContact);
 	}
 }
