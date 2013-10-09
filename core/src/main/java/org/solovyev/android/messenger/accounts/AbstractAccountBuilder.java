@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.accounts;
 
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -35,13 +36,16 @@ public abstract class AbstractAccountBuilder<A extends Account<C>, C extends Acc
 	public final A build(@Nonnull Data data) {
 		final String accountId = data.getAccountId();
 
-		final User user = getAccountUser(accountId);
+		final MutableUser user = getAccountUser(accountId);
+
+		// account user should always be online
+		user.setOnline(true);
 
 		return newAccount(accountId, user, AccountState.enabled);
 	}
 
 	@Nonnull
-	protected abstract User getAccountUser(@Nonnull String accountId);
+	protected abstract MutableUser getAccountUser(@Nonnull String accountId);
 
 	@Nonnull
 	public Realm getRealm() {

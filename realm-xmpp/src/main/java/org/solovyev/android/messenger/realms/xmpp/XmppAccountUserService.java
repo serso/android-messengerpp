@@ -21,6 +21,7 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.AccountUserService;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
@@ -28,6 +29,8 @@ import org.solovyev.android.security.base64.ABase64StringEncoder;
 
 import static org.solovyev.android.messenger.App.newSubTag;
 import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
+import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
+import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
@@ -148,26 +151,27 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	@Nonnull
 	public static User toUser(@Nonnull String realmId, @Nonnull String accountUserId, @Nullable String name, @Nonnull Connection connection, @Nonnull Account account) throws XMPPException {
 		final Entity entity = Entities.newEntity(realmId, accountUserId);
-		final List<AProperty> properties = loadUserProperties(true, accountUserId, isUserOnline(account, connection.getRoster(), entity), connection, name);
-		return Users.newUser(entity, Users.newNeverSyncedUserSyncData(), properties);
+		final List<AProperty> properties = loadUserProperties(true, accountUserId, connection, name);
+		final MutableUser user = newUser(entity, newNeverSyncedUserSyncData(), properties);
+		user.setOnline(isUserOnline(account, connection.getRoster(), entity));
+		return user;
 	}
 
 	@Nonnull
-	public static User toAccountUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, @Nonnull Connection connection) throws XMPPException {
+	public static MutableUser toAccountUser(@Nonnull String realmId, @Nonnull String realmUserId, @Nullable String name, @Nonnull Connection connection) throws XMPPException {
 		final Entity entity = Entities.newEntity(realmId, realmUserId);
-		final List<AProperty> properties = loadUserProperties(true, realmUserId, true, connection, name);
-		return Users.newUser(entity, Users.newNeverSyncedUserSyncData(), properties);
+		final List<AProperty> properties = loadUserProperties(true, realmUserId, connection, name);
+		final MutableUser user = newUser(entity, newNeverSyncedUserSyncData(), properties);
+		user.setOnline(true);
+		return user;
 	}
 
 	@Nonnull
 	private static List<AProperty> loadUserProperties(boolean loadVCard,
 													  @Nonnull String accountUserId,
-													  boolean available,
 													  @Nonnull Connection connection,
 													  @Nullable String name) throws XMPPException {
 		final List<AProperty> result = new ArrayList<AProperty>();
-
-		result.add(Users.newOnlineProperty(available));
 
 		if (loadVCard) {
 			try {
@@ -209,17 +213,17 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		private final Account account;
 
 		@Nonnull
-		private final String realmUserId;
+		private final String accountUserId;
 
-		private UserContactsLoader(@Nonnull Account account, @Nonnull String realmUserId) {
+		private UserContactsLoader(@Nonnull Account account, @Nonnull String accountUserId) {
 			this.account = account;
-			this.realmUserId = realmUserId;
+			this.accountUserId = accountUserId;
 		}
 
 		@Override
 		public List<User> call(@Nonnull final Connection connection) throws AccountConnectionException, XMPPException {
 
-			if (account.getUser().getEntity().getAccountEntityId().equals(realmUserId)) {
+			if (account.getUser().getEntity().getAccountEntityId().equals(accountUserId)) {
 				// realm user => load contacts through the roster
 				final Roster roster = connection.getRoster();
 				final Collection<RosterEntry> entries = roster.getEntries();

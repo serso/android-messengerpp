@@ -19,6 +19,7 @@ import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
+import static org.solovyev.android.messenger.users.Users.newUser;
 
 public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAccountFragment<A> {
 
@@ -122,7 +123,7 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 	protected MutableUser getOrCreateUser() {
 		final MutableUser result;
 		if(user != null) {
-			result = Users.newUser(user.getEntity(), user.getUserSyncData(), user.getProperties().getPropertiesCollection());
+			result = newUser(user.getEntity(), user.getUserSyncData(), user.getProperties().getPropertiesCollection());
 		} else {
 			result = newEmptyUser(generateEntity(getAccount()));
 		}

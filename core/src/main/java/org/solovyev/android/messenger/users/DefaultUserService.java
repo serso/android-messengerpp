@@ -332,8 +332,9 @@ public class DefaultUserService implements UserService {
 		final List<UiContact> result = new ArrayList<UiContact>();
 
 		final Collection<User> accountUsers = accountService.getEnabledAccountUsers();
-		if (accountUsers.size() > 0) {
-			final int accountCount = max(count / accountUsers.size(), 1);
+		final int accountsSize = accountUsers.size();
+		if (accountsSize > 0) {
+			final int accountCount = max(2 * except.size() / accountsSize + count / accountsSize, 1);
 			for (User user : accountUsers) {
 				result.addAll(findContacts(user, query, accountCount, except));
 			}

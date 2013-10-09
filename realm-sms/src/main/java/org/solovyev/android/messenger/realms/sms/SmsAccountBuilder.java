@@ -8,11 +8,16 @@ import javax.annotation.Nullable;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
+
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 /**
  * User: serso
@@ -27,8 +32,8 @@ final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccount, SmsAcco
 
 	@Nonnull
 	@Override
-	protected User getAccountUser(@Nonnull String accountId) {
-		return Users.newUser(accountId, SmsRealm.USER_ID, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
+	protected MutableUser getAccountUser(@Nonnull String accountId) {
+		return newEmptyUser(newEntity(accountId, SmsRealm.USER_ID));
 	}
 
 	@Nonnull

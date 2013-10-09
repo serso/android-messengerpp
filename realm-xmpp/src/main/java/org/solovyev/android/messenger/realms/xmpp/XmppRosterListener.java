@@ -22,6 +22,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.realms.xmpp.XmppAccountUserService.logUserPresence;
 
 /**
@@ -44,17 +46,17 @@ class XmppRosterListener implements RosterListener {
 	@Override
 	public void entriesAdded(@Nonnull Collection<String> contactIds) {
 		Log.d(TAG, "entriesAdded() called");
-		final AccountUserService accountUserService = account.getAccountUserService();
+		final AccountUserService aus = account.getAccountUserService();
 		final List<User> contacts;
 		try {
-			contacts = Lists.newArrayList(Iterables.transform(contactIds, new Function<String, User>() {
+			contacts = newArrayList(transform(contactIds, new Function<String, User>() {
 				@Override
 				public User apply(@Nullable String contactId) {
 					assert contactId != null;
 					// we need to request new user entity because user id should be prepared properly
 					final Entity entity = account.newUserEntity(contactId);
 					try {
-						return accountUserService.getUserById(entity.getAccountEntityId());
+						return aus.getUserById(entity.getAccountEntityId());
 					} catch (AccountException e) {
 						throw new AccountRuntimeException(e);
 					}

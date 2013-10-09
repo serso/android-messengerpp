@@ -14,8 +14,11 @@ import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
+
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, XmppAccountConfiguration> {
 
@@ -30,18 +33,18 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 
 	@Nonnull
 	@Override
-	protected User getAccountUser(@Nonnull String accountId) {
-		User user;
+	protected MutableUser getAccountUser(@Nonnull String accountId) {
+		MutableUser user;
 
 		if (connection != null) {
 			try {
 				user = XmppAccountUserService.toAccountUser(accountId, getConfiguration().getLogin(), null, connection);
 			} catch (XMPPException e) {
 				Log.e("XmppRealmBuilder", e.getMessage(), e);
-				user = Users.newEmptyUser(Entities.newEntity(accountId, getConfiguration().getLogin()));
+				user = newEmptyUser(Entities.newEntity(accountId, getConfiguration().getLogin()));
 			}
 		} else {
-			user = Users.newEmptyUser(Entities.newEntity(accountId, getConfiguration().getLogin()));
+			user = newEmptyUser(Entities.newEntity(accountId, getConfiguration().getLogin()));
 		}
 
 		return user;

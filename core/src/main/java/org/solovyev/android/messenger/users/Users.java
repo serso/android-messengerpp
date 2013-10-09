@@ -80,7 +80,7 @@ public final class Users {
 	}
 
 	@Nonnull
-	public static User newUser(@Nonnull Entity entity,
+	public static MutableUser newUser(@Nonnull Entity entity,
 							   @Nonnull UserSyncData userSyncData,
 							   @Nonnull AProperties properties) {
 		return UserImpl.newInstance(entity, userSyncData, properties.getPropertiesCollection());

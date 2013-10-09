@@ -5,11 +5,13 @@ import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, TestAccountConfiguration> {
@@ -20,7 +22,7 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, Test
 
 	@Nonnull
 	@Override
-	protected User getAccountUser(@Nonnull String accountId) {
+	protected MutableUser getAccountUser(@Nonnull String accountId) {
 		final TestAccountConfiguration configuration = getConfiguration();
 		String accountEntityId = "test_user";
 
@@ -28,7 +30,9 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, Test
 		if(accountUserId != null) {
 			accountEntityId += "_" + accountUserId;
 		}
-		return newEmptyUser(Entities.newEntity(accountId, accountEntityId));
+		final MutableUser user = newEmptyUser(newEntity(accountId, accountEntityId));
+		user.setOnline(true);
+		return user;
 	}
 
 	@Nonnull

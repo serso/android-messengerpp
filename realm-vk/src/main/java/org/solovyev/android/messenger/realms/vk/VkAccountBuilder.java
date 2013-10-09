@@ -18,8 +18,14 @@ import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkAuth;
 import org.solovyev.android.messenger.realms.vk.users.VkUsersGetHttpTransaction;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
+
+import static org.solovyev.android.http.HttpTransactions.execute;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
+import static org.solovyev.android.messenger.users.Users.newUser;
 
 public class VkAccountBuilder extends AbstractAccountBuilder<VkAccount, VkAccountConfiguration> {
 
@@ -29,17 +35,18 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccount, VkAccoun
 
 	@Nonnull
 	@Override
-	protected User getAccountUser(@Nonnull String accountId) {
+	protected MutableUser getAccountUser(@Nonnull String accountId) {
 		final String userId = getConfiguration().getUserId();
-		final User defaultUser = Users.newEmptyUser(Entities.newEntity(accountId, userId));
+		final MutableUser defaultUser = newEmptyUser(newEntity(accountId, userId));
 
-		User result;
+		MutableUser result;
 		try {
-			final List<User> users = HttpTransactions.execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(accountId, getRealm(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
+			final List<User> users = execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(accountId, getRealm(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
 			if (users.isEmpty()) {
 				result = defaultUser;
 			} else {
-				result = users.get(0);
+				final User user = users.get(0);
+				result = newUser(user.getEntity(), user.getUserSyncData(), user.getProperties());
 			}
 		} catch (IOException e) {
 			Log.e("VkRealmBuilder", e.getMessage(), e);
