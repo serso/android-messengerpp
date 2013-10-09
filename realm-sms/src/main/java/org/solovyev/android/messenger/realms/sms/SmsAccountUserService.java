@@ -6,13 +6,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.db.ListMapper;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.users.AccountUserService;
@@ -20,6 +13,11 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 import static org.solovyev.android.messenger.App.getApplication;
 
 /**
@@ -96,12 +94,8 @@ final class SmsAccountUserService implements AccountUserService {
 	@Nonnull
 	@Override
 	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException {
-		// all users are reachable in SMS realm
-		final List<User> result = new ArrayList<User>(users.size());
-		for (User user : users) {
-			result.add(user.cloneWithNewStatus(true));
-		}
-		return result;
+		// users always offline => do not need update
+		return emptyList();
 	}
 
 	@Nonnull

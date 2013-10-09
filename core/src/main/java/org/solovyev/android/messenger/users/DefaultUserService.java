@@ -34,6 +34,7 @@ import java.util.concurrent.Executor;
 import static com.google.common.collect.Iterables.find;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 
@@ -273,7 +274,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, final boolean available) {
-		onContactsPresenceChanged(user, Arrays.asList(contact.cloneWithNewStatus(available)));
+		onContactsPresenceChanged(user, asList(contact.cloneWithNewStatus(available)));
 	}
 
 	private void onContactsPresenceChanged(@Nonnull User user, @Nonnull List<User> contacts) {
@@ -495,7 +496,7 @@ public class DefaultUserService implements UserService {
 		final RealmIconService realmIconService = getRealmIconServiceByUser(user);
 
 		// fetch self icon
-		realmIconService.fetchUsersIcons(Arrays.asList(user));
+		realmIconService.fetchUsersIcons(asList(user));
 
 		// fetch icons for all contacts
 		final List<User> contacts = getUserContacts(user.getEntity());
