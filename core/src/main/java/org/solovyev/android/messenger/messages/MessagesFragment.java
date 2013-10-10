@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.http.ImageLoader;
@@ -37,10 +40,13 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static android.view.inputmethod.EditorInfo.IME_ACTION_SEND;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.setMessageBubbleUserIcon;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
@@ -108,6 +114,9 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 	@Nullable
 	private JEventListener<ChatEvent> chatEventListener;
 
+
+	private EditText messageBody;
+
 	public MessagesFragment() {
 		super(TAG, false, false);
 	}
@@ -168,6 +177,17 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		final View messageLayoutParent = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(context);
 		final View messageLayout = messageLayoutParent.findViewById(R.id.mpp_message_bubble_linearlayout);
 		final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
+		messageText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				boolean handled = false;
+				if (actionId == IME_ACTION_SEND) {
+					sendMessage();
+					handled = true;
+				}
+				return handled;
+			}
+		});
 
 		fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, null, true, true);
 
@@ -183,26 +203,13 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		final EditText messageBody = (EditText) root.findViewById(R.id.mpp_message_bubble_body_edittext);
+		messageBody = (EditText) root.findViewById(R.id.mpp_message_bubble_body_edittext);
 
 		final Button sendButton = (Button) root.findViewById(R.id.mpp_message_bubble_send_button);
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final String messageText = Strings.toHtml(messageBody.getText());
-
-				if (!Strings.isEmpty(messageText)) {
-					final Activity activity = getActivity();
-					//Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
-
-					new SendMessageAsyncTask(activity, chat) {
-						@Override
-						protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
-							super.onSuccessPostExecute(result);
-							messageBody.setText("");
-						}
-					}.executeInParallel(new SendMessageAsyncTask.Input(getUser(), messageText, chat));
-				}
+				sendMessage();
 			}
 		});
 
@@ -216,6 +223,27 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 				actionBar.setTitle(getString(R.string.mpp_public_chat_title));
 			}
 		}
+	}
+
+	private void sendMessage() {
+		if (messageBody != null) {
+			sendMessage(messageBody);
+		}
+	}
+
+	private void sendMessage(@Nonnull EditText messageBody) {
+		final String messageText = Strings.toHtml(messageBody.getText());
+
+		if (!Strings.isEmpty(messageText)) {
+			//Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
+
+			sendMessageAsync(messageBody, messageText);
+		}
+	}
+
+	private void sendMessageAsync(@Nonnull EditText messageBody, @Nonnull String messageText) {
+		final Activity activity = getActivity();
+		new SendMessageAndUpdateEditTextAsyncTask(activity, messageBody, chat).executeInParallel(new SendMessageAsyncTask.Input(getUser(), messageText, chat));
 	}
 
 	@Nonnull
@@ -453,6 +481,26 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 						scrollToTheEnd(500);
 					}
 				}.executeInParallel(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+			}
+		}
+	}
+
+	private static class SendMessageAndUpdateEditTextAsyncTask extends SendMessageAsyncTask {
+
+		@Nonnull
+		private final WeakReference<EditText> messageBodyRef;
+
+		public SendMessageAndUpdateEditTextAsyncTask(@Nonnull Activity activity, @Nonnull EditText messageBody, @Nonnull Chat chat) {
+			super(activity, chat);
+			this.messageBodyRef = new WeakReference<EditText>(messageBody);
+		}
+
+		@Override
+		protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
+			super.onSuccessPostExecute(result);
+			final EditText messageBody = messageBodyRef.get();
+			if (messageBody != null) {
+				messageBody.setText("");
 			}
 		}
 	}

@@ -144,6 +144,7 @@
 
 	<style name="mpp_list_item_message_text_editor" parent="mpp_list_item_message_text">
 		<item name="android:hint">@string/mpp_type_message_hint</item>
+		<item name="android:imeOptions">actionSend</item>
 		<item name="android:minLines">2</item>
 	</style>
 
