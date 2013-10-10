@@ -8,7 +8,7 @@ import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * User: serso
@@ -18,6 +18,7 @@ import java.util.List;
 public interface Chat extends Identifiable, EntityAware {
 
 	String PROPERTY_PRIVATE = "private";
+	String PROPERTY_DRAFT_MESSAGE = "draft_message";
 
 	@Nonnull
 	Entity getEntity();
@@ -32,7 +33,7 @@ public interface Chat extends Identifiable, EntityAware {
 	DateTime getLastMessagesSyncDate();
 
 	@Nonnull
-	List<AProperty> getProperties();
+	Collection<AProperty> getPropertiesCollection();
 
 	@Nonnull
 	Chat updateMessagesSyncDate();
@@ -45,6 +46,9 @@ public interface Chat extends Identifiable, EntityAware {
 	 */
 	@Nonnull
 	Chat copyWithNew(@Nonnull Entity accountChat);
+
+	@Nonnull
+	Chat cloneWithNewProperty(@Nonnull AProperty property);
 
 	@Nullable
 	String getPropertyValueByName(@Nonnull String name);

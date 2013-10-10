@@ -204,6 +204,7 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		super.onViewCreated(root, savedInstanceState);
 
 		messageBody = (EditText) root.findViewById(R.id.mpp_message_bubble_body_edittext);
+		messageBody.setText(getChatService().getDraftMessage(chat));
 
 		final Button sendButton = (Button) root.findViewById(R.id.mpp_message_bubble_send_button);
 		sendButton.setOnClickListener(new View.OnClickListener() {
@@ -350,6 +351,15 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 	@Override
 	protected MessagesAdapter createAdapter() {
 		return new MessagesAdapter(getActivity(), getUser(), chat, MessageListItemStyle.newFromDefaultPreferences(getActivity()));
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		if(chat != null && messageBody != null) {
+			getChatService().saveDraftMessage(chat, messageBody.getText().toString());
+		}
 	}
 
 	@Override

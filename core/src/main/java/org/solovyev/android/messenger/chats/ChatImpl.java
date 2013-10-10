@@ -6,11 +6,14 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+
+import static org.solovyev.android.properties.Properties.newProperties;
 
 /**
  * User: serso
@@ -30,10 +33,7 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
 	private boolean privateChat;
 
 	@Nonnull
-	private List<AProperty> properties;
-
-	@Nonnull
-	private Map<String, String> propertiesMap = new HashMap<String, String>();
+	private MutableAProperties properties;
 
 	@Nullable
 	private DateTime lastMessageSyncDate;
@@ -47,19 +47,18 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
     */
 
 	private ChatImpl(@Nonnull Entity entity,
-					 @Nonnull List<AProperty> properties,
+					 @Nonnull Collection<AProperty> properties,
 					 @Nullable DateTime lastMessageSyncDate) {
 		super(entity);
 		this.lastMessageSyncDate = lastMessageSyncDate;
 
-		this.properties = properties;
+		this.properties = newProperties(properties);
 
 		this.privateChat = true;
-		for (AProperty property : properties) {
-			this.propertiesMap.put(property.getName(), property.getValue());
-			if (property.getName().equals(PROPERTY_PRIVATE)) {
-				this.privateChat = Boolean.valueOf(property.getValue());
-			}
+
+		final String privateProperty = this.properties.getPropertyValue(PROPERTY_PRIVATE);
+		if(privateProperty != null) {
+			this.privateChat = Boolean.valueOf(privateProperty);
 		}
 	}
 
@@ -67,10 +66,8 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
 					 boolean privateChat) {
 		super(entity);
 		this.privateChat = privateChat;
-		this.properties = new ArrayList<AProperty>();
-		final AProperty property = Properties.newProperty(PROPERTY_PRIVATE, Boolean.toString(privateChat));
-		properties.add(property);
-		propertiesMap.put(property.getName(), property.getValue());
+		this.properties = newProperties(Collections.<AProperty>emptyList());
+		this.properties.setProperty(PROPERTY_PRIVATE, Boolean.toString(privateChat));
 	}
 
 
@@ -102,8 +99,8 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
     */
 
 	@Nonnull
-	public List<AProperty> getProperties() {
-		return Collections.unmodifiableList(properties);
+	public Collection<AProperty> getPropertiesCollection() {
+		return properties.getPropertiesCollection();
 	}
 
 	@Nonnull
@@ -119,13 +116,21 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
 	@Nonnull
 	@Override
 	public Chat copyWithNew(@Nonnull Entity accountChat) {
-		return new ChatImpl(accountChat, this.properties, this.lastMessageSyncDate);
+		return new ChatImpl(accountChat, this.properties.getPropertiesCollection(), this.lastMessageSyncDate);
+	}
+
+	@Nonnull
+	@Override
+	public Chat cloneWithNewProperty(@Nonnull AProperty property) {
+		final ChatImpl clone = clone();
+		clone.properties.setProperty(property);
+		return clone;
 	}
 
 	@Nullable
 	@Override
 	public String getPropertyValueByName(@Nonnull String name) {
-		return propertiesMap.get(name);
+		return properties.getPropertyValue(name);
 	}
 
 	@Nonnull
@@ -143,9 +148,7 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
             clone.participants.add(participant.clone());
         }*/
 
-		// properties cannot be changed themselves but some can be removed or added
-		clone.properties = new ArrayList<AProperty>(this.properties);
-		clone.propertiesMap = new HashMap<String, String>(this.propertiesMap);
+		clone.properties = this.properties.clone();
 
 		return clone;
 	}

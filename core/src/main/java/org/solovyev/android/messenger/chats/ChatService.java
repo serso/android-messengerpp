@@ -109,6 +109,12 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	void removeEmptyChats(@Nonnull User user);
 
+	void saveDraftMessage(@Nonnull Chat chat, @Nullable String message);
+
+	@Nullable
+	String getDraftMessage(@Nonnull Chat chat);
+
+
     /*
     **********************************************************************
     *
@@ -231,5 +237,4 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	void onUnreadMessagesCountChanged(@Nonnull Entity chat, @Nonnull Integer unreadMessagesCount);
 
 	int getUnreadMessagesCount(@Nonnull Entity chat);
-
 }

@@ -6,7 +6,8 @@ import android.widget.ImageView;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
@@ -20,7 +21,10 @@ import org.solovyev.android.messenger.messages.ChatMessageDao;
 import org.solovyev.android.messenger.messages.ChatMessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.users.*;
-import org.solovyev.common.collections.multimap.*;
+import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
+import org.solovyev.common.collections.multimap.ObjectRemovedUpdater;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
+import org.solovyev.common.collections.multimap.WholeListUpdater;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -39,10 +43,12 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.App.getAccountService;
+import static org.solovyev.android.messenger.chats.Chat.PROPERTY_DRAFT_MESSAGE;
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
  * User: serso
@@ -520,6 +526,17 @@ public class DefaultChatService implements ChatService {
 				chatDao.delete(user, chat);
 			}
 		}
+	}
+
+	@Override
+	public void saveDraftMessage(@Nonnull Chat chat, @Nullable String message) {
+		updateChat(chat.cloneWithNewProperty(newProperty(PROPERTY_DRAFT_MESSAGE, message)));
+	}
+
+	@Nullable
+	@Override
+	public String getDraftMessage(@Nonnull Chat chat) {
+		return chat.getPropertyValueByName(PROPERTY_DRAFT_MESSAGE);
 	}
 
 	@Nonnull

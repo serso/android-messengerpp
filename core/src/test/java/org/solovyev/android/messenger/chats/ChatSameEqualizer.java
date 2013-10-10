@@ -14,7 +14,7 @@ public final class ChatSameEqualizer implements Equalizer<Chat> {
 
 		same &= Objects.areEqual(c1.getLastMessagesSyncDate(), c2.getLastMessagesSyncDate());
 
-		same &= Objects.areEqual(c1.getProperties(), c2.getProperties(), new CollectionEqualizer<AProperty>(null));
+		same &= Objects.areEqual(c1.getPropertiesCollection(), c2.getPropertiesCollection(), new CollectionEqualizer<AProperty>(null));
 
 		same &= Objects.areEqual(c1.isPrivate(), c2.isPrivate());
 		same &= Objects.areEqual(c1.getSecondUser(), c2.getSecondUser());

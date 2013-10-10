@@ -413,7 +413,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 			long result = 0;
 			final Chat chat = getNotNullObject();
 
-			for (AProperty property : chat.getProperties()) {
+			for (AProperty property : chat.getPropertiesCollection()) {
 				final ContentValues values = new ContentValues();
 				values.put("chat_id", chat.getEntity().getEntityId());
 				values.put("property_name", property.getName());
