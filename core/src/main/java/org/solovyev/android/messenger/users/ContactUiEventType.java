@@ -12,6 +12,7 @@ public enum ContactUiEventType {
 	contact_clicked,
 	call_contact,
 	edit_contact,
+	mark_all_messages_read,
 	open_contact_chat,
 	show_composite_user_dialog
 	;

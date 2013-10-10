@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
@@ -26,6 +27,9 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
+
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 
 /**
  * User: serso
@@ -97,8 +101,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 		if (!message.isRead()) {
 			final ChatMessage readMessage = message.cloneRead();
 			setData(readMessage);
-			final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-			eventManager.fire(ChatUiEventType.chat_message_read.newEvent(chat, readMessage));
+			getEventManager(context).fire(chat_message_read.newEvent(chat, readMessage));
 		}
 	}
 

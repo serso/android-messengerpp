@@ -18,9 +18,15 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatUiEventType;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.common.Builder;
 
+import static org.solovyev.android.messenger.App.getAccountService;
+import static org.solovyev.android.messenger.App.getChatMessageService;
+import static org.solovyev.android.messenger.App.getChatService;
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.getExceptionHandler;
+import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 import static org.solovyev.android.messenger.users.ContactUiEventType.open_contact_chat;
 import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
 
@@ -76,13 +82,32 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 				case edit_contact:
 					onEditContact(contact);
 					break;
+				case mark_all_messages_read:
+					onMarkAllMessagesRead(contact);
+					break;
 				case show_composite_user_dialog:
 					Fragments2.showDialog(new CompositeUserDialogFragment(contact), CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
 					break;
 			}
 		} catch (UnsupportedAccountException e) {
 			// should not happen
-			App.getExceptionHandler().handleException(e);
+			getExceptionHandler().handleException(e);
+		}
+	}
+
+	private void onMarkAllMessagesRead(@Nonnull User contact) throws UnsupportedAccountException {
+		final Account account = getAccountService().getAccountByEntityAware(contact);
+		try {
+			final Chat chat = getChatService().getPrivateChat(account.getUser().getEntity(), contact.getEntity());
+			if (chat != null) {
+				for (ChatMessage message : getChatMessageService().getChatMessages(chat.getEntity())) {
+					if(!message.isRead()) {
+						getEventManager(activity).fire(chat_message_read.newEvent(chat, message.cloneRead()));
+					}
+				}
+			}
+		} catch (AccountException e) {
+			getExceptionHandler().handleException(e);
 		}
 	}
 
@@ -103,7 +128,7 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 
 				try {
 					final User user = activity.getAccountService().getAccountById(contact.getEntity().getAccountId()).getUser();
-					result = App.getChatService().getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
+					result = getChatService().getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 				} catch (AccountException e) {
 					throwException(e);
 				}

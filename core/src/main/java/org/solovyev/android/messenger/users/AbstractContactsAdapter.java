@@ -117,10 +117,10 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	private void onContactChanged(@Nonnull UserEvent event, @Nonnull User contact) {
-		onContactChanged(event, contact, true);
+		onContactChanged(event, contact, true, true);
 	}
 
-	private boolean onContactChanged(@Nonnull UserEvent event, @Nonnull User contact, boolean refilter) {
+	private boolean onContactChanged(@Nonnull UserEvent event, @Nonnull User contact, boolean notify, boolean refilter) {
 		boolean changed = false;
 
 		final ContactListItem listItem = findInAllElements(contact);
@@ -140,6 +140,10 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 			if (changed) {
 				onListItemChanged(contact);
+
+				if (notify) {
+					notifyDataSetChanged();
+				}
 
 				if (refilter) {
 					refilter();
@@ -164,10 +168,11 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 		final List<User> contacts = event.getDataAsUsers();
 		for (User contact : contacts) {
-			changed |= onContactChanged(event, contact, false);
+			changed |= onContactChanged(event, contact, false, false);
 		}
 
 		if (changed) {
+			notifyDataSetChanged();
 			refilter();
 		}
 	}

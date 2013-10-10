@@ -148,7 +148,7 @@
 	</style>
 
 	<style name="mpp_list_item_contact_call" parent="mpp_list_item_block">
-		<item name="android:src">@drawable/mpp_li_contact_call</item>
+		<item name="android:src">@drawable/mpp_li_contact_call_states</item>
 		<item name="android:layout_width">30dp</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:scaleType">centerInside</item>

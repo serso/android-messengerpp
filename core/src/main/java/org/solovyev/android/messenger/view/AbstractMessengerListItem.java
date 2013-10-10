@@ -243,6 +243,12 @@ public abstract class AbstractMessengerListItem<D extends Identifiable> implemen
 			final int drawableResId = selected ? R.drawable.mpp_contact_online_inverted : R.drawable.mpp_contact_online;
 			contactOnlineView.setImageDrawable(resources.getDrawable(drawableResId));
 		}
+
+		final ImageView contactCallView = (ImageView) view.findViewById(R.id.mpp_li_contact_call_view);
+		if (contactCallView != null) {
+			final int drawableResId = selected ? R.drawable.mpp_contact_call_inverted : R.drawable.mpp_contact_call;
+			contactCallView.setImageDrawable(resources.getDrawable(drawableResId));
+		}
 	}
 
 	private static void setActivatedStyles(@Nonnull final ViewGroup view, @Nonnull final Resources resources) {

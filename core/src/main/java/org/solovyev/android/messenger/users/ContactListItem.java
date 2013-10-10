@@ -13,7 +13,6 @@ import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
@@ -27,6 +26,7 @@ import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
 import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 import static org.solovyev.android.messenger.users.ContactUiEventType.edit_contact;
+import static org.solovyev.android.messenger.users.ContactUiEventType.mark_all_messages_read;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UiContact.newUiContact;
 
@@ -74,14 +74,12 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	public OnClickAction getOnLongClickAction() {
 		final List<LabeledMenuItem<ListItemOnClickData<User>>> menuItems = new ArrayList<LabeledMenuItem<ListItemOnClickData<User>>>();
 		final User contact = getContact();
-		try {
-			final Account account = getAccountService().getAccountByEntity(contact.getEntity());
-			if (account.getRealm().canEditUsers()) {
-				menuItems.add(Menu.edit);
+		for (Menu menuItem : Menu.values()) {
+			if(menuItem.isVisible(getData())) {
+				menuItems.add(menuItem);
 			}
-		} catch (UnsupportedAccountException e) {
-			getExceptionHandler().handleException(e);
 		}
+
 		return new SimpleMenuOnClick<User>(menuItems, contact, "contact-menu");
 	}
 
@@ -168,11 +166,34 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	*/
 
 	private enum Menu implements LabeledMenuItem<ListItemOnClickData<User>> {
+		mark_all_read("Mark all read") {
+			@Override
+			public void onClick(@Nonnull ListItemOnClickData<User> data, @Nonnull Context context) {
+				final User contact = data.getDataObject();
+				getEventManager(context).fire(mark_all_messages_read.newEvent(contact));
+			}
+
+			@Override
+			protected boolean isVisible(@Nonnull UiContact uiContact) {
+				return uiContact.getUnreadMessagesCount() > 0;
+			}
+		},
+
 		edit("Edit") {
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<User> data, @Nonnull Context context) {
 				final User contact = data.getDataObject();
 				getEventManager(context).fire(edit_contact.newEvent(contact));
+			}
+
+			@Override
+			protected boolean isVisible(@Nonnull UiContact uiContact) {
+				final Account account = uiContact.getAccount();
+				if (account != null) {
+					return account.getRealm().canEditUsers();
+				} else {
+					return false;
+				}
 			}
 		};
 
@@ -188,5 +209,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		public String getCaption(@Nonnull Context context) {
 			return caption;
 		}
+
+		protected abstract boolean isVisible(@Nonnull UiContact uiContact);
 	}
 }
