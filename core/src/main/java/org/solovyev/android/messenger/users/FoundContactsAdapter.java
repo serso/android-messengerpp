@@ -20,7 +20,7 @@ public class FoundContactsAdapter extends AbstractContactsAdapter {
 	private boolean recentContacts;
 
 	public FoundContactsAdapter(@Nonnull Context context, boolean recentContacts) {
-		super(context);
+		super(context, false);
 		this.recentContacts = recentContacts;
 	}
 

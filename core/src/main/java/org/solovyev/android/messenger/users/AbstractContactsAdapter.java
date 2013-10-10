@@ -46,6 +46,10 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 		super(context, new ArrayList<ContactListItem>());
 	}
 
+	public AbstractContactsAdapter(@Nonnull Context context, boolean fastScrollEnabled) {
+		super(context, new ArrayList<ContactListItem>(), fastScrollEnabled);
+	}
+
 	@Override
 	public void onEvent(@Nonnull UserEvent event) {
 		super.onEvent(event);

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- pressed -->
+	<item android:state_pressed="true" android:state_activated="false" android:drawable="@color/mpp_selected" />
+
+	<!-- default, list item not selected -->
+	<item android:drawable="@android:color/transparent" />
+</selector>
