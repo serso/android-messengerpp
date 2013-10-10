@@ -3,18 +3,16 @@ package org.solovyev.android.messenger.realms.sms;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.Iterables.getFirst;
 import static org.solovyev.android.messenger.users.Users.newUser;
@@ -30,13 +28,13 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 	static final String[] COLUMNS = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.PHOTO_ID};
 
 	@Nonnull
-	private final SmsAccount realm;
+	private final SmsAccount account;
 
 	@Nonnull
 	private final ContentResolver contentResolver;
 
-	public SmsUserMapper(@Nonnull SmsAccount realm, @Nonnull ContentResolver contentResolver) {
-		this.realm = realm;
+	public SmsUserMapper(@Nonnull SmsAccount account, @Nonnull ContentResolver contentResolver) {
+		this.account = account;
 		this.contentResolver = contentResolver;
 	}
 
@@ -61,7 +59,7 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 			}
 			properties.add(newProperty(User.PROPERTY_PHONES, sb.toString()));
 		}
-		return newUser(realm.getId(), userId, Users.newNeverSyncedUserSyncData(), properties);
+		return newUser(account.getId(), userId, Users.newNeverSyncedUserSyncData(), properties);
 	}
 
 	@Nonnull

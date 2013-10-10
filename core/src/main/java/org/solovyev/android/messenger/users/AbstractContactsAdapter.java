@@ -8,7 +8,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.common.JPredicate;
@@ -21,10 +20,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.ContactListItem.loadContactListItem;
-import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
-import static org.solovyev.android.messenger.users.UserEventType.unread_messages_count_changed;
 
 /**
  * User: serso
@@ -76,7 +74,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				// then - transform user objects to list items objects
 				final List<User> contacts = event.getDataAsUsers();
 				if (!Collections.isEmpty(contacts)) {
-					addAll(Lists.newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
+					addAll(newArrayList(Iterables.transform(Iterables.filter(contacts, new Predicate<User>() {
 						@Override
 						public boolean apply(@Nullable User contact) {
 							assert contact != null;
@@ -121,35 +119,32 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	private void onContactChanged(@Nonnull UserEvent event, @Nonnull User contact) {
-		onContactChanged(event, contact, true, true);
+		onContactChanged(event, contact, true);
 	}
 
-	private boolean onContactChanged(@Nonnull UserEvent event, @Nonnull User contact, boolean notify, boolean refilter) {
+	private boolean onContactChanged(@Nonnull UserEvent event, @Nonnull User contact, boolean notifyAndRefilter) {
 		boolean changed = false;
 
 		final ContactListItem listItem = findInAllElements(contact);
 		if (listItem != null) {
-			changed = true;
-			if(event.getType() == unread_messages_count_changed) {
-				listItem.onUnreadMessagesCountChanged(event.getDataAsInteger());
-			} else if(event.getType() == contacts_presence_changed) {
-				if(contact.isOnline() != listItem.getContact().isOnline()) {
+			switch (event.getType()){
+				case unread_messages_count_changed:
+					changed = listItem.onUnreadMessagesCountChanged(event.getDataAsInteger());
+					break;
+				case contacts_presence_changed:
+					changed = listItem.onContactPresenceChanged(contact);
+					break;
+				default:
 					listItem.onContactChanged(contact);
-				} else {
-					changed = false;
-				}
-			} else {
-				listItem.onContactChanged(contact);
+					changed = true;
+					break;
 			}
 
 			if (changed) {
 				onListItemChanged(contact);
 
-				if (notify) {
+				if (notifyAndRefilter) {
 					notifyDataSetChanged();
-				}
-
-				if (refilter) {
 					refilter();
 				}
 			}
@@ -172,7 +167,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 
 		final List<User> contacts = event.getDataAsUsers();
 		for (User contact : contacts) {
-			changed |= onContactChanged(event, contact, false, false);
+			changed |= onContactChanged(event, contact, false);
 		}
 
 		if (changed) {

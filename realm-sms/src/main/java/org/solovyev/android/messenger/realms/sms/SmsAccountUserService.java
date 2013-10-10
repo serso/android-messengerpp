@@ -28,10 +28,10 @@ import static org.solovyev.android.messenger.App.getApplication;
 final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
-	private final SmsAccount realm;
+	private final SmsAccount account;
 
-	SmsAccountUserService(@Nonnull SmsAccount realm) {
-		this.realm = realm;
+	SmsAccountUserService(@Nonnull SmsAccount account) {
+		this.account = account;
 	}
 
 	@Nullable
@@ -46,7 +46,7 @@ final class SmsAccountUserService implements AccountUserService {
 			final ContentResolver cr = context.getContentResolver();
 			final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, selectionArgs, null);
 			if (!cursor.isAfterLast()) {
-				return new SmsUserMapper(realm, cr).convert(cursor);
+				return new SmsUserMapper(account, cr).convert(cursor);
 			} else {
 				return null;
 			}
@@ -66,7 +66,7 @@ final class SmsAccountUserService implements AccountUserService {
 					final Cursor emailCursor = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, SmsUserEmailMapper.COLUMNS, ContactsContract.CommonDataKinds.Email.DATA + " = ?", new String[]{account.name}, null);
 					try {
 						if (emailCursor.moveToNext()) {
-							user = new SmsUserEmailMapper(realm).convert(emailCursor);
+							user = new SmsUserEmailMapper(this.account).convert(emailCursor);
 						}
 					} finally {
 						emailCursor.close();
@@ -78,7 +78,7 @@ final class SmsAccountUserService implements AccountUserService {
 				}
 			}
 
-			return user == null ? realm.getUser() : Users.newUser(realm.newEntity(SmsRealm.USER_ID), Users.newNeverSyncedUserSyncData(), user.getPropertiesCollection());
+			return user == null ? account.getUser() : Users.newUser(account.newEntity(SmsRealm.USER_ID), Users.newNeverSyncedUserSyncData(), user.getPropertiesCollection());
 		}
 	}
 
@@ -88,7 +88,7 @@ final class SmsAccountUserService implements AccountUserService {
 		final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 		final ContentResolver cr = getApplication().getContentResolver();
 		final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, null, null);
-		return new ListMapper<User>(new SmsUserMapper(realm, cr)).convert(cursor);
+		return new ListMapper<User>(new SmsUserMapper(account, cr)).convert(cursor);
 	}
 
 	@Nonnull

@@ -83,8 +83,28 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		return new SimpleMenuOnClick<User>(menuItems, contact, "contact-menu");
 	}
 
-	public void onUnreadMessagesCountChanged(@Nonnull Integer unreadMessagesCount) {
-		setData(getData().copyForNewUnreadMessagesCount(unreadMessagesCount));
+	public boolean onUnreadMessagesCountChanged(@Nonnull Integer unreadMessagesCount) {
+		boolean changed = false;
+
+		final UiContact uiContact = getData();
+		if (uiContact.getUnreadMessagesCount() != unreadMessagesCount) {
+			setData(uiContact.copyForNewUnreadMessagesCount(unreadMessagesCount));
+			changed = true;
+		}
+
+		return changed;
+	}
+
+	public boolean onContactPresenceChanged(@Nonnull User contact) {
+		boolean changed = false;
+
+		final UiContact uiContact = getData();
+		if (uiContact.getContact().isOnline() != contact.isOnline()) {
+			setData(uiContact.copyForNewUser(contact));
+			changed = true;
+		}
+
+		return changed;
 	}
 
 	public void onContactChanged(@Nonnull User newContact) {
