@@ -137,8 +137,4 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 		return createUserFragmentClass;
 	}
 
-	@Override
-	public boolean supportsVoiceCall() {
-		return false;
-	}
 }

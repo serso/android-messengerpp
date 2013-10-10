@@ -92,9 +92,7 @@ public interface Realm<C extends AccountConfiguration> extends Identifiable {
 	@Nullable
 	Class<? extends BaseEditUserFragment> getCreateUserFragmentClass();
 
-	boolean supportsVoiceCall();
-
-    /*
+	/*
 	**********************************************************************
     *
     *                           EQUALS/HASHCODE

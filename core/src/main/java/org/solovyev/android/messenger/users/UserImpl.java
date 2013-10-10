@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.users;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,6 +14,8 @@ import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
+
+import com.google.common.base.Splitter;
 
 import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
 import static org.solovyev.android.properties.Properties.newProperty;
@@ -117,13 +121,34 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	@Override
 	@Nullable
 	public String getFirstName() {
-		return this.getPropertyValueByName(User.PROPERTY_FIRST_NAME);
+		return this.getPropertyValueByName(PROPERTY_FIRST_NAME);
 	}
 
 	@Override
 	@Nullable
 	public String getLastName() {
-		return this.getPropertyValueByName(User.PROPERTY_LAST_NAME);
+		return this.getPropertyValueByName(PROPERTY_LAST_NAME);
+	}
+
+	@Nullable
+	@Override
+	public String getPhoneNumber() {
+		return this.getPropertyValueByName(PROPERTY_PHONE);
+	}
+
+	@Nonnull
+	@Override
+	public Set<String> getPhoneNumbers() {
+		final Set<String> phones = new HashSet<String>();
+
+		final String phonesProperty = getPropertyValueByName(PROPERTY_PHONES);
+		if (phonesProperty != null) {
+			for (String phone: Splitter.on(User.PROPERTY_PHONES_SEPARATOR).omitEmptyStrings().split(phonesProperty)) {
+				phones.add(phone);
+			}
+		}
+
+		return phones;
 	}
 
 	@Nonnull

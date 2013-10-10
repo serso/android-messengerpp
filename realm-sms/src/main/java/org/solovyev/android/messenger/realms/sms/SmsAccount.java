@@ -1,7 +1,12 @@
 package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
+
+import com.google.common.base.Function;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
@@ -10,14 +15,21 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.properties.AProperties;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.solovyev.android.messenger.users.CompositeUserChoice.newCompositeUserChoice;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
+import static org.solovyev.android.messenger.users.Users.isValidPhoneNumber;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
@@ -69,20 +81,13 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Nonnull
 	@Override
 	public List<CompositeUserChoice> getCompositeUserChoices(@Nonnull User user) {
-		final String phoneNumbers = user.getPropertyValueByName(User.PROPERTY_PHONES);
-		if (!Strings.isEmpty(phoneNumbers)) {
-			final List<CompositeUserChoice> choices = new ArrayList<CompositeUserChoice>();
-
-			int index = 0;
-			for (String phoneNumber : Splitter.on(User.PROPERTY_PHONES_SEPARATOR).omitEmptyStrings().split(phoneNumbers)) {
-				choices.add(CompositeUserChoice.newInstance(phoneNumber, index));
-				index++;
+		final AtomicInteger index = new AtomicInteger(0);
+		return newArrayList(transform(user.getPhoneNumbers(), new Function<String, CompositeUserChoice>() {
+			@Override
+			public CompositeUserChoice apply(String phone) {
+				return newCompositeUserChoice(phone, index.getAndIncrement());
 			}
-
-			return choices;
-		} else {
-			return Collections.emptyList();
-		}
+		}));
 	}
 
 	@Nonnull
@@ -99,5 +104,10 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Override
 	public int getCompositeDialogTitleResId() {
 		return R.string.mpp_sms_realm_composite_dialog_title;
+	}
+
+	@Override
+	public boolean canCall(@Nonnull User contact) {
+		return contact.getPhoneNumber() != null || !contact.getPhoneNumbers().isEmpty();
 	}
 }

@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,6 +87,12 @@ public interface User extends MutableUserSyncData, Identifiable, EntityAware {
 
 	@Nullable
 	String getLastName();
+
+	@Nullable
+	String getPhoneNumber();
+
+	@Nonnull
+	Set<String> getPhoneNumbers();
 
 	@Nonnull
 	Collection<AProperty> getPropertiesCollection();

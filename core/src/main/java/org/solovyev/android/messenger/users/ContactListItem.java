@@ -109,15 +109,17 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	}
 
 	@Override
-	protected void fillView(@Nonnull final UiContact contact, @Nonnull final Context context, @Nonnull ViewAwareTag viewTag) {
+	protected void fillView(@Nonnull final UiContact uiContact, @Nonnull final Context context, @Nonnull ViewAwareTag viewTag) {
+		final User contact = uiContact.getContact();
+
 		final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
-		App.getUserService().setUserIcon(contact.getContact(), contactIcon);
+		App.getUserService().setUserIcon(contact, contactIcon);
 
 		final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
 		contactName.setText(getDisplayName());
 
 		final AccountService accountService = getAccountService();
-		final Account account = contact.getAccount();
+		final Account account = uiContact.getAccount();
 
 		final TextView accountName = viewTag.getViewById(R.id.mpp_li_contact_account_textview);
 		if (accountService.isOneAccount()) {
@@ -131,11 +133,11 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
 		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
 		final View contactCall = viewTag.getViewById(R.id.mpp_li_contact_call_view);
-		if (account == null || !account.getRealm().supportsVoiceCall()) {
+		if (account == null || !account.canCall(contact)) {
 			contactCall.setOnClickListener(null);
 			contactCall.setVisibility(GONE);
 
-			if (contact.getContact().isOnline()) {
+			if (contact.isOnline()) {
 				contactOnline.setVisibility(VISIBLE);
 			} else {
 				contactOnline.setVisibility(INVISIBLE);
@@ -151,7 +153,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 			contactCall.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					getEventManager(context).fire(call_contact.newEvent(contact.getContact()));
+					getEventManager(context).fire(call_contact.newEvent(contact));
 				}
 			});
 		}

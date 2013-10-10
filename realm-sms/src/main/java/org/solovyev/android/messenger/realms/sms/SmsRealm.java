@@ -97,11 +97,6 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 		return new SmsRealmConfigurationCipherer();
 	}
 
-	@Override
-	public boolean supportsVoiceCall() {
-		return true;
-	}
-
 	/*
     **********************************************************************
     *

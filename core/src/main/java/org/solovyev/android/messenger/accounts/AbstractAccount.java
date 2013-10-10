@@ -238,4 +238,9 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	public final boolean isAccountUser(@Nonnull Entity entity) {
 		return getUser().getEntity().equals(entity);
 	}
+
+	@Override
+	public boolean canCall(@Nonnull User contact) {
+		return false;
+	}
 }

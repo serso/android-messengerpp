@@ -15,7 +15,7 @@ public final class CompositeUserChoice {
 	}
 
 	@Nonnull
-	public static CompositeUserChoice newInstance(@Nonnull CharSequence name, int id) {
+	public static CompositeUserChoice newCompositeUserChoice(@Nonnull CharSequence name, int id) {
 		return new CompositeUserChoice(name, id);
 	}
 

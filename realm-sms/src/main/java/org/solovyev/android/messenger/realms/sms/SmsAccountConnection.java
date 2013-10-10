@@ -8,11 +8,16 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
@@ -20,21 +25,19 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.entities.Entities;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.users.Users;
-import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 
 import static android.telephony.SmsMessage.createFromPdu;
 import static org.solovyev.android.messenger.App.getApplication;
@@ -42,11 +45,13 @@ import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.makeEntityId;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
-import static org.solovyev.android.messenger.users.User.*;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_RECEIVED;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
+import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
+import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
+import static org.solovyev.android.messenger.users.Users.isValidPhoneNumber;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
-import static org.solovyev.android.messenger.users.Users.newUser;
-import static org.solovyev.android.properties.Properties.newProperty;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 /**
@@ -197,8 +202,10 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		user.setFirstName(phone);
 
 		final MutableAProperties properties = user.getProperties();
-		properties.setProperty(PROPERTY_PHONE, phone);
-		properties.setProperty(PROPERTY_PHONES, phone);
+		if (isValidPhoneNumber(phone)) {
+			properties.setProperty(PROPERTY_PHONE, phone);
+			properties.setProperty(PROPERTY_PHONES, phone);
+		}
 
 		return user;
 	}
@@ -215,17 +222,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 						return true;
 					}
 
-					// then try find by 'phones' property
-					final String phones = contact.getPropertyValueByName(PROPERTY_PHONES);
-					if (phones != null) {
-						for (String userPhone: Splitter.on(User.PROPERTY_PHONES_SEPARATOR).omitEmptyStrings().split(phones)) {
-							if (userPhone.equals(phone)) {
-								return true;
-							}
-						}
-					}
-
-					return false;
+					return contact.getPhoneNumbers().contains(phone);
 				} else {
 					return false;
 				}
