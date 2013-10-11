@@ -104,6 +104,8 @@ public interface Account<C extends AccountConfiguration> extends Identifiable {
 	**********************************************************************
 	*/
 
+	boolean canSendMessage(@Nonnull Chat chat);
+
 	boolean canCall(@Nonnull User contact);
 
 	void call(@Nonnull User contact, @Nonnull Context context);

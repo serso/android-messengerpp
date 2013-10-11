@@ -243,6 +243,11 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	}
 
 	@Override
+	public boolean canSendMessage(@Nonnull Chat chat) {
+		return true;
+	}
+
+	@Override
 	public boolean canCall(@Nonnull User contact) {
 		return false;
 	}

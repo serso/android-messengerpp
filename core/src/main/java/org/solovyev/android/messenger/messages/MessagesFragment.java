@@ -183,6 +183,10 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		final Context context = getThemeContext();
 
 		final View messageLayoutParent = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(context);
+		if(!account.canSendMessage(chat)) {
+			messageLayoutParent.setVisibility(View.GONE);
+		}
+
 		final View messageLayout = messageLayoutParent.findViewById(R.id.mpp_message_bubble_linearlayout);
 		final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
 		messageText.setOnEditorActionListener(new TextView.OnEditorActionListener() {

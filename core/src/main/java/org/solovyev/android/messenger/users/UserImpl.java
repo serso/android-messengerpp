@@ -141,6 +141,11 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	public Set<String> getPhoneNumbers() {
 		final Set<String> phones = new HashSet<String>();
 
+		final String phoneNumber = getPhoneNumber();
+		if(phoneNumber != null) {
+			phones.add(phoneNumber);
+		}
+
 		final String phonesProperty = getPropertyValueByName(PROPERTY_PHONES);
 		if (phonesProperty != null) {
 			for (String phone: Splitter.on(User.PROPERTY_PHONES_SEPARATOR).omitEmptyStrings().split(phonesProperty)) {

@@ -4,37 +4,34 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.google.common.base.Function;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.PhoneNumber;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.base.Function;
 
 import static android.content.Intent.ACTION_CALL;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.solovyev.android.messenger.realms.sms.SmsAccountChatService.MESSAGE_PROPERTY_PHONE;
 import static org.solovyev.android.messenger.users.CompositeUserChoice.newCompositeUserChoice;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 /**
  * User: serso
@@ -79,7 +76,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Override
 	public boolean isCompositeUserDefined(@Nonnull User user) {
 		final String phoneNumber = user.getPropertyValueByName(PROPERTY_PHONE);
-		return !Strings.isEmpty(phoneNumber);
+		return !isEmpty(phoneNumber);
 	}
 
 	@Nonnull
@@ -110,9 +107,60 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 		return R.string.mpp_sms_realm_composite_dialog_title;
 	}
 
+
+	@Override
+	public boolean canSendMessage(@Nonnull Chat chat) {
+		if (chat.isPrivate()) {
+			final User recipient = App.getUserService().getUserById(chat.getSecondUser());
+			final String phoneNumber = recipient.getPhoneNumber();
+			if(newPhoneNumber(phoneNumber).isSendable()) {
+				return true;
+			} else {
+				if(!isEmpty(phoneNumber)) {
+					return false;
+				}
+
+				return existsSendablePhoneNumber(recipient);
+			}
+		} else {
+			return false;
+		}
+	}
+
+	private boolean existsSendablePhoneNumber(@Nonnull User recipient) {
+		final Set<String> phoneNumbers = recipient.getPhoneNumbers();
+		for (String phoneNumber : phoneNumbers) {
+			if (newPhoneNumber(phoneNumber).isSendable()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	@Override
 	public boolean canCall(@Nonnull User contact) {
-		return contact.getPhoneNumber() != null || !contact.getPhoneNumbers().isEmpty();
+		final String phoneNumber = contact.getPhoneNumber();
+		if (newPhoneNumber(phoneNumber).isCallable()) {
+			return true;
+		} else {
+			if (!isEmpty(phoneNumber)) {
+				return false;
+			}
+
+			return existsCallablePhoneNumber(contact);
+		}
+	}
+
+	private boolean existsCallablePhoneNumber(@Nonnull User contact) {
+		final Set<String> phoneNumbers = contact.getPhoneNumbers();
+		for (String phoneNumber : phoneNumbers) {
+			if (newPhoneNumber(phoneNumber).isCallable()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
