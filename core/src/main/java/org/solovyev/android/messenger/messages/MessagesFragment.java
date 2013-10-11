@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.messages;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import roboguice.event.EventListener;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -50,7 +48,6 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.text.Strings;
 
 import com.google.inject.Inject;
 
@@ -59,9 +56,8 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_SEND;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.setMessageBubbleUserIcon;
+import static org.solovyev.android.messenger.messages.UiMessageSender.trySendMessage;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
-import static org.solovyev.android.messenger.users.ContactUiEventType.resend_message;
-import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
 
 /**
  * User: serso
@@ -263,57 +259,8 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		}
 	}
 
-	private void sendMessage(@Nonnull EditText messageBody, @Nullable User contact) {
-		final String messageText = Strings.toHtml(messageBody.getText());
-
-		if (!Strings.isEmpty(messageText)) {
-			//Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
-
-			sendMessageAsync(messageBody, messageText, contact);
-		}
-	}
-
-	private void sendMessageAsync(@Nonnull EditText messageBody, @Nonnull String messageText, @Nullable User contact) {
-		if (canSendMessage(contact)) {
-			final Activity activity = getActivity();
-			new SendMessageAndUpdateEditTextAsyncTask(activity, messageBody, chat).executeInParallel(new SendMessageAsyncTask.Input(getUser(), messageText, chat, contact));
-		}
-	}
-
-	private boolean canSendMessage(@Nullable User contact) {
-		boolean result = true;
-
-		if (chat.isPrivate()) {
-			result = canSendMessageToUser(getContact(chat.getSecondUser(), contact));
-		}
-
-		return result;
-	}
-
-	@Nonnull
-	private User getContact(@Nonnull Entity contactEntity, @Nullable User contact) {
-		if (contact == null) {
-			return getUserService().getUserById(contactEntity);
-		} else {
-			if(contact.getEntity().equals(contactEntity)) {
-				return contact;
-			} else {
-				return getUserService().getUserById(contactEntity);
-			}
-		}
-	}
-
-	private boolean canSendMessageToUser(@Nonnull User contact) {
-		boolean result = true;
-
-		if (account.isCompositeUser(getUser())) {
-			if (!account.isCompositeUserDefined(contact)) {
-				result = false;
-				App.getEventManager(getActivity()).fire(show_composite_user_dialog.newEvent(contact, resend_message));
-			}
-		}
-
-		return result;
+	private void sendMessage(@Nonnull EditText messageEditText, @Nullable User recipient) {
+		trySendMessage(getActivity(), messageEditText, account, chat, recipient);
 	}
 
 	@Nonnull
@@ -564,23 +511,4 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		}
 	}
 
-	private static class SendMessageAndUpdateEditTextAsyncTask extends SendMessageAsyncTask {
-
-		@Nonnull
-		private final WeakReference<EditText> messageBodyRef;
-
-		public SendMessageAndUpdateEditTextAsyncTask(@Nonnull Activity activity, @Nonnull EditText messageBody, @Nonnull Chat chat) {
-			super(activity, chat);
-			this.messageBodyRef = new WeakReference<EditText>(messageBody);
-		}
-
-		@Override
-		protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
-			super.onSuccessPostExecute(result);
-			final EditText messageBody = messageBodyRef.get();
-			if (messageBody != null) {
-				messageBody.setText("");
-			}
-		}
-	}
 }
