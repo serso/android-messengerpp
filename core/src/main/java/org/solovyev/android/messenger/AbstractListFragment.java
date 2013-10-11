@@ -50,6 +50,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
+import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.newTag;
 
 /**
@@ -168,6 +169,9 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 	@Nonnull
 	private Context themeContext;
 
+	@Nonnull
+	private RoboListeners listeners;
+
     /*
     **********************************************************************
     *
@@ -244,7 +248,12 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 		return pullToRefreshListView;
 	}
 
-    /*
+	@Nonnull
+	protected RoboListeners getListeners() {
+		return listeners;
+	}
+
+	/*
     **********************************************************************
     *
     *                           LIFECYCLE
@@ -256,6 +265,7 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		listeners = new RoboListeners(App.getEventManager(getActivity()));
 		eventManager.fire(FragmentUiEventType.created.newEvent(this));
 	}
 
@@ -537,6 +547,12 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 		if (listViewFilter != null) {
 			listViewFilter.saveState(outState);
 		}
+	}
+
+	@Override
+	public void onPause() {
+		listeners.clearAll();
+		super.onPause();
 	}
 
 	@Override

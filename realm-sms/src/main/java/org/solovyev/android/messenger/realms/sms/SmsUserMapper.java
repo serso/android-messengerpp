@@ -3,20 +3,28 @@ package org.solovyev.android.messenger.realms.sms;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.Users;
-import org.solovyev.android.properties.AProperty;
-import org.solovyev.common.Converter;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.users.MutableUser;
+import org.solovyev.android.messenger.users.PhoneNumber;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.common.Converter;
+
 import static com.google.common.collect.Iterables.getFirst;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
+import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
 import static org.solovyev.android.messenger.users.Users.newUser;
-import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 /**
  * User: serso
@@ -45,10 +53,12 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 
 		final Set<String> phoneNumbers = getPhoneNumbers(userId);
 
-		final List<AProperty> properties = new ArrayList<AProperty>();
-		Users.tryParseNameProperties(properties, cursor.getString(1));
+		final List<AProperty> propertiesList = new ArrayList<AProperty>();
+		Users.tryParseNameProperties(propertiesList, cursor.getString(1));
+		final MutableUser user = newUser(newEntity(account.getId(), userId), newNeverSyncedUserSyncData(), propertiesList);
+
 		if (phoneNumbers.size() == 1) {
-			properties.add(newProperty(User.PROPERTY_PHONE, getFirst(phoneNumbers, null)));
+			user.getProperties().setProperty(User.PROPERTY_PHONE, getFirst(phoneNumbers, null));
 		} else {
 			final StringBuilder sb = new StringBuilder();
 			for (String phoneNumber : phoneNumbers) {
@@ -57,9 +67,18 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 				}
 				sb.append(phoneNumber);
 			}
-			properties.add(newProperty(User.PROPERTY_PHONES, sb.toString()));
+			user.getProperties().setProperty(User.PROPERTY_PHONES, sb.toString());
 		}
-		return newUser(account.getId(), userId, Users.newNeverSyncedUserSyncData(), properties);
+
+		if (!account.isCompositeUserDefined(user)) {
+			final User oldUser = App.getUserService().getUserById(user.getEntity(), false);
+			final String phone = oldUser.getPropertyValueByName(User.PROPERTY_PHONE);
+			if (!isEmpty(phone)) {
+				user.getProperties().setProperty(User.PROPERTY_PHONE, phone);
+			}
+		}
+
+		return user;
 	}
 
 	@Nonnull
@@ -72,9 +91,9 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 		final Cursor phoneCursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, selection, selectionArgs, null);
 		try {
 			while (phoneCursor.moveToNext()) {
-				final String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-				if (Users.isValidPhoneNumber(phoneNumber)) {
-					phoneNumbers.add(phoneNumber);
+				final PhoneNumber phoneNumber = newPhoneNumber(phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+				if (phoneNumber.isValid()) {
+					phoneNumbers.add(phoneNumber.getNumber());
 				}
 			}
 		} finally {

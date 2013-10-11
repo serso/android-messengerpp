@@ -132,7 +132,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public User getUserById(@Nonnull Entity user, boolean tryFindInRealm) {
+	public User getUserById(@Nonnull Entity user, boolean tryFindInAccount) {
 		boolean saved = true;
 
 		User result;
@@ -152,7 +152,7 @@ public class DefaultUserService implements UserService {
 			}
 
 			if (result == null) {
-				if (tryFindInRealm) {
+				if (tryFindInAccount) {
 					try {
 						final Account account = getAccountByEntity(user);
 						result = account.getAccountUserService().getUserById(user.getAccountEntityId());

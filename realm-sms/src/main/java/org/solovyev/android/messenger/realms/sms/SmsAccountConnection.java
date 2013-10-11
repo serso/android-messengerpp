@@ -30,6 +30,7 @@ import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.MutableUser;
+import org.solovyev.android.messenger.users.PhoneNumber;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.MutableAProperties;
@@ -48,9 +49,9 @@ import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_RECEIVED;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
+import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
-import static org.solovyev.android.messenger.users.Users.isValidPhoneNumber;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.text.Strings.isEmpty;
 
@@ -196,15 +197,20 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 	@Nonnull
 	private User toUser(@Nonnull String phone) {
+		return toUser(newPhoneNumber(phone));
+	}
+
+	@Nonnull
+	private User toUser(@Nonnull PhoneNumber phoneNumber) {
 		final SmsAccount account = getAccount();
 
-		final MutableUser user = newEmptyUser(newEntity(account.getId(), NO_ACCOUNT_ID, makeEntityId(account.getId(), phone)));
-		user.setFirstName(phone);
+		final MutableUser user = newEmptyUser(newEntity(account.getId(), NO_ACCOUNT_ID, makeEntityId(account.getId(), phoneNumber.getNumber())));
+		user.setFirstName(phoneNumber.getNumber());
 
 		final MutableAProperties properties = user.getProperties();
-		if (isValidPhoneNumber(phone)) {
-			properties.setProperty(PROPERTY_PHONE, phone);
-			properties.setProperty(PROPERTY_PHONES, phone);
+		if (phoneNumber.isValid()) {
+			properties.setProperty(PROPERTY_PHONE, phoneNumber.getNumber());
+			properties.setProperty(PROPERTY_PHONES, phoneNumber.getNumber());
 		}
 
 		return user;

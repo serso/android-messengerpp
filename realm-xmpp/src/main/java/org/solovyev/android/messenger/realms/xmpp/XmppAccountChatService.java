@@ -18,6 +18,8 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.MutableChatMessage;
+import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso
@@ -72,6 +74,10 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 	@Override
 	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException {
 		return doOnConnection(new MessengerSender(chat, message, getAccount()));
+	}
+
+	@Override
+	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull

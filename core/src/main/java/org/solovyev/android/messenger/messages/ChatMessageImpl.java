@@ -11,14 +11,19 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.MutableAProperties;
+import org.solovyev.android.properties.Properties;
 import org.solovyev.common.JObject;
+
+import static org.solovyev.android.properties.Properties.newProperties;
 
 /**
  * User: serso
  * Date: 6/6/12
  * Time: 1:01 PM
  */
-public class ChatMessageImpl extends JObject implements ChatMessage {
+public class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 	@Nonnull
 	private LiteChatMessage liteChatMessage;
@@ -30,6 +35,9 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 
 	@Nonnull
 	private MessageDirection direction = MessageDirection.in;
+
+	@Nonnull
+	private MutableAProperties properties = newProperties(Collections.<AProperty>emptyList());
 
 	private ChatMessageImpl(@Nonnull LiteChatMessage liteChatMessage) {
 		this.liteChatMessage = liteChatMessage;
@@ -61,7 +69,7 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 
 	@Nonnull
 	@Override
-	public ChatMessage cloneRead() {
+	public MutableChatMessage cloneRead() {
 		final ChatMessageImpl clone = clone();
 		clone.read = true;
 		return clone;
@@ -78,7 +86,15 @@ public class ChatMessageImpl extends JObject implements ChatMessage {
 			clone.fwdMessages.add(fwdMessage.clone());
 		}
 
+		clone.properties = this.properties.clone();
+
 		return clone;
+	}
+
+	@Override
+	@Nonnull
+	public MutableAProperties getProperties() {
+		return properties;
 	}
 
 	public boolean addFwdMessage(@Nonnull LiteChatMessage fwdMessage) {

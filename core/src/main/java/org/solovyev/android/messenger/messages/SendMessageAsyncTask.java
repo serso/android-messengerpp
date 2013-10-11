@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
+import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 /**
  * User: serso
@@ -82,7 +84,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 	}
 
 	@Nonnull
-	private static AccountService getRealmService() {
+	private static AccountService getAccountService() {
 		return App.getAccountService();
 	}
 
@@ -106,10 +108,14 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		@Nonnull
 		private final Chat chat;
 
-		public Input(@Nonnull User author, @Nonnull String message, @Nonnull Chat chat) {
+		@Nullable
+		private final User recipient;
+
+		public Input(@Nonnull User author, @Nonnull String message, @Nonnull Chat chat, @Nullable User recipient) {
 			this.author = author;
 			this.message = message;
 			this.chat = chat;
+			this.recipient = recipient;
 		}
 
 		public void setTitle(@Nullable String title) {
@@ -126,8 +132,9 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 		@Nullable
 		public ChatMessage sendChatMessage() throws AccountException {
-			final Account account = getRealmService().getAccountById(author.getEntity().getAccountId());
-			final LiteChatMessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
+			final Account account = getAccountService().getAccountById(author.getEntity().getAccountId());
+
+			final LiteChatMessageImpl liteChatMessage = newLiteMessage(generateEntity(account));
 			liteChatMessage.setAuthor(author.getEntity());
 			liteChatMessage.setBody(message);
 
@@ -139,11 +146,13 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			liteChatMessage.setTitle(title == null ? "" : title);
 			liteChatMessage.setSendDate(DateTime.now());
 
-			final ChatMessageImpl chatMessage = Messages.newMessage(liteChatMessage, true);
+			final ChatMessageImpl chatMessage = newMessage(liteChatMessage, true);
 			chatMessage.setDirection(MessageDirection.out);
 			for (LiteChatMessage fwdMessage : fwdMessages) {
 				chatMessage.addFwdMessage(fwdMessage);
 			}
+
+			account.getAccountChatService().beforeSendChatMessage(chat, recipient, chatMessage);
 
 			return getChatMessageService().sendChatMessage(author.getEntity(), chat, chatMessage);
 		}

@@ -56,11 +56,11 @@ public interface UserService {
 	 * NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
 	 *
 	 * @param user           user to be found
-	 * @param tryFindInRealm user search will be done in realm service if user was not found in persistence and this parameter is set to true
+	 * @param tryFindInAccount user search will be done in account service if user was not found in persistence and this parameter is set to true
 	 * @return user instance identified by specified <var>user</var> entity
 	 */
 	@Nonnull
-	User getUserById(@Nonnull Entity user, boolean tryFindInRealm);
+	User getUserById(@Nonnull Entity user, boolean tryFindInAccount);
 
 	/**
 	 * @param user user

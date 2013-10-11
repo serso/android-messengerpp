@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.http.HttpTransaction;
@@ -22,6 +23,7 @@ import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;
@@ -196,6 +198,10 @@ public class VkAccountChatService implements AccountChatService {
 		} catch (IOException e) {
 			throw new AccountConnectionException(account.getId(), e);
 		}
+	}
+
+	@Override
+	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull

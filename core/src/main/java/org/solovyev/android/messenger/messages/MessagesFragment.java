@@ -14,19 +14,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import roboguice.event.EventListener;
 
-import com.google.inject.Inject;
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.Activities;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.AbstractListFragment;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
@@ -38,11 +52,7 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
+import com.google.inject.Inject;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -50,6 +60,8 @@ import static android.view.inputmethod.EditorInfo.IME_ACTION_SEND;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.setMessageBubbleUserIcon;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
+import static org.solovyev.android.messenger.users.ContactUiEventType.resend_message;
+import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
 
 /**
  * User: serso
@@ -226,25 +238,82 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		}
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		getListeners().add(ContactUiEvent.class, new EventListener<ContactUiEvent>() {
+			@Override
+			public void onEvent(ContactUiEvent event) {
+				switch (event.getType()) {
+					case resend_message:
+						sendMessage(event.getContact());
+						break;
+				}
+			}
+		});
+	}
+
 	private void sendMessage() {
+		sendMessage(null);
+	}
+
+	private void sendMessage(@Nullable User contact) {
 		if (messageBody != null) {
-			sendMessage(messageBody);
+			sendMessage(messageBody, contact);
 		}
 	}
 
-	private void sendMessage(@Nonnull EditText messageBody) {
+	private void sendMessage(@Nonnull EditText messageBody, @Nullable User contact) {
 		final String messageText = Strings.toHtml(messageBody.getText());
 
 		if (!Strings.isEmpty(messageText)) {
 			//Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
 
-			sendMessageAsync(messageBody, messageText);
+			sendMessageAsync(messageBody, messageText, contact);
 		}
 	}
 
-	private void sendMessageAsync(@Nonnull EditText messageBody, @Nonnull String messageText) {
-		final Activity activity = getActivity();
-		new SendMessageAndUpdateEditTextAsyncTask(activity, messageBody, chat).executeInParallel(new SendMessageAsyncTask.Input(getUser(), messageText, chat));
+	private void sendMessageAsync(@Nonnull EditText messageBody, @Nonnull String messageText, @Nullable User contact) {
+		if (canSendMessage(contact)) {
+			final Activity activity = getActivity();
+			new SendMessageAndUpdateEditTextAsyncTask(activity, messageBody, chat).executeInParallel(new SendMessageAsyncTask.Input(getUser(), messageText, chat, contact));
+		}
+	}
+
+	private boolean canSendMessage(@Nullable User contact) {
+		boolean result = true;
+
+		if (chat.isPrivate()) {
+			result = canSendMessageToUser(getContact(chat.getSecondUser(), contact));
+		}
+
+		return result;
+	}
+
+	@Nonnull
+	private User getContact(@Nonnull Entity contactEntity, @Nullable User contact) {
+		if (contact == null) {
+			return getUserService().getUserById(contactEntity);
+		} else {
+			if(contact.getEntity().equals(contactEntity)) {
+				return contact;
+			} else {
+				return getUserService().getUserById(contactEntity);
+			}
+		}
+	}
+
+	private boolean canSendMessageToUser(@Nonnull User contact) {
+		boolean result = true;
+
+		if (account.isCompositeUser(getUser())) {
+			if (!account.isCompositeUserDefined(contact)) {
+				result = false;
+				App.getEventManager(getActivity()).fire(show_composite_user_dialog.newEvent(contact, resend_message));
+			}
+		}
+
+		return result;
 	}
 
 	@Nonnull

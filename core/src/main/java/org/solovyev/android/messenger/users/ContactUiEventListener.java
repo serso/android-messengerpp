@@ -8,9 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.Fragments2;
 import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -27,6 +25,9 @@ import static org.solovyev.android.messenger.App.getChatService;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
+import static org.solovyev.android.messenger.users.CompositeContactFragment.newCompositeContactFragment;
+import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
+import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 import static org.solovyev.android.messenger.users.ContactUiEventType.open_contact_chat;
 import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
 
@@ -57,23 +58,17 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 			final Account account = accountService.getAccountByEntityAware(contact);
 			switch (type) {
 				case contact_clicked:
+					fireEvent(open_contact_chat.newEvent(contact));
+					break;
+				case call_contact:
 					if (account.isCompositeUser(contact)) {
 						if (!account.isCompositeUserDefined(contact)) {
-							if(activity.isDualPane()) {
-								activity.getMultiPaneFragmentManager().setSecondFragment(new Builder<Fragment>() {
-									@Nonnull
-									@Override
-									public Fragment build() {
-										return CompositeContactFragment.newForContact(contact);
-									}
-								}, null, CompositeContactFragment.FRAGMENT_TAG);
-							}
-							fireEvent(show_composite_user_dialog.newEvent(contact));
+							fireEvent(show_composite_user_dialog.newEvent(contact, call_contact));
 						} else {
-							fireEvent(open_contact_chat.newEvent(contact));
+							onCallContactChat(contact);
 						}
 					} else {
-						fireEvent(open_contact_chat.newEvent(contact));
+						onCallContactChat(contact);
 					}
 					break;
 				case open_contact_chat:
@@ -86,12 +81,23 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 					onMarkAllMessagesRead(contact);
 					break;
 				case show_composite_user_dialog:
-					Fragments2.showDialog(new CompositeUserDialogFragment(contact), CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
+					onShowCompositeUserDialog(contact, event.getDataAsEventType());
 					break;
 			}
 		} catch (UnsupportedAccountException e) {
 			// should not happen
 			getExceptionHandler().handleException(e);
+		}
+	}
+
+	private void onShowCompositeUserDialog(@Nonnull User contact, @Nonnull ContactUiEventType nextEventType) {
+		CompositeUserDialogFragment.show(contact, nextEventType, activity);
+	}
+
+	private void onCallContactChat(@Nonnull User contact) throws UnsupportedAccountException {
+		final Account account = getAccountService().getAccountByEntityAware(contact);
+		if(account.canCall(contact)) {
+			account.call(contact, activity);
 		}
 	}
 

@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.MutableChatMessage;
+import org.solovyev.android.messenger.users.User;
 
 /**
  * User: serso
@@ -38,6 +40,8 @@ public interface AccountChatService {
 	 */
 	@Nullable
 	String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException;
+
+	void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException;
 
 	@Nonnull
 	Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException;

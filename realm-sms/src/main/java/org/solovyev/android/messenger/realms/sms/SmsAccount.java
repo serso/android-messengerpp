@@ -1,35 +1,39 @@
 package org.solovyev.android.messenger.realms.sms;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.google.common.base.Function;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import org.solovyev.android.messenger.accounts.AbstractAccount;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
+import org.solovyev.android.messenger.users.PhoneNumber;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.properties.AProperties;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static android.content.Intent.ACTION_CALL;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.solovyev.android.messenger.realms.sms.SmsAccountChatService.MESSAGE_PROPERTY_PHONE;
 import static org.solovyev.android.messenger.users.CompositeUserChoice.newCompositeUserChoice;
+import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
-import static org.solovyev.android.messenger.users.Users.isValidPhoneNumber;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
@@ -109,5 +113,14 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Override
 	public boolean canCall(@Nonnull User contact) {
 		return contact.getPhoneNumber() != null || !contact.getPhoneNumbers().isEmpty();
+	}
+
+	@Override
+	public void call(@Nonnull User contact, @Nonnull Context context) {
+		final PhoneNumber phoneNumber = newPhoneNumber(contact.getPhoneNumber());
+		if (phoneNumber.isCallable()) {
+			final Intent callIntent = new Intent(ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+			context.startActivity(callIntent);
+		}
 	}
 }

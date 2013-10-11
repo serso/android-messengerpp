@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.accounts;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 
@@ -69,6 +70,10 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	@Override
 	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
 		return "test_message_id";
+	}
+
+	@Override
+	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull

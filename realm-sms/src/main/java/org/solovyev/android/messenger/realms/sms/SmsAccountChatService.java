@@ -17,6 +17,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
@@ -32,6 +33,8 @@ import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
  * Time: 9:23 PM
  */
 final class SmsAccountChatService implements AccountChatService {
+
+	static final String MESSAGE_PROPERTY_PHONE = "phone_number";
 
 	@Nonnull
 	@Override
@@ -60,8 +63,7 @@ final class SmsAccountChatService implements AccountChatService {
 	@Nullable
 	@Override
 	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException {
-		final User recipient = App.getUserService().getUserById(message.getRecipient());
-		final String phoneNumber = recipient.getPropertyValueByName(User.PROPERTY_PHONE);
+		final String phoneNumber = getPhoneNumber(message);
 		if(!Strings.isEmpty(phoneNumber)) {
 			// return AUTO GENERATED ID
 			final String accountEntityId = message.getEntity().getAccountEntityId();
@@ -79,6 +81,28 @@ final class SmsAccountChatService implements AccountChatService {
 			return accountEntityId;
 		}
 		return null;
+	}
+
+	@Nullable
+	private String getPhoneNumber(@Nonnull ChatMessage message) {
+		String phoneNumber = message.getProperties().getPropertyValue(MESSAGE_PROPERTY_PHONE);
+		if (Strings.isEmpty(phoneNumber)) {
+			final User recipient = App.getUserService().getUserById(message.getRecipient());
+			phoneNumber = recipient.getPropertyValueByName(User.PROPERTY_PHONE);
+		}
+		return phoneNumber;
+	}
+
+	@Override
+	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException {
+		if (recipient == null) {
+			recipient = App.getUserService().getUserById(message.getRecipient());
+		}
+
+		final String phoneNumber = recipient.getPhoneNumber();
+		if (phoneNumber != null) {
+			message.getProperties().setProperty(MESSAGE_PROPERTY_PHONE, phoneNumber);
+		}
 	}
 
 	@Nonnull

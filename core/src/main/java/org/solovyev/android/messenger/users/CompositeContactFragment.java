@@ -9,6 +9,7 @@ import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.core.R;
@@ -18,6 +19,7 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
+import static org.solovyev.android.Activities.restartActivity;
 import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
 
 /**
@@ -35,8 +37,8 @@ public class CompositeContactFragment extends RoboSherlockFragment {
     **********************************************************************
     */
 
-	@Nonnull
-	private static final String CONTACT = "contact";
+	private static final String ARG_CONTACT = "contact";
+	private static final String ARG_NEXT_EVENT_TYPE = "next_event_type";
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "composite-contact-choice";
@@ -59,7 +61,9 @@ public class CompositeContactFragment extends RoboSherlockFragment {
 
 	private User contact;
 
-	private Entity realmContact;
+	private Entity accountContact;
+
+	private ContactUiEventType nextEventType;
 
 
     /*
@@ -73,38 +77,39 @@ public class CompositeContactFragment extends RoboSherlockFragment {
 	public CompositeContactFragment() {
 		// will be loaded later by id from fragment arguments
 		this.contact = null;
-		this.realmContact = null;
+		this.accountContact = null;
 	}
 
 	public CompositeContactFragment(@Nonnull User contact) {
 		this.contact = contact;
-		this.realmContact = contact.getEntity();
+		this.accountContact = contact.getEntity();
 	}
 
-	public CompositeContactFragment(@Nonnull Entity realmContact) {
-		// will be loaded later by realmContact
+	public CompositeContactFragment(@Nonnull Entity accountContact) {
+		// will be loaded later by accountContact
 		this.contact = null;
-		this.realmContact = realmContact;
+		this.accountContact = accountContact;
 	}
 
 
 	@Nonnull
-	public static CompositeContactFragment newForContact(@Nonnull User contact) {
+	public static CompositeContactFragment newCompositeContactFragment(@Nonnull User contact, @Nonnull ContactUiEventType nextEventType) {
 		final CompositeContactFragment result = new CompositeContactFragment(contact);
-		fillArguments(contact.getEntity(), result);
+		fillArguments(contact.getEntity(), nextEventType, result);
 		return result;
 	}
 
 	@Nonnull
-	public static CompositeContactFragment newForContact(@Nonnull Entity contact) {
+	public static CompositeContactFragment newCompositeContactFragment(@Nonnull Entity contact, @Nonnull ContactUiEventType nextEventType) {
 		final CompositeContactFragment result = new CompositeContactFragment(contact);
-		fillArguments(contact, result);
+		fillArguments(contact, nextEventType, result);
 		return result;
 	}
 
-	private static void fillArguments(@Nonnull Entity realmUser, @Nonnull CompositeContactFragment result) {
+	private static void fillArguments(@Nonnull Entity user, @Nonnull ContactUiEventType nextEventType, @Nonnull CompositeContactFragment result) {
 		final Bundle args = new Bundle();
-		args.putParcelable(CONTACT, realmUser);
+		args.putParcelable(ARG_CONTACT, user);
+		args.putSerializable(ARG_NEXT_EVENT_TYPE, nextEventType);
 		result.setArguments(args);
 	}
 
@@ -114,20 +119,26 @@ public class CompositeContactFragment extends RoboSherlockFragment {
 
 		if (contact == null) {
 			// restore state
-			final Entity realmContact;
+			final Entity accountContact;
 
-			if (this.realmContact != null) {
-				realmContact = this.realmContact;
+			if (this.accountContact != null) {
+				accountContact = this.accountContact;
 			} else {
-				realmContact = (Entity) getArguments().getParcelable(CONTACT);
+				accountContact = getArguments().getParcelable(ARG_CONTACT);
 			}
 
-			if (realmContact != null) {
-				this.contact = this.userService.getUserById(realmContact);
-				this.realmContact = realmContact;
-			} else {
-				getActivity().finish();
+			if (accountContact != null) {
+				this.contact = this.userService.getUserById(accountContact);
+				this.accountContact = accountContact;
 			}
+		}
+
+		if (nextEventType == null) {
+			nextEventType = (ContactUiEventType) getArguments().getSerializable(ARG_NEXT_EVENT_TYPE);
+		}
+
+		if (contact == null || nextEventType == null) {
+			restartActivity(getActivity());
 		}
 	}
 
@@ -150,7 +161,7 @@ public class CompositeContactFragment extends RoboSherlockFragment {
 		openCompositeChoiceDialogButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(show_composite_user_dialog.newEvent(contact));
+				eventManager.fire(show_composite_user_dialog.newEvent(contact, nextEventType));
 			}
 		});
 
@@ -159,6 +170,6 @@ public class CompositeContactFragment extends RoboSherlockFragment {
 
 	@Nonnull
 	public Entity getContact() {
-		return realmContact;
+		return accountContact;
 	}
 }

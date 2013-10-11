@@ -5,12 +5,18 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
-import com.google.inject.Inject;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.Fragments2;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -18,12 +24,11 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 
-import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
+import com.google.inject.Inject;
 
+import static org.solovyev.android.Activities.restartActivity;
 import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 
 public final class CompositeUserDialogFragment extends RoboSherlockDialogFragment {
 
@@ -38,7 +43,9 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 
 	private static final String TAG = CompositeUserDialogFragment.class.getSimpleName();
 
-	private static final String USER_ENTITY = "user_entity";
+	private static final String ARG_USER_ENTITY = "user_entity";
+	private static final String ARG_NEXT_EVENT_TYPE = "next_event_type";
+
 	private static final String DO_NOT_ASK_AGAIN = "do_not_ask_again";
 
 	/*
@@ -66,6 +73,8 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	*/
 
 	private User user;
+
+	private ContactUiEventType nextEventType;
 
 	private Account<?> account;
 
@@ -104,21 +113,24 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 		}
 
 		if (user == null) {
-			if (savedInstanceState != null) {
-				final Parcelable userEntity = savedInstanceState.getParcelable(USER_ENTITY);
-				if (userEntity instanceof Entity) {
-					user = userService.getUserById((Entity) userEntity);
-				}
+			final Parcelable userEntity = getArguments().getParcelable(ARG_USER_ENTITY);
+			if (userEntity instanceof Entity) {
+				user = userService.getUserById((Entity) userEntity);
 			}
 		}
 
-		if (user == null) {
-			throw new IllegalStateException("User is null");
+		if(nextEventType == null) {
+			nextEventType = (ContactUiEventType) getArguments().getSerializable(ARG_NEXT_EVENT_TYPE);
+		}
+
+		if (user == null || nextEventType == null) {
+			restartActivity(getActivity());
 		} else {
 			try {
 				account = accountService.getAccountByEntityAware(user);
 			} catch (UnsupportedAccountException e) {
 				App.getExceptionHandler().handleException(e);
+				restartActivity(getActivity());
 			}
 		}
 	}
@@ -166,8 +178,8 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	public void onDestroy() {
 		super.onDestroy();
 
-		if (user != null && account != null && account.isCompositeUserDefined(user)) {
-			getEventManager(getActivity()).fire(contact_clicked.newEvent(user));
+		if (user != null && account != null && nextEventType != null && account.isCompositeUserDefined(user)) {
+			getEventManager(getActivity()).fire(nextEventType.newEvent(user));
 		}
 	}
 
@@ -175,11 +187,18 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		if (user != null) {
-			outState.putParcelable(USER_ENTITY, user.getEntity());
-		}
-
 		outState.putBoolean(DO_NOT_ASK_AGAIN, doNotAskAgain);
+	}
+
+	public static void show(@Nonnull User contact, @Nonnull ContactUiEventType nextEventType, @Nonnull FragmentActivity activity) {
+		final CompositeUserDialogFragment fragment = new CompositeUserDialogFragment(contact);
+
+		final Bundle args = new Bundle();
+		args.putParcelable(ARG_USER_ENTITY, contact.getEntity());
+		args.putSerializable(ARG_NEXT_EVENT_TYPE, nextEventType);
+		fragment.setArguments(args);
+
+		Fragments2.showDialog(fragment, CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
 	}
 
 

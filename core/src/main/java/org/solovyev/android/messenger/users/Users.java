@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -14,7 +13,6 @@ import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManage
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static android.telephony.PhoneNumberUtils.isGlobalPhoneNumber;
 import static org.solovyev.android.messenger.App.TAG;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newCreateUserArguments;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newEditUserArguments;
@@ -57,7 +54,7 @@ public final class Users {
 	}
 
 	@Nonnull
-	public static User newUser(@Nonnull String accountId,
+	public static MutableUser newUser(@Nonnull String accountId,
 							   @Nonnull String accountUserId,
 							   @Nonnull UserSyncData userSyncData,
 							   @Nonnull List<AProperty> properties) {
@@ -161,13 +158,5 @@ public final class Users {
 	@Nonnull
 	public static AProperty newOnlineProperty(boolean online) {
 		return newProperty(User.PROPERTY_ONLINE, String.valueOf(online));
-	}
-
-	public static boolean isValidPhoneNumber(@Nullable String phoneNumber) {
-		if (!Strings.isEmpty(phoneNumber)) {
-			return isGlobalPhoneNumber(phoneNumber);
-		} else {
-			return false;
-		}
 	}
 }

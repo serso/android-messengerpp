@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.messages;
 
 import org.solovyev.android.messenger.chats.MessageDirection;
+import org.solovyev.android.properties.AProperties;
+import org.solovyev.android.properties.MutableAProperties;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -25,4 +27,7 @@ public interface ChatMessage extends LiteChatMessage {
 
 	@Nonnull
 	ChatMessage cloneRead();
+
+	@Nonnull
+	AProperties getProperties();
 }
