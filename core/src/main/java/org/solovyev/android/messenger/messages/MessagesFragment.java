@@ -3,6 +3,8 @@ package org.solovyev.android.messenger.messages;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -48,6 +50,7 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.text.Strings;
 
 import com.google.inject.Inject;
 
@@ -58,6 +61,7 @@ import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMes
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.setMessageBubbleUserIcon;
 import static org.solovyev.android.messenger.messages.UiMessageSender.trySendMessage;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 /**
  * User: serso
@@ -203,9 +207,6 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 
 		fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, null, true, true);
 
-		// setting user icon
-		setMessageBubbleUserIcon(context, getUser(), (ImageView) messageLayoutParent.findViewById(R.id.mpp_message_bubble_icon_imageview));
-
 		root.addView(messageLayoutParent, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
 		return root;
@@ -215,14 +216,32 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		messageBody = (EditText) root.findViewById(R.id.mpp_message_bubble_body_edittext);
-		messageBody.setText(getChatService().getDraftMessage(chat));
-
-		final Button sendButton = (Button) root.findViewById(R.id.mpp_message_bubble_send_button);
+		final View sendButton = root.findViewById(R.id.mpp_message_bubble_send_button);
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				sendMessage();
+			}
+		});
+
+		messageBody = (EditText) root.findViewById(R.id.mpp_message_bubble_body_edittext);
+		messageBody.setText(getChatService().getDraftMessage(chat));
+		messageBody.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (isEmpty(s)) {
+					sendButton.setEnabled(false);
+				} else {
+					sendButton.setEnabled(true);
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
 			}
 		});
 
