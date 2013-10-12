@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,13 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.*;
-import static org.solovyev.android.messenger.App.*;
-import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
-import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
-import static org.solovyev.android.messenger.users.ContactUiEventType.edit_contact;
-import static org.solovyev.android.messenger.users.ContactUiEventType.mark_all_messages_read;
+import static org.solovyev.android.messenger.App.getAccountService;
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.users.ContactUiEventType.*;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UiContact.newUiContact;
+import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
 /**
  * User: serso
@@ -149,36 +147,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 			}
 		}
 
-		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
-		final View contactCall = viewTag.getViewById(R.id.mpp_li_contact_call_view);
-		final View contactDivider = viewTag.getViewById(R.id.mpp_li_contact_divider_view);
-		if (account == null || !account.canCall(contact)) {
-			contactCall.setOnClickListener(null);
-			contactCall.setVisibility(GONE);
-			contactDivider.setVisibility(GONE);
-
-			if (contact.isOnline()) {
-				contactOnline.setVisibility(VISIBLE);
-			} else {
-				contactOnline.setVisibility(INVISIBLE);
-			}
-		} else {
-			contactOnline.setVisibility(GONE);
-
-			// for some reason following properties set from styles xml are not applied => apply them manually
-			contactCall.setFocusable(false);
-			contactCall.setFocusableInTouchMode(false);
-
-			contactCall.setVisibility(VISIBLE);
-			contactCall.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					getEventManager(context).fire(call_contact.newEvent(contact));
-				}
-			});
-
-			contactDivider.setVisibility(VISIBLE);
-		}
+		fillContactPresenceViews(context, viewTag, contact, account);
 	}
 
 	/*

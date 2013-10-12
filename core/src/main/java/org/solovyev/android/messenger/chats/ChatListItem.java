@@ -5,13 +5,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
@@ -23,9 +22,13 @@ import javax.annotation.Nullable;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_clicked;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.chats.UiChat.newEmptyUiChat;
+import static org.solovyev.android.messenger.messages.Messages.getMessageTime;
+import static org.solovyev.android.messenger.messages.Messages.getMessageTitle;
+import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
 /**
  * User: serso
@@ -109,13 +112,26 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 		final TextView lastMessageTextTime = viewTag.getViewById(R.id.mpp_li_last_message_text_time_textview);
 		final TextView lastMessageText = viewTag.getViewById(R.id.mpp_li_last_message_text_textview);
 		if (lastMessage != null) {
-			lastMessageText.setText(Messages.getMessageTitle(chat, lastMessage, user));
-			lastMessageTextTime.setText(Messages.getMessageTime(lastMessage));
+			lastMessageText.setText(getMessageTitle(chat, lastMessage, user));
+			lastMessageTextTime.setText(getMessageTime(lastMessage));
 		} else {
 			lastMessageText.setText("");
 			lastMessageTextTime.setText("");
 		}
 
+		if(chat.isPrivate()) {
+			fillContactPresence(uiChat, viewTag, context);
+		} else {
+			fillContactPresences(uiChat, viewTag);
+		}
+	}
+
+	private void fillContactPresence(@Nonnull UiChat uiChat, @Nonnull ViewAwareTag viewTag, @Nonnull Context context) {
+		final Entity secondUser = uiChat.getChat().getSecondUser();
+		fillContactPresenceViews(context, viewTag, getUserService().getUserById(secondUser, false), uiChat.getAccount());
+	}
+
+	private void fillContactPresences(UiChat uiChat, ViewAwareTag viewTag) {
 		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
 		if (uiChat.isOnline()) {
 			contactOnline.setVisibility(VISIBLE);

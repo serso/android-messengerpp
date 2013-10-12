@@ -1,16 +1,20 @@
 package org.solovyev.android.messenger.users;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.view.View;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.view.ViewAwareTag;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
 
@@ -20,11 +24,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.TAG;
+import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newCreateUserArguments;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newEditUserArguments;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
@@ -158,5 +167,41 @@ public final class Users {
 	@Nonnull
 	public static AProperty newOnlineProperty(boolean online) {
 		return newProperty(User.PROPERTY_ONLINE, String.valueOf(online));
+	}
+
+	public static void fillContactPresenceViews(@Nonnull final Context context,
+												@Nonnull ViewAwareTag viewTag,
+												@Nonnull final User contact,
+												@Nullable Account account) {
+		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
+		final View contactCall = viewTag.getViewById(R.id.mpp_li_contact_call_view);
+		final View contactDivider = viewTag.getViewById(R.id.mpp_li_contact_divider_view);
+		if (account == null || !account.canCall(contact)) {
+			contactCall.setOnClickListener(null);
+			contactCall.setVisibility(GONE);
+			contactDivider.setVisibility(GONE);
+
+			if (contact.isOnline()) {
+				contactOnline.setVisibility(VISIBLE);
+			} else {
+				contactOnline.setVisibility(INVISIBLE);
+			}
+		} else {
+			contactOnline.setVisibility(GONE);
+
+			// for some reason following properties set from styles xml are not applied => apply them manually
+			contactCall.setFocusable(false);
+			contactCall.setFocusableInTouchMode(false);
+
+			contactCall.setVisibility(VISIBLE);
+			contactCall.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getEventManager(context).fire(call_contact.newEvent(contact));
+				}
+			});
+
+			contactDivider.setVisibility(VISIBLE);
+		}
 	}
 }

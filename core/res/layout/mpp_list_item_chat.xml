@@ -31,8 +31,6 @@
 
 	</LinearLayout>
 
-	<ImageView
-			a:id="@+id/mpp_li_contact_online_view"
-			style="?mpp_list_item_contact_online"/>
+	<include layout="@layout/mpp_list_item_contact_presence"/>
 
 </LinearLayout>

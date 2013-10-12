@@ -1,15 +1,16 @@
 package org.solovyev.android.messenger.chats;
 
+import com.google.common.base.Predicate;
 import org.solovyev.android.messenger.Identifiable;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Predicate;
-
 import static com.google.common.collect.Iterables.any;
+import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getChatService;
 
 /**
@@ -26,6 +27,9 @@ public final class UiChat implements Identifiable {
 	private int unreadMessagesCount;
 
 	@Nullable
+	private final Account account;
+
+	@Nullable
 	private ChatMessage lastMessage;
 
 	// precached display name in order to calculate it before shown (e.g. for sorting)
@@ -34,9 +38,10 @@ public final class UiChat implements Identifiable {
 
 	private boolean online;
 
-	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
+	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
 		this.user = user;
 		this.chat = chat;
+		this.account = account;
 		this.lastMessage = lastMessage;
 		this.unreadMessagesCount = unreadMessagesCount;
 		this.displayName = displayName;
@@ -44,23 +49,29 @@ public final class UiChat implements Identifiable {
 	}
 
 	@Nonnull
-	static UiChat newUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
-		return new UiChat(user, chat, lastMessage, unreadMessagesCount, displayName, online);
+	static UiChat newUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
+		return new UiChat(user, chat, account, lastMessage, unreadMessagesCount, displayName, online);
 	}
 
 	@Nonnull
-	static UiChat loadUiChat(@Nonnull User user, @Nonnull Chat chat) {
+	static UiChat loadUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account) {
 		final ChatMessage lastMessage = getLastChatMessage(chat);
 		final int unreadMessagesCount = getUnreadMessagesCount(chat);
 		final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
 		final boolean online = isParticipantsOnline(user, chat);
 
-		return new UiChat(user, chat, lastMessage, unreadMessagesCount, displayName, online);
+		return new UiChat(user, chat, account, lastMessage, unreadMessagesCount, displayName, online);
+	}
+
+	@Nonnull
+	static UiChat loadUiChat(@Nonnull User user, @Nonnull Chat chat) {
+		final Account account = getAccountService().getAccountByEntityOrNull(user.getEntity());
+		return loadUiChat(user, chat, account);
 	}
 
 	@Nonnull
 	public static UiChat newEmptyUiChat(@Nonnull User user, @Nonnull Chat chat) {
-		return newUiChat(user, chat, null, 0, "", false);
+		return newUiChat(user, chat, null, null, 0, "", false);
 	}
 
 	@Nullable
@@ -100,6 +111,11 @@ public final class UiChat implements Identifiable {
 
 	public boolean isOnline() {
 		return online;
+	}
+
+	@Nullable
+	public Account getAccount() {
+		return account;
 	}
 
 	@Override
