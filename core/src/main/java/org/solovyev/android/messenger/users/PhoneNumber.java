@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.common.text.Strings;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.common.text.Strings;
 
 import static android.telephony.PhoneNumberUtils.isGlobalPhoneNumber;
 import static android.telephony.PhoneNumberUtils.isWellFormedSmsAddress;
@@ -68,5 +68,10 @@ public final class PhoneNumber {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Phone number: " + number;
 	}
 }

@@ -3,13 +3,7 @@ package org.solovyev.android.messenger.realms.sms;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.base.Function;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -22,7 +16,10 @@ import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.PhoneNumber;
 import org.solovyev.android.messenger.users.User;
 
-import com.google.common.base.Function;
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.Intent.ACTION_CALL;
 import static com.google.common.collect.Iterables.transform;
@@ -167,7 +164,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	public void call(@Nonnull User contact, @Nonnull Context context) {
 		final PhoneNumber phoneNumber = newPhoneNumber(contact.getPhoneNumber());
 		if (phoneNumber.isCallable()) {
-			final Intent callIntent = new Intent(ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+			final Intent callIntent = new Intent(ACTION_CALL, Uri.parse("tel:" + phoneNumber.getNumber()));
 			context.startActivity(callIntent);
 		}
 	}
