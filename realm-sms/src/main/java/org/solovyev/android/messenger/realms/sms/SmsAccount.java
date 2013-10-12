@@ -43,6 +43,12 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
 	@Nonnull
 	@Override
+	public SmsRealm getRealm() {
+		return (SmsRealm) super.getRealm();
+	}
+
+	@Nonnull
+	@Override
 	protected AccountConnection createConnection(@Nonnull Context context) {
 		return new SmsAccountConnection(this, context);
 	}
@@ -166,6 +172,10 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 		if (phoneNumber.isCallable()) {
 			final Intent callIntent = new Intent(ACTION_CALL, Uri.parse("tel:" + phoneNumber.getNumber()));
 			context.startActivity(callIntent);
+
+			// we need to return after call to application => enable listener
+			getRealm().getCallListener().setEnabled(true);
 		}
 	}
+
 }

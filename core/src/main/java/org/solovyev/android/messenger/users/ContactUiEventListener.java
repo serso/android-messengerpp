@@ -1,13 +1,5 @@
 package org.solovyev.android.messenger.users;
 
-import android.support.v4.app.Fragment;
-import roboguice.event.EventListener;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -17,19 +9,15 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatUiEventType;
 import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.common.Builder;
+import roboguice.event.EventListener;
 
-import static org.solovyev.android.messenger.App.getAccountService;
-import static org.solovyev.android.messenger.App.getChatMessageService;
-import static org.solovyev.android.messenger.App.getChatService;
-import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.App.getExceptionHandler;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
-import static org.solovyev.android.messenger.users.CompositeContactFragment.newCompositeContactFragment;
-import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
-import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
-import static org.solovyev.android.messenger.users.ContactUiEventType.open_contact_chat;
-import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
+import static org.solovyev.android.messenger.users.ContactUiEventType.*;
 
 /**
  * User: serso

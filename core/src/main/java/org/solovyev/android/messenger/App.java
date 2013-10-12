@@ -238,6 +238,11 @@ public final class App {
 		return instance.uiHandler;
 	}
 
+	@Nonnull
+	public static Class<? extends Activity> getMainActivityClass() {
+		return MainActivity.class;
+	}
+
 	/*
 	**********************************************************************
 	*

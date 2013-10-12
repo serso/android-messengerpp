@@ -5,8 +5,6 @@ import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.CompositeUser;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
@@ -65,7 +63,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public final Realm getRealm() {
+	public Realm getRealm() {
 		return realm;
 	}
 

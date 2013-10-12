@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.realms.sms;
 
 import android.app.Application;
 import android.content.Context;
+import android.telephony.TelephonyManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.accounts.Account;
@@ -20,6 +21,8 @@ import javax.crypto.SecretKey;
 import java.util.Collections;
 import java.util.List;
 
+import static android.content.Context.TELEPHONY_SERVICE;
+import static android.telephony.PhoneStateListener.LISTEN_CALL_STATE;
 import static org.solovyev.android.messenger.App.newTag;
 
 /**
@@ -60,10 +63,22 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	@Nonnull
 	private final Context context;
 
+	@Nonnull
+	private final CallListener callListener;
+
 	@Inject
 	public SmsRealm(@Nonnull Application context) {
 		super(REALM_ID, R.string.mpp_sms_realm_name, R.drawable.mpp_sms_icon, SmsAccountConfigurationFragment.class, SmsAccountConfiguration.class, true, SmsEditUserFragment.class);
 		this.context = context;
+		this.callListener = new CallListener(context);
+	}
+
+	@Override
+	public void init(@Nonnull Context context) {
+		super.init(context);
+
+		final TelephonyManager tm = (TelephonyManager)context.getSystemService(TELEPHONY_SERVICE);
+		tm.listen(callListener, LISTEN_CALL_STATE);
 	}
 
 	@Nonnull
@@ -95,6 +110,11 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	@Override
 	public Cipherer<SmsAccountConfiguration, SmsAccountConfiguration> getCipherer() {
 		return new SmsRealmConfigurationCipherer();
+	}
+
+	@Nonnull
+	public CallListener getCallListener() {
+		return callListener;
 	}
 
 	/*
