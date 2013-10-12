@@ -15,6 +15,7 @@
 	<attr name="mpp_list_item_message_text_editor" format="reference" />
 	<attr name="mpp_list_item_contact_online" format="reference" />
 	<attr name="mpp_list_item_contact_call" format="reference" />
+	<attr name="mpp_list_item_contact_divider" format="reference" />
 	<attr name="mpp_send_button" format="reference" />
 	<attr name="mpp_button" format="reference" />
 	<attr name="mpp_button_bright" format="reference" />

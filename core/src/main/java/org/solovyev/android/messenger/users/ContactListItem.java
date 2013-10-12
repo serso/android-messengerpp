@@ -151,9 +151,11 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
 		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
 		final View contactCall = viewTag.getViewById(R.id.mpp_li_contact_call_view);
+		final View contactDivider = viewTag.getViewById(R.id.mpp_li_contact_divider_view);
 		if (account == null || !account.canCall(contact)) {
 			contactCall.setOnClickListener(null);
 			contactCall.setVisibility(GONE);
+			contactDivider.setVisibility(GONE);
 
 			if (contact.isOnline()) {
 				contactOnline.setVisibility(VISIBLE);
@@ -174,6 +176,8 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 					getEventManager(context).fire(call_contact.newEvent(contact));
 				}
 			});
+
+			contactDivider.setVisibility(VISIBLE);
 		}
 	}
 

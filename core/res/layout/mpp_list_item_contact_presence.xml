@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:a="http://schemas.android.com/apk/res/android"
+	a:orientation="vertical"
+	a:layout_width="match_parent"
+	a:layout_height="match_parent">
+
+	<org.solovyev.android.messenger.view.VerticalDivider
+		a:id="@+id/mpp_li_contact_divider_view"
+		style="?mpp_list_item_contact_divider"
+		a:visibility="gone" />
+
+	<ImageView
+		a:id="@+id/mpp_li_contact_online_view"
+		style="?mpp_list_item_contact_online" />
+
+	<ImageButton
+		a:id="@+id/mpp_li_contact_call_view"
+		style="?mpp_list_item_contact_call"
+		a:visibility="gone" />
+
+</merge>

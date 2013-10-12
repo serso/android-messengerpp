@@ -18,6 +18,7 @@
 		<item name="mpp_list_item_message_text_editor">@style/mpp_list_item_message_text_editor</item>
 		<item name="mpp_list_item_contact_online">@style/mpp_list_item_contact_online</item>
 		<item name="mpp_list_item_contact_call">@style/mpp_list_item_contact_call</item>
+		<item name="mpp_list_item_contact_divider">@style/mpp_list_item_contact_divider</item>
 		<item name="mpp_button">@style/mpp_button</item>
 		<item name="mpp_send_button">@style/mpp_send_button</item>
 		<item name="mpp_button_bright">@style/mpp_button_bright</item>
@@ -48,6 +49,7 @@
 		<item name="mpp_list_item_message_text_editor">@style/mpp_list_item_message_text_editor</item>
 		<item name="mpp_list_item_contact_online">@style/mpp_list_item_contact_online</item>
 		<item name="mpp_list_item_contact_call">@style/mpp_list_item_contact_call</item>
+		<item name="mpp_list_item_contact_divider">@style/mpp_list_item_contact_divider</item>
 		<item name="mpp_button">@style/mpp_button</item>
 		<item name="mpp_send_button">@style/mpp_send_button</item>
 		<item name="mpp_button_bright">@style/mpp_button_bright</item>
