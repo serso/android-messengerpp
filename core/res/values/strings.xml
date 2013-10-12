@@ -25,7 +25,7 @@
 	<string name="mpp_reload_local_data_summary">Synchronizes local data with server</string>
 
 	<string name="mpp_sync_is_already_running">Synchronization is already running!</string>
-	<string name="mpp_type_message_hint">Type message</string>
+	<string name="mpp_type_message_hint">Enter message</string>
 	<string name="mpp_send">Send</string>
 	<string name="mpp_contact_icon">Contact icon</string>
 	<string name="mpp_phone">Phone</string>

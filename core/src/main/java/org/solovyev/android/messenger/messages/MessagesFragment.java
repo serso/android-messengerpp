@@ -10,25 +10,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import roboguice.event.EventListener;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
-import org.solovyev.android.messenger.AbstractListFragment;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
-import org.solovyev.android.messenger.Threads2;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
@@ -50,15 +38,15 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.text.Strings;
+import roboguice.event.EventListener;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_SEND;
-import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
-import static org.solovyev.android.messenger.messages.MessageBubbleViews.setMessageBubbleUserIcon;
 import static org.solovyev.android.messenger.messages.UiMessageSender.trySendMessage;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -191,7 +179,6 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 			messageLayoutParent.setVisibility(View.GONE);
 		}
 
-		final View messageLayout = messageLayoutParent.findViewById(R.id.mpp_message_bubble_linearlayout);
 		final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
 		messageText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
@@ -204,8 +191,6 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 				return handled;
 			}
 		});
-
-		fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, null, true, true);
 
 		root.addView(messageLayoutParent, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
