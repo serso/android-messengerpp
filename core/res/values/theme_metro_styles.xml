@@ -184,7 +184,7 @@
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_gravity">bottom</item>
-		<item name="android:src">@drawable/ic_send_dark_normal</item>
+		<item name="android:src">@drawable/mpp_send_button_states</item>
 		<item name="android:background">@null</item>
 	</style>
 

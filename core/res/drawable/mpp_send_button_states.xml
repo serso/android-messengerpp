@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:a="http://schemas.android.com/apk/res/android">
+
+	<item a:state_enabled="false" a:drawable="@drawable/mpp_send_button_dark_disabled"/>
+	<item a:drawable="@drawable/mpp_send_button_dark_normal"/>
+
+</selector>
