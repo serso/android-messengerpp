@@ -2,6 +2,8 @@
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
 	a:id="@+id/mpp_message_bubble_linearlayout"
+	a:paddingRight="14dp"
+	a:paddingLeft="14dp"
 	style="?mpp_list_item">
 
 	<EditText
