@@ -56,7 +56,7 @@
 	<string name="mpp_city">City</string>
 	<string name="mpp_sync">Synchronize</string>
 	<string name="mpp_icon">Icon</string>
-	<string name="mpp_user_starts_typing">User starts typing…</string>
+	<string name="mpp_user_is_typing">User is typing…</string>
 	<string name="mpp_menu_unread_messages_counter">0</string>
 	<string name="mpp_menu_toggle_users">Online/Offline</string>
 	<string name="mpp_realm_configuration">Configuration of %1$s</string>

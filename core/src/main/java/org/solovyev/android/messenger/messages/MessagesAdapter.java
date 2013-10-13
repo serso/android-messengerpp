@@ -166,7 +166,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(Entities.newEntityFromEntityId(user.getEntityId() + "_typing"));
 				liteChatMessage.setSendDate(DateTime.now());
 				liteChatMessage.setAuthor(user);
-				liteChatMessage.setBody(getContext().getString(R.string.mpp_user_starts_typing));
+				liteChatMessage.setBody(getContext().getString(R.string.mpp_user_is_typing));
 
 				// create fake list item
 				listItem = createListItem(Messages.newMessage(liteChatMessage, true));
