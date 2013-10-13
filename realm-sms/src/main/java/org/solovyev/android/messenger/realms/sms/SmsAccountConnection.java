@@ -20,6 +20,7 @@ import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
@@ -89,15 +90,26 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			try {
-				if (intent.getAction().equals(INTENT_RECEIVED)) {
+				final String action = intent.getAction();
+				if (action.equals(INTENT_RECEIVED)) {
 					onSmsReceived(this, intent);
-				} else {
-					// todo serso: sent/delivered report
+				} else if (action.equals(INTENT_SENT)) {
+					// todo serso: continue
+					onSmsSent(intent);
+				} else if (action.equals(INTENT_DELIVERED)) {
+					// todo serso: continue
 				}
 
 			} catch (AccountException e) {
 				Log.e(SmsRealm.TAG, e.getMessage(), e);
 			}
+		}
+	}
+
+	private void onSmsSent(@Nonnull Intent intent) {
+		final String accountEntityId = intent.getStringExtra(INTENT_EXTRA_SMS_ID);
+		if (!isEmpty(accountEntityId)) {
+			final Entity entity = getAccount().newMessageEntity(accountEntityId);
 		}
 	}
 

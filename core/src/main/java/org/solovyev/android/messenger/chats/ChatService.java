@@ -119,6 +119,8 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	void removeMessage(@Nonnull Message message);
 
+	void updateMessageState(@Nonnull Message message);
+
 
     /*
     **********************************************************************

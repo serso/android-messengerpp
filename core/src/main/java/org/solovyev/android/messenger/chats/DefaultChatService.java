@@ -496,6 +496,18 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
+	public void updateMessageState(@Nonnull Message message) {
+		final Chat chat = getChatById(message.getChat());
+		if (chat != null) {
+			updateMessageState(chat, message);
+		}
+	}
+
+	private void updateMessageState(@Nonnull Chat chat, @Nonnull Message message) {
+
+	}
+
+	@Override
 	public void removeMessage(@Nonnull Chat chat, @Nonnull Message message) {
 		message = message.cloneWithNewState(MessageState.removed);
 

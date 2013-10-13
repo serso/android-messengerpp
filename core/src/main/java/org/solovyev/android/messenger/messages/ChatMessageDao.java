@@ -14,6 +14,9 @@ import java.util.List;
  */
 public interface ChatMessageDao {
 
+	@Nullable
+	ChatMessage read(@Nonnull String messageId);
+
 	@Nonnull
 	List<ChatMessage> readMessages(@Nonnull String chatId);
 

@@ -85,10 +85,10 @@ public class DefaultMessageService implements MessageService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getMessages(@Nonnull Entity accountChat) {
+	public List<ChatMessage> getMessages(@Nonnull Entity chat) {
 		// todo serso: think about lock
 		/*synchronized (lock) {*/
-			return chatMessageDao.readMessages(accountChat.getEntityId());
+			return chatMessageDao.readMessages(chat.getEntityId());
 		/*}*/
 	}
 

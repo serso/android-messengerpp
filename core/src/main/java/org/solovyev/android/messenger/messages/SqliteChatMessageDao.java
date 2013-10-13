@@ -70,6 +70,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		return doDbQuery(getSqliteOpenHelper(), new LoadChatMessageIdsByChatId(getContext(), chatId, getSqliteOpenHelper()));
 	}
 
+	@Nullable
+	@Override
+	public ChatMessage read(@Nonnull String messageId) {
+		//todo serso: load message
+		return null;
+	}
+
 	@Nonnull
 	@Override
 	public List<ChatMessage> readMessages(@Nonnull String chatId) {
