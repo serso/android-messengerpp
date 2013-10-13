@@ -2,12 +2,11 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.Threads;
 import org.solovyev.common.listeners.JEvent;
 import org.solovyev.common.listeners.JEventListener;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -29,12 +28,12 @@ public final class UiThreadEventListener<E extends JEvent> implements JEventList
 	}
 
 	@Nonnull
-	public static <E extends JEvent> UiThreadEventListener<E> onUiThread(@Nonnull Activity activity, @Nonnull JEventListener<E> eventListener) {
+	public static <E extends JEvent> JEventListener<E> onUiThread(@Nonnull Activity activity, @Nonnull JEventListener<E> eventListener) {
 		return new UiThreadEventListener<E>(activity, null, eventListener);
 	}
 
 	@Nonnull
-	public static <E extends JEvent> UiThreadEventListener<E> onUiThread(@Nonnull Fragment fragment, @Nonnull JEventListener<E> eventListener) {
+	public static <E extends JEvent> JEventListener<E> onUiThread(@Nonnull Fragment fragment, @Nonnull JEventListener<E> eventListener) {
 		return new UiThreadEventListener<E>(null, fragment, eventListener);
 	}
 

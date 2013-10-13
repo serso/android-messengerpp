@@ -255,6 +255,22 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 				}
 			}
 		});
+		getListeners().add(MessageUiEvent.class, new EventListener<MessageUiEvent>() {
+			@Override
+			public void onEvent(MessageUiEvent event) {
+				switch (event.getType()) {
+					case quote:
+						quoteMessage(event.getMessage());
+						break;
+				}
+			}
+		});
+	}
+
+	private void quoteMessage(@Nonnull ChatMessage message) {
+		if (messageBody != null && !isEmpty(message.getBody())) {
+			messageBody.append("\"" + message.getBody() + "\"");
+		}
 	}
 
 	private void sendMessage() {

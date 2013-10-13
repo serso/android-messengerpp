@@ -16,6 +16,7 @@
 	<string name="mpp_online_contacts">Online contacts</string>
 
 	<string name="mpp_copy">Copy</string>
+	<string name="mpp_quote">Quote</string>
 	<string name="mpp_send">Send</string>
 	<string name="mpp_attach">Attach</string>
 	<string name="mpp_write_the_message">Write the message</string>

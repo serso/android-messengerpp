@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.messages;
 
 import android.app.Activity;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.Html;
 import android.view.View;
@@ -8,26 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import java.util.Arrays;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatUiEventType;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+
+import static android.content.ClipData.newPlainText;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 
@@ -138,12 +134,20 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 		copy(R.string.mpp_copy) {
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
-				final android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
+				final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
 
 				final MessageListItem messageListItem = data.getDataObject();
-				clipboard.setText(messageListItem.getData().getBody());
+				clipboard.setPrimaryClip(newPlainText(null, messageListItem.getData().getBody()));
 
 				Toast.makeText(context, context.getString(R.string.mpp_message_copied_to_clipboard), Toast.LENGTH_SHORT).show();
+			}
+		},
+
+		quote(R.string.mpp_quote) {
+
+			@Override
+			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
+				getEventManager(context).fire(MessageUiEventType.quote.newEvent(data.getDataObject().getMessage()));
 			}
 		};
 
