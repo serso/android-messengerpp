@@ -12,6 +12,7 @@ import android.widget.Toast;
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
@@ -148,6 +149,14 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
 				getEventManager(context).fire(MessageUiEventType.quote.newEvent(data.getDataObject().getMessage()));
+			}
+		},
+
+		remove(R.string.mpp_remove) {
+
+			@Override
+			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
+				App.getChatMessageService().removeMessage(data.getDataObject().getData());
 			}
 		};
 

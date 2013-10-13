@@ -37,4 +37,5 @@ public interface ChatMessageService {
 	 */
 	int getUnreadMessagesCount();
 
+	void removeMessage(@Nonnull ChatMessage message);
 }

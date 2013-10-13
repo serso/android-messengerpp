@@ -34,7 +34,7 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
 
 		final String chatId = c.getString(3);
 
-		final MessageImpl liteChatMessage = MessageImpl.newInstance(messageEntity);
+		final MessageImpl liteChatMessage = MessageImpl.newMessage(messageEntity);
 		liteChatMessage.setAuthor(Entities.newEntityFromEntityId(c.getString(4)));
 		if (!c.isNull(5)) {
 			final String recipientId = c.getString(5);

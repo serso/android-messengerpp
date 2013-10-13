@@ -81,12 +81,12 @@ public final class Messages {
 
 	@Nonnull
 	public static Message newEmptyMessage(@Nonnull String messageId) {
-		return MessageImpl.newInstance(Entities.newEntityFromEntityId(messageId));
+		return MessageImpl.newMessage(Entities.newEntityFromEntityId(messageId));
 	}
 
 	@Nonnull
 	public static MessageImpl newLiteMessage(@Nonnull Entity entity) {
-		return MessageImpl.newInstance(entity);
+		return MessageImpl.newMessage(entity);
 	}
 
 	public static ChatMessageImpl newMessage(@Nonnull Message message, boolean read) {

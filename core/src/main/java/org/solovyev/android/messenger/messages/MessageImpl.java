@@ -46,7 +46,7 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 	}
 
 	@Nonnull
-	static MessageImpl newInstance(@Nonnull Entity entity) {
+	static MessageImpl newMessage(@Nonnull Entity entity) {
 		return new MessageImpl(entity);
 	}
 

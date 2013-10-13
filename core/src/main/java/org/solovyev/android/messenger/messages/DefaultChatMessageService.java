@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
+import static org.solovyev.android.messenger.messages.MessageImpl.newMessage;
 
 /**
  * User: serso
@@ -95,12 +96,12 @@ public class DefaultChatMessageService implements ChatMessageService {
 	@Nullable
 	@Override
 	public ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException {
-		final Account account = getRealmByUser(user);
+		final Account account = getAccountByUser(user);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
 		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final MessageImpl message = MessageImpl.newInstance(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
+		final MessageImpl message = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
 
 		message.setAuthor(user);
 		if (chat.isPrivate()) {
@@ -113,8 +114,8 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 		// user's message is read (he is an author)
 		final ChatMessageImpl result = Messages.newMessage(message, true);
-		for (Message fwtMessage : chatMessage.getFwdMessages()) {
-			result.addFwdMessage(fwtMessage);
+		for (Message fwdMessage : chatMessage.getFwdMessages()) {
+			result.addFwdMessage(fwdMessage);
 		}
 
 		result.setDirection(MessageDirection.out);
@@ -133,8 +134,13 @@ public class DefaultChatMessageService implements ChatMessageService {
 		}
 	}
 
+	@Override
+	public void removeMessage(@Nonnull ChatMessage message) {
+		// todo serso: implement
+	}
+
 	@Nonnull
-	private Account getRealmByUser(@Nonnull Entity userEntity) throws UnsupportedAccountException {
+	private Account getAccountByUser(@Nonnull Entity userEntity) throws UnsupportedAccountException {
 		return accountService.getAccountById(userEntity.getAccountId());
 	}
 }
