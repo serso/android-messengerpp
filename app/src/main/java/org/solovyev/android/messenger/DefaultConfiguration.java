@@ -1,18 +1,21 @@
 package org.solovyev.android.messenger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import android.content.Context;
+import android.telephony.TelephonyManager;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.sms.SmsRealm;
 import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
+import static org.solovyev.android.messenger.App.getApplication;
 
 /**
  * User: serso
@@ -47,7 +50,10 @@ public class DefaultConfiguration implements Configuration {
 			if (realms.isEmpty()) {
 				realms.add(xmppRealm);
 				realms.add(vkRealm);
-				realms.add(smsRealm);
+				final TelephonyManager tm = (TelephonyManager) getApplication().getSystemService(Context.TELEPHONY_SERVICE);
+				if (tm.getPhoneType() != PHONE_TYPE_NONE) {
+					realms.add(smsRealm);
+				}
 			}
 		}
 
