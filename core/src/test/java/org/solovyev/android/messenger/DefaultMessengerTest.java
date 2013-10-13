@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.ChatMessageImpl;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
+import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.MutableUser;
@@ -31,7 +31,6 @@ import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
-import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
 
 public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 
@@ -91,7 +90,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 	}
 
 	private ChatMessageImpl generateMessage(int i, @Nonnull User user, @Nonnull User contact, @Nonnull TestAccount account) {
-		final LiteChatMessageImpl liteMessage = newLiteMessage(Entities.generateEntity(account));
+		final MessageImpl liteMessage = newLiteMessage(Entities.generateEntity(account));
 
 		if (i % 2 == 0) {
 			liteMessage.setAuthor(user.getEntity());

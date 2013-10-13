@@ -103,7 +103,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		private final List<Object> attachments = new ArrayList<Object>();
 
 		@Nonnull
-		private final List<LiteChatMessage> fwdMessages = new ArrayList<LiteChatMessage>();
+		private final List<Message> fwdMessages = new ArrayList<Message>();
 
 		@Nonnull
 		private final Chat chat;
@@ -126,7 +126,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			return attachments.add(attachment);
 		}
 
-		public boolean addFwdMessage(@Nonnull LiteChatMessage fwdMessage) {
+		public boolean addFwdMessage(@Nonnull Message fwdMessage) {
 			return fwdMessages.add(fwdMessage);
 		}
 
@@ -134,7 +134,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		public ChatMessage sendChatMessage() throws AccountException {
 			final Account account = getAccountService().getAccountById(author.getEntity().getAccountId());
 
-			final LiteChatMessageImpl liteChatMessage = newLiteMessage(generateEntity(account));
+			final MessageImpl liteChatMessage = newLiteMessage(generateEntity(account));
 			liteChatMessage.setAuthor(author.getEntity());
 			liteChatMessage.setBody(message);
 
@@ -148,7 +148,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 			final ChatMessageImpl chatMessage = newMessage(liteChatMessage, true);
 			chatMessage.setDirection(MessageDirection.out);
-			for (LiteChatMessage fwdMessage : fwdMessages) {
+			for (Message fwdMessage : fwdMessages) {
 				chatMessage.addFwdMessage(fwdMessage);
 			}
 

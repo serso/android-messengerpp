@@ -27,7 +27,7 @@ import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnect
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
+import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.PhoneNumber;
@@ -171,7 +171,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	@Nullable
 	private ChatMessage toChatMessage(@Nonnull String message, @Nonnull Account account, @Nonnull User from, @Nonnull User to) {
 		if (!isEmpty(message)) {
-			final LiteChatMessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
+			final MessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
 			liteChatMessage.setBody(message);
 			liteChatMessage.setAuthor(from.getEntity());
 			liteChatMessage.setRecipient(to.getEntity());

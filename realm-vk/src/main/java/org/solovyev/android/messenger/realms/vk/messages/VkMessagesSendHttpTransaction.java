@@ -12,7 +12,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.messages.LiteChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.common.text.Strings;
@@ -60,11 +60,11 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 			result.add(new BasicNameValuePair("title", URLEncoder.encode(chatMessage.getTitle(), "utf-8")));
 			result.add(new BasicNameValuePair("type", chatMessage.isPrivate() ? "0" : "1"));
 
-			final List<LiteChatMessage> fwdMessages = chatMessage.getFwdMessages();
+			final List<Message> fwdMessages = chatMessage.getFwdMessages();
 			if (!fwdMessages.isEmpty()) {
-				final String fwdMessagesParam = Strings.getAllValues(Lists.transform(fwdMessages, new Function<LiteChatMessage, String>() {
+				final String fwdMessagesParam = Strings.getAllValues(Lists.transform(fwdMessages, new Function<Message, String>() {
 					@Override
-					public String apply(@Nullable LiteChatMessage fwdMessage) {
+					public String apply(@Nullable Message fwdMessage) {
 						assert fwdMessage != null;
 						return fwdMessage.getEntity().getAccountEntityId();
 					}

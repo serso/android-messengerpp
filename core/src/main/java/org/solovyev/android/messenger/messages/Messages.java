@@ -80,17 +80,17 @@ public final class Messages {
 	}
 
 	@Nonnull
-	public static LiteChatMessage newEmptyMessage(@Nonnull String messageId) {
-		return LiteChatMessageImpl.newInstance(Entities.newEntityFromEntityId(messageId));
+	public static Message newEmptyMessage(@Nonnull String messageId) {
+		return MessageImpl.newInstance(Entities.newEntityFromEntityId(messageId));
 	}
 
 	@Nonnull
-	public static LiteChatMessageImpl newLiteMessage(@Nonnull Entity entity) {
-		return LiteChatMessageImpl.newInstance(entity);
+	public static MessageImpl newLiteMessage(@Nonnull Entity entity) {
+		return MessageImpl.newInstance(entity);
 	}
 
-	public static ChatMessageImpl newMessage(@Nonnull LiteChatMessage liteChatMessage, boolean read) {
-		return ChatMessageImpl.newInstance(liteChatMessage, read);
+	public static ChatMessageImpl newMessage(@Nonnull Message message, boolean read) {
+		return ChatMessageImpl.newInstance(message, read);
 	}
 
 	@Nonnull

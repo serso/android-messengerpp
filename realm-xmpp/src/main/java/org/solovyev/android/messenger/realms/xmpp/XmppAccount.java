@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
+import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
@@ -170,7 +170,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Account account) {
 		final String body = message.getBody();
 		if (!Strings.isEmpty(body)) {
-			final LiteChatMessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
+			final MessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
 			liteChatMessage.setBody(body);
 			liteChatMessage.setAuthor(account.newUserEntity(message.getFrom()));
 			liteChatMessage.setRecipient(account.newUserEntity(message.getTo()));

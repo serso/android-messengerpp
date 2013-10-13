@@ -11,13 +11,10 @@ import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.*;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.messages.ChatMessageImpl;
-import org.solovyev.android.messenger.messages.LiteChatMessage;
-import org.solovyev.android.messenger.messages.LiteChatMessageImpl;
-import org.solovyev.android.messenger.messages.Messages;
+import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
@@ -133,14 +130,14 @@ public class JsonMessage {
 	}
 
 	@Nonnull
-	public LiteChatMessage toLiteChatMessage(@Nonnull User user,
+	public Message toLiteChatMessage(@Nonnull User user,
 											 @Nullable String explicitUserId,
 											 @Nonnull Account account) throws IllegalJsonException {
 		if (mid == null || uid == null || date == null) {
 			throw new IllegalJsonException();
 		}
 
-		final LiteChatMessageImpl result = Messages.newLiteMessage(account.newMessageEntity(mid));
+		final MessageImpl result = Messages.newLiteMessage(account.newMessageEntity(mid));
 
 		final MessageDirection messageDirection = getMessageDirection();
 		if (messageDirection == MessageDirection.out) {
@@ -178,7 +175,7 @@ public class JsonMessage {
 
 		final ChatMessageImpl result = Messages.newMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
 		result.setDirection(getNotNullMessageDirection());
-		for (LiteChatMessage fwdMessage : getFwdMessages(user, account)) {
+		for (Message fwdMessage : getFwdMessages(user, account)) {
 			result.addFwdMessage(fwdMessage);
 		}
 
@@ -186,11 +183,11 @@ public class JsonMessage {
 	}
 
 	@Nonnull
-	private List<LiteChatMessage> getFwdMessages(@Nonnull User user, @Nonnull Account account) throws IllegalJsonException {
+	private List<Message> getFwdMessages(@Nonnull User user, @Nonnull Account account) throws IllegalJsonException {
 		if (fwd_messages == null) {
 			return Collections.emptyList();
 		} else {
-			final List<LiteChatMessage> result = new ArrayList<LiteChatMessage>(fwd_messages.length);
+			final List<Message> result = new ArrayList<Message>(fwd_messages.length);
 
 			for (JsonMessage fwd_message : fwd_messages) {
 				// todo serso: think about explicit user id

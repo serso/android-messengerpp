@@ -24,12 +24,12 @@ import static org.solovyev.android.properties.Properties.newProperties;
 public class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 	@Nonnull
-	private LiteChatMessage liteChatMessage;
+	private Message message;
 
 	private boolean read = false;
 
 	@Nonnull
-	private List<LiteChatMessage> fwdMessages = new ArrayList<LiteChatMessage>();
+	private List<Message> fwdMessages = new ArrayList<Message>();
 
 	@Nonnull
 	private MessageDirection direction = MessageDirection.in;
@@ -37,13 +37,13 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 	@Nonnull
 	private MutableAProperties properties = newProperties(Collections.<AProperty>emptyList());
 
-	private ChatMessageImpl(@Nonnull LiteChatMessage liteChatMessage) {
-		this.liteChatMessage = liteChatMessage;
+	private ChatMessageImpl(@Nonnull Message message) {
+		this.message = message;
 	}
 
 	@Nonnull
-	static ChatMessageImpl newInstance(@Nonnull LiteChatMessage liteChatMessage, boolean read) {
-		final ChatMessageImpl result = new ChatMessageImpl(liteChatMessage);
+	static ChatMessageImpl newInstance(@Nonnull Message message, boolean read) {
+		final ChatMessageImpl result = new ChatMessageImpl(message);
 		result.read = read;
 		return result;
 	}
@@ -61,7 +61,7 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 	@Nonnull
 	@Override
-	public List<LiteChatMessage> getFwdMessages() {
+	public List<Message> getFwdMessages() {
 		return Collections.unmodifiableList(fwdMessages);
 	}
 
@@ -78,9 +78,9 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 	public ChatMessageImpl clone() {
 		final ChatMessageImpl clone = (ChatMessageImpl) super.clone();
 
-		clone.liteChatMessage = this.liteChatMessage.clone();
-		clone.fwdMessages = new ArrayList<LiteChatMessage>(this.fwdMessages.size());
-		for (LiteChatMessage fwdMessage : this.fwdMessages) {
+		clone.message = this.message.clone();
+		clone.fwdMessages = new ArrayList<Message>(this.fwdMessages.size());
+		for (Message fwdMessage : this.fwdMessages) {
 			clone.fwdMessages.add(fwdMessage.clone());
 		}
 
@@ -95,7 +95,7 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 		return properties;
 	}
 
-	public boolean addFwdMessage(@Nonnull LiteChatMessage fwdMessage) {
+	public boolean addFwdMessage(@Nonnull Message fwdMessage) {
 		return fwdMessages.add(fwdMessage);
 	}
 
@@ -106,67 +106,67 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 	@Nonnull
 	@Override
 	public Entity getEntity() {
-		return this.liteChatMessage.getEntity();
+		return this.message.getEntity();
 	}
 
 	@Override
 	@Nonnull
 	public Entity getAuthor() {
-		return liteChatMessage.getAuthor();
+		return message.getAuthor();
 	}
 
 	@Override
 	@Nullable
 	public Entity getRecipient() {
-		return liteChatMessage.getRecipient();
+		return message.getRecipient();
 	}
 
 	@Override
 	@Nonnull
 	public DateTime getSendDate() {
-		return liteChatMessage.getSendDate();
+		return message.getSendDate();
 	}
 
 	@Override
 	@Nonnull
 	public String getTitle() {
-		return liteChatMessage.getTitle();
+		return message.getTitle();
 	}
 
 	@Override
 	@Nonnull
 	public String getBody() {
-		return liteChatMessage.getBody();
+		return message.getBody();
 	}
 
 	@Nonnull
 	@Override
 	public MessageState getState() {
-		return liteChatMessage.getState();
+		return message.getState();
 	}
 
 	@Override
 	@Nullable
 	public Entity getSecondUser(@Nonnull Entity user) {
-		return liteChatMessage.getSecondUser(user);
+		return message.getSecondUser(user);
 	}
 
 	@Nonnull
 	@Override
 	public String getId() {
-		return liteChatMessage.getId();
+		return message.getId();
 	}
 
 	@Override
 	@Nonnull
 	public DateTime getLocalSendDateTime() {
-		return liteChatMessage.getLocalSendDateTime();
+		return message.getLocalSendDateTime();
 	}
 
 	@Override
 	@Nonnull
 	public LocalDate getLocalSendDate() {
-		return liteChatMessage.getLocalSendDate();
+		return message.getLocalSendDate();
 	}
 
 	@Override
@@ -176,25 +176,25 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 		ChatMessageImpl that = (ChatMessageImpl) o;
 
-		if (!liteChatMessage.equals(that.liteChatMessage)) return false;
+		if (!message.equals(that.message)) return false;
 
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return liteChatMessage.hashCode();
+		return message.hashCode();
 	}
 
 	@Override
 	public String toString() {
 		return "ChatMessageImpl{" +
-				"liteChatMessage=" + liteChatMessage +
+				"liteChatMessage=" + message +
 				'}';
 	}
 
 	@Override
 	public boolean isPrivate() {
-		return liteChatMessage.isPrivate();
+		return message.isPrivate();
 	}
 }

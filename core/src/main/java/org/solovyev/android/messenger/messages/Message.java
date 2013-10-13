@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
  * Date: 6/6/12
  * Time: 1:58 PM
  */
-public interface LiteChatMessage extends Identifiable {
+public interface Message extends Identifiable {
 
 	@Nonnull
 	Entity getEntity();
@@ -48,5 +48,5 @@ public interface LiteChatMessage extends Identifiable {
 	MessageState getState();
 
 	@Nonnull
-	LiteChatMessage clone();
+	Message clone();
 }

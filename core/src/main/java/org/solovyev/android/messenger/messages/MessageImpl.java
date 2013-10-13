@@ -15,7 +15,7 @@ import java.util.TimeZone;
  * Date: 6/6/12
  * Time: 2:04 PM
  */
-public final class LiteChatMessageImpl extends AbstractIdentifiable implements LiteChatMessage {
+public final class MessageImpl extends AbstractIdentifiable implements Message {
 
 	@Nonnull
 	private Entity author;
@@ -41,13 +41,13 @@ public final class LiteChatMessageImpl extends AbstractIdentifiable implements L
 	@Nonnull
 	private MessageState state = MessageState.created;
 
-	private LiteChatMessageImpl(@Nonnull Entity entity) {
+	private MessageImpl(@Nonnull Entity entity) {
 		super(entity);
 	}
 
 	@Nonnull
-	static LiteChatMessageImpl newInstance(@Nonnull Entity entity) {
-		return new LiteChatMessageImpl(entity);
+	static MessageImpl newInstance(@Nonnull Entity entity) {
+		return new MessageImpl(entity);
 	}
 
 	@Nonnull
@@ -111,8 +111,8 @@ public final class LiteChatMessageImpl extends AbstractIdentifiable implements L
 
 	@Nonnull
 	@Override
-	public LiteChatMessageImpl clone() {
-		final LiteChatMessageImpl clone = (LiteChatMessageImpl) super.clone();
+	public MessageImpl clone() {
+		final MessageImpl clone = (MessageImpl) super.clone();
 
 		clone.author = this.author.clone();
 

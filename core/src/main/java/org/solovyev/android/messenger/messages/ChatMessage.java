@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.messages;
 
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.properties.AProperties;
-import org.solovyev.android.properties.MutableAProperties;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * Date: 6/6/12
  * Time: 12:56 PM
  */
-public interface ChatMessage extends LiteChatMessage {
+public interface ChatMessage extends Message {
 
 	boolean isRead();
 
@@ -20,7 +19,7 @@ public interface ChatMessage extends LiteChatMessage {
 	MessageDirection getDirection();
 
 	@Nonnull
-	List<LiteChatMessage> getFwdMessages();
+	List<Message> getFwdMessages();
 
 	@Nonnull
 	ChatMessage clone();

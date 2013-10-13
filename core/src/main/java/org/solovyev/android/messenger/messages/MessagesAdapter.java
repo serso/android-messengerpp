@@ -3,17 +3,10 @@ package org.solovyev.android.messenger.messages;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
@@ -24,10 +17,9 @@ import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * User: serso
@@ -163,7 +155,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				// 'Typing' message is not shown yet => show it
 
 				// create fake message
-				final LiteChatMessageImpl liteChatMessage = LiteChatMessageImpl.newInstance(Entities.newEntityFromEntityId(user.getEntityId() + "_typing"));
+				final MessageImpl liteChatMessage = MessageImpl.newInstance(Entities.newEntityFromEntityId(user.getEntityId() + "_typing"));
 				liteChatMessage.setSendDate(DateTime.now());
 				liteChatMessage.setAuthor(user);
 				liteChatMessage.setBody(getContext().getString(R.string.mpp_user_is_typing));

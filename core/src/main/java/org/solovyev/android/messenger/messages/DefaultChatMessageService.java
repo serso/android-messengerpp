@@ -100,7 +100,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final LiteChatMessageImpl message = LiteChatMessageImpl.newInstance(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
+		final MessageImpl message = MessageImpl.newInstance(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
 
 		message.setAuthor(user);
 		if (chat.isPrivate()) {
@@ -113,7 +113,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 		// user's message is read (he is an author)
 		final ChatMessageImpl result = Messages.newMessage(message, true);
-		for (LiteChatMessage fwtMessage : chatMessage.getFwdMessages()) {
+		for (Message fwtMessage : chatMessage.getFwdMessages()) {
 			result.addFwdMessage(fwtMessage);
 		}
 
