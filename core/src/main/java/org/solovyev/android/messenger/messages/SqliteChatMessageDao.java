@@ -7,8 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -32,9 +30,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
-import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
-import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.collect.Iterables.find;
+import static org.solovyev.android.db.AndroidDbUtils.*;
 
 /**
  * User: serso
@@ -123,7 +121,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 			for (final String chatMessageIdFromDb : messageIdsFromDb) {
 				try {
 					// message exists both in db and on remote server => just update message properties
-					result.addUpdatedObject(Iterables.find(messages, new ChatMessageByIdFinder(chatMessageIdFromDb)));
+					result.addUpdatedObject(find(messages, new ChatMessageByIdFinder(chatMessageIdFromDb)));
 				} catch (NoSuchElementException e) {
 					// message was removed on remote server => need to remove from local db
 					result.addRemovedObjectId(chatMessageIdFromDb);
@@ -133,7 +131,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 			for (ChatMessage message : messages) {
 				try {
 					// message exists both in db and on remote server => case already covered above
-					Iterables.find(messageIdsFromDb, Predicates.equalTo(message.getEntity().getEntityId()));
+					find(messageIdsFromDb, equalTo(message.getEntity().getEntityId()));
 				} catch (NoSuchElementException e) {
 					// message was added on remote server => need to add to local db
 					if (!messageIdsFromDb.contains(message.getEntity().getEntityId())) {
@@ -286,7 +284,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
-			return db.delete("messages", "chat_id in " + AndroidDbUtils.inClause(messagesIds), AndroidDbUtils.inClauseValues(messagesIds));
+			return db.delete("messages", "chat_id in " + inClause(messagesIds), inClauseValues(messagesIds));
 		}
 	}
 
@@ -425,6 +423,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		values.put("title", message.getTitle());
 		values.put("body", message.getBody());
 		values.put("read", message.isRead() ? 1 : 0);
+		values.put("state", message.getState().name());
 		return values;
 	}
 

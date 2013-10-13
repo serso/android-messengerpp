@@ -45,5 +45,8 @@ public interface LiteChatMessage extends Identifiable {
 	String getBody();
 
 	@Nonnull
+	MessageState getState();
+
+	@Nonnull
 	LiteChatMessage clone();
 }

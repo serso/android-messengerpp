@@ -1,9 +1,6 @@
 package org.solovyev.android.messenger.messages;
 
 import android.database.Cursor;
-
-import javax.annotation.Nonnull;
-
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.entities.Entities;
@@ -11,6 +8,10 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Converter;
+
+import javax.annotation.Nonnull;
+
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 /**
  * User: serso
@@ -39,6 +40,7 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
 			final String recipientId = c.getString(5);
 			liteChatMessage.setRecipient(Entities.newEntityFromEntityId(recipientId));
 		}
+		liteChatMessage.setState(MessageState.valueOf(c.getString(11)));
 		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
 		liteChatMessage.setSendDate(dateTimeFormatter.parseDateTime(c.getString(6)));
@@ -47,6 +49,7 @@ public class ChatMessageMapper implements Converter<Cursor, ChatMessage> {
 		liteChatMessage.setBody(c.getString(9));
 		final boolean read = c.getInt(10) == 1;
 
-		return Messages.newMessage(liteChatMessage, read);
+
+		return newMessage(liteChatMessage, read);
 	}
 }

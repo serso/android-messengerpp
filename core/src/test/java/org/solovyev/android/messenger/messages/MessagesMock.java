@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.messenger.messages.MessageState.created;
 
 public class MessagesMock {
 
@@ -48,6 +49,7 @@ public class MessagesMock {
 		when(message.getAuthor()).thenReturn(from);
 
 		when(message.getRecipient()).thenReturn(to);
+		when(message.getState()).thenReturn(created);
 
 		when(message.getSendDate()).thenReturn(sendDate);
 		return message;

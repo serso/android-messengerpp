@@ -38,6 +38,9 @@ public final class LiteChatMessageImpl extends AbstractIdentifiable implements L
 	@Nonnull
 	private String body = "";
 
+	@Nonnull
+	private MessageState state = MessageState.created;
+
 	private LiteChatMessageImpl(@Nonnull Entity entity) {
 		super(entity);
 	}
@@ -102,6 +105,12 @@ public final class LiteChatMessageImpl extends AbstractIdentifiable implements L
 
 	@Nonnull
 	@Override
+	public MessageState getState() {
+		return state;
+	}
+
+	@Nonnull
+	@Override
 	public LiteChatMessageImpl clone() {
 		final LiteChatMessageImpl clone = (LiteChatMessageImpl) super.clone();
 
@@ -141,5 +150,9 @@ public final class LiteChatMessageImpl extends AbstractIdentifiable implements L
 
 	public void setRecipient(@Nullable Entity recipient) {
 		this.recipient = recipient;
+	}
+
+	public void setState(@Nonnull MessageState state) {
+		this.state = state;
 	}
 }

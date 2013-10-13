@@ -1,20 +1,18 @@
 package org.solovyev.android.messenger.messages;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
-import org.solovyev.android.properties.Properties;
 import org.solovyev.common.JObject;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.solovyev.android.properties.Properties.newProperties;
 
@@ -139,6 +137,12 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 	@Nonnull
 	public String getBody() {
 		return liteChatMessage.getBody();
+	}
+
+	@Nonnull
+	@Override
+	public MessageState getState() {
+		return liteChatMessage.getState();
 	}
 
 	@Override
