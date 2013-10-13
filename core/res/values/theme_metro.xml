@@ -15,6 +15,7 @@
 		<item name="mpp_list_item_last_message_time">@style/mpp_list_item_last_message_time</item>
 		<item name="mpp_list_item_message_text">@style/mpp_list_item_message_text</item>
 		<item name="mpp_list_item_message_date">@style/mpp_list_item_message_date</item>
+		<item name="mpp_list_item_message_progress">@style/mpp_list_item_message_progress</item>
 		<item name="mpp_list_item_message_text_editor">@style/mpp_list_item_message_text_editor</item>
 		<item name="mpp_list_item_contact_online">@style/mpp_list_item_contact_online</item>
 		<item name="mpp_list_item_contact_call">@style/mpp_list_item_contact_call</item>
@@ -46,6 +47,7 @@
 		<item name="mpp_list_item_last_message_time">@style/mpp_list_item_last_message_time</item>
 		<item name="mpp_list_item_message_text">@style/mpp_list_item_message_text</item>
 		<item name="mpp_list_item_message_date">@style/mpp_list_item_message_date</item>
+		<item name="mpp_list_item_message_progress">@style/mpp_list_item_message_progress</item>
 		<item name="mpp_list_item_message_text_editor">@style/mpp_list_item_message_text_editor</item>
 		<item name="mpp_list_item_contact_online">@style/mpp_list_item_contact_online</item>
 		<item name="mpp_list_item_contact_call">@style/mpp_list_item_contact_call</item>

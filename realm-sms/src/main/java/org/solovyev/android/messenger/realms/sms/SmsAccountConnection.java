@@ -37,6 +37,7 @@ import static android.telephony.SmsMessage.createFromPdu;
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.*;
+import static org.solovyev.android.messenger.messages.MessageState.received;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
@@ -166,6 +167,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			message.setAuthor(from.getEntity());
 			message.setRecipient(to.getEntity());
 			message.setSendDate(DateTime.now());
+			message.setState(received);
 			// new message by default unread
 			return Messages.newMessage(message, false);
 		} else {

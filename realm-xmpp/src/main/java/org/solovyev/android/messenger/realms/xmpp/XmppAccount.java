@@ -15,10 +15,7 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.MessageService;
-import org.solovyev.android.messenger.messages.MessageImpl;
-import org.solovyev.android.messenger.messages.Messages;
+import org.solovyev.android.messenger.messages.*;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -34,6 +31,8 @@ import java.util.List;
 
 import static org.jivesoftware.smack.packet.Message.Type.error;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
+import static org.solovyev.android.messenger.messages.MessageState.received;
+import static org.solovyev.android.messenger.messages.MessageState.sent;
 import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 
 public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration> {
@@ -182,6 +181,11 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 			message.setRecipient(recipient);
 			message.setChat(getChatService().getPrivateChatId(author, recipient));
 			message.setSendDate(DateTime.now());
+			if(account.getUser().equals(author)) {
+				message.setState(sent);
+			} else {
+				message.setState(received);
+			}
 			// new message by default unread
 			return Messages.newMessage(message, false);
 		} else {

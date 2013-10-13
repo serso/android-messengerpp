@@ -72,8 +72,14 @@ public interface Realm<C extends AccountConfiguration> extends Identifiable {
 
 	/**
 	 * @return true if sent message should be notified immediately, false to wait until response from remote server will come (and then it must trigger event)
+	 * NOTE: settings this to false means that message would not be saved in storage and no event would be sent until account notifies us about sent message
 	 */
 	boolean notifySentMessagesImmediately();
+
+	/**
+	 * @return true if account would notify us about delivery status of a message
+	 */
+	boolean shouldWaitForDeliveryReport();
 
 	@Nonnull
 	RealmIconService getRealmIconService();

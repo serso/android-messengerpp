@@ -15,6 +15,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -25,6 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
+import static org.solovyev.android.messenger.messages.MessageState.sending;
+import static org.solovyev.android.messenger.messages.MessageState.sent;
 import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 
 /**
@@ -100,6 +103,7 @@ public class DefaultMessageService implements MessageService {
 	@Override
 	public ChatMessage sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException {
 		final Account account = getAccountByUser(user);
+		final Realm realm = account.getRealm();
 		final AccountChatService accountChatService = account.getAccountChatService();
 
 		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
@@ -115,6 +119,11 @@ public class DefaultMessageService implements MessageService {
 		message.setBody(chatMessage.getBody());
 		message.setTitle(chatMessage.getTitle());
 		message.setSendDate(DateTime.now());
+		if(realm.shouldWaitForDeliveryReport()) {
+			message.setState(sending);
+		} else {
+			message.setState(sent);
+		}
 
 		// user's message is read (he is an author)
 		final ChatMessageImpl result = Messages.newMessage(message, true);
@@ -124,7 +133,7 @@ public class DefaultMessageService implements MessageService {
 
 		result.setDirection(MessageDirection.out);
 
-		if (account.getRealm().notifySentMessagesImmediately()) {
+		if (realm.notifySentMessagesImmediately()) {
 			chatService.saveChatMessages(chat.getEntity(), Arrays.asList(result), false);
 		}
 

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
+import static org.solovyev.android.messenger.messages.MessageState.sending;
 import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
@@ -146,6 +147,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 			message.setTitle(title == null ? "" : title);
 			message.setSendDate(DateTime.now());
+			message.setState(sending);
 
 			final ChatMessageImpl chatMessage = newMessage(message, true);
 			chatMessage.setDirection(MessageDirection.out);

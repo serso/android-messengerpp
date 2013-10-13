@@ -33,6 +33,8 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 
 	private final boolean notifySentMessagesImmediately;
 
+	private final boolean shouldWaitForDeliveryReport;
+
 	@Nullable
 	private final Class<? extends BaseEditUserFragment<?>> createUserFragmentClass;
 
@@ -42,6 +44,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 							@Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
 							@Nonnull Class<? extends C> configurationClass,
 							boolean notifySentMessagesImmediately,
+							boolean shouldWaitForDeliveryReport,
 							@Nullable Class<? extends BaseEditUserFragment<?>> createUserFragmentClass) {
 		this.id = id;
 		this.nameResId = nameResId;
@@ -49,6 +52,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 		this.configurationFragmentClass = configurationFragmentClass;
 		this.configurationClass = configurationClass;
 		this.notifySentMessagesImmediately = notifySentMessagesImmediately;
+		this.shouldWaitForDeliveryReport = shouldWaitForDeliveryReport;
 		this.createUserFragmentClass = createUserFragmentClass;
 	}
 
@@ -114,6 +118,11 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	@Override
 	public final boolean notifySentMessagesImmediately() {
 		return notifySentMessagesImmediately;
+	}
+
+	@Override
+	public boolean shouldWaitForDeliveryReport() {
+		return shouldWaitForDeliveryReport;
 	}
 
 	@Override

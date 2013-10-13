@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.messages;
 import android.app.Activity;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 import static android.content.ClipData.newPlainText;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 
@@ -86,7 +89,20 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 		messageText.setText(Html.fromHtml(message.getBody()));
 
 		final TextView messageDate = viewTag.getViewById(R.id.mpp_li_message_date_textview);
-		messageDate.setText(Messages.getMessageTime(message));
+		final ImageView messageProgress = viewTag.getViewById(R.id.mpp_li_message_progress_imageview);
+		final AnimationDrawable animation = (AnimationDrawable) messageProgress.getDrawable();
+
+		if(message.getState() == MessageState.sending) {
+			messageDate.setVisibility(GONE);
+			messageProgress.setVisibility(VISIBLE);
+			messageDate.setText(null);
+			animation.start();
+		} else {
+			messageDate.setVisibility(VISIBLE);
+			messageProgress.setVisibility(GONE);
+			messageDate.setText(Messages.getMessageTime(message));
+			animation.stop();
+		}
 
 		final ImageView messageIcon = viewTag.getViewById(R.id.mpp_li_message_icon_imageview);
 		MessageBubbleViews.setMessageBubbleMessageIcon(context, message, messageIcon);

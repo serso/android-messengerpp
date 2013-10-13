@@ -28,6 +28,10 @@
 				a:id="@+id/mpp_li_message_body_textview"
 				style="?mpp_list_item_message_text" />
 
+			<ImageView
+				a:id="@+id/mpp_li_message_progress_imageview"
+				style="?mpp_list_item_message_progress"/>
+
 			<TextView
 				a:id="@+id/mpp_li_message_date_textview"
 				style="?mpp_list_item_message_date"
