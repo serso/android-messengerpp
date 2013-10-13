@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:a="http://schemas.android.com/apk/res/android">
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_20" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_21" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_22" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_23" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_24" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_25" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_26" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_27" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_28" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_29" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_30" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_31" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_32" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_33" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_34" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_35" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_36" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_37" />
+	<item
+		a:duration="33"
+		a:drawable="@drawable/mpp_ellipsis_38" />
+	<item
+		a:duration="500"
+		a:drawable="@drawable/mpp_ellipsis_39" />
+</animation-list>
