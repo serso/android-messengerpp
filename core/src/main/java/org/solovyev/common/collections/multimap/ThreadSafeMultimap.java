@@ -1,14 +1,9 @@
 package org.solovyev.common.collections.multimap;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.*;
 
 /**
  * User: serso
@@ -28,10 +23,10 @@ public final class ThreadSafeMultimap<K, V> {
 		this.map = map;
 	}
 
-	public static <K, V> ThreadSafeMultimap<K, V> newInstance() {
+	@Nonnull
+	public static <K, V> ThreadSafeMultimap<K, V> newThreadSafeMultimap() {
 		return new ThreadSafeMultimap<K, V>(new HashMap<K, List<V>>());
 	}
-
 
 	@Nonnull
 	public List<V> get(@Nonnull K key) {

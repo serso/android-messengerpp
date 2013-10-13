@@ -101,11 +101,11 @@ public class DefaultUserService implements UserService {
 
 	// key: user entity, value: list of user contacts
 	@Nonnull
-	private final ThreadSafeMultimap<Entity, User> userContactsCache = ThreadSafeMultimap.newInstance();
+	private final ThreadSafeMultimap<Entity, User> userContactsCache = ThreadSafeMultimap.newThreadSafeMultimap();
 
 	// key: user entity, value: list of user chats
 	@Nonnull
-	private final ThreadSafeMultimap<Entity, Chat> userChatsCache = ThreadSafeMultimap.newInstance();
+	private final ThreadSafeMultimap<Entity, Chat> userChatsCache = ThreadSafeMultimap.newThreadSafeMultimap();
 
 	// key: user entity, value: user object
 	@GuardedBy("usersCache")

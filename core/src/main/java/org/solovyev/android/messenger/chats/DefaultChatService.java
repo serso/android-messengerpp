@@ -121,7 +121,7 @@ public class DefaultChatService implements ChatService {
 
 	// key: chat id, value: list of participants
 	@Nonnull
-	private final ThreadSafeMultimap<Entity, User> chatParticipantsCache = ThreadSafeMultimap.newInstance();
+	private final ThreadSafeMultimap<Entity, User> chatParticipantsCache = ThreadSafeMultimap.newThreadSafeMultimap();
 
 	// key: chat id, value: last message
 	@Nonnull
