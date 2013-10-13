@@ -156,7 +156,9 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
-				App.getChatMessageService().removeMessage(data.getDataObject().getData());
+				final MessageListItem listItem = data.getDataObject();
+				final ChatMessage message = listItem.getData();
+				App.getChatService().removeMessage(message);
 			}
 		};
 

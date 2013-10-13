@@ -5,6 +5,7 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -113,6 +114,10 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	@Nullable
 	String getDraftMessage(@Nonnull Chat chat);
+
+	void removeMessage(@Nonnull Chat chat, @Nonnull Message message);
+
+	void removeMessage(@Nonnull Message message);
 
 
     /*

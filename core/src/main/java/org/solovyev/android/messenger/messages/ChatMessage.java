@@ -28,5 +28,9 @@ public interface ChatMessage extends Message {
 	ChatMessage cloneRead();
 
 	@Nonnull
+	@Override
+	ChatMessage cloneWithNewState(@Nonnull MessageState state);
+
+	@Nonnull
 	AProperties getProperties();
 }

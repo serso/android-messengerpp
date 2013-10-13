@@ -10,7 +10,10 @@ import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.AccountChatService;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.ChatMessageService;
@@ -31,6 +34,7 @@ import java.util.List;
 
 import static org.jivesoftware.smack.packet.Message.Type.error;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
+import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 
 public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration> {
 
@@ -167,16 +171,19 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nullable
-	private static ChatMessage toChatMessage(@Nonnull Message message, @Nonnull Account account) {
-		final String body = message.getBody();
+	private static ChatMessage toChatMessage(@Nonnull Message xmppMessage, @Nonnull Account account) {
+		final String body = xmppMessage.getBody();
 		if (!Strings.isEmpty(body)) {
-			final MessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
-			liteChatMessage.setBody(body);
-			liteChatMessage.setAuthor(account.newUserEntity(message.getFrom()));
-			liteChatMessage.setRecipient(account.newUserEntity(message.getTo()));
-			liteChatMessage.setSendDate(DateTime.now());
+			final MessageImpl message = newLiteMessage(generateEntity(account));
+			message.setBody(body);
+			final Entity author = account.newUserEntity(xmppMessage.getFrom());
+			message.setAuthor(author);
+			final Entity recipient = account.newUserEntity(xmppMessage.getTo());
+			message.setRecipient(recipient);
+			message.setChat(getChatService().getPrivateChatId(author, recipient));
+			message.setSendDate(DateTime.now());
 			// new message by default unread
-			return Messages.newMessage(liteChatMessage, false);
+			return Messages.newMessage(message, false);
 		} else {
 			return null;
 		}

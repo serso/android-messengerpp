@@ -232,9 +232,8 @@ public class DefaultUserService implements UserService {
 			userDao.update(user);
 		}
 
-		synchronized (usersCache) {
-			usersCache.put(user.getEntity(), user);
-		}
+		onUserChanged(user);
+
 		for (Account account : accountService.getAccounts()) {
 			if(account.getUser().equals(user)) {
 				account.setUser(user);
@@ -446,6 +445,7 @@ public class DefaultUserService implements UserService {
 		}
 
 		for (User updatedContact : result.getUpdatedObjects()) {
+			onUserChanged(updatedContact);
 			userEvents.add(UserEventType.changed.newEvent(updatedContact));
 		}
 
@@ -454,6 +454,14 @@ public class DefaultUserService implements UserService {
 		}
 
 		listeners.fireEvents(userEvents);
+	}
+
+	private void onUserChanged(@Nonnull User user) {
+		// user changed => update it in contacts cache
+		userContactsCache.update(new ObjectChangedMapUpdater<User>(user));
+		synchronized (usersCache) {
+			usersCache.put(user.getEntity(), user);
+		}
 	}
 
 	@Nonnull
@@ -606,15 +614,6 @@ public class DefaultUserService implements UserService {
 			final User eventUser = event.getUser();
 
 			switch (event.getType()) {
-				case added:
-					break;
-				case changed:
-					// user changed => update it in contacts cache
-					userContactsCache.update(new ObjectChangedMapUpdater<User>(eventUser));
-					synchronized (usersCache) {
-						usersCache.put(eventUser.getEntity(), eventUser);
-					}
-					break;
 				case contact_added:
 					// contact added => need to add to list of cached contacts
 					final User contact = event.getDataAsUser();
@@ -644,8 +643,6 @@ public class DefaultUserService implements UserService {
 					break;
 				case contacts_presence_changed:
 					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(event.getDataAsUsers()));
-					break;
-				case unread_messages_count_changed:
 					break;
 			}
 		}

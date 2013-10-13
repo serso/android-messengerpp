@@ -8,16 +8,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
@@ -35,20 +29,15 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.MutableAProperties;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 import static android.telephony.SmsMessage.createFromPdu;
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
-import static org.solovyev.android.messenger.entities.Entities.generateEntity;
-import static org.solovyev.android.messenger.entities.Entities.makeEntityId;
-import static org.solovyev.android.messenger.entities.Entities.newEntity;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_RECEIVED;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
+import static org.solovyev.android.messenger.entities.Entities.*;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
@@ -128,7 +117,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 				final List<ChatMessage> messages = new ArrayList<ChatMessage>(entry.getValue().size());
 				for (String message : entry.getValue()) {
-					final ChatMessage chatMessage = toChatMessage(message, account, contact, user);
+					final ChatMessage chatMessage = toChatMessage(message, account, contact, user, chat);
 					if (chatMessage != null) {
 						messages.add(chatMessage);
 					}
@@ -169,15 +158,16 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	}
 
 	@Nullable
-	private ChatMessage toChatMessage(@Nonnull String message, @Nonnull Account account, @Nonnull User from, @Nonnull User to) {
-		if (!isEmpty(message)) {
-			final MessageImpl liteChatMessage = Messages.newLiteMessage(generateEntity(account));
-			liteChatMessage.setBody(message);
-			liteChatMessage.setAuthor(from.getEntity());
-			liteChatMessage.setRecipient(to.getEntity());
-			liteChatMessage.setSendDate(DateTime.now());
+	private ChatMessage toChatMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull User to, @Nonnull Chat chat) {
+		if (!isEmpty(messageBody)) {
+			final MessageImpl message = Messages.newLiteMessage(generateEntity(account));
+			message.setChat(chat.getEntity());
+			message.setBody(messageBody);
+			message.setAuthor(from.getEntity());
+			message.setRecipient(to.getEntity());
+			message.setSendDate(DateTime.now());
 			// new message by default unread
-			return Messages.newMessage(liteChatMessage, false);
+			return Messages.newMessage(message, false);
 		} else {
 			return null;
 		}

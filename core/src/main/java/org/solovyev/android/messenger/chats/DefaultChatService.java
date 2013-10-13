@@ -16,10 +16,7 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.ChatMessageDao;
-import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
+import org.solovyev.android.messenger.messages.*;
 import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
 import org.solovyev.common.collections.multimap.ObjectRemovedUpdater;
@@ -157,10 +154,17 @@ public class DefaultChatService implements ChatService {
 		}
 
 		if (changed) {
-			fireEvent(ChatEventType.changed.newEvent(chat, null));
+			onChatChanged(chat);
 		}
 
 		return chat;
+	}
+
+	private void onChatChanged(@Nonnull Chat chat) {
+		synchronized (chatsById) {
+			chatsById.put(chat.getEntity(), chat);
+		}
+		fireEvent(ChatEventType.changed.newEvent(chat));
 	}
 
 	@Nonnull
@@ -355,7 +359,7 @@ public class DefaultChatService implements ChatService {
 		}
 
 		for (Chat updatedChat : mergeResult.getUpdatedObjects()) {
-			chatEvents.add(ChatEventType.changed.newEvent(updatedChat));
+			onChatChanged(updatedChat);
 		}
 
 		userService.fireEvents(userEvents);
@@ -472,14 +476,36 @@ public class DefaultChatService implements ChatService {
 			message = message.cloneRead();
 		}
 
-		final boolean changedReadStatus;
+		final boolean changed;
 		synchronized (lock) {
-			changedReadStatus = chatMessageDao.changeReadStatus(message.getId(), true);
+			changed = chatMessageDao.changeReadStatus(message.getId(), true);
 		}
 
-		if (changedReadStatus) {
+		if (changed) {
 			fireEvent(ChatEventType.message_changed.newEvent(chat, message));
 			fireEvent(ChatEventType.message_read.newEvent(chat, message));
+		}
+	}
+
+	@Override
+	public void removeMessage(@Nonnull Message message) {
+		final Chat chat = getChatById(message.getChat());
+		if (chat != null) {
+			removeMessage(chat, message);
+		}
+	}
+
+	@Override
+	public void removeMessage(@Nonnull Chat chat, @Nonnull Message message) {
+		message = message.cloneWithNewState(MessageState.removed);
+
+		final boolean changed;
+		synchronized (lock) {
+			changed = chatMessageDao.changeMessageState(message.getId(), message.getState());
+		}
+
+		if (changed) {
+			fireEvent(ChatEventType.message_removed.newEvent(chat, message.getId()));
 		}
 	}
 
@@ -746,13 +772,6 @@ public class DefaultChatService implements ChatService {
 			final Object data = event.getData();
 
 			switch (event.getType()) {
-				case added:
-					break;
-				case changed:
-					synchronized (chatsById) {
-						chatsById.put(eventChat.getEntity(), eventChat);
-					}
-					break;
 				case participant_added:
 					// participant added => need to add to list of cached participants
 					if (data instanceof User) {
@@ -766,30 +785,6 @@ public class DefaultChatService implements ChatService {
 						final User participant = ((User) data);
 						chatParticipantsCache.update(eventChat.getEntity(), new ObjectRemovedUpdater<User>(participant));
 					}
-					break;
-				case message_added:
-					break;
-				case message_added_batch:
-					break;
-				case message_removed:
-					break;
-				case message_changed:
-					synchronized (chatsById) {
-						chatsById.put(eventChat.getEntity(), eventChat);
-					}
-					break;
-				case last_message_changed:
-					synchronized (chatsById) {
-						chatsById.put(eventChat.getEntity(), eventChat);
-					}
-					break;
-				case user_starts_typing:
-					break;
-				case user_stops_typing:
-					break;
-				case unread_message_count_changed:
-					break;
-				case message_read:
 					break;
 			}
 

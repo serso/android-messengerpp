@@ -1,29 +1,26 @@
 package org.solovyev.android.messenger.chats;
 
 import android.support.v4.app.Fragment;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import roboguice.event.EventListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
-import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
+import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.android.messenger.users.ContactFragment;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.ContactsInfoFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Builder;
+import roboguice.event.EventListener;
 
-import com.actionbarsherlock.app.ActionBar;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 
@@ -55,18 +52,18 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 
 		switch (type) {
 			case chat_open_requested:
-				handleChatOpenRequestedEvent(chat);
+				onChatOpenRequestedEvent(chat);
 				break;
 			case chat_clicked:
-				handleChatClickedEvent(chat);
+				onChatClickedEvent(chat);
 				break;
 			case chat_message_read:
-				handleMessageReadEvent(chat, event.getDataAsChatMessage());
+				onMessageReadEvent(chat, event.getDataAsChatMessage());
 				break;
 		}
 	}
 
-	private void handleChatOpenRequestedEvent(@Nonnull final Chat chat) {
+	private void onChatOpenRequestedEvent(@Nonnull final Chat chat) {
 		final MultiPaneFragmentManager fragmentService = activity.getMultiPaneFragmentManager();
 		if (activity.getMultiPaneManager().isDualPane(activity)) {
 			if (!fragmentService.isFragmentShown(CHATS_FRAGMENT_TAG)) {
@@ -92,11 +89,11 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		}
 	}
 
-	private void handleMessageReadEvent(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+	private void onMessageReadEvent(@Nonnull Chat chat, @Nonnull ChatMessage message) {
 		chatService.onChatMessageRead(chat, message);
 	}
 
-	private void handleChatClickedEvent(@Nonnull final Chat chat) {
+	private void onChatClickedEvent(@Nonnull final Chat chat) {
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 
 		if (activity.isDualPane()) {

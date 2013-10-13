@@ -33,6 +33,7 @@ import java.util.NoSuchElementException;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.find;
 import static org.solovyev.android.db.AndroidDbUtils.*;
+import static org.solovyev.android.messenger.messages.MessageState.removed;
 
 /**
  * User: serso
@@ -100,7 +101,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 	@Override
 	public boolean changeReadStatus(@Nonnull String messageId, boolean read) {
-		final Long rows = doDbExec(getSqliteOpenHelper(), new ReadMessageStatusUpdater(messageId, read));
+		final Long rows = doDbExec(getSqliteOpenHelper(), new ReadStatusUpdater(messageId, read));
+		return rows != 0;
+	}
+
+	@Override
+	public boolean changeMessageState(@Nonnull String messageId, @Nonnull MessageState state) {
+		final Long rows = doDbExec(getSqliteOpenHelper(), new StateUpdater(messageId, state));
 		return rows != 0;
 	}
 
@@ -197,7 +204,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("messages", null, "chat_id = ? ", new String[]{String.valueOf(chatId)}, null, null, null);
+			return db.query("messages", null, "chat_id = ? and state <> ?", new String[]{chatId, removed.name()}, null, null, null);
 		}
 
 		@Nonnull
@@ -309,13 +316,13 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("messages", null, "chat_id = ? ", new String[]{chatId}, null, null, null);
+			return db.query("messages", null, "chat_id = ? and state <> ?", new String[]{chatId, removed.name()}, null, null, null);
 		}
 
 		@Nonnull
 		@Override
 		public List<ChatMessage> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService)).convert(cursor);
+			return new ListMapper<ChatMessage>(new MessageMapper(this.userService)).convert(cursor);
 		}
 	}
 
@@ -345,7 +352,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public List<ChatMessage> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<ChatMessage>(new ChatMessageMapper(this.userService)).convert(cursor);
+			return new ListMapper<ChatMessage>(new MessageMapper(this.userService)).convert(cursor);
 		}
 	}
 
@@ -362,7 +369,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery("select id from messages where chat_id = ? order by send_time asc", new String[]{chatId});
+			return db.rawQuery("select id from messages where chat_id = ? and state <> ? order by send_time asc", new String[]{chatId, removed.name()});
 		}
 
 		@Nonnull
@@ -389,7 +396,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery("select id from messages where chat_id = ? order by send_time desc", new String[]{chatId});
+			return db.rawQuery("select id from messages where chat_id = ? and state <> ? order by send_time desc", new String[]{chatId, removed.name()});
 		}
 
 		@Nonnull
@@ -436,7 +443,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery("select count(*) from messages where read = 0", null);
+			return db.rawQuery("select count(*) from messages where read = 0 and and state <> ?", new String[]{removed.name()});
 		}
 
 		@Nonnull
@@ -450,14 +457,14 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		}
 	}
 
-	private static class ReadMessageStatusUpdater implements DbExec {
+	private static class ReadStatusUpdater implements DbExec {
 
 		@Nonnull
 		private final String messageId;
 
 		private final boolean read;
 
-		private ReadMessageStatusUpdater(@Nonnull String messageId, boolean read) {
+		private ReadStatusUpdater(@Nonnull String messageId, boolean read) {
 			this.messageId = messageId;
 			this.read = read;
 		}
@@ -468,6 +475,27 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 			final int newReadValue = read ? 1 : 0;
 			values.put("read", newReadValue);
 			return db.update("messages", values, "id = ? and read <> ?", new String[]{messageId, String.valueOf(newReadValue)});
+		}
+	}
+
+	private static class StateUpdater implements DbExec {
+
+		@Nonnull
+		private final String messageId;
+
+		@Nonnull
+		private final MessageState state;
+
+		private StateUpdater(@Nonnull String messageId, @Nonnull MessageState state) {
+			this.messageId = messageId;
+			this.state = state;
+		}
+
+		@Override
+		public long exec(@Nonnull SQLiteDatabase db) {
+			final ContentValues values = new ContentValues();
+			values.put("state", state.name());
+			return db.update("messages", values, "id = ?", new String[]{messageId});
 		}
 	}
 }

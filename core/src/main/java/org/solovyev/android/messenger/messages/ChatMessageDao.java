@@ -35,6 +35,7 @@ public interface ChatMessageDao {
 	int getUnreadMessagesCount();
 
 	boolean changeReadStatus(@Nonnull String messageId, boolean read);
+	boolean changeMessageState(@Nonnull String messageId, @Nonnull MessageState state);
 
 	void deleteAll();
 }

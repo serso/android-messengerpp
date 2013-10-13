@@ -49,4 +49,10 @@ public interface Message extends Identifiable {
 
 	@Nonnull
 	Message clone();
+
+	@Nonnull
+	Message cloneWithNewState(@Nonnull MessageState state);
+
+	@Nonnull
+	Entity getChat();
 }

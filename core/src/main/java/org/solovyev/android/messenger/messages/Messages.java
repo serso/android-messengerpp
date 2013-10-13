@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -18,6 +17,7 @@ import java.util.TimeZone;
 import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.shortDate;
 import static org.joda.time.format.DateTimeFormat.shortTime;
+import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 
 /**
  * User: serso
@@ -81,7 +81,7 @@ public final class Messages {
 
 	@Nonnull
 	public static Message newEmptyMessage(@Nonnull String messageId) {
-		return MessageImpl.newMessage(Entities.newEntityFromEntityId(messageId));
+		return MessageImpl.newMessage(newEntityFromEntityId(messageId));
 	}
 
 	@Nonnull

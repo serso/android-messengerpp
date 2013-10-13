@@ -13,13 +13,16 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+
+import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 /**
  * User: serso
@@ -143,25 +146,26 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 			if (eventChat.equals(chat)) {
 				final Entity user = (Entity) data;
 				assert user != null;
-				onTypingEvent(type, user);
+				onTypingEvent(type, user, chat);
 			}
 		}
 	}
 
-	private void onTypingEvent(@Nonnull ChatEventType type, @Nonnull Entity user) {
+	private void onTypingEvent(@Nonnull ChatEventType type, @Nonnull Entity user, @Nonnull Chat chat) {
 		MessageListItem listItem = userTypingListItems.get(user);
 		if (type == ChatEventType.user_starts_typing) {
 			if (listItem == null) {
 				// 'Typing' message is not shown yet => show it
 
 				// create fake message
-				final MessageImpl liteChatMessage = MessageImpl.newMessage(Entities.newEntityFromEntityId(user.getEntityId() + "_typing"));
-				liteChatMessage.setSendDate(DateTime.now());
-				liteChatMessage.setAuthor(user);
-				liteChatMessage.setBody(getContext().getString(R.string.mpp_user_is_typing));
+				final MessageImpl message = newLiteMessage(newEntityFromEntityId(user.getEntityId() + "_typing"));
+				message.setChat(chat.getEntity());
+				message.setSendDate(DateTime.now());
+				message.setAuthor(user);
+				message.setBody(getContext().getString(R.string.mpp_user_is_typing));
 
 				// create fake list item
-				listItem = createListItem(Messages.newMessage(liteChatMessage, true));
+				listItem = createListItem(newMessage(message, true));
 				addListItem(listItem);
 
 				// add list item to the map

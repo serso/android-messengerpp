@@ -75,6 +75,20 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 	@Nonnull
 	@Override
+	public ChatMessage cloneWithNewState(@Nonnull MessageState state) {
+		final ChatMessageImpl clone = clone();
+		clone.message = clone.message.cloneWithNewState(state);
+		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public Entity getChat() {
+		return message.getChat();
+	}
+
+	@Nonnull
+	@Override
 	public ChatMessageImpl clone() {
 		final ChatMessageImpl clone = (ChatMessageImpl) super.clone();
 

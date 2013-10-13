@@ -10,7 +10,10 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.AccountChatService;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
@@ -22,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
-import static org.solovyev.android.messenger.messages.MessageImpl.newMessage;
+import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 
 /**
  * User: serso
@@ -101,8 +104,9 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final MessageImpl message = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
+		final MessageImpl message = newLiteMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
 
+		message.setChat(chat.getEntity());
 		message.setAuthor(user);
 		if (chat.isPrivate()) {
 			final Entity secondUser = chat.getSecondUser();

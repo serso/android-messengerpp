@@ -41,6 +41,9 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 	@Nonnull
 	private MessageState state = MessageState.created;
 
+	@Nonnull
+	private Entity chat;
+
 	private MessageImpl(@Nonnull Entity entity) {
 		super(entity);
 	}
@@ -115,11 +118,20 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 		final MessageImpl clone = (MessageImpl) super.clone();
 
 		clone.author = this.author.clone();
+		clone.chat = this.chat.clone();
 
 		if (this.recipient != null) {
 			clone.recipient = this.recipient.clone();
 		}
 
+		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public Message cloneWithNewState(@Nonnull MessageState state) {
+		final MessageImpl clone = clone();
+		clone.state = state;
 		return clone;
 	}
 
@@ -154,5 +166,15 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 
 	public void setState(@Nonnull MessageState state) {
 		this.state = state;
+	}
+
+	@Override
+	@Nonnull
+	public Entity getChat() {
+		return chat;
+	}
+
+	public void setChat(@Nonnull Entity chat) {
+		this.chat = chat;
 	}
 }
