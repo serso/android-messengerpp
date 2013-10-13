@@ -33,7 +33,7 @@ import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
  * Time: 7:50 PM
  */
 @Singleton
-public class DefaultChatMessageService implements ChatMessageService {
+public class DefaultMessageService implements MessageService {
 
     /*
 	**********************************************************************
@@ -72,7 +72,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 	private final PersistenceLock lock;
 
 	@Inject
-	public DefaultChatMessageService(@Nonnull PersistenceLock lock) {
+	public DefaultMessageService(@Nonnull PersistenceLock lock) {
 		this.lock = lock;
 	}
 
@@ -82,7 +82,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getChatMessages(@Nonnull Entity accountChat) {
+	public List<ChatMessage> getMessages(@Nonnull Entity accountChat) {
 		// todo serso: think about lock
 		/*synchronized (lock) {*/
 			return chatMessageDao.readMessages(accountChat.getEntityId());
@@ -98,7 +98,7 @@ public class DefaultChatMessageService implements ChatMessageService {
 
 	@Nullable
 	@Override
-	public ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException {
+	public ChatMessage sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException {
 		final Account account = getAccountByUser(user);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
@@ -136,11 +136,6 @@ public class DefaultChatMessageService implements ChatMessageService {
 		synchronized (lock) {
 			return this.chatMessageDao.getUnreadMessagesCount();
 		}
-	}
-
-	@Override
-	public void removeMessage(@Nonnull ChatMessage message) {
-		// todo serso: implement
 	}
 
 	@Nonnull

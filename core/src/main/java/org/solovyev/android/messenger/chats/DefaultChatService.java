@@ -85,7 +85,7 @@ public class DefaultChatService implements ChatService {
 
 	@Inject
 	@Nonnull
-	private ChatMessageService chatMessageService;
+	private MessageService messageService;
 
 	@Inject
 	@Nonnull
@@ -573,7 +573,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
-		final Integer offset = getChatMessageService().getChatMessages(chat).size();
+		final Integer offset = getMessageService().getMessages(chat).size();
 
 		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
 		saveChatMessages(chat, messages, false);
@@ -648,8 +648,8 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Nonnull
-	private ChatMessageService getChatMessageService() {
-		return this.chatMessageService;
+	private MessageService getMessageService() {
+		return this.messageService;
 	}
 
 	@Nullable

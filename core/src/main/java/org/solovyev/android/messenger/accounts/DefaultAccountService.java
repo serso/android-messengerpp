@@ -12,7 +12,7 @@ import org.solovyev.android.messenger.Configuration;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
-import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -70,7 +70,7 @@ public class DefaultAccountService implements AccountService {
 
 	@Inject
 	@Nonnull
-	private ChatMessageService messageService;
+	private MessageService messageService;
 
 	@Nonnull
 	private final Object lock;

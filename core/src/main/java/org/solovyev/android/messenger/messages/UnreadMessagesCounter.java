@@ -64,7 +64,7 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent> {
 
 	@Inject
 	@Nonnull
-	private ChatMessageService chatMessageService;
+	private MessageService messageService;
 
 	@Inject
 	@Nonnull

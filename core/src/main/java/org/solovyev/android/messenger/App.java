@@ -10,7 +10,7 @@ import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -39,7 +39,7 @@ public final class App {
 
 	@Inject
 	@Nonnull
-	private ChatMessageService chatMessageService;
+	private MessageService messageService;
 
 	@Inject
 	@Nonnull
@@ -106,7 +106,7 @@ public final class App {
 		accountService.init();
 		userService.init();
 		chatService.init();
-		chatMessageService.init();
+		messageService.init();
 		syncService.init();
 		unreadMessagesCounter.init();
 
@@ -145,8 +145,8 @@ public final class App {
 	}
 
 	@Nonnull
-	public static ChatMessageService getChatMessageService() {
-		return instance.chatMessageService;
+	public static MessageService getChatMessageService() {
+		return instance.messageService;
 	}
 
 	@Nonnull
@@ -260,8 +260,8 @@ public final class App {
 		this.application = application;
 	}
 
-	public void setChatMessageService(@Nonnull ChatMessageService chatMessageService) {
-		this.chatMessageService = chatMessageService;
+	public void setMessageService(@Nonnull MessageService messageService) {
+		this.messageService = messageService;
 	}
 
 	public void setUserService(@Nonnull UserService userService) {

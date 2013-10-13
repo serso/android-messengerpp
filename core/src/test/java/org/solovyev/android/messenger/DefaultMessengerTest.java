@@ -10,7 +10,7 @@ import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.messages.ChatMessageImpl;
-import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -52,7 +52,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 
 	@Nonnull
 	@Inject
-	private ChatMessageService messageService;
+	private MessageService messageService;
 
 	@Nonnull
 	@Inject

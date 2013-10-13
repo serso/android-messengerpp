@@ -16,7 +16,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.realms.Realm;
@@ -128,7 +128,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	private static ChatMessageService getChatMessageService() {
+	private static MessageService getChatMessageService() {
 		return App.getChatMessageService();
 	}
 

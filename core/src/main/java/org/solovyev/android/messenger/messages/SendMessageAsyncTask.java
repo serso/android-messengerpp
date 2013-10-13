@@ -74,7 +74,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 	}
 
 	@Nonnull
-	private static ChatMessageService getChatMessageService() {
+	private static MessageService getChatMessageService() {
 		return App.getChatMessageService();
 	}
 
@@ -155,7 +155,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 			account.getAccountChatService().beforeSendChatMessage(chat, recipient, chatMessage);
 
-			return getChatMessageService().sendChatMessage(author.getEntity(), chat, chatMessage);
+			return getChatMessageService().sendMessage(author.getEntity(), chat, chatMessage);
 		}
 
 	}

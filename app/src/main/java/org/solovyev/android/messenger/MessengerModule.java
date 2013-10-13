@@ -23,10 +23,9 @@ import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
-import org.solovyev.android.messenger.messages.ChatMessageDao;
-import org.solovyev.android.messenger.messages.ChatMessageService;
-import org.solovyev.android.messenger.messages.DefaultChatMessageService;
-import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
+import org.solovyev.android.messenger.messages.*;
+import org.solovyev.android.messenger.messages.DefaultMessageService;
+import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.notifications.DefaultNotificationService;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.DefaultRealmService;
@@ -85,7 +84,7 @@ public class MessengerModule extends AbstractModule {
 		bind(ChatService.class).to(DefaultChatService.class);
 
 		bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
-		bind(ChatMessageService.class).to(DefaultChatMessageService.class);
+		bind(MessageService.class).to(DefaultMessageService.class);
 
 		bind(SyncService.class).to(DefaultSyncService.class);
 		bind(RegistrationService.class).to(DummyRegistrationService.class);

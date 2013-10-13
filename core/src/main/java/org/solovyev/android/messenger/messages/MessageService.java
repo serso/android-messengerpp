@@ -20,22 +20,21 @@ import java.util.List;
  * Implementation of this class must provide thread safeness
  */
 @ThreadSafe
-public interface ChatMessageService {
+public interface MessageService {
 
 	void init();
 
 	@Nonnull
-	List<ChatMessage> getChatMessages(@Nonnull Entity accountChat);
+	List<ChatMessage> getMessages(@Nonnull Entity accountChat);
 
 	void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView);
 
 	@Nullable
-	ChatMessage sendChatMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException;
+	ChatMessage sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException;
 
 	/**
 	 * @return total number of unread messages in the application
 	 */
 	int getUnreadMessagesCount();
 
-	void removeMessage(@Nonnull ChatMessage message);
 }

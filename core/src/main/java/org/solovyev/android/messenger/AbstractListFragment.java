@@ -26,7 +26,7 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.FragmentUiEventType;
-import org.solovyev.android.messenger.messages.ChatMessageService;
+import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
@@ -50,7 +50,6 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
-import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.newTag;
 
 /**
@@ -104,7 +103,7 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 
 	@Inject
 	@Nonnull
-	private ChatMessageService chatMessageService;
+	private MessageService messageService;
 
 	@Inject
 	@Nonnull
@@ -214,8 +213,8 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 	}
 
 	@Nonnull
-	protected ChatMessageService getChatMessageService() {
-		return chatMessageService;
+	protected MessageService getMessageService() {
+		return messageService;
 	}
 
 	@Nonnull
