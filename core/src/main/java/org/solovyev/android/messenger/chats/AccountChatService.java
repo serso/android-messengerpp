@@ -31,7 +31,7 @@ public interface AccountChatService {
 	List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	/**
-	 * Method sends message to the realm and, if possible, returns message is. If message id could not be returned
+	 * Method sends message to the account and, if possible, returns message id. If message id could not be returned
 	 * (due, for example, to the asynchronous nature of realm) - null is returned (in that case realm connection must receive message id)
 	 *
 	 * @param chat    chat in which message was created
