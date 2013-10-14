@@ -103,9 +103,8 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	private final ThreadSafeMultimap<Entity, User> userContactsCache = ThreadSafeMultimap.newThreadSafeMultimap();
 
-	// key: user entity, value: list of user chats
 	@Nonnull
-	private final ThreadSafeMultimap<Entity, Chat> userChatsCache = ThreadSafeMultimap.newThreadSafeMultimap();
+	private final UserChats userChats = new UserChats();
 
 	// key: user entity, value: user object
 	@GuardedBy("usersCache")
@@ -121,7 +120,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void init() {
-		chatService.addListener(new ChatEventListener());
+		userChats.init();
 	}
 
 	@Nonnull
@@ -210,13 +209,13 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> getUserChats(@Nonnull Entity user) {
-		List<Chat> result = userChatsCache.get(user);
+		List<Chat> result = userChats.getChats(user);
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
 				result = chatService.loadUserChats(user);
 			}
-			userChatsCache.update(user, new WholeListUpdater<Chat>(result));
+			userChats.updateChats(user, result);
 		}
 
 		return result;
@@ -613,6 +612,8 @@ public class DefaultUserService implements UserService {
 		public void onEvent(@Nonnull UserEvent event) {
 			final User eventUser = event.getUser();
 
+			userChats.onEvent(event);
+
 			switch (event.getType()) {
 				case contact_added:
 					// contact added => need to add to list of cached contacts
@@ -629,18 +630,6 @@ public class DefaultUserService implements UserService {
 					final String removedContactId = event.getDataAsUserId();
 					userContactsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<User>(removedContactId));
 					break;
-				case chat_added:
-					final Chat chat = event.getDataAsChat();
-					userChatsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<Chat>(chat));
-					break;
-				case chat_added_batch:
-					final List<Chat> chats = event.getDataAsChats();
-					userChatsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<Chat>(chats));
-					break;
-				case chat_removed:
-					final Chat removedChat = event.getDataAsChat();
-					userChatsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(removedChat.getId()));
-					break;
 				case contacts_presence_changed:
 					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(event.getDataAsUsers()));
 					break;
@@ -649,24 +638,6 @@ public class DefaultUserService implements UserService {
 
 	}
 
-	private final class ChatEventListener extends AbstractJEventListener<ChatEvent> {
-
-		private ChatEventListener() {
-			super(ChatEvent.class);
-		}
-
-		@Override
-		public void onEvent(@Nonnull ChatEvent event) {
-			final Chat eventChat = event.getChat();
-
-			switch (event.getType()) {
-				case changed:
-					userChatsCache.update(new ObjectChangedMapUpdater<Chat>(eventChat));
-					break;
-			}
-		}
-
-	}
     /*
     **********************************************************************
     *
