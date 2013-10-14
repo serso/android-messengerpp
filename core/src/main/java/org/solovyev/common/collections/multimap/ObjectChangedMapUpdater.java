@@ -6,9 +6,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.entities.Entity;
-
-public class ObjectChangedMapUpdater<V> implements ThreadSafeMultimap.MapUpdater<Entity, V> {
+// NOTE: we don't copy the whole map, just update VALUE in list, because it's atomic operation
+public class ObjectChangedMapUpdater<K, V> implements ThreadSafeMultimap.MapUpdater<K, V> {
 
 	@Nonnull
 	private final V changedObject;
@@ -19,13 +18,16 @@ public class ObjectChangedMapUpdater<V> implements ThreadSafeMultimap.MapUpdater
 
 	@Nullable
 	@Override
-	public Map<Entity, List<V>> update(@Nonnull Map<Entity, List<V>> map) {
-		final Map<Entity, List<V>> result = ThreadSafeMultimap.copy(map);
+	public Map<K, List<V>> update(@Nonnull Map<K, List<V>> map) {
+		Map<K, List<V>> result = null;
 
-		for (List<V> objects : result.values()) {
+		for (List<V> objects : map.values()) {
 			for (int i = 0; i < objects.size(); i++) {
 				final V object = objects.get(i);
 				if (object.equals(changedObject)) {
+					if(result == null) {
+						result = map;
+					}
 					objects.set(i, changedObject);
 				}
 			}

@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.Threads;
@@ -29,11 +28,13 @@ import org.solovyev.common.listeners.Listeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
+
 import java.util.*;
 import java.util.concurrent.Executor;
 
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
@@ -104,10 +105,8 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	private final UserChats userChats = new UserChats();
 
-	// key: user entity, value: user object
-	@GuardedBy("usersCache")
 	@Nonnull
-	private final Map<Entity, User> usersCache = new HashMap<Entity, User>();
+	private final UserCache userCache = new UserCache();
 
 	@Inject
 	public DefaultUserService(@Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
@@ -132,11 +131,7 @@ public class DefaultUserService implements UserService {
 	public User getUserById(@Nonnull Entity user, boolean tryFindInAccount) {
 		boolean saved = true;
 
-		User result;
-
-		synchronized (usersCache) {
-			result = usersCache.get(user);
-		}
+		User result = userCache.get(user);
 
 		if (result == null) {
 
@@ -164,9 +159,7 @@ public class DefaultUserService implements UserService {
 				result = Users.newEmptyUser(user);
 			} else {
 				// user was loaded either from dao or from API => cache
-				synchronized (usersCache) {
-					usersCache.put(user, result);
-				}
+				userCache.put(result);
 			}
 
 			if (!saved) {
@@ -229,8 +222,6 @@ public class DefaultUserService implements UserService {
 			userDao.update(user);
 		}
 
-		onUserChanged(user);
-
 		for (Account account : accountService.getAccounts()) {
 			if(account.getUser().equals(user)) {
 				account.setUser(user);
@@ -269,7 +260,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<User> getOnlineUserContacts(@Nonnull Entity user) {
-		return Lists.newArrayList(Iterables.filter(getUserContacts(user), new Predicate<User>() {
+		return newArrayList(filter(getUserContacts(user), new Predicate<User>() {
 			@Override
 			public boolean apply(@javax.annotation.Nullable User contact) {
 				return contact != null && contact.isOnline();
@@ -442,7 +433,6 @@ public class DefaultUserService implements UserService {
 		}
 
 		for (User updatedContact : result.getUpdatedObjects()) {
-			onUserChanged(updatedContact);
 			userEvents.add(UserEventType.changed.newEvent(updatedContact));
 		}
 
@@ -453,20 +443,12 @@ public class DefaultUserService implements UserService {
 		listeners.fireEvents(userEvents);
 	}
 
-	private void onUserChanged(@Nonnull User user) {
-		// user changed => update it in contacts cache
-		userContacts.onContactChanged(user);
-		synchronized (usersCache) {
-			usersCache.put(user.getEntity(), user);
-		}
-	}
-
 	@Nonnull
 	@Override
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
 		final List<ApiChat> apiChats = getAccountByEntity(user).getAccountChatService().getChats(user.getAccountEntityId());
 
-		final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
+		final List<Chat> chats = newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
 			@Override
 			public Chat apply(@javax.annotation.Nullable ApiChat input) {
 				assert input != null;
@@ -572,6 +554,19 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
+	public void fireEvents(@Nonnull Collection<UserEvent> userEvents) {
+		this.listeners.fireEvents(userEvents);
+	}
+
+	/*
+	**********************************************************************
+	*
+	*                           UNREAD MESSAGES
+	*
+	**********************************************************************
+	*/
+
+	@Override
 	public void onUnreadMessagesCountChanged(@Nonnull Entity contactEntity, @Nonnull Integer unreadMessagesCount) {
 		final User contact = getUserById(contactEntity);
 		this.listeners.fireEvent(UserEventType.unread_messages_count_changed.newEvent(contact, unreadMessagesCount));
@@ -595,10 +590,13 @@ public class DefaultUserService implements UserService {
 		}
 	}
 
-	@Override
-	public void fireEvents(@Nonnull Collection<UserEvent> userEvents) {
-		this.listeners.fireEvents(userEvents);
-	}
+	/*
+	**********************************************************************
+	*
+	*                           STATIC/INNER
+	*
+	**********************************************************************
+	*/
 
 	private final class UserEventListener extends AbstractJEventListener<UserEvent> {
 
@@ -608,8 +606,9 @@ public class DefaultUserService implements UserService {
 
 		@Override
 		public void onEvent(@Nonnull UserEvent event) {
-			userChats.onEvent(event);
+			userCache.onEvent(event);
 			userContacts.onEvent(event);
+			userChats.onEvent(event);
 		}
 	}
 }

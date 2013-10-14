@@ -16,7 +16,6 @@ import org.solovyev.common.collections.multimap.ObjectsAddedUpdater;
 import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
 import org.solovyev.common.collections.multimap.WholeListUpdater;
 import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
 
 import static org.solovyev.common.collections.multimap.ThreadSafeMultimap.newThreadSafeMultimap;
 
@@ -69,7 +68,7 @@ class UserChats {
 		public void onEvent(@Nonnull ChatEvent event) {
 			switch (event.getType()) {
 				case changed:
-					chats.update(new ObjectChangedMapUpdater<Chat>(event.getChat()));
+					chats.update(new ObjectChangedMapUpdater<Entity, Chat>(event.getChat()));
 					break;
 
 			}

@@ -25,7 +25,12 @@ public final class ThreadSafeMultimap<K, V> {
 
 	@Nonnull
 	public static <K, V> ThreadSafeMultimap<K, V> newThreadSafeMultimap() {
-		return new ThreadSafeMultimap<K, V>(new HashMap<K, List<V>>());
+		return newThreadSafeMultimap(new HashMap<K, List<V>>());
+	}
+
+	@Nonnull
+	public static <K, V> ThreadSafeMultimap<K, V> newThreadSafeMultimap(@Nonnull Map<K, List<V>> map) {
+		return new ThreadSafeMultimap<K, V>(map);
 	}
 
 	@Nonnull
@@ -58,7 +63,13 @@ public final class ThreadSafeMultimap<K, V> {
 		}
 	}
 
-    /*
+	// for tests
+	@Nonnull
+	Map<K, List<V>> asMap() {
+		return map;
+	}
+
+	/*
 	**********************************************************************
     *
     *                           STATIC/INNER CLASSES

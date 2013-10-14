@@ -18,13 +18,14 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import static com.google.common.collect.Iterables.find;
+import static org.solovyev.common.collections.multimap.ThreadSafeMultimap.newThreadSafeMultimap;
 
 @ThreadSafe
 class UserContacts {
 
 	// key: user entity, value: list of user contacts
 	@Nonnull
-	private final ThreadSafeMultimap<Entity, User> contacts = ThreadSafeMultimap.newThreadSafeMultimap();
+	private final ThreadSafeMultimap<Entity, User> contacts = newThreadSafeMultimap();
 
 	@Nonnull
 	public List<User> getContacts(@Nonnull Entity user) {
@@ -35,14 +36,13 @@ class UserContacts {
 		this.contacts.update(user, new WholeListUpdater<User>(contacts));
 	}
 
-	public void onContactChanged(@Nonnull User contact) {
-		this.contacts.update(new ObjectChangedMapUpdater<User>(contact));
-	}
-
 	public void onEvent(@Nonnull UserEvent event) {
 		final User user = event.getUser();
 
 		switch (event.getType()) {
+			case changed:
+				this.contacts.update(new ObjectChangedMapUpdater<Entity, User>(user));
+				break;
 			case contact_added:
 				// contact added => need to add to list of cached contacts
 				final User contact = event.getDataAsUser();
@@ -87,7 +87,6 @@ class UserContacts {
 				});
 
 				if (index >= 0) {
-					// contact found => update status locally (persistence is not updated at status change is too frequent event)
 					final List<User> result = ThreadSafeMultimap.copy(values);
 					result.set(index, result.get(index).cloneWithNewStatus(contact.isOnline()));
 					return result;
