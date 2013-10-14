@@ -128,8 +128,6 @@ public class DefaultMessageService implements MessageService {
 		// user's message is read (he is an author)
 		final MutableChatMessage result = Messages.newChatMessage(message, true);
 
-		result.setDirection(MessageDirection.out);
-
 		if (realm.notifySentMessagesImmediately()) {
 			chatService.saveChatMessages(chat.getEntity(), Arrays.asList(result), false);
 		}

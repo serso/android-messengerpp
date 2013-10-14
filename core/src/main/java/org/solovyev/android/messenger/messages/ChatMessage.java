@@ -16,9 +16,6 @@ public interface ChatMessage extends Message {
 	boolean isRead();
 
 	@Nonnull
-	MessageDirection getDirection();
-
-	@Nonnull
 	ChatMessage clone();
 
 	@Nonnull

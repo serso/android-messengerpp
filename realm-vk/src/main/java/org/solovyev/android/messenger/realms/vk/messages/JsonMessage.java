@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.solovyev.android.messenger.messages.MessageState.delivered;
+import static org.solovyev.android.messenger.messages.MessageState.received;
+import static org.solovyev.android.messenger.messages.Messages.newChatMessage;
+
 /**
  * User: serso
  * Date: 6/6/12
@@ -150,6 +154,12 @@ public class JsonMessage {
 			}
 		}
 
+		if(getNotNullMessageDirection() == MessageDirection.in) {
+			result.setState(received);
+		} else {
+			result.setState(delivered);
+		}
+
 		DateTime sendDate;
 		try {
 			sendDate = new DateTime(Long.valueOf(date) * 1000L);
@@ -170,10 +180,7 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final MutableChatMessage result = Messages.newChatMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
-		result.setDirection(getNotNullMessageDirection());
-
-		return result;
+		return newChatMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
 	}
 
 	@Nonnull

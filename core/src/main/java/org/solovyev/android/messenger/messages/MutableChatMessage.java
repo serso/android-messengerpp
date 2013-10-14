@@ -16,5 +16,4 @@ public interface MutableChatMessage extends ChatMessage {
 	@Nonnull
 	MutableAProperties getProperties();
 
-	void setDirection(@Nonnull MessageDirection direction);
 }

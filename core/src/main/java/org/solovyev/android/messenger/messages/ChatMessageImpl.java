@@ -27,9 +27,6 @@ class ChatMessageImpl extends JObject implements MutableChatMessage {
 	private boolean read = false;
 
 	@Nonnull
-	private MessageDirection direction = MessageDirection.in;
-
-	@Nonnull
 	private MutableAProperties properties = newProperties(Collections.<AProperty>emptyList());
 
 	private ChatMessageImpl(@Nonnull Message message) {
@@ -46,12 +43,6 @@ class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 	public boolean isRead() {
 		return read;
-	}
-
-	@Nonnull
-	@Override
-	public MessageDirection getDirection() {
-		return this.direction;
 	}
 
 	@Nonnull
@@ -92,11 +83,6 @@ class ChatMessageImpl extends JObject implements MutableChatMessage {
 	@Nonnull
 	public MutableAProperties getProperties() {
 		return properties;
-	}
-
-	@Override
-	public void setDirection(@Nonnull MessageDirection direction) {
-		this.direction = direction;
 	}
 
 	@Nonnull

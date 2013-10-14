@@ -150,7 +150,6 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			message.setState(sending);
 
 			final MutableChatMessage chatMessage = newChatMessage(message, true);
-			chatMessage.setDirection(MessageDirection.out);
 
 			account.getAccountChatService().beforeSendChatMessage(chat, recipient, chatMessage);
 
