@@ -1,15 +1,13 @@
 package org.solovyev.common.collections.multimap;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
