@@ -177,7 +177,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 
 			case last_message_changed:
 				if (eventChat.equals(chat)) {
-					getData().setLastMessage(event.getDataAsChatMessage());
+					getData().setLastMessage(event.getDataAsMessage());
 					onDataChanged();
 					changed = true;
 				}

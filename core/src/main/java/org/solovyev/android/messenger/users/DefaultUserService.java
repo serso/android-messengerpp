@@ -467,7 +467,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
-		final List<ApiChat> apiChats = getAccountByEntity(user).getAccountChatService().getUserChats(user.getAccountEntityId());
+		final List<ApiChat> apiChats = getAccountByEntity(user).getAccountChatService().getChats(user.getAccountEntityId());
 
 		final List<Chat> chats = Lists.newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
 			@Override

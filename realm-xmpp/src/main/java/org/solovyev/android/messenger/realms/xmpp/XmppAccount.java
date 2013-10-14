@@ -127,12 +127,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	private static MessageService getChatMessageService() {
-		return App.getChatMessageService();
-	}
-
-	@Nonnull
-	static ApiChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> messages, @Nonnull Account account) {
+	static ApiChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> smackMessages, @Nonnull Account account) {
 		final User participant = toUser(smackChat.getParticipant(), account);
 
 		final Entity chat;
@@ -144,29 +139,29 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 			chat = account.newChatEntity(accountChatId);
 		}
 
-		final List<org.solovyev.android.messenger.messages.Message> chatMessages = toMessages(account, messages);
+		final List<org.solovyev.android.messenger.messages.Message> messages = toMessages(account, smackMessages);
 		final List<User> participants = Arrays.asList(account.getUser(), participant);
-		return Chats.newPrivateApiChat(chat, participants, chatMessages);
+		return Chats.newPrivateApiChat(chat, participants, messages);
 	}
 
 	@Nonnull
-	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterable<Message> messages) {
-		return toMessages(account, messages.iterator());
+	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterable<Message> smackMessages) {
+		return toMessages(account, smackMessages.iterator());
 	}
 
-	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterator<Message> messages) {
-		final List<org.solovyev.android.messenger.messages.Message> chatMessages = new ArrayList<org.solovyev.android.messenger.messages.Message>();
+	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterator<Message> smackMessages) {
+		final List<org.solovyev.android.messenger.messages.Message> messages = new ArrayList<org.solovyev.android.messenger.messages.Message>();
 
-		while (messages.hasNext()) {
-			final Message message = messages.next();
-			if (message.getType() != error) {
-				final MutableMessage chatMessage = toMessage(message, account);
-				if (chatMessage != null) {
-					chatMessages.add(chatMessage);
+		while (smackMessages.hasNext()) {
+			final Message smackMessage = smackMessages.next();
+			if (smackMessage.getType() != error) {
+				final MutableMessage message = toMessage(smackMessage, account);
+				if (message != null) {
+					messages.add(message);
 				}
 			}
 		}
-		return chatMessages;
+		return messages;
 	}
 
 	@Nullable

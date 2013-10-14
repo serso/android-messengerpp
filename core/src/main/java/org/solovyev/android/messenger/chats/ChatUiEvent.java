@@ -23,7 +23,7 @@ public final class ChatUiEvent extends AbstractTypedJEvent<Chat, ChatUiEventType
 	}
 
 	@Nonnull
-	public Message getDataAsChatMessage() {
+	public Message getDataAsMessage() {
 		return (Message) getData();
 	}
 }

@@ -32,7 +32,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<Message> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException {
 		return doOnConnection(new XmppConnectedCallable<List<Message>>() {
 			@Override
 			public List<Message> call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
@@ -52,30 +52,30 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
+	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
+	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getUserChats(@Nonnull String accountUserId) {
+	public List<ApiChat> getChats(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nullable
 	@Override
-	public String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
+	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
 		return doOnConnection(new XmppMessengerSender(chat, message, getAccount()));
 	}
 
 	@Override
-	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
+	public void beforeSendMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull

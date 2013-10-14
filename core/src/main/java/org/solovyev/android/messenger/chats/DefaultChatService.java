@@ -398,8 +398,8 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> syncChatMessages(@Nonnull Entity user) throws AccountException {
-		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getChatMessages(user.getAccountEntityId());
+	public List<Message> syncMessages(@Nonnull Entity user) throws AccountException {
+		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getMessages(user.getAccountEntityId());
 
 		final Multimap<Chat, Message> messagesByChats = ArrayListMultimap.create();
 
@@ -415,7 +415,7 @@ public class DefaultChatService implements ChatService {
 		}
 
 		for (Chat chat : messagesByChats.keySet()) {
-			saveChatMessages(chat.getEntity(), messagesByChats.get(chat), true);
+			saveMessages(chat.getEntity(), messagesByChats.get(chat), true);
 		}
 
 		return java.util.Collections.unmodifiableList(messages);
@@ -423,20 +423,20 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws AccountException {
+	public List<Message> syncNewerMessagesForChat(@Nonnull Entity chat) throws AccountException {
 		final Account account = getRealmByEntity(chat);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
-		final List<Message> messages = accountChatService.getNewerChatMessagesForChat(chat.getAccountEntityId(), account.getUser().getEntity().getAccountEntityId());
+		final List<Message> messages = accountChatService.getNewerMessagesForChat(chat.getAccountEntityId(), account.getUser().getEntity().getAccountEntityId());
 
-		saveChatMessages(chat, messages, true);
+		saveMessages(chat, messages, true);
 
 		return java.util.Collections.unmodifiableList(messages);
 
 	}
 
 	@Override
-	public void saveChatMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate) {
+	public void saveMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate) {
 		Chat chat = this.getChatById(accountChat);
 
 		if (chat != null) {
@@ -471,7 +471,7 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void onChatMessageRead(@Nonnull Chat chat, @Nonnull Message message) {
+	public void onMessageRead(@Nonnull Chat chat, @Nonnull Message message) {
 		if (!message.isRead()) {
 			message = message.cloneRead();
 		}
@@ -584,18 +584,18 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
+	public List<Message> syncOlderMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
 		final Integer offset = getMessageService().getMessages(chat).size();
 
-		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
-		saveChatMessages(chat, messages, false);
+		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getOlderMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
+		saveMessages(chat, messages, false);
 
 		return java.util.Collections.unmodifiableList(messages);
 	}
 
 	@Override
 	public void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
-		syncNewerChatMessagesForChat(chat);
+		syncNewerMessagesForChat(chat);
 	}
 
 	@Nullable
@@ -804,12 +804,12 @@ public class DefaultChatService implements ChatService {
 			synchronized (lastMessagesCache) {
 				switch (event.getType()) {
 					case message_added: {
-						final Message message = event.getDataAsChatMessage();
+						final Message message = event.getDataAsMessage();
 						tryPutNewLastMessage(eventChat, changedLastMessages, message);
 					}
 					break;
 					case message_added_batch: {
-						final List<Message> messages = event.getDataAsChatMessages();
+						final List<Message> messages = event.getDataAsMessages();
 
 						Message newestMessage = null;
 						for (Message message : messages) {

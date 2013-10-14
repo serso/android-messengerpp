@@ -4,7 +4,6 @@ import com.google.common.base.Predicate;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -56,7 +55,7 @@ public final class UiChat implements Identifiable {
 
 	@Nonnull
 	static UiChat loadUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account) {
-		final Message lastMessage = getLastChatMessage(chat);
+		final Message lastMessage = getLastMessage(chat);
 		final int unreadMessagesCount = getUnreadMessagesCount(chat);
 		final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
 		final boolean online = isParticipantsOnline(user, chat);
@@ -76,7 +75,7 @@ public final class UiChat implements Identifiable {
 	}
 
 	@Nullable
-	private static Message getLastChatMessage(Chat chat) {
+	private static Message getLastMessage(Chat chat) {
 		return getChatService().getLastMessage(chat.getEntity());
 	}
 

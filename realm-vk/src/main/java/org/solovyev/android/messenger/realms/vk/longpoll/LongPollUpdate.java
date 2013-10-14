@@ -224,7 +224,7 @@ public interface LongPollUpdate {
 				realmChat = getChatService().getPrivateChatId(user.getEntity(), account.newUserEntity(realmFriendId));
 			}
 
-			getChatService().syncNewerChatMessagesForChat(realmChat);
+			getChatService().syncNewerMessagesForChat(realmChat);
 		}
 
 		@Nonnull

@@ -20,16 +20,16 @@ import org.solovyev.android.messenger.users.User;
 public interface AccountChatService {
 
 	@Nonnull
-	List<Message> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	@Nonnull
-	List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;
+	List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;
 
 	@Nonnull
-	List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException;
+	List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException;
 
 	@Nonnull
-	List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<ApiChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	/**
 	 * Method sends message to the account and, if possible, returns message id. If message id could not be returned
@@ -40,9 +40,9 @@ public interface AccountChatService {
 	 * @return message id of sent message if possible
 	 */
 	@Nullable
-	String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException;
+	String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException;
 
-	void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException;
+	void beforeSendMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException;
 
 	@Nonnull
 	Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException;

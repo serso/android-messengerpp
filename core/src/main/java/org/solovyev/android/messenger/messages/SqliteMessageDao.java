@@ -93,9 +93,9 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 	@Nullable
 	@Override
 	public Message readLastMessage(@Nonnull String chatId) {
-		final String lastChatMessageId = doDbQuery(getSqliteOpenHelper(), new LastMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
-		if (!Strings.isEmpty(lastChatMessageId)) {
-			final List<Message> messages = doDbQuery(getSqliteOpenHelper(), new LoadMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
+		final String lastMessageId = doDbQuery(getSqliteOpenHelper(), new LastMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
+		if (!Strings.isEmpty(lastMessageId)) {
+			final List<Message> messages = doDbQuery(getSqliteOpenHelper(), new LoadMessage(getContext(), lastMessageId, this.userService, getSqliteOpenHelper()));
 			return getFirst(messages, null);
 		} else {
 			return null;
@@ -242,8 +242,8 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Nonnull
 		private final Chat chat;
 
-		public InsertMessage(@Nonnull Chat chat, @Nullable Message chatMessage) {
-			super(chatMessage);
+		public InsertMessage(@Nonnull Chat chat, @Nullable Message message) {
+			super(message);
 			this.chat = chat;
 		}
 
@@ -262,18 +262,18 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Nonnull
 		private final Chat chat;
 
-		private UpdateMessage(@Nonnull Message chatMessage, @Nonnull Chat chat) {
-			super(chatMessage);
+		private UpdateMessage(@Nonnull Message message, @Nonnull Chat chat) {
+			super(message);
 			this.chat = chat;
 		}
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
-			final Message chatMessage = getNotNullObject();
+			final Message message = getNotNullObject();
 
-			final ContentValues values = toContentValues(chat, chatMessage);
+			final ContentValues values = toContentValues(chat, message);
 
-			return db.update("messages", values, "id = ? and chat_id = ?", new String[]{String.valueOf(chatMessage.getEntity().getEntityId()), String.valueOf(chat.getEntity().getEntityId())});
+			return db.update("messages", values, "id = ? and chat_id = ?", new String[]{String.valueOf(message.getEntity().getEntityId()), String.valueOf(chat.getEntity().getEntityId())});
 		}
 	}
 

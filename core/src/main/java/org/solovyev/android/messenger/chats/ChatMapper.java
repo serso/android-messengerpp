@@ -31,17 +31,14 @@ public class ChatMapper implements Converter<Cursor, Chat> {
 	@Nonnull
 	@Override
 	public Chat convert(@Nonnull Cursor c) {
-		final Entity realmChat = EntityMapper.newInstanceFor(0).convert(c);
+		final Entity chat = EntityMapper.newInstanceFor(0).convert(c);
 
 		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 		final String lastMessagesSyncDateString = c.getString(3);
 		final DateTime lastMessagesSyncDate = lastMessagesSyncDateString == null ? null : dateTimeFormatter.parseDateTime(lastMessagesSyncDateString);
 
-		final List<AProperty> properties = chatDao.readPropertiesById(realmChat.getEntityId());
+		final List<AProperty> properties = chatDao.readPropertiesById(chat.getEntityId());
 
-		//final List<Message> chatMessages = chatDao.loadChatMessages(chatId);
-		//final List<User> chatParticipants = chatDao.loadChatParticipants(chatId);
-
-		return ChatImpl.newInstance(realmChat, properties, lastMessagesSyncDate);
+		return ChatImpl.newInstance(chat, properties, lastMessagesSyncDate);
 	}
 }

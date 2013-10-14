@@ -24,12 +24,12 @@ public class ChatEvent extends AbstractTypedJEvent<Chat, ChatEventType> {
 	}
 
 	@Nonnull
-	public Message getDataAsChatMessage() {
+	public Message getDataAsMessage() {
 		return (Message) getData();
 	}
 
 	@Nonnull
-	public List<Message> getDataAsChatMessages() {
+	public List<Message> getDataAsMessages() {
 		return (List<Message>) getData();
 	}
 

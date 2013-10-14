@@ -66,7 +66,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 				for (int j = 0; j < 10; j++) {
 					messages.add(newMockMessage(now.plusHours(i + 5 * j), user.getEntity(), contact.getEntity(), account));
 				}
-				chatService.saveChatMessages(chat.getEntity(), messages, false);
+				chatService.saveMessages(chat.getEntity(), messages, false);
 			}
 		}
 	}

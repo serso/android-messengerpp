@@ -45,36 +45,36 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<Message> getChatMessages(@Nonnull String accountUserId) {
+	public List<Message> getMessages(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
+	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
+	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getUserChats(@Nonnull String accountUserId) {
+	public List<ApiChat> getChats(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) {
+	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) {
 		return "test_message_id";
 	}
 
 	@Override
-	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
+	public void beforeSendMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull

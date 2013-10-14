@@ -22,8 +22,6 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.PhoneNumber;
@@ -131,14 +129,14 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 				final Chat chat = chatService.getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 
 				final List<Message> messages = new ArrayList<Message>(entry.getValue().size());
-				for (String message : entry.getValue()) {
-					final Message chatMessage = toMessage(message, account, contact, user, chat);
-					if (chatMessage != null) {
-						messages.add(chatMessage);
+				for (String messageBode : entry.getValue()) {
+					final Message message = toMessage(messageBode, account, contact, user, chat);
+					if (message != null) {
+						messages.add(message);
 					}
 				}
 
-				chatService.saveChatMessages(chat.getEntity(), messages, false);
+				chatService.saveMessages(chat.getEntity(), messages, false);
 			}
 		}
 

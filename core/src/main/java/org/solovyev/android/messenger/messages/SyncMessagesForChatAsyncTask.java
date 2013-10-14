@@ -41,9 +41,9 @@ public class SyncMessagesForChatAsyncTask extends MessengerAsyncTask<SyncMessage
 		if (context != null) {
 			try {
 				if (!input.older) {
-					getChatService().syncNewerChatMessagesForChat(input.realmChat);
+					getChatService().syncNewerMessagesForChat(input.realmChat);
 				} else {
-					getChatService().syncOlderChatMessagesForChat(input.realmChat, input.realmUser);
+					getChatService().syncOlderMessagesForChat(input.realmChat, input.realmUser);
 				}
 			} catch (AccountException e) {
 				throwException(e);

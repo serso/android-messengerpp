@@ -39,31 +39,31 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException {
+	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<ApiChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nullable
 	@Override
-	public String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
+	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
 		final String phoneNumber = getPhoneNumber(message);
 		if(!Strings.isEmpty(phoneNumber)) {
 			// return AUTO GENERATED ID
@@ -95,7 +95,7 @@ final class SmsAccountChatService implements AccountChatService {
 	}
 
 	@Override
-	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
+	public void beforeSendMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
 		if (recipient == null) {
 			recipient = App.getUserService().getUserById(message.getRecipient());
 		}

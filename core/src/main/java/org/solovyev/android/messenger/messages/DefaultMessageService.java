@@ -24,6 +24,7 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.messages.MessageState.sending;
 import static org.solovyev.android.messenger.messages.MessageState.sent;
@@ -100,36 +101,36 @@ public class DefaultMessageService implements MessageService {
 
 	@Nullable
 	@Override
-	public Message sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull Message chatMessage) throws AccountException {
+	public Message sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull Message message) throws AccountException {
 		final Account account = getAccountByUser(user);
 		final Realm realm = account.getRealm();
 		final AccountChatService accountChatService = account.getAccountChatService();
 
-		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
+		final String accountMessageId = accountChatService.sendMessage(chat, message);
 
-		final MutableMessage message = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
+		final MutableMessage result = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, message.getEntity().getEntityId()));
 
-		message.setChat(chat.getEntity());
-		message.setAuthor(user);
+		result.setChat(chat.getEntity());
+		result.setAuthor(user);
 		if (chat.isPrivate()) {
 			final Entity secondUser = chat.getSecondUser();
-			message.setRecipient(secondUser);
+			result.setRecipient(secondUser);
 		}
-		message.setBody(chatMessage.getBody());
-		message.setTitle(chatMessage.getTitle());
-		message.setSendDate(DateTime.now());
+		result.setBody(message.getBody());
+		result.setTitle(message.getTitle());
+		result.setSendDate(DateTime.now());
 		if(realm.shouldWaitForDeliveryReport()) {
-			message.setState(sending);
+			result.setState(sending);
 		} else {
-			message.setState(sent);
+			result.setState(sent);
 		}
-		message.setRead(true);
+		result.setRead(true);
 
 		if (realm.notifySentMessagesImmediately()) {
-			chatService.saveChatMessages(chat.getEntity(), Arrays.asList(message), false);
+			chatService.saveMessages(chat.getEntity(), asList(result), false);
 		}
 
-		return message;
+		return result;
 	}
 
 	@Override

@@ -107,13 +107,13 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
 		if (type == ChatEventType.message_added) {
 			if (eventChat.equals(chat)) {
-				addMessageListItem(event.getDataAsChatMessage());
+				addMessageListItem(event.getDataAsMessage());
 			}
 		}
 
 		if (type == ChatEventType.message_added_batch) {
 			if (eventChat.equals(chat)) {
-				final List<Message> messages = event.getDataAsChatMessages();
+				final List<Message> messages = event.getDataAsMessages();
 
 				addListItems(Lists.transform(messages, new Function<Message, MessageListItem>() {
 					@Override

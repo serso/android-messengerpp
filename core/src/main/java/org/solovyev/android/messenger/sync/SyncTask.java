@@ -148,7 +148,7 @@ public enum SyncTask {
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
 			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
-			App.getChatService().syncChatMessages(user.getEntity());
+			App.getChatService().syncMessages(user.getEntity());
 		}
 	};
 

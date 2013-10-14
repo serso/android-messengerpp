@@ -122,7 +122,7 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 	public void onEvent(@Nonnull ChatEvent event) {
 		if (ChatEventType.message_changed.isEvent(event.getType(), event.getChat(), chat)) {
 			if (getData().equals(event.getData())) {
-				setData(event.getDataAsChatMessage());
+				setData(event.getDataAsMessage());
 			}
 		}
 	}

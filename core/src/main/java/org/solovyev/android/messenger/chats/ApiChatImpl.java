@@ -74,10 +74,10 @@ public class ApiChatImpl implements ApiChat {
 	public static ApiChatImpl newInstance(@Nonnull Entity entity,
 										  @Nonnull Integer messagesCount,
 										  @Nonnull List<AProperty> properties,
-										  @Nonnull List<Message> chatMessages,
+										  @Nonnull List<Message> messages,
 										  @Nonnull List<User> chatParticipants,
 										  @Nullable DateTime lastMessageSyncDate) {
-		return new ApiChatImpl(entity, messagesCount, properties, chatMessages, chatParticipants, lastMessageSyncDate);
+		return new ApiChatImpl(entity, messagesCount, properties, messages, chatParticipants, lastMessageSyncDate);
 	}
 
 	@Nonnull

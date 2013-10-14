@@ -58,7 +58,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 				onChatClickedEvent(chat);
 				break;
 			case chat_message_read:
-				onMessageReadEvent(chat, event.getDataAsChatMessage());
+				onMessageReadEvent(chat, event.getDataAsMessage());
 				break;
 		}
 	}
@@ -90,7 +90,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 	}
 
 	private void onMessageReadEvent(@Nonnull Chat chat, @Nonnull Message message) {
-		chatService.onChatMessageRead(chat, message);
+		chatService.onMessageRead(chat, message);
 	}
 
 	private void onChatClickedEvent(@Nonnull final Chat chat) {

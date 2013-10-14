@@ -40,7 +40,7 @@ final class XmppMessageListener implements ChatStateListener {
 		Log.i("M++/Xmpp", "Message created: " + message.getBody());
 		final List<org.solovyev.android.messenger.messages.Message> messages = XmppAccount.toMessages(account, Arrays.asList(message));
 		if (!messages.isEmpty()) {
-			getChatService().saveChatMessages(this.chat, messages, false);
+			getChatService().saveMessages(this.chat, messages, false);
 		} else {
 			/**
 			 * Some special messages sent by another client like 'Composing' and 'Pausing'.

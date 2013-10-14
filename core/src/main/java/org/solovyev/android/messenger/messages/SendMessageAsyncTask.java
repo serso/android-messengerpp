@@ -47,7 +47,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 				if (context != null) {
 					assert chat.equals(input.chat);
 
-					final Message message = input.sendChatMessage();
+					final Message message = input.sendMessage();
 					if (message != null) {
 						result.add(message);
 					}
@@ -73,8 +73,8 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 	}
 
 	@Nonnull
-	private static MessageService getChatMessageService() {
-		return App.getChatMessageService();
+	private static MessageService getMessageService() {
+		return App.getMessageService();
 	}
 
 	@Nonnull
@@ -123,7 +123,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		}
 
 		@Nullable
-		public Message sendChatMessage() throws AccountException {
+		public Message sendMessage() throws AccountException {
 			final Account account = getAccountService().getAccountById(author.getEntity().getAccountId());
 
 			final MutableMessage message = newMessage(generateEntity(account));
@@ -141,9 +141,9 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			message.setState(sending);
 			message.setRead(true);
 
-			account.getAccountChatService().beforeSendChatMessage(chat, recipient, message);
+			account.getAccountChatService().beforeSendMessage(chat, recipient, message);
 
-			return getChatMessageService().sendMessage(author.getEntity(), chat, message);
+			return getMessageService().sendMessage(author.getEntity(), chat, message);
 		}
 
 	}

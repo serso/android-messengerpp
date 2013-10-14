@@ -506,7 +506,7 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 		@Nonnull
 		@Override
 		protected List<Message> getElements(@Nonnull Context context) {
-			return App.getChatMessageService().getMessages(chat.getEntity());
+			return App.getMessageService().getMessages(chat.getEntity());
 		}
 
 		@Nonnull

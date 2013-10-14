@@ -145,7 +145,7 @@ public final class App {
 	}
 
 	@Nonnull
-	public static MessageService getChatMessageService() {
+	public static MessageService getMessageService() {
 		return instance.messageService;
 	}
 

@@ -23,7 +23,6 @@ import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
@@ -52,7 +51,7 @@ public class VkAccountChatService implements AccountChatService {
 
     /*@Nonnull
 	@Override
-    public List<Chat> getUserChats(@Nonnull Integer userId) {
+    public List<Chat> getChats(@Nonnull Integer userId) {
         try {
             final List<Chat> result = new ArrayList<Chat>();
             for (VkMessagesGetDialogsHttpTransaction vkMessagesGetDialogsHttpTransaction : VkMessagesGetDialogsHttpTransaction.newInstances(100)) {
@@ -66,7 +65,7 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException {
 		try {
 			return HttpTransactions.execute(new VkMessagesGetHttpTransaction(account, getUser(accountUserId)));
 		} catch (HttpRuntimeIoException e) {
@@ -78,8 +77,8 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
-		return getChatMessagesForChat(accountChatId, accountUserId, new VkHttpTransactionForMessagesForChatProvider() {
+	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
+		return getMessagesForChat(accountChatId, accountUserId, new VkHttpTransactionForMessagesForChatProvider() {
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<Message>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
@@ -94,7 +93,7 @@ public class VkAccountChatService implements AccountChatService {
 		});
 	}
 
-	private List<Message> getChatMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull VkHttpTransactionForMessagesForChatProvider p) throws AccountConnectionException {
+	private List<Message> getMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull VkHttpTransactionForMessagesForChatProvider p) throws AccountConnectionException {
 		final Chat chat = getChatService().getChatById(account.newChatEntity(realmChatId));
 
 		if (chat != null) {
@@ -135,8 +134,8 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull final Integer offset) throws AccountConnectionException {
-		return getChatMessagesForChat(accountChatId, accountUserId, new VkHttpTransactionForMessagesForChatProvider() {
+	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull final Integer offset) throws AccountConnectionException {
+		return getMessagesForChat(accountChatId, accountUserId, new VkHttpTransactionForMessagesForChatProvider() {
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<Message>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
@@ -178,7 +177,7 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<ApiChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
 		try {
 			final User user = App.getUserService().getUserById(account.newUserEntity(accountUserId));
 			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(account, user));
@@ -191,7 +190,7 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
+	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
 		try {
 			return HttpTransactions.execute(new VkMessagesSendHttpTransaction(account, message, chat));
 		} catch (HttpRuntimeIoException e) {
@@ -202,7 +201,7 @@ public class VkAccountChatService implements AccountChatService {
 	}
 
 	@Override
-	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
+	public void beforeSendMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull
