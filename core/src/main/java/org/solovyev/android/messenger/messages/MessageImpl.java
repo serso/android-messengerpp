@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.TimeZone;
 
 import static org.solovyev.android.properties.Properties.newProperties;
@@ -149,6 +150,11 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	@Override
 	public MutableAProperties getProperties() {
 		return properties;
+	}
+
+	@Override
+	public void setProperties(@Nonnull List<AProperty> properties) {
+		this.properties.setPropertiesFrom(properties);
 	}
 
 	@Override

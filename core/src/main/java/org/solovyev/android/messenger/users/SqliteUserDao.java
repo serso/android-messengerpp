@@ -62,7 +62,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 	public long create(@Nonnull User user) {
 		final long result = dao.create(user);
 		if (result != DbExec.SQL_ERROR) {
-			doDbExec(getSqliteOpenHelper(), new InsertUserProperties(user));
+			doDbExec(getSqliteOpenHelper(), new InsertProperties(user));
 		}
 		return result;
 	}
@@ -82,7 +82,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 	@Nonnull
 	@Override
 	public List<AProperty> readPropertiesById(@Nonnull String userId) {
-		return doDbQuery(getSqliteOpenHelper(), new LoadUserPropertiesDbQuery(userId, getContext(), getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadPropertiesDbQuery(userId, getContext(), getSqliteOpenHelper()));
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		final long rows = dao.update(user);
 		if (rows > 0) {
 			// user exists => can remove/insert properties
-			doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteUserProperties(user), new InsertUserProperties(user)));
+			doDbExecs(getSqliteOpenHelper(), Arrays.<DbExec>asList(new DeleteProperties(user), new InsertProperties(user)));
 		}
 		return rows;
 	}
@@ -144,21 +144,21 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 
 		for (User updatedContact : result.getUpdatedObjects()) {
 			execs.add(new UpdateUser(updatedContact));
-			execs.add(new DeleteUserProperties(updatedContact));
-			execs.add(new InsertUserProperties(updatedContact));
+			execs.add(new DeleteProperties(updatedContact));
+			execs.add(new InsertProperties(updatedContact));
 		}
 
 		for (User addedContactLink : result.getAddedObjectLinks()) {
 			execs.add(new UpdateUser(addedContactLink));
-			execs.add(new DeleteUserProperties(addedContactLink));
-			execs.add(new InsertUserProperties(addedContactLink));
+			execs.add(new DeleteProperties(addedContactLink));
+			execs.add(new InsertProperties(addedContactLink));
 			execs.add(new InsertContact(userId, addedContactLink.getEntity().getEntityId()));
 		}
 
 
 		for (User addedContact : result.getAddedObjects()) {
 			execs.add(new InsertUser(addedContact));
-			execs.add(new InsertUserProperties(addedContact));
+			execs.add(new InsertProperties(addedContact));
 			execs.add(new InsertContact(userId, addedContact.getEntity().getEntityId()));
 		}
 
@@ -266,9 +266,9 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		}
 	}
 
-	public static final class LoadUserPropertiesDbQuery extends PropertyByIdDbQuery {
+	private static final class LoadPropertiesDbQuery extends PropertyByIdDbQuery {
 
-		public LoadUserPropertiesDbQuery(@Nonnull String userId, @Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+		public LoadPropertiesDbQuery(@Nonnull String userId, @Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 			super(context, sqliteOpenHelper, "user_properties", "user_id", userId);
 		}
 	}
@@ -306,9 +306,9 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		}
 	}
 
-	private static final class DeleteUserProperties extends AbstractObjectDbExec<User> {
+	private static final class DeleteProperties extends AbstractObjectDbExec<User> {
 
-		private DeleteUserProperties(@Nonnull User user) {
+		private DeleteProperties(@Nonnull User user) {
 			super(user);
 		}
 
@@ -320,9 +320,9 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		}
 	}
 
-	private static final class InsertUserProperties extends AbstractObjectDbExec<User> {
+	private static final class InsertProperties extends AbstractObjectDbExec<User> {
 
-		private InsertUserProperties(@Nonnull User user) {
+		private InsertProperties(@Nonnull User user) {
 			super(user);
 		}
 

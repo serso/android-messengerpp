@@ -1,10 +1,13 @@
 package org.solovyev.android.messenger.messages;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 
 public interface MutableMessage extends Message {
@@ -39,4 +42,6 @@ public interface MutableMessage extends Message {
 	@Nonnull
 	@Override
 	MutableAProperties getProperties();
+
+	void setProperties(@Nonnull List<AProperty> properties);
 }

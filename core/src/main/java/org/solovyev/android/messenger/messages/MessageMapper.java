@@ -1,11 +1,15 @@
 package org.solovyev.android.messenger.messages;
 
 import android.database.Cursor;
+
+import java.util.List;
+
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 
 import javax.annotation.Nonnull;
@@ -21,18 +25,18 @@ import static org.solovyev.android.messenger.messages.Messages.newMessage;
 public class MessageMapper implements Converter<Cursor, Message> {
 
 	@Nonnull
-	private final UserService userService;
+	private final MessageDao dao;
 
-	public MessageMapper(@Nonnull UserService userService) {
-		this.userService = userService;
+	public MessageMapper(@Nonnull MessageDao dao) {
+		this.dao = dao;
 	}
 
 	@Nonnull
 	@Override
 	public Message convert(@Nonnull Cursor c) {
-		final Entity messageEntity = EntityMapper.newInstanceFor(0).convert(c);
+		final Entity entity = EntityMapper.newInstanceFor(0).convert(c);
 
-		final MutableMessage message = newMessage(messageEntity);
+		final MutableMessage message = newMessage(entity);
 		message.setChat(newEntityFromEntityId(c.getString(3)));
 		message.setAuthor(newEntityFromEntityId(c.getString(4)));
 		if (!c.isNull(5)) {
@@ -49,6 +53,8 @@ public class MessageMapper implements Converter<Cursor, Message> {
 
 		final boolean read = c.getInt(10) == 1;
 		message.setRead(read);
+
+		message.setProperties(dao.readPropertiesById(entity.getEntityId()));
 
 		return message;
 	}

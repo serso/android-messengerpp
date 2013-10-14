@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.messages;
 
+import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,7 +14,7 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface MessageDao {
+public interface MessageDao extends Dao<Message> {
 
 	@Nullable
 	Message read(@Nonnull String messageId);
@@ -41,4 +43,7 @@ public interface MessageDao {
 	boolean changeMessageState(@Nonnull String messageId, @Nonnull MessageState state);
 
 	void deleteAll();
+
+	@Nonnull
+	List<AProperty> readPropertiesById(@Nonnull String messageId);
 }

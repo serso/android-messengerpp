@@ -13,6 +13,8 @@ import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 
+import static org.solovyev.android.messenger.users.Users.newUser;
+
 /**
  * User: serso
  * Date: 5/30/12
@@ -20,27 +22,22 @@ import org.solovyev.common.Converter;
  */
 public class UserMapper implements Converter<Cursor, User> {
 
-	@Nullable
-	private final UserDao userDao;
+	@Nonnull
+	private final UserDao dao;
 
-	public UserMapper(@Nullable UserDao userDao) {
-		this.userDao = userDao;
+	public UserMapper(@Nonnull UserDao dao) {
+		this.dao = dao;
 	}
 
 	@Nonnull
 	@Override
 	public User convert(@Nonnull Cursor c) {
-		final Entity realmUser = EntityMapper.newInstanceFor(0).convert(c);
+		final Entity entity = EntityMapper.newInstanceFor(0).convert(c);
 
 		final UserSyncData userSyncData = Users.newUserSyncData(c.getString(3), c.getString(4), c.getString(5), c.getString(6));
 
-		final List<AProperty> properties;
-		if (userDao != null) {
-			properties = userDao.readPropertiesById(realmUser.getEntityId());
-		} else {
-			properties = Collections.emptyList();
-		}
+		final List<AProperty> properties = dao.readPropertiesById(entity.getEntityId());
 
-		return Users.newUser(realmUser, userSyncData, properties);
+		return newUser(entity, userSyncData, properties);
 	}
 }
