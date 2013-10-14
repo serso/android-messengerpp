@@ -18,8 +18,10 @@ import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
+import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
@@ -109,6 +111,7 @@ public class DefaultAccountService implements AccountService {
 	@Override
 	public void init() {
 		accountDao.init();
+		userService.addListener(new UserEventListener());
 
 		synchronized (lock) {
 			// reset status to enabled for temporary disable realms
@@ -432,6 +435,27 @@ public class DefaultAccountService implements AccountService {
 		@Override
 		public boolean apply(@Nullable Account account) {
 			return account != null && account.getRealm().canCreateUsers();
+		}
+	}
+
+	private final class UserEventListener extends AbstractJEventListener<UserEvent> {
+
+		public UserEventListener() {
+			super(UserEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull UserEvent event) {
+			switch (event.getType()) {
+				case changed:
+					final User user = event.getUser();
+					for (Account account : getAccounts()) {
+						if(account.getUser().equals(user)) {
+							account.setUser(user);
+						}
+					}
+					break;
+			}
 		}
 	}
 }

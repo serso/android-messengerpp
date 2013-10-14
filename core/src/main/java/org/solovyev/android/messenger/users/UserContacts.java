@@ -33,6 +33,7 @@ class UserContacts {
 	}
 
 	public void update(@Nonnull Entity user, @Nonnull List<User> contacts) {
+		calculateDisplayNames(contacts);
 		this.contacts.update(user, new WholeListUpdater<User>(contacts));
 	}
 
@@ -51,6 +52,7 @@ class UserContacts {
 			case contact_added_batch:
 				// contacts added => need to add to list of cached contacts
 				final List<User> contacts = event.getDataAsUsers();
+				calculateDisplayNames(contacts);
 				this.contacts.update(user.getEntity(), new ObjectsAddedUpdater<User>(contacts));
 				break;
 			case contact_removed:
@@ -61,6 +63,13 @@ class UserContacts {
 			case contacts_presence_changed:
 				this.contacts.update(user.getEntity(), new UserListContactStatusUpdater(event.getDataAsUsers()));
 				break;
+		}
+	}
+
+	private void calculateDisplayNames(@Nonnull List<User> contacts) {
+		for (User contact : contacts) {
+			// update cached value
+			contact.getDisplayName();
 		}
 	}
 

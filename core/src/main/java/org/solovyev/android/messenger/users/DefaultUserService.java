@@ -190,11 +190,6 @@ public class DefaultUserService implements UserService {
 		return accountService.getAccountById(entity.getAccountId());
 	}
 
-	@Nullable
-	private Account getAccountByEntityOrNull(@Nonnull Entity entity){
-		return accountService.getAccountByIdOrNull(entity.getAccountId());
-	}
-
 	@Override
 	public void saveUser(@Nonnull User user) {
 		boolean saved = false;
@@ -237,12 +232,6 @@ public class DefaultUserService implements UserService {
 			userDao.update(user);
 		}
 
-		for (Account account : accountService.getAccounts()) {
-			if(account.getUser().equals(user)) {
-				account.setUser(user);
-			}
-		}
-
 		if (fireChangeEvent) {
 			listeners.fireEvent(UserEventType.changed.newEvent(user));
 		}
@@ -265,7 +254,6 @@ public class DefaultUserService implements UserService {
 			synchronized (lock) {
 				result = userDao.readContacts(user.getEntityId());
 			}
-			calculateDisplayNames(result);
 			userContacts.update(user, result);
 		}
 
@@ -320,7 +308,7 @@ public class DefaultUserService implements UserService {
 			}
 		}
 
-		Log.d(TAG, "Find contacts result: " + result.size());
+		Log.d(TAG, "Found contacts count: " + result.size());
 
 		return result;
 	}
@@ -391,7 +379,7 @@ public class DefaultUserService implements UserService {
 		User user = getAccountByEntity(userEntity).getAccountUserService().getUserById(userEntity.getAccountEntityId());
 		if (user != null) {
 			user = user.updatePropertiesSyncDate();
-			updateUser(user, false);
+			updateUser(user, true);
 		}
 	}
 
@@ -402,22 +390,12 @@ public class DefaultUserService implements UserService {
 		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getAccountEntityId());
 
 		if (!contacts.isEmpty()) {
-			calculateDisplayNames(contacts);
-			userContacts.update(user, contacts);
-
 			mergeUserContacts(user, contacts, false, true);
 		} else {
 			Log.w(TAG, "User contacts synchronization returned empty list for realm " + account.getId());
 		}
 
 		return java.util.Collections.unmodifiableList(contacts);
-	}
-
-	private void calculateDisplayNames(@Nonnull List<User> contacts) {
-		for (User contact : contacts) {
-			// update cached value
-			contact.getDisplayName();
-		}
 	}
 
 	@Override
