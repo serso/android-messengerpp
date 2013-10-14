@@ -8,9 +8,8 @@ import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessageService;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -28,7 +27,6 @@ import java.util.List;
 import static org.solovyev.android.messenger.chats.Chats.newPrivateApiChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
-import static org.solovyev.android.messenger.messages.Messages.newChatMessage;
 import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
@@ -79,7 +77,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		final User user = result.account.getUser();
 		result.users.add(0, user);
 		for (User contact : result.getContacts()) {
-			final List<ChatMessage> messages = new ArrayList<ChatMessage>();
+			final List<Message> messages = new ArrayList<Message>();
 			for(int i = 0; i < 10; i++) {
 				messages.add(generateMessage(i, user, contact, result.account));
 			}
@@ -89,20 +87,21 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		return result;
 	}
 
-	private MutableChatMessage generateMessage(int i, @Nonnull User user, @Nonnull User contact, @Nonnull TestAccount account) {
-		final MutableMessage liteMessage = newMessage(Entities.generateEntity(account));
+	private MutableMessage generateMessage(int i, @Nonnull User user, @Nonnull User contact, @Nonnull TestAccount account) {
+		final MutableMessage message = newMessage(Entities.generateEntity(account));
 
 		if (i % 2 == 0) {
-			liteMessage.setAuthor(user.getEntity());
-			liteMessage.setRecipient(contact.getEntity());
+			message.setAuthor(user.getEntity());
+			message.setRecipient(contact.getEntity());
 		} else {
-			liteMessage.setAuthor(contact.getEntity());
-			liteMessage.setRecipient(user.getEntity());
+			message.setAuthor(contact.getEntity());
+			message.setRecipient(user.getEntity());
 		}
 
-		liteMessage.setBody(Strings.generateRandomString(10));
-		liteMessage.setSendDate(new DateTime(0).plusMinutes(i));
-		return newChatMessage(liteMessage, false);
+		message.setBody(Strings.generateRandomString(10));
+		message.setSendDate(new DateTime(0).plusMinutes(i));
+		message.setRead(false);
+		return message;
 	}
 
 	@Nonnull

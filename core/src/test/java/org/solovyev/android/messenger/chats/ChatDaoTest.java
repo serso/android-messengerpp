@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
-import org.solovyev.android.messenger.messages.ChatMessageDao;
+import org.solovyev.android.messenger.messages.MessageDao;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 
 	@Inject
 	@Nonnull
-	private ChatMessageDao chatMessageDao;
+	private MessageDao messageDao;
 
 	@Nonnull
 	@Override
@@ -58,11 +58,11 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 	@Test
 	public void testMessagesShouldBeRemovedIfChatRemoved() throws Exception {
 		final ApiChat chat = getAccountData1().getChats().get(0);
-		assertFalse(chatMessageDao.readMessages(chat.getChat().getId()).isEmpty());
+		assertFalse(messageDao.readMessages(chat.getChat().getId()).isEmpty());
 
 		dao.deleteById(chat.getChat().getId());
 
-		assertTrue(chatMessageDao.readMessages(chat.getChat().getId()).isEmpty());
+		assertTrue(messageDao.readMessages(chat.getChat().getId()).isEmpty());
 	}
 
 	@Test

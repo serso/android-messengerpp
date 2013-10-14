@@ -144,23 +144,23 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 			chat = account.newChatEntity(accountChatId);
 		}
 
-		final List<ChatMessage> chatMessages = toMessages(account, messages);
+		final List<org.solovyev.android.messenger.messages.Message> chatMessages = toMessages(account, messages);
 		final List<User> participants = Arrays.asList(account.getUser(), participant);
 		return Chats.newPrivateApiChat(chat, participants, chatMessages);
 	}
 
 	@Nonnull
-	static List<ChatMessage> toMessages(@Nonnull Account account, @Nonnull Iterable<Message> messages) {
+	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterable<Message> messages) {
 		return toMessages(account, messages.iterator());
 	}
 
-	static List<ChatMessage> toMessages(@Nonnull Account account, @Nonnull Iterator<Message> messages) {
-		final List<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
+	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterator<Message> messages) {
+		final List<org.solovyev.android.messenger.messages.Message> chatMessages = new ArrayList<org.solovyev.android.messenger.messages.Message>();
 
 		while (messages.hasNext()) {
 			final Message message = messages.next();
 			if (message.getType() != error) {
-				final ChatMessage chatMessage = toChatMessage(message, account);
+				final MutableMessage chatMessage = toMessage(message, account);
 				if (chatMessage != null) {
 					chatMessages.add(chatMessage);
 				}
@@ -170,7 +170,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nullable
-	private static ChatMessage toChatMessage(@Nonnull Message xmppMessage, @Nonnull Account account) {
+	private static MutableMessage toMessage(@Nonnull Message xmppMessage, @Nonnull Account account) {
 		final String body = xmppMessage.getBody();
 		if (!Strings.isEmpty(body)) {
 			final MutableMessage message = newMessage(generateEntity(account));
@@ -186,8 +186,8 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 			} else {
 				message.setState(received);
 			}
-			// new message by default unread
-			return Messages.newChatMessage(message, false);
+			message.setRead(false);
+			return message;
 		} else {
 			return null;
 		}

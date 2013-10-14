@@ -8,7 +8,7 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatUiEventType;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -94,7 +94,7 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 		try {
 			final Chat chat = getChatService().getPrivateChat(account.getUser().getEntity(), contact.getEntity());
 			if (chat != null) {
-				for (ChatMessage message : getChatMessageService().getMessages(chat.getEntity())) {
+				for (Message message : getChatMessageService().getMessages(chat.getEntity())) {
 					if(!message.isRead()) {
 						getEventManager(activity).fire(chat_message_read.newEvent(chat, message.cloneRead()));
 					}

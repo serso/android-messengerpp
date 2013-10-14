@@ -10,15 +10,12 @@ import javax.annotation.Nullable;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
-import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 /**
@@ -29,14 +26,14 @@ import com.google.gson.Gson;
 public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<String> {
 
 	@Nonnull
-	private final ChatMessage chatMessage;
+	private final Message message;
 
 	@Nonnull
 	private final Chat chat;
 
-	public VkMessagesSendHttpTransaction(@Nonnull VkAccount realm, @Nonnull ChatMessage chatMessage, @Nonnull Chat chat) {
+	public VkMessagesSendHttpTransaction(@Nonnull VkAccount realm, @Nonnull Message message, @Nonnull Chat chat) {
 		super(realm, "messages.send");
-		this.chatMessage = chatMessage;
+		this.message = message;
 		this.chat = chat;
 	}
 
@@ -55,10 +52,10 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 				result.add(new BasicNameValuePair("chat_id", chat.getEntity().getAccountEntityId()));
 			}
 
-			result.add(new BasicNameValuePair("message", URLEncoder.encode(chatMessage.getBody(), "utf-8")));
+			result.add(new BasicNameValuePair("message", URLEncoder.encode(message.getBody(), "utf-8")));
 
-			result.add(new BasicNameValuePair("title", URLEncoder.encode(chatMessage.getTitle(), "utf-8")));
-			result.add(new BasicNameValuePair("type", chatMessage.isPrivate() ? "0" : "1"));
+			result.add(new BasicNameValuePair("title", URLEncoder.encode(message.getTitle(), "utf-8")));
+			result.add(new BasicNameValuePair("type", message.isPrivate() ? "0" : "1"));
 
 		} catch (UnsupportedEncodingException e) {
 			throw new AssertionError(e);

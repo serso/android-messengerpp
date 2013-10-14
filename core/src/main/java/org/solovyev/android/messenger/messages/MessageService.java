@@ -25,12 +25,12 @@ public interface MessageService {
 	void init();
 
 	@Nonnull
-	List<ChatMessage> getMessages(@Nonnull Entity chat);
+	List<Message> getMessages(@Nonnull Entity chat);
 
-	void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView);
+	void setMessageIcon(@Nonnull Message message, @Nonnull ImageView imageView);
 
 	@Nullable
-	ChatMessage sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException;
+	Message sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull Message chatMessage) throws AccountException;
 
 	/**
 	 * @return total number of unread messages in the application

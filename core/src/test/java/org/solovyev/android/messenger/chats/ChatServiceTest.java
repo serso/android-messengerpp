@@ -7,7 +7,7 @@ import org.solovyev.android.messenger.DefaultMessengerTest;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.TestAccount;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Objects;
@@ -43,8 +43,8 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		final List<UiChat> chats = chatService.getLastChats(user, MAX_VALUE);
 		assertTrue(!chats.isEmpty());
 		for (int i = 1; i < chats.size(); i++) {
-			final ChatMessage prevMessage = chats.get(i - 1).getLastMessage();
-			final ChatMessage message = chats.get(i).getLastMessage();
+			final Message prevMessage = chats.get(i - 1).getLastMessage();
+			final Message message = chats.get(i).getLastMessage();
 			assertNotNull(prevMessage);
 			assertNotNull(message);
 			assertTrue(prevMessage.getSendDate().isAfter(message.getSendDate()));
@@ -62,7 +62,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 			final Chat chat = chatService.getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 
 			if (createMessages) {
-				final List<ChatMessage> messages = new ArrayList<ChatMessage>();
+				final List<Message> messages = new ArrayList<Message>();
 				for (int j = 0; j < 10; j++) {
 					messages.add(newMockMessage(now.plusHours(i + 5 * j), user.getEntity(), contact.getEntity(), account));
 				}
@@ -94,7 +94,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		final User contact = ad.getContacts().get(0);
 
 		final List<User> participants = Arrays.asList(user, contact);
-		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateApiChat(account.newChatEntity("test_api_chat"), participants, Collections.<ChatMessage>emptyList()));
+		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateApiChat(account.newChatEntity("test_api_chat"), participants, Collections.<Message>emptyList()));
 
 		assertNotNull(chat);
 		assertEquals(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), chat.getEntity());

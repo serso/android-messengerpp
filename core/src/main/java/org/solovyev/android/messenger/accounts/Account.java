@@ -6,15 +6,12 @@ import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.util.List;
 

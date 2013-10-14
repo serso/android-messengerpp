@@ -3,7 +3,8 @@ package org.solovyev.android.messenger.chats;
 import com.google.common.base.Predicate;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -30,7 +31,7 @@ public final class UiChat implements Identifiable {
 	private final Account account;
 
 	@Nullable
-	private ChatMessage lastMessage;
+	private Message lastMessage;
 
 	// precached display name in order to calculate it before shown (e.g. for sorting)
 	@Nonnull
@@ -38,7 +39,7 @@ public final class UiChat implements Identifiable {
 
 	private boolean online;
 
-	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
+	private UiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account, @Nullable Message lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
 		this.user = user;
 		this.chat = chat;
 		this.account = account;
@@ -49,13 +50,13 @@ public final class UiChat implements Identifiable {
 	}
 
 	@Nonnull
-	static UiChat newUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account, @Nullable ChatMessage lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
+	static UiChat newUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account, @Nullable Message lastMessage, int unreadMessagesCount, @Nonnull String displayName, boolean online) {
 		return new UiChat(user, chat, account, lastMessage, unreadMessagesCount, displayName, online);
 	}
 
 	@Nonnull
 	static UiChat loadUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account) {
-		final ChatMessage lastMessage = getLastChatMessage(chat);
+		final Message lastMessage = getLastChatMessage(chat);
 		final int unreadMessagesCount = getUnreadMessagesCount(chat);
 		final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
 		final boolean online = isParticipantsOnline(user, chat);
@@ -75,7 +76,7 @@ public final class UiChat implements Identifiable {
 	}
 
 	@Nullable
-	private static ChatMessage getLastChatMessage(Chat chat) {
+	private static Message getLastChatMessage(Chat chat) {
 		return getChatService().getLastMessage(chat.getEntity());
 	}
 
@@ -105,7 +106,7 @@ public final class UiChat implements Identifiable {
 	}
 
 	@Nullable
-	public ChatMessage getLastMessage() {
+	public Message getLastMessage() {
 		return lastMessage;
 	}
 
@@ -162,7 +163,7 @@ public final class UiChat implements Identifiable {
 		this.chat = chat;
 	}
 
-	public void setLastMessage(@Nullable ChatMessage lastMessage) {
+	public void setLastMessage(@Nullable Message lastMessage) {
 		this.lastMessage = lastMessage;
 	}
 

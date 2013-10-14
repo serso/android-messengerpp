@@ -39,7 +39,7 @@ public class ChatMapper implements Converter<Cursor, Chat> {
 
 		final List<AProperty> properties = chatDao.readPropertiesById(realmChat.getEntityId());
 
-		//final List<ChatMessage> chatMessages = chatDao.loadChatMessages(chatId);
+		//final List<Message> chatMessages = chatDao.loadChatMessages(chatId);
 		//final List<User> chatParticipants = chatDao.loadChatParticipants(chatId);
 
 		return ChatImpl.newInstance(realmChat, properties, lastMessagesSyncDate);

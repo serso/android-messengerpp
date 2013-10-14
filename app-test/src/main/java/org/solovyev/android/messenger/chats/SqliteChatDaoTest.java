@@ -25,7 +25,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 	private ChatDao chatDao;
 
 	@Inject
-	private ChatMessageDao chatMessageDao;
+	private MessageDao messageDao;
 
 	@Inject
 	private TestRealm testRealmDef;
@@ -35,7 +35,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
 	public void setUp() throws Exception {
 		super.setUp();
-		chatMessageDao.deleteAll();
+		messageDao.deleteAll();
 		chatDao.deleteAll();
 	}
 
@@ -66,24 +66,24 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		Assert.assertNotNull(chat);
 		Assert.assertEquals(realmChat4.getEntityId(), chat.getEntity().getEntityId());
 
-		List<ChatMessage> messages = new ArrayList<ChatMessage>();
+		List<MutableMessage> messages = new ArrayList<MutableMessage>();
 		messages.add(newMessage("01", false));
 		messages.add(newMessage("02", false));
 		messages.add(newMessage("03", true));
 		messages.add(newMessage("04", true));
-		chatMessageDao.mergeMessages(realmChat4.getEntityId(), messages, false);
+		messageDao.mergeMessages(realmChat4.getEntityId(), messages, false);
 
-		messages = new ArrayList<ChatMessage>();
+		messages = new ArrayList<MutableMessage>();
 		messages.add(newMessage("07", true));
 		messages.add(newMessage("08", false));
 		messages.add(newMessage("09", true));
 		messages.add(newMessage("06", true));
-		chatMessageDao.mergeMessages(realmChat1.getEntityId(), messages, false);
+		messageDao.mergeMessages(realmChat1.getEntityId(), messages, false);
 
-		messages = new ArrayList<ChatMessage>();
+		messages = new ArrayList<MutableMessage>();
 		messages.add(newMessage("10", true));
 		messages.add(newMessage("11", true));
-		chatMessageDao.mergeMessages(realmChat2.getEntityId(), messages, false);
+		messageDao.mergeMessages(realmChat2.getEntityId(), messages, false);
 
 		final Map<Entity, Integer> actualUnreadChats = chatDao.getUnreadChats();
 		assertFalse(actualUnreadChats.isEmpty());
@@ -95,18 +95,19 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		assertEquals(Integer.valueOf(1), actualUnreadChats.get(realmChat1));
 	}
 
-	private MutableChatMessage newMessage(String realmMessageId, boolean read) {
-		final MutableMessage liteChatMessage = Messages.newMessage(testRealm.newMessageEntity(realmMessageId));
-		liteChatMessage.setAuthor(testRealm.newUserEntity("user_01"));
-		liteChatMessage.setRecipient(testRealm.newUserEntity("user_03"));
-		liteChatMessage.setSendDate(DateTime.now());
-		liteChatMessage.setBody(Strings.generateRandomString(10));
-		return Messages.newChatMessage(liteChatMessage, read);
+	private MutableMessage newMessage(String realmMessageId, boolean read) {
+		final MutableMessage message = Messages.newMessage(testRealm.newMessageEntity(realmMessageId));
+		message.setAuthor(testRealm.newUserEntity("user_01"));
+		message.setRecipient(testRealm.newUserEntity("user_03"));
+		message.setSendDate(DateTime.now());
+		message.setBody(Strings.generateRandomString(10));
+		message.setRead(read);
+		return message;
 	}
 
 	@Override
 	public void tearDown() throws Exception {
-		chatMessageDao.deleteAll();
+		messageDao.deleteAll();
 		chatDao.deleteAll();
 		super.tearDown();
 	}

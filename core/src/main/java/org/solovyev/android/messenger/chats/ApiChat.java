@@ -1,7 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
@@ -16,10 +17,10 @@ import java.util.List;
 public interface ApiChat {
 
 	@Nonnull
-	List<ChatMessage> getMessages();
+	List<Message> getMessages();
 
 	@Nullable
-	ChatMessage getLastMessage();
+	Message getLastMessage();
 
 	@Nonnull
 	List<User> getParticipants();

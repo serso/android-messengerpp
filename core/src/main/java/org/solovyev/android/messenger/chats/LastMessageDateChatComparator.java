@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 
 import java.util.Comparator;
 
@@ -10,8 +10,8 @@ class LastMessageDateChatComparator implements Comparator<UiChat> {
 
 	@Override
 	public int compare(UiChat lhs, UiChat rhs) {
-		final ChatMessage lm = lhs.getLastMessage();
-		final ChatMessage rm = rhs.getLastMessage();
+		final Message lm = lhs.getLastMessage();
+		final Message rm = rhs.getLastMessage();
 		return compareSendDatesLatestFirst(lm, rm);
 	}
 

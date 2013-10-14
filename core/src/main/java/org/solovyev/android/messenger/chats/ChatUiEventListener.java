@@ -9,7 +9,7 @@ import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.android.messenger.users.ContactFragment;
 import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
@@ -89,7 +89,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		}
 	}
 
-	private void onMessageReadEvent(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+	private void onMessageReadEvent(@Nonnull Chat chat, @Nonnull Message message) {
 		chatService.onChatMessageRead(chat, message);
 	}
 

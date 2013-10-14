@@ -18,7 +18,7 @@ public class MessagesTest {
 	@Test
 	public void testNullsShouldBeInTheEnd() throws Exception {
 		final DateTime now = DateTime.now();
-		final List<ChatMessage> messages = new ArrayList<ChatMessage>();
+		final List<Message> messages = new ArrayList<Message>();
 		for(int i = 0; i < 5; i++) {
 			messages.add(newMockMessage(now.plusDays(i)));
 		}
@@ -27,9 +27,9 @@ public class MessagesTest {
 			messages.add(null);
 		}
 
-		sort(messages, new Comparator<ChatMessage>() {
+		sort(messages, new Comparator<Message>() {
 			@Override
-			public int compare(ChatMessage lhs, ChatMessage rhs) {
+			public int compare(Message lhs, Message rhs) {
 				return compareSendDatesLatestFirst(lhs, rhs);
 			}
 		});
@@ -46,14 +46,14 @@ public class MessagesTest {
 	@Test
 	public void testDatesShouldBeStoredInDescendantOrder() throws Exception {
 		final DateTime now = DateTime.now();
-		final List<ChatMessage> messages = new ArrayList<ChatMessage>();
+		final List<Message> messages = new ArrayList<Message>();
 		for(int i = 0; i < 10; i++) {
 			messages.add(newMockMessage(now.plusDays(i)));
 		}
 
-		sort(messages, new Comparator<ChatMessage>() {
+		sort(messages, new Comparator<Message>() {
 			@Override
-			public int compare(ChatMessage lhs, ChatMessage rhs) {
+			public int compare(Message lhs, Message rhs) {
 				return compareSendDatesLatestFirst(lhs, rhs);
 			}
 		});
@@ -66,16 +66,16 @@ public class MessagesTest {
 	@Test
 	public void testComparisonResultShouldBePositiveForLaterDate() throws Exception {
 		final DateTime now = DateTime.now();
-		final ChatMessage lm = newMockMessage(now);
-		final ChatMessage rm = newMockMessage(now.plusDays(1));
+		final Message lm = newMockMessage(now);
+		final Message rm = newMockMessage(now.plusDays(1));
 		assertTrue(compareSendDatesLatestFirst(lm, rm) > 0);
 	}
 
 	@Test
 	public void testComparisonResultShouldBeNegativeForEarlierDate() throws Exception {
 		final DateTime now = DateTime.now();
-		final ChatMessage lm = newMockMessage(now);
-		final ChatMessage rm = newMockMessage(now.minusDays(1));
+		final Message lm = newMockMessage(now);
+		final Message rm = newMockMessage(now.minusDays(1));
 		assertTrue(compareSendDatesLatestFirst(lm, rm) < 0);
 	}
 

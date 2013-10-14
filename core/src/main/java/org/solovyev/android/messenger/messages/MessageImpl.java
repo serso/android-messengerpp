@@ -5,10 +5,16 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.properties.AProperty;
+import org.solovyev.android.properties.MutableAProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.Collections;
 import java.util.TimeZone;
+
+import static org.solovyev.android.properties.Properties.newProperties;
 
 /**
  * User: serso
@@ -43,6 +49,11 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 
 	@Nonnull
 	private Entity chat;
+
+	private boolean read = false;
+
+	@Nonnull
+	private MutableAProperties properties = newProperties(Collections.<AProperty>emptyList());
 
 	MessageImpl(@Nonnull Entity entity) {
 		super(entity);
@@ -117,6 +128,7 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 
 		clone.author = this.author.clone();
 		clone.chat = this.chat.clone();
+		clone.properties = this.properties.clone();
 
 		if (this.recipient != null) {
 			clone.recipient = this.recipient.clone();
@@ -127,10 +139,16 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 
 	@Nonnull
 	@Override
-	public Message cloneWithNewState(@Nonnull MessageState state) {
+	public MutableMessage cloneWithNewState(@Nonnull MessageState state) {
 		final MessageImpl clone = clone();
 		clone.state = state;
 		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public MutableAProperties getProperties() {
+		return properties;
 	}
 
 	@Override
@@ -178,5 +196,23 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	@Override
 	public void setChat(@Nonnull Entity chat) {
 		this.chat = chat;
+	}
+
+	@Override
+	public boolean isRead() {
+		return read;
+	}
+
+	@Override
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	@Nonnull
+	@Override
+	public MutableMessage cloneRead() {
+		final MessageImpl clone = clone();
+		clone.read = true;
+		return clone;
 	}
 }

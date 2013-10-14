@@ -8,12 +8,12 @@ public enum MessageUiEventType {
 	quote;
 
 	@Nonnull
-	public final MessageUiEvent newEvent(@Nonnull ChatMessage message) {
+	public final MessageUiEvent newEvent(@Nonnull Message message) {
 		return newEvent(message, null);
 	}
 
 	@Nonnull
-	public final MessageUiEvent newEvent(@Nonnull ChatMessage message, @Nullable Object data) {
+	public final MessageUiEvent newEvent(@Nonnull Message message, @Nullable Object data) {
 		checkData(data);
 		return new MessageUiEvent(message, this, data);
 	}

@@ -134,7 +134,7 @@ final class UiMessageSender {
 		}
 
 		@Override
-		protected void onSuccessPostExecute(@Nullable List<ChatMessage> result) {
+		protected void onSuccessPostExecute(@Nullable List<Message> result) {
 			super.onSuccessPostExecute(result);
 			final EditText messageBody = messageBodyRef.get();
 			if (messageBody != null) {

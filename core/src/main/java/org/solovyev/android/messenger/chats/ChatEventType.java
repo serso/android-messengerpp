@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 
 /**
  * User: serso
@@ -35,7 +35,7 @@ public enum ChatEventType {
 	message_changed {
 		@Override
 		protected void checkData(@Nullable Object data) {
-			assert data instanceof ChatMessage;
+			assert data instanceof Message;
 		}
 	},
 
@@ -43,7 +43,7 @@ public enum ChatEventType {
 	last_message_changed {
 		@Override
 		protected void checkData(@Nullable Object data) {
-			assert data instanceof ChatMessage;
+			assert data instanceof Message;
 		}
 	},
 
@@ -74,7 +74,7 @@ public enum ChatEventType {
 	message_read {
 		@Override
 		protected void checkData(@Nullable Object data) {
-			assert data instanceof ChatMessage;
+			assert data instanceof Message;
 		}
 	};
 

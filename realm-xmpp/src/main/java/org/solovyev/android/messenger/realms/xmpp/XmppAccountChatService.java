@@ -6,19 +6,17 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.OfflineMessageManager;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 
 /**
@@ -34,10 +32,10 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
-		return doOnConnection(new XmppConnectedCallable<List<ChatMessage>>() {
+	public List<Message> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+		return doOnConnection(new XmppConnectedCallable<List<Message>>() {
 			@Override
-			public List<ChatMessage> call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
+			public List<Message> call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 				final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
 				try {
 					if (offlineManager.supportsFlexibleRetrieval()) {
@@ -54,13 +52,13 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
+	public List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
+	public List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
 		return Collections.emptyList();
 	}
 
@@ -72,12 +70,12 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nullable
 	@Override
-	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException {
-		return doOnConnection(new MessengerSender(chat, message, getAccount()));
+	public String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
+		return doOnConnection(new XmppMessengerSender(chat, message, getAccount()));
 	}
 
 	@Override
-	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException {
+	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull
@@ -87,45 +85,9 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 			@Override
 			public Chat call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(accountUserId2, accountChat.getEntityId(), new XmppMessageListener(getAccount(), accountChat));
-				return XmppAccount.toApiChat(smackChat, Collections.<Message>emptyList(), getAccount()).getChat();
+				return XmppAccount.toApiChat(smackChat, Collections.<org.jivesoftware.smack.packet.Message>emptyList(), getAccount()).getChat();
 			}
 		});
 	}
 
-	private static final class MessengerSender implements XmppConnectedCallable<String> {
-
-		@Nonnull
-		private final Chat chat;
-
-		@Nonnull
-		private final ChatMessage message;
-
-		@Nonnull
-		private final Account account;
-
-		private MessengerSender(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull Account account) {
-			this.chat = chat;
-			this.message = message;
-			this.account = account;
-		}
-
-		@Override
-		public String call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
-			final ChatManager chatManager = connection.getChatManager();
-
-			final Entity accountChat = chat.getEntity();
-			org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(accountChat.getAccountEntityId());
-			if (smackChat == null) {
-				// smack forget about chat ids after restart => need to create chat here
-				smackChat = chatManager.createChat(chat.getSecondUser().getAccountEntityId(), accountChat.getAccountEntityId(), new XmppMessageListener(account, accountChat));
-			} else {
-				// todo serso: remove if unnecessary
-				smackChat.addMessageListener(new XmppMessageListener(account, accountChat));
-			}
-
-			smackChat.sendMessage(message.getBody());
-
-			return null;
-		}
-	}
 }

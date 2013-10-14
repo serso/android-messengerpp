@@ -3,7 +3,7 @@ package org.solovyev.android.messenger.chats;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**
@@ -23,7 +23,7 @@ public final class ChatUiEvent extends AbstractTypedJEvent<Chat, ChatUiEventType
 	}
 
 	@Nonnull
-	public ChatMessage getDataAsChatMessage() {
-		return (ChatMessage) getData();
+	public Message getDataAsChatMessage() {
+		return (Message) getData();
 	}
 }

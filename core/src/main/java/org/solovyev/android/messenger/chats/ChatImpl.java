@@ -138,8 +138,8 @@ public class ChatImpl extends AbstractIdentifiable implements Chat {
 	public ChatImpl clone() {
 		final ChatImpl clone = (ChatImpl) super.clone();
 
-        /*clone.messages = new ArrayList<ChatMessage>(this.messages.size());
-        for (ChatMessage message : this.messages) {
+        /*clone.messages = new ArrayList<Message>(this.messages.size());
+        for (Message message : this.messages) {
             clone.messages.add(message.clone());
         }
 

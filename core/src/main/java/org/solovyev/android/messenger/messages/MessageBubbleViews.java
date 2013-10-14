@@ -100,7 +100,7 @@ final class MessageBubbleViews {
 		}
 	}
 
-	static void setMessageBubbleMessageIcon(@Nonnull Context context, @Nonnull ChatMessage message, @Nonnull ImageView messageIcon) {
+	static void setMessageBubbleMessageIcon(@Nonnull Context context, @Nonnull Message message, @Nonnull ImageView messageIcon) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
 			messageIcon.setVisibility(View.VISIBLE);

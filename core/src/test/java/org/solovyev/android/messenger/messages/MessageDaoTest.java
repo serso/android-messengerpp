@@ -19,11 +19,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
 
-public class ChatMessageDaoTest extends DefaultMessengerTest {
+public class MessageDaoTest extends DefaultMessengerTest {
 
 	@Inject
 	@Nonnull
-	private SqliteChatMessageDao dao;
+	private SqliteMessageDao dao;
 
 	@Inject
 	@Nonnull
@@ -39,7 +39,7 @@ public class ChatMessageDaoTest extends DefaultMessengerTest {
 		final Entity from = account.getUser().getEntity();
 		final Entity to = getContactForAccount(account, 0).getEntity();
 
-		final List<ChatMessage> messages = new ArrayList<ChatMessage>();
+		final List<Message> messages = new ArrayList<Message>();
 		final DateTime now = DateTime.now();
 		messages.add(newMockMessage(now, from, to, account));
 		messages.add(newMockMessage(now.plusDays(1), from, to, account));
@@ -56,7 +56,7 @@ public class ChatMessageDaoTest extends DefaultMessengerTest {
 	}
 
 	private void checkLastMessage(@Nonnull Chat chat, @Nonnull DateTime expected) {
-		ChatMessage lastMessage = dao.readLastMessage(chat.getId());
+		Message lastMessage = dao.readLastMessage(chat.getId());
 		assertNotNull(lastMessage);
 		assertEquals(lastMessage.getSendDate(), expected);
 	}

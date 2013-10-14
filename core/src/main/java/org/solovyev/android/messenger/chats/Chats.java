@@ -8,7 +8,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -32,7 +33,7 @@ public final class Chats {
 	}
 
 	@Nonnull
-	static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage lastMessage, @Nonnull User user, int unreadMessagesCount) {
+	static String getDisplayName(@Nonnull Chat chat, @Nullable Message lastMessage, @Nonnull User user, int unreadMessagesCount) {
 		String result = getDisplayName(chat, lastMessage, user);
 		if (unreadMessagesCount > 0) {
 			result += " (" + unreadMessagesCount + ")";
@@ -41,7 +42,7 @@ public final class Chats {
 	}
 
 	@Nonnull
-	static String getDisplayName(@Nonnull Chat chat, @Nullable ChatMessage message, @Nonnull User user) {
+	static String getDisplayName(@Nonnull Chat chat, @Nullable Message message, @Nonnull User user) {
 		final String title = message != null ? message.getTitle() : null;
 		if (Strings.isEmpty(title) || title.equals(" ... ")) {
 
@@ -63,12 +64,12 @@ public final class Chats {
 	@Nonnull
 	public static ApiChat newPrivateApiChat(@Nonnull Entity chat,
 											@Nonnull Collection<User> participants,
-											@Nonnull Collection<ChatMessage> messages) {
+											@Nonnull Collection<Message> messages) {
 		final ApiChatImpl result = ApiChatImpl.newInstance(chat, messages.size(), true);
 		for (User participant : participants) {
 			result.addParticipant(participant);
 		}
-		for (ChatMessage message : messages) {
+		for (Message message : messages) {
 			result.addMessage(message);
 		}
 		return result;
@@ -76,7 +77,7 @@ public final class Chats {
 
 	@Nonnull
 	public static ApiChat newEmptyApiChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
-		return ApiChatImpl.newInstance(chat, Collections.<ChatMessage>emptyList(), participants);
+		return ApiChatImpl.newInstance(chat, Collections.<Message>emptyList(), participants);
 	}
 
 	@Nonnull

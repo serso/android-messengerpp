@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.common.listeners.AbstractTypedJEvent;
 
 /**
@@ -24,13 +24,13 @@ public class ChatEvent extends AbstractTypedJEvent<Chat, ChatEventType> {
 	}
 
 	@Nonnull
-	public ChatMessage getDataAsChatMessage() {
-		return (ChatMessage) getData();
+	public Message getDataAsChatMessage() {
+		return (Message) getData();
 	}
 
 	@Nonnull
-	public List<ChatMessage> getDataAsChatMessages() {
-		return (List<ChatMessage>) getData();
+	public List<Message> getDataAsChatMessages() {
+		return (List<Message>) getData();
 	}
 
 	@Nonnull

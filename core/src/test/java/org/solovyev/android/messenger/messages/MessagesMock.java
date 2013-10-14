@@ -18,7 +18,7 @@ public class MessagesMock {
 	private static final AtomicInteger counter = new AtomicInteger();
 
 	@Nonnull
-	public static ChatMessage newMockMessage(@Nonnull DateTime sendDate) {
+	public static Message newMockMessage(@Nonnull DateTime sendDate) {
 		final Entity from = mock(Entity.class);
 		final Entity to = mock(Entity.class);
 
@@ -26,7 +26,7 @@ public class MessagesMock {
 	}
 
 	@Nonnull
-	public static ChatMessage newMockMessage(@Nonnull DateTime sendDate,
+	public static Message newMockMessage(@Nonnull DateTime sendDate,
 											 @Nonnull Entity from,
 											 @Nonnull Entity to,
 											 @Nonnull Account account) {
@@ -34,11 +34,11 @@ public class MessagesMock {
 	}
 
 	@Nonnull
-	public static ChatMessage newMockMessage(@Nonnull DateTime sendDate,
+	public static Message newMockMessage(@Nonnull DateTime sendDate,
 											 @Nonnull Entity from,
 											 @Nonnull Entity to,
 											 @Nonnull String accountId) {
-		final ChatMessage message = mock(ChatMessage.class);
+		final Message message = mock(Message.class);
 
 		final String id = String.valueOf(counter.getAndIncrement());
 		when(message.getEntity()).thenReturn(newEntity(accountId, id));

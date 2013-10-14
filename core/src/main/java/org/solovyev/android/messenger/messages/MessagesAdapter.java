@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -21,8 +20,9 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.android.messenger.messages.MessageListItem.newMessageListItem;
+import static org.solovyev.android.messenger.messages.Messages.newEmptyMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
-import static org.solovyev.android.messenger.messages.Messages.newChatMessage;
 
 /**
  * User: serso
@@ -71,7 +71,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 	@Nonnull
 	private final Handler uiHandler = new Handler(new Handler.Callback() {
 		@Override
-		public boolean handleMessage(@Nonnull Message msg) {
+		public boolean handleMessage(@Nonnull android.os.Message msg) {
 			switch (msg.what) {
 				case REMOVE_USER_START_TYPING_ID:
 					final MessageListItem listItem = (MessageListItem) msg.obj;
@@ -113,17 +113,17 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
 		if (type == ChatEventType.message_added_batch) {
 			if (eventChat.equals(chat)) {
-				final List<ChatMessage> messages = event.getDataAsChatMessages();
+				final List<Message> messages = event.getDataAsChatMessages();
 
-				addListItems(Lists.transform(messages, new Function<ChatMessage, MessageListItem>() {
+				addListItems(Lists.transform(messages, new Function<Message, MessageListItem>() {
 					@Override
-					public MessageListItem apply(@javax.annotation.Nullable ChatMessage input) {
+					public MessageListItem apply(@javax.annotation.Nullable Message input) {
 						assert input != null;
 						return createListItem(input);
 					}
 				}));
 
-				for (ChatMessage message : messages) {
+				for (Message message : messages) {
 					final MessageListItem listItem = userTypingListItems.remove(message.getAuthor());
 					if (listItem != null) {
 						removeListItem(listItem);
@@ -134,7 +134,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
 		if (type == ChatEventType.message_changed) {
 			if (eventChat.equals(chat)) {
-				final ChatMessage message = (ChatMessage) data;
+				final Message message = (Message) data;
 				final MessageListItem listItem = findInAllElements(message);
 				if (listItem != null) {
 					listItem.onEvent(event);
@@ -163,9 +163,10 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				message.setSendDate(DateTime.now());
 				message.setAuthor(user);
 				message.setBody(getContext().getString(R.string.mpp_user_is_typing));
+				message.setRead(true);
 
 				// create fake list item
-				listItem = createListItem(newChatMessage(message, true));
+				listItem = createListItem(message);
 				addListItem(listItem);
 
 				// add list item to the map
@@ -199,27 +200,27 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 	}
 
 	@Nullable
-	private MessageListItem findInAllElements(@Nonnull ChatMessage message) {
+	private MessageListItem findInAllElements(@Nonnull Message message) {
 		return Iterables.find(getAllElements(), Predicates.<MessageListItem>equalTo(createListItem(message)), null);
 	}
 
 	@Nonnull
-	private MessageListItem createListItem(@Nonnull ChatMessage message) {
-		return MessageListItem.newInstance(user, chat, message, messageStyle);
+	private MessageListItem createListItem(@Nonnull Message message) {
+		return newMessageListItem(user, chat, message, messageStyle);
 	}
 
-	private void addMessageListItem(@Nonnull ChatMessage message) {
+	private void addMessageListItem(@Nonnull Message message) {
 		// remove typing message
 		userTypingListItems.remove(message.getAuthor());
 
 		addListItem(createListItem(message));
 	}
 
-	protected void removeListItem(@Nonnull ChatMessage message) {
+	protected void removeListItem(@Nonnull Message message) {
 		remove(createListItem(message));
 	}
 
 	private void removeMessageListItem(@Nonnull String messageId) {
-		removeListItem(Messages.newEmpty(messageId));
+		removeListItem(newEmptyMessage(messageId));
 	}
 }

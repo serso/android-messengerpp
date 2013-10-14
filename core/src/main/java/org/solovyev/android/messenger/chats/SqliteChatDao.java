@@ -19,8 +19,8 @@ import org.solovyev.android.messenger.LinkedEntitiesDao;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.SqliteChatMessageDao;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.SqliteMessageDao;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
@@ -242,8 +242,8 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 				}
 			});
 
-			for (ChatMessage chatMessage : apiChat.getMessages()) {
-				execs.add(new SqliteChatMessageDao.InsertMessage(addedChat, chatMessage));
+			for (Message message : apiChat.getMessages()) {
+				execs.add(new SqliteMessageDao.InsertMessage(addedChat, message));
 			}
 
 			for (User participant : apiChat.getParticipants()) {

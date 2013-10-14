@@ -14,7 +14,6 @@ import org.jivesoftware.smackx.ChatStateListener;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.messages.ChatMessage;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 
@@ -39,7 +38,7 @@ final class XmppMessageListener implements ChatStateListener {
 	@Override
 	public void processMessage(Chat chat, Message message) {
 		Log.i("M++/Xmpp", "Message created: " + message.getBody());
-		final List<ChatMessage> messages = XmppAccount.toMessages(account, Arrays.asList(message));
+		final List<org.solovyev.android.messenger.messages.Message> messages = XmppAccount.toMessages(account, Arrays.asList(message));
 		if (!messages.isEmpty()) {
 			getChatService().saveChatMessages(this.chat, messages, false);
 		} else {

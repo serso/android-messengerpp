@@ -11,13 +11,9 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static org.solovyev.android.messenger.messages.MessageState.delivered;
 import static org.solovyev.android.messenger.messages.MessageState.received;
-import static org.solovyev.android.messenger.messages.Messages.newChatMessage;
 
 /**
  * User: serso
@@ -131,10 +127,10 @@ public class JsonMessage {
 	}
 
 	@Nonnull
-	public Message toLiteChatMessage(@Nonnull User user,
-											 @Nullable String explicitUserId,
-											 @Nonnull Account account) throws IllegalJsonException {
-		if (mid == null || uid == null || date == null) {
+	public Message toMessage(@Nonnull User user,
+							 @Nullable String explicitUserId,
+							 @Nonnull Account account) throws IllegalJsonException {
+		if (mid == null || uid == null || date == null || read_state == null || out == null) {
 			throw new IllegalJsonException();
 		}
 
@@ -170,17 +166,9 @@ public class JsonMessage {
 		result.setSendDate(sendDate);
 		result.setBody(Strings.getNotEmpty(body, ""));
 		result.setTitle(Strings.getNotEmpty(title, ""));
+		result.setRead(isRead());
 
 		return result;
-	}
-
-	@Nonnull
-	public ChatMessage toChatMessage(@Nonnull User user, @Nullable String explicitUserId, @Nonnull Account account) throws IllegalJsonException {
-		if (read_state == null || out == null) {
-			throw new IllegalJsonException();
-		}
-
-		return newChatMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
 	}
 
 	@Nonnull

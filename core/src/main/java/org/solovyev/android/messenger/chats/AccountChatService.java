@@ -7,8 +7,9 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 
 /**
@@ -19,13 +20,13 @@ import org.solovyev.android.messenger.users.User;
 public interface AccountChatService {
 
 	@Nonnull
-	List<ChatMessage> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<Message> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	@Nonnull
-	List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;
+	List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;
 
 	@Nonnull
-	List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException;
+	List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException;
 
 	@Nonnull
 	List<ApiChat> getUserChats(@Nonnull String accountUserId) throws AccountConnectionException;
@@ -39,9 +40,9 @@ public interface AccountChatService {
 	 * @return message id of sent message if possible
 	 */
 	@Nullable
-	String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException;
+	String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException;
 
-	void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException;
+	void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException;
 
 	@Nonnull
 	Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException;

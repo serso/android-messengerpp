@@ -21,7 +21,8 @@ import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnect
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.MutableUser;
@@ -39,6 +40,7 @@ import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.*;
 import static org.solovyev.android.messenger.messages.MessageState.received;
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
@@ -128,9 +130,9 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 				final User contact = findOrCreateContact(entry.getKey(), contacts);
 				final Chat chat = chatService.getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 
-				final List<ChatMessage> messages = new ArrayList<ChatMessage>(entry.getValue().size());
+				final List<Message> messages = new ArrayList<Message>(entry.getValue().size());
 				for (String message : entry.getValue()) {
-					final ChatMessage chatMessage = toChatMessage(message, account, contact, user, chat);
+					final Message chatMessage = toMessage(message, account, contact, user, chat);
 					if (chatMessage != null) {
 						messages.add(chatMessage);
 					}
@@ -171,17 +173,17 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	}
 
 	@Nullable
-	private ChatMessage toChatMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull User to, @Nonnull Chat chat) {
+	private Message toMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull User to, @Nonnull Chat chat) {
 		if (!isEmpty(messageBody)) {
-			final MutableMessage message = Messages.newMessage(generateEntity(account));
+			final MutableMessage message = newMessage(generateEntity(account));
 			message.setChat(chat.getEntity());
 			message.setBody(messageBody);
 			message.setAuthor(from.getEntity());
 			message.setRecipient(to.getEntity());
 			message.setSendDate(DateTime.now());
 			message.setState(received);
-			// new message by default unread
-			return Messages.newChatMessage(message, false);
+			message.setRead(false);
+			return message;
 		} else {
 			return null;
 		}

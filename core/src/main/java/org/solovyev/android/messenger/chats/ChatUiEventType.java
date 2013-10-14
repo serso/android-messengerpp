@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,7 +17,7 @@ public enum ChatUiEventType {
 	chat_message_read {
 		@Override
 		protected void checkData(@Nullable Object data) {
-			assert data instanceof ChatMessage;
+			assert data instanceof Message;
 		}
 	};
 

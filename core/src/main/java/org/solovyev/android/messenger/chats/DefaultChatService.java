@@ -101,7 +101,7 @@ public class DefaultChatService implements ChatService {
 
 	@Inject
 	@Nonnull
-	private ChatMessageDao chatMessageDao;
+	private MessageDao messageDao;
 
 	@Inject
 	@Nonnull
@@ -125,7 +125,7 @@ public class DefaultChatService implements ChatService {
 
 	// key: chat id, value: last message
 	@Nonnull
-	private final Map<Entity, ChatMessage> lastMessagesCache = new HashMap<Entity, ChatMessage>();
+	private final Map<Entity, Message> lastMessagesCache = new HashMap<Entity, Message>();
 
 	// key: chat id, value: chat
 	@Nonnull
@@ -398,12 +398,12 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws AccountException {
-		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getChatMessages(user.getAccountEntityId());
+	public List<Message> syncChatMessages(@Nonnull Entity user) throws AccountException {
+		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getChatMessages(user.getAccountEntityId());
 
-		final Multimap<Chat, ChatMessage> messagesByChats = ArrayListMultimap.create();
+		final Multimap<Chat, Message> messagesByChats = ArrayListMultimap.create();
 
-		for (ChatMessage message : messages) {
+		for (Message message : messages) {
 			if (message.isPrivate()) {
 				final Entity participant = message.getSecondUser(user);
 				assert participant != null;
@@ -423,11 +423,11 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws AccountException {
+	public List<Message> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws AccountException {
 		final Account account = getRealmByEntity(chat);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
-		final List<ChatMessage> messages = accountChatService.getNewerChatMessagesForChat(chat.getAccountEntityId(), account.getUser().getEntity().getAccountEntityId());
+		final List<Message> messages = accountChatService.getNewerChatMessagesForChat(chat.getAccountEntityId(), account.getUser().getEntity().getAccountEntityId());
 
 		saveChatMessages(chat, messages, true);
 
@@ -436,13 +436,13 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void saveChatMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate) {
+	public void saveChatMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate) {
 		Chat chat = this.getChatById(accountChat);
 
 		if (chat != null) {
-			final MergeDaoResult<ChatMessage, String> result;
+			final MergeDaoResult<Message, String> result;
 			synchronized (lock) {
-				result = getChatMessageDao().mergeMessages(accountChat.getEntityId(), messages, false);
+				result = getMessageDao().mergeMessages(accountChat.getEntityId(), messages, false);
 
 				// update sync data
 				if (updateChatSyncDate) {
@@ -460,7 +460,7 @@ public class DefaultChatService implements ChatService {
                 chatEvents.add(new ChatEvent(chat, ChatEventType.message_removed, removedMessageId));
             }*/
 
-			for (ChatMessage updatedMessage : result.getUpdatedObjects()) {
+			for (Message updatedMessage : result.getUpdatedObjects()) {
 				chatEvents.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));
 			}
 
@@ -471,14 +471,14 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void onChatMessageRead(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+	public void onChatMessageRead(@Nonnull Chat chat, @Nonnull Message message) {
 		if (!message.isRead()) {
 			message = message.cloneRead();
 		}
 
 		final boolean changed;
 		synchronized (lock) {
-			changed = chatMessageDao.changeReadStatus(message.getId(), true);
+			changed = messageDao.changeReadStatus(message.getId(), true);
 		}
 
 		if (changed) {
@@ -513,7 +513,7 @@ public class DefaultChatService implements ChatService {
 
 		final boolean changed;
 		synchronized (lock) {
-			changed = chatMessageDao.changeMessageState(message.getId(), message.getState());
+			changed = messageDao.changeMessageState(message.getId(), message.getState());
 		}
 
 		if (changed) {
@@ -529,7 +529,7 @@ public class DefaultChatService implements ChatService {
 		final List<Chat> chats = userService.getUserChats(user.getEntity());
 
 		for (Chat chat : chats) {
-			final ChatMessage lastMessage = getLastMessage(chat.getEntity());
+			final Message lastMessage = getLastMessage(chat.getEntity());
 			if (lastMessage != null) {
 				result.add(loadUiChat(user, chat));
 			} else {
@@ -559,7 +559,7 @@ public class DefaultChatService implements ChatService {
 		final List<Chat> chats = userService.getUserChats(user.getEntity());
 
 		for (Chat chat : chats) {
-			final ChatMessage lastMessage = getLastMessage(chat.getEntity());
+			final Message lastMessage = getLastMessage(chat.getEntity());
 			if (lastMessage == null) {
 				chatDao.delete(user, chat);
 			}
@@ -578,16 +578,16 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Nonnull
-	private ChatMessageDao getChatMessageDao() {
-		return chatMessageDao;
+	private MessageDao getMessageDao() {
+		return messageDao;
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
+	public List<Message> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
 		final Integer offset = getMessageService().getMessages(chat).size();
 
-		final List<ChatMessage> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
+		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getOlderChatMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
 		saveChatMessages(chat, messages, false);
 
 		return java.util.Collections.unmodifiableList(messages);
@@ -726,13 +726,13 @@ public class DefaultChatService implements ChatService {
 
 	@Nullable
 	@Override
-	public ChatMessage getLastMessage(@Nonnull Entity chat) {
-		ChatMessage result;
+	public Message getLastMessage(@Nonnull Entity chat) {
+		Message result;
 
 		synchronized (lastMessagesCache) {
 			result = lastMessagesCache.get(chat);
 			if (result == null) {
-				result = getChatMessageDao().readLastMessage(chat.getEntityId());
+				result = getMessageDao().readLastMessage(chat.getEntityId());
 				if (result != null) {
 					lastMessagesCache.put(chat, result);
 				}
@@ -800,19 +800,19 @@ public class DefaultChatService implements ChatService {
 					break;
 			}
 
-			final Map<Chat, ChatMessage> changedLastMessages = new HashMap<Chat, ChatMessage>();
+			final Map<Chat, Message> changedLastMessages = new HashMap<Chat, Message>();
 			synchronized (lastMessagesCache) {
 				switch (event.getType()) {
 					case message_added: {
-						final ChatMessage message = event.getDataAsChatMessage();
+						final Message message = event.getDataAsChatMessage();
 						tryPutNewLastMessage(eventChat, changedLastMessages, message);
 					}
 					break;
 					case message_added_batch: {
-						final List<ChatMessage> messages = event.getDataAsChatMessages();
+						final List<Message> messages = event.getDataAsChatMessages();
 
-						ChatMessage newestMessage = null;
-						for (ChatMessage message : messages) {
+						Message newestMessage = null;
+						for (Message message : messages) {
 							if (newestMessage == null) {
 								newestMessage = message;
 							} else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
@@ -824,9 +824,9 @@ public class DefaultChatService implements ChatService {
 					}
 					break;
 					case message_changed: {
-						if (data instanceof ChatMessage) {
-							final ChatMessage message = (ChatMessage) data;
-							final ChatMessage messageFromCache = lastMessagesCache.get(eventChat.getEntity());
+						if (data instanceof Message) {
+							final Message message = (Message) data;
+							final Message messageFromCache = lastMessagesCache.get(eventChat.getEntity());
 							if (messageFromCache == null || messageFromCache.equals(message)) {
 								lastMessagesCache.put(eventChat.getEntity(), message);
 								changedLastMessages.put(eventChat, message);
@@ -837,17 +837,17 @@ public class DefaultChatService implements ChatService {
 				}
 			}
 
-			for (Map.Entry<Chat, ChatMessage> entry : changedLastMessages.entrySet()) {
+			for (Map.Entry<Chat, Message> entry : changedLastMessages.entrySet()) {
 				fireEvent(last_message_changed.newEvent(entry.getKey(), entry.getValue()));
 			}
 		}
 	}
 
 	private void tryPutNewLastMessage(@Nonnull Chat chat,
-									  @Nonnull Map<Chat, ChatMessage> changedLastMessages,
-									  @Nullable ChatMessage message) {
+									  @Nonnull Map<Chat, Message> changedLastMessages,
+									  @Nullable Message message) {
 		if (message != null) {
-			final ChatMessage messageFromCache = lastMessagesCache.get(chat.getEntity());
+			final Message messageFromCache = lastMessagesCache.get(chat.getEntity());
 			if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate())) {
 				lastMessagesCache.put(chat.getEntity(), message);
 				changedLastMessages.put(chat, message);

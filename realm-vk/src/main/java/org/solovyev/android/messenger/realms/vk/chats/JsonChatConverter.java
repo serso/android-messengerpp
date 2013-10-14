@@ -14,7 +14,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.ApiChatImpl;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
@@ -90,7 +90,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
 			if (!Collections.isEmpty(jsonMessages)) {
 				for (JsonMessage jsonMessage : jsonMessages) {
-					final ChatMessage message = jsonMessage.toChatMessage(user, explicitUserId, account);
+					final Message message = jsonMessage.toMessage(user, explicitUserId, account);
 
 					final Integer apiChatId = jsonMessage.getChat_id();
 					if (apiChatId == null && explicitChatId == null) {

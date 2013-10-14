@@ -47,6 +47,7 @@ import java.util.List;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_SEND;
+import static org.solovyev.android.messenger.messages.MessageListItem.newMessageListItem;
 import static org.solovyev.android.messenger.messages.UiMessageSender.trySendMessage;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -56,7 +57,7 @@ import static org.solovyev.common.text.Strings.isEmpty;
  * Date: 6/7/12
  * Time: 5:38 PM
  */
-public final class MessagesFragment extends AbstractListFragment<ChatMessage, MessageListItem> implements PullToRefreshListViewProvider {
+public final class MessagesFragment extends AbstractListFragment<Message, MessageListItem> implements PullToRefreshListViewProvider {
 
 	/*
 	**********************************************************************
@@ -267,7 +268,7 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		});
 	}
 
-	private void quoteMessage(@Nonnull ChatMessage message) {
+	private void quoteMessage(@Nonnull Message message) {
 		if (messageBody != null && !isEmpty(message.getBody())) {
 			messageBody.append("\"" + message.getBody() + "\"");
 		}
@@ -335,7 +336,7 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		return new AbstractOnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				new SyncChatMessagesForChatAsyncTask(this, getActivity()).executeInParallel(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+				new SyncMessagesForChatAsyncTask(this, getActivity()).executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 			}
 		};
 	}
@@ -360,7 +361,7 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 
 			final int count = lv.getCount();
 
-			new SyncChatMessagesForChatAsyncTask(this, getActivity()) {
+			new SyncMessagesForChatAsyncTask(this, getActivity()) {
 				@Override
 				protected void onSuccessPostExecute(@Nonnull Input result) {
 					try {
@@ -383,7 +384,7 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 
 					}
 				}
-			}.executeInParallel(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), true));
+			}.executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), true));
 		}
 	}
 
@@ -409,7 +410,7 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 
 	@Nonnull
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<ChatMessage>> createAsyncLoader(@Nonnull MessengerListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<Message>> createAsyncLoader(@Nonnull MessengerListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return new MessagesAsyncLoader(adapter, onPostExecute, MessageListItemStyle.newFromDefaultPreferences(getActivity()));
 	}
 
@@ -492,7 +493,7 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 		}
 	}
 
-	private class MessagesAsyncLoader extends AbstractAsyncLoader<ChatMessage, MessageListItem> {
+	private class MessagesAsyncLoader extends AbstractAsyncLoader<Message, MessageListItem> {
 
 		@Nonnull
 		private final MessageListItemStyle messageStyle;
@@ -504,18 +505,18 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 
 		@Nonnull
 		@Override
-		protected List<ChatMessage> getElements(@Nonnull Context context) {
+		protected List<Message> getElements(@Nonnull Context context) {
 			return App.getChatMessageService().getMessages(chat.getEntity());
 		}
 
 		@Nonnull
 		@Override
-		protected MessageListItem createListItem(@Nonnull ChatMessage message) {
-			return MessageListItem.newInstance(getUser(), chat, message, messageStyle);
+		protected MessageListItem createListItem(@Nonnull Message message) {
+			return newMessageListItem(getUser(), chat, message, messageStyle);
 		}
 
 		@Override
-		protected void onSuccessPostExecute(@Nullable List<ChatMessage> elements) {
+		protected void onSuccessPostExecute(@Nullable List<Message> elements) {
 			super.onSuccessPostExecute(elements);
 
 			scrollToTheEnd(200);
@@ -523,14 +524,14 @@ public final class MessagesFragment extends AbstractListFragment<ChatMessage, Me
 			// load new messages for chat
 			final FragmentActivity activity = getActivity();
 			if (activity != null) {
-				new SyncChatMessagesForChatAsyncTask(null, activity) {
+				new SyncMessagesForChatAsyncTask(null, activity) {
 					@Override
 					protected void onSuccessPostExecute(@Nonnull Input result) {
 						super.onSuccessPostExecute(result);
 						// let's wait 0.5 sec while sorting & filtering
 						scrollToTheEnd(500);
 					}
-				}.executeInParallel(new SyncChatMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+				}.executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 			}
 		}
 	}

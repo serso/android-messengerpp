@@ -5,14 +5,14 @@ import org.solovyev.common.listeners.AbstractTypedJEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-final class MessageUiEvent extends AbstractTypedJEvent<ChatMessage, MessageUiEventType>{
+final class MessageUiEvent extends AbstractTypedJEvent<Message, MessageUiEventType>{
 
-	MessageUiEvent(@Nonnull ChatMessage eventObject, @Nonnull MessageUiEventType type, @Nullable Object data) {
+	MessageUiEvent(@Nonnull Message eventObject, @Nonnull MessageUiEventType type, @Nullable Object data) {
 		super(eventObject, type, data);
 	}
 
 	@Nonnull
-	public ChatMessage getMessage() {
+	public Message getMessage() {
 		return getEventObject();
 	}
 }

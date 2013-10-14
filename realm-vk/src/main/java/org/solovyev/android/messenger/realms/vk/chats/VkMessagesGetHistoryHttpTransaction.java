@@ -12,7 +12,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
@@ -26,7 +26,7 @@ import org.solovyev.common.text.Strings;
  * Time: 10:15 PM
  */
 
-public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransaction<List<ChatMessage>> {
+public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransaction<List<Message>> {
 
 	@Nonnull
 	private static final Integer MAX_COUNT = 100;
@@ -51,7 +51,7 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
 	}
 
 	@Nonnull
-	public static HttpTransaction<List<ChatMessage>> forChat(@Nonnull VkAccount realm, @Nonnull String chatId, @Nonnull User user) {
+	public static HttpTransaction<List<Message>> forChat(@Nonnull VkAccount realm, @Nonnull String chatId, @Nonnull User user) {
 		final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction(realm);
 
 		result.chatId = chatId;
@@ -61,7 +61,7 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
 	}
 
 	@Nonnull
-	public static HttpTransaction<List<ChatMessage>> forChat(@Nonnull VkAccount realm, @Nonnull String chatId, @Nonnull User user, @Nonnull Integer offset) {
+	public static HttpTransaction<List<Message>> forChat(@Nonnull VkAccount realm, @Nonnull String chatId, @Nonnull User user, @Nonnull Integer offset) {
 		final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction(realm);
 
 		result.chatId = chatId;
@@ -72,7 +72,7 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
 	}
 
 	@Nonnull
-	public static HttpTransaction<List<ChatMessage>> forUser(@Nonnull VkAccount realm, @Nonnull String userId, @Nonnull User user) {
+	public static HttpTransaction<List<Message>> forUser(@Nonnull VkAccount realm, @Nonnull String userId, @Nonnull User user) {
 		final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction(realm);
 
 		result.userId = userId;
@@ -82,7 +82,7 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
 	}
 
 	@Nonnull
-	public static HttpTransaction<List<ChatMessage>> forUser(@Nonnull VkAccount realm, @Nonnull String userId, @Nonnull User user, @Nonnull Integer offset) {
+	public static HttpTransaction<List<Message>> forUser(@Nonnull VkAccount realm, @Nonnull String userId, @Nonnull User user, @Nonnull Integer offset) {
 		final VkMessagesGetHistoryHttpTransaction result = new VkMessagesGetHistoryHttpTransaction(realm);
 
 		result.userId = userId;
@@ -119,11 +119,11 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
 	}
 
 	@Override
-	protected List<ChatMessage> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+	protected List<Message> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
 		final List<ApiChat> chats = new JsonChatConverter(user, chatId, userId, App.getUserService(), getRealm()).convert(json);
 
 		// todo serso: optimize - convert json to the messages directly
-		final List<ChatMessage> messages = new ArrayList<ChatMessage>(chats.size() * 10);
+		final List<Message> messages = new ArrayList<Message>(chats.size() * 10);
 		for (ApiChat chat : chats) {
 			messages.addAll(chat.getMessages());
 		}

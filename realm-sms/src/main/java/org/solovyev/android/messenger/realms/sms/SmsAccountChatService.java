@@ -14,10 +14,11 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.ApiChat;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
@@ -38,19 +39,19 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getChatMessages(@Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException {
+	public List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 
@@ -62,7 +63,7 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nullable
 	@Override
-	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) throws AccountConnectionException {
+	public String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
 		final String phoneNumber = getPhoneNumber(message);
 		if(!Strings.isEmpty(phoneNumber)) {
 			// return AUTO GENERATED ID
@@ -84,7 +85,7 @@ final class SmsAccountChatService implements AccountChatService {
 	}
 
 	@Nullable
-	private String getPhoneNumber(@Nonnull ChatMessage message) {
+	private String getPhoneNumber(@Nonnull Message message) {
 		String phoneNumber = message.getProperties().getPropertyValue(MESSAGE_PROPERTY_PHONE);
 		if (Strings.isEmpty(phoneNumber)) {
 			final User recipient = App.getUserService().getUserById(message.getRecipient());
@@ -94,7 +95,7 @@ final class SmsAccountChatService implements AccountChatService {
 	}
 
 	@Override
-	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException {
+	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
 		if (recipient == null) {
 			recipient = App.getUserService().getUserById(message.getRecipient());
 		}

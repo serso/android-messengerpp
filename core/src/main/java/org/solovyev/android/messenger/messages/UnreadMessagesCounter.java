@@ -159,9 +159,9 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent> {
 		}
 	}
 
-	private void handleNewMessages(@Nonnull Chat chat, @Nonnull List<ChatMessage> messages) {
+	private void handleNewMessages(@Nonnull Chat chat, @Nonnull List<Message> messages) {
 		int unread = 0;
-		for (ChatMessage message : messages) {
+		for (Message message : messages) {
 			if (!message.isRead()) {
 				unread++;
 			}

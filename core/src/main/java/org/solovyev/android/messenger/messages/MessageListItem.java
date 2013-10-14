@@ -36,7 +36,7 @@ import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_
  * Date: 6/10/12
  * Time: 11:25 PM
  */
-public final class MessageListItem extends AbstractMessengerListItem<ChatMessage> /*, ChatEventListener*/ {
+public final class MessageListItem extends AbstractMessengerListItem<Message> /*, ChatEventListener*/ {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "message_list_item_";
@@ -50,7 +50,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 	private final MessageListItemStyle style;
 
 	private MessageListItem(@Nonnull Chat chat,
-							@Nonnull ChatMessage message,
+							@Nonnull Message message,
 							boolean userMessage,
 							@Nonnull MessageListItemStyle style) {
 		super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
@@ -60,7 +60,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 	}
 
 	@Nonnull
-	public static MessageListItem newInstance(@Nonnull User user, @Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull MessageListItemStyle style) {
+	public static MessageListItem newMessageListItem(@Nonnull User user, @Nonnull Chat chat, @Nonnull Message message, @Nonnull MessageListItemStyle style) {
 		final boolean userMessage = user.getEntity().equals(message.getAuthor());
 		return new MessageListItem(chat, message, userMessage, style);
 	}
@@ -77,12 +77,12 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 
 	@Nonnull
 	@Override
-	protected CharSequence getDisplayName(@Nonnull ChatMessage data, @Nonnull Context context) {
+	protected CharSequence getDisplayName(@Nonnull Message data, @Nonnull Context context) {
 		return data.getBody();
 	}
 
 	@Override
-	protected void fillView(@Nonnull ChatMessage message, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+	protected void fillView(@Nonnull Message message, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
 		final ViewGroup messageLayout = viewTag.getViewById(R.id.mpp_li_message_linearlayout);
 
 		final TextView messageText = viewTag.getViewById(R.id.mpp_li_message_body_textview);
@@ -112,7 +112,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 		MessageBubbleViews.fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage, false, style);
 
 		if (!message.isRead()) {
-			final ChatMessage readMessage = message.cloneRead();
+			final Message readMessage = message.cloneRead();
 			setData(readMessage);
 			getEventManager(context).fire(chat_message_read.newEvent(chat, readMessage));
 		}
@@ -173,7 +173,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
 				final MessageListItem listItem = data.getDataObject();
-				final ChatMessage message = listItem.getData();
+				final Message message = listItem.getData();
 				App.getChatService().removeMessage(message);
 			}
 		};
@@ -192,7 +192,7 @@ public final class MessageListItem extends AbstractMessengerListItem<ChatMessage
 	}
 
 	@Nonnull
-	public ChatMessage getMessage() {
+	public Message getMessage() {
 		return getData();
 	}
 }

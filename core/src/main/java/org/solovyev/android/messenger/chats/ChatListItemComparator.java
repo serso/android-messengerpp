@@ -1,6 +1,6 @@
 package org.solovyev.android.messenger.chats;
 
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 
 import javax.annotation.Nonnull;
 
@@ -26,8 +26,8 @@ final class ChatListItemComparator implements java.util.Comparator<ChatListItem>
 
 	@Override
 	public int compare(@Nonnull ChatListItem lhs, @Nonnull ChatListItem rhs) {
-		final ChatMessage lm = lhs.getLastMessage();
-		final ChatMessage rm = rhs.getLastMessage();
+		final Message lm = lhs.getLastMessage();
+		final Message rm = rhs.getLastMessage();
 		return compareSendDatesLatestFirst(lm, rm);
 	}
 }

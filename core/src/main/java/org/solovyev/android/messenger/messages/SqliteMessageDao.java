@@ -32,6 +32,7 @@ import java.util.NoSuchElementException;
 
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.getFirst;
 import static org.solovyev.android.db.AndroidDbUtils.*;
 import static org.solovyev.android.messenger.messages.MessageState.removed;
 
@@ -41,7 +42,7 @@ import static org.solovyev.android.messenger.messages.MessageState.removed;
  * Time: 7:41 PM
  */
 @Singleton
-public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMessageDao {
+public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao {
 
     /*
 	**********************************************************************
@@ -60,42 +61,42 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 	private UserService userService;
 
 	@Inject
-	public SqliteChatMessageDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+	public SqliteMessageDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
 	}
 
 	@Nonnull
 	@Override
 	public List<String> readMessageIds(@Nonnull String chatId) {
-		return doDbQuery(getSqliteOpenHelper(), new LoadChatMessageIdsByChatId(getContext(), chatId, getSqliteOpenHelper()));
+		return doDbQuery(getSqliteOpenHelper(), new LoadMessageIdsByChatId(getContext(), chatId, getSqliteOpenHelper()));
 	}
 
 	@Nullable
 	@Override
-	public ChatMessage read(@Nonnull String messageId) {
+	public Message read(@Nonnull String messageId) {
 		//todo serso: load message
 		return null;
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> readMessages(@Nonnull String chatId) {
-		return doDbQuery(getSqliteOpenHelper(), new LoadChatMessages(getContext(), chatId, this.userService, getSqliteOpenHelper()));
+	public List<Message> readMessages(@Nonnull String chatId) {
+		return doDbQuery(getSqliteOpenHelper(), new LoadMessages(getContext(), chatId, this.userService, getSqliteOpenHelper()));
 	}
 
 	@Nonnull
 	@Override
 	public String getOldestMessageForChat(@Nonnull String chatId) {
-		return doDbQuery(getSqliteOpenHelper(), new OldestChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
+		return doDbQuery(getSqliteOpenHelper(), new OldestMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
 	}
 
 	@Nullable
 	@Override
-	public ChatMessage readLastMessage(@Nonnull String chatId) {
-		final String lastChatMessageId = doDbQuery(getSqliteOpenHelper(), new LastChatMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
+	public Message readLastMessage(@Nonnull String chatId) {
+		final String lastChatMessageId = doDbQuery(getSqliteOpenHelper(), new LastMessageLoader(getContext(), getSqliteOpenHelper(), chatId));
 		if (!Strings.isEmpty(lastChatMessageId)) {
-			final List<ChatMessage> messages = doDbQuery(getSqliteOpenHelper(), new LoadChatMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
-			return Collections.getFirstListElement(messages);
+			final List<Message> messages = doDbQuery(getSqliteOpenHelper(), new LoadMessage(getContext(), lastChatMessageId, this.userService, getSqliteOpenHelper()));
+			return getFirst(messages, null);
 		} else {
 			return null;
 		}
@@ -125,24 +126,24 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<ChatMessage, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete) {
-		final MergeDaoResultImpl<ChatMessage, String> result = new MergeDaoResultImpl<ChatMessage, String>();
+	public MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages, boolean allowDelete) {
+		final MergeDaoResultImpl<Message, String> result = new MergeDaoResultImpl<Message, String>();
 
 		final Chat chat = getChatService().getChatById(Entities.newEntityFromEntityId(chatId));
 
 		if (chat != null) {
 			final List<String> messageIdsFromDb = readMessageIds(chatId);
-			for (final String chatMessageIdFromDb : messageIdsFromDb) {
+			for (final String messageIdFromDb : messageIdsFromDb) {
 				try {
 					// message exists both in db and on remote server => just update message properties
-					result.addUpdatedObject(find(messages, new ChatMessageByIdFinder(chatMessageIdFromDb)));
+					result.addUpdatedObject(find(messages, new MessageByIdFinder(messageIdFromDb)));
 				} catch (NoSuchElementException e) {
 					// message was removed on remote server => need to remove from local db
-					result.addRemovedObjectId(chatMessageIdFromDb);
+					result.addRemovedObjectId(messageIdFromDb);
 				}
 			}
 
-			for (ChatMessage message : messages) {
+			for (Message message : messages) {
 				try {
 					// message exists both in db and on remote server => case already covered above
 					find(messageIdsFromDb, equalTo(message.getEntity().getEntityId()));
@@ -163,11 +164,11 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 				}
 			}
 
-			for (ChatMessage updatedMessage : result.getUpdatedObjects()) {
+			for (Message updatedMessage : result.getUpdatedObjects()) {
 				execs.add(new UpdateMessage(updatedMessage, chat));
 			}
 
-			for (ChatMessage addedMessage : result.getAddedObjects()) {
+			for (Message addedMessage : result.getAddedObjects()) {
 				execs.add(new InsertMessage(chat, addedMessage));
 			}
 
@@ -198,12 +199,12 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
     **********************************************************************
     */
 
-	private static class LoadChatMessageIdsByChatId extends AbstractDbQuery<List<String>> {
+	private static class LoadMessageIdsByChatId extends AbstractDbQuery<List<String>> {
 
 		@Nonnull
 		private final String chatId;
 
-		private LoadChatMessageIdsByChatId(@Nonnull Context context, @Nonnull String chatId, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+		private LoadMessageIdsByChatId(@Nonnull Context context, @Nonnull String chatId, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 			super(context, sqliteOpenHelper);
 			this.chatId = chatId;
 		}
@@ -221,54 +222,54 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		}
 	}
 
-	private static class ChatMessageByIdFinder implements Predicate<ChatMessage> {
+	private static class MessageByIdFinder implements Predicate<Message> {
 
 		@Nonnull
 		private final String messageId;
 
-		public ChatMessageByIdFinder(@Nonnull String messageId) {
+		public MessageByIdFinder(@Nonnull String messageId) {
 			this.messageId = messageId;
 		}
 
 		@Override
-		public boolean apply(@javax.annotation.Nullable ChatMessage message) {
+		public boolean apply(@javax.annotation.Nullable Message message) {
 			return message != null && message.getEntity().getEntityId().equals(messageId);
 		}
 	}
 
-	public static final class InsertMessage extends AbstractObjectDbExec<ChatMessage> {
+	public static final class InsertMessage extends AbstractObjectDbExec<Message> {
 
 		@Nonnull
 		private final Chat chat;
 
-		public InsertMessage(@Nonnull Chat chat, @Nullable ChatMessage chatMessage) {
+		public InsertMessage(@Nonnull Chat chat, @Nullable Message chatMessage) {
 			super(chatMessage);
 			this.chat = chat;
 		}
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
-			final ChatMessage chatMessage = getNotNullObject();
+			final Message message = getNotNullObject();
 
-			final ContentValues values = toContentValues(chat, chatMessage);
+			final ContentValues values = toContentValues(chat, message);
 
 			return db.insert("messages", null, values);
 		}
 	}
 
-	private static final class UpdateMessage extends AbstractObjectDbExec<ChatMessage> {
+	private static final class UpdateMessage extends AbstractObjectDbExec<Message> {
 
 		@Nonnull
 		private final Chat chat;
 
-		private UpdateMessage(@Nonnull ChatMessage chatMessage, @Nonnull Chat chat) {
+		private UpdateMessage(@Nonnull Message chatMessage, @Nonnull Chat chat) {
 			super(chatMessage);
 			this.chat = chat;
 		}
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
-			final ChatMessage chatMessage = getNotNullObject();
+			final Message chatMessage = getNotNullObject();
 
 			final ContentValues values = toContentValues(chat, chatMessage);
 
@@ -303,7 +304,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 	}
 
 
-	private static final class LoadChatMessages extends AbstractDbQuery<List<ChatMessage>> {
+	private static final class LoadMessages extends AbstractDbQuery<List<Message>> {
 
 		@Nonnull
 		private final String chatId;
@@ -311,10 +312,10 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		private final UserService userService;
 
-		private LoadChatMessages(@Nonnull Context context,
-								 @Nonnull String chatId,
-								 @Nonnull UserService userService,
-								 @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+		private LoadMessages(@Nonnull Context context,
+							 @Nonnull String chatId,
+							 @Nonnull UserService userService,
+							 @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 			super(context, sqliteOpenHelper);
 			this.chatId = chatId;
 			this.userService = userService;
@@ -328,12 +329,12 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 		@Nonnull
 		@Override
-		public List<ChatMessage> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<ChatMessage>(new MessageMapper(this.userService)).convert(cursor);
+		public List<Message> retrieveData(@Nonnull Cursor cursor) {
+			return new ListMapper<Message>(new MessageMapper(this.userService)).convert(cursor);
 		}
 	}
 
-	private static final class LoadChatMessage extends AbstractDbQuery<List<ChatMessage>> {
+	private static final class LoadMessage extends AbstractDbQuery<List<Message>> {
 
 		@Nonnull
 		private final String messageId;
@@ -341,10 +342,10 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		@Nonnull
 		private final UserService userService;
 
-		private LoadChatMessage(@Nonnull Context context,
-								@Nonnull String messageId,
-								@Nonnull UserService userService,
-								@Nonnull SQLiteOpenHelper sqliteOpenHelper) {
+		private LoadMessage(@Nonnull Context context,
+							@Nonnull String messageId,
+							@Nonnull UserService userService,
+							@Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 			super(context, sqliteOpenHelper);
 			this.messageId = messageId;
 			this.userService = userService;
@@ -358,17 +359,17 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 
 		@Nonnull
 		@Override
-		public List<ChatMessage> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<ChatMessage>(new MessageMapper(this.userService)).convert(cursor);
+		public List<Message> retrieveData(@Nonnull Cursor cursor) {
+			return new ListMapper<Message>(new MessageMapper(this.userService)).convert(cursor);
 		}
 	}
 
-	private static class OldestChatMessageLoader extends AbstractDbQuery<String> {
+	private static class OldestMessageLoader extends AbstractDbQuery<String> {
 
 		@Nonnull
 		private String chatId;
 
-		protected OldestChatMessageLoader(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper, @Nonnull String chatId) {
+		protected OldestMessageLoader(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper, @Nonnull String chatId) {
 			super(context, sqliteOpenHelper);
 			this.chatId = chatId;
 		}
@@ -390,12 +391,12 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 		}
 	}
 
-	private static class LastChatMessageLoader extends AbstractDbQuery<String> {
+	private static class LastMessageLoader extends AbstractDbQuery<String> {
 
 		@Nonnull
 		private String chatId;
 
-		protected LastChatMessageLoader(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper, @Nonnull String chatId) {
+		protected LastMessageLoader(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper, @Nonnull String chatId) {
 			super(context, sqliteOpenHelper);
 			this.chatId = chatId;
 		}
@@ -418,7 +419,7 @@ public class SqliteChatMessageDao extends AbstractSQLiteHelper implements ChatMe
 	}
 
 	@Nonnull
-	private static ContentValues toContentValues(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+	private static ContentValues toContentValues(@Nonnull Chat chat, @Nonnull Message message) {
 		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
 		final ContentValues values = new ContentValues();

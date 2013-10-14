@@ -31,7 +31,7 @@ public final class Messages {
 	}
 
 	@Nonnull
-	public static CharSequence getMessageTime(@Nonnull ChatMessage message) {
+	public static CharSequence getMessageTime(@Nonnull Message message) {
 		final DateTimeZone localTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
 
 		final DateTime localSendDateTime = message.getLocalSendDateTime();
@@ -55,7 +55,7 @@ public final class Messages {
 	}
 
 	@Nonnull
-	public static CharSequence getMessageTitle(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull User user) {
+	public static CharSequence getMessageTitle(@Nonnull Chat chat, @Nonnull Message message, @Nonnull User user) {
 		final String authorName = getMessageAuthorDisplayName(chat, message, user);
 		if (Strings.isEmpty(authorName)) {
 			return Html.fromHtml(message.getBody());
@@ -65,7 +65,7 @@ public final class Messages {
 	}
 
 	@Nonnull
-	private static String getMessageAuthorDisplayName(@Nonnull Chat chat, @Nonnull ChatMessage message, @Nonnull User user) {
+	private static String getMessageAuthorDisplayName(@Nonnull Chat chat, @Nonnull Message message, @Nonnull User user) {
 		final Entity author = message.getAuthor();
 		if (user.getEntity().equals(author)) {
 			// todo serso: translate
@@ -89,17 +89,7 @@ public final class Messages {
 		return new MessageImpl(entity);
 	}
 
-	@Nonnull
-	public static MutableChatMessage newChatMessage(@Nonnull Message message, boolean read) {
-		return ChatMessageImpl.newInstance(message, read);
-	}
-
-	@Nonnull
-	public static ChatMessage newEmpty(@Nonnull String messageId) {
-		return newChatMessage(newEmptyMessage(messageId), false);
-	}
-
-	public static int compareSendDatesLatestFirst(@Nullable ChatMessage lm, @Nullable ChatMessage rm) {
+	public static int compareSendDatesLatestFirst(@Nullable Message lm, @Nullable Message rm) {
 		if(lm == null && rm == null) {
 			return 0;
 		} else if (lm == null) {
@@ -111,7 +101,7 @@ public final class Messages {
 		}
 	}
 
-	public static int compareSendDates(@Nullable ChatMessage lm, @Nullable ChatMessage rm) {
+	public static int compareSendDates(@Nullable Message lm, @Nullable Message rm) {
 		if(lm == null && rm == null) {
 			return 0;
 		} else if (lm == null) {

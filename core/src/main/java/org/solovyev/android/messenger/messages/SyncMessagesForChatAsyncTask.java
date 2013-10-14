@@ -21,13 +21,13 @@ import static org.solovyev.android.messenger.App.getChatService;
  * Date: 6/11/12
  * Time: 3:33 PM
  */
-public class SyncChatMessagesForChatAsyncTask extends MessengerAsyncTask<SyncChatMessagesForChatAsyncTask.Input, Void, SyncChatMessagesForChatAsyncTask.Input> {
+public class SyncMessagesForChatAsyncTask extends MessengerAsyncTask<SyncMessagesForChatAsyncTask.Input, Void, SyncMessagesForChatAsyncTask.Input> {
 
 	@Nullable
 	private PullToRefreshListViewProvider listViewProvider;
 
-	public SyncChatMessagesForChatAsyncTask(@Nullable PullToRefreshListViewProvider listViewProvider,
-											@Nonnull Context context) {
+	public SyncMessagesForChatAsyncTask(@Nullable PullToRefreshListViewProvider listViewProvider,
+										@Nonnull Context context) {
 		super(context);
 		this.listViewProvider = listViewProvider;
 	}

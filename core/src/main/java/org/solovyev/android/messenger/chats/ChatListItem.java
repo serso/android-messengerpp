@@ -10,7 +10,7 @@ import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
@@ -86,7 +86,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 	}
 
 	@Nullable
-	public ChatMessage getLastMessage() {
+	public Message getLastMessage() {
 		return this.getData().getLastMessage();
 	}
 
@@ -104,7 +104,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 		final ImageView chatIcon = viewTag.getViewById(R.id.mpp_li_chat_icon_imageview);
 		getChatService().setChatIcon(chat, chatIcon);
 
-		final ChatMessage lastMessage = getLastMessage();
+		final Message lastMessage = getLastMessage();
 
 		final TextView chatTitle = viewTag.getViewById(R.id.mpp_li_chat_title_textview);
 		chatTitle.setText(getDisplayName());

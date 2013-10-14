@@ -83,7 +83,7 @@ public class MessengerModule extends AbstractModule {
 		bind(ChatDao.class).to(SqliteChatDao.class);
 		bind(ChatService.class).to(DefaultChatService.class);
 
-		bind(ChatMessageDao.class).to(SqliteChatMessageDao.class);
+		bind(MessageDao.class).to(SqliteMessageDao.class);
 		bind(MessageService.class).to(DefaultMessageService.class);
 
 		bind(SyncService.class).to(DefaultSyncService.class);

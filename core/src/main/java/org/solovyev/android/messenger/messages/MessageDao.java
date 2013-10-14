@@ -12,16 +12,16 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:11 PM
  */
-public interface ChatMessageDao {
+public interface MessageDao {
 
 	@Nullable
-	ChatMessage read(@Nonnull String messageId);
+	Message read(@Nonnull String messageId);
 
 	@Nonnull
-	List<ChatMessage> readMessages(@Nonnull String chatId);
+	List<Message> readMessages(@Nonnull String chatId);
 
 	@Nonnull
-	MergeDaoResult<ChatMessage, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends ChatMessage> messages, boolean allowDelete);
+	MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages, boolean allowDelete);
 
 	@Nonnull
 	List<String> readMessageIds(@Nonnull String chatId);
@@ -30,7 +30,7 @@ public interface ChatMessageDao {
 	String getOldestMessageForChat(@Nonnull String chatId);
 
 	@Nullable
-	ChatMessage readLastMessage(@Nonnull String chatId);
+	Message readLastMessage(@Nonnull String chatId);
 
 	/**
 	 * @return total number of unread messages in the application

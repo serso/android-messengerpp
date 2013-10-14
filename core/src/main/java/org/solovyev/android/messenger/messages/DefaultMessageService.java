@@ -13,7 +13,6 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.PersistenceLock;
@@ -65,7 +64,7 @@ public class DefaultMessageService implements MessageService {
 	@GuardedBy("lock")
 	@Inject
 	@Nonnull
-	private ChatMessageDao chatMessageDao;
+	private MessageDao messageDao;
 
 	@Inject
 	@Nonnull
@@ -85,15 +84,15 @@ public class DefaultMessageService implements MessageService {
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getMessages(@Nonnull Entity chat) {
+	public List<Message> getMessages(@Nonnull Entity chat) {
 		// todo serso: think about lock
 		/*synchronized (lock) {*/
-			return chatMessageDao.readMessages(chat.getEntityId());
+			return messageDao.readMessages(chat.getEntityId());
 		/*}*/
 	}
 
 	@Override
-	public void setMessageIcon(@Nonnull ChatMessage message, @Nonnull ImageView imageView) {
+	public void setMessageIcon(@Nonnull Message message, @Nonnull ImageView imageView) {
 		final Entity author = message.getAuthor();
 		userService.setUserIcon(userService.getUserById(author), imageView);
 	}
@@ -101,7 +100,7 @@ public class DefaultMessageService implements MessageService {
 
 	@Nullable
 	@Override
-	public ChatMessage sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull ChatMessage chatMessage) throws AccountException {
+	public Message sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull Message chatMessage) throws AccountException {
 		final Account account = getAccountByUser(user);
 		final Realm realm = account.getRealm();
 		final AccountChatService accountChatService = account.getAccountChatService();
@@ -124,21 +123,19 @@ public class DefaultMessageService implements MessageService {
 		} else {
 			message.setState(sent);
 		}
-
-		// user's message is read (he is an author)
-		final MutableChatMessage result = Messages.newChatMessage(message, true);
+		message.setRead(true);
 
 		if (realm.notifySentMessagesImmediately()) {
-			chatService.saveChatMessages(chat.getEntity(), Arrays.asList(result), false);
+			chatService.saveChatMessages(chat.getEntity(), Arrays.asList(message), false);
 		}
 
-		return result;
+		return message;
 	}
 
 	@Override
 	public int getUnreadMessagesCount() {
 		synchronized (lock) {
-			return this.chatMessageDao.getUnreadMessagesCount();
+			return this.messageDao.getUnreadMessagesCount();
 		}
 	}
 

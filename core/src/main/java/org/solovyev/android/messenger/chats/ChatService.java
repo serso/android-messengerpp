@@ -4,7 +4,7 @@ import android.widget.ImageView;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
@@ -94,13 +94,13 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull Entity user);
 
 	@Nullable
-	ChatMessage getLastMessage(@Nonnull Entity chat);
+	Message getLastMessage(@Nonnull Entity chat);
 
 	void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView);
 
-	void saveChatMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends ChatMessage> messages, boolean updateChatSyncDate);
+	void saveChatMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate);
 
-	void onChatMessageRead(@Nonnull Chat chat, @Nonnull ChatMessage message);
+	void onChatMessageRead(@Nonnull Chat chat, @Nonnull Message message);
 
 	@Nonnull
 	List<UiChat> getLastChats(@Nonnull User user, int count);
@@ -181,7 +181,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return new chat messages for user
 	 */
 	@Nonnull
-	List<ChatMessage> syncChatMessages(@Nonnull Entity user) throws AccountException;
+	List<Message> syncChatMessages(@Nonnull Entity user) throws AccountException;
 
 	/**
 	 * Method synchronizes newer chat messages for <var>chat</var>
@@ -191,7 +191,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return list of newer messages if there exist ones
 	 */
 	@Nonnull
-	List<ChatMessage> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws AccountException;
+	List<Message> syncNewerChatMessagesForChat(@Nonnull Entity chat) throws AccountException;
 
 	/**
 	 * Method synchronizes older chat messages for <var>chat</var>
@@ -201,7 +201,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return list of older messages if there exist ones
 	 */
 	@Nonnull
-	List<ChatMessage> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException;
+	List<Message> syncOlderChatMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException;
 
 	void syncChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException;
 

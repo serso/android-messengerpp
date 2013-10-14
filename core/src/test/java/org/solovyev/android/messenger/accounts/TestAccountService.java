@@ -2,8 +2,9 @@ package org.solovyev.android.messenger.accounts;
 
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.MutableChatMessage;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 
@@ -44,19 +45,19 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getChatMessages(@Nonnull String accountUserId) {
+	public List<Message> getChatMessages(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
+	public List<Message> getNewerChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<ChatMessage> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
+	public List<Message> getOlderChatMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
 		return Collections.emptyList();
 	}
 
@@ -68,12 +69,12 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public String sendChatMessage(@Nonnull Chat chat, @Nonnull ChatMessage message) {
+	public String sendChatMessage(@Nonnull Chat chat, @Nonnull Message message) {
 		return "test_message_id";
 	}
 
 	@Override
-	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableChatMessage message) throws AccountConnectionException {
+	public void beforeSendChatMessage(@Nonnull Chat chat, @Nullable User recipient, @Nonnull MutableMessage message) throws AccountConnectionException {
 	}
 
 	@Nonnull
