@@ -10,11 +10,8 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
-import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
-import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
-import org.solovyev.common.collections.multimap.ObjectsAddedUpdater;
-import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
-import org.solovyev.common.collections.multimap.WholeListUpdater;
+import org.solovyev.common.collections.multimap.*;
+import org.solovyev.common.collections.multimap.ObjectsChangedMapUpdater;
 import org.solovyev.common.listeners.AbstractJEventListener;
 
 import static org.solovyev.common.collections.multimap.ThreadSafeMultimap.newThreadSafeMultimap;
@@ -68,7 +65,7 @@ class UserChats {
 		public void onEvent(@Nonnull ChatEvent event) {
 			switch (event.getType()) {
 				case changed:
-					chats.update(new ObjectChangedMapUpdater<Entity, Chat>(event.getChat()));
+					chats.update(new ObjectsChangedMapUpdater<Entity, Chat>(event.getChat()));
 					break;
 
 			}

@@ -1,21 +1,15 @@
 package org.solovyev.android.messenger.users;
 
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
+import org.solovyev.common.collections.multimap.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
-import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
-import org.solovyev.common.collections.multimap.ObjectChangedMapUpdater;
-import org.solovyev.common.collections.multimap.ObjectsAddedUpdater;
-import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
-import org.solovyev.common.collections.multimap.WholeListUpdater;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import java.util.List;
 
 import static com.google.common.collect.Iterables.find;
 import static org.solovyev.common.collections.multimap.ThreadSafeMultimap.newThreadSafeMultimap;
@@ -42,14 +36,9 @@ class UserContacts {
 
 		switch (event.getType()) {
 			case changed:
-				this.contacts.update(new ObjectChangedMapUpdater<Entity, User>(user));
+				this.contacts.update(new ObjectsChangedMapUpdater<Entity, User>(user));
 				break;
-			case contact_added:
-				// contact added => need to add to list of cached contacts
-				final User contact = event.getDataAsUser();
-				this.contacts.update(user.getEntity(), new ObjectAddedUpdater<User>(contact));
-				break;
-			case contact_added_batch:
+			case contacts_added:
 				// contacts added => need to add to list of cached contacts
 				final List<User> contacts = event.getDataAsUsers();
 				calculateDisplayNames(contacts);
@@ -59,6 +48,9 @@ class UserContacts {
 				// contact removed => try to remove from cached contacts
 				final String removedContactId = event.getDataAsUserId();
 				this.contacts.update(user.getEntity(), new EntityAwareRemovedUpdater<User>(removedContactId));
+				break;
+			case contacts_changed:
+				this.contacts.update(new ObjectsChangedMapUpdater<Entity, User>(event.getDataAsUsers()));
 				break;
 			case contacts_presence_changed:
 				this.contacts.update(user.getEntity(), new UserListContactStatusUpdater(event.getDataAsUsers()));

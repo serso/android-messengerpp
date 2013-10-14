@@ -1,9 +1,8 @@
 package org.solovyev.android.messenger.users;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * User: serso
@@ -14,8 +13,7 @@ public enum UserEventType {
 	added,
 	changed,
 
-	contact_added,
-	contact_added_batch {
+	contacts_added {
 		@Override
 		protected void checkData(@Nullable Object data) {
 			assert data instanceof List;
@@ -41,6 +39,13 @@ public enum UserEventType {
 		@Override
 		protected void checkData(@Nullable Object data) {
 			assert data instanceof String;
+		}
+	},
+
+	contacts_changed  {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof List;
 		}
 	},
 

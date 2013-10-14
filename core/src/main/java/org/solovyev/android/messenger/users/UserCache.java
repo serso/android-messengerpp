@@ -1,15 +1,14 @@
 package org.solovyev.android.messenger.users;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.solovyev.android.messenger.entities.Entity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
-
-import org.solovyev.android.messenger.entities.Entity;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ThreadSafe
 class UserCache {
@@ -46,6 +45,7 @@ class UserCache {
 			case changed:
 				put(user);
 				break;
+			case contacts_changed:
 			case contacts_presence_changed:
 				put(event.getDataAsUsers());
 				break;

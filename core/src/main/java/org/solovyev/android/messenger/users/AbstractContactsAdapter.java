@@ -63,13 +63,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				final String contactId = event.getDataAsUserId();
 				removeListItem(contactId);
 				break;
-			case contact_added:
-				final User contact = event.getDataAsUser();
-				if (canAddContact(contact)) {
-					addListItem(contact);
-				}
-				break;
-			case contact_added_batch:
+			case contacts_added:
 				// first - filter contacts which can be added
 				// then - transform user objects to list items objects
 				final List<User> contacts = event.getDataAsUsers();
@@ -90,15 +84,14 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 				}
 				break;
 			case changed:
-				// change of user is frequent operation - to avoid heavy work on main thread let's
-				// not change user in list (user still be persisted and changes will be shown later)
-				// onContactChanged(event, eventUser);
+				onContactChanged(event, eventUser);
 				break;
 			case unread_messages_count_changed:
 				onContactChanged(event, eventUser);
 				break;
+			case contacts_changed:
 			case contacts_presence_changed:
-				onContactsPresenceChanged(event);
+				onContactsChanged(event);
 				break;
 		}
 	}
@@ -162,7 +155,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 		});
 	}
 
-	private void onContactsPresenceChanged(@Nonnull UserEvent event) {
+	private void onContactsChanged(@Nonnull UserEvent event) {
 		boolean changed = false;
 
 		final List<User> contacts = event.getDataAsUsers();

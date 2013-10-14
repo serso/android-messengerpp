@@ -403,24 +403,21 @@ public class DefaultUserService implements UserService {
 
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
-		userEvents.add(UserEventType.contact_added_batch.newEvent(user, result.getAddedObjectLinks()));
+		userEvents.add(UserEventType.contacts_added.newEvent(user, result.getAddedObjectLinks()));
 
 		final List<User> addedContacts = result.getAddedObjects();
 		for (User addedContact : addedContacts) {
 			userEvents.add(UserEventType.added.newEvent(addedContact));
 		}
-		userEvents.add(UserEventType.contact_added_batch.newEvent(user, addedContacts));
+		userEvents.add(UserEventType.contacts_added.newEvent(user, addedContacts));
 
 
 		for (String removedContactId : result.getRemovedObjectIds()) {
 			userEvents.add(UserEventType.contact_removed.newEvent(user, removedContactId));
 		}
 
-		for (User updatedContact : result.getUpdatedObjects()) {
-			userEvents.add(changed.newEvent(updatedContact));
-		}
-
 		if(!result.getUpdatedObjects().isEmpty()) {
+			userEvents.add(contacts_changed.newEvent(user, result.getUpdatedObjects()));
 			userEvents.add(contacts_presence_changed.newEvent(user, result.getUpdatedObjects()));
 		}
 
