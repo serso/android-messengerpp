@@ -224,17 +224,11 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void updateUser(@Nonnull User user) {
-		updateUser(user, true);
-	}
-
-	private void updateUser(@Nonnull User user, boolean fireChangeEvent) {
 		synchronized (lock) {
 			userDao.update(user);
 		}
 
-		if (fireChangeEvent) {
-			listeners.fireEvent(UserEventType.changed.newEvent(user));
-		}
+		listeners.fireEvent(UserEventType.changed.newEvent(user));
 	}
 
 	/*
@@ -379,7 +373,7 @@ public class DefaultUserService implements UserService {
 		User user = getAccountByEntity(userEntity).getAccountUserService().getUserById(userEntity.getAccountEntityId());
 		if (user != null) {
 			user = user.updatePropertiesSyncDate();
-			updateUser(user, true);
+			updateUser(user);
 		}
 	}
 
@@ -407,7 +401,7 @@ public class DefaultUserService implements UserService {
 
 			// update sync data
 			user = user.updateContactsSyncDate();
-			updateUser(user, false);
+			updateUser(user);
 		}
 
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
@@ -462,7 +456,7 @@ public class DefaultUserService implements UserService {
 
 		// update sync data
 		user = user.updateChatsSyncDate();
-		updateUser(user, false);
+		updateUser(user);
 	}
 
 	@Override
