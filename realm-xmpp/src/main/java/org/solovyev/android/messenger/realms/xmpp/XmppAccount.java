@@ -33,7 +33,7 @@ import static org.jivesoftware.smack.packet.Message.Type.error;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.messages.MessageState.received;
 import static org.solovyev.android.messenger.messages.MessageState.sent;
-import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration> {
 
@@ -173,7 +173,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	private static ChatMessage toChatMessage(@Nonnull Message xmppMessage, @Nonnull Account account) {
 		final String body = xmppMessage.getBody();
 		if (!Strings.isEmpty(body)) {
-			final MessageImpl message = newLiteMessage(generateEntity(account));
+			final MessageImpl message = newMessage(generateEntity(account));
 			message.setBody(body);
 			final Entity author = account.newUserEntity(xmppMessage.getFrom());
 			message.setAuthor(author);
@@ -187,7 +187,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 				message.setState(received);
 			}
 			// new message by default unread
-			return Messages.newMessage(message, false);
+			return Messages.newChatMessage(message, false);
 		} else {
 			return null;
 		}

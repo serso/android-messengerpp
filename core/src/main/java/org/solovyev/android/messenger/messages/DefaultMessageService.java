@@ -28,7 +28,7 @@ import java.util.List;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.messages.MessageState.sending;
 import static org.solovyev.android.messenger.messages.MessageState.sent;
-import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 /**
  * User: serso
@@ -108,7 +108,7 @@ public class DefaultMessageService implements MessageService {
 
 		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final MessageImpl message = newLiteMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
+		final MessageImpl message = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
 
 		message.setChat(chat.getEntity());
 		message.setAuthor(user);
@@ -126,7 +126,7 @@ public class DefaultMessageService implements MessageService {
 		}
 
 		// user's message is read (he is an author)
-		final ChatMessageImpl result = Messages.newMessage(message, true);
+		final ChatMessageImpl result = Messages.newChatMessage(message, true);
 		for (Message fwdMessage : chatMessage.getFwdMessages()) {
 			result.addFwdMessage(fwdMessage);
 		}

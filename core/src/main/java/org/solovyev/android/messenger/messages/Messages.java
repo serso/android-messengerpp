@@ -81,21 +81,22 @@ public final class Messages {
 
 	@Nonnull
 	public static Message newEmptyMessage(@Nonnull String messageId) {
-		return MessageImpl.newMessage(newEntityFromEntityId(messageId));
+		return new MessageImpl(newEntityFromEntityId(messageId));
 	}
 
 	@Nonnull
-	public static MessageImpl newLiteMessage(@Nonnull Entity entity) {
-		return MessageImpl.newMessage(entity);
+	public static MessageImpl newMessage(@Nonnull Entity entity) {
+		return new MessageImpl(entity);
 	}
 
-	public static ChatMessageImpl newMessage(@Nonnull Message message, boolean read) {
+	@Nonnull
+	public static ChatMessageImpl newChatMessage(@Nonnull Message message, boolean read) {
 		return ChatMessageImpl.newInstance(message, read);
 	}
 
 	@Nonnull
 	public static ChatMessage newEmpty(@Nonnull String messageId) {
-		return newMessage(newEmptyMessage(messageId), false);
+		return newChatMessage(newEmptyMessage(messageId), false);
 	}
 
 	public static int compareSendDatesLatestFirst(@Nullable ChatMessage lm, @Nullable ChatMessage rm) {

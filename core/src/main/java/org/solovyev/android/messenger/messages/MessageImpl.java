@@ -44,13 +44,8 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 	@Nonnull
 	private Entity chat;
 
-	private MessageImpl(@Nonnull Entity entity) {
+	MessageImpl(@Nonnull Entity entity) {
 		super(entity);
-	}
-
-	@Nonnull
-	static MessageImpl newMessage(@Nonnull Entity entity) {
-		return new MessageImpl(entity);
 	}
 
 	@Nonnull

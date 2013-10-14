@@ -27,8 +27,8 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.newPrivateApiChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
-import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.android.messenger.messages.Messages.newChatMessage;
 import static org.solovyev.android.messenger.users.User.*;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
@@ -90,7 +90,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 	}
 
 	private ChatMessageImpl generateMessage(int i, @Nonnull User user, @Nonnull User contact, @Nonnull TestAccount account) {
-		final MessageImpl liteMessage = newLiteMessage(Entities.generateEntity(account));
+		final MessageImpl liteMessage = newMessage(Entities.generateEntity(account));
 
 		if (i % 2 == 0) {
 			liteMessage.setAuthor(user.getEntity());
@@ -102,7 +102,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 
 		liteMessage.setBody(Strings.generateRandomString(10));
 		liteMessage.setSendDate(new DateTime(0).plusMinutes(i));
-		return newMessage(liteMessage, false);
+		return newChatMessage(liteMessage, false);
 	}
 
 	@Nonnull

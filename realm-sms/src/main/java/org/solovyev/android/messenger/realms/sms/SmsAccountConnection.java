@@ -173,7 +173,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	@Nullable
 	private ChatMessage toChatMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull User to, @Nonnull Chat chat) {
 		if (!isEmpty(messageBody)) {
-			final MessageImpl message = Messages.newLiteMessage(generateEntity(account));
+			final MessageImpl message = Messages.newMessage(generateEntity(account));
 			message.setChat(chat.getEntity());
 			message.setBody(messageBody);
 			message.setAuthor(from.getEntity());
@@ -181,7 +181,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			message.setSendDate(DateTime.now());
 			message.setState(received);
 			// new message by default unread
-			return Messages.newMessage(message, false);
+			return Messages.newChatMessage(message, false);
 		} else {
 			return null;
 		}

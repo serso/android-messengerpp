@@ -21,8 +21,8 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.messages.MessageState.sending;
-import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.android.messenger.messages.Messages.newChatMessage;
 
 /**
  * User: serso
@@ -135,7 +135,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		public ChatMessage sendChatMessage() throws AccountException {
 			final Account account = getAccountService().getAccountById(author.getEntity().getAccountId());
 
-			final MessageImpl message = newLiteMessage(generateEntity(account));
+			final MessageImpl message = newMessage(generateEntity(account));
 			message.setChat(chat.getEntity());
 			message.setAuthor(author.getEntity());
 			message.setBody(this.message);
@@ -149,7 +149,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			message.setSendDate(DateTime.now());
 			message.setState(sending);
 
-			final ChatMessageImpl chatMessage = newMessage(message, true);
+			final ChatMessageImpl chatMessage = newChatMessage(message, true);
 			chatMessage.setDirection(MessageDirection.out);
 			for (Message fwdMessage : fwdMessages) {
 				chatMessage.addFwdMessage(fwdMessage);

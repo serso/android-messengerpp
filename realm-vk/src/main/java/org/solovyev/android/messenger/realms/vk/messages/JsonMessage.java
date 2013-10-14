@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.realms.vk.messages;
 
 import android.util.Log;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.http.IllegalJsonException;
@@ -135,7 +134,7 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final MessageImpl result = Messages.newLiteMessage(account.newMessageEntity(mid));
+		final MessageImpl result = Messages.newMessage(account.newMessageEntity(mid));
 
 		final MessageDirection messageDirection = getMessageDirection();
 		if (messageDirection == MessageDirection.out) {
@@ -171,7 +170,7 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final ChatMessageImpl result = Messages.newMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
+		final ChatMessageImpl result = Messages.newChatMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
 		result.setDirection(getNotNullMessageDirection());
 		for (Message fwdMessage : getFwdMessages(user, account)) {
 			result.addFwdMessage(fwdMessage);

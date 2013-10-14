@@ -21,8 +21,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
-import static org.solovyev.android.messenger.messages.Messages.newLiteMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.android.messenger.messages.Messages.newChatMessage;
 
 /**
  * User: serso
@@ -158,14 +158,14 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				// 'Typing' message is not shown yet => show it
 
 				// create fake message
-				final MessageImpl message = newLiteMessage(newEntityFromEntityId(user.getEntityId() + "_typing"));
+				final MessageImpl message = newMessage(newEntityFromEntityId(user.getEntityId() + "_typing"));
 				message.setChat(chat.getEntity());
 				message.setSendDate(DateTime.now());
 				message.setAuthor(user);
 				message.setBody(getContext().getString(R.string.mpp_user_is_typing));
 
 				// create fake list item
-				listItem = createListItem(newMessage(message, true));
+				listItem = createListItem(newChatMessage(message, true));
 				addListItem(listItem);
 
 				// add list item to the map
