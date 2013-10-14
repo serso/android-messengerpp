@@ -19,7 +19,6 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.common.collections.multimap.*;
@@ -99,9 +98,8 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners;
 
-	// key: user entity, value: list of user contacts
 	@Nonnull
-	private final ThreadSafeMultimap<Entity, User> userContactsCache = ThreadSafeMultimap.newThreadSafeMultimap();
+	private final UserContacts userContacts = new UserContacts();
 
 	@Nonnull
 	private final UserChats userChats = new UserChats();
@@ -255,14 +253,14 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<User> getUserContacts(@Nonnull Entity user) {
-		List<User> result = userContactsCache.get(user);
+		List<User> result = userContacts.getContacts(user);
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
 				result = userDao.readContacts(user.getEntityId());
 			}
 			calculateDisplayNames(result);
-			userContactsCache.update(user, new WholeListUpdater<User>(result));
+			userContacts.update(user, result);
 		}
 
 		return result;
@@ -399,7 +397,7 @@ public class DefaultUserService implements UserService {
 
 		if (!contacts.isEmpty()) {
 			calculateDisplayNames(contacts);
-			userContactsCache.update(user, new WholeListUpdater<User>(contacts));
+			userContacts.update(user, contacts);
 
 			mergeUserContacts(user, contacts, false, true);
 		} else {
@@ -457,7 +455,7 @@ public class DefaultUserService implements UserService {
 
 	private void onUserChanged(@Nonnull User user) {
 		// user changed => update it in contacts cache
-		userContactsCache.update(new ObjectChangedMapUpdater<User>(user));
+		userContacts.onContactChanged(user);
 		synchronized (usersCache) {
 			usersCache.put(user.getEntity(), user);
 		}
@@ -610,93 +608,8 @@ public class DefaultUserService implements UserService {
 
 		@Override
 		public void onEvent(@Nonnull UserEvent event) {
-			final User eventUser = event.getUser();
-
 			userChats.onEvent(event);
-
-			switch (event.getType()) {
-				case contact_added:
-					// contact added => need to add to list of cached contacts
-					final User contact = event.getDataAsUser();
-					userContactsCache.update(eventUser.getEntity(), new ObjectAddedUpdater<User>(contact));
-					break;
-				case contact_added_batch:
-					// contacts added => need to add to list of cached contacts
-					final List<User> contacts = event.getDataAsUsers();
-					userContactsCache.update(eventUser.getEntity(), new ObjectsAddedUpdater<User>(contacts));
-					break;
-				case contact_removed:
-					// contact removed => try to remove from cached contacts
-					final String removedContactId = event.getDataAsUserId();
-					userContactsCache.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<User>(removedContactId));
-					break;
-				case contacts_presence_changed:
-					userContactsCache.update(eventUser.getEntity(), new UserListContactStatusUpdater(event.getDataAsUsers()));
-					break;
-			}
-		}
-
-	}
-
-    /*
-    **********************************************************************
-    *
-    *                           CACHES
-    *
-    **********************************************************************
-    */
-
-
-	private static class UserListContactStatusUpdater implements ThreadSafeMultimap.ListUpdater<User> {
-
-		@Nonnull
-		private final List<User> contacts;
-
-		public UserListContactStatusUpdater(@Nonnull List<User> contacts) {
-			this.contacts = contacts;
-		}
-
-		@Nullable
-		@Override
-		public List<User> update(@Nonnull List<User> values) {
-			if (contacts.size() == 1) {
-				final User contact = contacts.get(0);
-
-				final int index = Iterables.indexOf(values, new Predicate<User>() {
-					@Override
-					public boolean apply(@Nullable User user) {
-						return contact.equals(user);
-					}
-				});
-
-				if (index >= 0) {
-					// contact found => update status locally (persistence is not updated at status change is too frequent event)
-					final List<User> result = ThreadSafeMultimap.copy(values);
-					result.set(index, result.get(index).cloneWithNewStatus(contact.isOnline()));
-					return result;
-				} else {
-					return null;
-				}
-			} else {
-				final List<User> result = ThreadSafeMultimap.copy(values);
-
-				for (int i = 0; i < result.size(); i++) {
-					final User user = result.get(i);
-					final User contact = find(contacts, new Predicate<User>() {
-						@Override
-						public boolean apply(@Nullable User contact) {
-							return user.equals(contact);
-						}
-					}, null);
-
-					if(contact != null) {
-						result.set(i, user.cloneWithNewStatus(contact.isOnline()));
-					}
-				}
-
-				return result;
-			}
+			userContacts.onEvent(event);
 		}
 	}
-
 }
