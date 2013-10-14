@@ -54,7 +54,7 @@ public final class ThreadSafeMultimap<K, V> {
 	}
 
 	public synchronized boolean update(@Nonnull MapUpdater<K, V> updater) {
-		Map<K, List<V>> newMap = updater.update(map);
+		Map<K, List<V>> newMap = updater.update(Collections.unmodifiableMap(map));
 		if (newMap != null) {
 			map = newMap;
 			return true;
