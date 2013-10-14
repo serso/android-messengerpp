@@ -1,38 +1,13 @@
 package org.solovyev.common.collections.multimap;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
-import static org.solovyev.common.collections.multimap.ThreadSafeMultimap.newThreadSafeMultimap;
 
-public class ObjectChangedMapUpdaterTest {
-
-	@Nonnull
-	private ThreadSafeMultimap<Integer, TestObject> multimap;
-
-	@Nonnull
-	private Map<Integer, List<TestObject>> map;
-
-	@Before
-	public void setUp() throws Exception {
-		map = new HashMap<Integer, List<TestObject>>();
-		for (int i = 0; i < 10; i++) {
-			final List<TestObject> testObjects = new ArrayList<TestObject>();
-			for (int j = 10 * i; j < 10 * i + 10; j++) {
-				testObjects.add(new TestObject(i));
-			}
-			map.put(i, testObjects);
-		}
-		multimap = newThreadSafeMultimap(map);
-	}
+public class ObjectChangedMapUpdaterTest extends ThreadSafeMultimapTest {
 
 	@Test
 	public void testShouldUpdateObject() throws Exception {
@@ -50,32 +25,6 @@ public class ObjectChangedMapUpdaterTest {
 		multimap.update(new ObjectChangedMapUpdater<Integer, TestObject>(oldObject));
 		final List<TestObject> actual = multimap.asMap().get(5);
 		assertSame(expected, actual);
-	}
-
-	private final class TestObject {
-
-		private final int index;
-
-		private TestObject(int index) {
-			this.index = index;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			TestObject that = (TestObject) o;
-
-			if (index != that.index) return false;
-
-			return true;
-		}
-
-		@Override
-		public int hashCode() {
-			return index;
-		}
 	}
 
 }

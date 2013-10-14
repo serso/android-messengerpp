@@ -1,3 +1,0 @@
-package org.solovyev.android.messenger.users;
-
-parcelable User;
