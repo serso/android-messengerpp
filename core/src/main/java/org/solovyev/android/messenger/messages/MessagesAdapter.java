@@ -158,7 +158,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				// 'Typing' message is not shown yet => show it
 
 				// create fake message
-				final MessageImpl message = newMessage(newEntityFromEntityId(user.getEntityId() + "_typing"));
+				final MutableMessage message = newMessage(newEntityFromEntityId(user.getEntityId() + "_typing"));
 				message.setChat(chat.getEntity());
 				message.setSendDate(DateTime.now());
 				message.setAuthor(user);

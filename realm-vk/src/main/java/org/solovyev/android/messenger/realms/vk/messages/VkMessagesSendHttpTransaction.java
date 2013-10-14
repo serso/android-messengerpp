@@ -60,19 +60,6 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 			result.add(new BasicNameValuePair("title", URLEncoder.encode(chatMessage.getTitle(), "utf-8")));
 			result.add(new BasicNameValuePair("type", chatMessage.isPrivate() ? "0" : "1"));
 
-			final List<Message> fwdMessages = chatMessage.getFwdMessages();
-			if (!fwdMessages.isEmpty()) {
-				final String fwdMessagesParam = Strings.getAllValues(Lists.transform(fwdMessages, new Function<Message, String>() {
-					@Override
-					public String apply(@Nullable Message fwdMessage) {
-						assert fwdMessage != null;
-						return fwdMessage.getEntity().getAccountEntityId();
-					}
-				}));
-
-				result.add(new BasicNameValuePair("forward_messages", fwdMessagesParam));
-			}
-
 		} catch (UnsupportedEncodingException e) {
 			throw new AssertionError(e);
 		}

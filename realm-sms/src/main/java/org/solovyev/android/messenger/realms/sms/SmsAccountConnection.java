@@ -22,8 +22,8 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.MessageImpl;
 import org.solovyev.android.messenger.messages.Messages;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.PhoneNumber;
 import org.solovyev.android.messenger.users.User;
@@ -173,7 +173,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	@Nullable
 	private ChatMessage toChatMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull User to, @Nonnull Chat chat) {
 		if (!isEmpty(messageBody)) {
-			final MessageImpl message = Messages.newMessage(generateEntity(account));
+			final MutableMessage message = Messages.newMessage(generateEntity(account));
 			message.setChat(chat.getEntity());
 			message.setBody(messageBody);
 			message.setAuthor(from.getEntity());

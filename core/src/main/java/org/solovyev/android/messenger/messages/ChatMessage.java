@@ -19,9 +19,6 @@ public interface ChatMessage extends Message {
 	MessageDirection getDirection();
 
 	@Nonnull
-	List<Message> getFwdMessages();
-
-	@Nonnull
 	ChatMessage clone();
 
 	@Nonnull

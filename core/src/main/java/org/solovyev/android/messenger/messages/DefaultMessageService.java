@@ -108,7 +108,7 @@ public class DefaultMessageService implements MessageService {
 
 		final String accountMessageId = accountChatService.sendChatMessage(chat, chatMessage);
 
-		final MessageImpl message = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
+		final MutableMessage message = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, chatMessage.getEntity().getEntityId()));
 
 		message.setChat(chat.getEntity());
 		message.setAuthor(user);
@@ -126,10 +126,7 @@ public class DefaultMessageService implements MessageService {
 		}
 
 		// user's message is read (he is an author)
-		final ChatMessageImpl result = Messages.newChatMessage(message, true);
-		for (Message fwdMessage : chatMessage.getFwdMessages()) {
-			result.addFwdMessage(fwdMessage);
-		}
+		final MutableChatMessage result = Messages.newChatMessage(message, true);
 
 		result.setDirection(MessageDirection.out);
 

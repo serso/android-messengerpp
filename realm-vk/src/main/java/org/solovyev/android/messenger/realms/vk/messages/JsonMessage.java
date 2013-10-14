@@ -134,7 +134,7 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final MessageImpl result = Messages.newMessage(account.newMessageEntity(mid));
+		final MutableMessage result = Messages.newMessage(account.newMessageEntity(mid));
 
 		final MessageDirection messageDirection = getMessageDirection();
 		if (messageDirection == MessageDirection.out) {
@@ -170,29 +170,10 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final ChatMessageImpl result = Messages.newChatMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
+		final MutableChatMessage result = Messages.newChatMessage(toLiteChatMessage(user, explicitUserId, account), isRead());
 		result.setDirection(getNotNullMessageDirection());
-		for (Message fwdMessage : getFwdMessages(user, account)) {
-			result.addFwdMessage(fwdMessage);
-		}
 
 		return result;
-	}
-
-	@Nonnull
-	private List<Message> getFwdMessages(@Nonnull User user, @Nonnull Account account) throws IllegalJsonException {
-		if (fwd_messages == null) {
-			return Collections.emptyList();
-		} else {
-			final List<Message> result = new ArrayList<Message>(fwd_messages.length);
-
-			for (JsonMessage fwd_message : fwd_messages) {
-				// todo serso: think about explicit user id
-				result.add(fwd_message.toLiteChatMessage(user, null, account));
-			}
-
-			return result;
-		}
 	}
 
 	@Nonnull

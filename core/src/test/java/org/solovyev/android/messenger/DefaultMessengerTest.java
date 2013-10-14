@@ -9,9 +9,9 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.ChatMessage;
-import org.solovyev.android.messenger.messages.ChatMessageImpl;
 import org.solovyev.android.messenger.messages.MessageService;
-import org.solovyev.android.messenger.messages.MessageImpl;
+import org.solovyev.android.messenger.messages.MutableChatMessage;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.MutableUser;
@@ -89,8 +89,8 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		return result;
 	}
 
-	private ChatMessageImpl generateMessage(int i, @Nonnull User user, @Nonnull User contact, @Nonnull TestAccount account) {
-		final MessageImpl liteMessage = newMessage(Entities.generateEntity(account));
+	private MutableChatMessage generateMessage(int i, @Nonnull User user, @Nonnull User contact, @Nonnull TestAccount account) {
+		final MutableMessage liteMessage = newMessage(Entities.generateEntity(account));
 
 		if (i % 2 == 0) {
 			liteMessage.setAuthor(user.getEntity());

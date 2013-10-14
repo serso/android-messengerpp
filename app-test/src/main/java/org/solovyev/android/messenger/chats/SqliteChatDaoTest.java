@@ -95,8 +95,8 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		assertEquals(Integer.valueOf(1), actualUnreadChats.get(realmChat1));
 	}
 
-	private ChatMessageImpl newMessage(String realmMessageId, boolean read) {
-		final MessageImpl liteChatMessage = Messages.newMessage(testRealm.newMessageEntity(realmMessageId));
+	private MutableChatMessage newMessage(String realmMessageId, boolean read) {
+		final MutableMessage liteChatMessage = Messages.newMessage(testRealm.newMessageEntity(realmMessageId));
 		liteChatMessage.setAuthor(testRealm.newUserEntity("user_01"));
 		liteChatMessage.setRecipient(testRealm.newUserEntity("user_03"));
 		liteChatMessage.setSendDate(DateTime.now());

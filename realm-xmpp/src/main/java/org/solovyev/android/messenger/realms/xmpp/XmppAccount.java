@@ -173,7 +173,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	private static ChatMessage toChatMessage(@Nonnull Message xmppMessage, @Nonnull Account account) {
 		final String body = xmppMessage.getBody();
 		if (!Strings.isEmpty(body)) {
-			final MessageImpl message = newMessage(generateEntity(account));
+			final MutableMessage message = newMessage(generateEntity(account));
 			message.setBody(body);
 			final Entity author = account.newUserEntity(xmppMessage.getFrom());
 			message.setAuthor(author);

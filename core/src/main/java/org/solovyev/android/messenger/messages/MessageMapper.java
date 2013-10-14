@@ -33,7 +33,7 @@ public class MessageMapper implements Converter<Cursor, ChatMessage> {
 	public ChatMessage convert(@Nonnull Cursor c) {
 		final Entity messageEntity = EntityMapper.newInstanceFor(0).convert(c);
 
-		final MessageImpl message = newMessage(messageEntity);
+		final MutableMessage message = newMessage(messageEntity);
 		message.setChat(newEntityFromEntityId(c.getString(3)));
 		message.setAuthor(newEntityFromEntityId(c.getString(4)));
 		if (!c.isNull(5)) {

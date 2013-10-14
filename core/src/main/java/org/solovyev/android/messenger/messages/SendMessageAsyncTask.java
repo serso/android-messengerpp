@@ -135,7 +135,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		public ChatMessage sendChatMessage() throws AccountException {
 			final Account account = getAccountService().getAccountById(author.getEntity().getAccountId());
 
-			final MessageImpl message = newMessage(generateEntity(account));
+			final MutableMessage message = newMessage(generateEntity(account));
 			message.setChat(chat.getEntity());
 			message.setAuthor(author.getEntity());
 			message.setBody(this.message);
@@ -149,11 +149,8 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			message.setSendDate(DateTime.now());
 			message.setState(sending);
 
-			final ChatMessageImpl chatMessage = newChatMessage(message, true);
+			final MutableChatMessage chatMessage = newChatMessage(message, true);
 			chatMessage.setDirection(MessageDirection.out);
-			for (Message fwdMessage : fwdMessages) {
-				chatMessage.addFwdMessage(fwdMessage);
-			}
 
 			account.getAccountChatService().beforeSendChatMessage(chat, recipient, chatMessage);
 

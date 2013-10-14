@@ -85,12 +85,12 @@ public final class Messages {
 	}
 
 	@Nonnull
-	public static MessageImpl newMessage(@Nonnull Entity entity) {
+	public static MutableMessage newMessage(@Nonnull Entity entity) {
 		return new MessageImpl(entity);
 	}
 
 	@Nonnull
-	public static ChatMessageImpl newChatMessage(@Nonnull Message message, boolean read) {
+	public static MutableChatMessage newChatMessage(@Nonnull Message message, boolean read) {
 		return ChatMessageImpl.newInstance(message, read);
 	}
 

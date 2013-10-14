@@ -15,7 +15,7 @@ import java.util.TimeZone;
  * Date: 6/6/12
  * Time: 2:04 PM
  */
-public final class MessageImpl extends AbstractIdentifiable implements Message {
+final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 
 	@Nonnull
 	private Entity author;
@@ -53,6 +53,7 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 		return author;
 	}
 
+	@Override
 	public void setAuthor(@Nonnull Entity author) {
 		this.author = author;
 	}
@@ -62,6 +63,7 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 		return sendDate;
 	}
 
+	@Override
 	public void setSendDate(@Nonnull DateTime sendDate) {
 		this.sendDate = sendDate;
 		this.localSendDateTime = null;
@@ -92,6 +94,7 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 		return title;
 	}
 
+	@Override
 	public void setTitle(@Nonnull String title) {
 		this.title = title;
 	}
@@ -130,6 +133,7 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 		return clone;
 	}
 
+	@Override
 	public void setBody(@Nonnull String body) {
 		this.body = body;
 	}
@@ -155,10 +159,12 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 		return null;
 	}
 
+	@Override
 	public void setRecipient(@Nullable Entity recipient) {
 		this.recipient = recipient;
 	}
 
+	@Override
 	public void setState(@Nonnull MessageState state) {
 		this.state = state;
 	}
@@ -169,6 +175,7 @@ public final class MessageImpl extends AbstractIdentifiable implements Message {
 		return chat;
 	}
 
+	@Override
 	public void setChat(@Nonnull Entity chat) {
 		this.chat = chat;
 	}

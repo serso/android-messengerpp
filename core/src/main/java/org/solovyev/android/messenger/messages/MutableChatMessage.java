@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.messages;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.properties.MutableAProperties;
 
 public interface MutableChatMessage extends ChatMessage {
@@ -14,4 +15,6 @@ public interface MutableChatMessage extends ChatMessage {
 
 	@Nonnull
 	MutableAProperties getProperties();
+
+	void setDirection(@Nonnull MessageDirection direction);
 }

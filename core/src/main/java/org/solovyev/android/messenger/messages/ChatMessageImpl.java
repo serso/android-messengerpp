@@ -10,9 +10,7 @@ import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static org.solovyev.android.properties.Properties.newProperties;
 
@@ -21,15 +19,12 @@ import static org.solovyev.android.properties.Properties.newProperties;
  * Date: 6/6/12
  * Time: 1:01 PM
  */
-public class ChatMessageImpl extends JObject implements MutableChatMessage {
+class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 	@Nonnull
 	private Message message;
 
 	private boolean read = false;
-
-	@Nonnull
-	private List<Message> fwdMessages = new ArrayList<Message>();
 
 	@Nonnull
 	private MessageDirection direction = MessageDirection.in;
@@ -61,12 +56,6 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 
 	@Nonnull
 	@Override
-	public List<Message> getFwdMessages() {
-		return Collections.unmodifiableList(fwdMessages);
-	}
-
-	@Nonnull
-	@Override
 	public MutableChatMessage cloneRead() {
 		final ChatMessageImpl clone = clone();
 		clone.read = true;
@@ -93,10 +82,6 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 		final ChatMessageImpl clone = (ChatMessageImpl) super.clone();
 
 		clone.message = this.message.clone();
-		clone.fwdMessages = new ArrayList<Message>(this.fwdMessages.size());
-		for (Message fwdMessage : this.fwdMessages) {
-			clone.fwdMessages.add(fwdMessage.clone());
-		}
 
 		clone.properties = this.properties.clone();
 
@@ -109,10 +94,7 @@ public class ChatMessageImpl extends JObject implements MutableChatMessage {
 		return properties;
 	}
 
-	public boolean addFwdMessage(@Nonnull Message fwdMessage) {
-		return fwdMessages.add(fwdMessage);
-	}
-
+	@Override
 	public void setDirection(@Nonnull MessageDirection direction) {
 		this.direction = direction;
 	}
