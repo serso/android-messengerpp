@@ -1,31 +1,19 @@
 package org.solovyev.android.messenger;
 
 import android.util.Log;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.http.HttpRuntimeIoException;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountRuntimeException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.network.NetworkState;
 import org.solovyev.android.network.NetworkStateService;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.notifications.Notifications.NO_INTERNET_NOTIFICATION;
-import static org.solovyev.android.messenger.notifications.Notifications.REALM_NOT_SUPPORTED_NOTIFICATION;
-import static org.solovyev.android.messenger.notifications.Notifications.newInvalidResponseNotification;
-import static org.solovyev.android.messenger.notifications.Notifications.newRealmConnectionErrorNotification;
-import static org.solovyev.android.messenger.notifications.Notifications.newRealmErrorNotification;
-import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
+import static org.solovyev.android.messenger.notifications.Notifications.*;
 
 @Singleton
 public final class DefaultExceptionHandler implements ExceptionHandler {
@@ -59,7 +47,7 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 		Notification notification = null;
 
 		if (e instanceof UnsupportedAccountException) {
-			notification = REALM_NOT_SUPPORTED_NOTIFICATION;
+			notification = ACCOUNT_NOT_SUPPORTED_NOTIFICATION;
 		} else if (e instanceof AccountConnectionException) {
 			final boolean handled = handleRealmException((AccountException) e);
 			if (!handled) {

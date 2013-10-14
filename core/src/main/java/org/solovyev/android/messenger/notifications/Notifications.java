@@ -27,7 +27,7 @@ public final class Notifications {
 	}
 
 	public static final Notification NO_INTERNET_NOTIFICATION = Notification.newInstance(R.string.mpp_notification_network_problem, MessageType.warning).solvedBy(new NoInternetConnectionSolution());
-	public static final Notification REALM_NOT_SUPPORTED_NOTIFICATION = Notification.newInstance(R.string.mpp_notification_realm_unsupported_exception, MessageType.error);
+	public static final Notification ACCOUNT_NOT_SUPPORTED_NOTIFICATION = Notification.newInstance(R.string.mpp_notification_account_unsupported_exception, MessageType.error);
 
 	@Nonnull
 	public static Notification newInvalidResponseNotification() {

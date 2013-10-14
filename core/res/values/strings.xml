@@ -84,7 +84,7 @@
 	<string name="mpp_notification_realm_connection_exception">Some error occurred while connecting to the remote
 		server, check internet connection and try again
 	</string>
-	<string name="mpp_notification_realm_unsupported_exception">Account is not defined in the app</string>
+	<string name="mpp_notification_account_unsupported_exception">Account is not defined in the app</string>
 	<string name="mpp_dialog_do_not_ask_again">Do not ask again</string>
 
 	<string name="mpp_new_message">New message</string>
