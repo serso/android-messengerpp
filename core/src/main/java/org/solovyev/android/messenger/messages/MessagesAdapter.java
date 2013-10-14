@@ -84,7 +84,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 	});
 
 	public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat, @Nonnull MessageListItemStyle messageStyle) {
-		super(context, new ArrayList<MessageListItem>(), false);
+		super(context, new ArrayList<MessageListItem>(), false, false);
 		this.user = user;
 		this.chat = chat;
 		this.messageStyle = messageStyle;

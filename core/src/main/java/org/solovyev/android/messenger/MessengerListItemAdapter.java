@@ -57,17 +57,20 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	@Nonnull
 	private final SectionIndexer sectionIndexer;
 
+	private final boolean saveSelection;
+
 	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
-		this(context, listItems, true);
+		this(context, listItems, true, true);
 	}
 
-	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems, boolean fastScrollEnabled) {
+	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems, boolean fastScrollEnabled, boolean saveSelection) {
 		super(context, listItems);
 		if (fastScrollEnabled) {
 			sectionIndexer = AlphabetIndexer.createAndAttach(this);
 		} else {
 			sectionIndexer = EmptySectionIndexer.getInstance();
 		}
+		this.saveSelection = saveSelection;
 	}
 
 	public boolean isInitialized() {

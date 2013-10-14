@@ -45,7 +45,7 @@ public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<C
 	}
 
 	public AbstractContactsAdapter(@Nonnull Context context, boolean fastScrollEnabled) {
-		super(context, new ArrayList<ContactListItem>(), fastScrollEnabled);
+		super(context, new ArrayList<ContactListItem>(), fastScrollEnabled, true);
 	}
 
 	@Override

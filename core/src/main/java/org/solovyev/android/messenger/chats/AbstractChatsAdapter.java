@@ -26,7 +26,7 @@ import static org.solovyev.android.messenger.chats.ChatListItem.newChatListItem;
 abstract class AbstractChatsAdapter extends MessengerListItemAdapter<ChatListItem> {
 
 	public AbstractChatsAdapter(@Nonnull Context context) {
-		super(context, new ArrayList<ChatListItem>(), false);
+		super(context, new ArrayList<ChatListItem>(), false, true);
 	}
 
 	/*@Override*/
