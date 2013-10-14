@@ -2,16 +2,10 @@ package org.solovyev.android.messenger.users;
 
 import android.app.Application;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Executor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
@@ -31,21 +25,23 @@ import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
-import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
+import static org.solovyev.android.messenger.users.UserEventType.*;
 
 /**
  * User: serso
@@ -192,19 +188,20 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void saveUser(@Nonnull User user) {
-		boolean saved = false;
+		final UserEventType eventType;
 
 		synchronized (lock) {
 			final User userFromDb = userDao.read(user.getEntity().getEntityId());
 			if (userFromDb == null) {
 				userDao.create(user);
-				saved = true;
+				eventType = added;
+			} else {
+				userDao.update(user);
+				eventType = changed;
 			}
 		}
 
-		if (saved) {
-			listeners.fireEvent(UserEventType.added.newEvent(user));
-		}
+		listeners.fireEvent(eventType.newEvent(user));
 	}
 
 	@Nonnull
@@ -228,7 +225,7 @@ public class DefaultUserService implements UserService {
 			userDao.update(user);
 		}
 
-		listeners.fireEvent(UserEventType.changed.newEvent(user));
+		listeners.fireEvent(changed.newEvent(user));
 	}
 
 	/*
@@ -389,7 +386,7 @@ public class DefaultUserService implements UserService {
 			Log.w(TAG, "User contacts synchronization returned empty list for realm " + account.getId());
 		}
 
-		return java.util.Collections.unmodifiableList(contacts);
+		return unmodifiableList(contacts);
 	}
 
 	@Override
@@ -420,7 +417,7 @@ public class DefaultUserService implements UserService {
 		}
 
 		for (User updatedContact : result.getUpdatedObjects()) {
-			userEvents.add(UserEventType.changed.newEvent(updatedContact));
+			userEvents.add(changed.newEvent(updatedContact));
 		}
 
 		if(!result.getUpdatedObjects().isEmpty()) {
@@ -435,7 +432,7 @@ public class DefaultUserService implements UserService {
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
 		final List<ApiChat> apiChats = getAccountByEntity(user).getAccountChatService().getChats(user.getAccountEntityId());
 
-		final List<Chat> chats = newArrayList(Iterables.transform(apiChats, new Function<ApiChat, Chat>() {
+		final List<Chat> chats = newArrayList(transform(apiChats, new Function<ApiChat, Chat>() {
 			@Override
 			public Chat apply(@javax.annotation.Nullable ApiChat input) {
 				assert input != null;
@@ -445,7 +442,7 @@ public class DefaultUserService implements UserService {
 
 		mergeUserChats(user, apiChats);
 
-		return java.util.Collections.unmodifiableList(chats);
+		return unmodifiableList(chats);
 	}
 
 	@Override
@@ -455,8 +452,7 @@ public class DefaultUserService implements UserService {
 		chatService.mergeUserChats(userEntity, apiChats);
 
 		// update sync data
-		user = user.updateChatsSyncDate();
-		updateUser(user);
+		updateUser(user.updateChatsSyncDate());
 	}
 
 	@Override
