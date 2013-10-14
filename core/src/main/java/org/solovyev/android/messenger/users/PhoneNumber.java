@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.users;
 
+import android.telephony.PhoneNumberUtils;
+
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -54,6 +56,11 @@ public final class PhoneNumber {
 		return sendable;
 	}
 
+	@Nonnull
+	private String getFormattedNumber() {
+		return PhoneNumberUtils.formatNumber(this.number);
+	};
+
 	private static boolean isValidPhoneNumber(@Nullable String phoneNumber) {
 		if (!Strings.isEmpty(phoneNumber)) {
 			return isGlobalPhoneNumber(phoneNumber);
@@ -73,5 +80,13 @@ public final class PhoneNumber {
 	@Override
 	public String toString() {
 		return "Phone number: " + number;
+	}
+
+	public boolean same(@Nonnull PhoneNumber that) {
+		if(this.getNumber().equals(that.getNumber())) {
+			return true;
+		}
+
+		return this.getFormattedNumber().equals(that.getFormattedNumber());
 	}
 }

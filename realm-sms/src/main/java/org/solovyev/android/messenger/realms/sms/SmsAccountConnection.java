@@ -20,7 +20,6 @@ import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessageState;
 import org.solovyev.android.messenger.messages.MutableMessage;
@@ -35,6 +34,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static android.telephony.SmsMessage.createFromPdu;
+import static com.google.common.collect.Iterables.any;
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.App.getChatService;
 import static org.solovyev.android.messenger.App.getMessageService;
@@ -229,21 +229,43 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 	@Nullable
 	private User findContactByPhone(@Nonnull final String phone, @Nonnull List<User> contacts) {
+		final SamePhonePredicate predicate = new SamePhonePredicate(newPhoneNumber(phone));
+
 		return Iterables.find(contacts, new Predicate<User>() {
 			@Override
 			public boolean apply(@Nullable User contact) {
 				if (contact != null) {
 					// first try to find by default phone property
-					final String contactPhone = contact.getPropertyValueByName(PROPERTY_PHONE);
-					if (contactPhone != null && contactPhone.equals(phone)) {
+					if (predicate.apply(contact.getPropertyValueByName(PROPERTY_PHONE))) {
 						return true;
+					} else {
+						return any(contact.getPhoneNumbers(), predicate);
 					}
-
-					return contact.getPhoneNumbers().contains(phone);
 				} else {
 					return false;
 				}
 			}
 		}, null);
+	}
+
+	private static class SamePhonePredicate implements Predicate<String> {
+
+		@Nonnull
+		private final PhoneNumber phoneNumber;
+
+		public SamePhonePredicate(@Nonnull PhoneNumber phoneNumber) {
+			this.phoneNumber = phoneNumber;
+		}
+
+		@Override
+		public boolean apply(@Nullable String phone) {
+			if (phone != null) {
+				if (newPhoneNumber(phone).same(phoneNumber)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }
