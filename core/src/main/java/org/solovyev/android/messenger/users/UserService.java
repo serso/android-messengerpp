@@ -1,19 +1,17 @@
 package org.solovyev.android.messenger.users;
 
-import android.widget.ImageView;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.common.listeners.JEventListener;
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.Collection;
-import java.util.List;
+
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.common.listeners.JEventListener;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -77,6 +75,9 @@ public interface UserService {
 	void updateUser(@Nonnull User user);
 
 	void saveUser(@Nonnull User user);
+
+	@Nonnull
+	UserIconsService getIconsService();
 
 	/*
     **********************************************************************
@@ -173,40 +174,6 @@ public interface UserService {
 	 * @param user user whose contacts statuses should be synchronized
 	 */
 	void syncUserContactsStatuses(@Nonnull Entity user) throws AccountException;
-
-    /*
-    **********************************************************************
-    *
-    *                           USER ICONS
-    *
-    **********************************************************************
-    */
-
-	/**
-	 * Method sets icon of <var>user</var> in <var>imageView</var>
-	 *
-	 * @param user      user for whom icon shall be set
-	 * @param imageView view to which icon shall be set
-	 */
-	void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);
-
-	/**
-	 * Method sets some icon which represents set of <var>users</var> in <var>imageView</var>
-	 *
-	 * @param account     realm
-	 * @param users     users for whom icon shall be set
-	 * @param imageView view to which icon shall be set
-	 */
-	void setUsersIcon(@Nonnull Account account, @Nonnull List<User> users, ImageView imageView);
-
-	void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView);
-
-	/**
-	 * Method fetches user icons for specified <var>user</var> and for ALL user contacts
-	 *
-	 * @param user for which icon fetching must be done
-	 */
-	void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedAccountException;
 
     /*
     **********************************************************************

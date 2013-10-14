@@ -150,7 +150,7 @@ public class ContactFragment extends RoboSherlockFragment {
 		contactName.setText(contact.getDisplayName());
 
 		final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon_imageview);
-		getUserService().setUserPhoto(contact, contactIcon);
+		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
 		final List<AProperty> contactProperties = accountService.getUserProperties(contact, this.getActivity());

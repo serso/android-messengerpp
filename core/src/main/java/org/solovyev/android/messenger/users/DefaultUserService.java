@@ -2,12 +2,16 @@ package org.solovyev.android.messenger.users;
 
 import android.app.Application;
 import android.util.Log;
-import android.widget.ImageView;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
@@ -15,22 +19,23 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.chats.*;
-import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.UiChat;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.common.collections.multimap.*;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.util.*;
-import java.util.concurrent.Executor;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
@@ -108,6 +113,9 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	private final UserCache userCache = new UserCache();
 
+	@Nonnull
+	private UserIconsService iconsService;
+
 	@Inject
 	public DefaultUserService(@Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this.listeners = Listeners.newEventListenersBuilderFor(UserEvent.class).withHardReferences().withExecutor(eventExecutor).create();
@@ -118,6 +126,13 @@ public class DefaultUserService implements UserService {
 	@Override
 	public void init() {
 		userChats.init();
+		iconsService = new DefaultUserIconsService(context, this);
+	}
+
+	@Override
+	@Nonnull
+	public UserIconsService getIconsService() {
+		return iconsService;
 	}
 
 	@Nonnull
@@ -479,60 +494,6 @@ public class DefaultUserService implements UserService {
 		final User user = getUserById(userEntity);
 
 		onContactsPresenceChanged(user, contacts);
-	}
-
-    /*
-    **********************************************************************
-    *
-    *                           USER ICONS
-    *
-    **********************************************************************
-    */
-
-	@Override
-	public void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedAccountException {
-		final RealmIconService realmIconService = getRealmIconServiceByUser(user);
-
-		// fetch self icon
-		realmIconService.fetchUsersIcons(asList(user));
-
-		// fetch icons for all contacts
-		final List<User> contacts = getUserContacts(user.getEntity());
-		realmIconService.fetchUsersIcons(contacts);
-
-		// update sync data
-		user = user.updateUserIconsSyncDate();
-		updateUser(user, false);
-	}
-
-	@Nonnull
-	private RealmIconService getRealmIconServiceByUser(@Nonnull User user) throws UnsupportedAccountException {
-		return getAccountByEntity(user.getEntity()).getRealm().getRealmIconService();
-	}
-
-	@Override
-	public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-		try {
-			getRealmIconServiceByUser(user).setUserIcon(user, imageView);
-		} catch (UnsupportedAccountException e) {
-			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
-			exceptionHandler.handleException(e);
-		}
-	}
-
-	@Override
-	public void setUsersIcon(@Nonnull Account account, @Nonnull List<User> users, ImageView imageView) {
-		account.getRealm().getRealmIconService().setUsersIcon(users, imageView);
-	}
-
-	@Override
-	public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-		try {
-			getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
-		} catch (UnsupportedAccountException e) {
-			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
-			exceptionHandler.handleException(e);
-		}
 	}
 
     /*

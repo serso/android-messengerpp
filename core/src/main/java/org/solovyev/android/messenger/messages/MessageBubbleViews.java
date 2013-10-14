@@ -114,7 +114,7 @@ final class MessageBubbleViews {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
 			userIconImageView.setVisibility(View.VISIBLE);
-			App.getUserService().setUserIcon(user, userIconImageView);
+			App.getUserService().getIconsService().setUserIcon(user, userIconImageView);
 		} else {
 			userIconImageView.setVisibility(View.GONE);
 		}

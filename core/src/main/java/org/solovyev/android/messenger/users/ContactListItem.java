@@ -129,7 +129,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		final User contact = uiContact.getContact();
 
 		final ImageView contactIcon = viewTag.getViewById(R.id.mpp_li_contact_icon_imageview);
-		App.getUserService().setUserIcon(contact, contactIcon);
+		App.getUserService().getIconsService().setUserIcon(contact, contactIcon);
 
 		final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
 		contactName.setText(getDisplayName());

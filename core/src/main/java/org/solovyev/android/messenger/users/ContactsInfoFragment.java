@@ -130,7 +130,7 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 			contactName.setText(contact.getDisplayName());
 
 			final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon_imageview);
-			App.getUserService().setUserPhoto(contact, contactIcon);
+			App.getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 		}
 	}
 

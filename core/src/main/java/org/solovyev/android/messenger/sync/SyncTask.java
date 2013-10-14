@@ -96,7 +96,7 @@ public enum SyncTask {
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws UnsupportedAccountException {
 			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
-			getUserService().fetchUserAndContactsIcons(user);
+			getUserService().getIconsService().fetchUserAndContactsIcons(user);
 		}
 	},
 

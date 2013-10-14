@@ -621,9 +621,9 @@ public class DefaultChatService implements ChatService {
 			if (!otherParticipants.isEmpty()) {
 				if (otherParticipants.size() == 1) {
 					final User participant = otherParticipants.get(0);
-					userService.setUserIcon(participant, imageView);
+					userService.getIconsService().setUserIcon(participant, imageView);
 				} else {
-					userService.setUsersIcon(account, otherParticipants, imageView);
+					userService.getIconsService().setUsersIcon(account, otherParticipants, imageView);
 				}
 			} else {
 				// just in case...

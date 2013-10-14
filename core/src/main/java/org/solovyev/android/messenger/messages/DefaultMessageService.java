@@ -101,7 +101,7 @@ public class DefaultMessageService implements MessageService {
 	@Override
 	public void setMessageIcon(@Nonnull Message message, @Nonnull ImageView imageView) {
 		final Entity author = message.getAuthor();
-		userService.setUserIcon(userService.getUserById(author), imageView);
+		userService.getIconsService().setUserIcon(userService.getUserById(author), imageView);
 	}
 
 
