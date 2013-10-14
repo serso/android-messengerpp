@@ -28,8 +28,8 @@ public enum ChatEventType {
 		}
 	},
 
-	// data == id of removed message
-	message_removed,
+	// data == changed message for chat
+	message_state_changed,
 
 	// data == changed message for chat
 	message_changed {

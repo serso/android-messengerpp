@@ -92,6 +92,12 @@ public class DefaultMessageService implements MessageService {
 		/*}*/
 	}
 
+	@Nullable
+	@Override
+	public Message getMessage(@Nonnull String messageId) {
+		return messageDao.read(messageId);
+	}
+
 	@Override
 	public void setMessageIcon(@Nonnull Message message, @Nonnull ImageView imageView) {
 		final Entity author = message.getAuthor();

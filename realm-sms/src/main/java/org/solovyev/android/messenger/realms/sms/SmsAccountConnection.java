@@ -22,6 +22,7 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MessageState;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.PhoneNumber;
@@ -35,9 +36,13 @@ import java.util.*;
 
 import static android.telephony.SmsMessage.createFromPdu;
 import static org.solovyev.android.messenger.App.getApplication;
+import static org.solovyev.android.messenger.App.getChatService;
+import static org.solovyev.android.messenger.App.getMessageService;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.*;
+import static org.solovyev.android.messenger.messages.MessageState.delivered;
 import static org.solovyev.android.messenger.messages.MessageState.received;
+import static org.solovyev.android.messenger.messages.MessageState.sent;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
@@ -94,10 +99,9 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 				if (action.equals(INTENT_RECEIVED)) {
 					onSmsReceived(this, intent);
 				} else if (action.equals(INTENT_SENT)) {
-					// todo serso: continue
-					onSmsSent(intent);
+					onSmsIntent(intent, sent);
 				} else if (action.equals(INTENT_DELIVERED)) {
-					// todo serso: continue
+					onSmsIntent(intent, delivered);
 				}
 
 			} catch (AccountException e) {
@@ -106,10 +110,13 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		}
 	}
 
-	private void onSmsSent(@Nonnull Intent intent) {
-		final String accountEntityId = intent.getStringExtra(INTENT_EXTRA_SMS_ID);
-		if (!isEmpty(accountEntityId)) {
-			final Entity entity = getAccount().newMessageEntity(accountEntityId);
+	private void onSmsIntent(@Nonnull Intent intent, @Nonnull MessageState state) {
+		final String entityId = intent.getStringExtra(INTENT_EXTRA_SMS_ID);
+		if (!isEmpty(entityId)) {
+			final Message message = getMessageService().getMessage(entityId);
+			if (message != null) {
+				getChatService().updateMessageState(message.cloneWithNewState(state));
+			}
 		}
 	}
 
@@ -120,7 +127,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		if (!messagesByPhoneNumber.isEmpty()) {
 			final User user = account.getUser();
 			final UserService userService = App.getUserService();
-			final ChatService chatService = App.getChatService();
+			final ChatService chatService = getChatService();
 
 			final List<User> contacts = userService.getUserContacts(user.getEntity());
 

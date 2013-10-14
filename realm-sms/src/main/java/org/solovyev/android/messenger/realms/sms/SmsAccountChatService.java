@@ -66,20 +66,17 @@ final class SmsAccountChatService implements AccountChatService {
 	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
 		final String phoneNumber = getPhoneNumber(message);
 		if(!Strings.isEmpty(phoneNumber)) {
-			// return AUTO GENERATED ID
-			final String accountEntityId = message.getEntity().getAccountEntityId();
-
 			final Intent sentIntent = new Intent(INTENT_SENT);
-			sentIntent.putExtra(INTENT_EXTRA_SMS_ID, accountEntityId);
+			sentIntent.putExtra(INTENT_EXTRA_SMS_ID, message.getEntity().getEntityId());
 
 			final Intent deliveredIntent = new Intent(INTENT_DELIVERED);
-			deliveredIntent.putExtra(INTENT_EXTRA_SMS_ID, accountEntityId);
+			deliveredIntent.putExtra(INTENT_EXTRA_SMS_ID, message.getEntity().getEntityId());
 
 			SmsManager.getDefault().sendTextMessage(phoneNumber, null, message.getBody(),
 					getBroadcast(getApplication(), 0, sentIntent, 0),
 					getBroadcast(getApplication(), 0, deliveredIntent, 0));
 
-			return accountEntityId;
+			return null;
 		}
 		return null;
 	}

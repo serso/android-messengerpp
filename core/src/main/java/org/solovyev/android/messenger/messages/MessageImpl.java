@@ -141,9 +141,13 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	@Nonnull
 	@Override
 	public MutableMessage cloneWithNewState(@Nonnull MessageState state) {
-		final MessageImpl clone = clone();
-		clone.state = state;
-		return clone;
+		if (this.state != state) {
+			final MessageImpl clone = clone();
+			clone.state = state;
+			return clone;
+		} else {
+			return this;
+		}
 	}
 
 	@Nonnull

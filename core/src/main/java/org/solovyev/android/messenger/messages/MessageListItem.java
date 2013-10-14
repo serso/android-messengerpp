@@ -118,13 +118,8 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 		}
 	}
 
-	/*@Override*/
-	public void onEvent(@Nonnull ChatEvent event) {
-		if (ChatEventType.message_changed.isEvent(event.getType(), event.getChat(), chat)) {
-			if (getData().equals(event.getData())) {
-				setData(event.getDataAsMessage());
-			}
-		}
+	void onMessageChanged(@Nonnull Message message) {
+		setData(message);
 	}
 
 	public static final class Comparator implements java.util.Comparator<MessageListItem> {

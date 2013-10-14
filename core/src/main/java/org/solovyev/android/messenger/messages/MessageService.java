@@ -27,6 +27,9 @@ public interface MessageService {
 	@Nonnull
 	List<Message> getMessages(@Nonnull Entity chat);
 
+	@Nullable
+	Message getMessage(@Nonnull String messageId);
+
 	void setMessageIcon(@Nonnull Message message, @Nonnull ImageView imageView);
 
 	@Nullable

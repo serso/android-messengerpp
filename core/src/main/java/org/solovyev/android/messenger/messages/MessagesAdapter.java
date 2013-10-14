@@ -21,7 +21,6 @@ import java.util.*;
 
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.MessageListItem.newMessageListItem;
-import static org.solovyev.android.messenger.messages.Messages.newEmptyMessage;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 /**
@@ -94,60 +93,71 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 	/*@Override*/
 	public void onEvent(@Nonnull ChatEvent event) {
 		final ChatEventType type = event.getType();
-		final Chat eventChat = event.getChat();
-		final Object data = event.getData();
 
-		if (type == ChatEventType.message_removed) {
-			if (eventChat.equals(chat)) {
-				final String messageId = (String) data;
-				assert messageId != null;
-				removeMessageListItem(messageId);
+		if (event.getChat().equals(chat)) {
+			switch (type) {
+				case message_added:
+					addMessageListItem(event.getDataAsMessage());
+					break;
+				case message_added_batch:
+					onMessagesAdded(event);
+					break;
+				case message_state_changed:
+					onMessageStateChanged(event);
+					break;
+				case message_changed:
+					onMessageChanged(event);
+					break;
+				case user_starts_typing:
+				case user_stops_typing:
+					onTypingEvent(type, event.getDataAsEntity(), chat);
+					break;
 			}
 		}
+	}
 
-		if (type == ChatEventType.message_added) {
-			if (eventChat.equals(chat)) {
-				addMessageListItem(event.getDataAsMessage());
+	private void onMessageChanged(@Nonnull ChatEvent event) {
+		final MessageListItem listItem = findInAllElements(event.getDataAsMessage());
+		if (listItem != null) {
+			listItem.onMessageChanged(event.getDataAsMessage());
+			notifyDataSetChanged();
+		}
+	}
+
+	private void onMessagesAdded(@Nonnull ChatEvent event) {
+		final List<Message> messages = event.getDataAsMessages();
+
+		addAll(Lists.transform(messages, new Function<Message, MessageListItem>() {
+			@Override
+			public MessageListItem apply(@javax.annotation.Nullable Message input) {
+				assert input != null;
+				return createListItem(input);
+			}
+		}));
+
+		for (Message message : messages) {
+			final MessageListItem listItem = userTypingListItems.remove(message.getAuthor());
+			if (listItem != null) {
+				remove(listItem);
 			}
 		}
+	}
 
-		if (type == ChatEventType.message_added_batch) {
-			if (eventChat.equals(chat)) {
-				final List<Message> messages = event.getDataAsMessages();
+	private void onMessageStateChanged(@Nonnull ChatEvent event) {
+		onMessageStateChanged(event.getDataAsMessage());
+	}
 
-				addListItems(Lists.transform(messages, new Function<Message, MessageListItem>() {
-					@Override
-					public MessageListItem apply(@javax.annotation.Nullable Message input) {
-						assert input != null;
-						return createListItem(input);
-					}
-				}));
-
-				for (Message message : messages) {
-					final MessageListItem listItem = userTypingListItems.remove(message.getAuthor());
-					if (listItem != null) {
-						removeListItem(listItem);
-					}
-				}
-			}
-		}
-
-		if (type == ChatEventType.message_changed) {
-			if (eventChat.equals(chat)) {
-				final Message message = (Message) data;
+	private void onMessageStateChanged(@Nonnull Message message) {
+		switch (message.getState()) {
+			case removed:
+				removeListItem(message);
+				break;
+			default:
 				final MessageListItem listItem = findInAllElements(message);
-				if (listItem != null) {
-					listItem.onEvent(event);
+				if(listItem != null) {
+					listItem.onMessageChanged(message);
+					notifyDataSetChanged();
 				}
-			}
-		}
-
-		if (event.isOfType(ChatEventType.user_starts_typing, ChatEventType.user_stops_typing)) {
-			if (eventChat.equals(chat)) {
-				final Entity user = (Entity) data;
-				assert user != null;
-				onTypingEvent(type, user, chat);
-			}
 		}
 	}
 
@@ -218,9 +228,5 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
 	protected void removeListItem(@Nonnull Message message) {
 		remove(createListItem(message));
-	}
-
-	private void removeMessageListItem(@Nonnull String messageId) {
-		removeListItem(newEmptyMessage(messageId));
 	}
 }

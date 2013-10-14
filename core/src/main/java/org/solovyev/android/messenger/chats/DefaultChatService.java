@@ -491,7 +491,7 @@ public class DefaultChatService implements ChatService {
 	public void removeMessage(@Nonnull Message message) {
 		final Chat chat = getChatById(message.getChat());
 		if (chat != null) {
-			removeMessage(chat, message);
+			updateMessageState(chat, message, MessageState.removed);
 		}
 	}
 
@@ -499,17 +499,12 @@ public class DefaultChatService implements ChatService {
 	public void updateMessageState(@Nonnull Message message) {
 		final Chat chat = getChatById(message.getChat());
 		if (chat != null) {
-			updateMessageState(chat, message);
+			updateMessageState(chat, message, message.getState());
 		}
 	}
 
-	private void updateMessageState(@Nonnull Chat chat, @Nonnull Message message) {
-
-	}
-
-	@Override
-	public void removeMessage(@Nonnull Chat chat, @Nonnull Message message) {
-		message = message.cloneWithNewState(MessageState.removed);
+	private void updateMessageState(@Nonnull Chat chat, @Nonnull Message message, @Nonnull MessageState newState) {
+		message = message.cloneWithNewState(newState);
 
 		final boolean changed;
 		synchronized (lock) {
@@ -517,7 +512,7 @@ public class DefaultChatService implements ChatService {
 		}
 
 		if (changed) {
-			fireEvent(ChatEventType.message_removed.newEvent(chat, message.getId()));
+			fireEvent(ChatEventType.message_state_changed.newEvent(chat, message));
 		}
 	}
 

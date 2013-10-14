@@ -24,13 +24,13 @@ public interface Entity extends Parcelable {
 	String getAccountId();
 
 	/**
-	 * @return realm id to which user is belonged to
+	 * @return realm id to which entity is belonged to
 	 */
 	@Nonnull
 	String getRealmId();
 
 	/**
-	 * @return user id in account
+	 * @return id in account
 	 */
 	@Nonnull
 	String getAccountEntityId();
