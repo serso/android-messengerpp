@@ -20,7 +20,7 @@ import java.util.List;
 
 import static java.lang.Integer.MAX_VALUE;
 import static org.junit.Assert.*;
-import static org.solovyev.android.messenger.chats.Chats.newPrivateApiChat;
+import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
 
 public class ChatServiceTest extends DefaultMessengerTest {
@@ -94,7 +94,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		final User contact = ad.getContacts().get(0);
 
 		final List<User> participants = Arrays.asList(user, contact);
-		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateApiChat(account.newChatEntity("test_api_chat"), participants, Collections.<Message>emptyList()));
+		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateAccountChat(account.newChatEntity("test_api_chat"), participants, Collections.<Message>emptyList()));
 
 		assertNotNull(chat);
 		assertEquals(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), chat.getEntity());
@@ -106,10 +106,10 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		final AccountData ad = getAccountData1();
 		final TestAccount account = ad.getAccount();
 		final User user = account.getUser();
-		final ApiChat apiChat = ad.getChats().get(0);
+		final AccountChat accountChat = ad.getChats().get(0);
 
-		final Chat chat = chatService.saveChat(user.getEntity(), apiChat);
+		final Chat chat = chatService.saveChat(user.getEntity(), accountChat);
 
-		assertTrue(Objects.areEqual(chat, apiChat.getChat(), new ChatSameEqualizer()));
+		assertTrue(Objects.areEqual(chat, accountChat.getChat(), new ChatSameEqualizer()));
 	}
 }

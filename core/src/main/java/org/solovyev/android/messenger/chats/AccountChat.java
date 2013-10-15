@@ -2,11 +2,10 @@ package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -14,13 +13,10 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:10 PM
  */
-public interface ApiChat {
+public interface AccountChat {
 
 	@Nonnull
 	List<Message> getMessages();
-
-	@Nullable
-	Message getLastMessage();
 
 	@Nonnull
 	List<User> getParticipants();
@@ -32,5 +28,5 @@ public interface ApiChat {
 	Chat getChat();
 
 	@Nonnull
-	ApiChat copyWithNew(@Nonnull Entity newAccountChat);
+	AccountChat copyWithNewId(@Nonnull Entity newAccountChat);
 }

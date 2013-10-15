@@ -193,7 +193,7 @@ public class DefaultChatService implements ChatService {
 				final List<User> participants = new ArrayList<User>(2);
 				participants.add(userService.getUserById(user1));
 				participants.add(userService.getUserById(user2));
-				final ApiChat apiChat = Chats.newEmptyApiChat(chat, participants);
+				final AccountChat apiChat = Chats.newEmptyAccountChat(chat, participants);
 
 				userService.mergeUserChats(user1, asList(apiChat));
 
@@ -224,14 +224,14 @@ public class DefaultChatService implements ChatService {
 			final String realmChatId = chat.getEntity().getAccountEntityId();
 
 			// copy with new id
-			chat = chat.copyWithNew(account.newEntity(realmChatId, chatEntity.getEntityId()));
+			chat = chat.copyWithNewId(account.newEntity(realmChatId, chatEntity.getEntityId()));
 		}
 
 		return chat;
 	}
 
 	@Nonnull
-	private ApiChat prepareChat(@Nonnull ApiChat apiChat) throws UnsupportedAccountException {
+	private AccountChat prepareChat(@Nonnull AccountChat apiChat) throws UnsupportedAccountException {
 		if (apiChat.getChat().isPrivate()) {
 			final Account account = accountService.getAccountById(apiChat.getChat().getEntity().getAccountId());
 			final User user = account.getUser();
@@ -250,7 +250,7 @@ public class DefaultChatService implements ChatService {
 					final String accountChatId = apiChat.getChat().getEntity().getAccountEntityId();
 
 					// copy with new id
-					apiChat = apiChat.copyWithNew(account.newEntity(accountChatId, accountChat.getEntityId()));
+					apiChat = apiChat.copyWithNewId(account.newEntity(accountChatId, accountChat.getEntityId()));
 				}
 			}
 		}
@@ -268,7 +268,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nullable
 	@Override
-	public Chat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException {
+	public Chat saveChat(@Nonnull Entity user, @Nonnull AccountChat chat) throws AccountException {
 		final MergeDaoResult<Chat, String> mergeResult = mergeUserChats(user, asList(chat));
 
 		Chat result = getFirst(mergeResult.getAddedObjects(), null);
@@ -309,7 +309,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<Chat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException {
+	public MergeDaoResult<Chat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends AccountChat> chats) throws AccountException {
 		final MergeDaoResult<Chat, String> result;
 
 		synchronized (lock) {
@@ -323,12 +323,12 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Nonnull
-	private List<ApiChat> prepareChats(List<? extends ApiChat> chats) throws AccountException {
-		final List<ApiChat> result;
+	private List<AccountChat> prepareChats(List<? extends AccountChat> chats) throws AccountException {
+		final List<AccountChat> result;
 		try {
-			result = newArrayList(transform(chats, new Function<ApiChat, ApiChat>() {
+			result = newArrayList(transform(chats, new Function<AccountChat, AccountChat>() {
 				@Override
-				public ApiChat apply(@Nullable ApiChat chat) {
+				public AccountChat apply(@Nullable AccountChat chat) {
 					assert chat != null;
 					try {
 						return prepareChat(chat);

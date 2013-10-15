@@ -17,6 +17,9 @@ import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 
+import static java.util.Arrays.asList;
+import static org.solovyev.android.messenger.realms.xmpp.XmppAccount.toMessages;
+
 /**
  * User: serso
  * Date: 3/12/13
@@ -38,7 +41,7 @@ final class XmppMessageListener implements ChatStateListener {
 	@Override
 	public void processMessage(Chat chat, Message message) {
 		Log.i("M++/Xmpp", "Message created: " + message.getBody());
-		final List<org.solovyev.android.messenger.messages.Message> messages = XmppAccount.toMessages(account, Arrays.asList(message));
+		final List<org.solovyev.android.messenger.messages.Message> messages = toMessages(account, asList(message));
 		if (!messages.isEmpty()) {
 			getChatService().saveMessages(this.chat, messages, false);
 		} else {

@@ -11,11 +11,10 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.OfflineMessageManager;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 
@@ -64,7 +63,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getChats(@Nonnull String accountUserId) {
+	public List<AccountChat> getChats(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 

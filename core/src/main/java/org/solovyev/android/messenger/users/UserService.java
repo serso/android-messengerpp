@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.listeners.JEventListener;
@@ -164,7 +164,7 @@ public interface UserService {
 	@Nonnull
 	List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException;
 
-	void mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> apiChats) throws AccountException;
+	void mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends AccountChat> apiChats) throws AccountException;
 
 	void mergeUserContacts(@Nonnull Entity user, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
 

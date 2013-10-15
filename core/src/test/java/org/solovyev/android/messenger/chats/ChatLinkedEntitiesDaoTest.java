@@ -1,20 +1,15 @@
 package org.solovyev.android.messenger.chats;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.DefaultLinkedEntitiesDaoTest;
-import org.solovyev.android.messenger.DefaultMessengerTest;
 import org.solovyev.android.messenger.LinkedEntitiesDao;
-import org.solovyev.common.equals.Equalizer;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import static com.google.common.collect.Iterables.transform;
@@ -41,10 +36,10 @@ public class ChatLinkedEntitiesDaoTest extends DefaultLinkedEntitiesDaoTest<Chat
 	@Nonnull
 	@Override
 	protected List<Chat> getLinkedEntities(@Nonnull AccountData ad) {
-		return newArrayList(transform(ad.getChats(), new Function<ApiChat, Chat>() {
+		return newArrayList(transform(ad.getChats(), new Function<AccountChat, Chat>() {
 			@Override
-			public Chat apply(@Nullable ApiChat apiChat) {
-				return apiChat.getChat();
+			public Chat apply(@Nullable AccountChat accountChat) {
+				return accountChat.getChat();
 			}
 		}));
 	}
@@ -58,10 +53,10 @@ public class ChatLinkedEntitiesDaoTest extends DefaultLinkedEntitiesDaoTest<Chat
 	@Nonnull
 	@Override
 	protected Collection<String> getLinkedIds() {
-		return newArrayList(transform(getAccountData1().getChats(), new Function<ApiChat, String>() {
+		return newArrayList(transform(getAccountData1().getChats(), new Function<AccountChat, String>() {
 			@Override
-			public String apply(@Nullable ApiChat apiChat) {
-				return apiChat.getChat().getId();
+			public String apply(@Nullable AccountChat accountChat) {
+				return accountChat.getChat().getId();
 			}
 		}));
 	}

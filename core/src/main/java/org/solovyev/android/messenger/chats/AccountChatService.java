@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 
@@ -29,7 +28,7 @@ public interface AccountChatService {
 	List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException;
 
 	@Nonnull
-	List<ApiChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<AccountChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	/**
 	 * Method sends message to the account and, if possible, returns message id. If message id could not be returned

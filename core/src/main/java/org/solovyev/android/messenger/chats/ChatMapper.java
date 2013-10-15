@@ -39,6 +39,6 @@ public class ChatMapper implements Converter<Cursor, Chat> {
 
 		final List<AProperty> properties = chatDao.readPropertiesById(chat.getEntityId());
 
-		return ChatImpl.newInstance(chat, properties, lastMessagesSyncDate);
+		return Chats.newChat(chat, properties, lastMessagesSyncDate);
 	}
 }

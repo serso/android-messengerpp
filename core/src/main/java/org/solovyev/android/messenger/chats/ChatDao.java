@@ -21,7 +21,7 @@ import java.util.Map;
 public interface ChatDao extends LinkedEntitiesDao<Chat>, Dao<Chat> {
 
 	@Nonnull
-	MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends ApiChat> chats);
+	MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends AccountChat> chats);
 
 	@Nonnull
 	Collection<String> readAllIds();

@@ -228,25 +228,25 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends ApiChat> apiChats) {
+	public MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends AccountChat> apiChats) {
 		final MergeDaoResult<Chat, String> result = mergeLinkedEntities(userId, apiChats);
 
 		final List<DbExec> execs = new ArrayList<DbExec>();
 
 		for (final Chat addedChat : result.getAddedObjects()) {
-			final ApiChat apiChat = find(apiChats, new Predicate<ApiChat>() {
+			final AccountChat accountChat = find(apiChats, new Predicate<AccountChat>() {
 				@Override
-				public boolean apply(@Nullable ApiChat apiChat) {
+				public boolean apply(@Nullable AccountChat apiChat) {
 					assert apiChat != null;
 					return apiChat.getChat().equals(addedChat);
 				}
 			});
 
-			for (Message message : apiChat.getMessages()) {
+			for (Message message : accountChat.getMessages()) {
 				execs.add(new SqliteMessageDao.InsertMessage(addedChat, message));
 			}
 
-			for (User participant : apiChat.getParticipants()) {
+			for (User participant : accountChat.getParticipants()) {
 				if (!participant.getEntity().getEntityId().equals(userId)) {
 					execs.add(new InsertChatLink(participant.getEntity().getEntityId(), addedChat.getEntity().getEntityId()));
 				}
@@ -258,13 +258,13 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		return result;
 	}
 
-	private MergeDaoResult<Chat, String> mergeLinkedEntities(@Nonnull String userId, Iterable<? extends ApiChat> apiChats) {
+	private MergeDaoResult<Chat, String> mergeLinkedEntities(@Nonnull String userId, Iterable<? extends AccountChat> apiChats) {
 		// !!! actually not all chats are loaded and we cannot delete the chat just because it is not in the list
-		return mergeLinkedEntities(userId, transform(apiChats, new Function<ApiChat, Chat>() {
+		return mergeLinkedEntities(userId, transform(apiChats, new Function<AccountChat, Chat>() {
 			@Override
-			public Chat apply(@Nullable ApiChat apiChat) {
-				assert apiChat != null;
-				return apiChat.getChat();
+			public Chat apply(@Nullable AccountChat accountChat) {
+				assert accountChat != null;
+				return accountChat.getChat();
 			}
 		}), false, true);
 	}

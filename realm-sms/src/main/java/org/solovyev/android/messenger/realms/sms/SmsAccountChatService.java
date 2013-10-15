@@ -12,12 +12,11 @@ import javax.annotation.Nullable;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
@@ -57,7 +56,7 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<AccountChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
 		return Collections.emptyList();
 	}
 

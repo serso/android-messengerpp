@@ -7,7 +7,7 @@ import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
 import org.solovyev.android.messenger.PropertiesEqualizer;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
@@ -68,7 +68,7 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 	@Test
 	public void testShouldSaveProperties() throws Exception {
 		final AccountData ad = getAccountData1();
-		final ApiChat chat = ad.getChats().get(0);
+		final AccountChat chat = ad.getChats().get(0);
 
 		final MutableMessage expected = newMessageWithProperties(ad);
 		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected), false);
@@ -82,7 +82,7 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 	@Test
 	public void testShouldUpdateProperties() throws Exception {
 		final AccountData ad = getAccountData1();
-		final ApiChat chat = ad.getChats().get(0);
+		final AccountChat chat = ad.getChats().get(0);
 
 		final MutableMessage expected = newMessageWithProperties(ad);
 		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected), false);
@@ -132,8 +132,8 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 	protected Collection<Message> populateEntities(@Nonnull Dao<Message> dao) {
 		final ArrayList<Message> messages = new ArrayList<Message>();
 		for (AccountData accountData : getAccountDataList()) {
-			for (ApiChat apiChat : accountData.getChats()) {
-				messages.addAll(apiChat.getMessages());
+			for (AccountChat accountChat : accountData.getChats()) {
+				messages.addAll(accountChat.getMessages());
 			}
 		}
 		return messages;

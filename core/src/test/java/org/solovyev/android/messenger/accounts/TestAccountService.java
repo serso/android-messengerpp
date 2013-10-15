@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.accounts;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -63,7 +62,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getChats(@Nonnull String accountUserId) {
+	public List<AccountChat> getChats(@Nonnull String accountUserId) {
 		return Collections.emptyList();
 	}
 

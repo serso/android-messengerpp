@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.solovyev.android.messenger.chats.Chats.newAccountChat;
+
 public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
 	@Inject
@@ -41,7 +43,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
 	public void testChatOperations() throws Exception {
 
-		final ArrayList<ApiChat> chats = new ArrayList<ApiChat>();
+		final ArrayList<AccountChat> chats = new ArrayList<AccountChat>();
 
 		final Entity realmUser = testRealm.newUserEntity("01");
 		final String userId = realmUser.getEntityId();
@@ -53,13 +55,13 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		Assert.assertTrue(chatDao.readChatsByUserId(userId).isEmpty());
 
 		final Entity realmChat1 = testRealm.newChatEntity("01");
-		chats.add(ApiChatImpl.newInstance(realmChat1, 10, false));
+		chats.add(newAccountChat(realmChat1, false));
 		final Entity realmChat2 = testRealm.newChatEntity("02");
-		chats.add(ApiChatImpl.newInstance(realmChat2, 10, false));
+		chats.add(newAccountChat(realmChat2, false));
 		final Entity realmChat3 = testRealm.newChatEntity("03");
-		chats.add(ApiChatImpl.newInstance(realmChat3, 10, false));
+		chats.add(newAccountChat(realmChat3, false));
 		final Entity realmChat4 = testRealm.newChatEntity("04");
-		chats.add(ApiChatImpl.newInstance(realmChat4, 10, false));
+		chats.add(newAccountChat(realmChat4, false));
 		chatDao.mergeChats(userId, chats);
 
 		Chat chat = chatDao.read(realmChat4.getEntityId());

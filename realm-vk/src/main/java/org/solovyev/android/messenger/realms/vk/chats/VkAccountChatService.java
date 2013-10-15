@@ -17,7 +17,7 @@ import org.solovyev.android.http.HttpTransactions;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -177,7 +177,7 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<ApiChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<AccountChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
 		try {
 			final User user = App.getUserService().getUserById(account.newUserEntity(accountUserId));
 			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(account, user));

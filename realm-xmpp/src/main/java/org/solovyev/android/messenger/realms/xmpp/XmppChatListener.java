@@ -6,7 +6,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 
@@ -29,9 +29,9 @@ final class XmppChatListener implements ChatManagerListener {
 		Log.d(TAG, "Chat created!");
 
 		if (!createdLocally) {
-			final ApiChat newApiChat = XmppAccount.toApiChat(chat, Collections.<Message>emptyList(), account);
+			final AccountChat newAccountChat = XmppAccount.toApiChat(chat, Collections.<Message>emptyList(), account);
 			try {
-				final Chat newChat = getChatService().saveChat(account.getUser().getEntity(), newApiChat);
+				final Chat newChat = getChatService().saveChat(account.getUser().getEntity(), newAccountChat);
 				if (newChat != null) {
 					chat.addMessageListener(new XmppMessageListener(account, newChat.getEntity()));
 				} else {

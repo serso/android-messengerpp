@@ -5,7 +5,6 @@ import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
@@ -211,7 +210,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return merge result
 	 */
 	@Nonnull
-	MergeDaoResult<Chat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends ApiChat> chats) throws AccountException;
+	MergeDaoResult<Chat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends AccountChat> chats) throws AccountException;
 
 	/**
 	 * Method tries to save chat.
@@ -223,7 +222,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return updated chat, null if chat has not been saved due to some reason (for example, invalid data)
 	 */
 	@Nullable
-	Chat saveChat(@Nonnull Entity user, @Nonnull ApiChat chat) throws AccountException;
+	Chat saveChat(@Nonnull Entity user, @Nonnull AccountChat chat) throws AccountException;
 
 	/**
 	 * Key: chat for which unread messages exist, value: number of unread messages

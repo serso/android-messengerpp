@@ -4,7 +4,7 @@ import android.app.Application;
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.*;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.solovyev.android.messenger.chats.Chats.newPrivateApiChat;
+import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.android.messenger.users.User.*;
@@ -81,7 +81,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 			for(int i = 0; i < 10; i++) {
 				messages.add(generateMessage(i, user, contact, result.account));
 			}
-			result.chats.add(newPrivateApiChat(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), Arrays.asList(user, contact), messages));
+			result.chats.add(newPrivateAccountChat(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), Arrays.asList(user, contact), messages));
 		}
 		chatService.mergeUserChats(user.getEntity(), result.chats);
 		return result;
@@ -194,7 +194,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		private final List<User> users = new ArrayList<User>();
 
 		@Nonnull
-		private final List<ApiChat> chats = new ArrayList<ApiChat>();
+		private final List<AccountChat> chats = new ArrayList<AccountChat>();
 
 		private AccountData(@Nonnull TestAccount account) {
 			this.account = account;
@@ -216,7 +216,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		}
 
 		@Nonnull
-		public List<ApiChat> getChats() {
+		public List<AccountChat> getChats() {
 			return chats;
 		}
 	}

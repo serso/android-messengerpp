@@ -94,7 +94,7 @@ abstract class AbstractChatsAdapter extends MessengerListItemAdapter<ChatListIte
 	}
 
 	protected void removeListItem(@Nonnull User user, @Nonnull String chatId) {
-		removeListItem(user, ChatImpl.newFakeChat(chatId));
+		removeListItem(user, Chats.newEmptyChat(chatId));
 	}
 
 	protected void removeListItem(@Nonnull User user, @Nonnull Chat chat) {

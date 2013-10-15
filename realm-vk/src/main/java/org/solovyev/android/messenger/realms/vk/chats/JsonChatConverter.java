@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.chats.ApiChat;
-import org.solovyev.android.messenger.chats.ApiChatImpl;
+import org.solovyev.android.messenger.chats.AccountChat;
+import org.solovyev.android.messenger.chats.MutableAccountChat;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
@@ -33,12 +33,14 @@ import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import static org.solovyev.android.messenger.chats.Chats.newAccountChat;
+
 /**
  * User: serso
  * Date: 6/6/12
  * Time: 1:33 PM
  */
-public class JsonChatConverter implements Converter<String, List<ApiChat>> {
+public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 
 	@Nonnull
 	private final User user;
@@ -69,7 +71,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 
 	@Nonnull
 	@Override
-	public List<ApiChat> convert(@Nonnull String json) {
+	public List<AccountChat> convert(@Nonnull String json) {
 		final Gson gson = new GsonBuilder()
 				.registerTypeAdapter(JsonMessages.class, new JsonMessages.Adapter())
 				.registerTypeAdapter(JsonMessageTypedAttachment.class, new JsonMessageTypedAttachment.Adapter())
@@ -80,10 +82,10 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 		final List<JsonMessage> jsonMessages = jsonMessagesResult.getResponse();
 
 		// key: chat id, value: chat
-		final Map<String, ApiChatImpl> chats = new HashMap<String, ApiChatImpl>();
+		final Map<String, MutableAccountChat> chats = new HashMap<String, MutableAccountChat>();
 
 		// key: id of second user, value: chat
-		final Map<String, ApiChatImpl> fakeChats = new HashMap<String, ApiChatImpl>();
+		final Map<String, MutableAccountChat> fakeChats = new HashMap<String, MutableAccountChat>();
 
 		try {
 			final Splitter splitter = Splitter.on(",");
@@ -104,9 +106,9 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 								final Entity realmUser = user.getEntity();
 								final Entity realmChat = App.getChatService().getPrivateChatId(realmUser, secondUser);
 
-								ApiChatImpl chat = fakeChats.get(realmChat.getEntityId());
+								MutableAccountChat chat = fakeChats.get(realmChat.getEntityId());
 								if (chat == null) {
-									chat = ApiChatImpl.newInstance(realmChat, jsonMessagesResult.getCount(), true);
+									chat = newAccountChat(realmChat, true);
 
 									chat.addParticipant(user);
 									chat.addParticipant(userService.getUserById(secondUser));
@@ -124,10 +126,10 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 						// real chat
 						final String realmChatId = apiChatId == null ? explicitChatId : String.valueOf(apiChatId);
 
-						ApiChatImpl chat = chats.get(realmChatId);
+						MutableAccountChat chat = chats.get(realmChatId);
 						if (chat == null) {
 							// create new chat object
-							chat = ApiChatImpl.newInstance(account.newChatEntity(realmChatId), jsonMessagesResult.getCount(), false);
+							chat = newAccountChat(account.newChatEntity(realmChatId), false);
 
 							final String participantsStr = jsonMessage.getChat_active();
 							if (!Strings.isEmpty(participantsStr)) {
@@ -149,7 +151,7 @@ public class JsonChatConverter implements Converter<String, List<ApiChat>> {
 			throw new IllegalJsonRuntimeException(e);
 		}
 
-		final List<ApiChat> result = new ArrayList<ApiChat>(chats.size() + fakeChats.size());
+		final List<AccountChat> result = new ArrayList<AccountChat>(chats.size() + fakeChats.size());
 		result.addAll(chats.values());
 		result.addAll(fakeChats.values());
 		return result;

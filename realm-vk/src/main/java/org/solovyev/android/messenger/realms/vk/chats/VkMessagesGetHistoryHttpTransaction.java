@@ -11,7 +11,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
@@ -120,11 +120,11 @@ public class VkMessagesGetHistoryHttpTransaction extends AbstractVkHttpTransacti
 
 	@Override
 	protected List<Message> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-		final List<ApiChat> chats = new JsonChatConverter(user, chatId, userId, App.getUserService(), getRealm()).convert(json);
+		final List<AccountChat> chats = new JsonChatConverter(user, chatId, userId, App.getUserService(), getRealm()).convert(json);
 
 		// todo serso: optimize - convert json to the messages directly
 		final List<Message> messages = new ArrayList<Message>(chats.size() * 10);
-		for (ApiChat chat : chats) {
+		for (AccountChat chat : chats) {
 			messages.addAll(chat.getMessages());
 		}
 

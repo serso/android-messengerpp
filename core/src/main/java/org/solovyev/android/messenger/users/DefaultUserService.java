@@ -13,7 +13,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.UiChat;
@@ -427,23 +427,23 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
-		final List<ApiChat> apiChats = getAccountByEntity(user).getAccountChatService().getChats(user.getAccountEntityId());
+		final List<AccountChat> accountChats = getAccountByEntity(user).getAccountChatService().getChats(user.getAccountEntityId());
 
-		final List<Chat> chats = newArrayList(transform(apiChats, new Function<ApiChat, Chat>() {
+		final List<Chat> chats = newArrayList(transform(accountChats, new Function<AccountChat, Chat>() {
 			@Override
-			public Chat apply(@javax.annotation.Nullable ApiChat input) {
+			public Chat apply(@javax.annotation.Nullable AccountChat input) {
 				assert input != null;
 				return input.getChat();
 			}
 		}));
 
-		mergeUserChats(user, apiChats);
+		mergeUserChats(user, accountChats);
 
 		return unmodifiableList(chats);
 	}
 
 	@Override
-	public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends ApiChat> apiChats) throws AccountException {
+	public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends AccountChat> apiChats) throws AccountException {
 		User user = this.getUserById(userEntity);
 
 		chatService.mergeUserChats(userEntity, apiChats);

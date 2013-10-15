@@ -11,7 +11,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.chats.ApiChat;
+import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
@@ -127,7 +127,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	static ApiChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> smackMessages, @Nonnull Account account) {
+	static AccountChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> smackMessages, @Nonnull Account account) {
 		final User participant = toUser(smackChat.getParticipant(), account);
 
 		final Entity chat;
@@ -141,7 +141,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 
 		final List<org.solovyev.android.messenger.messages.Message> messages = toMessages(account, smackMessages);
 		final List<User> participants = Arrays.asList(account.getUser(), participant);
-		return Chats.newPrivateApiChat(chat, participants, messages);
+		return Chats.newPrivateAccountChat(chat, participants, messages);
 	}
 
 	@Nonnull

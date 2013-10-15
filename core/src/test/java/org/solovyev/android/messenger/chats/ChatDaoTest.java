@@ -43,21 +43,21 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 	@Nonnull
 	@Override
 	protected Collection<Chat> populateEntities(@Nonnull Dao<Chat> dao) {
-		final List<ApiChat> chats = new ArrayList<ApiChat>();
+		final List<AccountChat> chats = new ArrayList<AccountChat>();
 		chats.addAll(getAccountData1().getChats());
 		chats.addAll(getAccountData2().getChats());
 		chats.addAll(getAccountData3().getChats());
-		return Collections2.transform(chats, new Function<ApiChat, Chat>() {
+		return Collections2.transform(chats, new Function<AccountChat, Chat>() {
 			@Override
-			public Chat apply(@Nullable ApiChat apiChat) {
-				return apiChat.getChat();
+			public Chat apply(@Nullable AccountChat accountChat) {
+				return accountChat.getChat();
 			}
 		});
 	}
 
 	@Test
 	public void testMessagesShouldBeRemovedIfChatRemoved() throws Exception {
-		final ApiChat chat = getAccountData1().getChats().get(0);
+		final AccountChat chat = getAccountData1().getChats().get(0);
 		assertFalse(messageDao.readMessages(chat.getChat().getId()).isEmpty());
 
 		dao.deleteById(chat.getChat().getId());
@@ -67,7 +67,7 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 
 	@Test
 	public void testPropertiesShouldBeRemovedIfChatRemoved() throws Exception {
-		final ApiChat chat = getAccountData1().getChats().get(0);
+		final AccountChat chat = getAccountData1().getChats().get(0);
 		assertFalse(dao.readPropertiesById(chat.getChat().getId()).isEmpty());
 
 		dao.deleteById(chat.getChat().getId());
