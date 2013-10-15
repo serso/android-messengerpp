@@ -3,6 +3,44 @@ package org.solovyev.android.messenger.chats;
 import android.app.Application;
 import android.util.Log;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
+import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MessageDao;
+import org.solovyev.android.messenger.messages.MessageService;
+import org.solovyev.android.messenger.messages.MessageState;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
+import org.solovyev.android.messenger.users.PersistenceLock;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserEvent;
+import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.listeners.JEventListeners;
+import org.solovyev.common.listeners.Listeners;
+import org.solovyev.common.text.Strings;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
@@ -10,38 +48,15 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.accounts.*;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.*;
-import org.solovyev.android.messenger.users.*;
-import org.solovyev.common.collections.multimap.ObjectAddedUpdater;
-import org.solovyev.common.collections.multimap.ObjectRemovedUpdater;
-import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
-import org.solovyev.common.collections.multimap.WholeListUpdater;
-import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.listeners.JEventListeners;
-import org.solovyev.common.listeners.Listeners;
-import org.solovyev.common.text.Strings;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import java.util.*;
-import java.util.concurrent.Executor;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.Chat.PROPERTY_DRAFT_MESSAGE;
-import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
 import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
@@ -119,17 +134,14 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	private final JEventListeners<JEventListener<? extends ChatEvent>, ChatEvent> listeners;
 
-	// key: chat id, value: list of participants
 	@Nonnull
-	private final ThreadSafeMultimap<Entity, User> chatParticipantsCache = ThreadSafeMultimap.newThreadSafeMultimap();
+	private final ChatParticipants participants = new ChatParticipants();
 
-	// key: chat id, value: last message
 	@Nonnull
-	private final Map<Entity, Message> lastMessagesCache = new HashMap<Entity, Message>();
+	private LastMessages lastMessages;
 
-	// key: chat id, value: chat
 	@Nonnull
-	private final Map<Entity, Chat> chatsById = new HashMap<Entity, Chat>();
+	private final ChatCache cache = new ChatCache();
 
 	@Nonnull
 	private final Object lock;
@@ -143,6 +155,7 @@ public class DefaultChatService implements ChatService {
 
 	@Override
 	public void init() {
+		this.lastMessages = new LastMessages(this, messageService);
 	}
 
 	@Nonnull
@@ -154,17 +167,10 @@ public class DefaultChatService implements ChatService {
 		}
 
 		if (changed) {
-			onChatChanged(chat);
+			fireEvent(ChatEventType.changed.newEvent(chat));
 		}
 
 		return chat;
-	}
-
-	private void onChatChanged(@Nonnull Chat chat) {
-		synchronized (chatsById) {
-			chatsById.put(chat.getEntity(), chat);
-		}
-		fireEvent(ChatEventType.changed.newEvent(chat));
 	}
 
 	@Nonnull
@@ -185,11 +191,11 @@ public class DefaultChatService implements ChatService {
 				chat = preparePrivateChat(chat, user1, user2);
 
 				final List<User> participants = new ArrayList<User>(2);
-				participants.add(getUserService().getUserById(user1));
-				participants.add(getUserService().getUserById(user2));
+				participants.add(userService.getUserById(user1));
+				participants.add(userService.getUserById(user2));
 				final ApiChat apiChat = Chats.newEmptyApiChat(chat, participants);
 
-				getUserService().mergeUserChats(user1, asList(apiChat));
+				userService.mergeUserChats(user1, asList(apiChat));
 
 				result = apiChat.getChat();
 			}
@@ -359,7 +365,7 @@ public class DefaultChatService implements ChatService {
 		}
 
 		for (Chat updatedChat : mergeResult.getUpdatedObjects()) {
-			onChatChanged(updatedChat);
+			fireEvent(ChatEventType.changed.newEvent(updatedChat));
 		}
 
 		userService.fireEvents(userEvents);
@@ -369,11 +375,7 @@ public class DefaultChatService implements ChatService {
 	@Nullable
 	@Override
 	public Chat getChatById(@Nonnull Entity chat) {
-		Chat result;
-
-		synchronized (chatsById) {
-			result = chatsById.get(chat);
-		}
+		Chat result = cache.get(chat);
 
 		if (result == null) {
 			synchronized (lock) {
@@ -381,9 +383,7 @@ public class DefaultChatService implements ChatService {
 			}
 
 			if (result != null) {
-				synchronized (chatsById) {
-					chatsById.put(result.getEntity(), result);
-				}
+				cache.put(result);
 			}
 		}
 
@@ -418,7 +418,7 @@ public class DefaultChatService implements ChatService {
 			saveMessages(chat.getEntity(), messagesByChats.get(chat), true);
 		}
 
-		return java.util.Collections.unmodifiableList(messages);
+		return unmodifiableList(messages);
 	}
 
 	@Nonnull
@@ -431,7 +431,7 @@ public class DefaultChatService implements ChatService {
 
 		saveMessages(chat, messages, true);
 
-		return java.util.Collections.unmodifiableList(messages);
+		return unmodifiableList(messages);
 
 	}
 
@@ -451,20 +451,15 @@ public class DefaultChatService implements ChatService {
 				}
 			}
 
-			final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>(messages.size());
+			final List<ChatEvent> events = new ArrayList<ChatEvent>(messages.size());
 
-			chatEvents.add(ChatEventType.message_added_batch.newEvent(chat, result.getAddedObjects()));
-
-			// cannot to remove as not all message can be loaded
-/*            for (Integer removedMessageId : result.getRemovedObjectIds()) {
-                chatEvents.add(new ChatEvent(chat, ChatEventType.message_removed, removedMessageId));
-            }*/
+			events.add(ChatEventType.message_added_batch.newEvent(chat, result.getAddedObjects()));
 
 			for (Message updatedMessage : result.getUpdatedObjects()) {
-				chatEvents.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));
+				events.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));
 			}
 
-			fireEvents(chatEvents);
+			fireEvents(events);
 		} else {
 			Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + accountChat.getEntityId());
 		}
@@ -580,12 +575,12 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<Message> syncOlderMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
-		final Integer offset = getMessageService().getMessages(chat).size();
+		final Integer offset = messageService.getMessages(chat).size();
 
 		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getOlderMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
 		saveMessages(chat, messages, false);
 
-		return java.util.Collections.unmodifiableList(messages);
+		return unmodifiableList(messages);
 	}
 
 	@Override
@@ -654,11 +649,6 @@ public class DefaultChatService implements ChatService {
 		return newEntity(user1.getAccountId(), firstPart + PRIVATE_CHAT_DELIMITER + secondPart);
 	}
 
-	@Nonnull
-	private MessageService getMessageService() {
-		return this.messageService;
-	}
-
 	@Nullable
 	@Override
 	public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) throws AccountException {
@@ -671,9 +661,7 @@ public class DefaultChatService implements ChatService {
 		Chat result = this.getPrivateChat(user1, user2);
 		if (result == null) {
 			result = this.newPrivateChat(user1, user2);
-			synchronized (chatsById) {
-				chatsById.put(result.getEntity(), result);
-			}
+			cache.put(result);
 		}
 
 		return result;
@@ -682,14 +670,14 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<User> getParticipants(@Nonnull Entity chat) {
-		List<User> participants = chatParticipantsCache.get(chat);
+		List<User> participants = this.participants.get(chat);
 
 		if (participants == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
 				participants = chatDao.readParticipants(chat.getEntityId());
 			}
 
-			chatParticipantsCache.update(chat, new WholeListUpdater<User>(participants));
+			this.participants.put(chat, participants);
 		} else {
 			participants = toActualUsers(participants);
 		}
@@ -722,25 +710,16 @@ public class DefaultChatService implements ChatService {
 	@Nullable
 	@Override
 	public Message getLastMessage(@Nonnull Entity chat) {
-		Message result;
-
-		synchronized (lastMessagesCache) {
-			result = lastMessagesCache.get(chat);
-			if (result == null) {
-				result = getMessageDao().readLastMessage(chat.getEntityId());
-				if (result != null) {
-					lastMessagesCache.put(chat, result);
-				}
-			}
-		}
-
-		return result;
+		return lastMessages.getLastMessage(chat);
 	}
 
-	@Nonnull
-	private UserService getUserService() {
-		return this.userService;
-	}
+	/*
+	**********************************************************************
+	*
+	*                           LISTENERS
+	*
+	**********************************************************************
+	*/
 
 	@Override
 	public boolean addListener(@Nonnull JEventListener<ChatEvent> listener) {
@@ -775,78 +754,9 @@ public class DefaultChatService implements ChatService {
 
 		@Override
 		public void onEvent(@Nonnull ChatEvent event) {
-			final Chat eventChat = event.getChat();
-			final Object data = event.getData();
-
-			switch (event.getType()) {
-				case participant_added:
-					// participant added => need to add to list of cached participants
-					if (data instanceof User) {
-						final User participant = ((User) data);
-						chatParticipantsCache.update(eventChat.getEntity(), new ObjectAddedUpdater<User>(participant));
-					}
-					break;
-				case participant_removed:
-					// participant removed => try to remove from cached participants
-					if (data instanceof User) {
-						final User participant = ((User) data);
-						chatParticipantsCache.update(eventChat.getEntity(), new ObjectRemovedUpdater<User>(participant));
-					}
-					break;
-			}
-
-			final Map<Chat, Message> changedLastMessages = new HashMap<Chat, Message>();
-			synchronized (lastMessagesCache) {
-				switch (event.getType()) {
-					case message_added: {
-						final Message message = event.getDataAsMessage();
-						tryPutNewLastMessage(eventChat, changedLastMessages, message);
-					}
-					break;
-					case message_added_batch: {
-						final List<Message> messages = event.getDataAsMessages();
-
-						Message newestMessage = null;
-						for (Message message : messages) {
-							if (newestMessage == null) {
-								newestMessage = message;
-							} else if (message.getSendDate().isAfter(newestMessage.getSendDate())) {
-								newestMessage = message;
-							}
-						}
-
-						tryPutNewLastMessage(eventChat, changedLastMessages, newestMessage);
-					}
-					break;
-					case message_changed: {
-						if (data instanceof Message) {
-							final Message message = (Message) data;
-							final Message messageFromCache = lastMessagesCache.get(eventChat.getEntity());
-							if (messageFromCache == null || messageFromCache.equals(message)) {
-								lastMessagesCache.put(eventChat.getEntity(), message);
-								changedLastMessages.put(eventChat, message);
-							}
-						}
-					}
-					break;
-				}
-			}
-
-			for (Map.Entry<Chat, Message> entry : changedLastMessages.entrySet()) {
-				fireEvent(last_message_changed.newEvent(entry.getKey(), entry.getValue()));
-			}
-		}
-	}
-
-	private void tryPutNewLastMessage(@Nonnull Chat chat,
-									  @Nonnull Map<Chat, Message> changedLastMessages,
-									  @Nullable Message message) {
-		if (message != null) {
-			final Message messageFromCache = lastMessagesCache.get(chat.getEntity());
-			if (messageFromCache == null || message.getSendDate().isAfter(messageFromCache.getSendDate())) {
-				lastMessagesCache.put(chat.getEntity(), message);
-				changedLastMessages.put(chat, message);
-			}
+			cache.onEvent(event);
+			participants.onEvent(event);
+			lastMessages.onEvent(event);
 		}
 	}
 }

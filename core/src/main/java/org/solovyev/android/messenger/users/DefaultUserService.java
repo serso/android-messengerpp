@@ -101,13 +101,13 @@ public class DefaultUserService implements UserService {
 	private final JEventListeners<JEventListener<? extends UserEvent>, UserEvent> listeners;
 
 	@Nonnull
-	private final UserContacts userContacts = new UserContacts();
+	private final UserContacts contacts = new UserContacts();
 
 	@Nonnull
-	private final UserChats userChats = new UserChats();
+	private final UserChats chats = new UserChats();
 
 	@Nonnull
-	private final UserCache userCache = new UserCache();
+	private final UserCache cache = new UserCache();
 
 	@Nonnull
 	private UserIconsService iconsService;
@@ -121,7 +121,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void init() {
-		userChats.init();
+		chats.init();
 		iconsService = new DefaultUserIconsService(context, this);
 	}
 
@@ -142,7 +142,7 @@ public class DefaultUserService implements UserService {
 	public User getUserById(@Nonnull Entity user, boolean tryFindInAccount) {
 		boolean saved = true;
 
-		User result = userCache.get(user);
+		User result = cache.get(user);
 
 		if (result == null) {
 
@@ -170,7 +170,7 @@ public class DefaultUserService implements UserService {
 				result = Users.newEmptyUser(user);
 			} else {
 				// user was loaded either from dao or from API => cache
-				userCache.put(result);
+				cache.put(result);
 			}
 
 			if (!saved) {
@@ -207,13 +207,13 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> getUserChats(@Nonnull Entity user) {
-		List<Chat> result = userChats.getChats(user);
+		List<Chat> result = chats.getChats(user);
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
 				result = chatService.loadUserChats(user);
 			}
-			userChats.updateChats(user, result);
+			chats.updateChats(user, result);
 		}
 
 		return result;
@@ -239,13 +239,13 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<User> getUserContacts(@Nonnull Entity user) {
-		List<User> result = userContacts.getContacts(user);
+		List<User> result = contacts.getContacts(user);
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
 				result = userDao.readContacts(user.getEntityId());
 			}
-			userContacts.update(user, result);
+			contacts.update(user, result);
 		}
 
 		return result;
@@ -532,9 +532,9 @@ public class DefaultUserService implements UserService {
 
 		@Override
 		public void onEvent(@Nonnull UserEvent event) {
-			userCache.onEvent(event);
-			userContacts.onEvent(event);
-			userChats.onEvent(event);
+			cache.onEvent(event);
+			contacts.onEvent(event);
+			chats.onEvent(event);
 		}
 	}
 }

@@ -35,6 +35,9 @@ public interface MessageService {
 	@Nullable
 	Message sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull Message message) throws AccountException;
 
+	@Nullable
+	Message getLastMessage(@Nonnull String chatId);
+
 	/**
 	 * @return total number of unread messages in the application
 	 */

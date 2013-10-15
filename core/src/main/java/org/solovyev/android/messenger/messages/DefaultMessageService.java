@@ -139,6 +139,14 @@ public class DefaultMessageService implements MessageService {
 		return result;
 	}
 
+	@Nullable
+	@Override
+	public Message getLastMessage(@Nonnull String chatId) {
+		synchronized (lock) {
+			return this.messageDao.readLastMessage(chatId);
+		}
+	}
+
 	@Override
 	public int getUnreadMessagesCount() {
 		synchronized (lock) {

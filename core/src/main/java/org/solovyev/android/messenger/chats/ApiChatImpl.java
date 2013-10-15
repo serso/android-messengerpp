@@ -17,6 +17,9 @@ import java.util.List;
 
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * User: serso
@@ -87,7 +90,7 @@ public class ApiChatImpl implements ApiChat {
 
 	@Nonnull
 	public List<Message> getMessages() {
-		return Collections.unmodifiableList(messages);
+		return unmodifiableList(messages);
 	}
 
 	@Override
@@ -101,13 +104,13 @@ public class ApiChatImpl implements ApiChat {
 
 	@Nonnull
 	public List<User> getParticipants() {
-		return Collections.unmodifiableList(participants);
+		return unmodifiableList(participants);
 	}
 
 	@Nonnull
 	@Override
 	public List<User> getParticipantsExcept(@Nonnull User user) {
-		return Lists.newArrayList(Iterables.filter(participants, not(equalTo(user))));
+		return newArrayList(filter(participants, not(equalTo(user))));
 	}
 
 	public boolean addParticipant(@Nonnull User participant) {
