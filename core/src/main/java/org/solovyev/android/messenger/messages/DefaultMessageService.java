@@ -21,7 +21,6 @@ import org.solovyev.android.messenger.users.UserService;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -133,7 +132,7 @@ public class DefaultMessageService implements MessageService {
 		result.setRead(true);
 
 		if (realm.notifySentMessagesImmediately()) {
-			chatService.saveMessages(chat.getEntity(), asList(result), false);
+			chatService.saveMessages(chat.getEntity(), asList(result));
 		}
 
 		return result;

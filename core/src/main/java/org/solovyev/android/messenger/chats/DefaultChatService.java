@@ -3,44 +3,6 @@ package org.solovyev.android.messenger.chats;
 import android.app.Application;
 import android.util.Log;
 import android.widget.ImageView;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountRuntimeException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.MessageDao;
-import org.solovyev.android.messenger.messages.MessageService;
-import org.solovyev.android.messenger.messages.MessageState;
-import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.android.messenger.users.PersistenceLock;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEvent;
-import org.solovyev.android.messenger.users.UserEventType;
-import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
-import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.listeners.JEventListeners;
-import org.solovyev.common.listeners.Listeners;
-import org.solovyev.common.text.Strings;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
@@ -48,6 +10,29 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.accounts.*;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.*;
+import org.solovyev.android.messenger.users.*;
+import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.listeners.JEventListeners;
+import org.solovyev.common.listeners.Listeners;
+import org.solovyev.common.text.Strings;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
@@ -175,7 +160,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	private Chat newPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException {
-		final Account account = getRealmByEntity(user1);
+		final Account account = getAccountByEntity(user1);
 
 		Chat result;
 
@@ -214,7 +199,7 @@ public class DefaultChatService implements ChatService {
 	 */
 	@Nonnull
 	private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity user1, @Nonnull Entity user2) throws UnsupportedAccountException {
-		final Account account = getRealmByEntity(user1);
+		final Account account = getAccountByEntity(user1);
 		final Entity chatEntity = getPrivateChatId(user1, user2);
 
 		if (!chatEntity.getAccountEntityId().equals(chat.getEntity().getAccountEntityId())) {
@@ -392,14 +377,14 @@ public class DefaultChatService implements ChatService {
 
 
 	@Nonnull
-	private Account getRealmByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
+	private Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {
 		return accountService.getAccountById(entity.getAccountId());
 	}
 
 	@Nonnull
 	@Override
 	public List<Message> syncMessages(@Nonnull Entity user) throws AccountException {
-		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getMessages(user.getAccountEntityId());
+		final List<Message> messages = getAccountByEntity(user).getAccountChatService().getMessages(user.getAccountEntityId());
 
 		final Multimap<Chat, Message> messagesByChats = ArrayListMultimap.create();
 
@@ -424,7 +409,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<Message> syncNewerMessagesForChat(@Nonnull Entity chat) throws AccountException {
-		final Account account = getRealmByEntity(chat);
+		final Account account = getAccountByEntity(chat);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
 		final List<Message> messages = accountChatService.getNewerMessagesForChat(chat.getAccountEntityId(), account.getUser().getEntity().getAccountEntityId());
@@ -436,13 +421,18 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void saveMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate) {
-		Chat chat = this.getChatById(accountChat);
+	public void saveMessages(@Nonnull Entity chat, @Nonnull Collection<? extends Message> messages) {
+		saveMessages(chat, messages, false);
+	}
+
+	@Override
+	public void saveMessages(@Nonnull Entity chatId, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate) {
+		Chat chat = this.getChatById(chatId);
 
 		if (chat != null) {
 			final MergeDaoResult<Message, String> result;
 			synchronized (lock) {
-				result = getMessageDao().mergeMessages(accountChat.getEntityId(), messages, false);
+				result = getMessageDao().mergeMessages(chat.getId(), messages, false);
 
 				// update sync data
 				if (updateChatSyncDate) {
@@ -461,7 +451,7 @@ public class DefaultChatService implements ChatService {
 
 			fireEvents(events);
 		} else {
-			Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + accountChat.getEntityId());
+			Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + chatId.getEntityId());
 		}
 	}
 
@@ -577,8 +567,8 @@ public class DefaultChatService implements ChatService {
 	public List<Message> syncOlderMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
 		final Integer offset = messageService.getMessages(chat).size();
 
-		final List<Message> messages = getRealmByEntity(user).getAccountChatService().getOlderMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
-		saveMessages(chat, messages, false);
+		final List<Message> messages = getAccountByEntity(user).getAccountChatService().getOlderMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
+		saveMessages(chat, messages);
 
 		return unmodifiableList(messages);
 	}
@@ -609,7 +599,7 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView) {
 		try {
-			final Account account = getRealmByEntity(chat.getEntity());
+			final Account account = getAccountByEntity(chat.getEntity());
 
 			final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
 

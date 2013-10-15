@@ -92,15 +92,6 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	@Nonnull
 	List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull Entity user);
 
-	@Nullable
-	Message getLastMessage(@Nonnull Entity chat);
-
-	void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView);
-
-	void saveMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate);
-
-	void onMessageRead(@Nonnull Chat chat, @Nonnull Message message);
-
 	@Nonnull
 	List<UiChat> getLastChats(@Nonnull User user, int count);
 
@@ -108,6 +99,23 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	List<UiChat> getLastChats(int count);
 
 	void removeEmptyChats(@Nonnull User user);
+
+	/*
+	**********************************************************************
+	*
+	*                           MESSAGES
+	*
+	**********************************************************************
+	*/
+
+	@Nullable
+	Message getLastMessage(@Nonnull Entity chat);
+
+	void saveMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages);
+
+	void saveMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate);
+
+	void onMessageRead(@Nonnull Chat chat, @Nonnull Message message);
 
 	void saveDraftMessage(@Nonnull Chat chat, @Nullable String message);
 
@@ -117,6 +125,17 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	void removeMessage(@Nonnull Message message);
 
 	void updateMessageState(@Nonnull Message message);
+
+	/*
+	**********************************************************************
+	*
+	*                           ICONS
+	*
+	**********************************************************************
+	*/
+
+
+	void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView);
 
 
     /*

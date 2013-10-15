@@ -143,7 +143,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 					}
 				}
 
-				chatService.saveMessages(chat.getEntity(), messages, false);
+				chatService.saveMessages(chat.getEntity(), messages);
 			}
 		}
 

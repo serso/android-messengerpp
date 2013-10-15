@@ -41,7 +41,7 @@ final class XmppMessageListener implements ChatStateListener {
 		Log.i("M++/Xmpp", "Message created: " + message.getBody());
 		final List<MutableMessage> messages = toMessages(account, asList(message));
 		if (!messages.isEmpty()) {
-			getChatService().saveMessages(this.chat, messages, false);
+			getChatService().saveMessages(this.chat, messages);
 		} else {
 			/**
 			 * Some special messages sent by another client like 'Composing' and 'Pausing'.
