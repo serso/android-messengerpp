@@ -2,11 +2,16 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.app.Application;
 import android.content.Context;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+
 import org.jivesfotware.smackx.enitycaps.provider.MessengerCapsExtensionProvider;
 import org.jivesoftware.smack.SmackAndroid;
-import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smackx.ServiceDiscoveryManager;
 import org.solovyev.android.messenger.App;
@@ -20,11 +25,8 @@ import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -85,12 +87,11 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 		SmackAndroid.init(context);
 
-	SmackConfiguration.setPacketReplyTimeout(300000);
-	ProviderManager.getInstance().addExtensionProvider("c", "http://jabber.org/protocol/caps", new MessengerCapsExtensionProvider());
+		ProviderManager.getInstance().addExtensionProvider("c", "http://jabber.org/protocol/caps", new MessengerCapsExtensionProvider());
 
-	// we need to call static initializer block
-	ServiceDiscoveryManager.class.getName();
-}
+		// we need to call static initializer block
+		ServiceDiscoveryManager.class.getName();
+	}
 
 	@Nonnull
 	@Override

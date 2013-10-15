@@ -168,19 +168,38 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	private static MutableMessage toMessage(@Nonnull Message xmppMessage, @Nonnull Account account) {
 		final String body = xmppMessage.getBody();
 		if (!Strings.isEmpty(body)) {
+			final Entity user = account.getUser().getEntity();
+
 			final MutableMessage message = newMessage(generateEntity(account));
 			message.setBody(body);
-			final Entity author = account.newUserEntity(xmppMessage.getFrom());
-			message.setAuthor(author);
-			final Entity recipient = account.newUserEntity(xmppMessage.getTo());
-			message.setRecipient(recipient);
-			message.setChat(getChatService().getPrivateChatId(author, recipient));
-			message.setSendDate(DateTime.now());
-			if(account.getUser().equals(author)) {
-				message.setState(sent);
+
+			final String from = xmppMessage.getFrom();
+			final Entity author = account.newUserEntity(from);
+
+			final String to = xmppMessage.getTo();
+			Entity recipient = account.newUserEntity(to);
+			if(user.equals(author) || user.equals(recipient)) {
+				// user found
+				message.setAuthor(author);
+				message.setRecipient(recipient);
+
+				if(account.getUser().equals(author)) {
+					message.setState(sent);
+					message.setChat(getChatService().getPrivateChatId(user, recipient));
+				} else {
+					message.setState(received);
+					message.setChat(getChatService().getPrivateChatId(user, author));
+				}
 			} else {
+				// fallback: use user as recipient as these messages have come from remote server => most probably thy are incoming
+				message.setAuthor(author);
+				message.setRecipient(user);
+
 				message.setState(received);
+				message.setChat(getChatService().getPrivateChatId(user, author));
 			}
+
+			message.setSendDate(DateTime.now());
 			message.setRead(false);
 			return message;
 		} else {
@@ -189,7 +208,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	private static User toUser(@Nonnull String realmUserId, @Nonnull Account account) {
-		return Users.newEmptyUser(account.newUserEntity(realmUserId));
+	private static User toUser(@Nonnull String accountUserId, @Nonnull Account account) {
+		return Users.newEmptyUser(account.newUserEntity(accountUserId));
 	}
 }

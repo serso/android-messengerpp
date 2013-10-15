@@ -74,8 +74,9 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 		if (notification != null) {
 			notification.causedBy(e);
 			notificationService.add(notification);
-			Log.e(App.TAG, e.getMessage(), e);
 		}
+
+		Log.e(App.TAG, e.getMessage(), e);
 	}
 
 	private boolean handleRealmException(@Nonnull AccountException e) {
