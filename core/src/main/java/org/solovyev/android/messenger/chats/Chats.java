@@ -1,12 +1,5 @@
 package org.solovyev.android.messenger.chats;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
@@ -14,6 +7,12 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.text.Strings;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static java.lang.Math.min;
 import static java.util.Collections.sort;
@@ -82,15 +81,18 @@ public final class Chats {
 
 	@Nonnull
 	public static MutableAccountChat newPrivateAccountChat(@Nonnull Entity chat,
-													@Nonnull Collection<User> participants,
-													@Nonnull Collection<Message> messages) {
+														   @Nonnull Collection<User> participants,
+														   @Nonnull Collection<? extends Message> messages) {
 		final MutableAccountChat result = newAccountChat(chat, true);
+
 		for (User participant : participants) {
 			result.addParticipant(participant);
 		}
+
 		for (Message message : messages) {
-			result.addMessage(message);
+			result.addMessage(message.cloneWithNewChat(chat));
 		}
+
 		return result;
 	}
 

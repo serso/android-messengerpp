@@ -139,18 +139,18 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 			chat = account.newChatEntity(accountChatId);
 		}
 
-		final List<org.solovyev.android.messenger.messages.Message> messages = toMessages(account, smackMessages);
+		final List<MutableMessage> messages = toMessages(account, smackMessages);
 		final List<User> participants = Arrays.asList(account.getUser(), participant);
 		return Chats.newPrivateAccountChat(chat, participants, messages);
 	}
 
 	@Nonnull
-	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterable<Message> smackMessages) {
+	static List<MutableMessage> toMessages(@Nonnull Account account, @Nonnull Iterable<Message> smackMessages) {
 		return toMessages(account, smackMessages.iterator());
 	}
 
-	static List<org.solovyev.android.messenger.messages.Message> toMessages(@Nonnull Account account, @Nonnull Iterator<Message> smackMessages) {
-		final List<org.solovyev.android.messenger.messages.Message> messages = new ArrayList<org.solovyev.android.messenger.messages.Message>();
+	static List<MutableMessage> toMessages(@Nonnull Account account, @Nonnull Iterator<Message> smackMessages) {
+		final List<MutableMessage> messages = new ArrayList<MutableMessage>();
 
 		while (smackMessages.hasNext()) {
 			final Message smackMessage = smackMessages.next();

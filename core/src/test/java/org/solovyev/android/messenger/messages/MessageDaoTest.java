@@ -50,18 +50,18 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 		final org.solovyev.android.messenger.entities.Entity from = account.getUser().getEntity();
 		final org.solovyev.android.messenger.entities.Entity to = getContactForAccount(account, 0).getEntity();
 
+		final Chat chat = chatService.getOrCreatePrivateChat(from, to);
 		final List<Message> messages = new ArrayList<Message>();
 		final DateTime now = DateTime.now();
-		messages.add(newMockMessage(now, from, to, account));
-		messages.add(newMockMessage(now.plusDays(1), from, to, account));
-		messages.add(newMockMessage(now.plusDays(2), from, to, account));
-		messages.add(newMockMessage(now.plusDays(3), from, to, account));
-		final Chat chat = chatService.getOrCreatePrivateChat(from, to);
+		messages.add(newMockMessage(now, from, to, account, chat.getId()));
+		messages.add(newMockMessage(now.plusDays(1), from, to, account, chat.getId()));
+		messages.add(newMockMessage(now.plusDays(2), from, to, account, chat.getId()));
+		messages.add(newMockMessage(now.plusDays(3), from, to, account, chat.getId()));
 		dao.mergeMessages(chat.getId(), messages, false);
 
 		checkLastMessage(chat, now.plusDays(3));
 
-		dao.mergeMessages(chat.getId(), Arrays.asList(newMockMessage(now.plusDays(4), from, to, account)), false);
+		dao.mergeMessages(chat.getId(), Arrays.asList(newMockMessage(now.plusDays(4), from, to, account, chat.getId())), false);
 		checkLastMessage(chat, now.plusDays(4));
 	}
 

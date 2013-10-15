@@ -164,9 +164,13 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	@Nonnull
 	@Override
 	public MutableMessage cloneWithNewChat(@Nonnull Entity chat) {
-		final MessageImpl clone = clone();
-		clone.chat = chat;
-		return clone;
+		if (!this.chat.equals(chat)) {
+			final MessageImpl clone = clone();
+			clone.chat = chat;
+			return clone;
+		} else {
+			return this;
+		}
 	}
 
 	@Override

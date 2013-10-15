@@ -8,6 +8,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.TestAccount;
 import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Objects;
@@ -64,7 +65,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 			if (createMessages) {
 				final List<Message> messages = new ArrayList<Message>();
 				for (int j = 0; j < 10; j++) {
-					messages.add(newMockMessage(now.plusHours(i + 5 * j), user.getEntity(), contact.getEntity(), account));
+					messages.add(newMockMessage(now.plusHours(i + 5 * j), user.getEntity(), contact.getEntity(), account, chat.getId()));
 				}
 				chatService.saveMessages(chat.getEntity(), messages, false);
 			}
@@ -94,7 +95,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		final User contact = ad.getContacts().get(0);
 
 		final List<User> participants = Arrays.asList(user, contact);
-		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateAccountChat(account.newChatEntity("test_api_chat"), participants, Collections.<Message>emptyList()));
+		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateAccountChat(account.newChatEntity("test_api_chat"), participants, Collections.<MutableMessage>emptyList()));
 
 		assertNotNull(chat);
 		assertEquals(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), chat.getEntity());

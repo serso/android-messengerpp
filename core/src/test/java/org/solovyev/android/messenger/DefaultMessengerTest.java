@@ -77,7 +77,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		final User user = result.account.getUser();
 		result.users.add(0, user);
 		for (User contact : result.getContacts()) {
-			final List<Message> messages = new ArrayList<Message>();
+			final List<MutableMessage> messages = new ArrayList<MutableMessage>();
 			for(int i = 0; i < 10; i++) {
 				messages.add(generateMessage(i, user, contact, result.account));
 			}
