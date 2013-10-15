@@ -4,6 +4,7 @@ import android.text.Html;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
@@ -17,7 +18,9 @@ import java.util.TimeZone;
 import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.shortDate;
 import static org.joda.time.format.DateTimeFormat.shortTime;
+import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.android.messenger.messages.MessageState.sending;
 
 /**
  * User: serso
@@ -82,6 +85,25 @@ public final class Messages {
 	@Nonnull
 	public static MutableMessage newEmptyMessage(@Nonnull String messageId) {
 		return new MessageImpl(newEntityFromEntityId(messageId));
+	}
+
+	@Nonnull
+	public static MutableMessage newOutgoingMessage(@Nonnull Account account, @Nonnull Chat chat, @Nonnull String message, @Nullable String title) {
+		final MutableMessage result = newMessage(generateEntity(account));
+
+		result.setChat(chat.getEntity());
+		result.setAuthor(account.getUser().getEntity());
+		if (chat.isPrivate()) {
+			final Entity recipient = chat.getSecondUser();
+			result.setRecipient(recipient);
+		}
+		result.setSendDate(now());
+		result.setState(sending);
+		result.setRead(true);
+		result.setBody(message);
+		result.setTitle(title == null ? "" : title);
+
+		return result;
 	}
 
 	@Nonnull

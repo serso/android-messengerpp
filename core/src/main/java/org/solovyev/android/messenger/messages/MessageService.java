@@ -33,7 +33,7 @@ public interface MessageService {
 	void setMessageIcon(@Nonnull Message message, @Nonnull ImageView imageView);
 
 	@Nullable
-	Message sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull Message message) throws AccountException;
+	Message sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountException;
 
 	@Nullable
 	Message getLastMessage(@Nonnull String chatId);

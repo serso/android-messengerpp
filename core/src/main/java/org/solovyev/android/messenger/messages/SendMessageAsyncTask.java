@@ -1,7 +1,6 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -9,7 +8,6 @@ import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -18,9 +16,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.solovyev.android.messenger.entities.Entities.generateEntity;
-import static org.solovyev.android.messenger.messages.MessageState.sending;
-import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 
 /**
  * User: serso
@@ -90,9 +86,6 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 	public static class Input {
 
 		@Nonnull
-		private final User author;
-
-		@Nonnull
 		private String message;
 
 		@Nullable
@@ -107,8 +100,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		@Nullable
 		private final User recipient;
 
-		public Input(@Nonnull User author, @Nonnull String message, @Nonnull Chat chat, @Nullable User recipient) {
-			this.author = author;
+		public Input(@Nonnull String message, @Nonnull Chat chat, @Nullable User recipient) {
 			this.message = message;
 			this.chat = chat;
 			this.recipient = recipient;
@@ -124,26 +116,14 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 		@Nullable
 		public Message sendMessage() throws AccountException {
-			final Account account = getAccountService().getAccountById(author.getEntity().getAccountId());
+			final Account account = getAccountService().getAccountById(chat.getEntity().getAccountId());
 
-			final MutableMessage message = newMessage(generateEntity(account));
-			message.setChat(chat.getEntity());
-			message.setAuthor(author.getEntity());
-			message.setBody(this.message);
+			final MutableMessage result = newOutgoingMessage(account, chat, message, title);
 
-			if (chat.isPrivate()) {
-				final Entity secondUser = chat.getSecondUser();
-				message.setRecipient(secondUser);
-			}
+			// on before send hook
+			account.getAccountChatService().beforeSendMessage(chat, recipient, result);
 
-			message.setTitle(title == null ? "" : title);
-			message.setSendDate(DateTime.now());
-			message.setState(sending);
-			message.setRead(true);
-
-			account.getAccountChatService().beforeSendMessage(chat, recipient, message);
-
-			return getMessageService().sendMessage(author.getEntity(), chat, message);
+			return getMessageService().sendMessage(chat, result);
 		}
 
 	}

@@ -4,12 +4,8 @@ import android.app.Application;
 import android.widget.ImageView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -106,36 +102,45 @@ public class DefaultMessageService implements MessageService {
 
 	@Nullable
 	@Override
-	public Message sendMessage(@Nonnull Entity user, @Nonnull Chat chat, @Nonnull Message message) throws AccountException {
-		final Account account = getAccountByUser(user);
+	public Message sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountException {
+		final Account account = getAccountByUser(chat.getEntity());
 		final Realm realm = account.getRealm();
-		final AccountChatService accountChatService = account.getAccountChatService();
+		final AccountChatService acs = account.getAccountChatService();
 
-		final String accountMessageId = accountChatService.sendMessage(chat, message);
+		// id returned by account
+		final String accountMessageId = sendMessage(chat, message, acs);
+		// auto-generated id
+		final String messageId = message.getEntity().getEntityId();
 
-		final MutableMessage result = newMessage(account.newMessageEntity(accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId, message.getEntity().getEntityId()));
+		final MutableMessage result = newMessage(account.newMessageEntity(accountMessageId, messageId));
 
 		result.setChat(chat.getEntity());
-		result.setAuthor(user);
-		if (chat.isPrivate()) {
-			final Entity secondUser = chat.getSecondUser();
-			result.setRecipient(secondUser);
+		result.setAuthor(message.getAuthor());
+		if(message.isPrivate()) {
+			result.setRecipient(message.getRecipient());
 		}
 		result.setBody(message.getBody());
 		result.setTitle(message.getTitle());
-		result.setSendDate(DateTime.now());
+		result.setSendDate(message.getSendDate());
 		if(realm.shouldWaitForDeliveryReport()) {
 			result.setState(sending);
 		} else {
 			result.setState(sent);
 		}
 		result.setRead(true);
+		result.getProperties().setPropertiesFrom(message.getProperties().getPropertiesCollection());
 
 		if (realm.notifySentMessagesImmediately()) {
 			chatService.saveMessages(chat.getEntity(), asList(result));
 		}
 
 		return result;
+	}
+
+	@Nonnull
+	private String sendMessage(@Nonnull Chat chat, @Nonnull Message message, @Nonnull AccountChatService acs) throws AccountConnectionException {
+		final String accountMessageId = acs.sendMessage(chat, message);
+		return accountMessageId == null ? NO_ACCOUNT_ID : accountMessageId;
 	}
 
 	@Nullable

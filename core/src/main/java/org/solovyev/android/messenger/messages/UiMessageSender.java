@@ -3,19 +3,17 @@ package org.solovyev.android.messenger.messages;
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.widget.EditText;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.users.ContactUiEventType.resend_message;
@@ -71,7 +69,7 @@ final class UiMessageSender {
 	private boolean trySendMessage(@Nonnull EditText messageBody, @Nonnull String messageText) {
 		if (canSendMessage()) {
 			final SendMessageAndUpdateEditTextAsyncTask task = new SendMessageAndUpdateEditTextAsyncTask(activity, messageBody, chat);
-			final SendMessageAsyncTask.Input input = new SendMessageAsyncTask.Input(account.getUser(), messageText, chat, recipient);
+			final SendMessageAsyncTask.Input input = new SendMessageAsyncTask.Input(messageText, chat, recipient);
 			task.executeInParallel(input);
 			return true;
 		} else {
