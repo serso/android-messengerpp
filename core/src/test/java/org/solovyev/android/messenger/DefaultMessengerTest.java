@@ -8,7 +8,6 @@ import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.TestRealm;
@@ -27,7 +26,7 @@ import java.util.List;
 import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
-import static org.solovyev.android.messenger.users.User.*;
+import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 public abstract class DefaultMessengerTest extends AbstractMessengerTest {
@@ -101,6 +100,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		message.setBody(Strings.generateRandomString(10));
 		message.setSendDate(new DateTime(0).plusMinutes(i));
 		message.setRead(false);
+		message.setChat(newEntity("test", "test"));
 		return message;
 	}
 
