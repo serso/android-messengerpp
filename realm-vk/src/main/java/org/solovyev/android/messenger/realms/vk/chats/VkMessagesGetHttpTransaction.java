@@ -48,7 +48,7 @@ public class VkMessagesGetHttpTransaction extends AbstractVkHttpTransaction<List
 
 	@Override
 	protected List<Message> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-		final List<AccountChat> chats = new JsonChatConverter(user, null, null, App.getUserService(), getRealm()).convert(json);
+		final List<AccountChat> chats = new JsonChatConverter(user, null, null, App.getUserService(), getAccount()).convert(json);
 
 		// todo serso: optimize - convert json to the messages directly
 		final List<Message> messages = new ArrayList<Message>(chats.size() * 10);

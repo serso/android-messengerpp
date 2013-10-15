@@ -1,9 +1,5 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.http.IllegalJsonException;
@@ -11,6 +7,9 @@ import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * User: serso
@@ -35,7 +34,7 @@ public class VkFriendsGetHttpTransaction extends AbstractVkHttpTransaction<List<
 	@Override
 	protected List<User> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
 		try {
-			return JsonUserConverter.newInstance(getRealm()).convert(json);
+			return JsonUserConverter.newInstance(getAccount()).convert(json);
 		} catch (IllegalJsonRuntimeException e) {
 			throw e.getIllegalJsonException();
 		}

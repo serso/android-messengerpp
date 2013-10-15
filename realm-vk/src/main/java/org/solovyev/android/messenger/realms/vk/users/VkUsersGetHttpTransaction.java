@@ -89,7 +89,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	@Override
 	protected List<User> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
 		try {
-			return JsonUserConverter.newInstance(getRealm()).convert(json);
+			return JsonUserConverter.newInstance(getAccount()).convert(json);
 		} catch (IllegalJsonRuntimeException e) {
 			throw e.getIllegalJsonException();
 		}

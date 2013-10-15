@@ -1,13 +1,7 @@
 package org.solovyev.android.messenger.realms.vk.http;
 
 import android.util.Log;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.google.gson.JsonParseException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -20,7 +14,10 @@ import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 
-import com.google.gson.JsonParseException;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: serso
@@ -29,30 +26,30 @@ import com.google.gson.JsonParseException;
  */
 public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransaction<R> {
 
-	private static final String URI = "https://api.vkontakte.ru/method/";
+	private static final String URI = "https://api.vk.com/method/";
 
 	@Nonnull
-	private final VkAccount realm;
+	private final VkAccount account;
 
-	protected AbstractVkHttpTransaction(@Nonnull VkAccount realm, @Nonnull String method) {
-		this(realm, method, HttpMethod.GET);
+	protected AbstractVkHttpTransaction(@Nonnull VkAccount account, @Nonnull String method) {
+		this(account, method, HttpMethod.GET);
 	}
 
-	protected AbstractVkHttpTransaction(@Nonnull VkAccount realm, @Nonnull String method, @Nonnull HttpMethod httpMethod) {
+	protected AbstractVkHttpTransaction(@Nonnull VkAccount account, @Nonnull String method, @Nonnull HttpMethod httpMethod) {
 		super(URI + method, httpMethod);
-		this.realm = realm;
+		this.account = account;
 	}
 
 	@Nonnull
-	protected VkAccount getRealm() {
-		return realm;
+	protected VkAccount getAccount() {
+		return account;
 	}
 
 	@Nonnull
 	@Override
 	public List<NameValuePair> getRequestParameters() {
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
-		result.add(new BasicNameValuePair("access_token", getRealm().getConfiguration().getAccessToken()));
+		result.add(new BasicNameValuePair("access_token", getAccount().getConfiguration().getAccessToken()));
 		return result;
 	}
 
@@ -67,9 +64,9 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
 			try {
 				return getResponseFromJson(json);
 			} catch (JsonParseException e) {
-				throw new AccountRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
+				throw new AccountRuntimeException(account.getId(), VkResponseErrorException.newInstance(json, this));
 			} catch (IllegalJsonException e) {
-				throw new AccountRuntimeException(realm.getId(), VkResponseErrorException.newInstance(json, this));
+				throw new AccountRuntimeException(account.getId(), VkResponseErrorException.newInstance(json, this));
 			}
 		} catch (IOException e) {
 			throw new HttpRuntimeIoException(e);
