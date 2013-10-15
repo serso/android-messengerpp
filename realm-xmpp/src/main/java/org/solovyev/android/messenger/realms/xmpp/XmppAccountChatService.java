@@ -1,22 +1,25 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.OfflineMessageManager;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
-import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.AccountChat;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+
+import static com.google.common.collect.Lists.transform;
+import static org.solovyev.android.messenger.realms.xmpp.XmppAccount.toMessages;
 
 /**
  * User: serso
@@ -38,7 +41,12 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 				final OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
 				try {
 					if (offlineManager.supportsFlexibleRetrieval()) {
-						return XmppAccount.toMessages(getAccount(), offlineManager.getMessages());
+						return transform(toMessages(getAccount(), offlineManager.getMessages()), new Function<MutableMessage, Message>() {
+							@Override
+							public Message apply(@Nullable MutableMessage message) {
+								return message;
+							}
+						});
 					}
 				} catch (XMPPException e) {
 					// ok, not supported by server
