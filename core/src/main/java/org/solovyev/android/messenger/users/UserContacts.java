@@ -27,8 +27,12 @@ class UserContacts {
 	}
 
 	public void update(@Nonnull Entity user, @Nonnull List<User> contacts) {
-		calculateDisplayNames(contacts);
-		this.contacts.update(user, new WholeListUpdater<User>(contacts));
+		if (!contacts.isEmpty()) {
+			calculateDisplayNames(contacts);
+			this.contacts.update(user, new WholeListUpdater<User>(contacts));
+		} else {
+			this.contacts.remove(user);
+		}
 	}
 
 	public void onEvent(@Nonnull UserEvent event) {
@@ -115,4 +119,5 @@ class UserContacts {
 			}
 		}
 	}
+
 }

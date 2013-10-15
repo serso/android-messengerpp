@@ -213,7 +213,7 @@ public class DefaultUserService implements UserService {
 			synchronized (lock) {
 				result = chatService.loadUserChats(user);
 			}
-			chats.updateChats(user, result);
+			chats.update(user, result);
 		}
 
 		return result;

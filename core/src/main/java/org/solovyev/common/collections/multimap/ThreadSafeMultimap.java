@@ -5,6 +5,12 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.*;
 
+import org.solovyev.android.messenger.entities.Entity;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
+
 /**
  * User: serso
  * Date: 4/27/13
@@ -14,7 +20,7 @@ import java.util.*;
 public final class ThreadSafeMultimap<K, V> {
 
 	@Nonnull
-	public static final List<?> NO_VALUE = Collections.emptyList();
+	public static final List<?> NO_VALUE = emptyList();
 
 	@Nonnull
 	private volatile Map<K, List<V>> map;
@@ -39,7 +45,7 @@ public final class ThreadSafeMultimap<K, V> {
 		if (values == null) {
 			return (List<V>) NO_VALUE;
 		} else {
-			return Collections.unmodifiableList(values);
+			return unmodifiableList(values);
 		}
 	}
 
@@ -54,7 +60,7 @@ public final class ThreadSafeMultimap<K, V> {
 	}
 
 	public synchronized boolean update(@Nonnull MapUpdater<K, V> updater) {
-		Map<K, List<V>> newMap = updater.update(Collections.unmodifiableMap(map));
+		Map<K, List<V>> newMap = updater.update(unmodifiableMap(map));
 		if (newMap != null) {
 			map = newMap;
 			return true;
@@ -67,6 +73,10 @@ public final class ThreadSafeMultimap<K, V> {
 	@Nonnull
 	Map<K, List<V>> asMap() {
 		return map;
+	}
+
+	public void remove(@Nonnull K key) {
+		map.put(key, null);
 	}
 
 	/*

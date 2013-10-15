@@ -32,8 +32,12 @@ class UserChats {
 		App.getChatService().addListener(new ChatEventListener());
 	}
 
-	public void updateChats(@Nonnull Entity user, @Nonnull List<Chat> chats) {
-		this.chats.update(user, new WholeListUpdater<Chat>(chats));
+	public void update(@Nonnull Entity user, @Nonnull List<Chat> chats) {
+		if (!chats.isEmpty()) {
+			this.chats.update(user, new WholeListUpdater<Chat>(chats));
+		} else {
+			this.chats.remove(user);
+		}
 	}
 
 	void onEvent(@Nonnull UserEvent event) {

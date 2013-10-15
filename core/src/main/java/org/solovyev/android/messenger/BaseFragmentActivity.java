@@ -48,7 +48,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
     **********************************************************************
     */
 
-	private static final String SELECTED_NAV = "selected_nav";
+	private static final String SELECTED_TAB = "selected_tab";
 
 	protected final String TAG = this.getClass().getSimpleName();
 
@@ -234,13 +234,13 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 				addTab(tabFragment);
 			}
 
-			int navPosition = -1;
+			int selectedTab = -1;
 			if (savedInstanceState != null) {
-				navPosition = savedInstanceState.getInt(SELECTED_NAV, -1);
+				selectedTab = savedInstanceState.getInt(SELECTED_TAB, -1);
 			}
 
-			if (navPosition >= 0) {
-				getSupportActionBar().setSelectedNavigationItem(navPosition);
+			if (selectedTab >= 0) {
+				getSupportActionBar().setSelectedNavigationItem(selectedTab);
 			}
 
 			gestureDetector = new GestureDetector(this, new SwipeGestureListener(this) {
@@ -309,7 +309,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putInt(SELECTED_NAV, getSupportActionBar().getSelectedNavigationIndex());
+		outState.putInt(SELECTED_TAB, getSupportActionBar().getSelectedNavigationIndex());
 	}
 
 
