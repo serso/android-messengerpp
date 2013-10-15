@@ -44,4 +44,7 @@ public interface MutableMessage extends Message {
 	MutableAProperties getProperties();
 
 	void setProperties(@Nonnull List<AProperty> properties);
+
+	@Nonnull
+	MutableMessage cloneWithNewChat(@Nonnull Entity chat);
 }

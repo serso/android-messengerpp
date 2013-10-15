@@ -65,4 +65,7 @@ public interface Message extends Identifiable {
 
 	@Nonnull
 	AProperties getProperties();
+
+	@Nonnull
+	Message cloneWithNewChat(@Nonnull Entity chat);
 }

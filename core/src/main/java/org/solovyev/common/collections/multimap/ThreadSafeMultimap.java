@@ -76,7 +76,7 @@ public final class ThreadSafeMultimap<K, V> {
 	}
 
 	public void remove(@Nonnull K key) {
-		map.put(key, null);
+		map.remove(key);
 	}
 
 	/*

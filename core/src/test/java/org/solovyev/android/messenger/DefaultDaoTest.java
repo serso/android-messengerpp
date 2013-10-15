@@ -62,8 +62,8 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 	}
 
 	@Nonnull
-	private Entity<E> insertEntity() {
-		final Entity<E> entity = newInsertEntity();
+	private Entity<? extends E> insertEntity() {
+		final Entity<? extends E> entity = newInsertEntity();
 		dao.create(entity.entity);
 		return entity;
 	}
@@ -127,13 +127,13 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 
 	@Test
 	public void testShouldReadEntityById() throws Exception {
-		final Entity<E> entity = insertEntity();
+		final Entity<? extends E> entity = insertEntity();
 		assertEntitiesSame(entity.entity, dao.read(entity.id));
 	}
 
 	@Test
 	public void testShouldUpdateEntity() throws Exception {
-		final Entity<E> e1 = insertEntity();
+		final Entity<? extends E> e1 = insertEntity();
 		final Entity<E> e2 = newEntity(changeEntity(e1.entity), e1.id);
 		dao.update(e2.entity);
 		assertTrue(any(dao.readAll(), new SamePredicate(e2.entity)));
@@ -143,7 +143,7 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 	protected abstract Collection<E> populateEntities(@Nonnull Dao<E> dao);
 
 	@Nonnull
-	protected abstract Entity<E> newInsertEntity();
+	protected abstract Entity<? extends E> newInsertEntity();
 
 	@Nonnull
 	protected abstract E changeEntity(@Nonnull E entity);

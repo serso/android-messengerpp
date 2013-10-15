@@ -227,13 +227,13 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 			}
 
 			for (Message updatedMessage : result.getUpdatedObjects()) {
-				execs.add(new UpdateMessage(updatedMessage, chat));
+				execs.add(new UpdateMessage(updatedMessage));
 				execs.add(new DeleteProperties(updatedMessage));
 				execs.add(new InsertProperties(updatedMessage));
 			}
 
 			for (Message addedMessage : result.getAddedObjects()) {
-				execs.add(new InsertMessage(chat, addedMessage));
+				execs.add(new InsertMessage(addedMessage));
 				execs.add(new InsertProperties(addedMessage));
 			}
 
@@ -304,19 +304,15 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 
 	public static final class InsertMessage extends AbstractObjectDbExec<Message> {
 
-		@Nonnull
-		private final Chat chat;
-
-		public InsertMessage(@Nonnull Chat chat, @Nullable Message message) {
+		public InsertMessage(@Nullable Message message) {
 			super(message);
-			this.chat = chat;
 		}
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
 			final Message message = getNotNullObject();
 
-			final ContentValues values = toContentValues(message, chat.getEntity().getEntityId());
+			final ContentValues values = toContentValues(message);
 
 			return db.insert("messages", null, values);
 		}
@@ -324,21 +320,17 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 
 	private static final class UpdateMessage extends AbstractObjectDbExec<Message> {
 
-		@Nonnull
-		private final Chat chat;
-
-		private UpdateMessage(@Nonnull Message message, @Nonnull Chat chat) {
+		private UpdateMessage(@Nonnull Message message) {
 			super(message);
-			this.chat = chat;
 		}
 
 		@Override
 		public long exec(@Nonnull SQLiteDatabase db) {
 			final Message message = getNotNullObject();
 
-			final ContentValues values = toContentValues(message, chat.getEntity().getEntityId());
+			final ContentValues values = toContentValues(message);
 
-			return db.update("messages", values, "id = ? and chat_id = ?", new String[]{String.valueOf(message.getEntity().getEntityId()), String.valueOf(chat.getEntity().getEntityId())});
+			return db.update("messages", values, "id = ?", new String[]{String.valueOf(message.getEntity().getEntityId())});
 		}
 	}
 
@@ -373,7 +365,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Nonnull
 		@Override
 		public ContentValues toContentValues(@Nonnull Message message) {
-			return SqliteMessageDao.toContentValues(message, message.getChat().getEntityId());
+			return SqliteMessageDao.toContentValues(message);
 		}
 
 		@Nonnull
@@ -495,7 +487,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 	}
 
 	@Nonnull
-	private static ContentValues toContentValues(@Nonnull Message message, @Nonnull String chatId) {
+	private static ContentValues toContentValues(@Nonnull Message message) {
 		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
 		final ContentValues values = new ContentValues();
@@ -505,7 +497,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		values.put("account_id", entity.getAccountId());
 		values.put("realm_message_id", entity.getAccountEntityId());
 
-		values.put("chat_id", chatId);
+		values.put("chat_id", message.getChat().getEntityId());
 		values.put("author_id", message.getAuthor().getEntityId());
 		final Entity recipient = message.getRecipient();
 		values.put("recipient_id", recipient == null ? null : recipient.getEntityId());

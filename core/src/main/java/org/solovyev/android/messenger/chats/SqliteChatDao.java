@@ -243,7 +243,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 			});
 
 			for (Message message : accountChat.getMessages()) {
-				execs.add(new SqliteMessageDao.InsertMessage(addedChat, message));
+				execs.add(new SqliteMessageDao.InsertMessage(message));
 			}
 
 			for (User participant : accountChat.getParticipants()) {

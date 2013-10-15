@@ -80,7 +80,7 @@ public final class Messages {
 	}
 
 	@Nonnull
-	public static Message newEmptyMessage(@Nonnull String messageId) {
+	public static MutableMessage newEmptyMessage(@Nonnull String messageId) {
 		return new MessageImpl(newEntityFromEntityId(messageId));
 	}
 

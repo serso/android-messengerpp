@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.properties.Properties.newProperty;
@@ -34,11 +40,11 @@ class AccountChatImpl implements MutableAccountChat {
 		this.participants = participants;
 	}
 
-	AccountChatImpl(@Nonnull Entity entity,
+	AccountChatImpl(@Nonnull Entity chat,
 							boolean privateChat) {
 		final List<AProperty> properties = new ArrayList<AProperty>();
 		properties.add(newProperty("private", Boolean.toString(privateChat)));
-		this.chat = Chats.newChat(entity, properties, null);
+		this.chat = Chats.newChat(chat, properties, null);
 
 		this.messages = new ArrayList<Message>(20);
 		this.participants = new ArrayList<User>(3);
@@ -87,8 +93,15 @@ class AccountChatImpl implements MutableAccountChat {
 
 	@Nonnull
 	@Override
-	public AccountChat copyWithNewId(@Nonnull Entity newAccountChat) {
-		return new AccountChatImpl(chat.copyWithNewId(newAccountChat), messages, participants);
+	public AccountChat copyWithNewId(@Nonnull final Entity id) {
+		final Chat chat = this.chat.copyWithNewId(id);
+		final List<Message> messages = newArrayList(transform(this.messages, new Function<Message, Message>() {
+			@Override
+			public Message apply(Message message) {
+				return message.cloneWithNewChat(id);
+			}
+		}));
+		return new AccountChatImpl(chat, messages, participants);
 	}
 
 }

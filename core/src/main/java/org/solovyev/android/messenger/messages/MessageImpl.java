@@ -161,6 +161,14 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 		this.properties.setPropertiesFrom(properties);
 	}
 
+	@Nonnull
+	@Override
+	public MutableMessage cloneWithNewChat(@Nonnull Entity chat) {
+		final MessageImpl clone = clone();
+		clone.chat = chat;
+		return clone;
+	}
+
 	@Override
 	public void setBody(@Nonnull String body) {
 		this.body = body;

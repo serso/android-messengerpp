@@ -28,5 +28,5 @@ public interface AccountChat {
 	Chat getChat();
 
 	@Nonnull
-	AccountChat copyWithNewId(@Nonnull Entity newAccountChat);
+	AccountChat copyWithNewId(@Nonnull Entity id);
 }

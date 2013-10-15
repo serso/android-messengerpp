@@ -41,11 +41,11 @@ public interface Chat extends Identifiable, EntityAware {
 	/**
 	 * Method creates copy of this object with new account id
 	 *
-	 * @param accountChat new chat id
+	 * @param id new chat id
 	 * @return chat copy with updated properties
 	 */
 	@Nonnull
-	Chat copyWithNewId(@Nonnull Entity accountChat);
+	Chat copyWithNewId(@Nonnull Entity id);
 
 	@Nonnull
 	Chat cloneWithNewProperty(@Nonnull AProperty property);

@@ -231,31 +231,31 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Nonnull
-	private AccountChat prepareChat(@Nonnull AccountChat apiChat) throws UnsupportedAccountException {
-		if (apiChat.getChat().isPrivate()) {
-			final Account account = accountService.getAccountById(apiChat.getChat().getEntity().getAccountId());
+	private AccountChat prepareChat(@Nonnull AccountChat accountChat) throws UnsupportedAccountException {
+		if (accountChat.getChat().isPrivate()) {
+			final Account account = accountService.getAccountById(accountChat.getChat().getEntity().getAccountId());
 			final User user = account.getUser();
-			final List<User> participants = apiChat.getParticipantsExcept(user);
+			final List<User> participants = accountChat.getParticipantsExcept(user);
 
 			if (participants.size() == 1) {
 				final Entity participant1 = user.getEntity();
 				final Entity participant2 = participants.get(0).getEntity();
 
-				final Entity accountChat = getPrivateChatId(participant1, participant2);
+				final Entity chat = getPrivateChatId(participant1, participant2);
 
-				if (!accountChat.getAccountEntityId().equals(apiChat.getChat().getEntity().getAccountEntityId())) {
+				if (!chat.getAccountEntityId().equals(accountChat.getChat().getEntity().getAccountEntityId())) {
 					/**
 					 * chat id that was created by account (may differ from one created in {@link org.solovyev.android.messenger.chats.ChatService#getPrivateChatId(org.solovyev.android.messenger.entities.Entity, org.solovyev.android.messenger.entities.Entity)) method)
 					 */
-					final String accountChatId = apiChat.getChat().getEntity().getAccountEntityId();
+					final String accountChatId = accountChat.getChat().getEntity().getAccountEntityId();
 
 					// copy with new id
-					apiChat = apiChat.copyWithNewId(account.newEntity(accountChatId, accountChat.getEntityId()));
+					accountChat = accountChat.copyWithNewId(account.newEntity(accountChatId, chat.getEntityId()));
 				}
 			}
 		}
 
-		return apiChat;
+		return accountChat;
 	}
 
 	@Nonnull
@@ -365,7 +365,7 @@ public class DefaultChatService implements ChatService {
 		}
 
 		for (Chat updatedChat : mergeResult.getUpdatedObjects()) {
-			fireEvent(ChatEventType.changed.newEvent(updatedChat));
+			chatEvents.add(ChatEventType.changed.newEvent(updatedChat));
 		}
 
 		userService.fireEvents(userEvents);

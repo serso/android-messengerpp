@@ -42,6 +42,16 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Nonnull
+	public String getAccountUserId() {
+		final int index = login.indexOf('@');
+		if (index < 0) {
+			return login + '@' + server;
+		} else {
+			return login;
+		}
+	}
+
+	@Nonnull
 	public String getServer() {
 		return server;
 	}

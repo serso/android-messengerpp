@@ -88,7 +88,7 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 
 	@Nonnull
 	@Override
-	protected Entity<Chat> newInsertEntity() {
+	protected Entity<MutableChat> newInsertEntity() {
 		return newEntity(newPrivateChat(getAccount1().newChatEntity("test_chat_1")));
 	}
 

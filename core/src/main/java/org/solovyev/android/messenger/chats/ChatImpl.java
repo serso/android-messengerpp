@@ -104,8 +104,8 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 
 	@Nonnull
 	@Override
-	public Chat copyWithNewId(@Nonnull Entity accountChat) {
-		return new ChatImpl(accountChat, this.properties.getPropertiesCollection(), this.lastMessageSyncDate);
+	public Chat copyWithNewId(@Nonnull Entity id) {
+		return new ChatImpl(id, this.properties.getPropertiesCollection(), this.lastMessageSyncDate);
 	}
 
 	@Nonnull
