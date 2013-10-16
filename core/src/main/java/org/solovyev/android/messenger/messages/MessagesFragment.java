@@ -38,12 +38,12 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import org.solovyev.common.text.Strings;
 
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -288,9 +288,10 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 	}
 
 	private void sendMessage(@Nonnull EditText messageEditText, @Nullable User recipient) {
-		final boolean sent = trySendMessage(getActivity(), account, chat, recipient, toHtml(messageEditText.getText()));
-		if (sent) {
+		final Message message = trySendMessage(getActivity(), account, chat, recipient, toHtml(messageEditText.getText()));
+		if (message != null) {
 			messageEditText.setText("");
+			getAdapter().addSendingMessage(message);
 		}
 	}
 
@@ -490,6 +491,7 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 					chat = event.getChat();
 				}
 			}
+
 			Threads2.tryRunOnUiThread(MessagesFragment.this, new Runnable() {
 				@Override
 				public void run() {

@@ -1,20 +1,19 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.users.User;
 
 import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 
@@ -23,7 +22,7 @@ import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessag
  * Date: 6/25/12
  * Time: 11:00 PM
  */
-public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTask.Input, Void, List<Message>> {
+public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTask.SendingMessage, Void, List<Message>> {
 
 	@Nonnull
 	private final Chat chat;
@@ -34,16 +33,16 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 	}
 
 	@Override
-	protected List<Message> doWork(@Nonnull List<Input> inputs) {
-		final List<Message> result = new ArrayList<Message>(inputs.size());
+	protected List<Message> doWork(@Nonnull List<SendingMessage> sendingMessages) {
+		final List<Message> result = new ArrayList<Message>(sendingMessages.size());
 
 		try {
-			for (Input input : inputs) {
+			for (SendingMessage sendingMessage : sendingMessages) {
 				final Context context = getContext();
 				if (context != null) {
-					assert chat.equals(input.chat);
+					assert chat.equals(sendingMessage.chat);
 
-					final Message message = input.sendMessage();
+					final Message message = sendingMessage.sendMessage();
 					if (message != null) {
 						result.add(message);
 					}
@@ -57,15 +56,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 	}
 
 	@Override
-	protected void onSuccessPostExecute(@Nullable List<Message> result) {
-		if (result != null) {
-			//getChatService().fireEvent(ChatEventType.message_added_batch.newEvent(chat, result)); wait remote add
-		}
-	}
-
-	@Nonnull
-	private static ChatService getChatService() {
-		return App.getChatService();
+	protected void onSuccessPostExecute(@Nullable List<Message> messages) {
 	}
 
 	@Nonnull
@@ -73,20 +64,13 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		return App.getMessageService();
 	}
 
-	@Nonnull
-	private static UserService getUserService() {
-		return App.getUserService();
-	}
-
-	@Nonnull
-	private static AccountService getAccountService() {
-		return App.getAccountService();
-	}
-
-	public static class Input {
+	public static class SendingMessage {
 
 		@Nonnull
-		private String message;
+		private final Account account;
+
+		@Nonnull
+		private String text;
 
 		@Nullable
 		private String title;
@@ -100,10 +84,19 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 		@Nullable
 		private final User recipient;
 
-		public Input(@Nonnull String message, @Nonnull Chat chat, @Nullable User recipient) {
-			this.message = message;
+		@Nullable
+		private MutableMessage message;
+
+		private SendingMessage(@Nonnull Account account, @Nonnull String text, @Nonnull Chat chat, @Nullable User recipient) {
+			this.account = account;
+			this.text = text;
 			this.chat = chat;
 			this.recipient = recipient;
+		}
+
+		@Nonnull
+		public static SendingMessage newSendingMessage(@Nonnull Account account, @Nonnull String message, @Nonnull Chat chat, @Nullable User recipient) {
+			return new SendingMessage(account, message, chat, recipient);
 		}
 
 		public void setTitle(@Nullable String title) {
@@ -116,9 +109,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 		@Nullable
 		public Message sendMessage() throws AccountException {
-			final Account account = getAccountService().getAccountById(chat.getEntity().getAccountId());
-
-			final MutableMessage result = newOutgoingMessage(account, chat, message, title);
+			final MutableMessage result = createMessage();
 
 			// on before send hook
 			account.getAccountChatService().beforeSendMessage(chat, recipient, result);
@@ -126,6 +117,14 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			return getMessageService().sendMessage(chat, result);
 		}
 
+		@Nonnull
+		public MutableMessage createMessage() {
+			if (message == null) {
+				message = newOutgoingMessage(account, chat, text, title);
+			}
+
+			return message;
+		}
 	}
 }
 

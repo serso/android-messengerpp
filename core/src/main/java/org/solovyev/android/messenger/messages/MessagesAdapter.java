@@ -2,10 +2,18 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import android.os.Handler;
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
@@ -15,12 +23,13 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
+import static com.google.common.collect.Lists.transform;
+import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
-import static org.solovyev.android.messenger.messages.MessageListItem.newMessageListItem;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 /**
@@ -65,7 +74,10 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 	// map of list items saying that someone start typing message
 	// key: user entity
 	@Nonnull
-	private final Map<Entity, MessageListItem> userTypingListItems = Collections.synchronizedMap(new HashMap<Entity, MessageListItem>());
+	private final Map<Entity, MessageListItem> userTypingListItems = new HashMap<Entity, MessageListItem>();
+
+	@Nonnull
+	private final Set<MessageListItem> sendingListItems = new HashSet<MessageListItem>();
 
 	@Nonnull
 	private final Handler uiHandler = new Handler(new Handler.Callback() {
@@ -74,7 +86,7 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 			switch (msg.what) {
 				case REMOVE_USER_START_TYPING_ID:
 					final MessageListItem listItem = (MessageListItem) msg.obj;
-					removeListItem(listItem);
+					remove(listItem);
 					userTypingListItems.remove(listItem.getMessage().getAuthor());
 					return true;
 
@@ -97,10 +109,10 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 		if (event.getChat().equals(chat)) {
 			switch (type) {
 				case message_added:
-					addMessageListItem(event.getDataAsMessage());
+					addMessages(asList(event.getDataAsMessage()));
 					break;
 				case message_added_batch:
-					onMessagesAdded(event);
+					addMessages(event.getDataAsMessages());
 					break;
 				case message_state_changed:
 					onMessageStateChanged(event);
@@ -124,23 +136,31 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 		}
 	}
 
-	private void onMessagesAdded(@Nonnull ChatEvent event) {
-		final List<Message> messages = event.getDataAsMessages();
+	public void addSendingMessage(@Nonnull Message message) {
+		final MessageListItem listItem = newMessageListItem(message);
+		add(listItem);
+		sendingListItems.add(listItem);
+	}
 
-		addAll(Lists.transform(messages, new Function<Message, MessageListItem>() {
+	private void addMessages(@Nonnull List<Message> messages) {
+		final List<MessageListItem> listItems = transform(messages, new Function<Message, MessageListItem>() {
 			@Override
-			public MessageListItem apply(@javax.annotation.Nullable Message input) {
-				assert input != null;
-				return createListItem(input);
+			public MessageListItem apply(Message message) {
+				return newMessageListItem(message);
 			}
-		}));
+		});
 
-		for (Message message : messages) {
-			final MessageListItem listItem = userTypingListItems.remove(message.getAuthor());
-			if (listItem != null) {
+		for (MessageListItem listItem : listItems) {
+			if (userTypingListItems.remove(listItem.getMessage().getAuthor()) != null) {
+				remove(listItem);
+			}
+
+			if(sendingListItems.remove(listItem)) {
 				remove(listItem);
 			}
 		}
+
+		addAll(listItems);
 	}
 
 	private void onMessageStateChanged(@Nonnull ChatEvent event) {
@@ -176,8 +196,8 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 				message.setRead(true);
 
 				// create fake list item
-				listItem = createListItem(message);
-				addListItem(listItem);
+				listItem = newMessageListItem(message);
+				add(listItem);
 
 				// add list item to the map
 				userTypingListItems.put(user, listItem);
@@ -211,22 +231,15 @@ public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /
 
 	@Nullable
 	private MessageListItem findInAllElements(@Nonnull Message message) {
-		return Iterables.find(getAllElements(), Predicates.<MessageListItem>equalTo(createListItem(message)), null);
+		return Iterables.find(getAllElements(), Predicates.<MessageListItem>equalTo(newMessageListItem(message)), null);
 	}
 
 	@Nonnull
-	private MessageListItem createListItem(@Nonnull Message message) {
-		return newMessageListItem(user, chat, message, messageStyle);
-	}
-
-	private void addMessageListItem(@Nonnull Message message) {
-		// remove typing message
-		userTypingListItems.remove(message.getAuthor());
-
-		addListItem(createListItem(message));
+	private MessageListItem newMessageListItem(@Nonnull Message message) {
+		return MessageListItem.newMessageListItem(user, chat, message, messageStyle);
 	}
 
 	protected void removeListItem(@Nonnull Message message) {
-		remove(createListItem(message));
+		remove(newMessageListItem(message));
 	}
 }

@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUserService;
+import static org.solovyev.android.messenger.messages.SendMessageAsyncTask.SendingMessage.newSendingMessage;
 import static org.solovyev.android.messenger.users.ContactUiEventType.resend_message;
 import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
 
@@ -40,7 +41,8 @@ final class UiMessageSender {
 		this.recipient = recipient;
 	}
 
-	public static boolean trySendMessage(@Nonnull FragmentActivity activity,
+	@Nullable
+	public static Message trySendMessage(@Nonnull FragmentActivity activity,
 										 @Nonnull Account account,
 										 @Nonnull Chat chat,
 										 @Nullable User recipient,
@@ -49,14 +51,16 @@ final class UiMessageSender {
 		return sender.trySendMessage(message);
 	}
 
-	private boolean trySendMessage(@Nonnull String message) {
+	@Nullable
+	private Message trySendMessage(@Nonnull String message) {
 		if (canSendMessage(message)) {
 			final SendMessageAsyncTask task = new SendMessageAsyncTask(activity, chat);
-			final SendMessageAsyncTask.Input input = new SendMessageAsyncTask.Input(message, chat, recipient);
-			task.executeInParallel(input);
-			return true;
+			final SendMessageAsyncTask.SendingMessage sendingMessage = newSendingMessage(account, message, chat, recipient);
+			final MutableMessage result = sendingMessage.createMessage();
+			task.executeInParallel(sendingMessage);
+			return result;
 		} else {
-			return false;
+			return null;
 		}
 	}
 
