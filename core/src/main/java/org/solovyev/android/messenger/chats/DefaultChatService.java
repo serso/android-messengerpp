@@ -28,10 +28,7 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 import static com.google.common.collect.Iterables.filter;
@@ -217,11 +214,20 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	private AccountChat prepareChat(@Nonnull AccountChat accountChat) throws UnsupportedAccountException {
-		if (accountChat.getChat().isPrivate()) {
-			final Account account = accountService.getAccountById(accountChat.getChat().getEntity().getAccountId());
-			final User user = account.getUser();
-			final List<User> participants = accountChat.getParticipantsExcept(user);
+		final Account account = accountService.getAccountById(accountChat.getChat().getEntity().getAccountId());
+		final User user = account.getUser();
+		final List<User> participants = accountChat.getParticipantsExcept(user);
 
+		// let's check if all participants are saved in the app
+		for (User participant : participants) {
+			try {
+				userService.getUserById(participant.getEntity(), false, false);
+			} catch (NoSuchElementException e) {
+				userService.saveUser(participant);
+			}
+		}
+
+		if (accountChat.getChat().isPrivate()) {
 			if (participants.size() == 1) {
 				final Entity participant1 = user.getEntity();
 				final Entity participant2 = participants.get(0).getEntity();

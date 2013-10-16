@@ -92,7 +92,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 			@Override
 			public Chat call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(accountUserId2, accountChat.getEntityId(), new XmppMessageListener(getAccount(), accountChat));
-				return XmppAccount.toApiChat(smackChat, Collections.<org.jivesoftware.smack.packet.Message>emptyList(), getAccount()).getChat();
+				return XmppAccount.toAccountChat(smackChat, Collections.<org.jivesoftware.smack.packet.Message>emptyList(), getAccount()).getChat();
 			}
 		});
 	}

@@ -1,19 +1,14 @@
 package org.solovyev.android.messenger.chats;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.base.Predicates.not;
@@ -41,9 +36,9 @@ class AccountChatImpl implements MutableAccountChat {
 	}
 
 	AccountChatImpl(@Nonnull Entity chat,
-							boolean privateChat) {
+					boolean privateChat) {
 		final List<AProperty> properties = new ArrayList<AProperty>();
-		properties.add(newProperty("private", Boolean.toString(privateChat)));
+		properties.add(newProperty(Chat.PROPERTY_PRIVATE, Boolean.toString(privateChat)));
 		this.chat = Chats.newChat(chat, properties, null);
 
 		this.messages = new ArrayList<Message>(20);

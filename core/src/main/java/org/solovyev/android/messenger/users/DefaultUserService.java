@@ -27,10 +27,7 @@ import org.solovyev.common.listeners.Listeners;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 import static com.google.common.collect.Iterables.*;
@@ -42,6 +39,7 @@ import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UserEventType.*;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 /**
  * User: serso
@@ -140,6 +138,12 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public User getUserById(@Nonnull Entity user, boolean tryFindInAccount) {
+		return getUserById(user, tryFindInAccount, true);
+	}
+
+	@Nonnull
+	@Override
+	public User getUserById(@Nonnull Entity user, boolean tryFindInAccount, boolean createFakeUser) {
 		boolean saved = true;
 
 		User result = cache.get(user);
@@ -167,7 +171,11 @@ public class DefaultUserService implements UserService {
 			}
 
 			if (result == null) {
-				result = Users.newEmptyUser(user);
+				if (createFakeUser) {
+					result = newEmptyUser(user);
+				} else {
+					throw new NoSuchElementException("User with id: " + user.getEntityId() + " doesn't exist");
+				}
 			} else {
 				// user was loaded either from dao or from API => cache
 				cache.put(result);

@@ -13,6 +13,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 
+import static org.solovyev.android.messenger.realms.xmpp.XmppAccount.toAccountChat;
 import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
 
 final class XmppChatListener implements ChatManagerListener {
@@ -29,7 +30,7 @@ final class XmppChatListener implements ChatManagerListener {
 		Log.d(TAG, "Chat created!");
 
 		if (!createdLocally) {
-			final AccountChat newAccountChat = XmppAccount.toApiChat(chat, Collections.<Message>emptyList(), account);
+			final AccountChat newAccountChat = toAccountChat(chat, Collections.<Message>emptyList(), account);
 			try {
 				final Chat newChat = getChatService().saveChat(account.getUser().getEntity(), newAccountChat);
 				if (newChat != null) {

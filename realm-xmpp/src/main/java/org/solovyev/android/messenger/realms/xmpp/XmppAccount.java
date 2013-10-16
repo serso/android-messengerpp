@@ -10,12 +10,11 @@ import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.AccountChat;
+import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.*;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
@@ -25,11 +24,11 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.jivesoftware.smack.packet.Message.Type.error;
+import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.messages.MessageState.received;
 import static org.solovyev.android.messenger.messages.MessageState.sent;
@@ -127,7 +126,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	static AccountChat toApiChat(@Nonnull Chat smackChat, @Nonnull List<Message> smackMessages, @Nonnull Account account) {
+	static AccountChat toAccountChat(@Nonnull Chat smackChat, @Nonnull List<Message> smackMessages, @Nonnull Account account) {
 		final User participant = toUser(smackChat.getParticipant(), account);
 
 		final Entity chat;
@@ -140,8 +139,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 		}
 
 		final List<MutableMessage> messages = toMessages(account, smackMessages);
-		final List<User> participants = Arrays.asList(account.getUser(), participant);
-		return Chats.newPrivateAccountChat(chat, participants, messages);
+		return newPrivateAccountChat(chat, account.getUser(), participant, messages);
 	}
 
 	@Nonnull

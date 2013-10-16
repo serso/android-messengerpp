@@ -81,13 +81,13 @@ public final class Chats {
 
 	@Nonnull
 	public static MutableAccountChat newPrivateAccountChat(@Nonnull Entity chat,
-														   @Nonnull Collection<User> participants,
+														   @Nonnull User user,
+														   @Nonnull User participant,
 														   @Nonnull Collection<? extends Message> messages) {
 		final MutableAccountChat result = newAccountChat(chat, true);
 
-		for (User participant : participants) {
-			result.addParticipant(participant);
-		}
+		result.addParticipant(user);
+		result.addParticipant(participant);
 
 		for (Message message : messages) {
 			result.addMessage(message.cloneWithNewChat(chat));

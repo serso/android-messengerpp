@@ -2,27 +2,32 @@ package org.solovyev.android.messenger.chats;
 
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTest;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.TestAccount;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserSameEqualizer;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.Objects;
+import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static java.lang.Integer.MAX_VALUE;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
+import static org.solovyev.common.Objects.areEqual;
 
 public class ChatServiceTest extends DefaultMessengerTest {
 
@@ -94,8 +99,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		final User user = account.getUser();
 		final User contact = ad.getContacts().get(0);
 
-		final List<User> participants = Arrays.asList(user, contact);
-		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateAccountChat(account.newChatEntity("test_api_chat"), participants, Collections.<MutableMessage>emptyList()));
+		final Chat chat = chatService.saveChat(user.getEntity(), newPrivateAccountChat(account.newChatEntity("test_api_chat"), user, contact, Collections.<MutableMessage>emptyList()));
 
 		assertNotNull(chat);
 		assertEquals(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), chat.getEntity());
@@ -111,6 +115,27 @@ public class ChatServiceTest extends DefaultMessengerTest {
 
 		final Chat chat = chatService.saveChat(user.getEntity(), accountChat);
 
-		assertTrue(Objects.areEqual(chat, accountChat.getChat(), new ChatSameEqualizer()));
+		assertTrue(areEqual(chat, accountChat.getChat(), new ChatSameEqualizer()));
+	}
+
+	@Test
+	public void testShouldSaveParticipantIfDoesntExist() throws Exception {
+		final AccountData ad = getAccountData1();
+		final User user = ad.getAccount().getUser();
+		final User contact = Users.newEmptyUser(ad.getAccount().newEntity("test_sdfsde5t"));
+		final Entity chat = ad.getAccount().newChatEntity("test_23123123");
+		final MutableAccountChat accountChat = newPrivateAccountChat(chat, user, contact, Collections.<Message>emptyList());
+
+		try {
+			userService.getUserById(contact.getEntity(), false, false);
+			fail();
+		} catch (NoSuchElementException e) {
+			// ok, user doesn't exist
+		}
+
+		chatService.mergeUserChats(user.getEntity(), asList(accountChat));
+
+		final User actual = userService.getUserById(contact.getEntity());
+		assertTrue(areEqual(contact, actual, new UserSameEqualizer()));
 	}
 }

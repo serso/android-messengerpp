@@ -228,27 +228,27 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends AccountChat> apiChats) {
-		final MergeDaoResult<Chat, String> result = mergeLinkedEntities(userId, apiChats);
+	public MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends AccountChat> chats) {
+		final MergeDaoResult<Chat, String> result = mergeLinkedEntities(userId, chats);
 
 		final List<DbExec> execs = new ArrayList<DbExec>();
 
 		for (final Chat addedChat : result.getAddedObjects()) {
-			final AccountChat accountChat = find(apiChats, new Predicate<AccountChat>() {
+			final AccountChat chat = find(chats, new Predicate<AccountChat>() {
 				@Override
-				public boolean apply(@Nullable AccountChat apiChat) {
-					assert apiChat != null;
-					return apiChat.getChat().equals(addedChat);
+				public boolean apply(AccountChat chat) {
+					return chat.getChat().equals(addedChat);
 				}
 			});
 
-			for (Message message : accountChat.getMessages()) {
+			for (Message message : chat.getMessages()) {
 				execs.add(new SqliteMessageDao.InsertMessage(message));
 			}
 
-			for (User participant : accountChat.getParticipants()) {
-				if (!participant.getEntity().getEntityId().equals(userId)) {
-					execs.add(new InsertChatLink(participant.getEntity().getEntityId(), addedChat.getEntity().getEntityId()));
+			for (User participant : chat.getParticipants()) {
+				final String participantId = participant.getId();
+				if (!participantId.equals(userId)) {
+					execs.add(new InsertChatLink(participantId, addedChat.getId()));
 				}
 			}
 		}

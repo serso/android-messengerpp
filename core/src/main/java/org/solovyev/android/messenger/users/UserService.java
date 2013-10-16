@@ -1,17 +1,17 @@
 package org.solovyev.android.messenger.users;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.listeners.JEventListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -59,6 +59,9 @@ public interface UserService {
 	 */
 	@Nonnull
 	User getUserById(@Nonnull Entity user, boolean tryFindInAccount);
+
+	@Nonnull
+	User getUserById(@Nonnull Entity user, boolean tryFindInAccount, boolean createFakeUser) throws NoSuchElementException;
 
 	/**
 	 * @param user user

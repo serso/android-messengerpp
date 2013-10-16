@@ -20,7 +20,6 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
@@ -80,7 +79,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 			for(int i = 0; i < 10; i++) {
 				messages.add(generateMessage(i, user, contact, result.account));
 			}
-			result.chats.add(newPrivateAccountChat(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), Arrays.asList(user, contact), messages));
+			result.chats.add(newPrivateAccountChat(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), user, contact, messages));
 		}
 		chatService.mergeUserChats(user.getEntity(), result.chats);
 		return result;
