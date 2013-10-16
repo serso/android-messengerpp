@@ -1,9 +1,7 @@
 package org.solovyev.android.messenger.messages;
 
-import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
-import android.widget.EditText;
-import org.solovyev.android.messenger.App;
+
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
@@ -12,9 +10,8 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.ref.WeakReference;
-import java.util.List;
 
+import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.users.ContactUiEventType.resend_message;
 import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
@@ -23,9 +20,6 @@ final class UiMessageSender {
 
 	@Nonnull
 	private final FragmentActivity activity;
-
-	@Nonnull
-	private final EditText messageEditText;
 
 	@Nonnull
 	private final Account account;
@@ -37,39 +31,28 @@ final class UiMessageSender {
 	private final User recipient;
 
 	private UiMessageSender(@Nonnull FragmentActivity activity,
-							@Nonnull EditText messageEditText,
 							@Nonnull Account account,
 							@Nonnull Chat chat,
 							@Nullable User recipient) {
 		this.activity = activity;
-		this.messageEditText = messageEditText;
 		this.account = account;
 		this.chat = chat;
 		this.recipient = recipient;
 	}
 
 	public static boolean trySendMessage(@Nonnull FragmentActivity activity,
-												 @Nonnull EditText messageEditText,
-												 @Nonnull Account account,
-												 @Nonnull Chat chat,
-												 @Nullable User recipient) {
-		final UiMessageSender sender = new UiMessageSender(activity, messageEditText, account, chat, recipient);
-		return sender.trySendMessage();
+										 @Nonnull Account account,
+										 @Nonnull Chat chat,
+										 @Nullable User recipient,
+										 @Nonnull String message) {
+		final UiMessageSender sender = new UiMessageSender(activity, account, chat, recipient);
+		return sender.trySendMessage(message);
 	}
 
-	public boolean trySendMessage() {
-		final String messageText = Strings.toHtml(messageEditText.getText());
-		if (!Strings.isEmpty(messageText)) {
-			return trySendMessage(messageEditText, messageText);
-		} else {
-			return false;
-		}
-	}
-
-	private boolean trySendMessage(@Nonnull EditText messageBody, @Nonnull String messageText) {
-		if (canSendMessage()) {
-			final SendMessageAndUpdateEditTextAsyncTask task = new SendMessageAndUpdateEditTextAsyncTask(activity, messageBody, chat);
-			final SendMessageAsyncTask.Input input = new SendMessageAsyncTask.Input(messageText, chat, recipient);
+	private boolean trySendMessage(@Nonnull String message) {
+		if (canSendMessage(message)) {
+			final SendMessageAsyncTask task = new SendMessageAsyncTask(activity, chat);
+			final SendMessageAsyncTask.Input input = new SendMessageAsyncTask.Input(message, chat, recipient);
 			task.executeInParallel(input);
 			return true;
 		} else {
@@ -77,11 +60,17 @@ final class UiMessageSender {
 		}
 	}
 
-	private boolean canSendMessage() {
-		boolean result = true;
+	private boolean canSendMessage(@Nonnull String message) {
+		final boolean result;
 
-		if (chat.isPrivate()) {
-			result = canSendMessageToUser(getContact(chat.getSecondUser()));
+		if (!Strings.isEmpty(message)) {
+			if (chat.isPrivate()) {
+				result = canSendMessageToUser(getContact(chat.getSecondUser()));
+			} else {
+				result = true;
+			}
+		} else {
+			result = false;
 		}
 
 		return result;
@@ -106,38 +95,10 @@ final class UiMessageSender {
 		if (account.isCompositeUser(contact)) {
 			if (!account.isCompositeUserDefined(contact)) {
 				result = false;
-				App.getEventManager(activity).fire(show_composite_user_dialog.newEvent(contact, resend_message));
+				getEventManager(activity).fire(show_composite_user_dialog.newEvent(contact, resend_message));
 			}
 		}
 
 		return result;
-	}
-
-	/*
-	**********************************************************************
-	*
-	*                           STATIC/INNER
-	*
-	**********************************************************************
-	*/
-
-	private static class SendMessageAndUpdateEditTextAsyncTask extends SendMessageAsyncTask {
-
-		@Nonnull
-		private final WeakReference<EditText> messageBodyRef;
-
-		public SendMessageAndUpdateEditTextAsyncTask(@Nonnull Activity activity, @Nonnull EditText messageBody, @Nonnull Chat chat) {
-			super(activity, chat);
-			this.messageBodyRef = new WeakReference<EditText>(messageBody);
-		}
-
-		@Override
-		protected void onSuccessPostExecute(@Nullable List<Message> result) {
-			super.onSuccessPostExecute(result);
-			final EditText messageBody = messageBodyRef.get();
-			if (messageBody != null) {
-				messageBody.setText("");
-			}
-		}
 	}
 }

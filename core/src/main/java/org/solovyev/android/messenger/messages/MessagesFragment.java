@@ -38,6 +38,8 @@ import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.text.Strings;
+
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -51,6 +53,7 @@ import static org.solovyev.android.messenger.messages.MessageListItem.newMessage
 import static org.solovyev.android.messenger.messages.UiMessageSender.trySendMessage;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
 import static org.solovyev.common.text.Strings.isEmpty;
+import static org.solovyev.common.text.Strings.toHtml;
 
 /**
  * User: serso
@@ -285,7 +288,10 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 	}
 
 	private void sendMessage(@Nonnull EditText messageEditText, @Nullable User recipient) {
-		trySendMessage(getActivity(), messageEditText, account, chat, recipient);
+		final boolean sent = trySendMessage(getActivity(), account, chat, recipient, toHtml(messageEditText.getText()));
+		if (sent) {
+			messageEditText.setText("");
+		}
 	}
 
 	@Nonnull
