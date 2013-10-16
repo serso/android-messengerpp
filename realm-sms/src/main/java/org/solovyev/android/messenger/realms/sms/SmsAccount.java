@@ -17,6 +17,7 @@ import org.solovyev.android.messenger.users.PhoneNumber;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,6 +52,12 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Override
 	protected AccountConnection createConnection(@Nonnull Context context) {
 		return new SmsAccountConnection(this, context);
+	}
+
+	@Nullable
+	@Override
+	protected synchronized SmsAccountConnection getAccountConnection() {
+		return (SmsAccountConnection) super.getAccountConnection();
 	}
 
 	@Nonnull
@@ -170,11 +177,14 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	public void call(@Nonnull User contact, @Nonnull Context context) {
 		final PhoneNumber phoneNumber = newPhoneNumber(contact.getPhoneNumber());
 		if (phoneNumber.isCallable()) {
+			// we need to return after call to application => enable listener
+			final SmsAccountConnection connection = getAccountConnection();
+			if (connection != null) {
+				connection.setCallFromUs(phoneNumber.getNumber());
+			}
+
 			final Intent callIntent = new Intent(ACTION_CALL, Uri.parse("tel:" + phoneNumber.getNumber()));
 			context.startActivity(callIntent);
-
-			// we need to return after call to application => enable listener
-			getRealm().getCallListener().setEnabled(true);
 		}
 	}
 

@@ -80,6 +80,14 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-core</artifactId>
+				<version>1.0</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
 				<groupId>com.google.android</groupId>
 				<artifactId>android</artifactId>
 				<version>4.0.1.2</version>

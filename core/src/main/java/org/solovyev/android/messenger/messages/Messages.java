@@ -20,6 +20,7 @@ import static org.joda.time.format.DateTimeFormat.shortDate;
 import static org.joda.time.format.DateTimeFormat.shortTime;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.android.messenger.messages.MessageState.received;
 import static org.solovyev.android.messenger.messages.MessageState.sending;
 
 /**
@@ -88,14 +89,31 @@ public final class Messages {
 	}
 
 	@Nonnull
+	public static MutableMessage newIncomingMessage(@Nonnull Account account, @Nonnull Chat chat, @Nonnull String message, @Nullable String title, @Nonnull Entity author) {
+		final MutableMessage result = newMessage(generateEntity(account));
+
+		result.setChat(chat.getEntity());
+		result.setAuthor(author);
+		if (chat.isPrivate()) {
+			result.setRecipient(account.getUser().getEntity());
+		}
+		result.setSendDate(now());
+		result.setState(received);
+		result.setRead(false);
+		result.setBody(message);
+		result.setTitle(title == null ? "" : title);
+
+		return result;
+	}
+
+	@Nonnull
 	public static MutableMessage newOutgoingMessage(@Nonnull Account account, @Nonnull Chat chat, @Nonnull String message, @Nullable String title) {
 		final MutableMessage result = newMessage(generateEntity(account));
 
 		result.setChat(chat.getEntity());
 		result.setAuthor(account.getUser().getEntity());
 		if (chat.isPrivate()) {
-			final Entity recipient = chat.getSecondUser();
-			result.setRecipient(recipient);
+			result.setRecipient(chat.getSecondUser());
 		}
 		result.setSendDate(now());
 		result.setState(sending);

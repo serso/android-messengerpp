@@ -5,14 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
-import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
@@ -31,19 +33,27 @@ import org.solovyev.android.properties.MutableAProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
+import static android.content.Context.TELEPHONY_SERVICE;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.telephony.PhoneStateListener.LISTEN_CALL_STATE;
+import static android.telephony.PhoneStateListener.LISTEN_NONE;
 import static android.telephony.SmsMessage.createFromPdu;
+import static android.telephony.TelephonyManager.*;
 import static com.google.common.collect.Iterables.any;
-import static org.solovyev.android.messenger.App.getApplication;
-import static org.solovyev.android.messenger.App.getChatService;
-import static org.solovyev.android.messenger.App.getMessageService;
+import static java.util.Arrays.asList;
+import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
-import static org.solovyev.android.messenger.entities.Entities.*;
+import static org.solovyev.android.messenger.entities.Entities.makeEntityId;
+import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.messages.MessageState.delivered;
-import static org.solovyev.android.messenger.messages.MessageState.received;
 import static org.solovyev.android.messenger.messages.MessageState.sent;
-import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.android.messenger.messages.Messages.newIncomingMessage;
+import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
@@ -61,8 +71,16 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	@Nullable
 	private volatile ReportsBroadcastReceiver receiver;
 
+	@Nonnull
+	private final CallListener callListener;
+
 	SmsAccountConnection(@Nonnull SmsAccount account, @Nonnull Context context) {
 		super(account, context, false);
+		callListener = new CallListener(context);
+	}
+
+	public void setCallFromUs(@Nonnull String number) {
+		callListener.setCallFromUs(number);
 	}
 
 	@Override
@@ -77,10 +95,18 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			intentReceivedFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
 			application.registerReceiver(receiver, intentReceivedFilter);
 		}
+
+		getTelephonyManager().listen(callListener, LISTEN_CALL_STATE);
+	}
+
+	@Nonnull
+	private TelephonyManager getTelephonyManager() {
+		return (TelephonyManager) getContext().getSystemService(TELEPHONY_SERVICE);
 	}
 
 	@Override
 	protected void stop0() {
+		getTelephonyManager().listen(callListener, LISTEN_NONE);
 		unregisterReceiver();
 	}
 
@@ -136,8 +162,8 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 				final Chat chat = chatService.getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 
 				final List<Message> messages = new ArrayList<Message>(entry.getValue().size());
-				for (String messageBode : entry.getValue()) {
-					final Message message = toMessage(messageBode, account, contact, user, chat);
+				for (String messageBody : entry.getValue()) {
+					final Message message = toMessage(messageBody, account, contact, chat);
 					if (message != null) {
 						messages.add(message);
 					}
@@ -178,30 +204,22 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	}
 
 	@Nullable
-	private Message toMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull User to, @Nonnull Chat chat) {
+	private static Message toMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull Chat chat) {
 		if (!isEmpty(messageBody)) {
-			final MutableMessage message = newMessage(generateEntity(account));
-			message.setChat(chat.getEntity());
-			message.setBody(messageBody);
-			message.setAuthor(from.getEntity());
-			message.setRecipient(to.getEntity());
-			message.setSendDate(DateTime.now());
-			message.setState(received);
-			message.setRead(false);
-			return message;
+			return newIncomingMessage(account, chat, messageBody, null, from.getEntity());
 		} else {
 			return null;
 		}
 	}
 
-	@Nullable
+	@Nonnull
 	private User findOrCreateContact(@Nonnull final String phone, @Nonnull List<User> contacts) {
 		User result = findContactByPhone(phone, contacts);
 		if (result == null) {
 			result = toUser(phone);
 
 			final SmsAccount account = getAccount();
-			App.getUserService().mergeUserContacts(account.getUser().getEntity(), Arrays.asList(result), false, false);
+			App.getUserService().mergeUserContacts(account.getUser().getEntity(), asList(result), false, false);
 		}
 		return result;
 	}
@@ -228,7 +246,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	}
 
 	@Nullable
-	private User findContactByPhone(@Nonnull final String phone, @Nonnull List<User> contacts) {
+	private static User findContactByPhone(@Nonnull final String phone, @Nonnull List<User> contacts) {
 		final SamePhonePredicate predicate = new SamePhonePredicate(newPhoneNumber(phone));
 
 		return Iterables.find(contacts, new Predicate<User>() {
@@ -246,6 +264,53 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 				}
 			}
 		}, null);
+	}
+
+	private void onCall(@Nonnull Call call) {
+		final String number = call.getNumber();
+		if (!isEmpty(number)) {
+			final SmsAccount account = getAccount();
+			final User user = account.getUser();
+			final List<User> contacts = getUserService().getUserContacts(user.getEntity());
+			final User contact = findOrCreateContact(number, contacts);
+			try {
+				final Chat chat = getChatService().getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
+
+				final String messageBody = formatMessageBody(call);
+
+				final MutableMessage message;
+				if (call.isIncoming()) {
+					message = newIncomingMessage(account, chat, messageBody, null, contact.getEntity());
+				} else {
+					message = newOutgoingMessage(account, chat, messageBody, null);
+					message.setState(MessageState.sent);
+				}
+				message.setRead(true);
+				message.setSendDate(call.getDate());
+				getChatService().saveMessages(chat.getEntity(), asList(message));
+			} catch (AccountException e) {
+				App.getExceptionHandler().handleException(e);
+			}
+		}
+	}
+
+	@Nonnull
+	private String formatMessageBody(@Nonnull Call call) {
+		final Resources resources = App.getApplication().getResources();
+		final String messageBody;
+		if (call.isIncoming()) {
+			messageBody = resources.getString(R.string.mpp_sms_realm_incoming_call);
+		} else {
+			messageBody = resources.getString(R.string.mpp_sms_realm_outgoing_call);
+		}
+		return messageBody;
+	}
+
+	@Nonnull
+	static String millisToMinutesAndSeconds(long millis) {
+		final long seconds = (millis / 1000L) % 60L;
+		final long minutes = (millis / 1000L) / 60L;
+		return String.format("%dm %ds", minutes, seconds);
 	}
 
 	private static class SamePhonePredicate implements Predicate<String> {
@@ -268,4 +333,50 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			return false;
 		}
 	}
+
+	private final class CallListener extends PhoneStateListener {
+
+		@Nonnull
+		private final Context context;
+
+		private boolean callFromUs = false;
+
+		@Nonnull
+		private Call call = Call.newNoCall();
+
+		public CallListener(@Nonnull Context context) {
+			this.context = context;
+		}
+
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			switch (state) {
+				case CALL_STATE_RINGING:
+					call = Call.newIncomingCall(incomingNumber);
+					break;
+				case CALL_STATE_OFFHOOK:
+					break;
+				case CALL_STATE_IDLE:
+					call.onEnd();
+					onCall(call);
+
+					// if we initiated call => we need to return to our screen => start activity
+					if (callFromUs) {
+						callFromUs = false;
+						final Intent intent = new Intent(context, getMainActivityClass());
+						intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+						context.startActivity(intent);
+					}
+
+					this.call = Call.newNoCall();
+					break;
+			}
+		}
+
+		public void setCallFromUs(@Nonnull String number) {
+			this.call = Call.newOutgoingCall(number);
+			this.callFromUs = true;
+		}
+	}
+
 }
