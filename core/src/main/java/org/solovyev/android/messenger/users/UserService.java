@@ -79,6 +79,8 @@ public interface UserService {
 
 	void saveUser(@Nonnull User user);
 
+	void removeUser(@Nonnull User user);
+
 	@Nonnull
 	UserIconsService getIconsService();
 

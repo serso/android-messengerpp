@@ -29,6 +29,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.TAG;
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.getUiHandler;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newCreateUserArguments;
 import static org.solovyev.android.messenger.accounts.BaseEditUserFragment.newEditUserArguments;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
@@ -154,7 +155,14 @@ public final class Users {
 			if (realm.canCreateUsers()) {
 				final Bundle fragmentArgs = newEditUserArguments(account, user);
 				final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-				mpfm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), fragmentArgs, CREATE_USER_FRAGMENT_TAG);
+
+				// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
+				getUiHandler().post(new Runnable() {
+					@Override
+					public void run() {
+						mpfm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), fragmentArgs, CREATE_USER_FRAGMENT_TAG);
+					}
+				});
 				return true;
 			}
 		} catch (UnsupportedAccountException e) {

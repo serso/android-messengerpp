@@ -115,12 +115,20 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseAcc
 
 	@Override
 	protected boolean isRemoveButtonVisible() {
-		return user != null;
+		if (user != null) {
+			final A account = getAccount();
+			final boolean accountUser = account.getUser().equals(user);
+			return !accountUser;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	protected void onRemoveButtonPressed() {
-
+		assert user != null;
+		userService.removeUser(user);
+		getActivity().getSupportFragmentManager().popBackStack();
 	}
 
 	@Nonnull
