@@ -94,7 +94,7 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		super.saveState(outState);
 
 		final int selectedItemPosition = this.getSelectedItemPosition();
-		if (selectedItemPosition != NOT_SELECTED) {
+		if (saveSelection && selectedItemPosition != NOT_SELECTED) {
 			outState.putInt(POSITION, selectedItemPosition);
 		}
 	}
@@ -126,7 +126,13 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	public void notifyDataSetChanged() {
 		if (selectedItem != null) {
 			if (!isAlreadySelected()) {
-				findAndSelectItem(selectedItem);
+				if (!findAndSelectItem(selectedItem)) {
+					if (selectedItemPosition >= 0 && selectedItemPosition < getCount()) {
+						selectedItemListener.onItemClick(selectedItemPosition, false);
+					} else if (!isEmpty()) {
+						selectedItemListener.onItemClick(0, false);
+					}
+				}
 			}
 		}
 		super.notifyDataSetChanged();
@@ -142,7 +148,9 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		return alreadySelected;
 	}
 
-	private void findAndSelectItem(@Nonnull ListItem selectedItem) {
+	private boolean findAndSelectItem(@Nonnull ListItem selectedItem) {
+		boolean selected = false;
+
 		for (int i = 0; i < getCount(); i++) {
 			final LI item = getItem(i);
 			if(selectedItem == item) {
@@ -150,10 +158,13 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 				if(!isSelected(item)) {
 					selectItem(item, true);
 				}
+				selected = true;
 			} else if (isSelected(item)) {
 				selectItem(item, false);
 			}
 		}
+
+		return selected;
 	}
 
 	public static final class ListItemComparator implements Comparator<ListItem> {
@@ -180,11 +191,15 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	public final class SelectedItemListener {
 
 		public void onItemClick(int position) {
-			final LI selectedItem = getItem(position);
-			onItemClick(position, selectedItem);
+			onItemClick(position, true);
 		}
 
-		private void onItemClick(int position, @Nonnull LI selectedItem) {
+		private void onItemClick(int position, boolean notifyChange) {
+			final LI selectedItem = getItem(position);
+			onItemClick(position, selectedItem, notifyChange);
+		}
+
+		private void onItemClick(int position, @Nonnull LI selectedItem, boolean notifyChange) {
 			if (MessengerListItemAdapter.this.selectedItem != selectedItem) {
 				selectItem(selectedItem, true);
 				selectItem(MessengerListItemAdapter.this.selectedItem, false);
@@ -192,7 +207,9 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 				MessengerListItemAdapter.this.selectedItem = selectedItem;
 				MessengerListItemAdapter.this.selectedItemPosition = position;
 
-				notifyDataSetChanged();
+				if (notifyChange) {
+					notifyDataSetChanged();
+				}
 			}
 		}
 
