@@ -85,21 +85,6 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 	public void onEvent(@Nonnull UserEvent event) {
 	}
 
-	@Deprecated
-	protected void addListItem(@Nonnull LI listItem) {
-		this.add(listItem);
-	}
-
-	@Deprecated
-	protected void removeListItem(@Nonnull LI listItem) {
-		this.remove(listItem);
-	}
-
-	@Deprecated
-	protected void addListItems(@Nonnull List<LI> listItems) {
-		this.addAll(listItems);
-	}
-
 	@Nullable
 	protected Comparator<? super LI> getComparator() {
 		return ListItemComparator.getInstance();
@@ -240,4 +225,6 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		}
 		return false;
 	}
+
+
 }
