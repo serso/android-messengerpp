@@ -647,7 +647,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nullable
 	@Override
-	public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) throws AccountException {
+	public Chat getPrivateChat(@Nonnull Entity user1, @Nonnull final Entity user2) {
 		return this.getChatById(getPrivateChatId(user1, user2));
 	}
 

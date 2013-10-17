@@ -91,17 +91,13 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 
 	private void onMarkAllMessagesRead(@Nonnull User contact) throws UnsupportedAccountException {
 		final Account account = getAccountService().getAccountByEntityAware(contact);
-		try {
-			final Chat chat = getChatService().getPrivateChat(account.getUser().getEntity(), contact.getEntity());
-			if (chat != null) {
-				for (Message message : getMessageService().getMessages(chat.getEntity())) {
-					if(!message.isRead()) {
-						getEventManager(activity).fire(chat_message_read.newEvent(chat, message.cloneRead()));
-					}
+		final Chat chat = getChatService().getPrivateChat(account.getUser().getEntity(), contact.getEntity());
+		if (chat != null) {
+			for (Message message : getMessageService().getMessages(chat.getEntity())) {
+				if(!message.isRead()) {
+					getEventManager(activity).fire(chat_message_read.newEvent(chat, message.cloneRead()));
 				}
 			}
-		} catch (AccountException e) {
-			getExceptionHandler().handleException(e);
 		}
 	}
 

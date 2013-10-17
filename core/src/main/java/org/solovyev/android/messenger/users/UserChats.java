@@ -1,18 +1,16 @@
 package org.solovyev.android.messenger.users;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAwareRemovedUpdater;
 import org.solovyev.common.collections.multimap.*;
-import org.solovyev.common.collections.multimap.ObjectsChangedMapUpdater;
 import org.solovyev.common.listeners.AbstractJEventListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import java.util.List;
 
 import static org.solovyev.common.collections.multimap.ThreadSafeMultimap.newThreadSafeMultimap;
 
@@ -53,8 +51,8 @@ class UserChats {
 				this.chats.update(eventUser.getEntity(), new ObjectsAddedUpdater<Chat>(chats));
 				break;
 			case chat_removed:
-				final Chat removedChat = event.getDataAsChat();
-				this.chats.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(removedChat.getId()));
+				final String removedChatId = event.getDataAsChatId();
+				this.chats.update(eventUser.getEntity(), new EntityAwareRemovedUpdater<Chat>(removedChatId));
 				break;
 		}
 	}

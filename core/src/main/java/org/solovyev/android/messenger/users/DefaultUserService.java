@@ -216,12 +216,14 @@ public class DefaultUserService implements UserService {
 	public void removeUser(@Nonnull User user) {
 		final Account account = accountService.getAccountByEntityOrNull(user.getEntity());
 		if (account != null) {
-			final boolean accountUser = account.getUser().equals(user);
-			if (!accountUser) {
+			final User accountUser = account.getUser();
+			if (!accountUser.equals(user)) {
 				synchronized (lock) {
 					userDao.delete(user);
 				}
-				listeners.fireEvent(contact_removed.newEvent(account.getUser(), user.getId()));
+				listeners.fireEvent(contact_removed.newEvent(accountUser, user.getId()));
+				final Entity chat = chatService.getPrivateChatId(accountUser.getEntity(), user.getEntity());
+				listeners.fireEvent(chat_removed.newEvent(accountUser, chat.getEntityId()));
 			}
 		}
 	}

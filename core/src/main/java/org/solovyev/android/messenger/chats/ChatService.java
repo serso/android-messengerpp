@@ -160,7 +160,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2);
 
 	@Nullable
-	Chat getPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2) throws AccountException;
+	Chat getPrivateChat(@Nonnull Entity user1, @Nonnull Entity user2);
 
 	/**
 	 * Method returns private chat for specified users. In case if such chat doesn't exist new empty chat is created.

@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTest;
 import org.solovyev.android.messenger.accounts.Account;
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.google.common.collect.Iterables.any;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -137,5 +138,22 @@ public class ChatServiceTest extends DefaultMessengerTest {
 
 		final User actual = userService.getUserById(contact.getEntity());
 		assertTrue(areEqual(contact, actual, new UserSameEqualizer()));
+	}
+
+	@Test
+	public void testOnUserRemovalChatShouldBeRemoved() throws Exception {
+		final AccountData ad = getAccountData1();
+		final User contact = ad.getContacts().get(0);
+
+		userService.removeUser(contact);
+
+		final List<Chat> chats = userService.getUserChats(ad.getAccount().getUser().getEntity());
+		assertFalse(any(chats, new Predicate<Chat>() {
+			@Override
+			public boolean apply(Chat chat) {
+				return chat.isPrivate() && chat.getSecondUser().getEntityId().equals(contact.getId());
+			}
+		}));
+
 	}
 }
