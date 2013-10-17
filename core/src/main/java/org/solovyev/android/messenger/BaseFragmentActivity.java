@@ -125,6 +125,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	@Nullable
 	private GestureDetector gestureDetector;
 
+	private boolean tabsEnabled = false;
+
 
     /*
     **********************************************************************
@@ -228,33 +230,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
 
 		if (showActionBarTabs) {
-			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-			for (PrimaryFragment tabFragment : tabFragments) {
-				addTab(tabFragment);
-			}
-
-			int selectedTab = -1;
-			if (savedInstanceState != null) {
-				selectedTab = savedInstanceState.getInt(SELECTED_TAB, -1);
-			}
-
-			if (selectedTab >= 0) {
-				getSupportActionBar().setSelectedNavigationItem(selectedTab);
-			}
-
-			gestureDetector = new GestureDetector(this, new SwipeGestureListener(this) {
-
-				@Override
-				protected void onSwipeToRight() {
-					changeTab(false);
-				}
-
-				@Override
-				protected void onSwipeToLeft() {
-					changeTab(true);
-				}
-			});
+			initTabs(savedInstanceState);
 		}
 
 		this.menu = new MainMenu(new Runnable() {
@@ -273,6 +249,35 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
 		this.messengerListeners.addListener(messengerEventListener);
+	}
+
+	private void initTabs(@Nullable Bundle savedInstanceState) {
+		final ActionBar actionBar = getSupportActionBar();
+
+		tabsEnabled = false;
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		for (PrimaryFragment tabFragment : tabFragments) {
+			addTab(tabFragment);
+		}
+
+		int selectedTab = -1;
+		if (savedInstanceState != null) {
+			selectedTab = savedInstanceState.getInt(SELECTED_TAB, -1);
+		}
+
+		if (selectedTab >= 0) {
+			actionBar.setSelectedNavigationItem(selectedTab);
+		}
+
+		gestureDetector = new GestureDetector(this, new SwipeTabsGestureListener());
+
+		tabsEnabled = true;
+
+		// activity created first time => we must select first tab
+		if (selectedTab == -1) {
+			actionBar.setSelectedNavigationItem(0);
+		}
 	}
 
 	@Override
@@ -323,8 +328,10 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		tab.setTabListener(new ActionBar.TabListener() {
 			@Override
 			public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-				emptifyNotPrimaryPanes();
-				getMultiPaneFragmentManager().setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
+				if (tabsEnabled) {
+					emptifyNotPrimaryPanes();
+					getMultiPaneFragmentManager().setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
+				}
 			}
 
 			@Override
@@ -333,15 +340,17 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 			@Override
 			public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-				emptifyNotPrimaryPanes();
-				// in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
-				getMultiPaneFragmentManager().setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
+				if (tabsEnabled) {
+					emptifyNotPrimaryPanes();
+					// in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
+					getMultiPaneFragmentManager().setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
+				}
 			}
 		});
 		actionBar.addTab(tab);
 	}
 
-	private void emptifyNotPrimaryPanes() {
+	public void emptifyNotPrimaryPanes() {
 		if (isDualPane()) {
 			getMultiPaneFragmentManager().emptifySecondFragment();
 			if (isTriplePane()) {
@@ -415,6 +424,23 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 					invalidateOptionsMenu();
 					break;
 			}
+		}
+	}
+
+	private class SwipeTabsGestureListener extends SwipeGestureListener {
+
+		public SwipeTabsGestureListener() {
+			super(BaseFragmentActivity.this);
+		}
+
+		@Override
+		protected void onSwipeToRight() {
+			changeTab(false);
+		}
+
+		@Override
+		protected void onSwipeToLeft() {
+			changeTab(true);
 		}
 	}
 }

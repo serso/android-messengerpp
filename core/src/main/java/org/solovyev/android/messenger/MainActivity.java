@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
@@ -14,8 +11,8 @@ import org.solovyev.android.messenger.chats.ChatUiEvent;
 import org.solovyev.android.messenger.chats.ChatUiEventListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.FragmentUiEvent;
-import org.solovyev.android.messenger.preferences.PreferenceListFragment;
 import org.solovyev.android.messenger.preferences.MessengerOnPreferenceAttachedListener;
+import org.solovyev.android.messenger.preferences.PreferenceListFragment;
 import org.solovyev.android.messenger.preferences.PreferenceUiEvent;
 import org.solovyev.android.messenger.preferences.PreferenceUiEventListener;
 import org.solovyev.android.messenger.realms.RealmUiEvent;
@@ -94,31 +91,7 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
 		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
 		listeners.add(FragmentUiEvent.class, new FragmentUiEventListener(this));
 		listeners.add(PreferenceUiEvent.class, new PreferenceUiEventListener(this));
-
-		if (isDualPane()) {
-			getMultiPaneFragmentManager().emptifySecondFragment();
-		} else {
-			removeFragmentByViewId(R.id.content_second_pane);
-		}
-
-		if (isTriplePane()) {
-			getMultiPaneFragmentManager().emptifyThirdFragment();
-		} else {
-			removeFragmentByViewId(R.id.content_third_pane);
-		}
 	}
-
-	private void removeFragmentByViewId(int viewId) {
-		final FragmentManager fm = getSupportFragmentManager();
-		final Fragment fragmentById = fm.findFragmentById(viewId);
-		if (fragmentById != null) {
-			final FragmentTransaction ft = fm.beginTransaction();
-			ft.remove(fragmentById);
-			ft.commitAllowingStateLoss();
-			fm.executePendingTransactions();
-		}
-	}
-
 
 	@Override
 	protected void onDestroy() {
