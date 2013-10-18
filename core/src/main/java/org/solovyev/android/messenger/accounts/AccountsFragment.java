@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
@@ -63,7 +63,7 @@ public class AccountsFragment extends BaseAccountsFragment {
 
 	@Nonnull
 	@Override
-	protected MessengerListItemAdapter<AccountListItem> createAdapter() {
+	protected BaseListItemAdapter<AccountListItem> createAdapter() {
 		final List<AccountListItem> listItems = new ArrayList<AccountListItem>();
 		for (Account account : getAccountService().getAccounts()) {
 			if (account.getState() != AccountState.removed) {
@@ -75,7 +75,7 @@ public class AccountsFragment extends BaseAccountsFragment {
 
 	@Nullable
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull MessengerListItemAdapter<AccountListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull BaseListItemAdapter<AccountListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return null;
 	}
 

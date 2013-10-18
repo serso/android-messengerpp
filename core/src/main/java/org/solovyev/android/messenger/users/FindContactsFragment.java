@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Filter;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
@@ -33,7 +34,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 
 	@Nonnull
 	@Override
-	protected MessengerListItemAdapter<ContactListItem> createAdapter() {
+	protected BaseListItemAdapter<ContactListItem> createAdapter() {
 		return new FoundContactsAdapter(getActivity(), isRecentContacts());
 	}
 
@@ -43,7 +44,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 
 	@Nonnull
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull BaseListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
 		final CharSequence filterText = getFilterText();
 		if (!isEmpty(filterText)) {
 			((FoundContactsAdapter) adapter).setRecentContacts(false);
@@ -84,7 +85,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 
 		@Override
 		public void run() {
-			final MessengerListItemAdapter adapter = getAdapter();
+			final BaseListItemAdapter adapter = getAdapter();
 			if (adapter.isInitialized()) {
 				createAsyncLoader(adapter).executeInParallel();
 			}

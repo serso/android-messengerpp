@@ -3,13 +3,14 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+
+import org.solovyev.android.messenger.BaseListItemAdapter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AccountsAdapter extends MessengerListItemAdapter<AccountListItem> {
+public class AccountsAdapter extends BaseListItemAdapter<AccountListItem> {
 
 	private final boolean canAddAccounts;
 

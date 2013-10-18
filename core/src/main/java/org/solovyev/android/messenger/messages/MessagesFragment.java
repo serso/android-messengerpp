@@ -417,7 +417,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 
 	@Nonnull
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<Message>> createAsyncLoader(@Nonnull MessengerListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<Message>> createAsyncLoader(@Nonnull BaseListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return new MessagesAsyncLoader(adapter, onPostExecute, MessageListItemStyle.newFromDefaultPreferences(getActivity()));
 	}
 
@@ -506,7 +506,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 		@Nonnull
 		private final MessageListItemStyle messageStyle;
 
-		public MessagesAsyncLoader(MessengerListItemAdapter<MessageListItem> adapter, Runnable onPostExecute, @Nonnull MessageListItemStyle messageStyle) {
+		public MessagesAsyncLoader(BaseListItemAdapter<MessageListItem> adapter, Runnable onPostExecute, @Nonnull MessageListItemStyle messageStyle) {
 			super(MessagesFragment.this.getActivity(), adapter, onPostExecute);
 			this.messageStyle = messageStyle;
 		}

@@ -9,7 +9,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.list.AdapterFilter;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
@@ -29,7 +29,7 @@ import static org.solovyev.android.messenger.users.ContactListItem.loadContactLi
  * Date: 6/2/12
  * Time: 5:55 PM
  */
-public abstract class AbstractContactsAdapter extends MessengerListItemAdapter<ContactListItem> {
+public abstract class AbstractContactsAdapter extends BaseListItemAdapter<ContactListItem> {
 
 	@Nonnull
 	private static final String TAG = newTag("ContactsAdapter");

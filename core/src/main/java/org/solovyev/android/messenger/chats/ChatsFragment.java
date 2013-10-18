@@ -1,7 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
 import android.widget.Toast;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
@@ -30,7 +31,7 @@ public final class ChatsFragment extends BaseChatsFragment {
 
 	@Nonnull
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull MessengerListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull BaseListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute);
 	}
 

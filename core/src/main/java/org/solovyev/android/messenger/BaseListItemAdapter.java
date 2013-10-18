@@ -16,12 +16,7 @@ import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 5:58 PM
- */
-public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
+public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
 
     /*
 	**********************************************************************
@@ -59,11 +54,11 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 
 	private final boolean saveSelection;
 
-	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
+	public BaseListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
 		this(context, listItems, true, true);
 	}
 
-	public MessengerListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems, boolean fastScrollEnabled, boolean saveSelection) {
+	public BaseListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems, boolean fastScrollEnabled, boolean saveSelection) {
 		super(context, listItems);
 		if (fastScrollEnabled) {
 			sectionIndexer = AlphabetIndexer.createAndAttach(this);
@@ -200,12 +195,12 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		}
 
 		private void onItemClick(int position, @Nonnull LI selectedItem, boolean notifyChange) {
-			if (MessengerListItemAdapter.this.selectedItem != selectedItem) {
+			if (BaseListItemAdapter.this.selectedItem != selectedItem) {
 				selectItem(selectedItem, true);
-				selectItem(MessengerListItemAdapter.this.selectedItem, false);
+				selectItem(BaseListItemAdapter.this.selectedItem, false);
 
-				MessengerListItemAdapter.this.selectedItem = selectedItem;
-				MessengerListItemAdapter.this.selectedItemPosition = position;
+				BaseListItemAdapter.this.selectedItem = selectedItem;
+				BaseListItemAdapter.this.selectedItemPosition = position;
 
 				if (notifyChange) {
 					notifyDataSetChanged();

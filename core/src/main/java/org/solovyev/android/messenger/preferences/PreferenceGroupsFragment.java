@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.BaseListFragment;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
@@ -40,7 +40,7 @@ public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceG
 
 	@Nonnull
 	@Override
-	protected MessengerListItemAdapter<PreferenceGroupListItem> createAdapter() {
+	protected BaseListItemAdapter<PreferenceGroupListItem> createAdapter() {
 		final List<PreferenceGroupListItem> preferences = new ArrayList<PreferenceGroupListItem>();
 
 		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-appearance", R.string.mpp_settings_appearance, R.xml.mpp_preferences_appearance, R.drawable.mpp_icon_settings_appearance)));
@@ -51,7 +51,7 @@ public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceG
 
 	@Nullable
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<PreferenceGroup>> createAsyncLoader(@Nonnull MessengerListItemAdapter<PreferenceGroupListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<PreferenceGroup>> createAsyncLoader(@Nonnull BaseListItemAdapter<PreferenceGroupListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return null;
 	}
 }

@@ -6,7 +6,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -23,7 +23,7 @@ import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatListItem.newChatListItem;
 
 
-abstract class AbstractChatsAdapter extends MessengerListItemAdapter<ChatListItem> {
+abstract class AbstractChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 
 	public AbstractChatsAdapter(@Nonnull Context context) {
 		super(context, new ArrayList<ChatListItem>(), false, true);

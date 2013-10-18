@@ -3,7 +3,8 @@ package org.solovyev.android.messenger.accounts;
 import android.os.Bundle;
 import android.util.Log;
 import com.google.common.base.Function;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 import javax.annotation.Nonnull;
@@ -50,7 +51,7 @@ public class PickAccountFragment extends BaseAccountsFragment {
 
 	@Nonnull
 	@Override
-	protected MessengerListItemAdapter<AccountListItem> createAdapter() {
+	protected BaseListItemAdapter<AccountListItem> createAdapter() {
 		final List<AccountListItem> listItems = new ArrayList<AccountListItem>();
 
 		final String[] accountIds = getArguments().getStringArray(ARG_ACCOUNT_IDS);
@@ -70,7 +71,7 @@ public class PickAccountFragment extends BaseAccountsFragment {
 
 	@Nullable
 	@Override
-	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull MessengerListItemAdapter<AccountListItem> adapter, @Nonnull Runnable onPostExecute) {
+	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull BaseListItemAdapter<AccountListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return null;
 	}
 }

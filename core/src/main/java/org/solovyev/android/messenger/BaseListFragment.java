@@ -128,7 +128,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	@Nullable
 	private JEventListener<UserEvent> userEventListener;
 
-	private MessengerListItemAdapter<LI> adapter;
+	private BaseListItemAdapter<LI> adapter;
 
 	@Nullable
 	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
@@ -223,7 +223,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	}
 
 	@Nonnull
-	protected MessengerListItemAdapter getAdapter() {
+	protected BaseListItemAdapter getAdapter() {
 		return adapter;
 	}
 
@@ -594,13 +594,13 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	}
 
 	@Nonnull
-	protected abstract MessengerListItemAdapter<LI> createAdapter();
+	protected abstract BaseListItemAdapter<LI> createAdapter();
 
 	@Nullable
-	protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull MessengerListItemAdapter<LI> adapter, @Nonnull Runnable onPostExecute);
+	protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull BaseListItemAdapter<LI> adapter, @Nonnull Runnable onPostExecute);
 
 	@Nullable
-	protected MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull MessengerListItemAdapter<LI> adapter) {
+	protected MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull BaseListItemAdapter<LI> adapter) {
 		return createAsyncLoader(adapter, new EmptyRunnable());
 	}
 

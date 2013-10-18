@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.MessengerListItemAdapter;
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
@@ -37,7 +37,7 @@ import static org.solovyev.android.messenger.messages.Messages.newMessage;
  * Date: 6/10/12
  * Time: 11:27 PM
  */
-public class MessagesAdapter extends MessengerListItemAdapter<MessageListItem> /*implements ChatEventListener, UserEventListener*/ {
+public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*implements ChatEventListener, UserEventListener*/ {
 
     /*
 	**********************************************************************
