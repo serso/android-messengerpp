@@ -69,9 +69,7 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 
 	@Nonnull
 	public static Bundle newCreateUserArguments(@Nonnull Account account) {
-		final Bundle arguments = new Bundle();
-		arguments.putString(ARG_ACCOUNT_ID, account.getId());
-		return arguments;
+		return newAccountArguments(account);
 	}
 
 	@Nonnull

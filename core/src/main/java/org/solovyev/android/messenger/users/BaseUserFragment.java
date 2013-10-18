@@ -65,9 +65,8 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 
 	@Nonnull
 	protected static Bundle newUserArguments(@Nonnull Account account, @Nonnull User user) {
-		final Bundle arguments = new Bundle();
+		final Bundle arguments = newAccountArguments(account);
 		arguments.putString(ARG_USER_ID, user.getId());
-		arguments.putString(ARG_ACCOUNT_ID, account.getId());
 		return arguments;
 	}
 }

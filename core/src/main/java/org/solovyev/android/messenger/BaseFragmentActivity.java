@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
@@ -28,8 +29,11 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
+import static com.google.common.collect.Iterables.any;
+import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager.tabFragments;
 
@@ -175,17 +179,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	public AccountService getAccountService() {
 		return accountService;
 	}
-
-	@Nonnull
-	public MessengerListeners getMessengerListeners() {
-		return messengerListeners;
-	}
-
-	@Nonnull
-	public UnreadMessagesCounter getUnreadMessagesCounter() {
-		return unreadMessagesCounter;
-	}
-
 	@Nonnull
 	public MultiPaneManager getMultiPaneManager() {
 		return multiPaneManager;
@@ -274,6 +267,24 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		tabsEnabled = true;
 
+		if (isDualPane()) {
+			final Fragment fragmentById = getSupportFragmentManager().findFragmentById(R.id.content_first_pane);
+			if (fragmentById != null) {
+				final boolean primaryFragment = any(asList(PrimaryFragment.values()), new Predicate<PrimaryFragment>() {
+					@Override
+					public boolean apply(PrimaryFragment fragment) {
+						return fragment.getFragmentTag().equals(fragmentById.getTag());
+					}
+				});
+
+				if(!primaryFragment) {
+					if (selectedTab >= 0) {
+						actionBar.setSelectedNavigationItem(selectedTab);
+					}
+				}
+			}
+		}
+
 		// activity created first time => we must select first tab
 		if (selectedTab == -1) {
 			actionBar.setSelectedNavigationItem(0);
@@ -329,7 +340,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 			@Override
 			public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
 				if (tabsEnabled) {
-					emptifyNotPrimaryPanes();
 					getMultiPaneFragmentManager().setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
 				}
 			}
@@ -341,22 +351,12 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 			@Override
 			public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
 				if (tabsEnabled) {
-					emptifyNotPrimaryPanes();
 					// in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
 					getMultiPaneFragmentManager().setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
 				}
 			}
 		});
 		actionBar.addTab(tab);
-	}
-
-	public void emptifyNotPrimaryPanes() {
-		if (isDualPane()) {
-			getMultiPaneFragmentManager().emptifySecondFragment();
-			if (isTriplePane()) {
-				getMultiPaneFragmentManager().emptifyThirdFragment();
-			}
-		}
 	}
 
 	@Override

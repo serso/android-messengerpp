@@ -228,6 +228,11 @@ public class MessengerListItemAdapter<LI extends ListItem> extends ListItemAdapt
 		return selectedItemPosition;
 	}
 
+	@Nullable
+	public ListItem getSelectedItem() {
+		return selectedItem;
+	}
+
 	private static void selectItem(@Nullable ListItem item, boolean selected) {
 		if (item instanceof Checkable) {
 			((Checkable) item).setChecked(selected);

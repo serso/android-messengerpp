@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +39,11 @@ public abstract class AbstractAccountsFragment extends AbstractListFragment<Acco
 
 		accountEventListener = new UiAccountEventListener();
 		accountService.addListener(accountEventListener);
+	}
+
+	@Override
+	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull AccountListItem selectedItem) {
+		return fragment instanceof AccountFragment || fragment instanceof BaseAccountConfigurationFragment;
 	}
 
 	@Override

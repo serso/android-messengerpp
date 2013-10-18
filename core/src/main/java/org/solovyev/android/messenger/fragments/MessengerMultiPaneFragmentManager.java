@@ -48,16 +48,21 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 								  @Nullable JPredicate<Fragment> reuseCondition,
 								  @Nonnull String fragmentTag,
 								  boolean addToBackStack) {
+		if (!addToBackStack) {
+			goBackTillStart();
+		}
 		setFragment(R.id.content_second_pane, MultiPaneFragmentDef.newInstance(fragmentTag, addToBackStack, ReflectionFragmentBuilder.forClass(getActivity(), fragmentClass, fragmentArgs), reuseCondition));
 	}
 
 	public void setSecondFragment(@Nonnull Builder<Fragment> fragmentBuilder,
 								  @Nullable JPredicate<Fragment> reuseCondition,
 								  @Nonnull String fragmentTag) {
+		goBackTillStart();
 		setFragment(R.id.content_second_pane, MultiPaneFragmentDef.newInstance(fragmentTag, false, fragmentBuilder, reuseCondition));
 	}
 
 	public void emptifySecondFragment() {
+		goBackTillStart();
 		emptifyFragmentPane(R.id.content_second_pane);
 	}
 
@@ -65,16 +70,19 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 								 @Nullable Bundle fragmentArgs,
 								 @Nullable JPredicate<Fragment> reuseCondition,
 								 @Nonnull String fragmentTag) {
+		goBackTillStart();
 		setFragment(R.id.content_third_pane, MultiPaneFragmentDef.newInstance(fragmentTag, false, ReflectionFragmentBuilder.forClass(getActivity(), fragmentClass, fragmentArgs), reuseCondition));
 	}
 
 	public void setThirdFragment(@Nonnull Builder<Fragment> fragmentBuilder,
 								 @Nullable JPredicate<Fragment> reuseCondition,
 								 @Nonnull String fragmentTag) {
+		goBackTillStart();
 		setFragment(R.id.content_third_pane, MultiPaneFragmentDef.newInstance(fragmentTag, false, fragmentBuilder, reuseCondition));
 	}
 
 	public void emptifyThirdFragment() {
+		goBackTillStart();
 		emptifyFragmentPane(R.id.content_third_pane);
 	}
 

@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,14 @@ public abstract class AbstractContactsFragment extends AbstractListFragment<UiCo
 		}
 
 		return root;
+	}
+
+	@Override
+	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull ContactListItem selectedItem) {
+		if (fragment instanceof BaseUserFragment) {
+			return selectedItem.getContact().equals(((BaseUserFragment) fragment).getUser());
+		}
+		return false;
 	}
 
 	protected class ContactsSyncRefreshListener extends AbstractOnRefreshListener {

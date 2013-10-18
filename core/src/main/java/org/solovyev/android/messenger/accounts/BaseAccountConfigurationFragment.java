@@ -8,7 +8,6 @@ import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,9 +92,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 
 	@Nonnull
 	public static Bundle newEditAccountArguments(@Nonnull Account account) {
-		final Bundle result = new Bundle();
-		result.putString(ARG_ACCOUNT_ID, account.getId());
-		return result;
+		return newAccountArguments(account);
 	}
 
 }

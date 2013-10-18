@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -746,13 +747,26 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 						position = selectedPosition;
 					}
 
-					if(multiPaneManager.isDualPane(activity)) {
+					if(multiPaneManager.isDualPane(activity) && !canReuseFragment(adapter.getSelectedItem())) {
 						// in case of dual pane we need to make a real click (call click listener)
 						clickItem(activity, position, listView);
 					}
 				}
 			}
 		}
+	}
+
+	private boolean canReuseFragment(@Nullable ListItem selectedItem) {
+		final Fragment fragmentById = getActivity().getSupportFragmentManager().findFragmentById(R.id.content_second_pane);
+		if (fragmentById == null || selectedItem == null) {
+			return false;
+		} else {
+			return canReuseFragment(fragmentById, (LI) selectedItem);
+		}
+	}
+
+	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull LI selectedItem) {
+		return false;
 	}
 
 	private class ListViewOnItemClickListener implements AdapterView.OnItemClickListener {

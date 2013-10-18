@@ -27,8 +27,8 @@ public enum PrimaryFragment implements FragmentDef {
 	//messages(MessengerChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
 	messages(RecentChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
 	accounts(AccountsFragment.class, AccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts),
-	pick_account(PickAccountFragment.class, PickAccountFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, true),
-	realms(RealmsFragment.class, RealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, true),
+	pick_account(PickAccountFragment.class, PickAccountFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts),
+	realms(RealmsFragment.class, RealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts),
 	settings(PreferenceGroupsFragment.class, PreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences);
 
 	@Nonnull

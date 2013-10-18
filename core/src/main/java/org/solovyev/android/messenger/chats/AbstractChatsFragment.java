@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import org.solovyev.android.messenger.AbstractListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -44,6 +46,11 @@ public abstract class AbstractChatsFragment extends AbstractListFragment<UiChat,
 		super.onCreate(savedInstanceState);
 
 		setHasOptionsMenu(true);
+	}
+
+	@Override
+	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull ChatListItem selectedItem) {
+		return fragment instanceof MessagesFragment;
 	}
 
 	@Override

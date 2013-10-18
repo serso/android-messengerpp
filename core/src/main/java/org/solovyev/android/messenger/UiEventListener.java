@@ -67,7 +67,6 @@ public class UiEventListener implements EventListener<UiEvent> {
 	}
 
 	private void onShowRealmsEvent() {
-		activity.emptifyNotPrimaryPanes();
 		activity.getMultiPaneFragmentManager().setMainFragment(realms);
 	}
 

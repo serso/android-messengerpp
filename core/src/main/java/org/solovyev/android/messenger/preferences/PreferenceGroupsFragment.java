@@ -41,7 +41,7 @@ public final class PreferenceGroupsFragment extends AbstractListFragment<Prefere
 	}
 
 	@Override
-	protected boolean isSupportedSecondFragment(@Nonnull Fragment fragment) {
+	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull PreferenceGroupListItem selectedItem) {
 		return fragment instanceof PreferenceListFragment;
 	}
 

@@ -10,6 +10,8 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.accounts.AccountFragment.newAccountArguments;
+
 
 /**
  * User: serso
@@ -70,12 +72,11 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 	}
 
 	private void showRealmFragment(@Nonnull Account account, boolean firstPane) {
-		final Bundle fragmentArgs = new Bundle();
-		fragmentArgs.putString(AccountFragment.ARGS_ACCOUNT_ID, account.getId());
+		final Bundle fragmentArgs = newAccountArguments(account);
 		if (firstPane) {
-			activity.getMultiPaneFragmentManager().setMainFragment(AccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), AccountFragment.FRAGMENT_TAG, true);
+			activity.getMultiPaneFragmentManager().setMainFragment(AccountFragment.class, fragmentArgs, AccountFragmentReuseCondition.forAccount(account), AccountFragment.FRAGMENT_TAG, true);
 		} else {
-			activity.getMultiPaneFragmentManager().setSecondFragment(AccountFragment.class, fragmentArgs, RealmFragmentReuseCondition.forRealm(account), AccountFragment.FRAGMENT_TAG, false);
+			activity.getMultiPaneFragmentManager().setSecondFragment(AccountFragment.class, fragmentArgs, AccountFragmentReuseCondition.forAccount(account), AccountFragment.FRAGMENT_TAG, false);
 		}
 	}
 
@@ -113,19 +114,19 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 	 * Fragment will be reused if it's instance of {@link AccountFragment} and
 	 * contains same realm as one passed in constructor
 	 */
-	private static class RealmFragmentReuseCondition extends AbstractFragmentReuseCondition<AccountFragment> {
+	private static class AccountFragmentReuseCondition extends AbstractFragmentReuseCondition<AccountFragment> {
 
 		@Nonnull
 		private final Account account;
 
-		private RealmFragmentReuseCondition(@Nonnull Account account) {
+		private AccountFragmentReuseCondition(@Nonnull Account account) {
 			super(AccountFragment.class);
 			this.account = account;
 		}
 
 		@Nonnull
-		public static JPredicate<Fragment> forRealm(@Nonnull Account account) {
-			return new RealmFragmentReuseCondition(account);
+		public static JPredicate<Fragment> forAccount(@Nonnull Account account) {
+			return new AccountFragmentReuseCondition(account);
 		}
 
 		@Override
