@@ -2,13 +2,10 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import android.view.View;
 import org.joda.time.DateTime;
-import org.solovyev.android.Fragments2;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
@@ -151,18 +148,19 @@ public final class Users {
 		return false;
 	}
 
-	public static boolean tryShowEditUserFragment(@Nonnull User user, @Nonnull final BaseFragmentActivity activity) {
+	public static boolean tryShowEditUserFragment(@Nonnull User user, @Nonnull BaseFragmentActivity activity) {
 		try {
 			final Account account = App.getAccountService().getAccountByEntity(user.getEntity());
 			final Realm realm = account.getRealm();
 			if (realm.canCreateUsers()) {
 				final Bundle fragmentArgs = newEditUserArguments(account, user);
+				final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
+
 				// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
 				getUiHandler().post(new Runnable() {
 					@Override
 					public void run() {
-						final DialogFragment fragment = (DialogFragment) Fragment.instantiate(activity, realm.getCreateUserFragmentClass().getName(), fragmentArgs);
-						Fragments2.showDialog(fragment, CREATE_USER_FRAGMENT_TAG, activity.getSupportFragmentManager(), true, false);
+						mpfm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), fragmentArgs, CREATE_USER_FRAGMENT_TAG);
 					}
 				});
 				return true;

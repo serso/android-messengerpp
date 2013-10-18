@@ -19,8 +19,7 @@ public class UserEditButtons<A extends Account<?>> extends EditButtons<BaseEditU
 
 	@Override
 	protected void onBackButtonPressed() {
-		final BaseEditUserFragment<A> fragment = getFragment();
-		fragment.dismiss();
+		getActivity().getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.contacts);
 	}
 
 	@Override
@@ -37,9 +36,8 @@ public class UserEditButtons<A extends Account<?>> extends EditButtons<BaseEditU
 
 	@Override
 	protected void onRemoveButtonPressed() {
-		final BaseEditUserFragment<A> fragment = getFragment();
-		App.getUserService().removeUser(fragment.getUser());
-		fragment.dismiss();
+		App.getUserService().removeUser(getFragment().getUser());
+		getActivity().getSupportFragmentManager().popBackStack();
 	}
 
 	@Override
@@ -52,7 +50,7 @@ public class UserEditButtons<A extends Account<?>> extends EditButtons<BaseEditU
 	protected void onSaveButtonPressed() {
 		final MutableUser contact = getFragment().validateData();
 		if (contact != null) {
-			getFragment().getTaskListeners().run(UserSaverCallable.TASK_NAME, new UserSaverCallable(getFragment().getAccount(), contact), newUserSaverCallback(getFragment()), getActivity(), R.string.mpp_saving_user_title, R.string.mpp_saving_user_message);
+			getFragment().getTaskListeners().run(UserSaverCallable.TASK_NAME, new UserSaverCallable(getFragment().getAccount(), contact), newUserSaverCallback(getActivity()), getActivity(), R.string.mpp_saving_user_title, R.string.mpp_saving_user_message);
 		}
 	}
 }

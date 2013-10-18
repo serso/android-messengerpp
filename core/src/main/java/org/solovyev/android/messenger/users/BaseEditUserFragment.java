@@ -42,7 +42,7 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 	@Override
 	public void onResume() {
 		super.onResume();
-		getTaskListeners().addTaskListener(UserSaverCallable.TASK_NAME, newUserSaverCallback(this), getActivity(), R.string.mpp_saving_user_title, R.string.mpp_saving_user_message);
+		getTaskListeners().addTaskListener(UserSaverCallable.TASK_NAME, newUserSaverCallback(getFragmentActivity()), getActivity(), R.string.mpp_saving_user_title, R.string.mpp_saving_user_message);
 	}
 
 	@Override
