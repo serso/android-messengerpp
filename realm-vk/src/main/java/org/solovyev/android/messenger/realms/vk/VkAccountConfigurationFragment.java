@@ -62,7 +62,7 @@ public class VkAccountConfigurationFragment extends BaseAccountConfigurationFrag
 	}
 
 	@Override
-	protected AccountConfiguration validateData() {
+	public AccountConfiguration validateData() {
 		boolean ok = true;
 
 		final String login = loginEditText.getText().toString();

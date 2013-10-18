@@ -7,22 +7,21 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
+import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.App.getTaskService;
@@ -38,7 +37,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	*/
 	
 	@Nonnull
-	public static final String ARG_ACCOUNT_ID = "account_id";
+	protected static final String ARG_ACCOUNT_ID = "account_id";
 	
 	/*
     **********************************************************************
@@ -59,23 +58,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	@Inject
 	@Nonnull
 	private EventManager eventManager;
-
-	/*
-	**********************************************************************
-	*
-	*                           VIEWS
-	*
-	**********************************************************************
-	*/
-
-	@Nonnull
-	private Button backButton;
-
-	@Nonnull
-	private Button saveButton;
-
-	@Nonnull
-	private Button removeButton;
 	
 	/*
     **********************************************************************
@@ -138,59 +120,13 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		backButton = (Button) root.findViewById(R.id.mpp_account_back_button);
-
-		if (isBackButtonVisible()) {
-			backButton.setVisibility(VISIBLE);
-			backButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onBackButtonPressed();
-				}
-			});
-		} else {
-			backButton.setVisibility(GONE);
-		}
-
-		removeButton = (Button) root.findViewById(R.id.mpp_account_remove_button);
-		if (isRemoveButtonVisible()) {
-			removeButton.setVisibility(VISIBLE);
-			removeButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onRemoveButtonPressed();
-				}
-			});
-		} else {
-			removeButton.setVisibility(GONE);
-		}
-
-
-		saveButton = (Button) root.findViewById(R.id.mpp_account_save_button);
-		saveButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onSaveButtonPressed();
-			}
-		});
-
 		final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
 		fragmentTitle.setText(getFragmentTitle());
 
 		getMultiPaneManager().onPaneCreated(getActivity(), root);
 	}
 
-	protected abstract boolean isRemoveButtonVisible();
-
-	protected abstract void onRemoveButtonPressed();
-
-	protected abstract boolean isBackButtonVisible();
-
 	protected abstract CharSequence getFragmentTitle();
-
-	protected abstract void onSaveButtonPressed();
-
-	protected abstract void onBackButtonPressed();
 
 	@Override
 	public void onPause() {
@@ -204,7 +140,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	}
 
 	@Nonnull
-	protected MultiPaneManager getMultiPaneManager() {
+	public MultiPaneManager getMultiPaneManager() {
 		return multiPaneManager;
 	}
 
@@ -223,7 +159,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	}
 
 	@Nonnull
-	protected TaskListeners getTaskListeners() {
+	public TaskListeners getTaskListeners() {
 		return taskListeners;
 	}
 }

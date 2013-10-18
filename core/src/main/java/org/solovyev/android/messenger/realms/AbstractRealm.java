@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
 import org.solovyev.android.messenger.accounts.*;
+import org.solovyev.android.messenger.users.BaseEditUserFragment;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;

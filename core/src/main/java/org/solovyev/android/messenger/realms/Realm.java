@@ -4,6 +4,7 @@ import android.content.Context;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.users.BaseEditUserFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;

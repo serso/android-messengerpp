@@ -10,7 +10,6 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.accounts.BaseAccountFragment.ARG_ACCOUNT_ID;
 
 /**
  * User: serso
@@ -54,8 +53,7 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 	}
 
 	private void onAccountEditRequestedEvent(@Nonnull Account account) {
-		final Bundle fragmentArgs = new Bundle();
-		fragmentArgs.putString(ARG_ACCOUNT_ID, account.getId());
+		final Bundle fragmentArgs = BaseAccountConfigurationFragment.newEditAccountArguments(account);
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 		fm.setSecondOrMainFragment(account.getRealm().getConfigurationFragmentClass(), fragmentArgs, BaseAccountConfigurationFragment.FRAGMENT_TAG);
 	}

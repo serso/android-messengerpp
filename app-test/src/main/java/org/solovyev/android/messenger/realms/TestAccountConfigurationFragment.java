@@ -25,7 +25,7 @@ public class TestAccountConfigurationFragment extends BaseAccountConfigurationFr
 
 	@Nullable
 	@Override
-	protected AccountConfiguration validateData() {
+	public AccountConfiguration validateData() {
 		return new TestAccountConfiguration("test", 42);
 	}
 
