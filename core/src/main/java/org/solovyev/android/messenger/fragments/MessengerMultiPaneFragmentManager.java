@@ -90,7 +90,7 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		if (getActivity().isDualPane()) {
 			setSecondFragment(fragmentClass, fragmentArgs, null, fragmentTag, true);
 		} else {
-			setMainFragment(fragmentClass, fragmentArgs, null, fragmentTag, true);
+			setMainFragment(fragmentClass, fragmentArgs, null, fragmentTag, false);
 		}
 	}
 }

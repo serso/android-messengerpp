@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 
@@ -46,6 +47,9 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 				break;
 			case account_edit_finished:
 				onAccountEditFinishedEvent(event);
+				break;
+			case account_picked:
+				Users.tryShowCreateUserFragment(account, activity);
 				break;
 		}
 	}

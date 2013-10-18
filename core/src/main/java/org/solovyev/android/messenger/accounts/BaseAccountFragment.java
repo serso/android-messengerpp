@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.Activities;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.core.R;
@@ -86,6 +87,10 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 
 	protected BaseAccountFragment(int layoutResId) {
 		this.layoutResId = layoutResId;
+	}
+
+	public BaseFragmentActivity getFragmentActivity() {
+		return (BaseFragmentActivity) super.getActivity();
 	}
 
 	@Override

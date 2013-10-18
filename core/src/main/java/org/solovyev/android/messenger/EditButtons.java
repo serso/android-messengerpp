@@ -70,8 +70,8 @@ public abstract class EditButtons<F extends Fragment> {
 	}
 
 	@Nonnull
-	protected FragmentActivity getActivity() {
-		return fragment.getActivity();
+	protected BaseFragmentActivity getActivity() {
+		return (BaseFragmentActivity) fragment.getActivity();
 	}
 
 	@Nonnull

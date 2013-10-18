@@ -26,9 +26,6 @@ public class UiEventListener implements EventListener<UiEvent> {
 	@Nonnull
 	private final MainActivity activity;
 
-	@Nonnull
-	private final EventListener<AccountUiEvent> accountEventListener = new AccountUiEventListener();
-
 	public UiEventListener(@Nonnull MainActivity activity) {
 		this.activity = activity;
 	}
@@ -52,9 +49,6 @@ public class UiEventListener implements EventListener<UiEvent> {
 		final Collection<Account> accounts = getAccountService().getAccountsCreatingUsers();
 		final int size = accounts.size();
 		if(size > 0) {
-			final RoboListeners listeners = activity.getListeners();
-			listeners.remove(AccountUiEvent.class, accountEventListener);
-			listeners.add(AccountUiEvent.class, accountEventListener);
 			activity.getMultiPaneFragmentManager().setMainFragment(pick_account, PickAccountFragment.createArguments(accounts));
 		}
 	}
@@ -69,20 +63,4 @@ public class UiEventListener implements EventListener<UiEvent> {
 	private void onShowRealmsEvent() {
 		activity.getMultiPaneFragmentManager().setMainFragment(realms);
 	}
-
-	private class AccountUiEventListener implements EventListener<AccountUiEvent> {
-		@Override
-		public void onEvent(AccountUiEvent event) {
-			switch (event.getType()){
-				case account_picked:
-					onAccountPicked(event.getAccount());
-					break;
-			}
-		}
-
-		private void onAccountPicked(@Nonnull Account account) {
-			Users.tryShowCreateUserFragment(account, activity);
-		}
-	}
-
 }

@@ -7,6 +7,7 @@ import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.tasks.UserSaverCallable;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.fragments.PrimaryFragment;
 
 import static org.solovyev.android.messenger.accounts.tasks.UserSaverCallback.newUserSaverCallback;
 
@@ -18,7 +19,7 @@ public class UserEditButtons<A extends Account<?>> extends EditButtons<BaseEditU
 
 	@Override
 	protected void onBackButtonPressed() {
-		getActivity().getSupportFragmentManager().popBackStack();
+		getActivity().getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.contacts);
 	}
 
 	@Override
