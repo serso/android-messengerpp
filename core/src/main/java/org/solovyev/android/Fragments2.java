@@ -10,16 +10,18 @@ public class Fragments2 {
 	public static void showDialog(@Nonnull android.support.v4.app.DialogFragment dialogFragment,
 								  @Nonnull String fragmentTag,
 								  @Nonnull android.support.v4.app.FragmentManager fm) {
-		showDialog(dialogFragment, fragmentTag, fm, true);
+		showDialog(dialogFragment, fragmentTag, fm, true, true);
 	}
 
-	public static void showDialog(DialogFragment dialogFragment, String fragmentTag, FragmentManager fm, boolean useExisting) {
+	public static void showDialog(DialogFragment dialogFragment, String fragmentTag, FragmentManager fm, boolean useExisting, boolean addToBackStack) {
 		android.support.v4.app.Fragment prev = fm.findFragmentByTag(fragmentTag);
 		if (prev != null) {
 			if (!useExisting) {
 				final android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 				ft.remove(prev);
-				ft.addToBackStack(null);
+				if (addToBackStack) {
+					ft.addToBackStack(null);
+				}
 
 				// Create and show the dialog.
 				dialogFragment.show(ft, fragmentTag);
@@ -28,7 +30,9 @@ public class Fragments2 {
 		} else {
 			final android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
 
-			ft.addToBackStack(null);
+			if (addToBackStack) {
+				ft.addToBackStack(null);
+			}
 
 			// Create and show the dialog.
 			dialogFragment.show(ft, fragmentTag);

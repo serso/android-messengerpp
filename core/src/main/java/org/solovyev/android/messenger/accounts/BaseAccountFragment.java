@@ -24,14 +24,14 @@ import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
 import com.google.inject.Inject;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.App.getTaskService;
 
-public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSherlockFragment {
+public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSherlockDialogFragment {
 
 	/*
 	**********************************************************************
@@ -117,6 +117,8 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+
+		setStyle(0, R.style.mpp_theme_metro_dialog_fragment);
 		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_metro_fragment);
 	}
 

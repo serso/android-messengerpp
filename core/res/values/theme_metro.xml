@@ -67,4 +67,36 @@
 		<item name="mpp_fragment_title">@style/mpp_fragment_title</item>
 	</style>
 
+	<style name="mpp_theme_metro_dialog_fragment" parent="Theme.Sherlock.Light.Dialog">
+		<item name="mpp_list_item">@style/mpp_list_item</item>
+		<item name="mpp_list_item_block">@style/mpp_list_item_block</item>
+		<item name="mpp_list_item_icon">@style/mpp_list_item_icon</item>
+		<item name="mpp_list_item_name">@style/mpp_list_item_name</item>
+		<item name="mpp_list_item_text_secondary">@style/mpp_list_item_text_secondary</item>
+		<item name="mpp_list_item_filter_icon">@style/mpp_list_item_filter_icon</item>
+		<item name="mpp_list_item_filter">@style/mpp_list_item_filter</item>
+		<item name="mpp_list_item_filter_text">@style/mpp_list_item_filter_text</item>
+		<item name="mpp_list_item_last_message_time">@style/mpp_list_item_last_message_time</item>
+		<item name="mpp_list_item_message_text">@style/mpp_list_item_message_text</item>
+		<item name="mpp_list_item_message_date">@style/mpp_list_item_message_date</item>
+		<item name="mpp_list_item_message_progress">@style/mpp_list_item_message_progress</item>
+		<item name="mpp_list_item_message_text_editor">@style/mpp_list_item_message_text_editor</item>
+		<item name="mpp_list_item_contact_online">@style/mpp_list_item_contact_online</item>
+		<item name="mpp_list_item_contact_call">@style/mpp_list_item_contact_call</item>
+		<item name="mpp_list_item_contact_divider">@style/mpp_list_item_contact_divider</item>
+		<item name="mpp_button">@style/mpp_button</item>
+		<item name="mpp_send_button">@style/mpp_send_button</item>
+		<item name="mpp_button_bright">@style/mpp_button_bright</item>
+		<item name="mpp_form_label">@style/mpp_form_label</item>
+		<item name="mpp_form_textview">@style/mpp_form_textview</item>
+		<item name="mpp_form_edittext">@style/mpp_form_edittext</item>
+		<item name="mpp_form_buttons">@style/mpp_form_buttons</item>
+		<item name="mpp_form_button">@style/mpp_form_button</item>
+		<item name="mpp_form_checkbox">@style/mpp_form_checkbox</item>
+		<item name="mpp_list_fragment">@style/mpp_list_fragment</item>
+		<item name="mpp_fragment">@style/mpp_fragment</item>
+		<item name="mpp_fragment_icon">@style/mpp_fragment_icon</item>
+		<item name="mpp_fragment_title">@style/mpp_fragment_title</item>
+	</style>
+
 </resources>
