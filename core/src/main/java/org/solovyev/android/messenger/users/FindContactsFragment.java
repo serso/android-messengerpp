@@ -16,7 +16,7 @@ import static org.solovyev.android.messenger.App.getUiHandler;
 import static org.solovyev.android.messenger.users.Users.MAX_SEARCH_CONTACTS;
 import static org.solovyev.common.text.Strings.isEmpty;
 
-public class FindContactsFragment extends AbstractContactsFragment {
+public class FindContactsFragment extends BaseContactsFragment {
 
 	private int maxContacts = MAX_SEARCH_CONTACTS;
 

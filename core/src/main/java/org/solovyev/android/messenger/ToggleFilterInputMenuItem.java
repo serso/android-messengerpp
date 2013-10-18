@@ -19,10 +19,10 @@ import com.actionbarsherlock.view.MenuItem;
 public class ToggleFilterInputMenuItem implements IdentifiableMenuItem<MenuItem> {
 
 	@Nonnull
-	private final WeakReference<AbstractListFragment<?, ?>> fragmentRef;
+	private final WeakReference<BaseListFragment<?, ?>> fragmentRef;
 
-	public ToggleFilterInputMenuItem(@Nonnull AbstractListFragment<?, ?> fragment) {
-		this.fragmentRef = new WeakReference<AbstractListFragment<?, ?>>(fragment);
+	public ToggleFilterInputMenuItem(@Nonnull BaseListFragment<?, ?> fragment) {
+		this.fragmentRef = new WeakReference<BaseListFragment<?, ?>>(fragment);
 	}
 
 	@Nonnull
@@ -33,7 +33,7 @@ public class ToggleFilterInputMenuItem implements IdentifiableMenuItem<MenuItem>
 
 	@Override
 	public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-		final AbstractListFragment<?, ?> fragment = fragmentRef.get();
+		final BaseListFragment<?, ?> fragment = fragmentRef.get();
 		if (fragment != null) {
 			fragment.toggleFilterBox();
 		}

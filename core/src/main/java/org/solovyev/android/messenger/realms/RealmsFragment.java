@@ -9,14 +9,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.AbstractListFragment;
+import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import com.google.inject.Inject;
 
-public class RealmsFragment extends AbstractListFragment<Realm, RealmListItem> implements DetachableFragment {
+public class RealmsFragment extends BaseListFragment<Realm, RealmListItem> implements DetachableFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "realms";

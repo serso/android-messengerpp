@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.AbstractListFragment;
+import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.MessengerListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
@@ -18,7 +18,7 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
  * Date: 3/17/13
  * Time: 5:56 PM
  */
-public final class PreferenceGroupsFragment extends AbstractListFragment<PreferenceGroup, PreferenceGroupListItem> implements DetachableFragment {
+public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceGroup, PreferenceGroupListItem> implements DetachableFragment {
 
 	public static final String FRAGMENT_TAG = "preference-groups";
 

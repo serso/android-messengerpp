@@ -57,7 +57,7 @@ import static org.solovyev.android.messenger.App.newTag;
  * Date: 6/7/12
  * Time: 5:57 PM
  */
-public abstract class AbstractListFragment<T, LI extends MessengerListItem>
+public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		extends RoboSherlockListFragment
 		implements ListViewScrollerListener, ListViewFilter.FilterableListView {
 
@@ -179,7 +179,7 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
     **********************************************************************
     */
 
-	public AbstractListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
+	public BaseListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
 		this.tag = newTag(tag);
 		if (filterEnabled) {
 			this.listViewFilter = new ListViewFilter(this, this);
@@ -671,7 +671,7 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 
 		@Override
 		public void onEvent(@Nonnull final UserEvent event) {
-			Threads2.tryRunOnUiThread(AbstractListFragment.this, new Runnable() {
+			Threads2.tryRunOnUiThread(BaseListFragment.this, new Runnable() {
 				@Override
 				public void run() {
 					adapter.onEvent(event);

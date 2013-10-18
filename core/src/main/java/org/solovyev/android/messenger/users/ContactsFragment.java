@@ -24,7 +24,7 @@ import java.util.List;
  * Date: 6/2/12
  * Time: 4:09 PM
  */
-public final class ContactsFragment extends AbstractContactsFragment {
+public final class ContactsFragment extends BaseContactsFragment {
 
 	@Nonnull
 	private static final String MODE = "mode";

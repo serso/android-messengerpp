@@ -12,7 +12,7 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.AbstractListFragment;
+import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.UiEventType.new_message;
 
-public abstract class AbstractChatsFragment extends AbstractListFragment<UiChat, ChatListItem> implements DetachableFragment {
+public abstract class BaseChatsFragment extends BaseListFragment<UiChat, ChatListItem> implements DetachableFragment {
 
 	@Nonnull
 	protected static final String TAG = "ChatsFragment";
@@ -35,7 +35,7 @@ public abstract class AbstractChatsFragment extends AbstractListFragment<UiChat,
 	@Nullable
 	private JEventListener<ChatEvent> chatEventListener;
 
-	public AbstractChatsFragment() {
+	public BaseChatsFragment() {
 		super(TAG, true, true);
 	}
 
@@ -85,7 +85,7 @@ public abstract class AbstractChatsFragment extends AbstractListFragment<UiChat,
 
 		@Override
 		public void onEvent(@Nonnull final ChatEvent event) {
-			Threads2.tryRunOnUiThread(AbstractChatsFragment.this, new Runnable() {
+			Threads2.tryRunOnUiThread(BaseChatsFragment.this, new Runnable() {
 				@Override
 				public void run() {
 					getAdapter().onEvent(event);

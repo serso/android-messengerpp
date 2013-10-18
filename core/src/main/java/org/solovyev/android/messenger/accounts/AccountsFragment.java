@@ -29,7 +29,7 @@ import com.actionbarsherlock.view.MenuItem;
 import static org.solovyev.android.messenger.UiEventType.show_realms;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_requested;
 
-public class AccountsFragment extends AbstractAccountsFragment {
+public class AccountsFragment extends BaseAccountsFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "accounts";

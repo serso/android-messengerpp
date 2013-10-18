@@ -60,7 +60,7 @@ import static org.solovyev.common.text.Strings.toHtml;
  * Date: 6/7/12
  * Time: 5:38 PM
  */
-public final class MessagesFragment extends AbstractListFragment<Message, MessageListItem> implements PullToRefreshListViewProvider {
+public final class MessagesFragment extends BaseListFragment<Message, MessageListItem> implements PullToRefreshListViewProvider {
 
 	/*
 	**********************************************************************

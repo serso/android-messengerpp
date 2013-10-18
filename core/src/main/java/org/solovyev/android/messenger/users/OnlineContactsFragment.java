@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Date: 6/2/12
  * Time: 5:14 PM
  */
-public class OnlineContactsFragment extends AbstractContactsFragment {
+public class OnlineContactsFragment extends BaseContactsFragment {
 
 	@Nonnull
 	@Override

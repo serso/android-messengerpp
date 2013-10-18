@@ -17,7 +17,7 @@ import static com.google.common.collect.Iterables.transform;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_picked;
 import static org.solovyev.common.collections.Collections.isEmpty;
 
-public class PickAccountFragment extends AbstractAccountsFragment {
+public class PickAccountFragment extends BaseAccountsFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "pick_account";

@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.AbstractListFragment;
+import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -14,7 +14,7 @@ import org.solovyev.common.listeners.JEventListener;
 
 import com.google.inject.Inject;
 
-public abstract class AbstractAccountsFragment extends AbstractListFragment<Account, AccountListItem> implements DetachableFragment {
+public abstract class BaseAccountsFragment extends BaseListFragment<Account, AccountListItem> implements DetachableFragment {
 
 	@Inject
 	@Nonnull
@@ -23,7 +23,7 @@ public abstract class AbstractAccountsFragment extends AbstractListFragment<Acco
 	@Nullable
 	private JEventListener<AccountEvent> accountEventListener;
 
-	public AbstractAccountsFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
+	public BaseAccountsFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
 		super(tag, filterEnabled, selectFirstItemByDefault);
 	}
 
@@ -74,7 +74,7 @@ public abstract class AbstractAccountsFragment extends AbstractListFragment<Acco
 
 		@Override
 		public void onEvent(@Nonnull final AccountEvent accountEvent) {
-			Threads2.tryRunOnUiThread(AbstractAccountsFragment.this, new Runnable() {
+			Threads2.tryRunOnUiThread(BaseAccountsFragment.this, new Runnable() {
 				@Override
 				public void run() {
 					getAdapter().onAccountEvent(accountEvent);

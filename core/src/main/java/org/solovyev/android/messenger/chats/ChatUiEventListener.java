@@ -73,7 +73,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 				}
 			}
 
-			final AbstractChatsFragment fragment = fragmentService.getFragment(CHATS_FRAGMENT_TAG);
+			final BaseChatsFragment fragment = fragmentService.getFragment(CHATS_FRAGMENT_TAG);
 			if (fragment != null) {
 				fragment.clickItemById(chat.getId());
 			}

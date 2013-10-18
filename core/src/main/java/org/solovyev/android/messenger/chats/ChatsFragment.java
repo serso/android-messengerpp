@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 5:37 PM
  */
-public final class ChatsFragment extends AbstractChatsFragment {
+public final class ChatsFragment extends BaseChatsFragment {
 
 	public ChatsFragment() {
 		super();

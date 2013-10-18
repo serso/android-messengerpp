@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.AbstractListFragment;
+import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
@@ -23,12 +23,12 @@ import static org.solovyev.android.messenger.UiEventType.new_contact;
  * Date: 6/2/12
  * Time: 5:11 PM
  */
-public abstract class AbstractContactsFragment extends AbstractListFragment<UiContact, ContactListItem> implements DetachableFragment {
+public abstract class BaseContactsFragment extends BaseListFragment<UiContact, ContactListItem> implements DetachableFragment {
 
 	@Nonnull
 	private static String TAG = newTag("ContactsFragment");
 
-	public AbstractContactsFragment() {
+	public BaseContactsFragment() {
 		super(TAG, true, true);
 	}
 
