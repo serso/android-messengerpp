@@ -1,15 +1,13 @@
 package org.solovyev.android.messenger.accounts.tasks;
 
 
-import javax.annotation.Nonnull;
-
+import com.google.common.util.concurrent.FutureCallback;
 import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.tasks.ContextCallback;
 import org.solovyev.android.tasks.Tasks;
 
-import com.google.common.util.concurrent.FutureCallback;
+import javax.annotation.Nonnull;
 
 public class UserSaverCallback implements ContextCallback<BaseFragmentActivity, User> {
 
@@ -18,7 +16,7 @@ public class UserSaverCallback implements ContextCallback<BaseFragmentActivity, 
 
 	@Override
 	public void onSuccess(@Nonnull BaseFragmentActivity context, User result) {
-		context.getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.contacts);
+		context.getMultiPaneFragmentManager().clearBackStack();
 	}
 
 	@Override

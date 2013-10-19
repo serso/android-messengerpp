@@ -747,9 +747,13 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 						position = selectedPosition;
 					}
 
-					if(multiPaneManager.isDualPane(activity) && !canReuseFragment(adapter.getSelectedItem())) {
-						// in case of dual pane we need to make a real click (call click listener)
-						clickItem(activity, position, listView);
+					if(multiPaneManager.isDualPane(activity)) {
+						if (adapter.isEmpty()) {
+							((BaseFragmentActivity) activity).getMultiPaneFragmentManager().emptifySecondFragment();
+						} else if (!canReuseFragment(adapter.getSelectedItem())) {
+							// in case of dual pane we need to make a real click (call click listener)
+							clickItem(activity, position, listView);
+						}
 					}
 				}
 			}

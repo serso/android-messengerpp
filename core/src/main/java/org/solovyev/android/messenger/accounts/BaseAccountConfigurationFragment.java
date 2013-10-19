@@ -1,13 +1,18 @@
 package org.solovyev.android.messenger.accounts;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmFragmentReuseCondition;
+import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +49,15 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 
 	protected BaseAccountConfigurationFragment(int layoutResId) {
 		super(layoutResId);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newAccountConfigurationFragmentDef(@Nonnull Class<? extends BaseAccountConfigurationFragment> clazz,
+																		  @Nonnull Context context,
+																		  @Nonnull Realm realm,
+																		  boolean addToBackStack) {
+		final JPredicate<Fragment> reuseCondition = new RealmFragmentReuseCondition(realm);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, clazz, context, null, reuseCondition);
 	}
 
 

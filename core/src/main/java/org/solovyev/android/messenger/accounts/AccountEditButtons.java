@@ -1,8 +1,8 @@
 package org.solovyev.android.messenger.accounts;
 
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.EditButtons;
+
+import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.back;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
@@ -46,8 +46,6 @@ public class AccountEditButtons<A extends Account<?>> extends EditButtons<BaseAc
 
 	@Override
 	protected boolean isBackButtonVisible() {
-		final BaseAccountConfigurationFragment<A> fragment = getFragment();
-		// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-		return !(fragment.isNewAccount() && fragment.getMultiPaneManager().isDualPane(getActivity()));
+		return true;
 	}
 }

@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
+import org.solovyev.common.Builder;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
@@ -226,6 +228,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 			initTabs(savedInstanceState);
 		}
 
+		initFragments();
+
 		this.menu = new MainMenu(new Runnable() {
 			@Override
 			public void run() {
@@ -242,6 +246,51 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
 		this.messengerListeners.addListener(messengerEventListener);
+	}
+
+	private void initFragments() {
+		// In case of dual pane we need to restore fragments properly.
+		// First of all we need to be sure that fragment shown on the main pane is primary.
+		// If it's not a primary fragment we need to move it to the secondary pane.
+		// As we need to restore fragment state let's copy fragment arguments and instance state and pass it to the newly created argument.
+
+		if (isDualPane()) {
+			final FragmentManager fm = getSupportFragmentManager();
+			final Fragment fragmentById = fm.findFragmentById(R.id.content_first_pane);
+			if (fragmentById != null) {
+				final boolean primaryFragment = any(asList(PrimaryFragment.values()), new Predicate<PrimaryFragment>() {
+					@Override
+					public boolean apply(PrimaryFragment fragment) {
+						return fragment.getFragmentTag().equals(fragmentById.getTag());
+					}
+				});
+
+				if(!primaryFragment) {
+					// NOTE: we must save local copies before popping the back stack as these values might change
+					final Fragment.SavedState fragmentSavedState = fm.saveFragmentInstanceState(fragmentById);
+					final String fragmentTag = fragmentById.getTag();
+					final Bundle fragmentArguments = fragmentById.getArguments();
+
+					if (!fm.popBackStackImmediate()) {
+						final ActionBar.Tab selectedTab = getSupportActionBar().getSelectedTab();
+						if (selectedTab != null) {
+							selectedTab.select();
+						}
+					} else {
+						multiPaneFragmentManager.setSecondFragment(MultiPaneFragmentDef.newInstance(fragmentTag, false, new Builder<Fragment>() {
+							@Nonnull
+							@Override
+							public Fragment build() {
+								final Fragment fragment = Fragment.instantiate(BaseFragmentActivity.this, fragmentById.getClass().getName(), fragmentArguments);
+								fragment.setInitialSavedState(fragmentSavedState);
+								return fragment;
+							}
+						}, null));
+					}
+				}
+			}
+		}
+
 	}
 
 	private void initTabs(@Nullable Bundle savedInstanceState) {
@@ -266,24 +315,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		gestureDetector = new GestureDetector(this, new SwipeTabsGestureListener());
 
 		tabsEnabled = true;
-
-		if (isDualPane()) {
-			final Fragment fragmentById = getSupportFragmentManager().findFragmentById(R.id.content_first_pane);
-			if (fragmentById != null) {
-				final boolean primaryFragment = any(asList(PrimaryFragment.values()), new Predicate<PrimaryFragment>() {
-					@Override
-					public boolean apply(PrimaryFragment fragment) {
-						return fragment.getFragmentTag().equals(fragmentById.getTag());
-					}
-				});
-
-				if(!primaryFragment) {
-					if (selectedTab >= 0) {
-						actionBar.setSelectedNavigationItem(selectedTab);
-					}
-				}
-			}
-		}
 
 		// activity created first time => we must select first tab
 		if (selectedTab == -1) {
@@ -340,7 +371,9 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 			@Override
 			public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
 				if (tabsEnabled) {
-					getMultiPaneFragmentManager().setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
+					final MessengerMultiPaneFragmentManager mpfm = getMultiPaneFragmentManager();
+					mpfm.clearBackStack();
+					mpfm.setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
 				}
 			}
 

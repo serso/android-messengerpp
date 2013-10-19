@@ -1,17 +1,14 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.users.Users;
-import org.solovyev.common.JPredicate;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.accounts.AccountFragment.newAccountArguments;
+import static org.solovyev.android.messenger.accounts.AccountFragment.newAccountFragmentDef;
 
 
 /**
@@ -20,9 +17,6 @@ import static org.solovyev.android.messenger.accounts.AccountFragment.newAccount
  * Time: 1:50 PM
  */
 public final class AccountUiEventListener implements EventListener<AccountUiEvent> {
-
-	@Nonnull
-	private static final String TAG = AccountUiEventListener.class.getSimpleName();
 
 	@Nonnull
 	private final BaseFragmentActivity activity;
@@ -65,22 +59,15 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 	}
 
 	private void onAccountViewRequestedEvent(@Nonnull Account account) {
+		MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
+
 		if (activity.isDualPane()) {
-			showRealmFragment(account, false);
+			mpfm.setSecondFragment(newAccountFragmentDef(activity, account));
 			if (activity.isTriplePane()) {
-				activity.getMultiPaneFragmentManager().emptifyThirdFragment();
+				mpfm.emptifyThirdFragment();
 			}
 		} else {
-			showRealmFragment(account, true);
-		}
-	}
-
-	private void showRealmFragment(@Nonnull Account account, boolean firstPane) {
-		final Bundle fragmentArgs = newAccountArguments(account);
-		if (firstPane) {
-			activity.getMultiPaneFragmentManager().setMainFragment(AccountFragment.class, fragmentArgs, AccountFragmentReuseCondition.forAccount(account), AccountFragment.FRAGMENT_TAG, true);
-		} else {
-			activity.getMultiPaneFragmentManager().setSecondFragment(AccountFragment.class, fragmentArgs, AccountFragmentReuseCondition.forAccount(account), AccountFragment.FRAGMENT_TAG, false);
+			mpfm.setMainFragment(newAccountFragmentDef(activity, account));
 		}
 	}
 
@@ -92,50 +79,14 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 				activity.getMultiPaneFragmentManager().goBack();
 				break;
 			case removed:
-				activity.getMultiPaneFragmentManager().goBackTillStart();
-				if (activity.isDualPane()) {
-					activity.getMultiPaneFragmentManager().emptifySecondFragment();
-				}
+				activity.getMultiPaneFragmentManager().clearBackStack();
 				break;
 			case status_changed:
 				// do nothing as we can change state only from realm info fragment and that is OK
 				break;
 			case saved:
-				activity.getMultiPaneFragmentManager().goBackTillStart();
+				activity.getMultiPaneFragmentManager().clearBackStack();
 				break;
-		}
-	}
-
-    /*
-	**********************************************************************
-    *
-    *                           STATIC
-    *
-    **********************************************************************
-    */
-
-	/**
-	 * Fragment will be reused if it's instance of {@link AccountFragment} and
-	 * contains same realm as one passed in constructor
-	 */
-	private static class AccountFragmentReuseCondition extends AbstractFragmentReuseCondition<AccountFragment> {
-
-		@Nonnull
-		private final Account account;
-
-		private AccountFragmentReuseCondition(@Nonnull Account account) {
-			super(AccountFragment.class);
-			this.account = account;
-		}
-
-		@Nonnull
-		public static JPredicate<Fragment> forAccount(@Nonnull Account account) {
-			return new AccountFragmentReuseCondition(account);
-		}
-
-		@Override
-		protected boolean canReuseFragment(@Nonnull AccountFragment fragment) {
-			return account.equals(fragment.getAccount());
 		}
 	}
 }

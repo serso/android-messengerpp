@@ -1,13 +1,13 @@
 package org.solovyev.android.messenger.accounts;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
@@ -15,8 +15,10 @@ import org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.common.JPredicate;
+import roboguice.event.EventManager;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_requested;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_cancelled;
@@ -69,6 +71,13 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 	public AccountFragment() {
 		super(R.layout.mpp_fragment_account);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newAccountFragmentDef(@Nonnull Context context, @Nonnull Account account) {
+		final Bundle args = newAccountArguments(account);
+		final JPredicate<Fragment> reuseCondition = AccountFragmentReuseCondition.forAccount(account);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, true, AccountFragment.class, context, args, reuseCondition);
 	}
 
 	@Override
