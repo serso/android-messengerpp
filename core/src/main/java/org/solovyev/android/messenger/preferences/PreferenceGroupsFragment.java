@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.preferences;
 
+import android.support.v4.app.Fragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,11 @@ public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceG
 	@Override
 	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
 		return null;
+	}
+
+	@Override
+	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull PreferenceGroupListItem selectedItem) {
+		return fragment instanceof PreferenceListFragment;
 	}
 
 	@Nonnull

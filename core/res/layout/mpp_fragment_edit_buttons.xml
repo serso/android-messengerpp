@@ -6,18 +6,18 @@
 	a:layout_height="wrap_content">
 
 	<Button
-		a:id="@id/mpp_account_back_button"
+		a:id="@id/mpp_back_button"
 		a:text="@string/mpp_back"
 		style="?mpp_form_button" />
 
 	<Button
-		a:id="@id/mpp_account_remove_button"
+		a:id="@id/mpp_remove_button"
 		a:visibility="gone"
 		a:text="@string/mpp_remove"
 		style="?mpp_form_button" />
 
 	<Button
-		a:id="@id/mpp_account_save_button"
+		a:id="@id/mpp_save_button"
 		a:text="@string/mpp_save"
 		style="?mpp_form_button" />
 

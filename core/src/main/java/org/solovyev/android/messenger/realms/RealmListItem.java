@@ -38,7 +38,7 @@ class RealmListItem extends AbstractMessengerListItem<Realm> {
 	}
 
 	@Nonnull
-	private Realm getRealm() {
+	public Realm getRealm() {
 		return getData();
 	}
 

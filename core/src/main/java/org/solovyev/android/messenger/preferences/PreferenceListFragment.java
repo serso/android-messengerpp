@@ -28,8 +28,10 @@ public class PreferenceListFragment extends ListFragment {
 	private static final int NO_THEME = -1;
 
 	public static final String FRAGMENT_TAG = "preferences";
-	public static final String PREFERENCES_RES_ID = "preferences_res_id";
-	public static final String LAYOUT_RES_ID = "layout_res_id";
+
+	private static final String ARG_PREFERENCES_RES_ID = "preferences_res_id";
+	private static final String ARG_LAYOUT_RES_ID = "layout_res_id";
+	private static final String ARG_THEME_RES_ID = "theme_res_id";
 
 	private PreferenceManagerCompat preferenceManager;
 
@@ -45,12 +47,24 @@ public class PreferenceListFragment extends ListFragment {
 	public PreferenceListFragment(int preferencesResId, int layoutResId) {
 		this.preferencesResId = preferencesResId;
 		this.layoutResId = layoutResId;
+		fillArguments();
 	}
 
 	public PreferenceListFragment(int preferencesResId, int layoutResId, int themeResId) {
 		this.preferencesResId = preferencesResId;
 		this.layoutResId = layoutResId;
 		this.themeResId = themeResId;
+		fillArguments();
+	}
+
+	private void fillArguments() {
+		final Bundle args = new Bundle();
+
+		args.putInt(ARG_PREFERENCES_RES_ID, preferencesResId);
+		args.putInt(ARG_LAYOUT_RES_ID, layoutResId);
+		args.putInt(ARG_THEME_RES_ID, themeResId);
+
+		setArguments(args);
 	}
 
 	//must be provided
@@ -60,11 +74,6 @@ public class PreferenceListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null) {
-			preferencesResId = savedInstanceState.getInt(PREFERENCES_RES_ID);
-			layoutResId = savedInstanceState.getInt(LAYOUT_RES_ID);
-		}
-
 		preferenceManager = new PreferenceManagerCompat(this);
 	}
 
@@ -73,8 +82,15 @@ public class PreferenceListFragment extends ListFragment {
 	}
 
 	@Override
-	public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
+	public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final LayoutInflater themeInflater;
+
+		if (savedInstanceState != null) {
+			final Bundle arguments = getArguments();
+			preferencesResId = arguments.getInt(ARG_PREFERENCES_RES_ID);
+			layoutResId = arguments.getInt(ARG_LAYOUT_RES_ID);
+			themeResId = arguments.getInt(ARG_THEME_RES_ID);
+		}
 
 		if (themeResId == NO_THEME) {
 			themeContext = getActivity();
@@ -89,7 +105,7 @@ public class PreferenceListFragment extends ListFragment {
 		final ListView lv = (ListView) root.findViewById(R.id.list);
 		prepareListView(lv);
 
-		onCreateView(themeContext, themeInflater, root, container, b);
+		onCreateView(themeContext, themeInflater, root, container, savedInstanceState);
 
 		return root;
 	}
@@ -116,13 +132,6 @@ public class PreferenceListFragment extends ListFragment {
 	@Nullable
 	public PreferenceScreen getPreferenceScreen() {
 		return preferenceManager.getPreferenceScreen();
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(PREFERENCES_RES_ID, preferencesResId);
-		outState.putInt(LAYOUT_RES_ID, layoutResId);
 	}
 
 	@Override

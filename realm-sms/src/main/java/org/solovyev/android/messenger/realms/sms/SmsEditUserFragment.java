@@ -9,7 +9,7 @@ import android.widget.Toast;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.accounts.BaseEditUserFragment;
+import org.solovyev.android.messenger.users.BaseEditUserFragment;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.MutableAProperties;

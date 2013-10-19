@@ -98,6 +98,8 @@ public abstract class AbstractContactsAdapter extends BaseListItemAdapter<Contac
 
 	@Override
 	public void restoreState(@Nonnull Bundle savedInstanceState) {
+		super.restoreState(savedInstanceState);
+
 		final Serializable mode = savedInstanceState.getSerializable(MODE);
 		if (mode instanceof ContactsDisplayMode) {
 			this.mode = (ContactsDisplayMode) mode;

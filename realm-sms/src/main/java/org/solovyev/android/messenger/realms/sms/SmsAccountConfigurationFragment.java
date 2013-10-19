@@ -52,7 +52,7 @@ public final class SmsAccountConfigurationFragment extends BaseAccountConfigurat
 
 	@Nullable
 	@Override
-	protected AccountConfiguration validateData() {
+	public AccountConfiguration validateData() {
 		final SmsAccountConfiguration configuration = new SmsAccountConfiguration();
 		configuration.setStopFurtherProcessing(stopFurtherProcessingCheckbox.isChecked());
 		return configuration;

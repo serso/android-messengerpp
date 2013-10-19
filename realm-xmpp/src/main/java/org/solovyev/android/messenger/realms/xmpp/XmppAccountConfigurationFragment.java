@@ -90,7 +90,7 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 	}
 
 	@Override
-	protected AccountConfiguration validateData() {
+	public AccountConfiguration validateData() {
 		final String server = serverEditText.getText().toString();
 		final String login = loginEditText.getText().toString();
 		final String password = passwordEditText.getText().toString();

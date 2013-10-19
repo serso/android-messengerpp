@@ -30,14 +30,7 @@ public class PickAccountFragment extends BaseAccountsFragment {
 	}
 
 	@Nonnull
-	public static PickAccountFragment newPickAccountFragment(@Nonnull Collection<Account> accounts) {
-		final PickAccountFragment fragment = new PickAccountFragment();
-		fragment.setArguments(createArguments(accounts));
-		return fragment;
-	}
-
-	@Nonnull
-	public static Bundle createArguments(@Nonnull Collection<Account> accounts) {
+	public static Bundle newPickAccountArguments(@Nonnull Collection<Account> accounts) {
 		final Bundle arguments = new Bundle();
 		arguments.putStringArray(ARG_ACCOUNT_IDS, toArray(transform(accounts, new Function<Account, String>() {
 			@Override

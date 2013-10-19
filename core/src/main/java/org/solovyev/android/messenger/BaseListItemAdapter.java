@@ -225,6 +225,11 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		return selectedItemPosition;
 	}
 
+	@Nullable
+	public ListItem getSelectedItem() {
+		return selectedItem;
+	}
+
 	private static void selectItem(@Nullable ListItem item, boolean selected) {
 		if (item instanceof Checkable) {
 			((Checkable) item).setChecked(selected);

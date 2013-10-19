@@ -1,20 +1,18 @@
 package org.solovyev.android.messenger.realms;
 
-import android.os.Bundle;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import android.support.v4.app.Fragment;
+import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.BaseListItemAdapter;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RealmsFragment extends BaseListFragment<Realm, RealmListItem> implements DetachableFragment {
 
@@ -30,8 +28,12 @@ public class RealmsFragment extends BaseListFragment<Realm, RealmListItem> imple
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull RealmListItem selectedItem) {
+		boolean canReuse = false;
+		if (fragment instanceof BaseAccountConfigurationFragment) {
+			canReuse = ((BaseAccountConfigurationFragment) fragment).getRealm().equals(selectedItem.getRealm());
+		}
+		return canReuse;
 	}
 
 	@Nullable

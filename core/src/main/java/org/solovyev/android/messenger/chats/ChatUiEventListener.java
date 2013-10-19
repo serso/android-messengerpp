@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
+import static org.solovyev.android.messenger.messages.MessagesFragment.newMessagesFragmentDef;
 
 /**
  * User: serso
@@ -96,14 +97,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 
 		if (activity.isDualPane()) {
-			fm.setSecondFragment(new Builder<Fragment>() {
-				@Nonnull
-				@Override
-				public Fragment build() {
-					return new MessagesFragment(chat);
-				}
-			}, MessagesFragmentReuseCondition.forChat(chat), MessagesFragment.FRAGMENT_TAG);
-
+			fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
 			if (activity.isTriplePane()) {
 				if (chat.isPrivate()) {
 					fm.setThirdFragment(new Builder<Fragment>() {
@@ -132,13 +126,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 			}
 
 		} else {
-			fm.setMainFragment(new Builder<Fragment>() {
-				@Nonnull
-				@Override
-				public Fragment build() {
-					return new MessagesFragment(chat);
-				}
-			}, MessagesFragmentReuseCondition.forChat(chat), MessagesFragment.FRAGMENT_TAG, true);
+			fm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
 		}
 	}
 }
