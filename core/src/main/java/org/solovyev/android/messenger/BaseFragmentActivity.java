@@ -249,48 +249,78 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	}
 
 	private void initFragments() {
-		// In case of dual pane we need to restore fragments properly.
-		// First of all we need to be sure that fragment shown on the main pane is primary.
-		// If it's not a primary fragment we need to move it to the secondary pane.
-		// As we need to restore fragment state let's copy fragment arguments and instance state and pass it to the newly created argument.
-
 		if (isDualPane()) {
-			final FragmentManager fm = getSupportFragmentManager();
-			final Fragment fragmentById = fm.findFragmentById(R.id.content_first_pane);
-			if (fragmentById != null) {
-				final boolean primaryFragment = any(asList(PrimaryFragment.values()), new Predicate<PrimaryFragment>() {
-					@Override
-					public boolean apply(PrimaryFragment fragment) {
-						return fragment.getFragmentTag().equals(fragmentById.getTag());
-					}
-				});
+			initDualPaneFragments();
+		} else {
+			initMainPaneFragment();
+		}
+	}
 
-				if(!primaryFragment) {
-					// NOTE: we must save local copies before popping the back stack as these values might change
-					final Fragment.SavedState fragmentSavedState = fm.saveFragmentInstanceState(fragmentById);
-					final String fragmentTag = fragmentById.getTag();
-					final Bundle fragmentArguments = fragmentById.getArguments();
+	private void initMainPaneFragment() {
+		final FragmentManager fm = getSupportFragmentManager();
 
-					if (!fm.popBackStackImmediate()) {
-						final ActionBar.Tab selectedTab = getSupportActionBar().getSelectedTab();
-						if (selectedTab != null) {
-							selectedTab.select();
-						}
-					} else {
-						multiPaneFragmentManager.setSecondFragment(MultiPaneFragmentDef.newInstance(fragmentTag, false, new Builder<Fragment>() {
-							@Nonnull
-							@Override
-							public Fragment build() {
-								final Fragment fragment = Fragment.instantiate(BaseFragmentActivity.this, fragmentById.getClass().getName(), fragmentArguments);
-								fragment.setInitialSavedState(fragmentSavedState);
-								return fragment;
-							}
-						}, null));
-					}
+		final Fragment mainFragment = fm.findFragmentById(R.id.content_first_pane);
+		if (mainFragment != null) {
+			if (isPrimaryFragment(mainFragment)) {
+				final Fragment secondFragment = fm.findFragmentById(R.id.content_second_pane);
+				if (secondFragment != null) {
+					multiPaneFragmentManager.setMainFragment(newCopyingFragmentDef(secondFragment, true));
 				}
 			}
 		}
+	}
 
+	private void initDualPaneFragments() {
+		final FragmentManager fm = getSupportFragmentManager();
+
+		// We need to be sure that the fragment which is shown on the main pane is primary.
+		// If it's not a primary fragment we need to move it to the secondary pane.
+		// To restore the primary fragment we just pop back stack (as primary fragment must be somewhere in back stack)
+		// As we need to restore second fragment's state let's copy arguments and instance state and pass it to the newly created argument.
+		final Fragment mainFragment = fm.findFragmentById(R.id.content_first_pane);
+		if (mainFragment != null) {
+			if(!isPrimaryFragment(mainFragment)) {
+				// NOTE: we must save local copies before popping the back stack as these values might change
+				final MultiPaneFragmentDef fragmentDef = newCopyingFragmentDef(mainFragment, false);
+
+				if (!fm.popBackStackImmediate()) {
+					final ActionBar.Tab selectedTab = getSupportActionBar().getSelectedTab();
+					if (selectedTab != null) {
+						selectedTab.select();
+					}
+				} else {
+					multiPaneFragmentManager.setSecondFragment(fragmentDef);
+				}
+			}
+		}
+	}
+
+	@Nonnull
+	private MultiPaneFragmentDef newCopyingFragmentDef(@Nonnull final Fragment fragment, boolean addToBackStack) {
+		final FragmentManager fm = getSupportFragmentManager();
+
+		final Fragment.SavedState fragmentSavedState = fm.saveFragmentInstanceState(fragment);
+		final String fragmentTag = fragment.getTag();
+		final Bundle fragmentArguments = fragment.getArguments();
+
+		return MultiPaneFragmentDef.newInstance(fragmentTag, addToBackStack, new Builder<Fragment>() {
+			@Nonnull
+			@Override
+			public Fragment build() {
+				final Fragment newFragment = Fragment.instantiate(BaseFragmentActivity.this, fragment.getClass().getName(), fragmentArguments);
+				newFragment.setInitialSavedState(fragmentSavedState);
+				return newFragment;
+			}
+		}, null);
+	}
+
+	private boolean isPrimaryFragment(@Nonnull final Fragment fragment) {
+		return any(asList(PrimaryFragment.values()), new Predicate<PrimaryFragment>() {
+			@Override
+			public boolean apply(PrimaryFragment pf) {
+				return pf.getFragmentTag().equals(fragment.getTag());
+			}
+		});
 	}
 
 	private void initTabs(@Nullable Bundle savedInstanceState) {
