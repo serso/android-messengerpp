@@ -181,12 +181,14 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
 			@Override
 			protected boolean isVisible(@Nonnull UiContact uiContact) {
-				final Account account = uiContact.getAccount();
+				// todo serso: we must guarantee that contact is selected in the contacts' list. Otherwise, edit fragment will be the first fragment in the back stack (instead of messages fragment) which can lead to unpredictable behaviour
+				/*final Account account = uiContact.getAccount();
 				if (account != null) {
 					return account.getRealm().canEditUsers();
 				} else {
 					return false;
-				}
+				}*/
+				return false;
 			}
 		};
 
