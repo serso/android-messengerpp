@@ -1,13 +1,11 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
-
 import android.view.View;
 import org.joda.time.DateTime;
-import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
@@ -24,16 +22,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static org.solovyev.android.messenger.App.TAG;
-import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.App.getUiHandler;
-import static org.solovyev.android.messenger.users.BaseEditUserFragment.newCreateUserArguments;
-import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserArguments;
-import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static android.view.View.*;
+import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.android.messenger.users.BaseEditUserFragment.newCreateUserFragmentDef;
+import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserFragmentDef;
 import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
 import static org.solovyev.android.properties.Properties.newProperty;
 
@@ -141,26 +135,32 @@ public final class Users {
 		final Realm realm = account.getRealm();
 		if (realm.canCreateUsers()) {
 			final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-			mpfm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), newCreateUserArguments(account), CREATE_USER_FRAGMENT_TAG);
+			if(activity.isDualPane()) {
+				mpfm.setSecondFragment(newCreateUserFragmentDef(activity, account, false));
+			} else {
+				mpfm.setMainFragment(newCreateUserFragmentDef(activity, account, true));
+			}
 			return true;
 		}
 
 		return false;
 	}
 
-	public static boolean tryShowEditUserFragment(@Nonnull User user, @Nonnull BaseFragmentActivity activity) {
+	public static boolean tryShowEditUserFragment(@Nonnull final User user, @Nonnull final BaseFragmentActivity activity) {
 		try {
 			final Account account = App.getAccountService().getAccountByEntity(user.getEntity());
 			final Realm realm = account.getRealm();
 			if (realm.canCreateUsers()) {
-				final Bundle fragmentArgs = newEditUserArguments(account, user);
 				final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-
 				// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
 				getUiHandler().post(new Runnable() {
 					@Override
 					public void run() {
-						mpfm.setSecondOrMainFragment(realm.getCreateUserFragmentClass(), fragmentArgs, CREATE_USER_FRAGMENT_TAG);
+						if(activity.isDualPane()) {
+							mpfm.setSecondFragment(newEditUserFragmentDef(activity, account, user, true));
+						} else {
+							mpfm.setMainFragment(newEditUserFragmentDef(activity, account, user, true));
+						}
 					}
 				});
 				return true;

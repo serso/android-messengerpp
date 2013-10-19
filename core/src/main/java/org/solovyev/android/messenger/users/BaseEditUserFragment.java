@@ -1,15 +1,17 @@
 package org.solovyev.android.messenger.users;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.tasks.UserSaverCallable;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.accounts.tasks.UserSaverCallback.newUserSaverCallback;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
@@ -31,6 +33,20 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 
 	protected BaseEditUserFragment(int layoutResId) {
 		super(layoutResId);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newCreateUserFragmentDef(@Nonnull Context context, @Nonnull Account account, boolean addToBackStack) {
+		final Realm realm = account.getRealm();
+		final Bundle arguments = newAccountArguments(account);
+		return MultiPaneFragmentDef.forClass(Users.CREATE_USER_FRAGMENT_TAG, addToBackStack, realm.getCreateUserFragmentClass(), context, arguments);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newEditUserFragmentDef(@Nonnull Context context, @Nonnull Account account, @Nonnull User user, boolean addToBackStack) {
+		final Realm realm = account.getRealm();
+		final Bundle arguments = newUserArguments(account, user);
+		return MultiPaneFragmentDef.forClass(Users.CREATE_USER_FRAGMENT_TAG, addToBackStack, realm.getCreateUserFragmentClass(), context, arguments);
 	}
 
 	@Override
@@ -65,15 +81,5 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 		}
 
 		return result;
-	}
-
-	@Nonnull
-	public static Bundle newCreateUserArguments(@Nonnull Account account) {
-		return newAccountArguments(account);
-	}
-
-	@Nonnull
-	public static Bundle newEditUserArguments(@Nonnull Account account, @Nonnull User user) {
-		return newUserArguments(account, user);
 	}
 }

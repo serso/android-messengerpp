@@ -29,7 +29,7 @@ public class PickAccountFragment extends AbstractAccountsFragment {
 	}
 
 	@Nonnull
-	public static Bundle createArguments(@Nonnull Collection<Account> accounts) {
+	public static Bundle newPickAccountArguments(@Nonnull Collection<Account> accounts) {
 		final Bundle arguments = new Bundle();
 		arguments.putStringArray(ARG_ACCOUNT_IDS, toArray(transform(accounts, new Function<Account, String>() {
 			@Override

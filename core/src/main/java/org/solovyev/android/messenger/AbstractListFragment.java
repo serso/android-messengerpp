@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.*;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
@@ -172,6 +175,19 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 	@Nonnull
 	private RoboListeners listeners;
 
+	/**
+	 * Last saved instance state (the last state which has been passed through onCreate method)
+	 *
+	 * Problem: When fragment is in back stack and has not been shown during activity lifecycle then
+	 * onSaveInstanceState() saves nothing on activity destruction (as no view has been created). If later we return to this fragment using back button we loose state.
+	 *
+	 * Solution: Save last state and if fragment hsa not been shown - use it.
+	 */
+	@Nullable
+	private Bundle lastSavedInstanceState;
+
+	private boolean viewCreated = false;
+
     /*
     **********************************************************************
     *
@@ -262,21 +278,25 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
     */
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		listeners = new RoboListeners(App.getEventManager(getActivity()));
-		eventManager.fire(FragmentUiEventType.created.newEvent(this));
-	}
-
-	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_metro_fragment);
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		listeners = new RoboListeners(App.getEventManager(getActivity()));
+		eventManager.fire(FragmentUiEventType.created.newEvent(this));
+
+		lastSavedInstanceState = savedInstanceState;
+		viewCreated = false;
+	}
+
+	@Override
 	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		viewCreated = true;
 		final LinearLayout root = new LinearLayout(themeContext);
 		root.setOrientation(VERTICAL);
 		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -540,13 +560,21 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		if (adapter != null) {
-			adapter.saveState(outState);
+		if (viewCreated) {
+			if (adapter != null) {
+				adapter.saveState(outState);
+			}
+
+			if (listViewFilter != null) {
+				listViewFilter.saveState(outState);
+			}
+		} else {
+			if(lastSavedInstanceState != null) {
+				outState.putAll(lastSavedInstanceState);
+			}
 		}
 
-		if (listViewFilter != null) {
-			listViewFilter.saveState(outState);
-		}
+		lastSavedInstanceState = null;
 	}
 
 	@Override
@@ -749,7 +777,7 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 
 					if(multiPaneManager.isDualPane(activity)) {
 						if (adapter.isEmpty()) {
-							((BaseFragmentActivity) activity).getMultiPaneFragmentManager().emptifySecondFragment();
+							onEmptyListLoaded((BaseFragmentActivity) activity);
 						} else if (!canReuseFragment(adapter.getSelectedItem())) {
 							// in case of dual pane we need to make a real click (call click listener)
 							clickItem(activity, position, listView);
@@ -758,6 +786,10 @@ public abstract class AbstractListFragment<T, LI extends MessengerListItem>
 				}
 			}
 		}
+	}
+
+	protected void onEmptyListLoaded(@Nonnull BaseFragmentActivity activity) {
+		activity.getMultiPaneFragmentManager().emptifySecondFragment();
 	}
 
 	private boolean canReuseFragment(@Nullable ListItem selectedItem) {

@@ -15,16 +15,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
@@ -71,6 +69,13 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 	*/
 	public static final String FRAGMENT_TAG = "messages";
 
+	@Nonnull
+	private static final String TAG = "MessagesFragment";
+
+	@Nonnull
+	private static final String ARG_CHAT = "chat";
+
+
     /*
 	**********************************************************************
     *
@@ -104,13 +109,6 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
     **********************************************************************
     */
 
-
-	@Nonnull
-	private static final String TAG = "MessagesFragment";
-
-	@Nonnull
-	private static final String CHAT = "chat";
-
 	private Chat chat;
 
 	private Account account;
@@ -131,6 +129,18 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 	}
 
 	@Nonnull
+	public static MultiPaneFragmentDef newMessagesFragmentDef(@Nonnull Context context, @Nonnull Chat chat, boolean addToBackStack) {
+		final Bundle arguments = new Bundle();
+		arguments.putParcelable(ARG_CHAT, chat.getEntity());
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MessagesFragment.class, context, arguments, MessagesFragmentReuseCondition.forChat(chat));
+	}
+
+	@Override
+	protected void onEmptyListLoaded(@Nonnull BaseFragmentActivity activity) {
+		//do nothing
+	}
+
+	@Nonnull
 	public Chat getChat() {
 		return chat;
 	}
@@ -140,23 +150,18 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 		super.onCreate(savedInstanceState);
 
 		try {
-			if (chat != null) {
-				// chat is set => fragment was just created => we need to load realm
-				account = accountService.getAccountById(chat.getEntity().getAccountId());
-			} else {
-				// first - restore state
-				final Entity realmChat = savedInstanceState.getParcelable(CHAT);
-				if (realmChat != null) {
-					chat = this.chatService.getChatById(realmChat);
-				}
+			// first - restore state
+			final Entity chatId = getArguments().getParcelable(ARG_CHAT);
+			if (chatId != null) {
+				chat = this.chatService.getChatById(chatId);
+			}
 
-				if (chat == null) {
-					Log.e(TAG, "Chat is null: unable to find chat with id: " + realmChat);
-					notificationService.add(newUndefinedErrorNotification());
-					Activities.restartActivity(getActivity());
-				} else {
-					account = accountService.getAccountById(chat.getEntity().getAccountId());
-				}
+			if (chat == null) {
+				Log.e(TAG, "Chat is null: unable to find chat with id: " + chatId);
+				notificationService.add(newUndefinedErrorNotification());
+				Activities.restartActivity(getActivity());
+			} else {
+				account = accountService.getAccountById(chat.getEntity().getAccountId());
 			}
 		} catch (UnsupportedAccountException e) {
 			App.getExceptionHandler().handleException(e);
@@ -306,15 +311,6 @@ public final class MessagesFragment extends AbstractListFragment<Message, Messag
 
 		if (chatEventListener != null) {
 			this.chatService.removeListener(chatEventListener);
-		}
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		if (chat != null) {
-			outState.putParcelable(CHAT, chat.getEntity());
 		}
 	}
 

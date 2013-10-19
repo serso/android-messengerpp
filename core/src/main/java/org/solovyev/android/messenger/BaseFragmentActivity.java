@@ -37,6 +37,7 @@ import java.util.Stack;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.find;
 import static java.util.Arrays.asList;
+import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager.tabFragments;
 
@@ -57,7 +58,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	private static final String SELECTED_TAB = "selected_tab";
 
-	protected final String TAG = this.getClass().getSimpleName();
+	protected final String TAG = newTag(this.getClass().getSimpleName());
 
     /*
     **********************************************************************
