@@ -53,7 +53,7 @@ public final class AccountListItem extends AbstractMessengerListItem<Account> {
 	}
 
 	@Nonnull
-	private Account getAccount() {
+	Account getAccount() {
 		return getData();
 	}
 

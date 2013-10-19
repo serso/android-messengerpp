@@ -6,7 +6,7 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment.newAccountConfigurationFragmentDef;
+import static org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment.newCreateAccountConfigurationFragmentDef;
 
 /**
  * User: serso
@@ -30,9 +30,9 @@ public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 		switch (event.getType()) {
 			case realm_clicked:
 				if (activity.isDualPane()) {
-					mpfm.setSecondFragment(newAccountConfigurationFragmentDef(realm.getConfigurationFragmentClass(), activity, realm, false));
+					mpfm.setSecondFragment(newCreateAccountConfigurationFragmentDef(activity, realm, false));
 				} else {
-					mpfm.setMainFragment(newAccountConfigurationFragmentDef(realm.getConfigurationFragmentClass(), activity, realm, true));
+					mpfm.setMainFragment(newCreateAccountConfigurationFragmentDef(activity, realm, true));
 				}
 				break;
 			case realm_edit_finished:

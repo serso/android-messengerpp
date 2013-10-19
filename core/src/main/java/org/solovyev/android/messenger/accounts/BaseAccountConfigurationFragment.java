@@ -52,12 +52,21 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	}
 
 	@Nonnull
-	public static MultiPaneFragmentDef newAccountConfigurationFragmentDef(@Nonnull Class<? extends BaseAccountConfigurationFragment> clazz,
-																		  @Nonnull Context context,
-																		  @Nonnull Realm realm,
-																		  boolean addToBackStack) {
+	public static MultiPaneFragmentDef newEditAccountConfigurationFragmentDef(@Nonnull Context context,
+																			  @Nonnull Account account,
+																			  boolean addToBackStack) {
+		final Realm realm = account.getRealm();
 		final JPredicate<Fragment> reuseCondition = new RealmFragmentReuseCondition(realm);
-		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, clazz, context, null, reuseCondition);
+		final Bundle args = newAccountArguments(account);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, realm.getConfigurationFragmentClass(), context, args, reuseCondition);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newCreateAccountConfigurationFragmentDef(@Nonnull Context context,
+																				@Nonnull Realm realm,
+																				boolean addToBackStack) {
+		final JPredicate<Fragment> reuseCondition = new RealmFragmentReuseCondition(realm);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, realm.getConfigurationFragmentClass(), context, null, reuseCondition);
 	}
 
 
@@ -102,11 +111,6 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	protected CharSequence getFragmentTitle() {
 		final String realmName = getString(getRealm().getNameResId());
 		return getString(R.string.mpp_realm_configuration, realmName);
-	}
-
-	@Nonnull
-	public static Bundle newEditAccountArguments(@Nonnull Account account) {
-		return newAccountArguments(account);
 	}
 
 }

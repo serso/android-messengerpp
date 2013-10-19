@@ -33,7 +33,7 @@ public class RealmsFragment extends AbstractListFragment<Realm, RealmListItem> i
 		if (fragment instanceof BaseAccountConfigurationFragment) {
 			canReuse = ((BaseAccountConfigurationFragment) fragment).getRealm().equals(selectedItem.getRealm());
 		}
-		return false;
+		return canReuse;
 	}
 
 	@Nullable

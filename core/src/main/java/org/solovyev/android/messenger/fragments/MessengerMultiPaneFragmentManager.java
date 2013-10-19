@@ -92,6 +92,7 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 	}
 
 	public void clearBackStack() {
-		getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		final FragmentManager fm = getActivity().getSupportFragmentManager();
+		fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 	}
 }

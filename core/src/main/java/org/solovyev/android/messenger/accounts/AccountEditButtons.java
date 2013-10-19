@@ -25,9 +25,9 @@ public class AccountEditButtons<A extends Account<?>> extends EditButtons<BaseAc
 
 	protected void onBackButtonPressed() {
 		final BaseAccountConfigurationFragment<A> fragment = getFragment();
-		A editedRealm = fragment.getEditedAccount();
-		if (editedRealm != null) {
-			fragment.getEventManager().fire(account_edit_finished.newEvent(editedRealm, back));
+		A editedAccount = fragment.getEditedAccount();
+		if (editedAccount != null) {
+			fragment.getEventManager().fire(account_edit_finished.newEvent(editedAccount, back));
 		} else {
 			fragment.getEventManager().fire(realm_edit_finished.newEvent(fragment.getRealm()));
 		}

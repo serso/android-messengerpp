@@ -74,10 +74,10 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	}
 
 	@Nonnull
-	public static MultiPaneFragmentDef newAccountFragmentDef(@Nonnull Context context, @Nonnull Account account) {
+	public static MultiPaneFragmentDef newAccountFragmentDef(@Nonnull Context context, @Nonnull Account account, boolean addToBackStack) {
 		final Bundle args = newAccountArguments(account);
 		final JPredicate<Fragment> reuseCondition = AccountFragmentReuseCondition.forAccount(account);
-		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, true, AccountFragment.class, context, args, reuseCondition);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, AccountFragment.class, context, args, reuseCondition);
 	}
 
 	@Override

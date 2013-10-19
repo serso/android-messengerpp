@@ -2,10 +2,7 @@ package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.AbstractListFragment;
 import org.solovyev.android.messenger.Threads2;
@@ -13,7 +10,8 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class AbstractAccountsFragment extends AbstractListFragment<Account, AccountListItem> implements DetachableFragment {
 
@@ -43,7 +41,16 @@ public abstract class AbstractAccountsFragment extends AbstractListFragment<Acco
 
 	@Override
 	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull AccountListItem selectedItem) {
-		return fragment instanceof AccountFragment || fragment instanceof BaseAccountConfigurationFragment;
+		boolean canReuse = false;
+		if (fragment instanceof AccountFragment || fragment instanceof BaseAccountConfigurationFragment) {
+			final Account account = ((BaseAccountFragment) fragment).getAccount();
+			if (account == null) {
+				canReuse = false;
+			} else {
+				canReuse = account.equals(selectedItem.getAccount());
+			}
+		}
+		return canReuse;
 	}
 
 	@Override
