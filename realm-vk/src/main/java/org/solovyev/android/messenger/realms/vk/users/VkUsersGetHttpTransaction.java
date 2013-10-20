@@ -1,12 +1,7 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.solovyev.android.messenger.http.IllegalJsonException;
@@ -17,8 +12,10 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: serso
@@ -59,9 +56,8 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull VkAccount realm, @Nonnull List<User> users, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
 		return newInstancesForUserIds(realm, Lists.transform(users, new Function<User, String>() {
 			@Override
-			public String apply(@Nullable User user) {
-				assert user != null;
-				return user.getEntity().getEntityId();
+			public String apply(User user) {
+				return user.getEntity().getAccountEntityId();
 			}
 		}), apiUserFields);
 	}

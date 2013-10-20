@@ -1,11 +1,5 @@
 package org.solovyev.android.messenger.realms.vk.auth;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -17,24 +11,25 @@ import org.solovyev.android.http.HttpRuntimeIoException;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 
-/**
- * User: serso
- * Date: 4/13/13
- * Time: 11:26 PM
- */
-final class VkAccessTokenHttpTransaction extends AbstractHttpTransaction<JsonAuthResult> {
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-	// todo serso: add VkConfiguration
+public class VkOauthHttpTransaction extends AbstractHttpTransaction<JsonAuthResult> {
 
 	@Nonnull
-	private final String code;
+	private final String login;
 
-	public VkAccessTokenHttpTransaction(@Nonnull String code) {
-		super("https://api.vk.com/oauth/access_token", HttpMethod.GET);
-		this.code = code;
+	@Nonnull
+	private final String password;
+
+	public VkOauthHttpTransaction(@Nonnull String login, @Nonnull String password) {
+		super("https://api.vk.com/oauth/token", HttpMethod.GET);
+		this.login = login;
+		this.password = password;
 	}
 
-	@Nonnull
 	@Override
 	public JsonAuthResult getResponse(@Nonnull HttpResponse response) {
 		boolean ok = response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
@@ -59,11 +54,15 @@ final class VkAccessTokenHttpTransaction extends AbstractHttpTransaction<JsonAut
 	@Nonnull
 	@Override
 	public List<NameValuePair> getRequestParameters() {
-		final List<NameValuePair> result = new ArrayList<NameValuePair>();
-		result.add(new BasicNameValuePair("client_id", "2970921"));
-		result.add(new BasicNameValuePair("client_secret", "Scm7M1vxOdDjpeVj81jw"));
-		result.add(new BasicNameValuePair("code", code));
-		result.add(new BasicNameValuePair("redirect_uri", "http://oauth.vk.com/blank.html"));
-		return result;
+		final List<NameValuePair> values = new ArrayList<NameValuePair>();
+		values.add(new BasicNameValuePair("grant_type", "password"));
+		values.add(new BasicNameValuePair("client_id", "2965041"));
+		values.add(new BasicNameValuePair("client_secret", "fXK28HAI0nVRK3hNZiGs"));
+		//values.add(new BasicNameValuePair("client_id", "2970921"));
+		//values.add(new BasicNameValuePair("client_secret", "Scm7M1vxOdDjpeVj81jw"));
+		values.add(new BasicNameValuePair("username", login));
+		values.add(new BasicNameValuePair("password", password));
+		values.add(new BasicNameValuePair("scope", "friends,messages,notifications,offline,photos,audio,video,docs,notify,notes,status,groups,wall"));
+		return values;
 	}
 }

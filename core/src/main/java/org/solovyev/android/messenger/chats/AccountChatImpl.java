@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.chats;
 import com.google.common.base.Function;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 
@@ -51,7 +52,8 @@ class AccountChatImpl implements MutableAccountChat {
 	}
 
 	@Override
-	public void addMessage(@Nonnull Message message) {
+	public void addMessage(@Nonnull MutableMessage message) {
+		message.setChat(this.chat.getEntity());
 		this.messages.add(message);
 	}
 

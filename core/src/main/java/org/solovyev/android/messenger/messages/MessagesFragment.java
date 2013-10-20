@@ -171,7 +171,6 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// then call parent
 		super.onActivityCreated(savedInstanceState);
 
 		chatEventListener = new UiThreadUserChatListener();

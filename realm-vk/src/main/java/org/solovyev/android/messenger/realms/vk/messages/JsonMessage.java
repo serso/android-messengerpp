@@ -127,7 +127,7 @@ public class JsonMessage {
 	}
 
 	@Nonnull
-	public Message toMessage(@Nonnull User user,
+	public MutableMessage toMessage(@Nonnull User user,
 							 @Nullable String explicitUserId,
 							 @Nonnull Account account) throws IllegalJsonException {
 		if (mid == null || uid == null || date == null || read_state == null || out == null) {

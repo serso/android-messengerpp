@@ -1,24 +1,19 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.base.Function;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
-import org.solovyev.common.collections.Collections;
 
-import com.google.gson.Gson;
+import javax.annotation.Nonnull;
+import java.util.List;
 
-/**
- * User: serso
- * Date: 5/30/12
- * Time: 10:15 PM
- */
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.solovyev.android.messenger.realms.vk.users.JsonUsers.newFromJson;
+
 public class JsonUserConverter implements Converter<String, List<User>> {
 
 	@Nonnull
@@ -31,24 +26,18 @@ public class JsonUserConverter implements Converter<String, List<User>> {
 	@Nonnull
 	@Override
 	public List<User> convert(@Nonnull String json) {
-		final Gson gson = new Gson();
-
-		final JsonUsers jsonUsersResult = gson.fromJson(json, JsonUsers.class);
-		final List<JsonUser> jsonUsers = jsonUsersResult.getResponse();
-
-		final List<User> result = new ArrayList<User>(jsonUsers == null ? 0 : jsonUsers.size());
-
-		try {
-			if (!Collections.isEmpty(jsonUsers)) {
-				for (JsonUser jsonUser : jsonUsers) {
-					result.add(jsonUser.toUser(account));
+		final JsonUsers jsonUsersResult = newFromJson(json);
+		final List<JsonUser> jsonUsers = jsonUsersResult.getUsers();
+		return newArrayList(transform(jsonUsers, new Function<JsonUser, User>() {
+			@Override
+			public User apply(JsonUser jsonUser) {
+				try {
+					return jsonUser.toUser(account);
+				} catch (IllegalJsonException e) {
+					throw new IllegalJsonRuntimeException(e);
 				}
 			}
-		} catch (IllegalJsonException e) {
-			throw new IllegalJsonRuntimeException(e);
-		}
-
-		return result;
+		}));
 	}
 
 	@Nonnull

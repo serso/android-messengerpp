@@ -4,6 +4,7 @@ import android.util.Log;
 import com.google.gson.JsonParseException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -15,6 +16,7 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,19 +59,31 @@ public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransacti
 	public R getResponse(@Nonnull HttpResponse response) {
 		try {
 			final HttpEntity httpEntity = response.getEntity();
-			final String json = EntityUtils.toString(httpEntity);
+			final String entity = EntityUtils.toString(httpEntity);
 
-			Log.d(AbstractVkHttpTransaction.class.getSimpleName(), "Json: " + json);
+			checkStatusCode(response, entity);
+
+			Log.d(getClass().getSimpleName(), "Json: " + entity);
 
 			try {
-				return getResponseFromJson(json);
+				return getResponseFromJson(entity);
 			} catch (JsonParseException e) {
-				throw new AccountRuntimeException(account.getId(), VkResponseErrorException.newInstance(json, this));
+				throw new AccountRuntimeException(account.getId(), VkResponseErrorException.newInstance(entity, this));
 			} catch (IllegalJsonException e) {
-				throw new AccountRuntimeException(account.getId(), VkResponseErrorException.newInstance(json, this));
+				throw new AccountRuntimeException(account.getId(), VkResponseErrorException.newInstance(entity, this));
 			}
 		} catch (IOException e) {
 			throw new HttpRuntimeIoException(e);
+		}
+	}
+
+	private void checkStatusCode(@Nonnull HttpResponse response, @Nullable String entity) {
+		final int statusCode = response.getStatusLine().getStatusCode();
+		final boolean ok = statusCode == HttpStatus.SC_OK;
+		if (!ok) {
+			Log.e(getClass().getSimpleName(), "Error in HTTP request: " + createRequest().getURI());
+			Log.e(getClass().getSimpleName(), "Got response: " + entity);
+			throw new HttpRuntimeIoException(new IOException("Error status code: " + statusCode));
 		}
 	}
 

@@ -1,23 +1,19 @@
 package org.solovyev.android.messenger.realms.vk.chats;
 
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.MutableAccountChat;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.http.IllegalJsonRuntimeException;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessage;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessageTypedAttachment;
 import org.solovyev.android.messenger.realms.vk.messages.JsonMessages;
@@ -27,11 +23,12 @@ import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Function;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.solovyev.android.messenger.chats.Chats.newAccountChat;
 
@@ -92,7 +89,7 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 
 			if (!Collections.isEmpty(jsonMessages)) {
 				for (JsonMessage jsonMessage : jsonMessages) {
-					final Message message = jsonMessage.toMessage(user, explicitUserId, account);
+					final MutableMessage message = jsonMessage.toMessage(user, explicitUserId, account);
 
 					final Integer apiChatId = jsonMessage.getChat_id();
 					if (apiChatId == null && explicitChatId == null) {
@@ -103,17 +100,17 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 						if (secondUser != null) {
 							// vk allows to have messages sent to person self himself - we don't
 							if (!secondUser.getAccountEntityId().equals(user.getEntity().getAccountEntityId())) {
-								final Entity realmUser = user.getEntity();
-								final Entity realmChat = App.getChatService().getPrivateChatId(realmUser, secondUser);
+								final Entity userId = user.getEntity();
+								final Entity chatId = App.getChatService().getPrivateChatId(userId, secondUser);
 
-								MutableAccountChat chat = fakeChats.get(realmChat.getEntityId());
+								MutableAccountChat chat = fakeChats.get(chatId.getEntityId());
 								if (chat == null) {
-									chat = newAccountChat(realmChat, true);
+									chat = newAccountChat(chatId, true);
 
 									chat.addParticipant(user);
 									chat.addParticipant(userService.getUserById(secondUser));
 
-									fakeChats.put(realmChat.getEntityId(), chat);
+									fakeChats.put(chatId.getEntityId(), chat);
 								}
 
 								chat.addMessage(message);

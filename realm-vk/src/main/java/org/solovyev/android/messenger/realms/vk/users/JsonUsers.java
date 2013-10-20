@@ -1,21 +1,25 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
+import com.google.gson.Gson;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-/**
- * User: serso
- * Date: 5/30/12
- * Time: 10:16 PM
- */
 class JsonUsers {
 
 	@Nullable
 	private List<JsonUser> response;
 
-	@Nullable
-	public List<JsonUser> getResponse() {
-		return response;
+	@Nonnull
+	public List<JsonUser> getUsers() {
+		return response == null ? Collections.<JsonUser>emptyList() : response;
+	}
+
+	@Nonnull
+	static JsonUsers newFromJson(@Nonnull String json) {
+		final Gson gson = new Gson();
+		return gson.fromJson(json, JsonUsers.class);
 	}
 }

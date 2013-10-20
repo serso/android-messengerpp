@@ -125,7 +125,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		final User user = ad.getAccount().getUser();
 		final User contact = Users.newEmptyUser(ad.getAccount().newEntity("test_sdfsde5t"));
 		final Entity chat = ad.getAccount().newChatEntity("test_23123123");
-		final MutableAccountChat accountChat = newPrivateAccountChat(chat, user, contact, Collections.<Message>emptyList());
+		final MutableAccountChat accountChat = newPrivateAccountChat(chat, user, contact, Collections.<MutableMessage>emptyList());
 
 		try {
 			userService.getUserById(contact.getEntity(), false, false);

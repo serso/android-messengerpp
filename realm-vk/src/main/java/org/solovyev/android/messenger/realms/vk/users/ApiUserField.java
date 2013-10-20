@@ -1,15 +1,10 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
+import org.solovyev.common.text.Strings;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.common.text.Strings;
-
-/**
- * User: serso
- * Date: 5/30/12
- * Time: 10:09 PM
- */
 public enum ApiUserField {
 	uid,
 	first_name,

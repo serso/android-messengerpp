@@ -3,6 +3,7 @@ package org.solovyev.android.messenger.chats;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
@@ -83,14 +84,14 @@ public final class Chats {
 	public static MutableAccountChat newPrivateAccountChat(@Nonnull Entity chat,
 														   @Nonnull User user,
 														   @Nonnull User participant,
-														   @Nonnull Collection<? extends Message> messages) {
+														   @Nonnull Collection<? extends MutableMessage> messages) {
 		final MutableAccountChat result = newAccountChat(chat, true);
 
 		result.addParticipant(user);
 		result.addParticipant(participant);
 
-		for (Message message : messages) {
-			result.addMessage(message.cloneWithNewChat(chat));
+		for (MutableMessage message : messages) {
+			result.addMessage(message);
 		}
 
 		return result;

@@ -1,10 +1,10 @@
 package org.solovyev.android.messenger.security;
 
-import javax.annotation.Nonnull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.solovyev.android.messenger.realms.vk.VkConfigurationImpl;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -14,10 +14,10 @@ import org.solovyev.android.messenger.realms.vk.VkConfigurationImpl;
 public class VkAuthenticationHttpTransactionTest {
 
 	@Nonnull
-	private static final String CLIENT_ID = "2970921";
+	private static final String CLIENT_ID = "2965041";
 
 	@Nonnull
-	private static final String CLIENT_SECRET = "Scm7M1vxOdDjpeVj81jw";
+	private static final String CLIENT_SECRET = "hHbJug59sKJie78wjrH8Jdr98gtU";
 
 	@Before
 	public void setUp() throws Exception {

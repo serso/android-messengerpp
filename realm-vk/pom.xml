@@ -53,9 +53,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.7.2</version>
+			<groupId>org.solovyev.android.messenger</groupId>
+			<artifactId>android-messenger-core</artifactId>
+			<type>test-jar</type>
 		</dependency>
 
 	</dependencies>
