@@ -123,11 +123,6 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 		super(TAG, false, false);
 	}
 
-	public MessagesFragment(@Nonnull Chat chat) {
-		super(TAG, false, false);
-		this.chat = chat;
-	}
-
 	@Nonnull
 	public static MultiPaneFragmentDef newMessagesFragmentDef(@Nonnull Context context, @Nonnull Chat chat, boolean addToBackStack) {
 		final Bundle arguments = new Bundle();
