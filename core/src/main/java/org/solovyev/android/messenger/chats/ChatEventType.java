@@ -1,18 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 4:18 PM
- */
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
 public enum ChatEventType {
 	added,
 	changed,

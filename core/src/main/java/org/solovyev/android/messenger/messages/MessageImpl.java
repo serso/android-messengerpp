@@ -174,6 +174,16 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	}
 
 	@Override
+	public boolean isOutgoing() {
+		return state.isOutgoing();
+	}
+
+	@Override
+	public boolean isIncoming() {
+		return state.isIncoming();
+	}
+
+	@Override
 	public void setBody(@Nonnull String body) {
 		this.body = body;
 	}

@@ -2,18 +2,10 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import android.os.Handler;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import android.util.Log;
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
@@ -23,12 +15,13 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
+import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
@@ -54,6 +47,9 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	// VK doesn't send 'Stop typing' => this constant must be low enough
 	private static final int REMOVE_USER_START_TYPING_DELAY = 30000;
 
+	@Nonnull
+	private static final String TAG = newTag("MessagesAdapter");
+
     /*
     **********************************************************************
     *
@@ -76,8 +72,10 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	@Nonnull
 	private final Map<Entity, MessageListItem> userTypingListItems = new HashMap<Entity, MessageListItem>();
 
+	// as id might be changed in service let's use something more consistent, e.g. date as a key
+	// key: sending time, value; sending message
 	@Nonnull
-	private final Set<MessageListItem> sendingListItems = new HashSet<MessageListItem>();
+	private final Map<DateTime, MessageListItem> sendingListItems = new HashMap<DateTime, MessageListItem>();
 
 	@Nonnull
 	private final Handler uiHandler = new Handler(new Handler.Callback() {
@@ -104,6 +102,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 
 	/*@Override*/
 	public void onEvent(@Nonnull ChatEvent event) {
+		Log.d(TAG, "On event: " + event);
 		final ChatEventType type = event.getType();
 
 		if (event.getChat().equals(chat)) {
@@ -129,7 +128,8 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	}
 
 	private void onMessageChanged(@Nonnull ChatEvent event) {
-		final MessageListItem listItem = findInAllElements(event.getDataAsMessage());
+		final Message message = event.getDataAsMessage();
+		final MessageListItem listItem = findInAllElements(message);
 		if (listItem != null) {
 			listItem.onMessageChanged(event.getDataAsMessage());
 			notifyDataSetChanged();
@@ -139,7 +139,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	public void addSendingMessage(@Nonnull Message message) {
 		final MessageListItem listItem = newMessageListItem(message);
 		add(listItem);
-		sendingListItems.add(listItem);
+		sendingListItems.put(message.getSendDate(), listItem);
 	}
 
 	private void addMessages(@Nonnull List<Message> messages) {
@@ -151,12 +151,16 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 		});
 
 		for (MessageListItem listItem : listItems) {
-			if (userTypingListItems.remove(listItem.getMessage().getAuthor()) != null) {
+			final Message message = listItem.getMessage();
+			if (userTypingListItems.remove(message.getAuthor()) != null) {
 				remove(listItem);
 			}
 
-			if(sendingListItems.remove(listItem)) {
-				remove(listItem);
+			if (message.isOutgoing()) {
+				final MessageListItem removedListItem = sendingListItems.remove(message.getSendDate());
+				if(removedListItem != null) {
+					remove(removedListItem);
+				}
 			}
 		}
 

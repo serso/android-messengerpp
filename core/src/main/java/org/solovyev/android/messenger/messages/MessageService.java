@@ -32,7 +32,7 @@ public interface MessageService {
 
 	void setMessageIcon(@Nonnull Message message, @Nonnull ImageView imageView);
 
-	@Nullable
+	@Nonnull
 	Message sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountException;
 
 	@Nullable

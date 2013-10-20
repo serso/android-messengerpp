@@ -1,13 +1,6 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -15,13 +8,14 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 
-/**
- * User: serso
- * Date: 6/25/12
- * Time: 11:00 PM
- */
+
 public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTask.SendingMessage, Void, List<Message>> {
 
 	@Nonnull
@@ -41,11 +35,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 				final Context context = getContext();
 				if (context != null) {
 					assert chat.equals(sendingMessage.chat);
-
-					final Message message = sendingMessage.sendMessage();
-					if (message != null) {
-						result.add(message);
-					}
+					result.add(sendingMessage.sendMessage());
 				}
 			}
 		} catch (AccountException e) {
@@ -107,7 +97,7 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 			return attachments.add(attachment);
 		}
 
-		@Nullable
+		@Nonnull
 		public Message sendMessage() throws AccountException {
 			final MutableMessage result = createMessage();
 

@@ -5,21 +5,18 @@ import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.MessageDirection;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.messages.*;
+import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.solovyev.android.messenger.chats.MessageDirection.in;
 import static org.solovyev.android.messenger.messages.MessageState.delivered;
 import static org.solovyev.android.messenger.messages.MessageState.received;
+import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.common.text.Strings.getNotEmpty;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 1:07 PM
- */
 public class JsonMessage {
 
 	@Nullable
@@ -134,26 +131,31 @@ public class JsonMessage {
 			throw new IllegalJsonException();
 		}
 
-		final MutableMessage result = Messages.newMessage(account.newMessageEntity(mid));
+		final MutableMessage message = newMessage(account.newMessageEntity(mid));
 
 		final MessageDirection messageDirection = getMessageDirection();
-		if (messageDirection == MessageDirection.out) {
-			result.setAuthor(user.getEntity());
-			result.setRecipient(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
-		} else if (messageDirection == MessageDirection.in) {
-			result.setAuthor(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
-			result.setRecipient(user.getEntity());
+		if(messageDirection != null) {
+			switch (messageDirection) {
+				case in:
+					message.setAuthor(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
+					message.setRecipient(user.getEntity());
+					break;
+				case out:
+					message.setAuthor(user.getEntity());
+					message.setRecipient(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
+					break;
+			}
 		} else {
-			result.setAuthor(account.newUserEntity(uid));
+			message.setAuthor(account.newUserEntity(uid));
 			if (explicitUserId != null) {
-				result.setRecipient(account.newUserEntity(explicitUserId));
+				message.setRecipient(account.newUserEntity(explicitUserId));
 			}
 		}
 
-		if(getNotNullMessageDirection() == MessageDirection.in) {
-			result.setState(received);
+		if(getNotNullMessageDirection() == in) {
+			message.setState(received);
 		} else {
-			result.setState(delivered);
+			message.setState(delivered);
 		}
 
 		DateTime sendDate;
@@ -163,12 +165,12 @@ public class JsonMessage {
 			Log.e(this.getClass().getSimpleName(), "Date could not be parsed for message: " + mid + ", date: " + date);
 			sendDate = DateTime.now();
 		}
-		result.setSendDate(sendDate);
-		result.setBody(Strings.getNotEmpty(body, ""));
-		result.setTitle(Strings.getNotEmpty(title, ""));
-		result.setRead(isRead());
+		message.setSendDate(sendDate);
+		message.setBody(getNotEmpty(body, ""));
+		message.setTitle(getNotEmpty(title, ""));
+		message.setRead(isRead());
 
-		return result;
+		return message;
 	}
 
 	@Nonnull
@@ -176,7 +178,7 @@ public class JsonMessage {
 		if (Integer.valueOf(1).equals(out)) {
 			return MessageDirection.out;
 		} else {
-			return MessageDirection.in;
+			return in;
 		}
 	}
 
@@ -185,7 +187,7 @@ public class JsonMessage {
 		if (Integer.valueOf(1).equals(out)) {
 			return MessageDirection.out;
 		} else if (Integer.valueOf(0).equals(out)) {
-			return MessageDirection.in;
+			return in;
 		} else {
 			return null;
 		}

@@ -2,17 +2,10 @@ package org.solovyev.android.messenger.realms.vk;
 
 import android.app.Application;
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -21,6 +14,7 @@ import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.notifications.Notifications;
+import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
@@ -30,8 +24,11 @@ import org.solovyev.common.msg.MessageType;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
 import static org.solovyev.android.messenger.notifications.Notifications.newOpenRealmConfSolution;
@@ -101,7 +98,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
     */
 
 	public VkRealm() {
-		super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkAccountConfigurationFragment.class, VkAccountConfiguration.class, false, false, null);
+		super(REALM_ID, R.string.mpp_vk_realm_name, R.drawable.mpp_vk_icon, VkAccountConfigurationFragment.class, VkAccountConfiguration.class, true, null);
 	}
 
     /*

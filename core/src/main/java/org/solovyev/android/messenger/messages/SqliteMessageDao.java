@@ -277,7 +277,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.query("messages", null, "chat_id = ? and state <> ?", new String[]{chatId, removed.name()}, null, null, null);
+			return db.query("messages", null, "chat_id = ?", new String[]{chatId}, null, null, null);
 		}
 
 		@Nonnull

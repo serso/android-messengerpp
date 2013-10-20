@@ -25,7 +25,7 @@ public class TestRealm extends AbstractRealm {
 	public static final String REALM_ID = "test";
 
 	public TestRealm() {
-		super(REALM_ID, 0, 0, TestAccountConfigurationFragment.class, TestAccountConfiguration.class, false, false, null);
+		super(REALM_ID, 0, 0, TestAccountConfigurationFragment.class, TestAccountConfiguration.class, false, null);
 	}
 
 	@Nonnull

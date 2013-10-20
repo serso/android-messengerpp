@@ -5,7 +5,6 @@ import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperties;
-import org.solovyev.android.properties.MutableAProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,4 +67,7 @@ public interface Message extends Identifiable {
 
 	@Nonnull
 	Message cloneWithNewChat(@Nonnull Entity chat);
+
+	boolean isOutgoing();
+	boolean isIncoming();
 }

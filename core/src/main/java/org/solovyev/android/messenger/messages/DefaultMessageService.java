@@ -99,8 +99,7 @@ public class DefaultMessageService implements MessageService {
 		userService.getIconsService().setUserIcon(userService.getUserById(author), imageView);
 	}
 
-
-	@Nullable
+	@Nonnull
 	@Override
 	public Message sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountException {
 		final Account account = getAccountByUser(chat.getEntity());
@@ -109,10 +108,16 @@ public class DefaultMessageService implements MessageService {
 
 		// id returned by account
 		final String accountMessageId = sendMessage(chat, message, acs);
-		// auto-generated id
-		final String messageId = message.getEntity().getEntityId();
 
-		final MutableMessage result = newMessage(account.newMessageEntity(accountMessageId, messageId));
+		final Entity messageId;
+		if(accountMessageId.equals(NO_ACCOUNT_ID)) {
+			// auto-generated id
+			messageId = message.getEntity();
+		} else {
+			messageId = account.newMessageEntity(accountMessageId);
+		}
+
+		final MutableMessage result = newMessage(messageId);
 
 		result.setChat(chat.getEntity());
 		result.setAuthor(message.getAuthor());
@@ -130,9 +135,7 @@ public class DefaultMessageService implements MessageService {
 		result.setRead(true);
 		result.getProperties().setPropertiesFrom(message.getProperties().getPropertiesCollection());
 
-		if (realm.notifySentMessagesImmediately()) {
-			chatService.saveMessages(chat.getEntity(), asList(result));
-		}
+		chatService.saveMessages(chat.getEntity(), asList(result));
 
 		return result;
 	}
