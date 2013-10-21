@@ -68,10 +68,10 @@ public class VkGetLongPollingDataHttpTransaction extends AbstractHttpTransaction
 		result.add(new BasicNameValuePair("act", "a_check"));
 		result.add(new BasicNameValuePair("key", longPollServerData.getKey()));
 		result.add(new BasicNameValuePair("ts", String.valueOf(longPollServerData.getTimeStamp())));
-		result.add(new BasicNameValuePair("wait", "25"));
+		result.add(new BasicNameValuePair("wait", "20"));
 		result.add(new BasicNameValuePair("mode", "0"));
 		//todo serso: check if necessary
-		result.add(new BasicNameValuePair(CoreConnectionPNames.CONNECTION_TIMEOUT, "30000"));
+		result.add(new BasicNameValuePair(CoreConnectionPNames.SO_TIMEOUT, "30000"));
 
 		return result;
 	}

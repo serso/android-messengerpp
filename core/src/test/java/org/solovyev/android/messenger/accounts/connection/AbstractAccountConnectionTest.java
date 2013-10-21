@@ -16,12 +16,12 @@ import static org.mockito.Mockito.mock;
 public class AbstractAccountConnectionTest {
 
 	@Test
-	public void testStartShouldNotBeCalledIfAlreadyStarted() throws Exception {
+	public void testStartShouldBeCalledIfAlreadyStarted() throws Exception {
 		final TestAccountConnection connection = new TestAccountConnection();
 		connection.start();
 		assertEquals(1, connection.startCounter.get());
 		connection.start();
-		assertEquals(1, connection.startCounter.get());
+		assertEquals(2, connection.startCounter.get());
 	}
 
 	@Test

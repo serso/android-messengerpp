@@ -5,20 +5,18 @@ import android.util.Log;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
 import org.solovyev.android.messenger.users.User;
 
-/**
- * User: serso
- * Date: 7/25/12
- * Time: 5:53 PM
- */
+import static org.solovyev.android.messenger.App.newTag;
+
 public abstract class LongPollAccountConnection extends AbstractAccountConnection<Account> {
 
-	public static final String TAG = "LongPolling";
+	public static final String TAG = newTag("LongPolling");
 	@Nonnull
 	private final RealmLongPollService realmLongPollService;
 

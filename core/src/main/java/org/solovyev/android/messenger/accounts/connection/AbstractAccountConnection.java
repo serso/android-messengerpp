@@ -55,12 +55,9 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 
 	@Override
 	public final void start() throws AccountConnectionException {
-		if(stopped.compareAndSet(true, false)) {
-			Log.d(TAG, "Trying to start connection");
-			start0();
-		} else {
-			Log.d(TAG, "Connection is already started");
-		}
+		stopped.compareAndSet(true, false);
+
+		start0();
 	}
 
 	protected abstract void start0() throws AccountConnectionException;
