@@ -174,6 +174,24 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	}
 
 	@Override
+	public MutableMessage cloneAndMerge(@Nonnull Message that) {
+		if(this == that) {
+			return this;
+		} else {
+			final MessageImpl clone = clone();
+			// NOTE: date, author, recipient, id, chat cannot be changed => do not apply them from that instance
+			if (!clone.read) {
+				clone.read = that.isRead();
+			}
+			clone.state = that.getState();
+			clone.body = that.getBody();
+			clone.title = that.getTitle();
+			clone.properties.setPropertiesFrom(that.getProperties().getPropertiesCollection());
+			return clone;
+		}
+	}
+
+	@Override
 	public boolean isOutgoing() {
 		return state.isOutgoing();
 	}

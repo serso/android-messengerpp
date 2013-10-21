@@ -438,7 +438,7 @@ public class DefaultChatService implements ChatService {
 		if (chat != null) {
 			final MergeDaoResult<Message, String> result;
 			synchronized (lock) {
-				result = getMessageDao().mergeMessages(chat.getId(), messages, false);
+				result = getMessageDao().mergeMessages(chat.getId(), messages);
 
 				// update sync data
 				if (updateChatSyncDate) {

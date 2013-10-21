@@ -73,19 +73,19 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 		messages.add(newMessage("02", false));
 		messages.add(newMessage("03", true));
 		messages.add(newMessage("04", true));
-		messageDao.mergeMessages(realmChat4.getEntityId(), messages, false);
+		messageDao.mergeMessages(realmChat4.getEntityId(), messages);
 
 		messages = new ArrayList<MutableMessage>();
 		messages.add(newMessage("07", true));
 		messages.add(newMessage("08", false));
 		messages.add(newMessage("09", true));
 		messages.add(newMessage("06", true));
-		messageDao.mergeMessages(realmChat1.getEntityId(), messages, false);
+		messageDao.mergeMessages(realmChat1.getEntityId(), messages);
 
 		messages = new ArrayList<MutableMessage>();
 		messages.add(newMessage("10", true));
 		messages.add(newMessage("11", true));
-		messageDao.mergeMessages(realmChat2.getEntityId(), messages, false);
+		messageDao.mergeMessages(realmChat2.getEntityId(), messages);
 
 		final Map<Entity, Integer> actualUnreadChats = chatDao.getUnreadChats();
 		assertFalse(actualUnreadChats.isEmpty());

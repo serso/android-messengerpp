@@ -17,12 +17,10 @@ import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
-import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
-import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
@@ -38,13 +36,10 @@ import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.getFirst;
 import static org.solovyev.android.db.AndroidDbUtils.*;
+import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.MessageState.removed;
 
-/**
- * User: serso
- * Date: 6/11/12
- * Time: 7:41 PM
- */
+
 @Singleton
 public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao {
 
@@ -188,43 +183,23 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages, boolean allowDelete) {
+	public MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages) {
 		final MergeDaoResultImpl<Message, String> result = new MergeDaoResultImpl<Message, String>();
 
-		final Chat chat = getChatService().getChatById(Entities.newEntityFromEntityId(chatId));
+		final Chat chat = getChatService().getChatById(newEntityFromEntityId(chatId));
 
 		if (chat != null) {
-			final List<String> messageIdsFromDb = readMessageIds(chatId);
-			for (final String messageIdFromDb : messageIdsFromDb) {
-				try {
-					// message exists both in db and on remote server => just update message properties
-					result.addUpdatedObject(find(messages, new MessageByIdFinder(messageIdFromDb)));
-				} catch (NoSuchElementException e) {
-					// message was removed on remote server => need to remove from local db
-					result.addRemovedObjectId(messageIdFromDb);
-				}
-			}
-
 			for (Message message : messages) {
-				try {
-					// message exists both in db and on remote server => case already covered above
-					find(messageIdsFromDb, equalTo(message.getEntity().getEntityId()));
-				} catch (NoSuchElementException e) {
-					// message was added on remote server => need to add to local db
-					if (!messageIdsFromDb.contains(message.getEntity().getEntityId())) {
-						// no message information in local db is available - full message insertion
-						result.addAddedObject(message);
-					}
+				final Message messageFromDb = read(message.getId());
+				if (messageFromDb == null) {
+					result.addAddedObject(message);
+				} else {
+					final Message mergedMessage = messageFromDb.cloneAndMerge(message);
+					result.addUpdatedObject(mergedMessage);
 				}
 			}
 
 			final List<DbExec> execs = new ArrayList<DbExec>();
-
-			if (allowDelete) {
-				if (!result.getRemovedObjectIds().isEmpty()) {
-					execs.addAll(RemoveMessages.newInstances(result.getRemovedObjectIds()));
-				}
-			}
 
 			for (Message updatedMessage : result.getUpdatedObjects()) {
 				execs.add(new UpdateMessage(updatedMessage));
@@ -331,32 +306,6 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 			final ContentValues values = toContentValues(message);
 
 			return db.update("messages", values, "id = ?", new String[]{String.valueOf(message.getEntity().getEntityId())});
-		}
-	}
-
-	private static final class RemoveMessages implements DbExec {
-
-		@Nonnull
-		private List<String> messagesIds;
-
-		private RemoveMessages(@Nonnull List<String> messagesIds) {
-			this.messagesIds = messagesIds;
-		}
-
-		@Nonnull
-		private static List<RemoveMessages> newInstances(@Nonnull List<String> messagesIds) {
-			final List<RemoveMessages> result = new ArrayList<RemoveMessages>();
-
-			for (List<String> messagesIdsChunk : Collections.split(messagesIds, MAX_IN_COUNT)) {
-				result.add(new RemoveMessages(messagesIdsChunk));
-			}
-
-			return result;
-		}
-
-		@Override
-		public long exec(@Nonnull SQLiteDatabase db) {
-			return db.delete("messages", "chat_id in " + inClause(messagesIds), inClauseValues(messagesIds));
 		}
 	}
 

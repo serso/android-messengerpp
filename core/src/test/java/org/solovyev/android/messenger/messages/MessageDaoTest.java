@@ -57,11 +57,11 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 		messages.add(newMockMessage(now.plusDays(1), from, to, account, chat.getId()));
 		messages.add(newMockMessage(now.plusDays(2), from, to, account, chat.getId()));
 		messages.add(newMockMessage(now.plusDays(3), from, to, account, chat.getId()));
-		dao.mergeMessages(chat.getId(), messages, false);
+		dao.mergeMessages(chat.getId(), messages);
 
 		checkLastMessage(chat, now.plusDays(3));
 
-		dao.mergeMessages(chat.getId(), Arrays.asList(newMockMessage(now.plusDays(4), from, to, account, chat.getId())), false);
+		dao.mergeMessages(chat.getId(), Arrays.asList(newMockMessage(now.plusDays(4), from, to, account, chat.getId())));
 		checkLastMessage(chat, now.plusDays(4));
 	}
 
@@ -71,7 +71,7 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 		final AccountChat chat = ad.getChats().get(0);
 
 		final MutableMessage expected = newMessageWithProperties(ad);
-		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected), false);
+		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected));
 
 		final Message actual = dao.read(expected.getId());
 		assertEquals("test", actual.getProperties().getPropertyValue("property_1"));
@@ -85,11 +85,11 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 		final AccountChat chat = ad.getChats().get(0);
 
 		final MutableMessage expected = newMessageWithProperties(ad);
-		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected), false);
+		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected));
 
 		expected.getProperties().setProperty("property_1", "test2");
 		expected.getProperties().removeProperty("property_2");
-		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected), false);
+		dao.mergeMessages(chat.getChat().getId(), Arrays.asList(expected));
 
 
 		final Message actual = dao.read(expected.getId());

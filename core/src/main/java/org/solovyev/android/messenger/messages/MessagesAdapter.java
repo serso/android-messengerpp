@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
@@ -19,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.App.newTag;
@@ -84,7 +84,14 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 			switch (msg.what) {
 				case REMOVE_USER_START_TYPING_ID:
 					final MessageListItem listItem = (MessageListItem) msg.obj;
-					remove(listItem);
+					doWork(new Runnable() {
+						@Override
+						public void run() {
+							while (findInAllElements(listItem) != null) {
+								remove(listItem);
+							}
+						}
+					});
 					userTypingListItems.remove(listItem.getMessage().getAuthor());
 					return true;
 
@@ -136,6 +143,15 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 		}
 	}
 
+	private void removeSendingListItem(Message message) {
+		if (message.isOutgoing()) {
+			final MessageListItem removedListItem = sendingListItems.remove(message.getSendDate());
+			if(removedListItem != null) {
+				remove(removedListItem);
+			}
+		}
+	}
+
 	public void addSendingMessage(@Nonnull Message message) {
 		final MessageListItem listItem = newMessageListItem(message);
 		add(listItem);
@@ -156,12 +172,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 				remove(listItem);
 			}
 
-			if (message.isOutgoing()) {
-				final MessageListItem removedListItem = sendingListItems.remove(message.getSendDate());
-				if(removedListItem != null) {
-					remove(removedListItem);
-				}
-			}
+			removeSendingListItem(message);
 		}
 
 		addAll(listItems);
@@ -235,7 +246,12 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 
 	@Nullable
 	private MessageListItem findInAllElements(@Nonnull Message message) {
-		return Iterables.find(getAllElements(), Predicates.<MessageListItem>equalTo(newMessageListItem(message)), null);
+		return findInAllElements(newMessageListItem(message));
+	}
+
+	@Nullable
+	private MessageListItem findInAllElements(@Nonnull MessageListItem listItem) {
+		return find(getAllElements(), Predicates.<MessageListItem>equalTo(listItem), null);
 	}
 
 	@Nonnull

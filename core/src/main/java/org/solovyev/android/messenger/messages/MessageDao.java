@@ -23,7 +23,7 @@ public interface MessageDao extends Dao<Message> {
 	List<Message> readMessages(@Nonnull String chatId);
 
 	@Nonnull
-	MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages, boolean allowDelete);
+	MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages);
 
 	@Nonnull
 	List<String> readMessageIds(@Nonnull String chatId);

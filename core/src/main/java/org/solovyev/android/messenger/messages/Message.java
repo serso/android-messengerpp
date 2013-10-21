@@ -71,5 +71,8 @@ public interface Message extends Identifiable {
 	Message cloneWithNewChat(@Nonnull Entity chat);
 
 	boolean isOutgoing();
+
 	boolean isIncoming();
+
+	Message cloneAndMerge(@Nonnull Message that);
 }
