@@ -62,6 +62,8 @@ public interface Message extends Identifiable {
 
 	boolean isRead();
 
+	boolean canRead();
+
 	@Nonnull
 	AProperties getProperties();
 

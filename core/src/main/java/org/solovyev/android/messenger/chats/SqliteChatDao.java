@@ -459,7 +459,11 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery("select c.id, c.account_id, c.realm_chat_id, count(*) from chats c, messages m where c.id = m.chat_id and m.read = 0 group by c.id, c.account_id, c.realm_chat_id", null);
+			return db.rawQuery(	"select c.id, c.account_id, c.realm_chat_id, count(*) from chats c, messages m " +
+								"where c.id = m.chat_id " +
+								"and m.read = 0 " +
+								"and m.state = 'received' " +
+								"group by c.id, c.account_id, c.realm_chat_id", null);
 		}
 
 		@Nonnull

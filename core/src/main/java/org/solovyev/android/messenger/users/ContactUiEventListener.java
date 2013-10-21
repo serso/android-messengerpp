@@ -94,7 +94,7 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 		final Chat chat = getChatService().getPrivateChat(account.getUser().getEntity(), contact.getEntity());
 		if (chat != null) {
 			for (Message message : getMessageService().getMessages(chat.getEntity())) {
-				if(!message.isRead()) {
+				if (message.canRead()) {
 					getEventManager(activity).fire(chat_message_read.newEvent(chat, message.cloneRead()));
 				}
 			}

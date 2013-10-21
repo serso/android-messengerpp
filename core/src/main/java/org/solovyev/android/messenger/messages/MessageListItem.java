@@ -111,7 +111,7 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 
 		MessageBubbleViews.fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage, false, style);
 
-		if (!message.isRead()) {
+		if (message.canRead()) {
 			final Message readMessage = message.cloneRead();
 			setData(readMessage);
 			getEventManager(context).fire(chat_message_read.newEvent(chat, readMessage));

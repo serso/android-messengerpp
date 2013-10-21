@@ -236,6 +236,11 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	}
 
 	@Override
+	public boolean canRead() {
+		return isIncoming() && !isRead();
+	}
+
+	@Override
 	public void setRead(boolean read) {
 		this.read = read;
 	}
