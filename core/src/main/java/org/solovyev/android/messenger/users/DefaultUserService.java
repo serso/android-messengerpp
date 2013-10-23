@@ -2,10 +2,17 @@ package org.solovyev.android.messenger.users;
 
 import android.app.Application;
 import android.util.Log;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.Executor;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
@@ -25,12 +32,14 @@ import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.concurrent.Executor;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import static com.google.common.collect.Iterables.*;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -38,14 +47,13 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
-import static org.solovyev.android.messenger.users.UserEventType.*;
+import static org.solovyev.android.messenger.users.UserEventType.added;
+import static org.solovyev.android.messenger.users.UserEventType.changed;
+import static org.solovyev.android.messenger.users.UserEventType.chat_removed;
+import static org.solovyev.android.messenger.users.UserEventType.contact_removed;
+import static org.solovyev.android.messenger.users.UserEventType.contacts_changed;
+import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
-
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 10:30 PM
- */
 
 @Singleton
 public class DefaultUserService implements UserService {
@@ -222,7 +230,9 @@ public class DefaultUserService implements UserService {
 					userDao.delete(user);
 				}
 				listeners.fireEvent(contact_removed.newEvent(accountUser, user.getId()));
+
 				final Entity chat = chatService.getPrivateChatId(accountUser.getEntity(), user.getEntity());
+				chatService.removeChat(chat);
 				listeners.fireEvent(chat_removed.newEvent(accountUser, chat.getEntityId()));
 			}
 		}

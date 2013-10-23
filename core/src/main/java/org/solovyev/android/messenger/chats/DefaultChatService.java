@@ -3,21 +3,38 @@ package org.solovyev.android.messenger.chats;
 import android.app.Application;
 import android.util.Log;
 import android.widget.ImageView;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.Executor;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.accounts.*;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountRuntimeException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.*;
-import org.solovyev.android.messenger.users.*;
+import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MessageDao;
+import org.solovyev.android.messenger.messages.MessageService;
+import org.solovyev.android.messenger.messages.MessageState;
+import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
+import org.solovyev.android.messenger.users.PersistenceLock;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserEvent;
+import org.solovyev.android.messenger.users.UserEventType;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -25,11 +42,13 @@ import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import java.util.*;
-import java.util.concurrent.Executor;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
@@ -550,6 +569,11 @@ public class DefaultChatService implements ChatService {
 				chatDao.delete(user, chat);
 			}
 		}
+	}
+
+	@Override
+	public void removeChat(@Nonnull Entity chat) {
+		chatDao.deleteById(chat.getEntityId());
 	}
 
 	@Override

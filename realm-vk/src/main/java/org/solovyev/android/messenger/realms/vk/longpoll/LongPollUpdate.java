@@ -112,7 +112,7 @@ public interface LongPollUpdate {
 			if (!user.getEntity().getAccountEntityId().equals(realmUserId)) {
 				Chat chat = getChatService().getChatById(account.newChatEntity(realmChatId));
 				if (chat != null) {
-					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, account.newUserEntity(realmUserId)));
+					getChatService().fireEvent(ChatEventType.user_is_typing.newEvent(chat, account.newUserEntity(realmUserId)));
 				}
 			}
 		}
@@ -142,7 +142,7 @@ public interface LongPollUpdate {
 				final Entity realmChat = getChatService().getPrivateChatId(user.getEntity(), secondRealmUser);
 				Chat chat = getChatService().getChatById(realmChat);
 				if (chat != null) {
-					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, secondRealmUser));
+					getChatService().fireEvent(ChatEventType.user_is_typing.newEvent(chat, secondRealmUser));
 				}
 			}
 		}

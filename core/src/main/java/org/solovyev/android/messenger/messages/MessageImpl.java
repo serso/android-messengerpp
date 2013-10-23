@@ -270,4 +270,16 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 		clone.read = true;
 		return clone;
 	}
+
+	@Override
+	public String toString() {
+		return "Message{" +
+				"id=" + getEntity() +
+				", chat=" + chat +
+				", body='" + body + '\'' +
+				", recipient=" + recipient +
+				", author=" + author +
+				", sendDate=" + sendDate +
+				'}';
+	}
 }

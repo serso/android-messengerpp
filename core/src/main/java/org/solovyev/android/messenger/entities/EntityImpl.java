@@ -181,21 +181,6 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Mutab
 
 	@Override
 	public String toString() {
-		return "Entity{" +
-				"accountId='" + accountId + '\'' +
-				", realmId='" + realmId + '\'' +
-				", accountEntityId='" + accountEntityId + '\'' +
-				", appAccountEntityId='" + appAccountEntityId + '\'' +
-				", entityId='" + entityId + '\'' +
-				'}';
+		return "Entity{id=" + entityId + "}";
 	}
-
-	/*
-    **********************************************************************
-    *
-    *                           STATIC
-    *
-    **********************************************************************
-    */
-
 }

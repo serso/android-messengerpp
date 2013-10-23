@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.messages;
 
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
@@ -94,7 +95,8 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 
 		final Message actual = dao.read(expected.getId());
 		assertEquals("test2", actual.getProperties().getPropertyValue("property_1"));
-		assertNull(actual.getProperties().getPropertyValue("property_2"));
+		// properties now are not removed in merge procedure
+		assertNotNull(actual.getProperties().getPropertyValue("property_2"));
 	}
 
 	private MutableMessage newMessageWithProperties(AccountData ad) {

@@ -10,11 +10,6 @@ import org.robolectric.RobolectricTestRunner;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 2/27/13
- * Time: 10:16 PM
- */
 @RunWith(RobolectricTestRunner.class)
 public abstract class AbstractMessengerTest {
 

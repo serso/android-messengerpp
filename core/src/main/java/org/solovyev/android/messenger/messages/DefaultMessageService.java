@@ -10,7 +10,6 @@ import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.UserService;
 
@@ -21,9 +20,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
-import static org.solovyev.android.messenger.messages.MessageState.sending;
-import static org.solovyev.android.messenger.messages.MessageState.sent;
-import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.android.messenger.messages.Messages.copySentMessage;
 
 /**
  * User: serso
@@ -103,37 +100,12 @@ public class DefaultMessageService implements MessageService {
 	@Override
 	public Message sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountException {
 		final Account account = getAccountByUser(chat.getEntity());
-		final Realm realm = account.getRealm();
 		final AccountChatService acs = account.getAccountChatService();
 
 		// id returned by account
 		final String accountMessageId = sendMessage(chat, message, acs);
 
-		final Entity messageId;
-		if(accountMessageId.equals(NO_ACCOUNT_ID)) {
-			// auto-generated id
-			messageId = message.getEntity();
-		} else {
-			messageId = account.newMessageEntity(accountMessageId);
-		}
-
-		final MutableMessage result = newMessage(messageId);
-
-		result.setChat(chat.getEntity());
-		result.setAuthor(message.getAuthor());
-		if(message.isPrivate()) {
-			result.setRecipient(message.getRecipient());
-		}
-		result.setBody(message.getBody());
-		result.setTitle(message.getTitle());
-		result.setSendDate(message.getSendDate());
-		if(realm.shouldWaitForDeliveryReport()) {
-			result.setState(sending);
-		} else {
-			result.setState(sent);
-		}
-		result.setRead(true);
-		result.getProperties().setPropertiesFrom(message.getProperties().getPropertiesCollection());
+		final MutableMessage result = copySentMessage(message, account, accountMessageId);
 
 		chatService.saveMessages(chat.getEntity(), asList(result));
 

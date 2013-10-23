@@ -58,9 +58,9 @@ final class XmppMessageListener implements ChatStateListener {
 			if (chat != null && chat.isPrivate()) {
 				final Entity participant = chat.getSecondUser();
 				if (state == ChatState.composing) {
-					getChatService().fireEvent(ChatEventType.user_starts_typing.newEvent(chat, participant));
+					getChatService().fireEvent(ChatEventType.user_is_typing.newEvent(chat, participant));
 				} else {
-					getChatService().fireEvent(ChatEventType.user_stops_typing.newEvent(chat, participant));
+					getChatService().fireEvent(ChatEventType.user_is_not_typing.newEvent(chat, participant));
 				}
 			}
 		}

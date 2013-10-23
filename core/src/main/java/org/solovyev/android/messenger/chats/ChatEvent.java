@@ -8,11 +8,6 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.common.listeners.AbstractTypedJEvent;
 
-/**
- * User: serso
- * Date: 3/10/13
- * Time: 2:41 PM
- */
 public class ChatEvent extends AbstractTypedJEvent<Chat, ChatEventType> {
 
 	ChatEvent(@Nonnull Chat chat, @Nonnull ChatEventType type, Object data) {
@@ -42,5 +37,10 @@ public class ChatEvent extends AbstractTypedJEvent<Chat, ChatEventType> {
 	@Nonnull
 	public Entity getDataAsEntity() {
 		return (Entity) getData();
+	}
+
+	@Override
+	public String toString() {
+		return "ChatEvent{chat=" + getChat().getId() + ", type=" + getType() + ", data=" + getData() + "}";
 	}
 }

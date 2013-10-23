@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.common.text.Strings;
@@ -18,10 +19,12 @@ import java.util.TimeZone;
 import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.shortDate;
 import static org.joda.time.format.DateTimeFormat.shortTime;
+import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.MessageState.received;
 import static org.solovyev.android.messenger.messages.MessageState.sending;
+import static org.solovyev.android.messenger.messages.MessageState.sent;
 
 /**
  * User: serso
@@ -151,5 +154,36 @@ public final class Messages {
 		} else {
 			return lm.getSendDate().compareTo(rm.getSendDate());
 		}
+	}
+
+	@Nonnull
+	static MutableMessage copySentMessage(@Nonnull Message message, @Nonnull Account account, @Nonnull String accountMessageId) {
+		final Realm realm = account.getRealm();
+		final Entity messageId;
+		if(accountMessageId.equals(NO_ACCOUNT_ID)) {
+			// auto-generated id
+			messageId = message.getEntity();
+		} else {
+			messageId = account.newMessageEntity(accountMessageId);
+		}
+
+		final MutableMessage result = newMessage(messageId);
+
+		result.setChat(message.getChat());
+		result.setAuthor(message.getAuthor());
+		if(message.isPrivate()) {
+			result.setRecipient(message.getRecipient());
+		}
+		result.setBody(message.getBody());
+		result.setTitle(message.getTitle());
+		result.setSendDate(message.getSendDate());
+		if(realm.shouldWaitForDeliveryReport()) {
+			result.setState(sending);
+		} else {
+			result.setState(sent);
+		}
+		result.setRead(true);
+		result.getProperties().setPropertiesFrom(message.getProperties().getPropertiesCollection());
+		return result;
 	}
 }

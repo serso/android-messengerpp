@@ -14,7 +14,13 @@ public enum ChatEventType {
 	participant_added,
 	participant_removed,
 
-	message_added,
+	message_added {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof Message;
+		}
+	},
+
 	message_added_batch {
 		@Override
 		protected void checkData(@Nullable Object data) {
@@ -23,7 +29,12 @@ public enum ChatEventType {
 	},
 
 	// data == changed message for chat
-	message_state_changed,
+	message_state_changed {
+		@Override
+		protected void checkData(@Nullable Object data) {
+			assert data instanceof Message;
+		}
+	},
 
 	// data == changed message for chat
 	message_changed {
@@ -42,7 +53,7 @@ public enum ChatEventType {
 	},
 
 	// data == user which start typing in chat
-	user_starts_typing {
+	user_is_typing {
 		@Override
 		protected void checkData(@Nullable Object data) {
 			assert data instanceof Entity;
@@ -50,7 +61,7 @@ public enum ChatEventType {
 	},
 
 	// data == user which stop typing in chat
-	user_stops_typing {
+	user_is_not_typing {
 		@Override
 		protected void checkData(@Nullable Object data) {
 			assert data instanceof Entity;

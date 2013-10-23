@@ -10,7 +10,6 @@ import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
@@ -25,11 +24,6 @@ import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
-/**
- * User: serso
- * Date: 6/10/12
- * Time: 11:27 PM
- */
 public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*implements ChatEventListener, UserEventListener*/ {
 
     /*
@@ -49,6 +43,8 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 
 	@Nonnull
 	private static final String TAG = newTag("MessagesAdapter");
+
+	/*private*/ static final String TYPING_POSTFIX = "_typing";
 
     /*
     **********************************************************************
@@ -84,14 +80,9 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 			switch (msg.what) {
 				case REMOVE_USER_START_TYPING_ID:
 					final MessageListItem listItem = (MessageListItem) msg.obj;
-					doWork(new Runnable() {
-						@Override
-						public void run() {
-							while (findInAllElements(listItem) != null) {
-								remove(listItem);
-							}
-						}
-					});
+					while (findInAllElements(listItem) != null) {
+						remove(listItem);
+					}
 					userTypingListItems.remove(listItem.getMessage().getAuthor());
 					return true;
 
@@ -126,8 +117,8 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 				case message_changed:
 					onMessageChanged(event);
 					break;
-				case user_starts_typing:
-				case user_stops_typing:
+				case user_is_typing:
+				case user_is_not_typing:
 					onTypingEvent(type, event.getDataAsEntity(), chat);
 					break;
 			}
@@ -143,16 +134,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 		}
 	}
 
-	private void removeSendingListItem(Message message) {
-		if (message.isOutgoing()) {
-			final MessageListItem removedListItem = sendingListItems.remove(message.getSendDate());
-			if(removedListItem != null) {
-				remove(removedListItem);
-			}
-		}
-	}
-
-	public void addSendingMessage(@Nonnull Message message) {
+	void addSendingMessage(@Nonnull Message message) {
 		final MessageListItem listItem = newMessageListItem(message);
 		add(listItem);
 		sendingListItems.put(message.getSendDate(), listItem);
@@ -168,14 +150,29 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 
 		for (MessageListItem listItem : listItems) {
 			final Message message = listItem.getMessage();
-			if (userTypingListItems.remove(message.getAuthor()) != null) {
-				remove(listItem);
-			}
-
+			removeTypingListItem(message);
 			removeSendingListItem(message);
 		}
 
 		addAll(listItems);
+	}
+
+	private void removeTypingListItem(@Nonnull Message message) {
+		if (message.isIncoming()) {
+			final MessageListItem typingListItem = userTypingListItems.remove(message.getAuthor());
+			if (typingListItem != null) {
+				remove(typingListItem);
+			}
+		}
+	}
+
+	private void removeSendingListItem(Message message) {
+		if (message.isOutgoing()) {
+			final MessageListItem sendingListItem = sendingListItems.remove(message.getSendDate());
+			if(sendingListItem != null) {
+				remove(sendingListItem);
+			}
+		}
 	}
 
 	private void onMessageStateChanged(@Nonnull ChatEvent event) {
@@ -198,16 +195,16 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 
 	private void onTypingEvent(@Nonnull ChatEventType type, @Nonnull Entity user, @Nonnull Chat chat) {
 		MessageListItem listItem = userTypingListItems.get(user);
-		if (type == ChatEventType.user_starts_typing) {
+		if (type == ChatEventType.user_is_typing) {
 			if (listItem == null) {
 				// 'Typing' message is not shown yet => show it
 
 				// create fake message
-				final MutableMessage message = newMessage(newEntityFromEntityId(user.getEntityId() + "_typing"));
+				final MutableMessage message = newMessage(newEntityFromEntityId(user.getEntityId() + TYPING_POSTFIX));
 				message.setChat(chat.getEntity());
 				message.setSendDate(DateTime.now());
 				message.setAuthor(user);
-				message.setBody(getContext().getString(R.string.mpp_user_is_typing));
+				//message.setBody(getContext().getString(R.string.mpp_user_is_typing));
 				message.setRead(true);
 
 				// create fake list item
