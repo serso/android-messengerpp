@@ -90,6 +90,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 
 		if (activity.isDualPane()) {
+			fm.clearBackStack();
 			fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
 			if (activity.isTriplePane()) {
 				if (chat.isPrivate()) {

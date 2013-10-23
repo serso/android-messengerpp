@@ -41,11 +41,6 @@ import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager.tabFragments;
 
-/**
- * User: serso
- * Date: 6/1/12
- * Time: 7:28 PM
- */
 public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity {
 
     /*
@@ -226,25 +221,14 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
 
+		// menu must be initialized before fragments as some fragments might add entries to menu
+		this.menu = new MainMenu(new HomeButtonListener());
+
 		if (showActionBarTabs) {
 			initTabs(savedInstanceState);
 		}
 
 		initFragments();
-
-		this.menu = new MainMenu(new Runnable() {
-			@Override
-			public void run() {
-				if (actionBarIconAsUp) {
-					if (!multiPaneFragmentManager.goBackImmediately()) {
-						final ActionBar.Tab tab = findTabByTag(PrimaryFragment.contacts.getFragmentTag());
-						if (tab != null) {
-							tab.select();
-						}
-					}
-				}
-			}
-		});
 
 		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
 		this.messengerListeners.addListener(messengerEventListener);
@@ -530,7 +514,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		return this.menu.onPrepareOptionsMenu(this, menu);
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		return this.menu.onCreateOptionsMenu(this, menu);
@@ -590,6 +573,20 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		@Override
 		protected void onSwipeToLeft() {
 			changeTab(true);
+		}
+	}
+
+	private class HomeButtonListener implements Runnable {
+		@Override
+		public void run() {
+			if (actionBarIconAsUp) {
+				if (!multiPaneFragmentManager.goBackImmediately()) {
+					final ActionBar.Tab tab = findTabByTag(PrimaryFragment.contacts.getFragmentTag());
+					if (tab != null) {
+						tab.select();
+					}
+				}
+			}
 		}
 	}
 }

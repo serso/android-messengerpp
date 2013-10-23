@@ -16,7 +16,7 @@ public class UserSaverCallback implements ContextCallback<BaseFragmentActivity, 
 
 	@Override
 	public void onSuccess(@Nonnull BaseFragmentActivity context, User result) {
-		context.getMultiPaneFragmentManager().clearBackStack();
+		context.getMultiPaneFragmentManager().goBack();
 	}
 
 	@Override

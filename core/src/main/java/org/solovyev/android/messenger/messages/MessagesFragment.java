@@ -13,10 +13,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.menu.AMenuItem;
+import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.menu.IdentifiableMenuItem;
+import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -27,13 +35,16 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.users.ContactUiEvent;
+import org.solovyev.android.messenger.users.ContactUiEventType;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
+import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.JPredicate;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -42,6 +53,7 @@ import roboguice.event.EventListener;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -53,11 +65,6 @@ import static org.solovyev.android.messenger.notifications.Notifications.newUnde
 import static org.solovyev.common.text.Strings.isEmpty;
 import static org.solovyev.common.text.Strings.toHtml;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 5:38 PM
- */
 public final class MessagesFragment extends BaseListFragment<Message, MessageListItem> implements PullToRefreshListViewProvider {
 
 	/*
@@ -116,8 +123,9 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 	@Nullable
 	private JEventListener<ChatEvent> chatEventListener;
 
-
 	private EditText messageBody;
+
+	private ActivityMenu<Menu, MenuItem> menu;
 
 	public MessagesFragment() {
 		super(TAG, false, false);
@@ -162,6 +170,8 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 			App.getExceptionHandler().handleException(e);
 			Activities.restartActivity(getActivity());
 		}
+
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -534,4 +544,65 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 		}
 	}
 
+
+	/*
+	**********************************************************************
+    *
+    *                           MENU
+    *
+    **********************************************************************
+    */
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return this.menu.onOptionsItemSelected(this.getActivity(), item);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
+
+		final EditContactMenuItem editContactMenuItem = new EditContactMenuItem();
+		menuItems.add(editContactMenuItem);
+
+		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_messages, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
+			@Override
+			public boolean apply(@Nullable AMenuItem<MenuItem> menuItem) {
+				if(menuItem == editContactMenuItem) {
+					if(chat.isPrivate() && account.getRealm().canEditUsers()) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+	}
+
+	private class EditContactMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_edit_contact;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
+			if(chat.isPrivate() && account.getRealm().canEditUsers()) {
+				final Entity contactId = chatService.getSecondUser(chat);
+				if (contactId != null) {
+					final User contact = getUserService().getUserById(contactId);
+					getEventManager().fire(ContactUiEventType.edit_contact.newEvent(contact));
+				}
+			}
+		}
+	}
 }
