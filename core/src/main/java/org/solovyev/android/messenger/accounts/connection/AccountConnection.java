@@ -38,4 +38,6 @@ public interface AccountConnection {
 	boolean isStopped();
 
 	boolean isInternetConnectionRequired();
+
+	int getRetryCount();
 }

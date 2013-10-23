@@ -5,7 +5,6 @@ import android.util.Log;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -17,13 +16,15 @@ import static org.solovyev.android.messenger.App.newTag;
 public abstract class LongPollAccountConnection extends AbstractAccountConnection<Account> {
 
 	public static final String TAG = newTag("LongPolling");
+
 	@Nonnull
 	private final RealmLongPollService realmLongPollService;
 
 	protected LongPollAccountConnection(@Nonnull Account account,
 										@Nonnull Context context,
-										@Nonnull RealmLongPollService realmLongPollService) {
-		super(account, context, true);
+										@Nonnull RealmLongPollService realmLongPollService,
+										int retryCount) {
+		super(account, context, true, retryCount);
 		this.realmLongPollService = realmLongPollService;
 	}
 

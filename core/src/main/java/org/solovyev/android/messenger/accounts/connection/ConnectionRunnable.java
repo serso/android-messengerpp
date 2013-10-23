@@ -13,8 +13,7 @@ import static org.solovyev.android.messenger.accounts.connection.DefaultAccountC
 
 class ConnectionRunnable implements Runnable {
 
-	private static final int RETRY_CONNECTION_ATTEMPT_COUNT = 5;
-	public static final long DEFAULT_RECOVERY_SLEEP_MILLIS = 5000L;
+	public static final long DEFAULT_RECOVERY_SLEEP_MILLIS = 3000L;
 
 	@Nonnull
 	private final AccountConnection connection;
@@ -32,37 +31,45 @@ class ConnectionRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		startConnection(0, null);
-	}
+		final int retryCount = connection.getRetryCount();
+		int attempt = 0;
 
-	private void startConnection(int attempt, @Nullable AccountConnectionException lastError) {
-		Log.d(TAG, "Account start requested, attempt: " + attempt);
-
-		if (attempt > RETRY_CONNECTION_ATTEMPT_COUNT) {
-			onMaxAttemptsReached(lastError);
-		} else {
-			try {
-				if (connection.getAccount().isEnabled()) {
-					Log.d(TAG, "Account is enabled => starting connection...");
-					connection.start();
-					Log.d(TAG, "Connection is successfully established => no more work is needed on background thread. Terminating...");
-				}
-			} catch (AccountConnectionException e) {
-				onConnectionException(attempt, e);
-			} catch (Throwable e) {
-				onConnectionException(attempt, e);
+		AccountConnectionException lastError = startConnection(attempt++);
+		while (lastError != null) {
+			if(attempt > retryCount) {
+				onMaxAttemptsReached(lastError);
+				break;
+			} else {
+				lastError = startConnectionDelayed(attempt++, lastError);
 			}
 		}
 	}
 
-	private void onConnectionException(int attempt, @Nonnull Throwable e) {
-		onConnectionException(attempt, new AccountConnectionException(connection.getAccount().getId(), e));
+	private AccountConnectionException startConnection(int attempt) {
+		Log.d(TAG, "Account start requested, attempt: " + attempt);
+
+		try {
+			if (connection.getAccount().isEnabled()) {
+				Log.d(TAG, "Account is enabled => starting connection...");
+				connection.start();
+				Log.d(TAG, "Connection is successfully established => no more work is needed on background thread. Terminating...");
+			}
+		} catch (AccountConnectionException e) {
+			return onConnectionException(attempt, e);
+		} catch (Throwable e) {
+			return onConnectionException(attempt, e);
+		}
+
+		return null;
 	}
 
-	private void onConnectionException(int attempt, AccountConnectionException e) {
-		Log.w(TAG, "Account connection error occurred, connection attempt: " + attempt, e);
+	private AccountConnectionException onConnectionException(int attempt, @Nonnull Throwable e) {
+		return onConnectionException(attempt, new AccountConnectionException(connection.getAccount().getId(), e));
+	}
 
-		startConnectionDelayed(attempt, e);
+	private AccountConnectionException onConnectionException(int attempt, AccountConnectionException e) {
+		Log.w(TAG, "Account connection error occurred, connection attempt: " + attempt, e);
+		return e;
 	}
 
 	private void onMaxAttemptsReached(@Nullable AccountConnectionException lastError) {
@@ -79,7 +86,7 @@ class ConnectionRunnable implements Runnable {
 		getAccountService().changeAccountState(connection.getAccount(), disabled_by_app);
 	}
 
-	private void startConnectionDelayed(int attempt, @Nullable AccountConnectionException lastException) {
+	private AccountConnectionException startConnectionDelayed(int attempt, @Nullable AccountConnectionException lastException) {
 		try {
 			// let's wait a little bit - may be the exception was caused by connectivity problem
 			Thread.sleep(recoverySleepMillis);
@@ -87,7 +94,9 @@ class ConnectionRunnable implements Runnable {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {
 			if (!connection.isStopped()) {
-				startConnection(attempt + 1, lastException);
+				return startConnection(attempt + 1);
+			} else {
+				return null;
 			}
 		}
 	}

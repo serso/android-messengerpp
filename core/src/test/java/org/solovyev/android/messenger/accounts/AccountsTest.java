@@ -52,6 +52,7 @@ public class AccountsTest {
 	private static AccountConnection newMockConnection(@Nonnull Account account) {
 		final AccountConnection connection = mock(AccountConnection.class);
 
+		when(connection.getRetryCount()).thenReturn(5);
 		when(connection.isStopped()).thenReturn(true);
 		when(connection.isInternetConnectionRequired()).thenReturn(true);
 		try {
