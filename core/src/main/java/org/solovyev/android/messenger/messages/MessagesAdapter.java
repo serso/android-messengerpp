@@ -10,6 +10,7 @@ import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 
@@ -200,12 +201,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 				// 'Typing' message is not shown yet => show it
 
 				// create fake message
-				final MutableMessage message = newMessage(newEntityFromEntityId(user.getEntityId() + TYPING_POSTFIX));
-				message.setChat(chat.getEntity());
-				message.setSendDate(DateTime.now());
-				message.setAuthor(user);
-				//message.setBody(getContext().getString(R.string.mpp_user_is_typing));
-				message.setRead(true);
+				final MutableMessage message = newTypingMessage(user, chat);
 
 				// create fake list item
 				listItem = newMessageListItem(message);
@@ -234,6 +230,22 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 				// message is not shown => no removal is needed
 			}
 		}
+	}
+
+	@Nonnull
+	MutableMessage newTypingMessage(@Nonnull Entity user, @Nonnull Chat chat) {
+		final MutableMessage message = newMessage(newEntityFromEntityId(user.getEntityId() + TYPING_POSTFIX));
+		message.setChat(chat.getEntity());
+		message.setSendDate(DateTime.now());
+		message.setAuthor(user);
+		message.setBody(getTypingMessageBody());
+		message.setRead(true);
+		return message;
+	}
+
+	@Nonnull
+	String getTypingMessageBody() {
+		return getContext().getString(R.string.mpp_user_is_typing);
 	}
 
 	@Override

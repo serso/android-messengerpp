@@ -11,12 +11,10 @@ import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTest;
 import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
 import static java.lang.Math.max;
-import static java.lang.Math.min;
 import static java.lang.System.currentTimeMillis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -24,8 +22,8 @@ import static org.solovyev.android.messenger.chats.ChatEventType.message_added;
 import static org.solovyev.android.messenger.chats.ChatEventType.message_added_batch;
 import static org.solovyev.android.messenger.chats.ChatEventType.message_changed;
 import static org.solovyev.android.messenger.chats.ChatEventType.message_state_changed;
-import static org.solovyev.android.messenger.chats.ChatEventType.user_is_typing;
 import static org.solovyev.android.messenger.chats.ChatEventType.user_is_not_typing;
+import static org.solovyev.android.messenger.chats.ChatEventType.user_is_typing;
 import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 
 public class MessagesAdapterTest extends DefaultMessengerTest {
@@ -52,7 +50,13 @@ public class MessagesAdapterTest extends DefaultMessengerTest {
 		accountData = getAccountData1();
 		chat = accountData.getChats().get(0);
 		contact = chat.getParticipantsExcept(accountData.getAccount().getUser()).get(0);
-		adapter = new MessagesAdapter(getApplication(), accountData.getAccount().getUser(), chat.getChat(), MessageListItemStyle.newFromDefaultPreferences(getApplication()));
+		adapter = new MessagesAdapter(getApplication(), accountData.getAccount().getUser(), chat.getChat(), MessageListItemStyle.newFromDefaultPreferences(getApplication())){
+			@Nonnull
+			@Override
+			String getTypingMessageBody() {
+				return "User is typing...";
+			}
+		};
 	}
 
 	@Test
