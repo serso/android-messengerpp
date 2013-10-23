@@ -69,10 +69,9 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	@Nonnull
 	private final Map<Entity, MessageListItem> userTypingListItems = new HashMap<Entity, MessageListItem>();
 
-	// as id might be changed in service let's use something more consistent, e.g. date as a key
-	// key: sending time, value; sending message
+	// key: original message id, value; sending message
 	@Nonnull
-	private final Map<DateTime, MessageListItem> sendingListItems = new HashMap<DateTime, MessageListItem>();
+	private final Map<String, MessageListItem> sendingListItems = new HashMap<String, MessageListItem>();
 
 	@Nonnull
 	private final Handler uiHandler = new Handler(new Handler.Callback() {
@@ -138,7 +137,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	void addSendingMessage(@Nonnull Message message) {
 		final MessageListItem listItem = newMessageListItem(message);
 		add(listItem);
-		sendingListItems.put(message.getSendDate(), listItem);
+		sendingListItems.put(message.getOriginalId(), listItem);
 	}
 
 	private void addMessages(@Nonnull List<Message> messages) {
@@ -169,7 +168,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 
 	private void removeSendingListItem(Message message) {
 		if (message.isOutgoing()) {
-			final MessageListItem sendingListItem = sendingListItems.remove(message.getSendDate());
+			final MessageListItem sendingListItem = sendingListItems.remove(message.getOriginalId());
 			if(sendingListItem != null) {
 				remove(sendingListItem);
 			}

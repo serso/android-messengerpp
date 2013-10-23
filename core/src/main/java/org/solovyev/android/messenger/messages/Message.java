@@ -9,15 +9,16 @@ import org.solovyev.android.properties.AProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 1:58 PM
- */
 public interface Message extends Identifiable {
 
 	@Nonnull
 	Entity getEntity();
+
+	/**
+	 * @return id of a message which has been assigned before sending message
+	 */
+	@Nonnull
+	String getOriginalId();
 
 	@Nonnull
 	Entity getAuthor();

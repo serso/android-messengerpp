@@ -12,6 +12,8 @@ import org.solovyev.android.properties.MutableAProperties;
 
 public interface MutableMessage extends Message {
 
+	void setOriginalId(@Nonnull String id);
+
 	void setAuthor(@Nonnull Entity author);
 
 	void setSendDate(@Nonnull DateTime sendDate);

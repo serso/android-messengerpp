@@ -184,6 +184,12 @@ public final class Messages {
 		}
 		result.setRead(true);
 		result.getProperties().setPropertiesFrom(message.getProperties().getPropertiesCollection());
+
+		if(!messageId.equals(message.getEntity())) {
+			// id has changed => need to set original message id
+			result.setOriginalId(message.getEntity().getEntityId());
+		}
+
 		return result;
 	}
 }

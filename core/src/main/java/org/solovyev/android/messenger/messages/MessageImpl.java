@@ -16,13 +16,27 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static org.solovyev.android.properties.Properties.newProperties;
+import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 2:04 PM
- */
 final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
+
+	/*
+	**********************************************************************
+	*
+	*                           CONSTANTS
+	*
+	**********************************************************************
+	*/
+
+	private static final String PROPERTY_ORIGINAL_ID = "original_id";
+
+	/*
+	**********************************************************************
+	*
+	*                           FIELDS
+	*
+	**********************************************************************
+	*/
 
 	@Nonnull
 	private Entity author;
@@ -58,6 +72,18 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 
 	MessageImpl(@Nonnull Entity entity) {
 		super(entity);
+	}
+
+	@Nonnull
+	@Override
+	public String getOriginalId() {
+		final String originalId = properties.getPropertyValue(PROPERTY_ORIGINAL_ID);
+		return !isEmpty(originalId) ? originalId : getId();
+	}
+
+	@Override
+	public void setOriginalId(@Nonnull String id) {
+		properties.setProperty(PROPERTY_ORIGINAL_ID, id);
 	}
 
 	@Nonnull
@@ -179,13 +205,14 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 			return this;
 		} else {
 			final MessageImpl clone = clone();
-			// NOTE: date, author, recipient, id, chat cannot be changed => do not apply them from that instance
+			// NOTE: author, recipient, id, chat cannot be changed => do not apply them from that instance
 			if (!clone.read) {
 				clone.read = that.isRead();
 			}
 			clone.state = that.getState();
 			clone.body = that.getBody();
 			clone.title = that.getTitle();
+			clone.sendDate = that.getSendDate();
 			clone.properties.setPropertiesFrom(that.getProperties().getPropertiesCollection());
 			return clone;
 		}
