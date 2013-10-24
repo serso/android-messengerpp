@@ -6,7 +6,7 @@
 		Base style for all text containing views
 	-->
 	<style name="mpp_text">
-		<item name="android:textSize">18sp</item>
+		<item name="android:textSize">16sp</item>
 		<item name="android:textColor">@color/mpp_text</item>
 		<item name="android:textCursorDrawable">@null</item>
 	</style>
@@ -66,7 +66,7 @@
 
 	<style name="mpp_list_item_text_secondary" parent="mpp_list_item_text">
 		<item name="android:textColor">@color/mpp_list_item_text_secondary_states</item>
-		<item name="android:textSize">14sp</item>
+		<item name="android:textSize">12sp</item>
 	</style>
 
 	<!--
