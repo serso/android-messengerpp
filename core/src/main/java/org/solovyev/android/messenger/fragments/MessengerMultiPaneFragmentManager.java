@@ -44,33 +44,12 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		return (BaseFragmentActivity) super.getActivity();
 	}
 
-	public void setSecondFragment(@Nonnull Class<? extends Fragment> fragmentClass,
-								  @Nullable Bundle fragmentArgs,
-								  @Nullable JPredicate<Fragment> reuseCondition,
-								  @Nonnull String fragmentTag,
-								  boolean addToBackStack) {
-		setFragment(R.id.content_second_pane, MultiPaneFragmentDef.newInstance(fragmentTag, addToBackStack, ReflectionFragmentBuilder.forClass(getActivity(), fragmentClass, fragmentArgs), reuseCondition));
-	}
-
 	public void setSecondFragment(@Nonnull MultiPaneFragmentDef fragmentDef) {
 		setFragment(R.id.content_second_pane, fragmentDef);
 	}
 
-	public void setSecondFragment(@Nonnull Builder<Fragment> fragmentBuilder,
-								  @Nullable JPredicate<Fragment> reuseCondition,
-								  @Nonnull String fragmentTag) {
-		setFragment(R.id.content_second_pane, MultiPaneFragmentDef.newInstance(fragmentTag, false, fragmentBuilder, reuseCondition));
-	}
-
 	public void emptifySecondFragment() {
 		emptifyFragmentPane(R.id.content_second_pane);
-	}
-
-	public void setThirdFragment(@Nonnull Class<? extends Fragment> fragmentClass,
-								 @Nullable Bundle fragmentArgs,
-								 @Nullable JPredicate<Fragment> reuseCondition,
-								 @Nonnull String fragmentTag) {
-		setFragment(R.id.content_third_pane, MultiPaneFragmentDef.newInstance(fragmentTag, false, ReflectionFragmentBuilder.forClass(getActivity(), fragmentClass, fragmentArgs), reuseCondition));
 	}
 
 	public void setThirdFragment(@Nonnull Builder<Fragment> fragmentBuilder,
@@ -81,14 +60,6 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 
 	public void emptifyThirdFragment() {
 		emptifyFragmentPane(R.id.content_third_pane);
-	}
-
-	public void setSecondOrMainFragment(Class<? extends Fragment> fragmentClass, Bundle fragmentArgs, String fragmentTag) {
-		if (getActivity().isDualPane()) {
-			setSecondFragment(fragmentClass, fragmentArgs, null, fragmentTag, true);
-		} else {
-			setMainFragment(fragmentClass, fragmentArgs, null, fragmentTag, false);
-		}
 	}
 
 	public void clearBackStack() {

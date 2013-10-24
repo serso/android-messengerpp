@@ -44,37 +44,30 @@ public class PreferenceListFragment extends ListFragment {
 	private int themeResId = NO_THEME;
 	private Context themeContext;
 
-	public PreferenceListFragment(int preferencesResId, int layoutResId) {
-		this.preferencesResId = preferencesResId;
-		this.layoutResId = layoutResId;
-		fillArguments();
+	//must be provided
+	public PreferenceListFragment() {
 	}
 
-	public PreferenceListFragment(int preferencesResId, int layoutResId, int themeResId) {
-		this.preferencesResId = preferencesResId;
-		this.layoutResId = layoutResId;
-		this.themeResId = themeResId;
-		fillArguments();
-	}
-
-	private void fillArguments() {
+	@Nonnull
+	public static Bundle newPreferencesArguments(int preferencesResId, int layoutResId, int themeResId) {
 		final Bundle args = new Bundle();
 
 		args.putInt(ARG_PREFERENCES_RES_ID, preferencesResId);
 		args.putInt(ARG_LAYOUT_RES_ID, layoutResId);
 		args.putInt(ARG_THEME_RES_ID, themeResId);
 
-		setArguments(args);
-	}
-
-	//must be provided
-	public PreferenceListFragment() {
+		return args;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		preferenceManager = new PreferenceManagerCompat(this);
+
+		final Bundle arguments = getArguments();
+		preferencesResId = arguments.getInt(ARG_PREFERENCES_RES_ID);
+		layoutResId = arguments.getInt(ARG_LAYOUT_RES_ID);
+		themeResId = arguments.getInt(ARG_THEME_RES_ID);
 	}
 
 	protected void prepareListView(@Nonnull ListView lv) {
@@ -84,13 +77,6 @@ public class PreferenceListFragment extends ListFragment {
 	@Override
 	public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final LayoutInflater themeInflater;
-
-		if (savedInstanceState != null) {
-			final Bundle arguments = getArguments();
-			preferencesResId = arguments.getInt(ARG_PREFERENCES_RES_ID);
-			layoutResId = arguments.getInt(ARG_LAYOUT_RES_ID);
-			themeResId = arguments.getInt(ARG_THEME_RES_ID);
-		}
 
 		if (themeResId == NO_THEME) {
 			themeContext = getActivity();

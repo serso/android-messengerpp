@@ -1,13 +1,13 @@
 package org.solovyev.android.messenger.preferences;
 
-import android.support.v4.app.Fragment;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.common.Builder;
+
+import static org.solovyev.android.messenger.preferences.MainPreferenceListFragment.newPreferencesListFragmentDef;
 
 /**
  * User: serso
@@ -32,24 +32,12 @@ public final class PreferenceUiEventListener implements EventListener<Preference
 			final int preferencesResId = preferenceGroup.getPreferencesResId();
 
 			if (activity.isDualPane()) {
-				fm.setSecondFragment(new Builder<Fragment>() {
-					@Nonnull
-					@Override
-					public Fragment build() {
-						return new MainPreferenceListFragment(preferencesResId);
-					}
-				}, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG);
+				fm.setSecondFragment(newPreferencesListFragmentDef(activity, preferencesResId, false));
 				if (activity.isTriplePane()) {
 					fm.emptifyThirdFragment();
 				}
 			} else {
-				fm.setMainFragment(new Builder<Fragment>() {
-					@Nonnull
-					@Override
-					public Fragment build() {
-						return new MainPreferenceListFragment(preferencesResId);
-					}
-				}, PreferenceListFragmentReuseCondition.newInstance(preferencesResId), PreferenceListFragment.FRAGMENT_TAG, true);
+				fm.setMainFragment(newPreferencesListFragmentDef(activity, preferencesResId, true));
 			}
 		}
 	}

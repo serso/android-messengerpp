@@ -9,17 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import roboguice.RoboGuice;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 8:34 PM
- */
 public final class MainPreferenceListFragment extends PreferenceListFragment implements DetachableFragment {
 
     /*
@@ -34,11 +30,14 @@ public final class MainPreferenceListFragment extends PreferenceListFragment imp
 	@Nonnull
 	private MultiPaneManager multiPaneManager;
 
-	public MainPreferenceListFragment(int preferencesResId) {
-		super(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_fragment);
+	public MainPreferenceListFragment() {
+		super();
 	}
 
-	public MainPreferenceListFragment() {
+	@Nonnull
+	public static MultiPaneFragmentDef newPreferencesListFragmentDef(@Nonnull Context context, int preferencesResId, boolean addToBackStack) {
+		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_fragment);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MainPreferenceListFragment.class, context, arguments, PreferenceListFragmentReuseCondition.newInstance(preferencesResId));
 	}
 
 	@Override
