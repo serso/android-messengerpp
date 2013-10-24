@@ -21,6 +21,7 @@ import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.app.PendingIntent.getBroadcast;
 import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
@@ -72,8 +73,8 @@ final class SmsAccountChatService implements AccountChatService {
 			deliveredIntent.putExtra(INTENT_EXTRA_SMS_ID, message.getEntity().getEntityId());
 
 			SmsManager.getDefault().sendTextMessage(phoneNumber, null, message.getBody(),
-					getBroadcast(getApplication(), 0, sentIntent, 0),
-					getBroadcast(getApplication(), 0, deliveredIntent, 0));
+					getBroadcast(getApplication(), 0, sentIntent, FLAG_UPDATE_CURRENT),
+					getBroadcast(getApplication(), 0, deliveredIntent, FLAG_UPDATE_CURRENT));
 
 			return null;
 		}
