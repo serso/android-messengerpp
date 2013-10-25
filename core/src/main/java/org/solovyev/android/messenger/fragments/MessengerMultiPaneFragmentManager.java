@@ -35,7 +35,7 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 	}
 
 	public MessengerMultiPaneFragmentManager(@Nonnull BaseFragmentActivity activity) {
-		super(activity, R.id.content_first_pane, EmptyFragment.class, EmptyFragment.FRAGMENT_TAG, R.anim.mpp_fragment_fade_in, R.anim.mpp_fragment_fade_out);
+		super(activity, R.id.content_first_pane, EmptyFragment.class, EmptyFragment.FRAGMENT_TAG);
 	}
 
 	@Nonnull
