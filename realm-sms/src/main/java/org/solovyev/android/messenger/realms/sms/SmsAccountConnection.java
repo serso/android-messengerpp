@@ -15,6 +15,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+
+import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
@@ -54,6 +56,7 @@ import static org.solovyev.android.messenger.messages.MessageState.delivered;
 import static org.solovyev.android.messenger.messages.MessageState.sent;
 import static org.solovyev.android.messenger.messages.Messages.newIncomingMessage;
 import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
+import static org.solovyev.android.messenger.realms.sms.Call.newNoCall;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
@@ -89,7 +92,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			application.registerReceiver(receiver, intentReceivedFilter);
 		}
 
-		getTelephonyManager().listen(callListener, LISTEN_CALL_STATE);
+		getTelephonyManager().listen(callListener.phoneStateListener, LISTEN_CALL_STATE);
 	}
 
 	@Nonnull
@@ -99,7 +102,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 	@Override
 	protected void stop0() {
-		getTelephonyManager().listen(callListener, LISTEN_NONE);
+		getTelephonyManager().listen(callListener.phoneStateListener, LISTEN_NONE);
 		unregisterReceiver();
 	}
 
@@ -337,7 +340,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		}
 	}
 
-	private final class CallListener extends PhoneStateListener {
+	private final class CallListener {
 
 		@Nonnull
 		private final Context context;
@@ -345,40 +348,70 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		private boolean callFromUs = false;
 
 		@Nonnull
-		private Call call = Call.newNoCall();
+		private Call call = newNoCall();
+
+		private volatile PhoneStateListener phoneStateListener;
 
 		public CallListener(@Nonnull Context context) {
 			this.context = context;
+
+			// PhoneStateListener can be created only on UI thread
+			if(Threads.isUiThread()) {
+				// if UI thread just create
+				phoneStateListener = new CallPhoneStateListener();
+			} else {
+				// if not UI thread then run it on UI handler and wait for result
+				createListenerAndWait();
+			}
 		}
 
-		@Override
-		public void onCallStateChanged(int state, String incomingNumber) {
-			switch (state) {
-				case CALL_STATE_RINGING:
-					call = Call.newIncomingCall(incomingNumber);
-					break;
-				case CALL_STATE_OFFHOOK:
-					break;
-				case CALL_STATE_IDLE:
-					call.onEnd();
-					onCall(call);
+		private void createListenerAndWait() {
+			getUiHandler().post(new Runnable() {
+				@Override
+				public void run() {
+					phoneStateListener = new CallPhoneStateListener();
+				}
+			});
 
-					// if we initiated call => we need to return to our screen => start activity
-					if (callFromUs) {
-						callFromUs = false;
-						final Intent intent = new Intent(context, getMainActivityClass());
-						intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-						context.startActivity(intent);
-					}
-
-					this.call = Call.newNoCall();
-					break;
+			while (phoneStateListener == null) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
 			}
 		}
 
 		public void setCallFromUs(@Nonnull String number) {
 			this.call = Call.newOutgoingCall(number);
 			this.callFromUs = true;
+		}
+
+		private class CallPhoneStateListener extends PhoneStateListener {
+
+			@Override
+			public void onCallStateChanged(int state, String incomingNumber) {
+				switch (state) {
+					case CALL_STATE_RINGING:
+						call = Call.newIncomingCall(incomingNumber);
+						break;
+					case CALL_STATE_OFFHOOK:
+						break;
+					case CALL_STATE_IDLE:
+						call.onEnd();
+						onCall(call);
+
+						// if we initiated call => we need to return to our screen => start activity
+						if (callFromUs) {
+							callFromUs = false;
+							final Intent intent = new Intent(context, getMainActivityClass());
+							intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+							context.startActivity(intent);
+						}
+
+						call = newNoCall();
+						break;
+				}
+			}
 		}
 	}
 
