@@ -270,4 +270,15 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	protected void removeListItem(@Nonnull Message message) {
 		remove(newMessageListItem(message));
 	}
+
+	@Override
+	public int getViewTypeCount() {
+		return 2;
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		final MessageListItem item = getItem(position);
+		return item.isUserMessage() ? 0 : 1;
+	}
 }

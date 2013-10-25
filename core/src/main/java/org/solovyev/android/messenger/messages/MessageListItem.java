@@ -15,8 +15,6 @@ import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
@@ -25,17 +23,11 @@ import org.solovyev.android.messenger.view.ViewAwareTag;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-import static android.content.ClipData.newPlainText;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 
-/**
- * User: serso
- * Date: 6/10/12
- * Time: 11:25 PM
- */
 public final class MessageListItem extends AbstractMessengerListItem<Message> /*, ChatEventListener*/ {
 
 	@Nonnull
@@ -79,6 +71,10 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 	@Override
 	protected CharSequence getDisplayName(@Nonnull Message data, @Nonnull Context context) {
 		return data.getBody();
+	}
+
+	public boolean isUserMessage() {
+		return userMessage;
 	}
 
 	@Override
@@ -149,7 +145,7 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 				final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Activity.CLIPBOARD_SERVICE);
 
 				final MessageListItem messageListItem = data.getDataObject();
-				clipboard.setPrimaryClip(newPlainText(null, messageListItem.getData().getBody()));
+				clipboard.setText(messageListItem.getData().getBody());
 
 				Toast.makeText(context, context.getString(R.string.mpp_message_copied_to_clipboard), Toast.LENGTH_SHORT).show();
 			}
