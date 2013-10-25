@@ -22,11 +22,6 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
 
-/**
- * User: serso
- * Date: 5/27/13
- * Time: 8:45 PM
- */
 @Singleton
 public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
@@ -42,8 +37,8 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	static final String USER_ID = "self";
 
 	public static final String INTENT_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
-	public static final String INTENT_SENT = "SMS_SENT";
-	public static final String INTENT_DELIVERED = "SMS_DELIVERED";
+	public static final String INTENT_SENT_PREFIX = "SMS_SENT";
+	public static final String INTENT_DELIVERED_PREFIX = "SMS_DELIVERED";
 	public static final String INTENT_EXTRA_SMS_ID = "sms_id";
 	public static final String INTENT_EXTRA_PDUS ="pdus";
 	public static final String INTENT_EXTRA_FORMAT ="format";
@@ -104,6 +99,16 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
     *
     **********************************************************************
     */
+
+	@Nonnull
+	static String makeSmsSentAction(@Nonnull String messageId) {
+		return INTENT_SENT_PREFIX + "_" + messageId;
+	}
+
+	@Nonnull
+	static String makeSmsDeliveredAction(@Nonnull String messageId) {
+		return INTENT_DELIVERED_PREFIX + "_" + messageId;
+	}
 
 	private static class SmsRealmConfigurationCipherer implements Cipherer<SmsAccountConfiguration, SmsAccountConfiguration> {
 

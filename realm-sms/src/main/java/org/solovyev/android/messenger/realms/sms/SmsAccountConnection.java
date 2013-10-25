@@ -61,11 +61,6 @@ import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 5/27/13
- * Time: 9:22 PM
- */
 final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 	@Nullable
@@ -88,8 +83,6 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		if (receiver == null) {
 			receiver = new ReportsBroadcastReceiver();
 			final Application application = getApplication();
-			application.registerReceiver(receiver, new IntentFilter(INTENT_SENT));
-			application.registerReceiver(receiver, new IntentFilter(INTENT_DELIVERED));
 
 			final IntentFilter intentReceivedFilter = new IntentFilter(INTENT_RECEIVED);
 			intentReceivedFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
@@ -110,6 +103,16 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		unregisterReceiver();
 	}
 
+	@Nonnull
+	public ReportsBroadcastReceiver getReceiver() throws AccountConnectionException {
+		final ReportsBroadcastReceiver result = receiver;
+		if (result != null) {
+			return result;
+		} else {
+			throw new AccountConnectionException(getAccount().getId());
+		}
+	}
+
 	private void unregisterReceiver() {
 		if (receiver != null) {
 			getApplication().unregisterReceiver(receiver);
@@ -124,9 +127,9 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 				final String action = intent.getAction();
 				if (action.equals(INTENT_RECEIVED)) {
 					onSmsReceived(this, intent);
-				} else if (action.equals(INTENT_SENT)) {
+				} else if (action.startsWith(INTENT_SENT_PREFIX)) {
 					onSmsIntent(intent, sent);
-				} else if (action.equals(INTENT_DELIVERED)) {
+				} else if (action.startsWith(INTENT_DELIVERED_PREFIX)) {
 					onSmsIntent(intent, delivered);
 				}
 

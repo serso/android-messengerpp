@@ -31,11 +31,6 @@ import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.android.properties.Properties.newProperty;
 import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 5/27/13
- * Time: 8:43 PM
- */
 final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
 	public SmsAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
@@ -75,7 +70,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 	@Nonnull
 	@Override
 	public AccountChatService getAccountChatService() {
-		return new SmsAccountChatService();
+		return new SmsAccountChatService(this);
 	}
 
 	@Override

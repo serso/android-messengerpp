@@ -1,6 +1,9 @@
 package org.solovyev.android.messenger.realms.sms;
 
+import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.telephony.SmsManager;
 
 import java.util.Collections;
@@ -21,21 +24,23 @@ import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static android.app.PendingIntent.FLAG_ONE_SHOT;
 import static android.app.PendingIntent.getBroadcast;
 import static org.solovyev.android.messenger.App.getApplication;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_DELIVERED;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_EXTRA_SMS_ID;
-import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_SENT;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.makeSmsDeliveredAction;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.makeSmsSentAction;
 
-/**
- * User: serso
- * Date: 5/27/13
- * Time: 9:23 PM
- */
 final class SmsAccountChatService implements AccountChatService {
 
 	static final String MESSAGE_PROPERTY_PHONE = "phone_number";
+
+	@Nonnull
+	private final SmsAccount account;
+
+	public SmsAccountChatService(@Nonnull SmsAccount account) {
+		this.account = account;
+	}
 
 	@Nonnull
 	@Override
@@ -66,15 +71,24 @@ final class SmsAccountChatService implements AccountChatService {
 	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
 		final String phoneNumber = getPhoneNumber(message);
 		if(!Strings.isEmpty(phoneNumber)) {
-			final Intent sentIntent = new Intent(INTENT_SENT);
+			final Application application = getApplication();
+
+			final Intent sentIntent = new Intent(makeSmsSentAction(message.getId()));
 			sentIntent.putExtra(INTENT_EXTRA_SMS_ID, message.getEntity().getEntityId());
 
-			final Intent deliveredIntent = new Intent(INTENT_DELIVERED);
+			final Intent deliveredIntent = new Intent(makeSmsDeliveredAction(message.getId()));
 			deliveredIntent.putExtra(INTENT_EXTRA_SMS_ID, message.getEntity().getEntityId());
 
+			final SmsAccountConnection connection = account.getAccountConnection();
+			if (connection != null) {
+				final BroadcastReceiver receiver = connection.getReceiver();
+				application.registerReceiver(receiver, new IntentFilter(sentIntent.getAction()));
+				application.registerReceiver(receiver, new IntentFilter(deliveredIntent.getAction()));
+			}
+
 			SmsManager.getDefault().sendTextMessage(phoneNumber, null, message.getBody(),
-					getBroadcast(getApplication(), 0, sentIntent, FLAG_UPDATE_CURRENT),
-					getBroadcast(getApplication(), 0, deliveredIntent, FLAG_UPDATE_CURRENT));
+					getBroadcast(application, 0, sentIntent, FLAG_ONE_SHOT),
+					getBroadcast(application, 0, deliveredIntent, FLAG_ONE_SHOT));
 
 			return null;
 		}
