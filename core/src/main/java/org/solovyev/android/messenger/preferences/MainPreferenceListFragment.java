@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.preferences;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
@@ -51,6 +52,9 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 	protected void prepareListView(@Nonnull ListView lv) {
 		super.prepareListView(lv);
 		lv.setBackgroundDrawable(null);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			lv.setOverscrollFooter(null);
+		}
 	}
 
 	@Override

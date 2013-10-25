@@ -299,7 +299,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		viewCreated = true;
 		final LinearLayout root = new LinearLayout(themeContext);
 		root.setOrientation(VERTICAL);
-		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		if (listViewFilter != null) {
 			final View filterView = listViewFilter.createView(savedInstanceState);
@@ -308,7 +307,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 		final View listViewParent = createListView();
 
-		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, 0, 1);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MATCH_PARENT, 0, 1f);
 		params.gravity = CENTER_VERTICAL;
 		root.addView(listViewParent, params);
 
@@ -458,8 +457,10 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		ListViewScroller.createAndAttach(lv, this);
 		lv.setFastScrollEnabled(true);
 
-		// filter so done manually
 		lv.setTextFilterEnabled(false);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			lv.setOverscrollFooter(null);
+		}
 
 		lv.setVerticalFadingEdgeEnabled(false);
 		lv.setFocusable(false);

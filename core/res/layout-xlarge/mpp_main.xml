@@ -12,7 +12,6 @@
 		a:layout_height="match_parent"
 		a:id="@+id/content_first_pane" />
 
-
 	<LinearLayout
 		a:layout_width="0dp"
 		a:layout_weight="3"

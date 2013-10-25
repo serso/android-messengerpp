@@ -157,7 +157,7 @@
 		<item name="android:layout_weight">1</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_gravity">bottom</item>
-		<item name="android:gravity">top</item>
+		<item name="android:gravity">center_vertical|left</item>
 		<item name="android:textColor">@color/mpp_text</item>
 		<item name="android:textSize">14sp</item>
 	</style>
