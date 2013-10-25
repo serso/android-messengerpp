@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-	a:id="@+id/ad_parent_view"
-	xmlns:a="http://schemas.android.com/apk/res/android"
-	a:layout_width="fill_parent"
-	a:layout_height="wrap_content"
-	a:gravity="center"
-	a:background="@android:color/black" />

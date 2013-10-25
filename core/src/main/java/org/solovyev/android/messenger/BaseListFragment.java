@@ -453,6 +453,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
 			lv.setScrollbarFadingEnabled(true);
 		}
+		lv.setBackgroundDrawable(null);
 		lv.setCacheColorHint(Color.TRANSPARENT);
 		ListViewScroller.createAndAttach(lv, this);
 		lv.setFastScrollEnabled(true);

@@ -6,19 +6,19 @@
 	a:orientation="horizontal"
 	a:baselineAligned="false">
 
-	<LinearLayout
+	<FrameLayout
 		a:layout_width="0dp"
 		a:layout_weight="1"
 		a:layout_height="match_parent"
 		a:id="@+id/content_first_pane" />
 
-	<LinearLayout
+	<FrameLayout
 		a:layout_width="0dp"
 		a:layout_weight="2"
 		a:layout_height="match_parent"
 		a:id="@+id/content_second_pane" />
 
-	<LinearLayout
+	<FrameLayout
 		a:layout_width="0dp"
 		a:layout_weight="1"
 		a:layout_height="match_parent"

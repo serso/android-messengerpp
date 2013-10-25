@@ -6,9 +6,9 @@ import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.google.inject.Inject;
-import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.core.R;
@@ -16,7 +16,7 @@ import roboguice.RoboGuice;
 
 import javax.annotation.Nonnull;
 
-public final class MainPreferenceListFragment extends PreferenceListFragment implements DetachableFragment {
+public final class MainPreferenceListFragment extends PreferenceListFragment {
 
     /*
 	**********************************************************************
@@ -45,6 +45,12 @@ public final class MainPreferenceListFragment extends PreferenceListFragment imp
 		super.onCreate(savedInstanceState);
 
 		RoboGuice.getInjector(this.getActivity()).injectMembersWithoutViews(this);
+	}
+
+	@Override
+	protected void prepareListView(@Nonnull ListView lv) {
+		super.prepareListView(lv);
+		lv.setBackgroundDrawable(null);
 	}
 
 	@Override

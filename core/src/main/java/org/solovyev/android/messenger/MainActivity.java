@@ -62,7 +62,7 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
     */
 
 	public MainActivity() {
-		super(R.layout.mpp_main);
+		super(R.layout.mpp_main_content);
 	}
 
 	public static void startActivity(@Nonnull Activity activity) {

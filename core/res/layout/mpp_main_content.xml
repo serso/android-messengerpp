@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <FrameLayout
 	xmlns:a="http://schemas.android.com/apk/res/android"
 	a:id="@+id/content_first_pane"

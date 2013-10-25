@@ -6,7 +6,7 @@
 	a:orientation="horizontal"
 	a:baselineAligned="false">
 
-	<LinearLayout
+	<FrameLayout
 		a:layout_width="0dp"
 		a:layout_weight="2"
 		a:layout_height="match_parent"
@@ -20,12 +20,12 @@
 		a:gravity="top"
 		a:orientation="vertical">
 
-		<LinearLayout
+		<FrameLayout
 			a:layout_width="match_parent"
 			a:layout_height="wrap_content"
 			a:id="@+id/content_third_pane" />
 
-		<LinearLayout
+		<FrameLayout
 			a:layout_width="match_parent"
 			a:layout_height="match_parent"
 			a:id="@+id/content_second_pane" />

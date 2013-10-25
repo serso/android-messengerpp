@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.preferences;
 
-import android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -88,7 +87,7 @@ public class PreferenceListFragment extends ListFragment {
 
 		root = themeInflater.inflate(layoutResId, null);
 
-		final ListView lv = (ListView) root.findViewById(R.id.list);
+		final ListView lv = (ListView) root.findViewById(android.R.id.list);
 		prepareListView(lv);
 
 		onCreateView(themeContext, themeInflater, root, container, savedInstanceState);
