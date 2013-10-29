@@ -21,7 +21,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 
 	private int maxContacts = MAX_SEARCH_CONTACTS;
 
-	private final long SEARCH_DELAY_MILLIS = 500;
+	private static final long SEARCH_DELAY_MILLIS = 500;
 
 	@Nonnull
 	private final FindContactsRunnable runnable = new FindContactsRunnable();
@@ -87,6 +87,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 		public void run() {
 			final BaseListItemAdapter adapter = getAdapter();
 			if (adapter.isInitialized()) {
+				adapter.unselect();
 				createAsyncLoader(adapter).executeInParallel();
 			}
 		}

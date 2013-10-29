@@ -81,7 +81,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
     */
 
 	@Nonnull
-	private final HttpRealmIconService.UrlGetter iconUrlGetter = HttpRealmIconService.newUrlFromPropertyGetter("photo");
+	private final HttpRealmIconService.UrlGetter iconUrlGetter = new VkIconUrlGetter();
 
 	@Nonnull
 	private final HttpRealmIconService.UrlGetter photoUrlGetter = new VkPhotoUrlGetter();
@@ -209,6 +209,25 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 
 			if (result == null) {
 				result = user.getPropertyValueByName("photo");
+			}
+
+			return result;
+		}
+	}
+
+	private static final class VkIconUrlGetter implements HttpRealmIconService.UrlGetter {
+
+		@Nullable
+		@Override
+		public String getUrl(@Nonnull User user) {
+			String result = user.getPropertyValueByName("photo");
+
+			if (result == null) {
+				result = user.getPropertyValueByName("photoRec");
+			}
+
+			if (result == null) {
+				result = user.getPropertyValueByName("photoBig");
 			}
 
 			return result;

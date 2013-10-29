@@ -99,7 +99,7 @@ class JsonUser {
 
 		final Boolean online = getOnline();
 		if (online != null) {
-			properties.setProperty(Users.newOnlineProperty(online));
+			user.setOnline(online);
 		}
 		if (bdate != null) {
 			properties.setProperty("bdate", bdate);

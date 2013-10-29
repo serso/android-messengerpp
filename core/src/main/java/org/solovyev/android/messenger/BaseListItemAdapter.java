@@ -143,7 +143,7 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		return alreadySelected;
 	}
 
-	private boolean findAndSelectItem(@Nonnull ListItem selectedItem) {
+	private boolean findAndSelectItem(@Nullable ListItem selectedItem) {
 		boolean selected = false;
 
 		for (int i = 0; i < getCount(); i++) {
@@ -160,6 +160,12 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		}
 
 		return selected;
+	}
+
+	public void unselect() {
+		selectedItem = null;
+		selectedItemPosition = NOT_SELECTED;
+		findAndSelectItem(null);
 	}
 
 	public static final class ListItemComparator implements Comparator<ListItem> {

@@ -210,7 +210,11 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 			if (!clone.read) {
 				clone.read = that.isRead();
 			}
-			clone.state = that.getState();
+
+			if(clone.state != MessageState.removed) {
+				clone.state = that.getState();
+			}
+
 			clone.body = that.getBody();
 			clone.title = that.getTitle();
 			clone.sendDate = that.getSendDate();

@@ -19,11 +19,6 @@ import javax.annotation.Nonnull;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.UiEventType.new_contact;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 5:11 PM
- */
 public abstract class BaseContactsFragment extends BaseListFragment<UiContact, ContactListItem> implements DetachableFragment {
 
 	@Nonnull
