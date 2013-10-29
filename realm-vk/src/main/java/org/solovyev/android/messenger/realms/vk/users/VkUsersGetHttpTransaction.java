@@ -13,15 +13,14 @@ import org.solovyev.common.collections.Collections;
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 5/30/12
- * Time: 1:43 AM
- */
+import static com.google.common.collect.Lists.transform;
+
 public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<User>> {
 
 	@Nonnull
@@ -30,10 +29,10 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	@Nonnull
 	private final List<String> userIds;
 
-	@javax.annotation.Nullable
+	@Nullable
 	private final List<ApiUserField> apiUserFields;
 
-	private VkUsersGetHttpTransaction(@Nonnull VkAccount realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+	private VkUsersGetHttpTransaction(@Nonnull VkAccount realm, @Nonnull List<String> userIds, @Nullable List<ApiUserField> apiUserFields) {
 		super(realm, "users.get");
 		this.apiUserFields = apiUserFields;
 		assert !userIds.isEmpty();
@@ -42,7 +41,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	}
 
 	@Nonnull
-	public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@Nonnull VkAccount realm, @Nonnull List<String> userIds, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+	public static List<VkUsersGetHttpTransaction> newInstancesForUserIds(@Nonnull VkAccount realm, @Nonnull List<String> userIds, @Nullable List<ApiUserField> apiUserFields) {
 		final List<VkUsersGetHttpTransaction> result = new ArrayList<VkUsersGetHttpTransaction>();
 
 		for (List<String> userIdsChunk : Collections.split(userIds, MAX_CHUNK)) {
@@ -53,8 +52,8 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	}
 
 	@Nonnull
-	public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull VkAccount realm, @Nonnull List<User> users, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
-		return newInstancesForUserIds(realm, Lists.transform(users, new Function<User, String>() {
+	public static List<VkUsersGetHttpTransaction> newInstancesForUsers(@Nonnull VkAccount realm, @Nonnull List<User> users, @Nullable List<ApiUserField> apiUserFields) {
+		return newInstancesForUserIds(realm, transform(users, new Function<User, String>() {
 			@Override
 			public String apply(User user) {
 				return user.getEntity().getAccountEntityId();
@@ -63,7 +62,7 @@ public class VkUsersGetHttpTransaction extends AbstractVkHttpTransaction<List<Us
 	}
 
 	@Nonnull
-	public static VkUsersGetHttpTransaction newInstance(@Nonnull VkAccount realm, @Nonnull String userId, @javax.annotation.Nullable List<ApiUserField> apiUserFields) {
+	public static VkUsersGetHttpTransaction newInstance(@Nonnull VkAccount realm, @Nonnull String userId, @Nullable List<ApiUserField> apiUserFields) {
 		return new VkUsersGetHttpTransaction(realm, Arrays.asList(userId), apiUserFields);
 	}
 
