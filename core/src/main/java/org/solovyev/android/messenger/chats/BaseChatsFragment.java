@@ -50,7 +50,11 @@ public abstract class BaseChatsFragment extends BaseListFragment<UiChat, ChatLis
 
 	@Override
 	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull ChatListItem selectedItem) {
-		return fragment instanceof MessagesFragment;
+		boolean canReuse = false;
+		if(fragment instanceof MessagesFragment) {
+			canReuse = ((MessagesFragment) fragment).getChat().equals(selectedItem.getChat());
+		}
+		return canReuse;
 	}
 
 	@Override
