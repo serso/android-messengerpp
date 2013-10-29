@@ -24,5 +24,4 @@ public interface MutableUser extends User {
 
 	@Nonnull
 	MutableUser clone();
-
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.db.StringIdMapper;
 
 import javax.annotation.Nonnull;
@@ -18,7 +20,7 @@ import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
 import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
 import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
 
-public final class SqliteDao<E> extends AbstractSQLiteHelper implements Dao<E> {
+public final class SqliteDao<E extends Identifiable> extends AbstractSQLiteHelper implements Dao<E> {
 
 	@Nonnull
 	private final String tableName;
@@ -71,7 +73,7 @@ public final class SqliteDao<E> extends AbstractSQLiteHelper implements Dao<E> {
 
 	@Override
 	public void delete(@Nonnull E entity) {
-		deleteById(mapper.getId(entity));
+		deleteById(entity.getId());
 	}
 
 	@Override
@@ -120,7 +122,7 @@ public final class SqliteDao<E> extends AbstractSQLiteHelper implements Dao<E> {
 
 			final ContentValues values = mapper.toContentValues(entity);
 
-			return db.update(tableName, values, whereIdEqualsTo(), new String[]{mapper.getId(entity)});
+			return db.update(tableName, values, whereIdEqualsTo(), new String[]{entity.getId()});
 		}
 	}
 

@@ -3,13 +3,14 @@ package org.solovyev.android.messenger.messages;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.Identifiable;
+import org.solovyev.android.messenger.Mergeable;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface Message extends Identifiable {
+public interface Message extends Identifiable, Mergeable<Message> {
 
 	@Nonnull
 	Entity getEntity();
@@ -74,6 +75,4 @@ public interface Message extends Identifiable {
 	boolean isOutgoing();
 
 	boolean isIncoming();
-
-	Message cloneAndMerge(@Nonnull Message that);
 }

@@ -357,11 +357,6 @@ public class DefaultChatService implements ChatService {
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>();
 		final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>();
 
-		final List<Chat> addedObjectLinks = mergeResult.getAddedObjectLinks();
-		if (!addedObjectLinks.isEmpty()) {
-			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedObjectLinks));
-		}
-
 		final List<Chat> addedObjects = mergeResult.getAddedObjects();
 		for (Chat addedChat : addedObjects) {
 			chatEvents.add(ChatEventType.added.newEvent(addedChat));

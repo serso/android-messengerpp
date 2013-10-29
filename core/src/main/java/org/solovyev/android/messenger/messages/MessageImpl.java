@@ -199,8 +199,9 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 		}
 	}
 
+	@Nonnull
 	@Override
-	public MutableMessage cloneAndMerge(@Nonnull Message that) {
+	public MutableMessage merge(@Nonnull Message that) {
 		if(this == that) {
 			return this;
 		} else {

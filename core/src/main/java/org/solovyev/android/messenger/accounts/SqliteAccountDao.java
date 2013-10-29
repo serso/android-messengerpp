@@ -142,7 +142,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		public ContentValues toContentValues(@Nonnull Account account) throws AccountRuntimeException {
 			final ContentValues values = new ContentValues();
 
-			values.put("id", getId(account));
+			values.put("id", account.getId());
 			values.put("realm_id", account.getRealm().getId());
 			values.put("user_id", account.getUser().getEntity().getEntityId());
 
@@ -169,12 +169,6 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		@Override
 		public Converter<Cursor, Account> getCursorMapper() {
 			return cursorMapper;
-		}
-
-		@Nonnull
-		@Override
-		public String getId(@Nonnull Account account) {
-			return account.getId();
 		}
 	}
 

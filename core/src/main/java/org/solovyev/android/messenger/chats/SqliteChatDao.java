@@ -75,7 +75,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		super(context, sqliteOpenHelper);
 		final ChatDaoMapper chatDaoMapper = new ChatDaoMapper(this);
 		dao = new SqliteDao<Chat>("chats", "id", chatDaoMapper, context, sqliteOpenHelper);
-		linkedEntitiesDao = new SqliteLinkedEntitiesDao<Chat>("chats", "id", chatDaoMapper, context, sqliteOpenHelper, "user_chats", "user_id", "chat_id", dao, true);
+		linkedEntitiesDao = new SqliteLinkedEntitiesDao<Chat>("chats", "id", context, sqliteOpenHelper, "user_chats", "user_id", "chat_id", dao);
 	}
 
 	@Nonnull
@@ -284,13 +284,6 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 			execs.add(new UpdateChat(updatedChat));
 			execs.add(new DeleteChatProperties(updatedChat));
 			execs.add(new InsertChatProperties(updatedChat));
-		}
-
-		for (Chat addedChatLink : result.getAddedObjectLinks()) {
-			execs.add(new UpdateChat(addedChatLink));
-			execs.add(new DeleteChatProperties(addedChatLink));
-			execs.add(new InsertChatProperties(addedChatLink));
-			execs.add(new InsertChatLink(userId, addedChatLink.getEntity().getEntityId()));
 		}
 
 		for (final Chat addedChat : result.getAddedObjects()) {
@@ -504,12 +497,6 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		@Override
 		public Converter<Cursor, Chat> getCursorMapper() {
 			return chatMapper;
-		}
-
-		@Nonnull
-		@Override
-		public String getId(@Nonnull Chat chat) {
-			return chat.getId();
 		}
 	}
 }

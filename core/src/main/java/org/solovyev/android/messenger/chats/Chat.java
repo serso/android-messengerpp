@@ -2,6 +2,7 @@ package org.solovyev.android.messenger.chats;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.Identifiable;
+import org.solovyev.android.messenger.Mergeable;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.properties.AProperty;
@@ -10,12 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-/**
- * User: serso
- * Date: 6/11/12
- * Time: 7:38 PM
- */
-public interface Chat extends Identifiable, EntityAware {
+public interface Chat extends Identifiable, EntityAware, Mergeable<Chat> {
 
 	String PROPERTY_PRIVATE = "private";
 	String PROPERTY_DRAFT_MESSAGE = "draft_message";

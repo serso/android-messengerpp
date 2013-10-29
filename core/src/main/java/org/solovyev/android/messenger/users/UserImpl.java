@@ -18,13 +18,7 @@ import org.solovyev.common.text.Strings;
 import com.google.common.base.Splitter;
 
 import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
-import static org.solovyev.android.properties.Properties.newProperty;
 
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 10:30 PM
- */
 final class UserImpl extends AbstractIdentifiable implements MutableUser {
 
 	@Nonnull
@@ -205,6 +199,19 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 		final UserImpl clone = (UserImpl) super.clone();
 		clone.properties = this.properties.clone();
 		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public User merge(@Nonnull User that) {
+		if(this == that) {
+			return this;
+		} else {
+			final UserImpl clone = this.clone();
+			clone.displayName = that.getDisplayName();
+			clone.properties.setPropertiesFrom(that.getPropertiesCollection());
+			return clone;
+		}
 	}
 
 	@Override

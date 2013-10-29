@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public abstract class DefaultLinkedEntitiesDaoTest<E> extends DefaultMessengerTest {
+public abstract class DefaultLinkedEntitiesDaoTest<E extends Identifiable> extends DefaultMessengerTest {
 
 	@Nullable
 	private final Equalizer<E> equalsEqualizer;
@@ -61,22 +61,28 @@ public abstract class DefaultLinkedEntitiesDaoTest<E> extends DefaultMessengerTe
 	}
 
 	@Test
-	public void testEntitiesShouldBeInAddedList() throws Exception {
+	public void testMerge() throws Exception {
 		final AccountData ad = getAccountData1();
 		final List<E> addedEntities = newArrayList();
 		for(int i = 0; i < 5; i++) {
 			addedEntities.add(newLinkedEntity(ad, i));
 		}
 
-		final List<E> entitiesFromDb = newArrayList(getLinkedEntities(ad));
-		entitiesFromDb.addAll(addedEntities);
-		shuffle(entitiesFromDb);
+		final List<String> removedEntityIds = newArrayList();
+		final List<E> entitiesFromDb = getLinkedEntities(ad);
+		removedEntityIds.add(entitiesFromDb.remove(0).getId());
+		removedEntityIds.add(entitiesFromDb.remove(0).getId());
 
-		final MergeDaoResult<E, String> result = dao.mergeLinkedEntities(getId(), entitiesFromDb, false, true);
+		final List<E> entities = newArrayList(entitiesFromDb);
+		entities.addAll(addedEntities);
+		shuffle(entities);
 
-		assertEntitiesSame(getLinkedEntities(ad), result.getUpdatedObjects());
+		final MergeDaoResult<E, String> result = dao.mergeLinkedEntities(getId(), entities, true, true);
+
+		assertEntitiesSame(entitiesFromDb, result.getUpdatedObjects());
 		assertEntitiesSame(addedEntities, result.getAddedObjects());
-		assertTrue(result.getAddedObjectLinks().isEmpty());
+		// removal now is not supported
+		// assertEquals(removedEntityIds, result.getRemovedObjectIds());
 	}
 
 	@Nonnull

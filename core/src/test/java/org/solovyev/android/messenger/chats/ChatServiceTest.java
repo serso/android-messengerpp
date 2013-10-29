@@ -104,7 +104,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 
 		assertNotNull(chat);
 		assertEquals(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), chat.getEntity());
-		assertEquals("test_api_chat", chat.getEntity().getAccountEntityId());
+		assertEquals(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()).getAccountEntityId(), chat.getEntity().getAccountEntityId());
 	}
 
 	@Test

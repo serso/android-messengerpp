@@ -13,11 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 9:11 PM
- */
 public interface ChatDao extends LinkedEntitiesDao<Chat>, Dao<Chat> {
 
 	@Nonnull

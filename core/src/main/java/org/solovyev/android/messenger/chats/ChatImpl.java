@@ -3,7 +3,6 @@ package org.solovyev.android.messenger.chats;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
@@ -14,14 +13,8 @@ import javax.annotation.Nullable;
 
 import java.util.*;
 
-import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.properties.Properties.newProperties;
 
-/**
- * User: serso
- * Date: 6/11/12
- * Time: 7:59 PM
- */
 public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 
     /*
@@ -156,5 +149,17 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 				"id=" + getEntity().getEntityId() +
 				", privateChat=" + privateChat +
 				'}';
+	}
+
+	@Nonnull
+	@Override
+	public Chat merge(@Nonnull Chat that) {
+		if(this == that) {
+			return this;
+		} else {
+			final ChatImpl clone = this.clone();
+			clone.properties.setPropertiesFrom(that.getPropertiesCollection());
+			return clone;
+		}
 	}
 }

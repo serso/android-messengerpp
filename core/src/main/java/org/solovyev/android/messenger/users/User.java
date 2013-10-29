@@ -7,17 +7,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.Identifiable;
+import org.solovyev.android.messenger.Mergeable;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
 
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 9:11 PM
- */
-public interface User extends MutableUserSyncData, Identifiable, EntityAware {
+public interface User extends MutableUserSyncData, Identifiable, EntityAware, Mergeable<User> {
 
     /*
 	**********************************************************************

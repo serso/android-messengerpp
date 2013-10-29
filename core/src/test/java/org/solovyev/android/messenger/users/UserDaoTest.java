@@ -170,14 +170,4 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	protected User changeEntity(@Nonnull User user) {
 		return user;
 	}
-
-	@Test
-	public void testForUserShouldNotBeCreatedLink() throws Exception {
-		final AccountData ad = getAccountData1();
-		final TestAccount account = ad.getAccount();
-		final User user = account.getUser();
-
-		final MergeDaoResult<User,String> mergeResult = dao.mergeLinkedEntities(user.getId(), Arrays.asList(user), false, true);
-		assertTrue(mergeResult.getAddedObjectLinks().isEmpty());
-	}
 }

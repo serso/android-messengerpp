@@ -50,6 +50,7 @@ public interface MutableMessage extends Message {
 	@Nonnull
 	MutableMessage cloneWithNewChat(@Nonnull Entity chat);
 
+	@Nonnull
 	@Override
-	MutableMessage cloneAndMerge(@Nonnull Message that);
+	MutableMessage merge(@Nonnull Message that);
 }

@@ -437,8 +437,6 @@ public class DefaultUserService implements UserService {
 
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
-		userEvents.add(UserEventType.contacts_added.newEvent(user, result.getAddedObjectLinks()));
-
 		final List<User> addedContacts = result.getAddedObjects();
 		for (User addedContact : addedContacts) {
 			userEvents.add(UserEventType.added.newEvent(addedContact));

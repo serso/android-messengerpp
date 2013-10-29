@@ -55,7 +55,7 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		super(context, sqliteOpenHelper);
 		final UserDaoMapper userDaoMapper = new UserDaoMapper(this);
 		dao = new SqliteDao<User>("users", "id", userDaoMapper, context, sqliteOpenHelper);
-		linkedEntitiesDao = new SqliteLinkedEntitiesDao<User>("users", "id", userDaoMapper, context, sqliteOpenHelper, "user_contacts", "user_id", "contact_id", dao, false);
+		linkedEntitiesDao = new SqliteLinkedEntitiesDao<User>("users", "id", context, sqliteOpenHelper, "user_contacts", "user_id", "contact_id", dao);
 	}
 
 	@Override
@@ -147,14 +147,6 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 			execs.add(new DeleteProperties(updatedContact));
 			execs.add(new InsertProperties(updatedContact));
 		}
-
-		for (User addedContactLink : result.getAddedObjectLinks()) {
-			execs.add(new UpdateUser(addedContactLink));
-			execs.add(new DeleteProperties(addedContactLink));
-			execs.add(new InsertProperties(addedContactLink));
-			execs.add(new InsertContact(userId, addedContactLink.getEntity().getEntityId()));
-		}
-
 
 		for (User addedContact : result.getAddedObjects()) {
 			execs.add(new InsertUser(addedContact));
@@ -387,12 +379,6 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		@Override
 		public Converter<Cursor, User> getCursorMapper() {
 			return userMapper;
-		}
-
-		@Nonnull
-		@Override
-		public String getId(@Nonnull User user) {
-			return user.getId();
 		}
 	}
 

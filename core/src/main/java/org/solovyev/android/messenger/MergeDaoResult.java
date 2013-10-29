@@ -25,21 +25,8 @@ public interface MergeDaoResult<T, ID> {
 	List<ID> getRemovedObjectIds();
 
 	/**
-	 * Method returns list of added object to persistence storage, i.e. list of object which EXISTED before merge BUT were not added to parent object and LINKS to parent object WERE ADDED while merge
-	 * <p/>
-	 * NOTE: list returned by this method and list returned by {@link MergeDaoResult#getAddedObjects()} are mutually exclusive,
-	 * i.e. no elements from one list contains in another and vice versa
-	 *
-	 * @return list of added objects links, empty if not applicable
-	 */
-	@Nonnull
-	List<T> getAddedObjectLinks();
-
-	/**
 	 * Method returns list of added object to persistence storage, i.e. list of object which didn't exist before merge and were added while merge
 	 * <p/>
-	 * NOTE: list returned by this method and list returned by {@link MergeDaoResult#getAddedObjectLinks()} are mutually exclusive,
-	 * i.e. no elements from one list contains in another and vice versa
 	 *
 	 * @return list of added objects
 	 */

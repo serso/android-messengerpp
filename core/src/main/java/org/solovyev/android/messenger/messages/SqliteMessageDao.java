@@ -6,11 +6,27 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.common.base.Predicate;
-import com.google.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
+
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.*;
+import org.solovyev.android.db.AbstractDbQuery;
+import org.solovyev.android.db.AbstractObjectDbExec;
+import org.solovyev.android.db.AbstractSQLiteHelper;
+import org.solovyev.android.db.Dao;
+import org.solovyev.android.db.DbExec;
+import org.solovyev.android.db.DeleteAllRowsDbExec;
+import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.db.SqliteDao;
+import org.solovyev.android.db.SqliteDaoEntityMapper;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
@@ -23,19 +39,12 @@ import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 import org.solovyev.common.text.Strings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.google.inject.Inject;
 
-import static com.google.common.base.Predicates.equalTo;
-import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.getFirst;
-import static org.solovyev.android.db.AndroidDbUtils.*;
+import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
+import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
+import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.MessageState.removed;
 
@@ -194,7 +203,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 				if (messageFromDb == null) {
 					result.addAddedObject(message);
 				} else {
-					final Message mergedMessage = messageFromDb.cloneAndMerge(message);
+					final Message mergedMessage = messageFromDb.merge(message);
 					result.addUpdatedObject(mergedMessage);
 				}
 			}
@@ -262,21 +271,6 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		}
 	}
 
-	private static class MessageByIdFinder implements Predicate<Message> {
-
-		@Nonnull
-		private final String messageId;
-
-		public MessageByIdFinder(@Nonnull String messageId) {
-			this.messageId = messageId;
-		}
-
-		@Override
-		public boolean apply(@javax.annotation.Nullable Message message) {
-			return message != null && message.getEntity().getEntityId().equals(messageId);
-		}
-	}
-
 	public static final class InsertMessage extends AbstractObjectDbExec<Message> {
 
 		public InsertMessage(@Nullable Message message) {
@@ -321,12 +315,6 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Override
 		public Converter<Cursor, Message> getCursorMapper() {
 			return new MessageMapper(SqliteMessageDao.this);
-		}
-
-		@Nonnull
-		@Override
-		public String getId(@Nonnull Message message) {
-			return message.getId();
 		}
 	}
 

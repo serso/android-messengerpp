@@ -1,26 +1,17 @@
 package org.solovyev.android.messenger;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 6/9/12
- * Time: 8:19 PM
- */
+import static java.util.Collections.unmodifiableList;
+
 public final class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
 
 	// ids of objects which were removed on the remote server
 	@Nonnull
 	private final List<ID> removedObjectIds;
-
-	// objects which were added on the remote server
-	@Nonnull
-	private final List<T> addedObjectLinks;
 
 	@Nonnull
 	private final List<T> addedObjects;
@@ -31,37 +22,27 @@ public final class MergeDaoResultImpl<T, ID> implements MergeDaoResult<T, ID> {
 
 	public MergeDaoResultImpl() {
 		this.removedObjectIds = new ArrayList<ID>();
-		this.addedObjectLinks = new ArrayList<T>();
 		this.addedObjects = new ArrayList<T>();
 		this.updatedObjects = new ArrayList<T>();
 	}
 
 	@Nonnull
 	public List<ID> getRemovedObjectIds() {
-		return Collections.unmodifiableList(removedObjectIds);
-	}
-
-	@Nonnull
-	public List<T> getAddedObjectLinks() {
-		return Collections.unmodifiableList(addedObjectLinks);
+		return unmodifiableList(removedObjectIds);
 	}
 
 	@Nonnull
 	public List<T> getAddedObjects() {
-		return Collections.unmodifiableList(addedObjects);
+		return unmodifiableList(addedObjects);
 	}
 
 	@Nonnull
 	public List<T> getUpdatedObjects() {
-		return Collections.unmodifiableList(updatedObjects);
+		return unmodifiableList(updatedObjects);
 	}
 
 	public boolean addRemovedObjectId(@Nonnull ID removedObjectId) {
 		return removedObjectIds.add(removedObjectId);
-	}
-
-	public boolean addAddedObjectLink(@Nonnull T addedLink) {
-		return addedObjectLinks.add(addedLink);
 	}
 
 	public boolean addAddedObject(@Nonnull T addedObject) {
