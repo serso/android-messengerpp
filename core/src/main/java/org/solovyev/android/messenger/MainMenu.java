@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.PopupWindow;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +16,8 @@ import org.solovyev.android.menu.AMenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatUiEventType;
+import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.Notification;
 import org.solovyev.android.messenger.notifications.NotificationsViewBuilder;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
@@ -32,7 +28,6 @@ import org.solovyev.android.view.AnchorAPopupWindow;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import static org.solovyev.android.messenger.App.getChatService;
 import static org.solovyev.android.messenger.App.getUnreadMessagesCounter;
 
 /**
@@ -157,14 +152,7 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-			final Entity chatEntity = getUnreadMessagesCounter().getUnreadChat();
-			if (chatEntity != null) {
-				final Chat chat = getChatService().getChatById(chatEntity);
-				if (chat != null) {
-					final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-					eventManager.fire(ChatUiEventType.chat_open_requested.newEvent(chat));
-				}
-			}
+			Chats.openUnreadChat(context);
 		}
 	}
 

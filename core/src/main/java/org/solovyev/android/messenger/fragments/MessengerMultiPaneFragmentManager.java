@@ -1,12 +1,10 @@
 package org.solovyev.android.messenger.fragments;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentManager;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
-import org.solovyev.android.fragments.ReflectionFragmentBuilder;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.EmptyFragment;

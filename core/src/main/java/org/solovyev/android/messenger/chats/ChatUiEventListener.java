@@ -51,8 +51,8 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		final ChatUiEventType type = event.getType();
 
 		switch (type) {
-			case chat_open_requested:
-				onChatOpenRequestedEvent(chat);
+			case open_chat:
+				onOpenChatEvent(chat);
 				break;
 			case chat_clicked:
 				onChatClickedEvent(chat);
@@ -63,7 +63,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		}
 	}
 
-	private void onChatOpenRequestedEvent(@Nonnull final Chat chat) {
+	private void onOpenChatEvent(@Nonnull final Chat chat) {
 		final MultiPaneFragmentManager fragmentService = activity.getMultiPaneFragmentManager();
 		if (activity.getMultiPaneManager().isDualPane(activity)) {
 			if (!fragmentService.isFragmentShown(CHATS_FRAGMENT_TAG)) {

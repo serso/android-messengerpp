@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
+
 import com.google.inject.Inject;
+
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
 import org.solovyev.android.messenger.chats.ChatUiEvent;
@@ -24,12 +26,13 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 3:52 PM
- */
+import static org.solovyev.android.messenger.App.getUiHandler;
+import static org.solovyev.android.messenger.chats.Chats.openUnreadChat;
+import static org.solovyev.common.Objects.areEqual;
+
 public final class MainActivity extends BaseFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
+
+	private static final String INTENT_SHOW_UNREAD_MESSAGES_ACTION = "show_unread_messages";
 
     /*
 	**********************************************************************
@@ -71,6 +74,13 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
 		activity.startActivity(result);
 	}
 
+	public static void startActivityForUnreadMessages(@Nonnull Activity activity) {
+		final Intent result = new Intent();
+		result.setClass(activity, MainActivity.class);
+		result.setAction(INTENT_SHOW_UNREAD_MESSAGES_ACTION);
+		activity.startActivity(result);
+	}
+
     /*
     **********************************************************************
     *
@@ -91,6 +101,25 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
 		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
 		listeners.add(FragmentUiEvent.class, new FragmentUiEventListener(this));
 		listeners.add(PreferenceUiEvent.class, new PreferenceUiEventListener(this));
+
+		handleIntent(getIntent());
+	}
+
+	private void handleIntent(@Nonnull Intent intent) {
+		if (areEqual(intent.getAction(), INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
+			getUiHandler().post(new Runnable() {
+				@Override
+				public void run() {
+					openUnreadChat(MainActivity.this);
+				}
+			});
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleIntent(intent);
 	}
 
 	@Override

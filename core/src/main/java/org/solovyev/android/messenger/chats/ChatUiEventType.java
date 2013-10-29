@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  */
 public enum ChatUiEventType {
 
-	chat_open_requested,
+	open_chat,
 	chat_clicked,
 	chat_message_read {
 		@Override

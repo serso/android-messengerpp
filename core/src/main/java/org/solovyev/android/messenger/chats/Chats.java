@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger.chats;
 
+import android.content.Context;
+
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
@@ -17,6 +19,9 @@ import java.util.List;
 
 import static java.lang.Math.min;
 import static java.util.Collections.sort;
+import static org.solovyev.android.messenger.App.getChatService;
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.getUnreadMessagesCounter;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 
 /**
@@ -107,5 +112,15 @@ public final class Chats {
 		sort(result, new LastMessageDateChatComparator());
 
 		return result.subList(0, min(result.size(), count));
+	}
+
+	public static void openUnreadChat(@Nonnull Context context) {
+		final Entity chatId = getUnreadMessagesCounter().getUnreadChat();
+		if (chatId != null) {
+			final Chat chat = getChatService().getChatById(chatId);
+			if (chat != null) {
+				getEventManager(context).fire(ChatUiEventType.open_chat.newEvent(chat));
+			}
+		}
 	}
 }
