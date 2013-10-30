@@ -58,6 +58,8 @@ public class ContactFragment extends BaseUserFragment {
 
 			propertiesViewGroup.addView(propertyView);
 		}
+
+		getMultiPaneManager().onPaneCreated(getActivity(), root, true);
 	}
 
 	@Nullable

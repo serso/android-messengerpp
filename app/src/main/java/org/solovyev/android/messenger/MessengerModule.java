@@ -118,7 +118,7 @@ public class MessengerModule extends AbstractModule {
 
 		@Inject
 		public ImageLoader(@Nonnull Application context) {
-			super(context, "messenger");
+			super(context, "messenger", App.getUiHandler());
 		}
 	}
 }

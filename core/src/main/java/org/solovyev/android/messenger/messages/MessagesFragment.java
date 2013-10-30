@@ -630,13 +630,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
-			if(chat.isPrivate()) {
-				final Entity contactId = chatService.getSecondUser(chat);
-				if (contactId != null) {
-					final User contact = getUserService().getUserById(contactId);
-					getEventManager().fire(ContactUiEventType.view_contact.newEvent(contact));
-				}
-			}
+			getEventManager().fire(ChatUiEventType.show_participants.newEvent(chat));
 		}
 	}
 
@@ -650,9 +644,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
-			if(!chat.isPrivate()) {
-
-			}
+			getEventManager().fire(ChatUiEventType.show_participants.newEvent(chat));
 		}
 	}
 }

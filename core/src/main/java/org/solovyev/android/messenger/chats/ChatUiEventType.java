@@ -14,6 +14,7 @@ public enum ChatUiEventType {
 
 	open_chat,
 	chat_clicked,
+	show_participants,
 	chat_message_read {
 		@Override
 		protected void checkData(@Nullable Object data) {

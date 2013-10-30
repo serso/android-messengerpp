@@ -1,27 +1,27 @@
 package org.solovyev.android.messenger.chats;
 
-import android.support.v4.app.Fragment;
 import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessagesFragment;
-import org.solovyev.android.messenger.users.ContactsInfoFragment;
+import org.solovyev.android.messenger.users.ContactUiEventType;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.Builder;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.messages.MessagesFragment.newMessagesFragmentDef;
 import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
+import static org.solovyev.android.messenger.users.ContactsInfoFragment.newViewContactsFragmentDef;
+import static org.solovyev.android.messenger.users.Users.showViewUsersFragment;
 
 /**
  * User: serso
@@ -59,6 +59,25 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 			case chat_message_read:
 				onMessageReadEvent(chat, event.getDataAsMessage());
 				break;
+			case show_participants:
+				onShowParticipants(chat);
+				break;
+		}
+	}
+
+	private void onShowParticipants(@Nonnull Chat chat) {
+		if(chat.isPrivate()) {
+			final Entity contactId = chatService.getSecondUser(chat);
+			if (contactId != null) {
+				final User contact = App.getUserService().getUserById(contactId);
+				App.getEventManager(activity).fire(ContactUiEventType.view_contact.newEvent(contact));
+			}
+		} else {
+			final Account account = App.getAccountService().getAccountByEntityOrNull(chat.getEntity());
+			if (account != null) {
+				final List<User> participants = chatService.getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
+				showViewUsersFragment(participants, activity);
+			}
 		}
 	}
 
@@ -98,15 +117,8 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 					if (chat.isPrivate()) {
 						fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
 					} else {
-						fm.setThirdFragment(new Builder<Fragment>() {
-							@Nonnull
-							@Override
-							public Fragment build() {
-								final List<User> participants = new ArrayList<User>();
-								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity()));
-								return new ContactsInfoFragment(participants);
-							}
-						}, null, ContactsInfoFragment.FRAGMENT_TAG);
+						final List<User> participants = activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
+						fm.setThirdFragment(newViewContactsFragmentDef(activity, participants, false));
 					}
 				} catch (UnsupportedAccountException e) {
 					App.getExceptionHandler().handleException(e);

@@ -3,6 +3,8 @@ package org.solovyev.android.messenger;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Handler;
+import android.os.Looper;
 import com.google.inject.*;
 import com.google.inject.util.Modules;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
@@ -129,7 +131,7 @@ public abstract class AbstractTestMessengerModule extends AbstractModule {
 
 		@Inject
 		public ImageLoader(@Nonnull Application context) {
-			super(context, "messenger");
+			super(context, "messenger", new Handler());
 		}
 	}
 }

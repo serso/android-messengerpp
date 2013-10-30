@@ -28,6 +28,7 @@ public interface MultiPaneManager {
 	void onCreatePane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane);
 
 	void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane);
+	void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane, boolean forceShowTitle);
 
 	void fillLoadingLayout(@Nonnull Activity activity, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView);
 }

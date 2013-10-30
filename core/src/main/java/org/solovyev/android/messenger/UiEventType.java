@@ -2,11 +2,6 @@ package org.solovyev.android.messenger;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 3/8/13
- * Time: 10:29 PM
- */
 public enum UiEventType {
 	show_realms,
 	new_message,

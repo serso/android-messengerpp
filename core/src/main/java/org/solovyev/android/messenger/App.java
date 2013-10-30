@@ -98,6 +98,7 @@ public final class App {
 
 	private void init0(@Nonnull Application application) {
 		this.application = application;
+		this.uiHandler = Threads.newUiHandler();
 
 		RoboGuice.getBaseApplicationInjector(application).injectMembers(this);
 
@@ -118,8 +119,6 @@ public final class App {
 		accountConnectionsService.init();
 
 		networkStateService.startListening(application);
-
-		uiHandler = Threads.newUiHandler();
 	}
 
 	/*
