@@ -326,6 +326,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 
 		lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		lv.setStackFromBottom(true);
+		lv.setFastScrollEnabled(false);
 	}
 
 	@Override

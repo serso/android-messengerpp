@@ -330,8 +330,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		setListShown(false);
-
 		if (listViewFilter != null) {
 			listViewFilter.onViewCreated();
 		}
@@ -760,9 +758,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 			public void onFilterComplete(int count) {
 				final Activity activity = getActivity();
 				if (activity != null && !activity.isFinishing() && !isDetached()) {
-
-					// change UI state
-					setListShown(true);
 
 					int position = -1;
 					if (selectedListItem != null) {
