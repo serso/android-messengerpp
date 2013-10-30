@@ -50,8 +50,8 @@ public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceG
 	protected BaseListItemAdapter<PreferenceGroupListItem> createAdapter() {
 		final List<PreferenceGroupListItem> preferences = new ArrayList<PreferenceGroupListItem>();
 
-		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-appearance", R.string.mpp_settings_appearance, R.xml.mpp_preferences_appearance, R.drawable.mpp_icon_settings_appearance)));
-		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-others", R.string.mpp_settings_other, R.xml.mpp_preferences_others, R.drawable.mpp_icon_settings_other)));
+		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-appearance", R.string.mpp_settings_appearance, R.xml.mpp_preferences_appearance, R.drawable.mpp_settings_appearance_states)));
+		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-others", R.string.mpp_settings_other, R.xml.mpp_preferences_others, R.drawable.mpp_settings_other_states)));
 
 		return new PreferencesAdapter(this.getActivity(), preferences);
 	}
