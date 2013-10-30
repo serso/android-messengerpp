@@ -13,6 +13,7 @@ import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.common.JPredicate;
@@ -84,14 +85,17 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	public void onViewCreated(@Nonnull View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
+		final Account<?> account = getAccount();
+		final Realm realm = account.getRealm();
+
 		final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
-		realmIconImageView.setImageDrawable(getResources().getDrawable(getAccount().getRealm().getIconResId()));
+		realmIconImageView.setImageDrawable(getResources().getDrawable(realm.getIconResId()));
 
 		final Button backButton = (Button) root.findViewById(R.id.mpp_account_back_button);
 		backButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(account_view_cancelled.newEvent(getAccount()));
+				eventManager.fire(account_view_cancelled.newEvent(account));
 			}
 		});
 		if (multiPaneManager.isDualPane(getActivity())) {
@@ -121,7 +125,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		syncButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SyncAllAsyncTask.newForAccount(getActivity(), syncService, getAccount()).executeInParallel((Void) null);
+				SyncAllAsyncTask.newForAccount(getActivity(), syncService, account).executeInParallel((Void) null);
 			}
 		});
 
@@ -132,6 +136,9 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 				changeState();
 			}
 		});
+		if(!realm.isEnabled()) {
+			changeStateButton.setEnabled(false);
+		}
 
 		onAccountStateChanged(root);
 	}

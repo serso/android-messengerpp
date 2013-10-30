@@ -53,7 +53,9 @@ public class RealmsFragment extends BaseListFragment<Realm, RealmListItem> imple
 	protected BaseListItemAdapter<RealmListItem> createAdapter() {
 		final List<RealmListItem> listItems = new ArrayList<RealmListItem>();
 		for (Realm realm : realmService.getRealms()) {
-			listItems.add(new RealmListItem(realm));
+			if (realm.isEnabled()) {
+				listItems.add(new RealmListItem(realm));
+			}
 		}
 		return new BaseListItemAdapter<RealmListItem>(getActivity(), listItems);
 	}

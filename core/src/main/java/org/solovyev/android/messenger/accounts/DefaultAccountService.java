@@ -8,12 +8,12 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.Configuration;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.PersistenceLock;
@@ -41,11 +41,6 @@ import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_a
 import static org.solovyev.android.messenger.accounts.AccountState.enabled;
 import static org.solovyev.android.messenger.accounts.AccountState.removed;
 
-/**
- * User: serso
- * Date: 7/22/12
- * Time: 1:02 AM
- */
 @Singleton
 public class DefaultAccountService implements AccountService {
 
@@ -68,6 +63,10 @@ public class DefaultAccountService implements AccountService {
 
 	@Inject
 	@Nonnull
+	private RealmService realmService;
+
+	@Inject
+	@Nonnull
 	private ChatService chatService;
 
 	@Inject
@@ -76,16 +75,6 @@ public class DefaultAccountService implements AccountService {
 
 	@Nonnull
 	private final Object lock;
-
-	/*
-	**********************************************************************
-	*
-	*                           FIELDS
-	*
-	**********************************************************************
-	*/
-	@Nonnull
-	private final Context context;
 
 	@GuardedBy("accounts")
 	@Nonnull
@@ -98,12 +87,7 @@ public class DefaultAccountService implements AccountService {
 	private final JEventListeners<JEventListener<? extends AccountEvent>, AccountEvent> listeners;
 
 	@Inject
-	public DefaultAccountService(@Nonnull Application context, @Nonnull Configuration configuration, @Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
-		this(context, lock, eventExecutor);
-	}
-
-	public DefaultAccountService(@Nonnull Application context, @Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
-		this.context = context;
+	public DefaultAccountService(@Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this.lock = lock;
 		this.listeners = Listeners.newEventListenersBuilderFor(AccountEvent.class).withHardReferences().withExecutor(eventExecutor).create();
 	}
@@ -123,6 +107,21 @@ public class DefaultAccountService implements AccountService {
 			for (Account account : accountDao.loadAccountsInState(removed)) {
 				this.accountDao.deleteById(account.getId());
 				this.accounts.remove(account.getId());
+			}
+
+			for (final Realm<? extends AccountConfiguration> realm : realmService.getRealms()) {
+				if (!realm.isEnabled()) {
+					final Iterable<Account> accounts = filter(this.accounts.values(), new Predicate<Account>() {
+						@Override
+						public boolean apply(Account account) {
+							return account.getRealm().equals(realm);
+						}
+					});
+
+					for (Account account : accounts) {
+						changeAccountState(account, disabled_by_app, false);
+					}
+				}
 			}
 		}
 	}

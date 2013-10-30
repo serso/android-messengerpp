@@ -50,10 +50,7 @@ public class DefaultConfiguration implements Configuration {
 			if (realms.isEmpty()) {
 				realms.add(xmppRealm);
 				realms.add(vkRealm);
-				final TelephonyManager tm = (TelephonyManager) getApplication().getSystemService(Context.TELEPHONY_SERVICE);
-				if (tm.getPhoneType() != PHONE_TYPE_NONE) {
-					realms.add(smsRealm);
-				}
+				realms.add(smsRealm);
 			}
 		}
 
