@@ -18,7 +18,7 @@
 			a:layout_gravity="top"
 			style="?mpp_list_item_icon"
 			a:visibility="gone"
-			a:src="@drawable/mpp_icon_user_empty" />
+			a:src="@drawable/mpp_icon_user" />
 
 		<LinearLayout
 			style="?mpp_list_item_block"

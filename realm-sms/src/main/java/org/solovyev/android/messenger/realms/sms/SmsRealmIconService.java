@@ -68,7 +68,7 @@ final class SmsRealmIconService implements RealmIconService {
 			}
 		}
 
-		return context.getResources().getDrawable(R.drawable.mpp_icon_user_empty);
+		return context.getResources().getDrawable(R.drawable.mpp_icon_user);
 	}
 
 	private Bitmap loadContactPhoto(long id) {

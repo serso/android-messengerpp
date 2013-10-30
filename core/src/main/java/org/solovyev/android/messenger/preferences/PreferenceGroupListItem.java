@@ -4,17 +4,16 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: serso
@@ -43,7 +42,7 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
 		if (preferenceGroup.hasIcon()) {
 			preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(preferenceGroup.getIconResId()));
 		} else {
-			preferenceIconImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_empty));
+			preferenceIconImageView.setImageDrawable(null);
 		}
 
 		final TextView preferenceNameTextView = viewTag.getViewById(R.id.mpp_li_preference_name_textview);

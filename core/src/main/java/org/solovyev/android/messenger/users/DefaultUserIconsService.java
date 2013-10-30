@@ -60,7 +60,7 @@ class DefaultUserIconsService implements UserIconsService {
 		try {
 			getRealmIconServiceByUser(user).setUserIcon(user, imageView);
 		} catch (UnsupportedAccountException e) {
-			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
+			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user));
 			App.getExceptionHandler().handleException(e);
 		}
 	}
@@ -75,7 +75,7 @@ class DefaultUserIconsService implements UserIconsService {
 		try {
 			getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
 		} catch (UnsupportedAccountException e) {
-			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_empty));
+			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user));
 			App.getExceptionHandler().handleException(e);
 		}
 	}

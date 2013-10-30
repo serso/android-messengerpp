@@ -191,7 +191,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	@Override
 	public synchronized RealmIconService getRealmIconService() {
 		if (iconService == null) {
-			iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_icon_user_empty, R.drawable.mpp_icon_users, iconUrlGetter, photoUrlGetter);
+			iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_icon_user, R.drawable.mpp_icon_users, iconUrlGetter, photoUrlGetter);
 		}
 		return iconService;
 	}
