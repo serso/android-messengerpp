@@ -2,8 +2,12 @@ package org.solovyev.android.messenger.realms.sms;
 
 import android.app.Application;
 import android.content.Context;
+import android.telephony.TelephonyManager;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -20,6 +24,7 @@ import javax.crypto.SecretKey;
 import java.util.Collections;
 import java.util.List;
 
+import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
 import static org.solovyev.android.messenger.App.newTag;
 
 @Singleton
@@ -78,6 +83,12 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
 		// todo serso: implement
 		return Collections.emptyList();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		final TelephonyManager tm = (TelephonyManager) App.getApplication().getSystemService(Context.TELEPHONY_SERVICE);
+		return tm.getPhoneType() != PHONE_TYPE_NONE;
 	}
 
 	@Nonnull

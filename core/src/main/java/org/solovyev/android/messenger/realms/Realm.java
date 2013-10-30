@@ -13,11 +13,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 7/22/12
- * Time: 12:56 AM
- */
 public interface Realm<C extends AccountConfiguration> extends Identifiable {
 
 	@Nonnull
@@ -49,6 +44,8 @@ public interface Realm<C extends AccountConfiguration> extends Identifiable {
 	 * @param context application's context
 	 */
 	void init(@Nonnull Context context);
+
+	boolean isEnabled();
 
 	@Nonnull
 	Class<? extends BaseAccountConfigurationFragment> getConfigurationFragmentClass();

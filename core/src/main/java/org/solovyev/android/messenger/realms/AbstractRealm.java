@@ -12,11 +12,6 @@ import java.util.List;
 import static org.solovyev.android.properties.Properties.newProperty;
 import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 7/22/12
- * Time: 1:05 AM
- */
 public abstract class AbstractRealm<C extends AccountConfiguration> implements Realm<C> {
 
 	@Nonnull
@@ -100,6 +95,11 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	@Override
 	public final int hashCode() {
 		return id.hashCode();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 	protected final void addUserProperty(@Nonnull Context context, @Nonnull List<AProperty> properties, int propertyNameResId, @Nullable String propertyValue) {
