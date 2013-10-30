@@ -89,6 +89,7 @@
 	<string name="mpp_dialog_do_not_ask_again">Do not ask again</string>
 
 	<string name="mpp_new_message">New message</string>
+	<string name="mpp_chat_participants">Participants</string>
 
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message.</item>

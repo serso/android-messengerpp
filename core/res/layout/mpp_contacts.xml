@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-	a:id="@+id/contacts_container"
-	a:layout_width="match_parent"
-	a:layout_height="match_parent"
-	a:padding="5dp"
-	a:gravity="top|center_horizontal"
-	a:orientation="vertical" />
