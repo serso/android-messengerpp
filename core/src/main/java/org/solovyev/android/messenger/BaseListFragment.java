@@ -792,6 +792,9 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 	protected void onEmptyListLoaded(@Nonnull BaseFragmentActivity activity) {
 		activity.getMultiPaneFragmentManager().emptifySecondFragment();
+		if(multiPaneManager.isTriplePane(activity)) {
+			activity.getMultiPaneFragmentManager().emptifyThirdFragment();
+		}
 	}
 
 	private boolean canReuseFragment(@Nullable ListItem selectedItem) {
