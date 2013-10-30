@@ -4,6 +4,9 @@
 	<!-- pressed -->
 	<item android:state_pressed="true" android:drawable="@drawable/mpp_settings_appearance_inverted" />
 
+	<!-- list item selected-->
+	<item android:state_activated="true" android:drawable="@drawable/mpp_settings_appearance_inverted" />
+
 	<!-- default, list item not selected -->
 	<item android:drawable="@drawable/mpp_settings_appearance" />
 </selector>

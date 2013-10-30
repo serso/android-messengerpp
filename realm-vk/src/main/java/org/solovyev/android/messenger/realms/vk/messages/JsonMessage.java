@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import static org.solovyev.android.messenger.chats.MessageDirection.in;
 import static org.solovyev.android.messenger.messages.MessageState.delivered;
 import static org.solovyev.android.messenger.messages.MessageState.received;
+import static org.solovyev.android.messenger.messages.MessageState.sent;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.common.text.Strings.getNotEmpty;
 
@@ -154,8 +155,10 @@ public class JsonMessage {
 
 		if(getNotNullMessageDirection() == in) {
 			message.setState(received);
+			message.setRead(isRead());
 		} else {
-			message.setState(delivered);
+			message.setState(isRead() ? delivered : sent);
+			message.setRead(true);
 		}
 
 		DateTime sendDate;
@@ -168,7 +171,6 @@ public class JsonMessage {
 		message.setSendDate(sendDate);
 		message.setBody(getNotEmpty(body, ""));
 		message.setTitle(getNotEmpty(title, ""));
-		message.setRead(isRead());
 
 		return message;
 	}
