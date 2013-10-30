@@ -566,7 +566,16 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		final boolean triplePane = getMultiPaneManager().isTriplePane(getActivity());
+
+
 		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
+
+		final ViewContactMenuItem viewContactMenuItem = new ViewContactMenuItem();
+		menuItems.add(viewContactMenuItem);
+
+		final ViewContactsMenuItem viewContactsMenuItem = new ViewContactsMenuItem();
+		menuItems.add(viewContactsMenuItem);
 
 		final EditContactMenuItem editContactMenuItem = new EditContactMenuItem();
 		menuItems.add(editContactMenuItem);
@@ -574,12 +583,16 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_messages, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
 			@Override
 			public boolean apply(@Nullable AMenuItem<MenuItem> menuItem) {
-				if(menuItem == editContactMenuItem) {
-					if(chat.isPrivate() && account.getRealm().canEditUsers()) {
+				if (menuItem == editContactMenuItem) {
+					if (chat.isPrivate() && account.getRealm().canEditUsers()) {
 						return false;
 					} else {
 						return true;
 					}
+				} else if (menuItem == viewContactMenuItem) {
+					return triplePane || !chat.isPrivate();
+				} else if (menuItem == viewContactsMenuItem) {
+					return triplePane || chat.isPrivate();
 				}
 				return false;
 			}
@@ -603,6 +616,42 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 					final User contact = getUserService().getUserById(contactId);
 					getEventManager().fire(ContactUiEventType.edit_contact.newEvent(contact));
 				}
+			}
+		}
+	}
+
+	private class ViewContactMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_view_contact;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
+			if(chat.isPrivate()) {
+				final Entity contactId = chatService.getSecondUser(chat);
+				if (contactId != null) {
+					final User contact = getUserService().getUserById(contactId);
+					getEventManager().fire(ContactUiEventType.view_contact.newEvent(contact));
+				}
+			}
+		}
+	}
+
+	private class ViewContactsMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_view_contacts;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
+			if(!chat.isPrivate()) {
+
 			}
 		}
 	}

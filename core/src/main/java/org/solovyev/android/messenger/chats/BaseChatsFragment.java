@@ -17,7 +17,9 @@ import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.MessagesFragment;
+import org.solovyev.android.messenger.users.BaseUserFragment;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -51,8 +53,12 @@ public abstract class BaseChatsFragment extends BaseListFragment<UiChat, ChatLis
 	@Override
 	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull ChatListItem selectedItem) {
 		boolean canReuse = false;
-		if(fragment instanceof MessagesFragment) {
-			canReuse = ((MessagesFragment) fragment).getChat().equals(selectedItem.getChat());
+		final Chat chat = selectedItem.getChat();
+		if (fragment instanceof MessagesFragment) {
+			canReuse = ((MessagesFragment) fragment).getChat().equals(chat);
+		} else if (fragment instanceof BaseUserFragment && chat.isPrivate()) {
+			final Entity contact = chat.getSecondUser();
+			canReuse = ((BaseUserFragment) fragment).getUser().getEntity().equals(contact);
 		}
 		return canReuse;
 	}

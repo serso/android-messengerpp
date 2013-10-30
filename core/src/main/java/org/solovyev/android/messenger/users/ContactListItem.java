@@ -170,26 +170,6 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 			protected boolean isVisible(@Nonnull UiContact uiContact) {
 				return uiContact.getUnreadMessagesCount() > 0;
 			}
-		},
-
-		edit("Edit") {
-			@Override
-			public void onClick(@Nonnull ListItemOnClickData<User> data, @Nonnull Context context) {
-				final User contact = data.getDataObject();
-				getEventManager(context).fire(edit_contact.newEvent(contact));
-			}
-
-			@Override
-			protected boolean isVisible(@Nonnull UiContact uiContact) {
-				// todo serso: we must guarantee that contact is selected in the contacts' list. Otherwise, edit fragment will be the first fragment in the back stack (instead of messages fragment) which can lead to unpredictable behaviour
-				/*final Account account = uiContact.getAccount();
-				if (account != null) {
-					return account.getRealm().canEditUsers();
-				} else {
-					return false;
-				}*/
-				return false;
-			}
 		};
 
 		@Nonnull

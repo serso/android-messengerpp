@@ -1,12 +1,11 @@
 package org.solovyev.android.messenger.users;
 
 import android.support.v4.app.Fragment;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.JPredicate;
+
+import javax.annotation.Nonnull;
 
 /**
  * User: serso
@@ -30,6 +29,6 @@ public final class ContactFragmentReuseCondition extends AbstractFragmentReuseCo
 
 	@Override
 	protected boolean canReuseFragment(@Nonnull ContactFragment fragment) {
-		return contact.equals(fragment.getContact());
+		return contact.equals(fragment.getUser());
 	}
 }

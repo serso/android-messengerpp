@@ -10,8 +10,6 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessagesFragment;
-import org.solovyev.android.messenger.users.ContactFragment;
-import org.solovyev.android.messenger.users.ContactFragmentReuseCondition;
 import org.solovyev.android.messenger.users.ContactsInfoFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Builder;
@@ -23,6 +21,7 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.messages.MessagesFragment.newMessagesFragmentDef;
+import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
 
 /**
  * User: serso
@@ -93,29 +92,24 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 			fm.clearBackStack();
 			fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
 			if (activity.isTriplePane()) {
-				if (chat.isPrivate()) {
-					fm.setThirdFragment(new Builder<Fragment>() {
-						@Nonnull
-						@Override
-						public Fragment build() {
-							return ContactFragment.newForContact(chat.getSecondUser());
-						}
-					}, ContactFragmentReuseCondition.forContact(chat.getSecondUser()), ContactFragment.FRAGMENT_TAG);
-				} else {
-					fm.setThirdFragment(new Builder<Fragment>() {
-						@Nonnull
-						@Override
-						public Fragment build() {
-							final List<User> participants = new ArrayList<User>();
-							try {
-								final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
+				try {
+					final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
+
+					if (chat.isPrivate()) {
+						fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
+					} else {
+						fm.setThirdFragment(new Builder<Fragment>() {
+							@Nonnull
+							@Override
+							public Fragment build() {
+								final List<User> participants = new ArrayList<User>();
 								participants.addAll(activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity()));
-							} catch (UnsupportedAccountException e) {
-								App.getExceptionHandler().handleException(e);
+								return new ContactsInfoFragment(participants);
 							}
-							return new ContactsInfoFragment(participants);
-						}
-					}, null, ContactsInfoFragment.FRAGMENT_TAG);
+						}, null, ContactsInfoFragment.FRAGMENT_TAG);
+					}
+				} catch (UnsupportedAccountException e) {
+					App.getExceptionHandler().handleException(e);
 				}
 			}
 

@@ -1,13 +1,12 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.BaseAccountFragment;
+import org.solovyev.android.messenger.entities.Entity;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 
@@ -65,8 +64,13 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 
 	@Nonnull
 	protected static Bundle newUserArguments(@Nonnull Account account, @Nonnull User user) {
+		return newUserArguments(account, user.getEntity());
+	}
+
+	@Nonnull
+	protected static Bundle newUserArguments(@Nonnull Account account, @Nonnull Entity user) {
 		final Bundle arguments = newAccountArguments(account);
-		arguments.putString(ARG_USER_ID, user.getId());
+		arguments.putString(ARG_USER_ID, user.getEntityId());
 		return arguments;
 	}
 }

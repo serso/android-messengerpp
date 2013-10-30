@@ -3,6 +3,18 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
 	<item
+		a:id="@+id/mpp_menu_view_contact"
+		a:title="@string/mpp_menu_view"
+		a:icon="@drawable/mpp_ab_contact"
+		a:showAsAction="always"/>
+
+	<item
+		a:id="@+id/mpp_menu_view_contacts"
+		a:title="@string/mpp_menu_view"
+		a:icon="@drawable/mpp_ab_contacts"
+		a:showAsAction="always"/>
+
+	<item
 		a:id="@+id/mpp_menu_edit_contact"
 		a:title="@string/mpp_menu_edit"
 		a:icon="@drawable/mpp_ab_edit"

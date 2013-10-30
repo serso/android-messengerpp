@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.MultiPaneManager;
@@ -23,9 +20,10 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
+import roboguice.event.EventManager;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.messenger.App.getExceptionHandler;
@@ -141,6 +139,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 		getMultiPaneManager().onPaneCreated(getActivity(), root);
 	}
 
+	@Nullable
 	protected abstract CharSequence getFragmentTitle();
 
 	protected void onAccountStateChanged(@Nonnull View root) {

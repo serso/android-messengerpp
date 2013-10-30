@@ -28,6 +28,7 @@ import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.users.BaseEditUserFragment.newCreateUserFragmentDef;
 import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserFragmentDef;
+import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
 import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
 import static org.solovyev.android.properties.Properties.newProperty;
 
@@ -170,6 +171,25 @@ public final class Users {
 		}
 
 		return false;
+	}
+
+	public static void showViewUserFragment(@Nonnull final User user, @Nonnull final BaseFragmentActivity activity) {
+		final Account account = App.getAccountService().getAccountByEntityOrNull(user.getEntity());
+
+		if (account != null) {
+			final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
+			// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
+			getUiHandler().post(new Runnable() {
+				@Override
+				public void run() {
+					if (activity.isDualPane()) {
+						mpfm.setSecondFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
+					} else {
+						mpfm.setMainFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
+					}
+				}
+			});
+		}
 	}
 
 	@Nonnull
