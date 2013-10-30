@@ -2,8 +2,17 @@ package org.solovyev.android.messenger.realms.vk;
 
 import android.app.Application;
 import android.content.Context;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
@@ -19,19 +28,16 @@ import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
 import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.android.properties.Properties;
 import org.solovyev.common.msg.MessageType;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
 import static org.solovyev.android.messenger.notifications.Notifications.newOpenRealmConfSolution;
+import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
  * User: serso
@@ -131,18 +137,49 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 			if (name.equals(User.PROPERTY_NICKNAME)) {
 				addUserProperty(context, result, R.string.mpp_nickname, property.getValue());
 			} else if (name.equals(User.PROPERTY_SEX)) {
-				result.add(Properties.newProperty(context.getString(R.string.mpp_sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
+				result.add(newProperty(context.getString(R.string.mpp_sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
 			} else if (name.equals("bdate")) {
-				result.add(Properties.newProperty(context.getString(R.string.mpp_birth_date), property.getValue()));
-			} else if (name.equals("countryId")) {
-				result.add(Properties.newProperty(context.getString(R.string.mpp_country), property.getValue()));
-			} else if (name.equals("cityId")) {
-				result.add(Properties.newProperty(context.getString(R.string.mpp_city), property.getValue()));
+				final String birthDate = formatBirthDate(property.getValue());
+				if (birthDate != null) {
+					result.add(newProperty(context.getString(R.string.mpp_birth_date), birthDate));
+				}
 			}
 
 		}
 
 		return result;
+	}
+
+	private String formatBirthDate(String value) {
+		int dateParts = 1;
+		for (int i = 0; i < value.length(); i++) {
+			if(value.charAt(i) == '.') {
+				dateParts++;
+			}
+		}
+
+
+		if(dateParts > 1) {
+			final SimpleDateFormat dt;
+			if(dateParts > 2) {
+				dt = new SimpleDateFormat("dd.MM.yyyy");
+			} else {
+				dt = new SimpleDateFormat("dd.MM");
+			}
+			try {
+				final DateFormat df;
+				if (dateParts > 2) {
+					df = SimpleDateFormat.getDateInstance();
+				} else {
+					df = new SimpleDateFormat("dd.MM");
+				}
+				return df.format(dt.parse(value));
+			} catch (ParseException e) {
+				return null;
+			}
+		} else {
+			return null;
+		}
 	}
 
 	@Override
