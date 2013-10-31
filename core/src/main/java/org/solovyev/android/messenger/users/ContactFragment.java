@@ -102,6 +102,17 @@ public class ContactFragment extends BaseUserFragment {
 		getMultiPaneManager().onPaneCreated(activity, root, true);
 	}
 
+	@Override
+	protected void onUserChanged(@Nonnull User user) {
+		super.onUserChanged(user);
+
+		final View view = getView();
+		if (view != null) {
+			final TextView contactName = (TextView) view.findViewById(R.id.mpp_fragment_title);
+			contactName.setText(user.getDisplayName());
+		}
+	}
+
 	@Nullable
 	@Override
 	protected CharSequence getFragmentTitle() {

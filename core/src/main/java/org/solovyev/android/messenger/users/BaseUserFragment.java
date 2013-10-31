@@ -1,12 +1,16 @@
 package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.BaseAccountFragment;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.common.listeners.AbstractJEventListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 
@@ -36,6 +40,9 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 
 	private User user;
 
+	@Nullable
+	private UserEventListener userEventListener;
+
 	protected BaseUserFragment(int layoutResId) {
 		super(layoutResId);
 	}
@@ -49,10 +56,22 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 			final String userId = arguments.getString(ARG_USER_ID);
 			if (userId != null) {
 				user = userService.getUserById(newEntityFromEntityId(userId));
+
+				userEventListener = new UserEventListener();
+				userService.addListener(userEventListener);
 			}
 		}
 	}
 
+	@Override
+	public void onDestroy() {
+		if (userEventListener != null) {
+			userService.removeListener(userEventListener);
+			userEventListener = null;
+		}
+
+		super.onDestroy();
+	}
 
 	protected boolean isNewUser() {
 		return user == null;
@@ -60,6 +79,15 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 
 	public User getUser() {
 		return user;
+	}
+
+	public void setUser(@Nonnull User user) {
+		assert this.user != null && this.user.equals(user);
+		this.user = user;
+		onUserChanged(this.user);
+	}
+
+	protected void onUserChanged(@Nonnull User user) {
 	}
 
 	@Nonnull
@@ -72,5 +100,54 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 		final Bundle arguments = newAccountArguments(account);
 		arguments.putString(ARG_USER_ID, user.getEntityId());
 		return arguments;
+	}
+
+	private final class UserEventListener extends AbstractJEventListener<UserEvent> {
+
+		protected UserEventListener() {
+			super(UserEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull UserEvent event) {
+			final User user = event.getUser();
+			final User fragmentUser = getUser();
+			final A account = getAccount();
+
+			if (fragmentUser != null) {
+				switch (event.getType()) {
+					case changed:
+						if (fragmentUser.equals(user)) {
+							setUser(user);
+						}
+						break;
+					case contacts_changed:
+						if (account.getUser().equals(user)) {
+							for (User contact : event.getDataAsUsers()) {
+								if (fragmentUser.equals(contact)) {
+									setUser(contact);
+									break;
+								}
+							}
+						}
+						break;
+					case contact_removed:
+						if (account.getUser().equals(user)) {
+							final String contactId = event.getDataAsUserId();
+							if (fragmentUser.getId().equals(contactId)) {
+								final FragmentActivity activity = getActivity();
+								if (activity != null) {
+									if (getMultiPaneManager().isDualPane(activity)) {
+										if (!getMultiPaneManager().isTriplePane(activity)) {
+											getFragmentManager().popBackStack();
+										}
+									}
+								}
+							}
+						}
+						break;
+				}
+			}
+		}
 	}
 }

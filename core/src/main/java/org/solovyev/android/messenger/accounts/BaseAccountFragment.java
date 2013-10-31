@@ -165,6 +165,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	public void onDestroy() {
 		if (accountEventListener != null) {
 			accountService.removeListener(accountEventListener);
+			accountEventListener = null;
 		}
 
 		super.onDestroy();
