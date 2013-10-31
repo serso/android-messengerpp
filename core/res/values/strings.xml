@@ -22,8 +22,6 @@
 	<string name="mpp_write_the_message">Write the message</string>
 	<string name="mpp_message_copied_to_clipboard">Message copied to clipboard!</string>
 
-	<string name="mpp_reload_local_data">Reload accounts data</string>
-	<string name="mpp_reload_local_data_summary">Synchronizes local data with server</string>
 
 	<string name="mpp_sync_is_already_running">Synchronization is already running!</string>
 	<string name="mpp_type_message_hint">Enter message</string>
@@ -37,9 +35,6 @@
 	<string name="mpp_sex">Sex</string>
 	<string name="mpp_search_hint">Search</string>
 	<string name="mpp_menu_search">Search</string>
-	<string name="mpp_settings_appearance">Appearance settings</string>
-	<string name="mpp_settings_other">Other settings</string>
-	<string name="mpp_settings">Settings</string>
 
 	<string name="mpp_account_icon">Account icon</string>
 	<string name="mpp_account_add">Add account</string>
@@ -91,6 +86,15 @@
 
 	<string name="mpp_new_message">New message</string>
 	<string name="mpp_chat_participants">Participants</string>
+
+	<string name="mpp_preferences_appearance">Appearance settings</string>
+	<string name="mpp_preferences_other">Other settings</string>
+	<string name="mpp_preferences_show_icon_in_chat_title">Show user icon in chat message</string>
+	<string name="mpp_preferences_show_icon_in_chat_summary">If checked user icon will be shown in message bubble in
+		chat
+	</string>
+	<string name="mpp_preferences_reload_local_data_title">Reload accounts data</string>
+	<string name="mpp_preferences_reload_local_data_summary">Synchronizes local data with server</string>
 
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message.</item>

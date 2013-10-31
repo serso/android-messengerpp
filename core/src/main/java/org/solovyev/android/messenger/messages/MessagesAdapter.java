@@ -61,9 +61,6 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	@Nonnull
 	private Chat chat;
 
-	@Nonnull
-	private final MessageListItemStyle messageStyle;
-
 	// map of list items saying that someone start typing message
 	// key: user entity
 	@Nonnull
@@ -91,11 +88,10 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 		}
 	});
 
-	public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat, @Nonnull MessageListItemStyle messageStyle) {
+	public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat) {
 		super(context, new ArrayList<MessageListItem>(), false, false);
 		this.user = user;
 		this.chat = chat;
-		this.messageStyle = messageStyle;
 	}
 
 	/*@Override*/
@@ -264,7 +260,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 
 	@Nonnull
 	private MessageListItem newMessageListItem(@Nonnull Message message) {
-		return MessageListItem.newMessageListItem(user, chat, message, messageStyle);
+		return MessageListItem.newMessageListItem(user, chat, message);
 	}
 
 	protected void removeListItem(@Nonnull Message message) {

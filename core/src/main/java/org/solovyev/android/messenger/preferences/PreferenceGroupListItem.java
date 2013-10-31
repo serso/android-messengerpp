@@ -6,6 +6,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
@@ -14,6 +15,8 @@ import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static org.solovyev.android.messenger.App.getEventManager;
 
 /**
  * User: serso
@@ -55,8 +58,7 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
-				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(PreferenceUiEventType.preference_group_clicked.newEvent(getData()));
+				getEventManager(context).fire(PreferenceUiEventType.preference_group_clicked.newEvent(getData()));
 			}
 		};
 	}
@@ -65,5 +67,10 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
 	@Override
 	public OnClickAction getOnLongClickAction() {
 		return null;
+	}
+
+	@Nonnull
+	public PreferenceGroup getPreferenceGroup() {
+		return getData();
 	}
 }

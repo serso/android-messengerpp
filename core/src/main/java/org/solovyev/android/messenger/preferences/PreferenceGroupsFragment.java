@@ -42,7 +42,11 @@ public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceG
 
 	@Override
 	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull PreferenceGroupListItem selectedItem) {
-		return fragment instanceof PreferenceListFragment;
+		boolean canReuse = false;
+		if(fragment instanceof PreferenceListFragment) {
+			canReuse = selectedItem.getPreferenceGroup().getPreferencesResId() == ((PreferenceListFragment) fragment).getPreferencesResId();
+		}
+		return canReuse;
 	}
 
 	@Nonnull
@@ -50,8 +54,8 @@ public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceG
 	protected BaseListItemAdapter<PreferenceGroupListItem> createAdapter() {
 		final List<PreferenceGroupListItem> preferences = new ArrayList<PreferenceGroupListItem>();
 
-		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-appearance", R.string.mpp_settings_appearance, R.xml.mpp_preferences_appearance, R.drawable.mpp_settings_appearance_states)));
-		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-others", R.string.mpp_settings_other, R.xml.mpp_preferences_others, R.drawable.mpp_settings_other_states)));
+		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-appearance", R.string.mpp_preferences_appearance, R.xml.mpp_preferences_appearance, R.drawable.mpp_settings_appearance_states)));
+		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-others", R.string.mpp_preferences_other, R.xml.mpp_preferences_others, R.drawable.mpp_settings_other_states)));
 
 		return new PreferencesAdapter(this.getActivity(), preferences);
 	}

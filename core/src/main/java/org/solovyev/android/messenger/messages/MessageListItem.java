@@ -27,6 +27,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
+import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
 
 public final class MessageListItem extends AbstractMessengerListItem<Message> /*, ChatEventListener*/ {
 
@@ -38,23 +39,18 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 
 	private final boolean userMessage;
 
-	@Nonnull
-	private final MessageListItemStyle style;
-
 	private MessageListItem(@Nonnull Chat chat,
 							@Nonnull Message message,
-							boolean userMessage,
-							@Nonnull MessageListItemStyle style) {
+							boolean userMessage) {
 		super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
 		this.chat = chat;
 		this.userMessage = userMessage;
-		this.style = style;
 	}
 
 	@Nonnull
-	public static MessageListItem newMessageListItem(@Nonnull User user, @Nonnull Chat chat, @Nonnull Message message, @Nonnull MessageListItemStyle style) {
+	public static MessageListItem newMessageListItem(@Nonnull User user, @Nonnull Chat chat, @Nonnull Message message) {
 		final boolean userMessage = user.getEntity().equals(message.getAuthor());
-		return new MessageListItem(chat, message, userMessage, style);
+		return new MessageListItem(chat, message, userMessage);
 	}
 
 	@Override
@@ -105,7 +101,7 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 
 		final View root = viewTag.getView();
 
-		MessageBubbleViews.fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage, false, style);
+		fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage);
 
 		if (message.canRead()) {
 			final Message readMessage = message.cloneRead();

@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +15,7 @@ import javax.annotation.Nullable;
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerPreferences;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 
 final class MessageBubbleViews {
@@ -28,36 +28,20 @@ final class MessageBubbleViews {
 									   @Nonnull View messageLayout,
 									   @Nonnull TextView messageText,
 									   @Nullable TextView messageDate,
-									   boolean userMessage,
-									   boolean processButtons) {
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		final MessageListItemStyle style = MessageListItemStyle.newFromPreferences(preferences);
-		fillMessageBubbleViews(context, messageLayoutParent, messageLayout, messageText, messageDate, userMessage, processButtons, style);
-	}
-
-	static void fillMessageBubbleViews(@Nonnull Context context,
-									   @Nonnull View messageLayoutParent,
-									   @Nonnull View messageLayout,
-									   @Nonnull TextView messageText,
-									   @Nullable TextView messageDate,
-									   boolean userMessage,
-									   boolean processButtons,
-									   @Nonnull MessageListItemStyle style) {
+									   boolean userMessage) {
 		applyMessageBubblePaddings(context, messageLayoutParent, messageLayout, userMessage);
-		applyMessageBubbleStyles(context, messageLayout, messageText, messageDate, userMessage, processButtons, style);
+		applyMessageBubbleStyles(context, messageLayout, messageText, messageDate, userMessage);
 	}
 
 	private static void applyMessageBubbleStyles(@Nonnull Context context,
 												 @Nonnull View messageLayout,
 												 @Nonnull TextView messageText,
 												 @Nullable TextView messageDate,
-												 final boolean userMessage,
-												 boolean processButtons,
-												 @Nonnull final MessageListItemStyle style) {
+												 final boolean userMessage) {
 		final Resources resources = context.getResources();
 
-		messageLayout.setBackgroundDrawable(resources.getDrawable(style.getMessageBackground(userMessage)));
-		final int textColor = resources.getColor(style.getTextColorResId(userMessage));
+		messageLayout.setBackgroundDrawable(resources.getDrawable(userMessage ? R.drawable.mpp_message_bubble_left_gray_light : R.drawable.mpp_message_bubble_right_blue));
+		final int textColor = resources.getColor(userMessage ?  R.color.mpp_text : R.color.mpp_text_inverted);
 		messageText.setTextColor(textColor);
 		messageText.setHintTextColor(textColor);
 		messageText.setLinkTextColor(textColor);
@@ -67,16 +51,6 @@ final class MessageBubbleViews {
 			messageDate.setHintTextColor(textColor);
 			messageDate.setLinkTextColor(textColor);
 			messageDate.setHighlightColor(textColor);
-		}
-
-		if (processButtons) {
-			Views.processViewsOfType(messageLayout, Button.class, new Views.ViewProcessor<Button>() {
-				@Override
-				public void process(@Nonnull Button button) {
-					button.setBackgroundDrawable(resources.getDrawable(style.getButtonDrawableResId(userMessage)));
-					button.setTextColor(resources.getColor(style.getButtonTextColorResId(userMessage)));
-				}
-			});
 		}
 	}
 
@@ -107,16 +81,6 @@ final class MessageBubbleViews {
 			App.getMessageService().setMessageIcon(message, messageIcon);
 		} else {
 			messageIcon.setVisibility(View.GONE);
-		}
-	}
-
-	static void setMessageBubbleUserIcon(@Nonnull Context context, @Nonnull User user, @Nonnull ImageView userIconImageView) {
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
-			userIconImageView.setVisibility(View.VISIBLE);
-			App.getUserService().getIconsService().setUserIcon(user, userIconImageView);
-		} else {
-			userIconImageView.setVisibility(View.GONE);
 		}
 	}
 }

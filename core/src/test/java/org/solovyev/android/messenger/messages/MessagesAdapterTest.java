@@ -50,7 +50,7 @@ public class MessagesAdapterTest extends DefaultMessengerTest {
 		accountData = getAccountData1();
 		chat = accountData.getChats().get(0);
 		contact = chat.getParticipantsExcept(accountData.getAccount().getUser()).get(0);
-		adapter = new MessagesAdapter(getApplication(), accountData.getAccount().getUser(), chat.getChat(), MessageListItemStyle.newFromDefaultPreferences(getApplication())){
+		adapter = new MessagesAdapter(getApplication(), accountData.getAccount().getUser(), chat.getChat()){
 			@Nonnull
 			@Override
 			String getTypingMessageBody() {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:a="http://schemas.android.com/apk/res/android"
-	a:title="@string/mpp_settings_other">
+	a:title="@string/mpp_preferences_other">
 
 	<Preference
 		a:key="reload_data"
-		a:title="@string/mpp_reload_local_data"
-		a:summary="@string/mpp_reload_local_data_summary" />
+		a:title="@string/mpp_preferences_reload_local_data_title"
+		a:summary="@string/mpp_preferences_reload_local_data_summary" />
 
 </PreferenceScreen>

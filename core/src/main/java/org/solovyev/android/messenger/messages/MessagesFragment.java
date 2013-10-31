@@ -34,7 +34,6 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.users.ContactUiEvent;
-import org.solovyev.android.messenger.users.ContactUiEventType;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
@@ -393,7 +392,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 	@Nonnull
 	@Override
 	protected MessagesAdapter createAdapter() {
-		return new MessagesAdapter(getActivity(), getUser(), chat, MessageListItemStyle.newFromDefaultPreferences(getActivity()));
+		return new MessagesAdapter(getActivity(), getUser(), chat);
 	}
 
 	@Override
@@ -413,7 +412,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 	@Nonnull
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<Message>> createAsyncLoader(@Nonnull BaseListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return new MessagesAsyncLoader(adapter, onPostExecute, MessageListItemStyle.newFromDefaultPreferences(getActivity()));
+		return new MessagesAsyncLoader(adapter, onPostExecute);
 	}
 
 	private void scrollToTheEnd(long delayMillis) {
@@ -498,12 +497,8 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 
 	private class MessagesAsyncLoader extends AbstractAsyncLoader<Message, MessageListItem> {
 
-		@Nonnull
-		private final MessageListItemStyle messageStyle;
-
-		public MessagesAsyncLoader(BaseListItemAdapter<MessageListItem> adapter, Runnable onPostExecute, @Nonnull MessageListItemStyle messageStyle) {
+		public MessagesAsyncLoader(BaseListItemAdapter<MessageListItem> adapter, Runnable onPostExecute) {
 			super(MessagesFragment.this.getActivity(), adapter, onPostExecute);
-			this.messageStyle = messageStyle;
 		}
 
 		@Nonnull
@@ -515,7 +510,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 		@Nonnull
 		@Override
 		protected MessageListItem createListItem(@Nonnull Message message) {
-			return newMessageListItem(getUser(), chat, message, messageStyle);
+			return newMessageListItem(getUser(), chat, message);
 		}
 
 		@Override
