@@ -58,7 +58,6 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		final View serverLabel = root.findViewById(R.id.mpp_xmpp_server_label);
 		serverEditText = (EditText) root.findViewById(R.id.mpp_xmpp_server_edittext);
 		loginEditText = (EditText) root.findViewById(R.id.mpp_xmpp_login_edittext);
 		passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
@@ -68,6 +67,7 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 			final XmppAccount realm = getEditedAccount();
 			final XmppAccountConfiguration configuration = realm.getConfiguration();
 
+			setupServerInput(root);
 			serverEditText.setText(configuration.getServer());
 
 			loginEditText.setText(configuration.getLogin());
@@ -76,17 +76,23 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 			passwordEditText.setText(configuration.getPassword());
 			resourceEditText.setText(configuration.getResource());
 		} else {
-			final String server = getServer();
-			if (!isEmpty(server)) {
-				serverEditText.setText(server);
-				serverEditText.setVisibility(GONE);
-				serverLabel.setVisibility(GONE);
-			}
+			setupServerInput(root);
 		}
 
 		final int loginHintResId = getLoginHintResId();
 		if(loginHintResId != NO_ID) {
 			loginEditText.setHint(loginHintResId);
+		}
+	}
+
+	private void setupServerInput(@Nonnull View root) {
+		final View serverLabel = root.findViewById(R.id.mpp_xmpp_server_label);
+
+		final String server = getServer();
+		if (!isEmpty(server)) {
+			serverEditText.setText(server);
+			serverEditText.setVisibility(GONE);
+			serverLabel.setVisibility(GONE);
 		}
 	}
 
