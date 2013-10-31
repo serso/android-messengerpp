@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import org.joda.time.DateTime;
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
@@ -158,10 +159,16 @@ public final class Users {
 				getUiHandler().post(new Runnable() {
 					@Override
 					public void run() {
+						final MultiPaneFragmentDef fragmentDef = newEditUserFragmentDef(activity, account, user, true);
+
 						if(activity.isDualPane()) {
-							mpfm.setSecondFragment(newEditUserFragmentDef(activity, account, user, true));
+							if (activity.isTriplePane()) {
+								mpfm.setThirdFragment(fragmentDef);
+							} else {
+								mpfm.setSecondFragment(fragmentDef);
+							}
 						} else {
-							mpfm.setMainFragment(newEditUserFragmentDef(activity, account, user, true));
+							mpfm.setMainFragment(fragmentDef);
 						}
 					}
 				});

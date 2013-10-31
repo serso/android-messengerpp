@@ -54,12 +54,6 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		setFragment(R.id.content_third_pane, fragmentDef);
 	}
 
-	public void setThirdFragment(@Nonnull Builder<Fragment> fragmentBuilder,
-								 @Nullable JPredicate<Fragment> reuseCondition,
-								 @Nonnull String fragmentTag) {
-		setFragment(R.id.content_third_pane, MultiPaneFragmentDef.newInstance(fragmentTag, false, fragmentBuilder, reuseCondition));
-	}
-
 	public void emptifyThirdFragment() {
 		emptifyFragmentPane(R.id.content_third_pane);
 	}

@@ -17,4 +17,6 @@
 		a:layout_height="wrap_content"
 		a:orientation="vertical" />
 
+	<include layout="@layout/mpp_fragment_edit_buttons"/>
+
 </LinearLayout>

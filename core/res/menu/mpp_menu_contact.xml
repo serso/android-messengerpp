@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:a="http://schemas.android.com/apk/res/android">
+
+	<item
+		a:id="@+id/mpp_menu_edit_contact"
+		a:title="@string/mpp_menu_edit"
+		a:icon="@drawable/mpp_ab_edit"
+		a:showAsAction="always"/>
+
+</menu>

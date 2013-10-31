@@ -577,19 +577,10 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 		final ViewContactsMenuItem viewContactsMenuItem = new ViewContactsMenuItem();
 		menuItems.add(viewContactsMenuItem);
 
-		final EditContactMenuItem editContactMenuItem = new EditContactMenuItem();
-		menuItems.add(editContactMenuItem);
-
 		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_messages, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
 			@Override
 			public boolean apply(@Nullable AMenuItem<MenuItem> menuItem) {
-				if (menuItem == editContactMenuItem) {
-					if (chat.isPrivate() && account.getRealm().canEditUsers()) {
-						return false;
-					} else {
-						return true;
-					}
-				} else if (menuItem == viewContactMenuItem) {
+				if (menuItem == viewContactMenuItem) {
 					return triplePane || !chat.isPrivate();
 				} else if (menuItem == viewContactsMenuItem) {
 					return triplePane || chat.isPrivate();
@@ -598,26 +589,6 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 			}
 		});
 		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
-	}
-
-	private class EditContactMenuItem implements IdentifiableMenuItem<MenuItem> {
-
-		@Nonnull
-		@Override
-		public Integer getItemId() {
-			return R.id.mpp_menu_edit_contact;
-		}
-
-		@Override
-		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
-			if(chat.isPrivate() && account.getRealm().canEditUsers()) {
-				final Entity contactId = chatService.getSecondUser(chat);
-				if (contactId != null) {
-					final User contact = getUserService().getUserById(contactId);
-					getEventManager().fire(ContactUiEventType.edit_contact.newEvent(contact));
-				}
-			}
-		}
 	}
 
 	private class ViewContactMenuItem implements IdentifiableMenuItem<MenuItem> {
