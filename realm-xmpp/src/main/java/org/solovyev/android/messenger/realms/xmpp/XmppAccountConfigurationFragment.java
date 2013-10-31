@@ -8,23 +8,15 @@ import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
+import static android.view.View.GONE;
+import static android.view.View.NO_ID;
+import static org.solovyev.common.text.Strings.isEmpty;
 
-    /*
-	**********************************************************************
-    *
-    *                           CONSTANTS
-    *
-    **********************************************************************
-    */
-
-	// todo serso: save instance state
+public abstract class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
 
     /*
     **********************************************************************
@@ -33,10 +25,6 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
     *
     **********************************************************************
     */
-
-	@Inject
-	@Nonnull
-	private XmppRealm realmDef;
 
 	@Inject
 	@Nonnull
@@ -70,6 +58,7 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
+		final View serverLabel = root.findViewById(R.id.mpp_xmpp_server_label);
 		serverEditText = (EditText) root.findViewById(R.id.mpp_xmpp_server_edittext);
 		loginEditText = (EditText) root.findViewById(R.id.mpp_xmpp_login_edittext);
 		passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
@@ -86,7 +75,28 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 
 			passwordEditText.setText(configuration.getPassword());
 			resourceEditText.setText(configuration.getResource());
+		} else {
+			final String server = getServer();
+			if (!isEmpty(server)) {
+				serverEditText.setText(server);
+				serverEditText.setVisibility(GONE);
+				serverLabel.setVisibility(GONE);
+			}
 		}
+
+		final int loginHintResId = getLoginHintResId();
+		if(loginHintResId != NO_ID) {
+			loginEditText.setHint(loginHintResId);
+		}
+	}
+
+	@Nullable
+	protected String getServer() {
+		return null;
+	}
+
+	protected int getLoginHintResId() {
+		return R.string.mpp_xmpp_login_hint;
 	}
 
 	@Override
@@ -103,17 +113,17 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 	private XmppAccountConfiguration validateData(@Nullable String server, @Nullable String login, @Nullable String password, @Nullable String resource) {
 		boolean ok = true;
 
-		if (Strings.isEmpty(server)) {
+		if (isEmpty(server)) {
 			Toast.makeText(getActivity(), "Server field must be set!", Toast.LENGTH_SHORT).show();
 			ok = false;
 		}
 
-		if (Strings.isEmpty(login)) {
+		if (isEmpty(login)) {
 			Toast.makeText(getActivity(), "Login field must be set!", Toast.LENGTH_SHORT).show();
 			ok = false;
 		}
 
-		if (Strings.isEmpty(password)) {
+		if (isEmpty(password)) {
 			Toast.makeText(getActivity(), "Password field must be set!", Toast.LENGTH_SHORT).show();
 			ok = false;
 		}
@@ -127,16 +137,5 @@ public class XmppAccountConfigurationFragment extends BaseAccountConfigurationFr
 		} else {
 			return null;
 		}
-	}
-
-	@Override
-	public void onSaveInstanceState(@Nonnull Bundle out) {
-		super.onSaveInstanceState(out);
-	}
-
-	@Nonnull
-	@Override
-	public Realm getRealm() {
-		return realmDef;
 	}
 }

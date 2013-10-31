@@ -235,6 +235,10 @@
 
 	<style name="mpp_form_edittext" parent="mpp_form_label">
 		<item name="android:textStyle">normal</item>
+		<item name="android:lines">1</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:ellipsize">none</item>
+		<item name="android:scrollHorizontally">false</item>
 	</style>
 
 	<style name="mpp_form_buttons">

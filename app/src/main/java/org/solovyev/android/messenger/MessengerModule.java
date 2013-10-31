@@ -101,11 +101,6 @@ public class MessengerModule extends AbstractModule {
 			super(context, configuration);
 		}
 
-		public SQLiteOpenHelper(@Nonnull Context context,
-								@Nonnull SQLiteOpenHelperConfiguration configuration) {
-			super(context, configuration);
-		}
-
 		@Override
 		public void onOpen(SQLiteDatabase db) {
 			super.onOpen(db);

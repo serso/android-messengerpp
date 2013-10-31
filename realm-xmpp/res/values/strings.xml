@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="mpp_xmpp_name">XMPP</string>
+	<string name="mpp_xmpp_facebook_name">Facebook</string>
+	<string name="mpp_xmpp_google_name">Google Talk</string>
 	<string name="mpp_xmpp_server">Server</string>
 	<string name="mpp_xmpp_login">Login</string>
+	<string name="mpp_xmpp_login_hint">user_name@domain.xx</string>
+	<string name="mpp_xmpp_facebook_login_hint">user_name</string>
+	<string name="mpp_xmpp_google_login_hint">user_name@gmail.com</string>
 	<string name="mpp_xmpp_password">Password</string>
 	<string name="mpp_xmpp_resource">Resource</string>
 </resources>

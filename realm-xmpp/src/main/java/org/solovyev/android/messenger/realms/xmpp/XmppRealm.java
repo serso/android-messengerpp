@@ -26,17 +26,10 @@ import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import static org.solovyev.android.messenger.App.newTag;
 
-/**
- * User: serso
- * Date: 2/24/13
- * Time: 8:09 PM
- */
-@Singleton
-public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
+public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
     /*
 	**********************************************************************
@@ -49,8 +42,6 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	public static final String USER_PROPERTY_AVATAR_HASH = "avatar_hash";
 	public static final String USER_PROPERTY_AVATAR_BASE64 = "avatar_base64";
 
-	@Nonnull
-	static final String REALM_ID = "xmpp";
 	public static final String TAG = newTag("XMPP");
 
     /*
@@ -65,8 +56,8 @@ public final class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	@Nonnull
 	private Application context;
 
-	public XmppRealm() {
-		super(REALM_ID, R.string.mpp_xmpp_name, R.drawable.mpp_xmpp_icon, XmppAccountConfigurationFragment.class, XmppAccountConfiguration.class, false, null);
+	protected XmppRealm(@Nonnull String realmId, int nameResId, int iconResId, @Nonnull Class<? extends XmppAccountConfigurationFragment> configurationFragmentClass) {
+		super(realmId, nameResId, iconResId, configurationFragmentClass, XmppAccountConfiguration.class, false, null);
 	}
 
 	@Nonnull

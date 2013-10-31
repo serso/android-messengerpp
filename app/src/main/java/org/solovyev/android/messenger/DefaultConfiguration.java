@@ -1,27 +1,21 @@
 package org.solovyev.android.messenger;
 
-import android.content.Context;
-import android.telephony.TelephonyManager;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.sms.SmsRealm;
-import org.solovyev.android.messenger.realms.vk.VkRealm;
-import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
-import static org.solovyev.android.messenger.App.getApplication;
+import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 9:36 PM
- */
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.realms.sms.SmsRealm;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
+import org.solovyev.android.messenger.realms.xmpp.CustomXmppRealm;
+import org.solovyev.android.messenger.realms.xmpp.FacebookXmppRealm;
+import org.solovyev.android.messenger.realms.xmpp.GoogleXmppRealm;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 @Singleton
 public class DefaultConfiguration implements Configuration {
 
@@ -30,7 +24,15 @@ public class DefaultConfiguration implements Configuration {
 
 	@Inject
 	@Nonnull
-	private XmppRealm xmppRealm;
+	private CustomXmppRealm xmppRealm;
+
+	@Inject
+	@Nonnull
+	private FacebookXmppRealm facebookXmppRealm;
+
+	@Inject
+	@Nonnull
+	private GoogleXmppRealm googleXmppRealm;
 
 	@Inject
 	@Nonnull
@@ -49,6 +51,8 @@ public class DefaultConfiguration implements Configuration {
 		synchronized (realms) {
 			if (realms.isEmpty()) {
 				realms.add(xmppRealm);
+				realms.add(facebookXmppRealm);
+				realms.add(googleXmppRealm);
 				realms.add(vkRealm);
 				realms.add(smsRealm);
 			}
