@@ -314,24 +314,13 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Nonnull
-	private List<AccountChat> prepareChats(List<? extends AccountChat> chats) throws AccountException {
-		final List<AccountChat> result;
-		try {
-			result = newArrayList(transform(chats, new Function<AccountChat, AccountChat>() {
+	private List<AccountChat> prepareChats(List<? extends AccountChat> chats) {
+		return newArrayList(transform(chats, new Function<AccountChat, AccountChat>() {
 				@Override
-				public AccountChat apply(@Nullable AccountChat chat) {
-					assert chat != null;
-					try {
-						return prepareChat(chat);
-					} catch (UnsupportedAccountException e) {
-						throw new AccountRuntimeException(e);
-					}
+				public AccountChat apply(AccountChat chat) {
+					return prepareChat(chat);
 				}
 			}));
-		} catch (AccountRuntimeException e) {
-			throw new AccountException(e);
-		}
-		return result;
 	}
 
 	private void fireChatEvents(@Nonnull User user, @Nonnull MergeDaoResult<Chat, String> mergeResult) {
@@ -513,8 +502,6 @@ public class DefaultChatService implements ChatService {
 			final Message lastMessage = getLastMessage(chat.getEntity());
 			if (lastMessage != null) {
 				result.add(loadUiChat(user, chat));
-			} else {
-				Log.i(TAG, "Empty chat detected, chat id " + chat.getId());
 			}
 		}
 
@@ -604,25 +591,20 @@ public class DefaultChatService implements ChatService {
 
 	@Override
 	public void setChatIcon(@Nonnull Chat chat, @Nonnull ImageView imageView) {
-		try {
-			final Account account = getAccountByEntity(chat.getEntity());
+		final Account account = getAccountByEntity(chat.getEntity());
 
-			final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
+		final List<User> otherParticipants = this.getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
 
-			if (!otherParticipants.isEmpty()) {
-				if (otherParticipants.size() == 1) {
-					final User participant = otherParticipants.get(0);
-					userService.getIconsService().setUserIcon(participant, imageView);
-				} else {
-					userService.getIconsService().setUsersIcon(account, otherParticipants, imageView);
-				}
+		if (!otherParticipants.isEmpty()) {
+			if (otherParticipants.size() == 1) {
+				final User participant = otherParticipants.get(0);
+				userService.getIconsService().setUserIcon(participant, imageView);
 			} else {
-				// just in case...
-				imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user));
+				userService.getIconsService().setUsersIcon(account, otherParticipants, imageView);
 			}
-		} catch (UnsupportedAccountException e) {
+		} else {
+			// just in case...
 			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user));
-			App.getExceptionHandler().handleException(e);
 		}
 	}
 

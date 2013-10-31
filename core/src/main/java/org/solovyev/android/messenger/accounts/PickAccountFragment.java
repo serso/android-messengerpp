@@ -50,11 +50,7 @@ public class PickAccountFragment extends BaseAccountsFragment {
 		final String[] accountIds = getArguments().getStringArray(ARG_ACCOUNT_IDS);
 		if (!isEmpty(accountIds)) {
 			for (String accountId : accountIds) {
-				try {
-					listItems.add(new AccountListItem(getAccountService().getAccountById(accountId), account_picked));
-				} catch (UnsupportedAccountException e) {
-					Log.e(getTag(), e.getMessage(), e);
-				}
+				listItems.add(new AccountListItem(getAccountService().getAccountById(accountId), account_picked));
 			}
 		}
 

@@ -82,8 +82,8 @@
 	</string>
 	<string name="mpp_notification_invalid_response">Server returned invalid response</string>
 	<string name="mpp_notification_undefined_error">Some error occurred</string>
-	<string name="mpp_notification_realm_exception">Account error occurred</string>
-	<string name="mpp_notification_realm_connection_exception">Some error occurred while connecting to the remote
+	<string name="mpp_notification_account_exception">Account error occurred</string>
+	<string name="mpp_notification_account_connection_exception">Some error occurred while connecting to the remote
 		server, check internet connection and try again
 	</string>
 	<string name="mpp_notification_account_unsupported_exception">Account is not defined in the app</string>

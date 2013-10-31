@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.realms;
 
 import javax.annotation.Nonnull;
 
-public class UnsupportedRealmException extends RealmException {
+public class UnsupportedRealmException extends RealmRuntimeException {
 
 	public UnsupportedRealmException(@Nonnull String realmId) {
 		super(realmId);

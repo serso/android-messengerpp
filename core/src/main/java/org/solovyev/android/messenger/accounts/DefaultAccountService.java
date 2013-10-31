@@ -1,6 +1,5 @@
 package org.solovyev.android.messenger.accounts;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 import com.google.common.base.Predicate;
@@ -10,7 +9,6 @@ import com.google.inject.Singleton;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
@@ -171,12 +169,6 @@ public class DefaultAccountService implements AccountService {
 			}
 		}
 		return result;
-	}
-
-	@Nullable
-	@Override
-	public Account getAccountByIdOrNull(@Nonnull String accountId) {
-		return this.accounts.get(accountId);
 	}
 
 	@Nonnull
@@ -353,17 +345,6 @@ public class DefaultAccountService implements AccountService {
 		return getAccountById(entity.getAccountId());
 	}
 
-	@Override
-	public Account getAccountByEntityOrNull(@Nonnull Entity entity) {
-		return getAccountByIdOrNull(entity.getAccountId());
-	}
-
-	@Nonnull
-	@Override
-	public Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedAccountException {
-		return getAccountByEntity(entityAware.getEntity());
-	}
-
 	@Nonnull
 	private String generateAccountId(@Nonnull Realm realm) {
 		return Realms.makeAccountId(realm.getId(), accountCounter.getAndIncrement());
@@ -412,11 +393,9 @@ public class DefaultAccountService implements AccountService {
 
 	@Override
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
-		try {
-			return getAccountById(user.getEntity().getAccountId()).getRealm().getUserProperties(user, context);
-		} catch (UnsupportedAccountException e) {
-			return Collections.emptyList();
-		}
+		final Account account = getAccountById(user.getEntity().getAccountId());
+		final Realm<?> realm = account.getRealm();
+		return realm.getUserProperties(user, context);
 	}
 
 	@Override

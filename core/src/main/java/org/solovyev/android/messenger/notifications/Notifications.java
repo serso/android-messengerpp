@@ -40,13 +40,13 @@ public final class Notifications {
 	}
 
 	@Nonnull
-	public static Notification newRealmErrorNotification() {
-		return Notification.newInstance(R.string.mpp_notification_realm_exception, MessageType.error);
+	public static Notification newAccountErrorNotification() {
+		return Notification.newInstance(R.string.mpp_notification_account_exception, MessageType.error);
 	}
 
 	@Nonnull
-	public static Notification newRealmConnectionErrorNotification() {
-		return Notification.newInstance(R.string.mpp_notification_realm_connection_exception, MessageType.error);
+	public static Notification newAccountConnectionErrorNotification() {
+		return Notification.newInstance(R.string.mpp_notification_account_connection_exception, MessageType.error);
 	}
 
 	@Nonnull
@@ -55,8 +55,8 @@ public final class Notifications {
 	}
 
 	@Nonnull
-	public static NotificationSolution newOpenRealmConfSolution(@Nonnull Account account) {
-		return new OpenAccountConfSolution(account);
+	public static NotificationSolution newOpenAccountConfSolution(@Nonnull Account account) {
+		return new OpenAccountSolution(account);
 	}
 
 	/*
@@ -98,11 +98,11 @@ public final class Notifications {
 		}
 	}
 
-	private static class OpenAccountConfSolution implements NotificationSolution {
+	private static class OpenAccountSolution implements NotificationSolution {
 		@Nonnull
 		private final Account account;
 
-		public OpenAccountConfSolution(@Nonnull Account account) {
+		public OpenAccountSolution(@Nonnull Account account) {
 			this.account = account;
 		}
 

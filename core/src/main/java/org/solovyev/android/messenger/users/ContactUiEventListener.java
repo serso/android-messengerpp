@@ -42,42 +42,37 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 		final User contact = event.getContact();
 		final ContactUiEventType type = event.getType();
 
-		try {
-			final Account account = accountService.getAccountByEntityAware(contact);
-			switch (type) {
-				case contact_clicked:
-					fireEvent(open_contact_chat.newEvent(contact));
-					break;
-				case call_contact:
-					if (account.isCompositeUser(contact)) {
-						if (!account.isCompositeUserDefined(contact)) {
-							fireEvent(show_composite_user_dialog.newEvent(contact, call_contact));
-						} else {
-							onCallContactChat(contact);
-						}
+		final Account account = accountService.getAccountByEntity(contact.getEntity());
+		switch (type) {
+			case contact_clicked:
+				fireEvent(open_contact_chat.newEvent(contact));
+				break;
+			case call_contact:
+				if (account.isCompositeUser(contact)) {
+					if (!account.isCompositeUserDefined(contact)) {
+						fireEvent(show_composite_user_dialog.newEvent(contact, call_contact));
 					} else {
 						onCallContactChat(contact);
 					}
-					break;
-				case open_contact_chat:
-					onOpenContactChat(contact);
-					break;
-				case edit_contact:
-					onEditContact(contact);
-					break;
-				case view_contact:
-					onViewContact(contact);
-					break;
-				case mark_all_messages_read:
-					onMarkAllMessagesRead(contact);
-					break;
-				case show_composite_user_dialog:
-					onShowCompositeUserDialog(contact, event.getDataAsEventType());
-					break;
-			}
-		} catch (UnsupportedAccountException e) {
-			// should not happen
-			getExceptionHandler().handleException(e);
+				} else {
+					onCallContactChat(contact);
+				}
+				break;
+			case open_contact_chat:
+				onOpenContactChat(contact);
+				break;
+			case edit_contact:
+				onEditContact(contact);
+				break;
+			case view_contact:
+				onViewContact(contact);
+				break;
+			case mark_all_messages_read:
+				onMarkAllMessagesRead(contact);
+				break;
+			case show_composite_user_dialog:
+				onShowCompositeUserDialog(contact, event.getDataAsEventType());
+				break;
 		}
 	}
 
@@ -86,14 +81,14 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 	}
 
 	private void onCallContactChat(@Nonnull User contact) throws UnsupportedAccountException {
-		final Account account = getAccountService().getAccountByEntityAware(contact);
+		final Account account = getAccountService().getAccountByEntity(contact.getEntity());
 		if(account.canCall(contact)) {
 			account.call(contact, activity);
 		}
 	}
 
 	private void onMarkAllMessagesRead(@Nonnull User contact) throws UnsupportedAccountException {
-		final Account account = getAccountService().getAccountByEntityAware(contact);
+		final Account account = getAccountService().getAccountByEntity(contact.getEntity());
 		final Chat chat = getChatService().getPrivateChat(account.getUser().getEntity(), contact.getEntity());
 		if (chat != null) {
 			for (Message message : getMessageService().getMessages(chat.getEntity())) {

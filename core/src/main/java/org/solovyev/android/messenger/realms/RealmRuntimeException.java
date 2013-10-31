@@ -2,16 +2,16 @@ package org.solovyev.android.messenger.realms;
 
 import javax.annotation.Nonnull;
 
-public class RealmException extends Exception {
+public class RealmRuntimeException extends RuntimeException {
 
 	@Nonnull
 	private final String realmId;
 
-	public RealmException(@Nonnull String realmId) {
+	public RealmRuntimeException(@Nonnull String realmId) {
 		this.realmId = realmId;
 	}
 
-	public RealmException(@Nonnull String realmId, @Nonnull Throwable throwable) {
+	public RealmRuntimeException(@Nonnull String realmId, @Nonnull Throwable throwable) {
 		super(throwable);
 		this.realmId = realmId;
 	}

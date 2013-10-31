@@ -5,7 +5,6 @@ import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.Message;
@@ -73,11 +72,9 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 				App.getEventManager(activity).fire(ContactUiEventType.view_contact.newEvent(contact));
 			}
 		} else {
-			final Account account = App.getAccountService().getAccountByEntityOrNull(chat.getEntity());
-			if (account != null) {
-				final List<User> participants = chatService.getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
-				showViewUsersFragment(participants, activity);
-			}
+			final Account account = App.getAccountService().getAccountByEntity(chat.getEntity());
+			final List<User> participants = chatService.getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
+			showViewUsersFragment(participants, activity);
 		}
 	}
 
@@ -111,17 +108,13 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 			fm.clearBackStack();
 			fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
 			if (activity.isTriplePane()) {
-				try {
-					final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
+				final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
 
-					if (chat.isPrivate()) {
-						fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
-					} else {
-						final List<User> participants = activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
-						fm.setThirdFragment(newViewContactsFragmentDef(activity, participants, false));
-					}
-				} catch (UnsupportedAccountException e) {
-					App.getExceptionHandler().handleException(e);
+				if (chat.isPrivate()) {
+					fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
+				} else {
+					final List<User> participants = activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
+					fm.setThirdFragment(newViewContactsFragmentDef(activity, participants, false));
 				}
 			}
 

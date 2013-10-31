@@ -99,15 +99,10 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 		if (arguments != null) {
 			final String accountId = arguments.getString(ARG_ACCOUNT_ID);
 			if (accountId != null) {
-				try {
-					account = (A) accountService.getAccountById(accountId);
+				account = (A) accountService.getAccountById(accountId);
 
-					accountEventListener = new AccountEventListener();
-					accountService.addListener(accountEventListener);
-				} catch (UnsupportedAccountException e) {
-					getExceptionHandler().handleException(e);
-					Activities.restartActivity(getActivity());
-				}
+				accountEventListener = new AccountEventListener();
+				accountService.addListener(accountEventListener);
 			}
 		}
 	}

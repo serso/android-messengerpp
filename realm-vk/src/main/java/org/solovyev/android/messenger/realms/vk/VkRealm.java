@@ -36,7 +36,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
-import static org.solovyev.android.messenger.notifications.Notifications.newOpenRealmConfSolution;
+import static org.solovyev.android.messenger.notifications.Notifications.newOpenAccountConfSolution;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 /**
@@ -209,7 +209,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 			if (e instanceof VkResponseErrorException) {
 				final VkResponseErrorException cause = (VkResponseErrorException) e;
 				if ("5".equals(cause.getError().getErrorId())) {
-					notificationService.add(newNotification(R.string.mpp_vk_notification_auth_token_expired, MessageType.error).solvedBy(newOpenRealmConfSolution(account)));
+					notificationService.add(newNotification(R.string.mpp_vk_notification_auth_token_expired, MessageType.error).solvedBy(newOpenAccountConfSolution(account)));
 				} else {
 					notificationService.add(newVkNotification(cause));
 				}

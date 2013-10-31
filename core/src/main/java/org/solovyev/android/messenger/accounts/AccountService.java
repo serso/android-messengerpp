@@ -56,17 +56,8 @@ public interface AccountService {
 	@Nonnull
 	Account getAccountById(@Nonnull String accountId) throws UnsupportedAccountException;
 
-	@Nullable
-	Account getAccountByIdOrNull(@Nonnull String accountId);
-
 	@Nonnull
 	Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException;
-
-	@Nullable
-	Account getAccountByEntityOrNull(@Nonnull Entity entity);
-
-	@Nonnull
-	Account getAccountByEntityAware(@Nonnull EntityAware entityAware) throws UnsupportedAccountException;
 
 	@Nonnull
 	<A extends Account> A saveAccount(@Nonnull AccountBuilder<A> accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException;

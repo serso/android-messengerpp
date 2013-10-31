@@ -9,7 +9,6 @@ import javax.crypto.SecretKey;
 
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.Converter;
 import org.solovyev.common.security.Cipherer;
@@ -38,19 +37,15 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 		final String configuration = cursor.getString(3);
 		final String state = cursor.getString(4);
 
-		try {
-			final Realm<C> realm = (Realm<C>) getRealmService().getRealmById(realmId);
-			// realm is not loaded => no way we can find user in realm services
-			final User user = getUserService().getUserById(Entities.newEntityFromEntityId(userId), false);
+		final Realm<C> realm = (Realm<C>) getRealmService().getRealmById(realmId);
+		// realm is not loaded => no way we can find user in realm services
+		final User user = getUserService().getUserById(Entities.newEntityFromEntityId(userId), false);
 
-			final C encryptedConfiguration = new Gson().fromJson(configuration, realm.getConfigurationClass());
+		final C encryptedConfiguration = new Gson().fromJson(configuration, realm.getConfigurationClass());
 
-			final C decryptedConfiguration = decryptConfiguration(realm, encryptedConfiguration);
+		final C decryptedConfiguration = decryptConfiguration(realm, encryptedConfiguration);
 
-			return realm.newAccount(accountId, user, decryptedConfiguration, AccountState.valueOf(state));
-		} catch (UnsupportedRealmException e) {
-			throw new AccountRuntimeException(accountId, e);
-		}
+		return realm.newAccount(accountId, user, decryptedConfiguration, AccountState.valueOf(state));
 	}
 
 	@Nonnull

@@ -15,11 +15,6 @@ import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.App.newTag;
 
-/**
- * User: serso
- * Date: 5/30/12
- * Time: 11:18 PM
- */
 public enum SyncTask {
 
 	user {
@@ -27,15 +22,10 @@ public enum SyncTask {
 		public boolean isTime(@Nonnull SyncData syncData) {
 			boolean result = false;
 
-			try {
-				final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
-				final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
-				if (lastPropertiesSyncDate == null || lastPropertiesSyncDate.plusHours(1).isBefore(DateTime.now())) {
-					result = true;
-				}
-			} catch (UnsupportedAccountException e) {
-				// ok, user is not logged in
-				getExceptionHandler().handleException(e);
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
+			final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
+			if (lastPropertiesSyncDate == null || lastPropertiesSyncDate.plusHours(1).isBefore(DateTime.now())) {
+				result = true;
 			}
 
 			return result;
@@ -43,7 +33,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
 			getUserService().syncUser(user.getEntity());
 		}
 	},
@@ -53,15 +43,10 @@ public enum SyncTask {
 		public boolean isTime(@Nonnull SyncData syncData) {
 			boolean result = false;
 
-			try {
-				final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
-				final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
-				if (lastContactsSyncDate == null || lastContactsSyncDate.plusHours(1).isBefore(DateTime.now())) {
-					result = true;
-				}
-			} catch (UnsupportedAccountException e) {
-				// ok, user is not logged in
-				getExceptionHandler().handleException(e);
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
+			final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
+			if (lastContactsSyncDate == null || lastContactsSyncDate.plusHours(1).isBefore(DateTime.now())) {
+				result = true;
 			}
 
 			return result;
@@ -69,7 +54,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
 			getUserService().syncUserContacts(user.getEntity());
 		}
 	},
@@ -79,15 +64,10 @@ public enum SyncTask {
 		public boolean isTime(@Nonnull SyncData syncData) {
 			boolean result = false;
 
-			try {
-				final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
-				final DateTime lastUserIconsSyncDate = user.getUserSyncData().getLastUserIconsSyncData();
-				if (lastUserIconsSyncDate == null || lastUserIconsSyncDate.plusDays(1).isBefore(DateTime.now())) {
-					result = true;
-				}
-			} catch (UnsupportedAccountException e) {
-				// ok, user is not logged in
-				getExceptionHandler().handleException(e);
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
+			final DateTime lastUserIconsSyncDate = user.getUserSyncData().getLastUserIconsSyncData();
+			if (lastUserIconsSyncDate == null || lastUserIconsSyncDate.plusDays(1).isBefore(DateTime.now())) {
+				result = true;
 			}
 
 			return result;
@@ -95,7 +75,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws UnsupportedAccountException {
-			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
 			getUserService().getIconsService().fetchUserAndContactsIcons(user);
 		}
 	},
@@ -108,7 +88,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
 			getUserService().syncUserContactsStatuses(user.getEntity());
 		}
 	},
@@ -118,15 +98,10 @@ public enum SyncTask {
 		public boolean isTime(@Nonnull SyncData syncData) {
 			boolean result = false;
 
-			try {
-				final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
-				final DateTime lastChatsSyncDate = user.getUserSyncData().getLastChatsSyncDate();
-				if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(24).isBefore(DateTime.now())) {
-					result = true;
-				}
-			} catch (UnsupportedAccountException e) {
-				// ok, user is not logged in
-				getExceptionHandler().handleException(e);
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
+			final DateTime lastChatsSyncDate = user.getUserSyncData().getLastChatsSyncDate();
+			if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(24).isBefore(DateTime.now())) {
+				result = true;
 			}
 
 			return result;
@@ -134,7 +109,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
 			getUserService().syncUserChats(user.getEntity());
 		}
 	},
@@ -147,7 +122,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getRealmService().getAccountById(syncData.getAccountId()).getUser();
+			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
 			App.getChatService().syncMessages(user.getEntity());
 		}
 	};
@@ -155,7 +130,7 @@ public enum SyncTask {
 	private static final String TAG = newTag("SyncTask");
 
 	@Nonnull
-	private static AccountService getRealmService() {
+	private static AccountService getAccountService() {
 		return App.getAccountService();
 	}
 

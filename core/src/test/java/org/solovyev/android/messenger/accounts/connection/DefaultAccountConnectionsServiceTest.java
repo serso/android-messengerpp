@@ -141,7 +141,7 @@ public class DefaultAccountConnectionsServiceTest {
 		service.onNetworkEvent(networkData);
 
 		verify(notificationService, times(1)).remove(Notifications.NO_INTERNET_NOTIFICATION);
-		verify(notificationService, times(1)).remove(Notifications.newRealmConnectionErrorNotification());
+		verify(notificationService, times(1)).remove(Notifications.newAccountConnectionErrorNotification());
 	}
 
 	@Test

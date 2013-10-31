@@ -28,7 +28,6 @@ import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
@@ -152,23 +151,18 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		try {
-			// first - restore state
-			final Entity chatId = getArguments().getParcelable(ARG_CHAT);
-			if (chatId != null) {
-				chat = this.chatService.getChatById(chatId);
-			}
+		// first - restore state
+		final Entity chatId = getArguments().getParcelable(ARG_CHAT);
+		if (chatId != null) {
+			chat = this.chatService.getChatById(chatId);
+		}
 
-			if (chat == null) {
-				Log.e(TAG, "Chat is null: unable to find chat with id: " + chatId);
-				notificationService.add(newUndefinedErrorNotification());
-				Activities.restartActivity(getActivity());
-			} else {
-				account = accountService.getAccountById(chat.getEntity().getAccountId());
-			}
-		} catch (UnsupportedAccountException e) {
-			App.getExceptionHandler().handleException(e);
+		if (chat == null) {
+			Log.e(TAG, "Chat is null: unable to find chat with id: " + chatId);
+			notificationService.add(newUndefinedErrorNotification());
 			Activities.restartActivity(getActivity());
+		} else {
+			account = accountService.getAccountById(chat.getEntity().getAccountId());
 		}
 
 		setHasOptionsMenu(true);

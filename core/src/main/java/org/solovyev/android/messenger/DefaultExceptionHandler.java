@@ -49,17 +49,17 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 		if (e instanceof UnsupportedAccountException) {
 			notification = ACCOUNT_NOT_SUPPORTED_NOTIFICATION;
 		} else if (e instanceof AccountConnectionException) {
-			final boolean handled = handleRealmException((AccountException) e);
+			final boolean handled = handleAccountException((AccountException) e);
 			if (!handled) {
 				if (networkStateService.getNetworkData().getState() == NetworkState.CONNECTED) {
 					// if we are not connected show nothing
-					notification = newRealmConnectionErrorNotification();
+					notification = newAccountConnectionErrorNotification();
 				}
 			}
 		} else if (e instanceof AccountException) {
-			final boolean handled = handleRealmException((AccountException) e);
+			final boolean handled = handleAccountException((AccountException) e);
 			if (!handled) {
-				notification = newRealmErrorNotification();
+				notification = newAccountErrorNotification();
 			}
 		} else if (e instanceof HttpRuntimeIoException) {
 			notification = NO_INTERNET_NOTIFICATION;
@@ -79,13 +79,13 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 		Log.e(App.TAG, e.getMessage(), e);
 	}
 
-	private boolean handleRealmException(@Nonnull AccountException e) {
+	private boolean handleAccountException(@Nonnull AccountException e) {
 		boolean handled = false;
 
-		final String realmId = e.getAccountId();
+		final String accountId = e.getAccountId();
 
 		try {
-			final Account account = accountService.getAccountById(realmId);
+			final Account account = accountService.getAccountById(accountId);
 			final Throwable cause = e.getCause();
 
 			if (cause != e) {
@@ -94,7 +94,7 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 				handled = account.getRealm().handleException(e, account);
 			}
 		} catch (UnsupportedAccountException e1) {
-			handleException(e1);
+			Log.e(App.TAG, e1.getMessage(), e1);
 		}
 
 		return handled;

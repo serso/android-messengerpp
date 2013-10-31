@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
 
@@ -19,13 +18,9 @@ import static java.util.Arrays.asList;
 class DefaultUserIconsService implements UserIconsService {
 
 	@Nonnull
-	private final Context context;
-
-	@Nonnull
 	private final UserService userService;
 
-	public DefaultUserIconsService(@Nonnull Context context, @Nonnull UserService userService) {
-		this.context = context;
+	public DefaultUserIconsService(@Nonnull UserService userService) {
 		this.userService = userService;
 	}
 
@@ -57,12 +52,7 @@ class DefaultUserIconsService implements UserIconsService {
 
 	@Override
 	public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-		try {
-			getRealmIconServiceByUser(user).setUserIcon(user, imageView);
-		} catch (UnsupportedAccountException e) {
-			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user));
-			App.getExceptionHandler().handleException(e);
-		}
+		getRealmIconServiceByUser(user).setUserIcon(user, imageView);
 	}
 
 	@Override
@@ -72,11 +62,6 @@ class DefaultUserIconsService implements UserIconsService {
 
 	@Override
 	public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-		try {
-			getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
-		} catch (UnsupportedAccountException e) {
-			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user));
-			App.getExceptionHandler().handleException(e);
-		}
+		getRealmIconServiceByUser(user).setUserPhoto(user, imageView);
 	}
 }

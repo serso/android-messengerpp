@@ -2,14 +2,13 @@ package org.solovyev.android.messenger.accounts;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 7/22/12
- * Time: 1:12 AM
- */
-public final class UnsupportedAccountException extends AccountException {
+public final class UnsupportedAccountException extends AccountRuntimeException {
 
 	public UnsupportedAccountException(@Nonnull String accountId) {
 		super(accountId);
+	}
+
+	public UnsupportedAccountException(@Nonnull String accountId, Throwable throwable) {
+		super(accountId, throwable);
 	}
 }

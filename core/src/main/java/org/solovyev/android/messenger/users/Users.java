@@ -150,54 +150,48 @@ public final class Users {
 	}
 
 	public static boolean tryShowEditUserFragment(@Nonnull final User user, @Nonnull final BaseFragmentActivity activity) {
-		try {
-			final Account account = App.getAccountService().getAccountByEntity(user.getEntity());
-			final Realm realm = account.getRealm();
-			if (realm.canCreateUsers()) {
-				final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-				// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
-				getUiHandler().post(new Runnable() {
-					@Override
-					public void run() {
-						final MultiPaneFragmentDef fragmentDef = newEditUserFragmentDef(activity, account, user, true);
+		final Account account = App.getAccountService().getAccountByEntity(user.getEntity());
+		final Realm realm = account.getRealm();
+		if (realm.canCreateUsers()) {
+			final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
+			// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
+			getUiHandler().post(new Runnable() {
+				@Override
+				public void run() {
+					final MultiPaneFragmentDef fragmentDef = newEditUserFragmentDef(activity, account, user, true);
 
-						if(activity.isDualPane()) {
-							if (activity.isTriplePane()) {
-								mpfm.setThirdFragment(fragmentDef);
-							} else {
-								mpfm.setSecondFragment(fragmentDef);
-							}
+					if (activity.isDualPane()) {
+						if (activity.isTriplePane()) {
+							mpfm.setThirdFragment(fragmentDef);
 						} else {
-							mpfm.setMainFragment(fragmentDef);
+							mpfm.setSecondFragment(fragmentDef);
 						}
+					} else {
+						mpfm.setMainFragment(fragmentDef);
 					}
-				});
-				return true;
-			}
-		} catch (UnsupportedAccountException e) {
-			Log.e(TAG, e.getMessage(), e);
+				}
+			});
+			return true;
 		}
 
 		return false;
 	}
 
 	public static void showViewUserFragment(@Nonnull final User user, @Nonnull final BaseFragmentActivity activity) {
-		final Account account = App.getAccountService().getAccountByEntityOrNull(user.getEntity());
+		final Account account = App.getAccountService().getAccountByEntity(user.getEntity());
 
-		if (account != null) {
-			final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-			// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
-			getUiHandler().post(new Runnable() {
-				@Override
-				public void run() {
-					if (activity.isDualPane()) {
-						mpfm.setSecondFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
-					} else {
-						mpfm.setMainFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
-					}
+		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
+		// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
+		getUiHandler().post(new Runnable() {
+			@Override
+			public void run() {
+				if (activity.isDualPane()) {
+					mpfm.setSecondFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
+				} else {
+					mpfm.setMainFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
 				}
-			});
-		}
+			}
+		});
 	}
 
 	public static void showViewUsersFragment(@Nonnull final List<User> users, @Nonnull final BaseFragmentActivity activity) {

@@ -45,9 +45,9 @@ final class UiContact implements Identifiable {
 		return newUiContact(contact, getUnreadMessagesCount(contact), account);
 	}
 
-	@Nullable
+	@Nonnull
 	private static Account getAccount(@Nonnull User contact) {
-		return getAccountService().getAccountByEntityOrNull(contact.getEntity());
+		return getAccountService().getAccountByEntity(contact.getEntity());
 	}
 
 	private static int getUnreadMessagesCount(@Nonnull User contact) {

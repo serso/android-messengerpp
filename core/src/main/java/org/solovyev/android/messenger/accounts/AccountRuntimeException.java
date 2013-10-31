@@ -2,7 +2,7 @@ package org.solovyev.android.messenger.accounts;
 
 import javax.annotation.Nonnull;
 
-public final class AccountRuntimeException extends RuntimeException {
+public class AccountRuntimeException extends RuntimeException {
 
 	@Nonnull
 	private final String accountId;
@@ -13,6 +13,10 @@ public final class AccountRuntimeException extends RuntimeException {
 
 	public AccountRuntimeException(@Nonnull String accountId, Throwable throwable) {
 		super(throwable);
+		this.accountId = accountId;
+	}
+
+	public AccountRuntimeException(@Nonnull String accountId) {
 		this.accountId = accountId;
 	}
 

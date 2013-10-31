@@ -128,7 +128,7 @@ public class DefaultUserService implements UserService {
 	@Override
 	public void init() {
 		chats.init();
-		iconsService = new DefaultUserIconsService(context, this);
+		iconsService = new DefaultUserIconsService(this);
 	}
 
 	@Override
@@ -222,19 +222,17 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void removeUser(@Nonnull User user) {
-		final Account account = accountService.getAccountByEntityOrNull(user.getEntity());
-		if (account != null) {
-			final User accountUser = account.getUser();
-			if (!accountUser.equals(user)) {
-				synchronized (lock) {
-					userDao.delete(user);
-				}
-				listeners.fireEvent(contact_removed.newEvent(accountUser, user.getId()));
-
-				final Entity chat = chatService.getPrivateChatId(accountUser.getEntity(), user.getEntity());
-				chatService.removeChat(chat);
-				listeners.fireEvent(chat_removed.newEvent(accountUser, chat.getEntityId()));
+		final Account account = accountService.getAccountByEntity(user.getEntity());
+		final User accountUser = account.getUser();
+		if (!accountUser.equals(user)) {
+			synchronized (lock) {
+				userDao.delete(user);
 			}
+			listeners.fireEvent(contact_removed.newEvent(accountUser, user.getId()));
+
+			final Entity chat = chatService.getPrivateChatId(accountUser.getEntity(), user.getEntity());
+			chatService.removeChat(chat);
+			listeners.fireEvent(chat_removed.newEvent(accountUser, chat.getEntityId()));
 		}
 	}
 
@@ -320,7 +318,7 @@ public class DefaultUserService implements UserService {
 		final List<User> contacts = getUserContacts(user.getEntity());
 		final ContactFilter filter = new ContactFilter(query, all_contacts);
 
-		final Account account = accountService.getAccountByEntityOrNull(user.getEntity());
+		final Account account = accountService.getAccountByEntity(user.getEntity());
 
 		for (final User contact : contacts) {
 			if (!isExceptedUser(except, contact)) {
@@ -532,18 +530,14 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public int getUnreadMessagesCount(@Nonnull Entity contact) {
-		try {
-			if (!Threads.isUiThread()) {
-				final Chat chat = chatService.getPrivateChat(getAccountByEntity(contact).getUser().getEntity(), contact);
-				if (chat != null) {
-					return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
-				} else {
-					return 0;
-				}
+		if (!Threads.isUiThread()) {
+			final Chat chat = chatService.getPrivateChat(getAccountByEntity(contact).getUser().getEntity(), contact);
+			if (chat != null) {
+				return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());
 			} else {
 				return 0;
 			}
-		} catch (AccountException e) {
+		} else {
 			return 0;
 		}
 	}

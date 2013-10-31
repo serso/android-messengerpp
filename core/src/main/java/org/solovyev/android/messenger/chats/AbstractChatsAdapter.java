@@ -7,7 +7,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseListItemAdapter;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
 
@@ -122,16 +121,12 @@ abstract class AbstractChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 			case changed:
 			case last_message_changed:
 			case unread_message_count_changed:
-				try {
-					final User user = getAccountService().getAccountById(eventChat.getEntity().getAccountId()).getUser();
-					final ChatListItem chatListItem = findInAllElements(user, eventChat);
-					if (chatListItem != null) {
-						if (chatListItem.onEvent(event)) {
-							onDataSetChanged();
-						}
+				final User user = getAccountService().getAccountById(eventChat.getEntity().getAccountId()).getUser();
+				final ChatListItem chatListItem = findInAllElements(user, eventChat);
+				if (chatListItem != null) {
+					if (chatListItem.onEvent(event)) {
+						onDataSetChanged();
 					}
-				} catch (UnsupportedAccountException e) {
-					App.getExceptionHandler().handleException(e);
 				}
 				break;
 		}

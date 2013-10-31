@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.solovyev.android.messenger.notifications.Notifications.NO_INTERNET_NOTIFICATION;
-import static org.solovyev.android.messenger.notifications.Notifications.newRealmConnectionErrorNotification;
+import static org.solovyev.android.messenger.notifications.Notifications.newAccountConnectionErrorNotification;
 
 /**
  * User: serso
@@ -96,7 +96,7 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 		switch (networkData.getState()) {
 			case CONNECTED:
 				notificationService.remove(NO_INTERNET_NOTIFICATION);
-				notificationService.remove(newRealmConnectionErrorNotification());
+				notificationService.remove(newAccountConnectionErrorNotification());
 				accountConnections.tryStartAll(true);
 				break;
 			case UNKNOWN:
