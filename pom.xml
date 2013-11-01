@@ -7,13 +7,22 @@
 	<version>1.0</version>
 	<name>Android Messenger</name>
 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>in-project-repository</id>
+			<name>In Project Repo</name>
+			<url>file://${project.basedir}/maven-repository</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<repositories>
 		<repository>
 			<id>in-project-repository</id>
 			<name>In Project Repo</name>
-			<url>file://${project.basedir}/lib</url>
+			<url>file://${project.basedir}/maven-repository</url>
 		</repository>
 	</repositories>
+
 
 	<modules>
 		<module>core</module>
@@ -265,7 +274,7 @@
 			<dependency>
 				<groupId>com.github.rtyley</groupId>
 				<artifactId>roboguice-sherlock</artifactId>
-				<version>1.5-SNAPSHOT</version>
+				<version>1.5</version>
 			</dependency>
 
 			<!--  Gson: Java to Json conversion -->
@@ -305,7 +314,7 @@
 			<plugin>
 				<groupId>org.solovyev.external.com.electriccloud</groupId>
 				<artifactId>org.solovyev.external.javac2-maven-plugin</artifactId>
-				<version>1.0.3</version>
+				<version>1.0.4</version>
 				<executions>
 					<execution>
 						<id>instrument-notnull-src</id>

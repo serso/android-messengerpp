@@ -4,10 +4,7 @@ import android.app.Application;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.realms.xmpp.XmppConfiguration;
-import org.solovyev.android.messenger.realms.xmpp.XmppAccount;
-import org.solovyev.android.messenger.realms.xmpp.XmppAccountBuilder;
-import org.solovyev.android.messenger.realms.xmpp.XmppRealm;
+import org.solovyev.android.messenger.realms.xmpp.*;
 
 import com.google.inject.Inject;
 
@@ -15,7 +12,7 @@ public abstract class XmppTest extends DefaultMessengerTest {
 
 	@Nonnull
 	@Inject
-	private XmppRealm xmppRealm;
+	private CustomXmppRealm xmppRealm;
 
 	@Nonnull
 	private XmppAccount xmppAccount;
