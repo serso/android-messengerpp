@@ -19,6 +19,8 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.tasks.TaskService;
+
+import android.widget.Toast;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -141,6 +143,10 @@ public final class App {
 
 	public static void init(@Nonnull Application application) {
 		instance.init0(application);
+	}
+
+	public static void showToast(int textResId) {
+		Toast.makeText(getApplication(), textResId, Toast.LENGTH_SHORT).show();
 	}
 
 	@Nonnull

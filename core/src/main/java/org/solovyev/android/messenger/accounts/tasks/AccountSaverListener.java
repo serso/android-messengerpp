@@ -3,15 +3,18 @@ package org.solovyev.android.messenger.accounts.tasks;
 import android.app.Activity;
 import android.widget.Toast;
 import com.google.common.util.concurrent.FutureCallback;
+
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerContextCallback;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountAlreadyExistsException;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
-import org.solovyev.android.tasks.Tasks;
 
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.saved;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
 import static org.solovyev.android.tasks.Tasks.toUiThreadFutureCallback;
@@ -39,9 +42,9 @@ public final class AccountSaverListener extends MessengerContextCallback<Activit
 	@Override
 	public void onFailure(@Nonnull Activity context, Throwable e) {
 		if (e instanceof InvalidCredentialsException) {
-			Toast.makeText(context, "Invalid credentials!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_invalid_credentials);
 		} else if (e instanceof AccountAlreadyExistsException) {
-			Toast.makeText(context, "Same account already configured!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_same_account_configured);
 		} else {
 			super.onFailure(context, e);
 		}

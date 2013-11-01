@@ -14,6 +14,7 @@ import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.MutableAProperties;
 
+import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.users.User.PROPERTY_FIRST_NAME;
 import static org.solovyev.android.messenger.users.User.PROPERTY_LAST_NAME;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
@@ -70,7 +71,7 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 		boolean ok = true;
 
 		if (isEmpty(phone)) {
-			Toast.makeText(getActivity(), "Phone must be set!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_sms_phone_must_be_set);
 			ok = false;
 		}
 

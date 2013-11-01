@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 
 import static android.view.View.GONE;
 import static android.view.View.NO_ID;
+import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public abstract class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
@@ -120,17 +121,17 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 		boolean ok = true;
 
 		if (isEmpty(server)) {
-			Toast.makeText(getActivity(), "Server field must be set!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_xmpp_server_must_be_set);
 			ok = false;
 		}
 
 		if (isEmpty(login)) {
-			Toast.makeText(getActivity(), "Login field must be set!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_xmpp_login_must_be_set);
 			ok = false;
 		}
 
 		if (isEmpty(password)) {
-			Toast.makeText(getActivity(), "Password field must be set!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_xmpp_password_must_be_set);
 			ok = false;
 		}
 

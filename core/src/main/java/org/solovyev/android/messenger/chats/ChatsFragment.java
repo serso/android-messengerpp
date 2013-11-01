@@ -1,9 +1,8 @@
 package org.solovyev.android.messenger.chats;
 
-import android.widget.Toast;
-
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.view.AbstractOnRefreshListener;
@@ -11,6 +10,8 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+
+import static org.solovyev.android.messenger.App.showToast;
 
 /**
  * User: serso
@@ -55,9 +56,9 @@ public final class ChatsFragment extends BaseChatsFragment {
 						completeRefresh();
 					}
 				});
-				Toast.makeText(getActivity(), "Chats sync started!", Toast.LENGTH_SHORT).show();
+				showToast(R.string.mpp_updating_chat);
 			} catch (TaskIsAlreadyRunningException e) {
-				e.showMessage(getActivity());
+				e.showMessage();
 			}
 		}
 	}

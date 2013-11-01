@@ -6,6 +6,6 @@ import com.google.inject.Singleton;
 public class FacebookXmppRealm extends XmppRealm {
 
 	public FacebookXmppRealm() {
-		super("xmpp-facebook", R.string.mpp_xmpp_facebook_name, R.drawable.mpp_xmpp_facebook_icon, FacebookXmppAccountConfigurationFragment.class);
+		super("xmpp-facebook", R.string.mpp_xmpp_name_facebook, R.drawable.mpp_xmpp_facebook_icon, FacebookXmppAccountConfigurationFragment.class);
 	}
 }

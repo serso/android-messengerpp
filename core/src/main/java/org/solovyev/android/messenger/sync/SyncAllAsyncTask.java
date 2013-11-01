@@ -12,6 +12,8 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.core.R;
 
+import static org.solovyev.android.messenger.App.showToast;
+
 /**
  * User: serso
  * Date: 3/6/13
@@ -67,7 +69,7 @@ public class SyncAllAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 		if (e instanceof SyncAllTaskIsAlreadyRunning) {
 			final Context context = getContext();
 			if (context != null) {
-				Toast.makeText(context, context.getString(R.string.mpp_sync_is_already_running), Toast.LENGTH_SHORT).show();
+				showToast(R.string.mpp_sync_is_already_running);
 			}
 		} else {
 			super.onFailurePostExecute(e);

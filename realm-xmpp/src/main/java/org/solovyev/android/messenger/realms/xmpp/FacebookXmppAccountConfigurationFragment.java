@@ -27,6 +27,6 @@ public class FacebookXmppAccountConfigurationFragment extends XmppAccountConfigu
 
 	@Override
 	protected int getLoginHintResId() {
-		return R.string.mpp_xmpp_facebook_login_hint;
+		return R.string.mpp_xmpp_login_hint_facebook;
 	}
 }

@@ -26,6 +26,6 @@
 		a:layout_above="@id/captcha_code"
 		a:layout_width="fill_parent"
 		a:layout_height="wrap_content"
-		a:contentDescription="@string/mpp_captcha" />
+		a:contentDescription="@string/mpp_captcha_title" />
 
 </RelativeLayout>

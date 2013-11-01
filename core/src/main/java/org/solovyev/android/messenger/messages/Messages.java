@@ -4,8 +4,10 @@ import android.text.Html;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.User;
@@ -19,6 +21,7 @@ import java.util.TimeZone;
 import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.shortDate;
 import static org.joda.time.format.DateTimeFormat.shortTime;
+import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
@@ -53,8 +56,7 @@ public final class Messages {
 			return shortTime().print(localSendDateTime);
 		} else if (localSendDate.toDateTimeAtStartOfDay().compareTo(localYesterday.toDateTimeAtStartOfDay()) == 0) {
 			// yesterday
-			// todo serso: translate
-			return "Yesterday";// + ", " + DateTimeFormat.shortTime().print(sendDate);
+			return getApplication().getString(R.string.mpp_yesterday_at) + shortTime().print(localSendDateTime);
 		} else {
 			// the days before yesterday
 			return shortDate().print(localSendDateTime);

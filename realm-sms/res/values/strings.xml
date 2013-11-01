@@ -4,4 +4,5 @@
 	<string name="mpp_sms_realm_composite_dialog_title">Choose phone number</string>
 	<string name="mpp_sms_realm_incoming_call">User called you</string>
 	<string name="mpp_sms_realm_outgoing_call">You called user</string>
+	<string name="mpp_sms_phone_must_be_set">Phone number must be set!</string>
 </resources>

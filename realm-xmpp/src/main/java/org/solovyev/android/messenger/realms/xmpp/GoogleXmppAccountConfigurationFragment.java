@@ -27,6 +27,6 @@ public class GoogleXmppAccountConfigurationFragment extends XmppAccountConfigura
 
 	@Override
 	protected int getLoginHintResId() {
-		return R.string.mpp_xmpp_google_login_hint;
+		return R.string.mpp_xmpp_login_hint_google;
 	}
 }

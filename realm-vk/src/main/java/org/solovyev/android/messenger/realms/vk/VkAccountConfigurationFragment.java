@@ -12,6 +12,8 @@ import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.App.showToast;
+
 public class VkAccountConfigurationFragment extends BaseAccountConfigurationFragment<VkAccount> {
 
     /*
@@ -67,13 +69,13 @@ public class VkAccountConfigurationFragment extends BaseAccountConfigurationFrag
 
 		final String login = loginEditText.getText().toString();
 		if (Strings.isEmpty(login)) {
-			Toast.makeText(getActivity(), "Login field must be set!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_vk_login_must_be_set);
 			ok = false;
 		}
 
 		final String password = passwordEditText.getText().toString();
 		if (Strings.isEmpty(password)) {
-			Toast.makeText(getActivity(), "Password field must be set!", Toast.LENGTH_SHORT).show();
+			showToast(R.string.mpp_vk_password_must_be_set);
 			ok = false;
 		}
 

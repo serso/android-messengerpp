@@ -26,6 +26,7 @@ import java.util.Arrays;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
 
@@ -143,7 +144,7 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 				final MessageListItem messageListItem = data.getDataObject();
 				clipboard.setText(messageListItem.getData().getBody());
 
-				Toast.makeText(context, context.getString(R.string.mpp_message_copied_to_clipboard), Toast.LENGTH_SHORT).show();
+				showToast(R.string.mpp_message_copied_to_clipboard);
 			}
 		},
 

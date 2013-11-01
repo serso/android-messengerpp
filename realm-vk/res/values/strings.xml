@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="mpp_vk_realm_name">VK</string>
-	<string name="mpp_vk_login">Login</string>
+	<string name="mpp_vk_login">Login/Phone number</string>
 	<string name="mpp_vk_password">Password</string>
-	<string name="mpp_vk_notification_auth_token_expired">Authentication period has been expired. Try to log in again</string>
+	<string name="mpp_vk_notification_auth_token_expired">Authentication period has expired. Try to log in again</string>
 	<string name="mpp_vk_notification_error">VK error occurred: %1$s</string>
+	<string name="mpp_vk_login_must_be_set">Login or phone number must be set!</string>
+	<string name="mpp_vk_password_must_be_set">Password must be set!</string>
 </resources>

@@ -17,6 +17,7 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.newTag;
+import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.UiEventType.new_contact;
 
 public abstract class BaseContactsFragment extends BaseListFragment<UiContact, ContactListItem> implements DetachableFragment {
@@ -67,10 +68,10 @@ public abstract class BaseContactsFragment extends BaseListFragment<UiContact, C
 						completeRefresh();
 					}
 				});
-				Toast.makeText(getActivity(), "User contacts presence sync started!", Toast.LENGTH_SHORT).show();
+				showToast(R.string.mpp_updating_contacts);
 			} catch (TaskIsAlreadyRunningException e) {
 				completeRefresh();
-				e.showMessage(getActivity());
+				e.showMessage();
 			}
 		}
 	}

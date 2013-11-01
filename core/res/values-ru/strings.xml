@@ -1,0 +1,109 @@
+<resources>
+	<string name="mpp_app_name">Messenger++</string>
+
+	<string name="mpp_captcha_message">Пожалуйста, введите код из картинки ниже</string>
+	<string name="mpp_captcha_title">Captcha</string>
+
+	<string name="mpp_task_is_already_running">Обновление данных уже запущено!</string>
+	<string name="mpp_chats">Чаты</string>
+	<string name="mpp_contact">Контакт</string>
+
+	<string name="mpp_tab_contacts">Контакты</string>
+	<string name="mpp_tab_messages">Сообщения</string>
+	<string name="mpp_tab_accounts">Аккаунты</string>
+	<string name="mpp_tab_preferences">Настройки</string>
+
+	<string name="mpp_online_contacts">Контакты в сети</string>
+
+	<string name="mpp_copy">Копировать</string>
+	<string name="mpp_quote">Цитировать</string>
+	<string name="mpp_send">Отправить</string>
+	<string name="mpp_attach">Вложить</string>
+	<string name="mpp_write_message">Написать сообщение</string>
+	<string name="mpp_message_copied_to_clipboard">Сообщение скопировано в буфер обмена!</string>
+
+
+	<string name="mpp_sync_is_already_running">Обновление данных уже запущено!</string>
+	<string name="mpp_type_message_hint">Введите сообщение</string>
+	<string name="mpp_send">Отправить</string>
+	<string name="mpp_contact_icon">Контакт</string>
+	<string name="mpp_phone">Телефон</string>
+	<string name="mpp_filter_icon">Поиск</string>
+	<string name="mpp_clear">Очистить</string>
+	<string name="mpp_male">Мужской</string>
+	<string name="mpp_female">Женский</string>
+	<string name="mpp_sex">Пол</string>
+	<string name="mpp_search_hint">Поиск</string>
+	<string name="mpp_menu_search">Поиск</string>
+
+	<string name="mpp_account_icon">Аккаунт</string>
+	<string name="mpp_account_add">Добавить аккаунт</string>
+	<string name="mpp_contact_add">Добавить контакт</string>
+	<string name="mpp_menu_app_exit">Выход</string>
+	<string name="mpp_back">Назад</string>
+	<string name="mpp_save">Сохранить</string>
+	<string name="mpp_remove">Удалить</string>
+	<string name="mpp_edit">Изменить</string>
+
+	<string name="mpp_nickname">Ник</string>
+	<string name="mpp_birth_date">Дата рождения</string>
+	<string name="mpp_country">Страна</string>
+	<string name="mpp_city">Город</string>
+	<string name="mpp_sync">Обновить</string>
+	<string name="mpp_icon">Иконка</string>
+	<string name="mpp_user_is_typing">Пользователь печатает…</string>
+	<string name="mpp_menu_unread_messages_counter">0</string>
+	<string name="mpp_menu_toggle_users">В сети/В не сети</string>
+	<string name="mpp_menu_edit">Изменить</string>
+	<string name="mpp_menu_view">Посмотреть</string>
+	<string name="mpp_realm_configuration">Настройка %1$s</string>
+	<string name="mpp_notification_title">Messenger++</string>
+	<string name="mpp_notification_text">Нажмите для открытия приложения</string>
+	<string name="mpp_private_chat_title">Чат: %1$s</string>
+	<string name="mpp_public_chat_title">Чат</string>
+	<string name="mpp_saving_account_title">Сохраняем…</string>
+	<string name="mpp_saving_account_message">Подождите пока сохраняется аккаунт</string>
+	<string name="mpp_removing_account_title">Удаляем…</string>
+	<string name="mpp_removing_account_message">Подождите пока удаляется аккаунт</string>
+	<string name="mpp_saving_user_title">Сохраняем…</string>
+	<string name="mpp_saving_user_message">Подождите пока сохраняется контакт</string>
+	<string name="mpp_disable">Выключить</string>
+	<string name="mpp_enable">Включить</string>
+	<string name="mpp_menu_notifications">Сообщения</string>
+
+	<string name="mpp_notification_network_problem">No internet connection available: connect to the network and try
+		again
+	</string>
+	<string name="mpp_notification_invalid_response">Server returned invalid response</string>
+	<string name="mpp_notification_undefined_error">Some error occurred</string>
+	<string name="mpp_notification_account_exception">Account error occurred</string>
+	<string name="mpp_notification_account_connection_exception">Some error occurred while connecting to the remote
+		server, check internet connection and try again
+	</string>
+	<string name="mpp_notification_account_unsupported_exception">Account is not defined in the app</string>
+	<string name="mpp_dialog_do_not_ask_again">Do not ask again</string>
+
+	<string name="mpp_new_message">New message</string>
+	<string name="mpp_chat_participants">Participants</string>
+
+	<string name="mpp_invalid_credentials">Invalid credentials!</string>
+	<string name="mpp_same_account_configured">Same account already configured!</string>
+	<string name="mpp_updating_chat">Updating chat…</string>
+	<string name="mpp_updating_contacts">Updating contacts…</string>
+
+	<string name="mpp_preferences_appearance">Appearance settings</string>
+	<string name="mpp_preferences_other">Other settings</string>
+	<string name="mpp_preferences_show_icon_in_chat_title">Show user icon in chat message</string>
+	<string name="mpp_preferences_show_icon_in_chat_summary">If checked user icon will be shown in message bubble in
+		chat
+	</string>
+	<string name="mpp_preferences_reload_local_data_title">Reload accounts data</string>
+	<string name="mpp_preferences_reload_local_data_summary">Synchronizes local data with server</string>
+	<string name="mpp_yesterday_at">Yesterday at</string>
+
+	<plurals name="mpp_unread_messages_count_notification">
+		<item quantity="one">There is one unread message.</item>
+		<item quantity="other">There are %s unread messages.</item>
+	</plurals>
+
+</resources>

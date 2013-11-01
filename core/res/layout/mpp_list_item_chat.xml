@@ -16,18 +16,15 @@
 
 		<TextView
 			a:id="@+id/mpp_li_chat_title_textview"
-			style="?mpp_list_item_name"
-			a:text="mpp_li_chat_title_textview" />
+			style="?mpp_list_item_name"/>
 
 		<TextView
 			a:id="@+id/mpp_li_last_message_text_textview"
-			style="?mpp_list_item_text_secondary"
-			a:text="mpp_li_last_message_text_textview" />
+			style="?mpp_list_item_text_secondary"/>
 
 		<TextView
 			a:id="@+id/mpp_li_last_message_text_time_textview"
-			style="?mpp_list_item_last_message_time"
-			a:text="mpp_li_last_message_text_time_textview" />
+			style="?mpp_list_item_last_message_time"/>
 
 	</LinearLayout>
 

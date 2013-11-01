@@ -23,11 +23,6 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.Builder;
 import org.solovyev.common.collections.Collections;
 
-/**
- * User: serso
- * Date: 5/29/12
- * Time: 9:39 PM
- */
 public class CaptchaViewBuilder implements Builder<AlertDialog> {
 
 	@Nonnull
@@ -50,7 +45,7 @@ public class CaptchaViewBuilder implements Builder<AlertDialog> {
 	public AlertDialog build() {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-		builder.setTitle(R.string.mpp_captcha);
+		builder.setTitle(R.string.mpp_captcha_title);
 		final View view = ViewFromLayoutBuilder.newInstance(R.layout.mpp_captcha).build(context);
 
 		final ImageView captchaImage = (ImageView) view.findViewById(R.id.captcha_image);
