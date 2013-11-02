@@ -18,7 +18,7 @@ public abstract class AbstractMessengerTest {
 	private Application application = Robolectric.application;
 
 	@Nonnull
-	private AbstractTestMessengerModule module;
+	private AbstractTestModule module;
 
 	@Before
 	public void setUp() throws Exception {
@@ -30,7 +30,7 @@ public abstract class AbstractMessengerTest {
 
 	protected abstract void populateDatabase() throws Exception;
 
-	protected abstract AbstractTestMessengerModule newModule(@Nonnull Application application);
+	protected abstract AbstractTestModule newModule(@Nonnull Application application);
 
 	@After
 	public void tearDown() throws Exception {

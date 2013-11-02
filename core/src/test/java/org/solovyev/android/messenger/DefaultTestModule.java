@@ -4,15 +4,15 @@ import android.app.Application;
 
 import javax.annotation.Nonnull;
 
-public class XmppTestModule extends DefaultTestModule {
+public class DefaultTestModule extends AbstractTestModule {
 
-	public XmppTestModule(@Nonnull Application application) {
+	public DefaultTestModule(@Nonnull Application application) {
 		super(application);
 	}
 
 	@Nonnull
 	@Override
 	protected Class<? extends Configuration> getConfigurationClass() {
-		return XmppTestConfiguration.class;
+		return TestConfiguration.class;
 	}
 }

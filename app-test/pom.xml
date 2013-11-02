@@ -73,14 +73,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-
-		<dependency>
-			<groupId>org.solovyev.android.messenger</groupId>
-			<artifactId>android-messenger-core</artifactId>
-			<type>test-jar</type>
-			<scope>compile</scope>
-		</dependency>
-
 	</dependencies>
 
 	<build>

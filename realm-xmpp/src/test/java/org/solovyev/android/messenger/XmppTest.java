@@ -19,7 +19,7 @@ public abstract class XmppTest extends DefaultMessengerTest {
 
 	@Nonnull
 	@Override
-	protected AbstractTestMessengerModule newModule(@Nonnull Application application) {
+	protected AbstractTestModule newModule(@Nonnull Application application) {
 		return new XmppTestModule(application);
 	}
 

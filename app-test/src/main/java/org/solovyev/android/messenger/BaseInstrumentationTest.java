@@ -1,19 +1,20 @@
 package org.solovyev.android.messenger;
 
 import android.app.Application;
+import android.content.Context;
+import android.test.AndroidTestCase;
+import android.test.ApplicationTestCase;
 import android.test.InstrumentationTestCase;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.realms.RealmService;
+import roboguice.RoboGuice;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 2/27/13
- * Time: 10:16 PM
- */
-public abstract class AbstractMessengerTestCase extends InstrumentationTestCase {
+import static roboguice.RoboGuice.getBaseApplicationInjector;
+
+public abstract class BaseInstrumentationTest extends InstrumentationTestCase {
 
 	@Nonnull
 	@Inject
@@ -27,28 +28,23 @@ public abstract class AbstractMessengerTestCase extends InstrumentationTestCase 
 	@Inject
 	private RealmService realmService;
 
-	@Nonnull
-	private TestMessengerModule module;
-
 	public void setUp() throws Exception {
 		super.setUp();
 		Thread.sleep(100);
-		final Application applicationContext = (Application) getInstrumentation().getTargetContext().getApplicationContext();
-		module = new TestMessengerModule(applicationContext);
-		module.setUp(this, module);
-		App.init(applicationContext);
+		application = (Application) getInstrumentation().getTargetContext().getApplicationContext();
+		getBaseApplicationInjector(application).injectMembers(this);
+		App.init(application);
 	}
 
-	@Override
-	public void tearDown() throws Exception {
-		super.tearDown();
-		module.tearDown();
-	}
-
-/*    @Nonnull
+	@Nonnull
 	public Application getApplication() {
-        return application;
-    }*/
+		return application;
+	}
+
+	@Nonnull
+	public Context getContext() {
+		return application;
+	}
 
 	@Nonnull
 	public AccountService getAccountService() {

@@ -1,14 +1,12 @@
 package org.solovyev.android.messenger.realms.xmpp;
 
-import junit.framework.Assert;
-
 import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.AbstractMessengerTestCase;
+import org.solovyev.android.messenger.BaseInstrumentationTest;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.accounts.AccountState;
@@ -22,12 +20,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-/**
- * User: serso
- * Date: 3/4/13
- * Time: 8:28 PM
- */
-public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
+public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 
 	@Nonnull
 	private XmppAccount realm1;
@@ -37,7 +30,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 
 	@Inject
 	@Nonnull
-	private XmppRealm xmppRealm;
+	private CustomXmppRealm xmppRealm;
 
 	@Nonnull
 	private AccountUserService accountUserService;
@@ -51,7 +44,7 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 	}
 
 	public void testGetUserById() throws Exception {
-		final AccountConnection accountConnection2 = realm2.newConnection(getInstrumentation().getContext());
+		final AccountConnection accountConnection2 = realm2.newConnection(getContext());
 
 		try {
 			new Thread(new Runnable() {
@@ -69,26 +62,26 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 			Thread.sleep(100);
 
 			final User user2 = accountUserService.getUserById(realm2.getUser().getEntity().getAccountEntityId());
-			Assert.assertNotNull(user2);
-			Assert.assertEquals(user2.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN2);
-			Assert.assertEquals(user2.getEntity().getAccountId(), realm1.getId());
-			Assert.assertEquals("Sergey II Solovyev", user2.getFirstName());
-			Assert.assertNull(user2.getLastName());
+			assertNotNull(user2);
+			assertEquals(user2.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN2);
+			assertEquals(user2.getEntity().getAccountId(), realm1.getId());
+			assertEquals("Sergey II Solovyev", user2.getFirstName());
+			assertNull(user2.getLastName());
 
 			// load self
 			final User user1 = accountUserService.getUserById(realm1.getUser().getEntity().getAccountEntityId());
-			Assert.assertNotNull(user1);
-			Assert.assertEquals(user1.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN);
-			Assert.assertEquals(user1.getEntity().getAccountId(), realm1.getId());
-			Assert.assertEquals("Sergey I Solovyev", user1.getFirstName());
-			Assert.assertNull(user1.getLastName());
+			assertNotNull(user1);
+			assertEquals(user1.getEntity().getAccountEntityId(), TestXmppConfiguration.USER_LOGIN);
+			assertEquals(user1.getEntity().getAccountId(), realm1.getId());
+			assertEquals("Sergey I Solovyev", user1.getFirstName());
+			assertNull(user1.getLastName());
 
 			final User serso = accountUserService.getUserById("se.solovyev@gmail.com");
-			Assert.assertNotNull(serso);
-			Assert.assertEquals(serso.getEntity().getAccountEntityId(), "se.solovyev@gmail.com");
-			Assert.assertEquals(serso.getEntity().getAccountId(), realm1.getId());
-			Assert.assertEquals("Sergey", serso.getFirstName());
-			Assert.assertEquals("Solovyev", serso.getLastName());
+			assertNotNull(serso);
+			assertEquals(serso.getEntity().getAccountEntityId(), "se.solovyev@gmail.com");
+			assertEquals(serso.getEntity().getAccountId(), realm1.getId());
+			assertEquals("Sergey", serso.getFirstName());
+			assertEquals("Solovyev", serso.getLastName());
 
 
 		} finally {
@@ -98,8 +91,8 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 
 	public void testGetUserContacts() throws Exception {
 		List<User> contacts1 = accountUserService.getUserContacts(TestXmppConfiguration.USER_LOGIN);
-		Assert.assertTrue(contacts1.size() >= 2);
-		Assert.assertTrue(Iterables.any(contacts1, new Predicate<User>() {
+		assertTrue(contacts1.size() >= 2);
+		assertTrue(Iterables.any(contacts1, new Predicate<User>() {
 			@Override
 			public boolean apply(@Nullable User contact) {
 				return contact != null && contact.getEntity().getAccountEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
@@ -107,12 +100,12 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 		}));
 
 		contacts1 = accountUserService.getUserContacts(TestXmppConfiguration.USER_LOGIN2);
-		Assert.assertTrue(contacts1.isEmpty());
+		assertTrue(contacts1.isEmpty());
 
 	}
 
 	public void testCheckOnlineUsers() throws Exception {
-		final AccountConnection accountConnection2 = realm2.newConnection(getInstrumentation().getContext());
+		final AccountConnection accountConnection2 = realm2.newConnection(getContext());
 
 		try {
 			new Thread(new Runnable() {
@@ -132,18 +125,11 @@ public class XmppAccountUserServiceTest extends AbstractMessengerTestCase {
 
 			final User user2InRealm1 = Users.newEmptyUser(realm1.newUserEntity(realm2.getUser().getEntity().getAccountEntityId()));
 			final List<User> users1 = accountUserService.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
-			Assert.assertNotNull(users1);
-			Assert.assertTrue(!users1.isEmpty());
+			assertNotNull(users1);
+			assertTrue(!users1.isEmpty());
 
-			// todo serso: currently doesn't work => user presence is not changed fast enough to be registered by roster
-/*            Assert.assertTrue(Iterables.any(users1, new Predicate<User>() {
-				@Override
-                public boolean apply(@Nullable User contact) {
-                    return contact != null && contact.getRealmUser().getAccountEntityId().equals(TestXmppConfiguration.USER_LOGIN2) && contact.isOnline();
-                }
-            }));*/
 
-			Assert.assertTrue(Iterables.any(users1, new Predicate<User>() {
+			assertTrue(Iterables.any(users1, new Predicate<User>() {
 				@Override
 				public boolean apply(@Nullable User contact) {
 					return contact != null && contact.getEntity().getAccountEntityId().equals(TestXmppConfiguration.USER_LOGIN) && contact.isOnline();

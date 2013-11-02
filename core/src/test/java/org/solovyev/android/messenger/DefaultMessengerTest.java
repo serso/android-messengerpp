@@ -58,8 +58,8 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 	private final List<AccountData> accountDataList = new ArrayList<AccountData>();
 
 	@Nonnull
-	protected AbstractTestMessengerModule newModule(@Nonnull Application application) {
-		return new DefaultTestMessengerModule(application);
+	protected AbstractTestModule newModule(@Nonnull Application application) {
+		return new DefaultTestModule(application);
 	}
 
 	protected void populateDatabase() throws Exception {

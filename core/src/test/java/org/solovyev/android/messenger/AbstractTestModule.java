@@ -2,11 +2,12 @@ package org.solovyev.android.messenger;
 
 import android.app.Application;
 import android.content.Context;
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.Scopes;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Handler;
+import com.google.inject.*;
 import com.google.inject.util.Modules;
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
+import org.solovyev.android.http.CachingImageLoader;
 import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.DefaultAccountService;
@@ -26,10 +27,7 @@ import org.solovyev.android.messenger.notifications.DefaultNotificationService;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.DefaultRealmService;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.realms.vk.registration.DummyRegistrationService;
-import org.solovyev.android.messenger.registration.RegistrationService;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
-import org.solovyev.android.messenger.sync.DefaultSyncService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
@@ -38,7 +36,6 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
 import org.solovyev.tasks.TaskService;
-import org.solovyev.tasks.Tasks;
 import roboguice.RoboGuice;
 import roboguice.inject.RoboInjector;
 
@@ -47,40 +44,46 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-public class TestMessengerModule extends AbstractModule {
+import static org.mockito.Mockito.mock;
+import static org.solovyev.tasks.Tasks.newTaskService;
+
+public abstract class AbstractTestModule extends AbstractModule {
 
 	private final Map<Class<?>, Object> bindings = new HashMap<Class<?>, Object>();
 
 	@Nonnull
 	private final Application application;
 
-	public TestMessengerModule(@Nonnull Application application) {
+	public AbstractTestModule(@Nonnull Application application) {
 		this.application = application;
 	}
 
 	@Override
 	protected void configure() {
-		bind(Executor.class).toInstance(Executors.newSingleThreadExecutor());
-		bind(TaskService.class).toInstance(Tasks.newTaskService());
+		bind(Executor.class).toInstance(new Executor() {
+			@Override
+			public void execute(Runnable command) {
+				command.run();
+			}
+		});
+		bind(SQLiteOpenHelperConfiguration.class).to(TestMessengerDbConfiguration.class);
+		bind(SQLiteOpenHelper.class).to(TestSQLiteOpenHelper.class);
 
 		bind(MessengerSecurityService.class).to(TestSecurityService.class);
-		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
-		bind(ExceptionHandler.class).to(DefaultExceptionHandler.class);
-		bind(NotificationService.class).to(DefaultNotificationService.class);
-
-		bind(SQLiteOpenHelperConfiguration.class).to(DbConfiguration.class);
-		bind(android.database.sqlite.SQLiteOpenHelper.class).to(MessengerModule.SQLiteOpenHelper.class);
+		bind(TaskService.class).toInstance(newTaskService());
 
 		bind(RealmService.class).to(DefaultRealmService.class);
-		bind(AccountService.class).to(DefaultAccountService.class);
-		bind(AccountDao.class).to(SqliteAccountDao.class);
 		bind(AccountConnections.class).to(DefaultAccountConnections.class);
 		bind(AccountConnectionsService.class).to(DefaultAccountConnectionsService.class);
+		bind(AccountService.class).to(DefaultAccountService.class);
+		bind(AccountDao.class).to(SqliteAccountDao.class);
 
-		bind(Configuration.class).to(TestConfiguration.class);
-		bind(org.solovyev.android.http.ImageLoader.class).to(MessengerModule.ImageLoader.class);
+		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
+		bind(NotificationService.class).to(DefaultNotificationService.class);
+		bind(ExceptionHandler.class).to(DefaultExceptionHandler.class);
+		bind(Configuration.class).to(getConfigurationClass());
+		bind(org.solovyev.android.http.ImageLoader.class).to(ImageLoader.class);
 		bind(NetworkStateService.class).to(NetworkStateServiceImpl.class).in(Scopes.SINGLETON);
 
 		bind(UserDao.class).to(SqliteUserDao.class);
@@ -92,8 +95,7 @@ public class TestMessengerModule extends AbstractModule {
 		bind(MessageDao.class).to(SqliteMessageDao.class);
 		bind(MessageService.class).to(DefaultMessageService.class);
 
-		bind(SyncService.class).to(DefaultSyncService.class);
-		bind(RegistrationService.class).to(DummyRegistrationService.class);
+		bind(SyncService.class).toInstance(mock(SyncService.class));
 
 		bind(Context.class).toInstance(application);
 
@@ -103,12 +105,15 @@ public class TestMessengerModule extends AbstractModule {
 		}
 	}
 
+	@Nonnull
+	protected abstract Class<? extends Configuration> getConfigurationClass();
+
 	public void addBinding(Class<?> type, Object object) {
 		bindings.put(type, object);
 	}
 
 	public void setUp(@Nonnull Object testObject,
-					  @Nonnull TestMessengerModule module) {
+					  @Nonnull AbstractTestModule module) {
 		Module roboGuiceModule = RoboGuice.newDefaultRoboModule(application);
 		Module testModule = Modules.override(roboGuiceModule).with(module);
 		RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE, testModule);
@@ -118,5 +123,14 @@ public class TestMessengerModule extends AbstractModule {
 
 	public void tearDown() {
 		RoboGuice.util.reset();
+	}
+
+	@Singleton
+	public static class ImageLoader extends CachingImageLoader {
+
+		@Inject
+		public ImageLoader(@Nonnull Application context) {
+			super(context, "messenger", new Handler());
+		}
 	}
 }

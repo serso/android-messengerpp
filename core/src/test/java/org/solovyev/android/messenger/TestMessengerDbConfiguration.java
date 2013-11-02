@@ -7,11 +7,6 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.db.SQLiteOpenHelperConfiguration;
 
-/**
- * User: serso
- * Date: 3/4/13
- * Time: 8:49 PM
- */
 public class TestMessengerDbConfiguration implements SQLiteOpenHelperConfiguration {
 	@Nonnull
 	@Override

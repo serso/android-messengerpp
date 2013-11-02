@@ -48,11 +48,6 @@ import org.solovyev.tasks.Tasks;
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 
-/**
- * User: serso
- * Date: 8/12/12
- * Time: 10:27 PM
- */
 public class MessengerModule extends AbstractModule {
 
 	@Override
