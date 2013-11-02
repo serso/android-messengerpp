@@ -32,14 +32,14 @@ final class XmppMessengerSender implements XmppConnectedCallable<String> {
 	public String call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 		final ChatManager chatManager = connection.getChatManager();
 
-		final Entity accountChat = chat.getEntity();
-		org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(accountChat.getAccountEntityId());
+		final Entity chatId = chat.getEntity();
+		final XmppMessageListener messageListener = new XmppMessageListener(account, chatId);
+		org.jivesoftware.smack.Chat smackChat = chatManager.getThreadChat(chatId.getAccountEntityId());
 		if (smackChat == null) {
 			// smack forget about chat ids after restart => need to create chat here
-			smackChat = chatManager.createChat(chat.getSecondUser().getAccountEntityId(), accountChat.getAccountEntityId(), new XmppMessageListener(account, accountChat));
-		} else {
-			// todo serso: remove if unnecessary
-			smackChat.addMessageListener(new XmppMessageListener(account, accountChat));
+			smackChat = chatManager.createChat(chat.getSecondUser().getAccountEntityId(), chatId.getAccountEntityId(), messageListener);
+		} else if (!smackChat.getListeners().contains(messageListener)) {
+			smackChat.addMessageListener(messageListener);
 		}
 
 		smackChat.sendMessage(message.getBody());
