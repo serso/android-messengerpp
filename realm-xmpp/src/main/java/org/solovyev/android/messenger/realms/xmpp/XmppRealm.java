@@ -86,7 +86,7 @@ public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
+	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
 		final List<AProperty> result = new ArrayList<AProperty>(user.getPropertiesCollection().size());
 
 		for (AProperty property : user.getPropertiesCollection()) {

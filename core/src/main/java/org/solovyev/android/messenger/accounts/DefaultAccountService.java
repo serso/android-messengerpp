@@ -395,7 +395,7 @@ public class DefaultAccountService implements AccountService {
 	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
 		final Account account = getAccountById(user.getEntity().getAccountId());
 		final Realm<?> realm = account.getRealm();
-		return realm.getUserProperties(user, context);
+		return realm.getUserDisplayProperties(user, context);
 	}
 
 	@Override

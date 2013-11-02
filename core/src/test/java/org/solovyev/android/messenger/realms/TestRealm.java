@@ -52,7 +52,7 @@ public class TestRealm extends AbstractRealm {
 
 	@Nonnull
 	@Override
-	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
+	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
 		return Collections.emptyList();
 	}
 

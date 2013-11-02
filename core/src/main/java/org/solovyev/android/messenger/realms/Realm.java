@@ -66,7 +66,7 @@ public interface Realm<C extends AccountConfiguration> extends Identifiable {
 	 * @return list of translated user properties
 	 */
 	@Nonnull
-	List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context);
+	List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context);
 
 	/**
 	 * @return true if account would notify us about delivery status of a message

@@ -80,7 +80,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public List<AProperty> getUserProperties(@Nonnull User user, @Nonnull Context context) {
+	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
 		// todo serso: implement
 		return Collections.emptyList();
 	}
