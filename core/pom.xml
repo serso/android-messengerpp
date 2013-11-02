@@ -204,7 +204,6 @@
 					<plugin>
 						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 						<artifactId>android-maven-plugin</artifactId>
-						<version>3.5.1</version>
 						<configuration>
 							<!-- emma start -->
 							<emma>
