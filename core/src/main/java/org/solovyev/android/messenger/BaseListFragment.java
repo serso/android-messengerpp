@@ -20,7 +20,6 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFra
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import org.solovyev.android.Threads;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListViewScroller;
@@ -56,11 +55,6 @@ import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
 import static org.solovyev.android.messenger.App.newTag;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 5:57 PM
- */
 public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		extends RoboSherlockListFragment
 		implements ListViewScrollerListener, ListViewFilter.FilterableListView {
@@ -399,8 +393,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 			fillListView(pullToRefreshListView.getRefreshableView(), context);
 			pullToRefreshListView.setShowIndicator(false);
-			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView());
-			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView());
 
 			pullToRefreshListView.setOnRefreshListener(new OnRefreshListener2Adapter(topRefreshListener, bottomRefreshListener));
 			listView = pullToRefreshListView;
@@ -413,8 +405,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 			fillListView(pullToRefreshListView.getRefreshableView(), context);
 
 			pullToRefreshListView.setShowIndicator(false);
-			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView());
-			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView());
 
 			pullToRefreshListView.setOnRefreshListener(topRefreshListener);
 
@@ -427,8 +417,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 			fillListView(pullToRefreshListView.getRefreshableView(), context);
 			pullToRefreshListView.setShowIndicator(false);
-			prepareLoadingView(resources, pullToRefreshListView.getHeaderLoadingView());
-			prepareLoadingView(resources, pullToRefreshListView.getFooterLoadingView());
 
 			pullToRefreshListView.setOnRefreshListener(bottomRefreshListener);
 
@@ -467,12 +455,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		}
 		lv.setDivider(new ColorDrawable(Color.LTGRAY));
 		lv.setDividerHeight(1);
-	}
-
-	private void prepareLoadingView(@Nonnull Resources resources, @Nullable LoadingLayout loadingView) {
-		if (loadingView != null) {
-			multiPaneManager.fillLoadingLayout(this.getActivity(), resources, loadingView);
-		}
 	}
 
 	@Nullable

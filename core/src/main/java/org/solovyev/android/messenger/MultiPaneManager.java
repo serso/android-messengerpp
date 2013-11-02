@@ -8,11 +8,6 @@ import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 8/16/12
- * Time: 5:29 PM
- */
 public interface MultiPaneManager {
 
 	boolean isDualPane(@Nonnull Activity activity);
@@ -29,6 +24,4 @@ public interface MultiPaneManager {
 
 	void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane);
 	void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane, boolean forceShowTitle);
-
-	void fillLoadingLayout(@Nonnull Activity activity, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView);
 }

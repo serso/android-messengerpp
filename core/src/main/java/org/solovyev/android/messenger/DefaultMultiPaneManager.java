@@ -17,11 +17,6 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 2/28/13
- * Time: 11:22 PM
- */
 @Singleton
 public class DefaultMultiPaneManager implements MultiPaneManager {
 
@@ -115,12 +110,5 @@ public class DefaultMultiPaneManager implements MultiPaneManager {
 			titleTextView.setText(String.valueOf(fragmentTitle).toUpperCase());
 			titleTextView.setVisibility(View.VISIBLE);
 		}
-	}
-
-	@Override
-	public void fillLoadingLayout(@Nonnull Activity activity, @Nonnull Resources resources, @Nonnull LoadingLayout loadingView) {
-		// todo serso: incorrect color of "Release to refresh caption"
-		loadingView.setTextColor(ColorStateList.valueOf(resources.getColor(R.color.mpp_text)));
-		loadingView.setBackgroundColor(resources.getColor(android.R.color.transparent));
 	}
 }
