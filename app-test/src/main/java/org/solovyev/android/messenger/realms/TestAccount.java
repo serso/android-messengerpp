@@ -20,12 +20,12 @@ import com.google.inject.Singleton;
 public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 
 	@Inject
-	public TestAccount(@Nonnull TestRealm realmDef) {
-		this(realmDef, 1);
+	public TestAccount(@Nonnull TestRealm realm) {
+		this(realm, 1);
 	}
 
-	public TestAccount(@Nonnull TestRealm realmDef, int index) {
-		super(realmDef.getId() + "~" + index, realmDef, Users.newEmptyUser(Entities.newEntity(realmDef.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
+	public TestAccount(@Nonnull TestRealm realm, int index) {
+		super(realm.getId() + "~" + index, realm, Users.newEmptyUser(Entities.newEntity(realm.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
 	}
 
 

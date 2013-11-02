@@ -24,7 +24,7 @@ public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 
 	@Override
 	public void onEvent(@Nonnull RealmUiEvent event) {
-		final Realm realm = event.getRealmDef();
+		final Realm realm = event.getRealm();
 
 		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
 		switch (event.getType()) {

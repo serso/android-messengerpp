@@ -8,16 +8,11 @@ import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 
 import com.google.inject.Inject;
 
-/**
- * User: serso
- * Date: 2/27/13
- * Time: 9:15 PM
- */
 public class TestAccountConfigurationFragment extends BaseAccountConfigurationFragment<TestAccount> {
 
 	@Inject
 	@Nonnull
-	private TestRealm realmDef;
+	private TestRealm realm;
 
 	public TestAccountConfigurationFragment() {
 		super(0);
@@ -32,6 +27,6 @@ public class TestAccountConfigurationFragment extends BaseAccountConfigurationFr
 	@Nonnull
 	@Override
 	public Realm getRealm() {
-		return realmDef;
+		return realm;
 	}
 }

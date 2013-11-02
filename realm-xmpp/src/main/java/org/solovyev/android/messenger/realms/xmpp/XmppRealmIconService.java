@@ -70,7 +70,7 @@ public class XmppRealmIconService implements RealmIconService {
 				final byte[] userIconBytes = ABase64StringDecoder.getInstance().convert(userIconBase64);
 				result = new BitmapDrawable(BitmapFactory.decodeByteArray(userIconBytes, 0, userIconBytes.length));
 			} catch (IllegalArgumentException e) {
-				Log.e("XmppRealmDef", e.getMessage(), e);
+				Log.e("XmppRealm", e.getMessage(), e);
 			}
 		}
 

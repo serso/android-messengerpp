@@ -23,19 +23,19 @@ public class TestConfiguration implements Configuration {
 
 	@Inject
 	@Nonnull
-	private TestRealm testRealmDef;
+	private TestRealm testRealm;
 
 	@Inject
 	@Nonnull
-	private VkRealm vkRealmDef;
+	private VkRealm vkRealm;
 
 	@Inject
 	@Nonnull
-	private XmppRealm xmppRealmDef;
+	private XmppRealm xmppRealm;
 
 	@Nonnull
 	@Override
 	public Collection<Realm> getRealms() {
-		return Arrays.<Realm>asList(testRealmDef, vkRealmDef, xmppRealmDef);
+		return Arrays.<Realm>asList(testRealm, vkRealm, xmppRealm);
 	}
 }

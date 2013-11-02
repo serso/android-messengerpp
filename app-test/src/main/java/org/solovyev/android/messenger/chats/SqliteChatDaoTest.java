@@ -30,10 +30,10 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 	private MessageDao messageDao;
 
 	@Inject
-	private TestRealm testRealmDef;
+	private TestRealm testRealm;
 
 	@Inject
-	private TestAccount testRealm;
+	private TestAccount testAccount;
 
 	public void setUp() throws Exception {
 		super.setUp();
@@ -45,7 +45,7 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
 		final ArrayList<AccountChat> chats = new ArrayList<AccountChat>();
 
-		final Entity realmUser = testRealm.newUserEntity("01");
+		final Entity realmUser = testAccount.newUserEntity("01");
 		final String userId = realmUser.getEntityId();
 
 		userDao.create(Users.newEmptyUser(realmUser));
@@ -54,13 +54,13 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 
 		Assert.assertTrue(chatDao.readChatsByUserId(userId).isEmpty());
 
-		final Entity realmChat1 = testRealm.newChatEntity("01");
+		final Entity realmChat1 = testAccount.newChatEntity("01");
 		chats.add(newAccountChat(realmChat1, false));
-		final Entity realmChat2 = testRealm.newChatEntity("02");
+		final Entity realmChat2 = testAccount.newChatEntity("02");
 		chats.add(newAccountChat(realmChat2, false));
-		final Entity realmChat3 = testRealm.newChatEntity("03");
+		final Entity realmChat3 = testAccount.newChatEntity("03");
 		chats.add(newAccountChat(realmChat3, false));
-		final Entity realmChat4 = testRealm.newChatEntity("04");
+		final Entity realmChat4 = testAccount.newChatEntity("04");
 		chats.add(newAccountChat(realmChat4, false));
 		chatDao.mergeChats(userId, chats);
 
@@ -98,9 +98,9 @@ public class SqliteChatDaoTest extends AbstractMessengerTestCase {
 	}
 
 	private MutableMessage newMessage(String realmMessageId, boolean read) {
-		final MutableMessage message = Messages.newMessage(testRealm.newMessageEntity(realmMessageId));
-		message.setAuthor(testRealm.newUserEntity("user_01"));
-		message.setRecipient(testRealm.newUserEntity("user_03"));
+		final MutableMessage message = Messages.newMessage(testAccount.newMessageEntity(realmMessageId));
+		message.setAuthor(testAccount.newUserEntity("user_01"));
+		message.setRecipient(testAccount.newUserEntity("user_03"));
 		message.setSendDate(DateTime.now());
 		message.setBody(Strings.generateRandomString(10));
 		message.setRead(read);
