@@ -432,7 +432,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		final Entity entity = message.getEntity();
 		values.put("id", entity.getEntityId());
 		values.put("account_id", entity.getAccountId());
-		values.put("realm_message_id", entity.getAccountEntityId());
+		values.put("account_message_id", entity.getAccountEntityId());
 
 		values.put("chat_id", message.getChat().getEntityId());
 		values.put("author_id", message.getAuthor().getEntityId());

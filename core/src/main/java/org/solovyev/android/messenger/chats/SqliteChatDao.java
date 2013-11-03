@@ -375,7 +375,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 		values.put("id", chat.getEntity().getEntityId());
 		values.put("account_id", chat.getEntity().getAccountId());
-		values.put("realm_chat_id", chat.getEntity().getAccountEntityId());
+		values.put("account_chat_id", chat.getEntity().getAccountEntityId());
 		values.put("last_messages_sync_date", lastMessagesSyncDate == null ? null : dateTimeFormatter.print(lastMessagesSyncDate));
 
 		return values;
@@ -452,11 +452,11 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			return db.rawQuery(	"select c.id, c.account_id, c.realm_chat_id, count(*) from chats c, messages m " +
+			return db.rawQuery(	"select c.id, c.account_id, c.account_chat_id, count(*) from chats c, messages m " +
 								"where c.id = m.chat_id " +
 								"and m.read = 0 " +
 								"and m.state = 'received' " +
-								"group by c.id, c.account_id, c.realm_chat_id", null);
+								"group by c.id, c.account_id, c.account_chat_id", null);
 		}
 
 		@Nonnull
