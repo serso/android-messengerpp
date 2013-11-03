@@ -241,6 +241,10 @@
 		<item name="android:scrollHorizontally">false</item>
 	</style>
 
+	<style name="mpp_form_password_edittext" parent="mpp_form_edittext">
+		<item name="android:inputType">textPassword</item>
+	</style>
+
 	<style name="mpp_form_buttons">
 		<item name="android:orientation">horizontal</item>
 		<item name="android:baselineAligned">false</item>

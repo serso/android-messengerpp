@@ -35,8 +35,7 @@
 
 		<EditText
 				a:id="@+id/mpp_xmpp_password_edittext"
-				a:inputType="textPassword"
-				style="?mpp_form_edittext"/>
+				style="?mpp_form_password_edittext"/>
 
 		<TextView
 				a:id="@+id/mpp_xmpp_resource_label"
