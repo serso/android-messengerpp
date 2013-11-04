@@ -109,7 +109,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
 	@Override
 	public int getCompositeDialogTitleResId() {
-		return R.string.mpp_sms_realm_composite_dialog_title;
+		return R.string.mpp_sms_composite_dialog_title;
 	}
 
 

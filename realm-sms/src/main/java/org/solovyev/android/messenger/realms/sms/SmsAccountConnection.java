@@ -305,9 +305,9 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		final Resources resources = App.getApplication().getResources();
 		final String messageBody;
 		if (call.isIncoming()) {
-			messageBody = resources.getString(R.string.mpp_sms_realm_incoming_call);
+			messageBody = resources.getString(R.string.mpp_sms_incoming_call);
 		} else {
-			messageBody = resources.getString(R.string.mpp_sms_realm_outgoing_call);
+			messageBody = resources.getString(R.string.mpp_sms_outgoing_call);
 		}
 		return messageBody;
 	}

@@ -11,7 +11,7 @@
 			style="?mpp_fragment_title" />
 
 		<TextView
-			a:text="First name"
+			a:text="@string/mpp_sms_first_name"
 			style="?mpp_form_label" />
 
 		<EditText
@@ -19,7 +19,7 @@
 			style="?mpp_form_edittext" />
 
 		<TextView
-			a:text="Last name"
+			a:text="@string/mpp_sms_last_name"
 			style="?mpp_form_label" />
 
 		<EditText
@@ -27,7 +27,7 @@
 			style="?mpp_form_edittext" />
 
 		<TextView
-			a:text="Phone"
+			a:text="@string/mpp_sms_phone"
 			style="?mpp_form_label" />
 
 		<EditText
@@ -37,7 +37,7 @@
 
 		<CheckBox
 			a:id="@+id/mpp_sms_dont_save_into_phone_checkbox"
-			a:text="Do not save into phone contacts"
+			a:text="@string/mpp_sms_do_not_save_into_phone_contacts"
 			style="?mpp_form_checkbox"/>
 
 		<include layout="@layout/mpp_fragment_edit_buttons"/>

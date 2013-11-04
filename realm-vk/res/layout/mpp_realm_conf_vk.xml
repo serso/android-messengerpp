@@ -16,7 +16,6 @@
 
 		<EditText
 			a:id="@+id/mpp_vk_login_edittext"
-			a:text="se.solovyev"
 			style="?mpp_form_edittext" />
 
 		<TextView

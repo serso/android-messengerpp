@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="mpp_vk_realm_name">ВКонтакте</string>
+	<string name="mpp_vk_login">Логин/Телефон</string>
+	<string name="mpp_vk_password">Пароль</string>
+	<string name="mpp_vk_notification_auth_token_expired">Сессия истекла. Попробуйте войти в аккаунт снова</string>
+	<string name="mpp_vk_notification_error">Ошибка ВКонтакте: %1$s</string>
+	<string name="mpp_vk_login_must_be_set">Поле "Логин/Телефона" должно быть заполнено!</string>
+	<string name="mpp_vk_password_must_be_set">Поле пароль должно быть заполнено!</string>
+</resources>

@@ -12,7 +12,7 @@
 
 		<CheckBox
 			a:id="@+id/mpp_sms_conf_stop_processing_checkbox"
-			a:text="Do not put SMS into system inbox"
+			a:text="@string/mpp_sms_do_not_put_sms_into_system_inbox"
 			style="?mpp_form_checkbox"/>
 
 		<include layout="@layout/mpp_fragment_edit_buttons"/>
