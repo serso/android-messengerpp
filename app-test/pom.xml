@@ -199,12 +199,15 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
 						<configuration>
-							<excludes>
-								<exclude>**/XmppAccountUserServiceTest.java</exclude>
-							</excludes>
+							<test>
+								<skip>false</skip>
+								<classes>
+									<class>org.solovyev.android.messenger.realms.SqliteAccountDaoTest</class>
+								</classes>
+							</test>
 						</configuration>
 					</plugin>
 				</plugins>
