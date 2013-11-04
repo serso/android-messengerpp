@@ -6,11 +6,6 @@ import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 5:14 PM
- */
 public class OnlineContactsFragment extends BaseContactsFragment {
 
 	@Nonnull
@@ -21,7 +16,7 @@ public class OnlineContactsFragment extends BaseContactsFragment {
 
 	@Nonnull
 	protected AbstractContactsAdapter createAdapter() {
-		return new OnlineContactsAdapter(getActivity(), getAccountService());
+		return new OnlineContactsAdapter(getActivity());
 	}
 
 	@Override

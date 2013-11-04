@@ -6,14 +6,9 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.accounts.AccountService;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 6:01 PM
- */
 public class OnlineContactsAdapter extends AbstractContactsAdapter {
 
-	public OnlineContactsAdapter(@Nonnull Context context, @Nonnull AccountService accountService) {
+	public OnlineContactsAdapter(@Nonnull Context context) {
 		super(context);
 	}
 
