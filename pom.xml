@@ -424,7 +424,10 @@
 		<profile>
 			<!-- profile which runs the instrumentation tests -->
 			<id>with-tests</id>
+		</profile>
 
+		<profile>
+			<id>no-internet</id>
 		</profile>
 
 		<profile>
