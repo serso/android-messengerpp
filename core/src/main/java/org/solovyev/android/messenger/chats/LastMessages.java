@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.MessageDao;
 import org.solovyev.android.messenger.messages.MessageService;
 
 import static org.solovyev.android.messenger.chats.ChatEventType.last_message_changed;
@@ -43,7 +42,7 @@ class LastMessages {
 					tryPutNewLastMessage(chat, changedLastMessages, message);
 				}
 				break;
-				case message_added_batch: {
+				case messages_added: {
 					final List<Message> messages = event.getDataAsMessages();
 
 					Message newestMessage = null;

@@ -11,7 +11,6 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
@@ -332,7 +331,7 @@ public class DefaultChatService implements ChatService {
 			chatEvents.add(ChatEventType.added.newEvent(addedChat));
 		}
 		if (!addedObjects.isEmpty()) {
-			userEvents.add(UserEventType.chat_added_batch.newEvent(user, addedObjects));
+			userEvents.add(UserEventType.chats_added.newEvent(user, addedObjects));
 		}
 
 		for (String removedChatId : mergeResult.getRemovedObjectIds()) {
@@ -433,7 +432,7 @@ public class DefaultChatService implements ChatService {
 
 			final List<ChatEvent> events = new ArrayList<ChatEvent>(messages.size());
 
-			events.add(ChatEventType.message_added_batch.newEvent(chat, result.getAddedObjects()));
+			events.add(ChatEventType.messages_added.newEvent(chat, result.getAddedObjects()));
 
 			for (Message updatedMessage : result.getUpdatedObjects()) {
 				events.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));

@@ -19,7 +19,7 @@ import static java.lang.System.currentTimeMillis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.solovyev.android.messenger.chats.ChatEventType.message_added;
-import static org.solovyev.android.messenger.chats.ChatEventType.message_added_batch;
+import static org.solovyev.android.messenger.chats.ChatEventType.messages_added;
 import static org.solovyev.android.messenger.chats.ChatEventType.message_changed;
 import static org.solovyev.android.messenger.chats.ChatEventType.message_state_changed;
 import static org.solovyev.android.messenger.chats.ChatEventType.user_is_not_typing;
@@ -88,7 +88,7 @@ public class MessagesAdapterTest extends DefaultMessengerTest {
 					event = message_added.newEvent(chat.getChat(), newMessage(i));
 					break;
 				case 1:
-					event = message_added_batch.newEvent(chat.getChat(), Arrays.asList(newMessage(i)));
+					event = messages_added.newEvent(chat.getChat(), Arrays.asList(newMessage(i)));
 					break;
 				case 2:
 					final int position = r.nextInt(max(1, adapter.getCount()));

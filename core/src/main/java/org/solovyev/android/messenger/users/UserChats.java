@@ -46,7 +46,7 @@ class UserChats {
 				final Chat chat = event.getDataAsChat();
 				this.chats.update(eventUser.getEntity(), new ObjectAddedUpdater<Chat>(chat));
 				break;
-			case chat_added_batch:
+			case chats_added:
 				final List<Chat> chats = event.getDataAsChats();
 				this.chats.update(eventUser.getEntity(), new ObjectsAddedUpdater<Chat>(chats));
 				break;

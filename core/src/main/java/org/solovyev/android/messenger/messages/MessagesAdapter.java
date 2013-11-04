@@ -104,7 +104,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 				case message_added:
 					addMessages(asList(event.getDataAsMessage()));
 					break;
-				case message_added_batch:
+				case messages_added:
 					addMessages(event.getDataAsMessages());
 					break;
 				case message_state_changed:

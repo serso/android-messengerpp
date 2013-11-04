@@ -127,7 +127,7 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent> {
 			case message_added:
 				handleNewMessages(event.getChat(), Arrays.asList(event.getDataAsMessage()));
 				break;
-			case message_added_batch:
+			case messages_added:
 				handleNewMessages(event.getChat(), event.getDataAsMessages());
 				break;
 		}

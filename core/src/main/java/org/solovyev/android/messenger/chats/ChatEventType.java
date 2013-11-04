@@ -21,7 +21,7 @@ public enum ChatEventType {
 		}
 	},
 
-	message_added_batch {
+	messages_added {
 		@Override
 		protected void checkData(@Nullable Object data) {
 			assert data instanceof List;

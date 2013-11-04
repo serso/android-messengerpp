@@ -54,7 +54,7 @@ abstract class AbstractChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 					addListItem(eventUser, chat);
 				}
 				break;
-			case chat_added_batch:
+			case chats_added:
 				final List<Chat> chats = event.getDataAsChats();
 				addAll(toChatListItems(eventUser, chats));
 				break;

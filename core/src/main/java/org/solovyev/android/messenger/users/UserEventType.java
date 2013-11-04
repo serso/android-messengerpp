@@ -28,7 +28,7 @@ public enum UserEventType {
 	},
 
 	chat_added,
-	chat_added_batch {
+	chats_added {
 		@Override
 		protected void checkData(@Nullable Object data) {
 			assert data instanceof List;
