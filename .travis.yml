@@ -18,4 +18,4 @@ before_script:
   - chmod +x $PWD/.travis_wait_for_emulator.sh
   - $PWD/.travis_wait_for_emulator.sh
 
-script: mvn install -Pwith-tests,with-no-internet
+script: mvn install -Pwith-tests,no-internet
