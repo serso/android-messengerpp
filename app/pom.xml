@@ -243,6 +243,23 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
+						<inherited>true</inherited>
+						<configuration>
+							<renameManifestPackage>org.solovyev.android.messenger.dev</renameManifestPackage>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 
 

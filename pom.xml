@@ -427,7 +427,13 @@
 		</profile>
 
 		<profile>
+			<!-- profile which runs if there is no internet connection on build machine (some tests will be skipped) -->
 			<id>no-internet</id>
+		</profile>
+
+		<profile>
+			<!-- profile which builds developer's version of application (renames manifest) -->
+			<id>dev</id>
 		</profile>
 
 		<profile>
