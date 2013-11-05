@@ -3,6 +3,7 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import com.google.inject.Inject;
@@ -225,7 +226,13 @@ public final class App {
 	}
 
 	public static void exit(Activity activity) {
-		MessengerApplication.exit(instance.application, activity);
+		getAccountService().stopAllRealmConnections();
+
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
+		instance.application.stopService(serviceIntent);
+
+		activity.finish();
 	}
 
 	@Nonnull
@@ -322,6 +329,8 @@ public final class App {
 	}
 
 	public static void startBackgroundService() {
-		MessengerApplication.startBackgroundService(instance.application);
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
+		instance.application.startService(serviceIntent);
 	}
 }

@@ -1,9 +1,15 @@
 package org.solovyev.android.messenger;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
+import roboguice.RoboGuice;
+
+import java.util.Collection;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -13,22 +19,9 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
-import roboguice.RoboGuice;
-
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static org.joda.time.DateTimeZone.UTC;
 import static org.solovyev.android.messenger.App.getAccountService;
-
-/**
- * User: serso
- * Date: 5/25/12
- * Time: 8:16 PM
- */
 
 @ReportsCrashes(formKey = "",
 		mailTo = "se.solovyev+programming+messengerpp+crashes+1.0@gmail.com",
@@ -41,6 +34,9 @@ public class MessengerApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		// if we rename package we need to find module
+		RoboGuice.setModulesResourceId(R.array.roboguice_modules);
 
 		ACRA.init(this);
 
@@ -85,22 +81,6 @@ public class MessengerApplication extends Application {
 				// do not care
 			}
 		}
-	}
-
-	public static void exit(@Nonnull Application application, @Nonnull Activity activity) {
-		getAccountService().stopAllRealmConnections();
-
-		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(application, OngoingNotificationService.class);
-		application.stopService(serviceIntent);
-
-		activity.finish();
-	}
-
-	public static void startBackgroundService(@Nonnull Application application) {
-		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(application, OngoingNotificationService.class);
-		application.startService(serviceIntent);
 	}
 
 	private static final class PreloadCachedData extends MessengerAsyncTask<User, Void, Void> {
