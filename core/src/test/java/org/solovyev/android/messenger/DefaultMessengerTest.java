@@ -32,7 +32,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 
 	private static final int ACCOUNT_1_USER_COUNT = 3;
 	private static final int ACCOUNT_2_USER_COUNT = 20;
-	private static final int ACCOUNT_3_USER_COUNT = 200;
+	private static final int ACCOUNT_3_USER_COUNT = 40;
 
 	@Nonnull
 	@Inject

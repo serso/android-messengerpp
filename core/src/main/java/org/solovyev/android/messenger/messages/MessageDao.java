@@ -1,7 +1,9 @@
 package org.solovyev.android.messenger.messages;
 
+import org.joda.time.DateTime;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
@@ -9,11 +11,6 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 9:11 PM
- */
 public interface MessageDao extends Dao<Message> {
 
 	@Nullable
@@ -46,4 +43,7 @@ public interface MessageDao extends Dao<Message> {
 
 	@Nonnull
 	List<AProperty> readPropertiesById(@Nonnull String messageId);
+
+	@Nullable
+	Message readSameMessage(@Nonnull String body, @Nonnull DateTime sendTime, @Nonnull Entity author, @Nonnull Entity recipient);
 }

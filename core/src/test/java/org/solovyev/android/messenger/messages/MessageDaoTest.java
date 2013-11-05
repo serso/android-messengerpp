@@ -2,7 +2,6 @@ package org.solovyev.android.messenger.messages;
 
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
@@ -98,6 +97,42 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 		// properties now are not removed in merge procedure
 		assertNotNull(actual.getProperties().getPropertyValue("property_2"));
 	}
+
+	@Test
+	public void testShouldReturnSameMessageForExactMatch() throws Exception {
+		final AccountData ad = getAccountData1();
+		final AccountChat chat = ad.getChats().get(0);
+		final Message expected = chat.getMessages().get(0);
+
+		checkSameMessage(expected, expected.getSendDate());
+	}
+
+	private void checkSameMessage(@Nonnull Message expected, @Nonnull DateTime sendDate) {
+		final Message actual = dao.readSameMessage(expected.getBody(), sendDate, expected.getAuthor(), expected.getRecipient());
+		assertNotNull(actual);
+		assertEntitiesEqual(expected, actual);
+	}
+
+	@Test
+	public void testShouldReturnSameMessageWithinASecond() throws Exception {
+		final AccountData ad = getAccountData1();
+		final AccountChat chat = ad.getChats().get(0);
+		final Message expected = chat.getMessages().get(0);
+
+		checkSameMessage(expected, expected.getSendDate().minus(999));
+		checkSameMessage(expected, expected.getSendDate().plus(999));
+	}
+
+	@Test
+	public void testShouldNotReturnSameMessageIfSendTimesDiffer() throws Exception {
+		final AccountData ad = getAccountData1();
+		final AccountChat chat = ad.getChats().get(0);
+		final Message expected = chat.getMessages().get(0);
+
+		assertNull(dao.readSameMessage(expected.getBody(), expected.getSendDate().minus(1000), expected.getAuthor(), expected.getRecipient()));
+		assertNull(dao.readSameMessage(expected.getBody(), expected.getSendDate().plus(1000), expected.getAuthor(), expected.getRecipient()));
+	}
+
 
 	private MutableMessage newMessageWithProperties(AccountData ad) {
 		final MutableMessage expected = Messages.newMessage(ad.getAccount().newMessageEntity(MessagesMock.getMessageId()));

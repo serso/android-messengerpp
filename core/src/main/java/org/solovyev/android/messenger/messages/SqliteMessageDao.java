@@ -16,17 +16,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
+import com.google.common.collect.Iterables;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.solovyev.android.db.AbstractDbQuery;
-import org.solovyev.android.db.AbstractObjectDbExec;
-import org.solovyev.android.db.AbstractSQLiteHelper;
-import org.solovyev.android.db.Dao;
-import org.solovyev.android.db.DbExec;
-import org.solovyev.android.db.DeleteAllRowsDbExec;
-import org.solovyev.android.db.ListMapper;
-import org.solovyev.android.db.SqliteDao;
-import org.solovyev.android.db.SqliteDaoEntityMapper;
+import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.MergeDaoResultImpl;
@@ -78,6 +72,9 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 
 	@Nonnull
 	private final Dao<Message> dao;
+
+	@Nonnull
+	private final MessageMapper mapper = new MessageMapper(SqliteMessageDao.this);
 
 	@Inject
 	public SqliteMessageDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
@@ -188,6 +185,12 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 	@Override
 	public List<AProperty> readPropertiesById(@Nonnull String messageId) {
 		return doDbQuery(getSqliteOpenHelper(), new LoadPropertiesDbQuery(messageId, getContext(), getSqliteOpenHelper()));
+	}
+
+	@Nullable
+	@Override
+	public Message readSameMessage(@Nonnull String body, @Nonnull DateTime sendTime, @Nonnull Entity author, @Nonnull Entity recipient) {
+		return getFirst(doDbQuery(getSqliteOpenHelper(), new LoadSameMessage(body, sendTime, author, recipient)), null);
 	}
 
 	@Nonnull
@@ -314,7 +317,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Nonnull
 		@Override
 		public Converter<Cursor, Message> getCursorMapper() {
-			return new MessageMapper(SqliteMessageDao.this);
+			return mapper;
 		}
 	}
 
@@ -340,7 +343,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Nonnull
 		@Override
 		public List<Message> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<Message>(new MessageMapper(SqliteMessageDao.this)).convert(cursor);
+			return new ListMapper<Message>(mapper).convert(cursor);
 		}
 	}
 
@@ -365,7 +368,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Nonnull
 		@Override
 		public List<Message> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<Message>(new MessageMapper(SqliteMessageDao.this)).convert(cursor);
+			return new ListMapper<Message>(mapper).convert(cursor);
 		}
 	}
 
@@ -560,6 +563,41 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 			}
 
 			return result;
+		}
+	}
+
+	private class LoadSameMessage implements DbQuery<List<Message>> {
+
+		@Nonnull
+		private final String body;
+
+		@Nonnull
+		private final DateTime sendTime;
+
+		@Nonnull
+		private final Entity author;
+
+		@Nonnull
+		private final Entity recipient;
+
+		public LoadSameMessage(@Nonnull String body, @Nonnull DateTime sendTime, @Nonnull Entity author, @Nonnull Entity recipient) {
+			this.body = body;
+			this.sendTime = sendTime;
+			this.author = author;
+			this.recipient = recipient;
+		}
+
+		@Nonnull
+		@Override
+		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
+			final String sendTime = String.valueOf(this.sendTime.getMillis());
+			return db.query("messages", null, "body = ? and author_id = ? and recipient_id = ? and abs(send_time - ?) < 1000", new String[]{body, author.getEntityId(), recipient.getEntityId(), sendTime}, null, null, null);
+		}
+
+		@Nonnull
+		@Override
+		public List<Message> retrieveData(@Nonnull Cursor cursor) {
+			return new ListMapper<Message>(mapper).convert(cursor);
 		}
 	}
 }

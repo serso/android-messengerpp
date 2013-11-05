@@ -158,7 +158,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 
 		if (!messagesByPhoneNumber.isEmpty()) {
 			final User user = account.getUser();
-			final UserService userService = App.getUserService();
+			final UserService userService = getUserService();
 			final ChatService chatService = getChatService();
 
 			final List<User> contacts = userService.getUserContacts(user.getEntity());

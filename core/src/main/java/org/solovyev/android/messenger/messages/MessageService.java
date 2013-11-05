@@ -1,6 +1,7 @@
 package org.solovyev.android.messenger.messages;
 
 import android.widget.ImageView;
+import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
@@ -9,12 +10,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.List;
-
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 9:11 PM
- */
 
 /**
  * Implementation of this class must provide thread safeness
@@ -26,6 +21,9 @@ public interface MessageService {
 
 	@Nonnull
 	List<Message> getMessages(@Nonnull Entity chat);
+
+	@Nullable
+	Message getSameMessage(@Nonnull String body, @Nonnull DateTime sendTime, @Nonnull Entity author, @Nonnull Entity recipient);
 
 	@Nullable
 	Message getMessage(@Nonnull String messageId);

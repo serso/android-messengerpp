@@ -4,9 +4,11 @@ import android.database.Cursor;
 
 import javax.annotation.Nonnull;
 
+import android.util.Log;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.messages.MessageState;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.common.Converter;
@@ -15,6 +17,7 @@ import static org.solovyev.android.messenger.App.getChatService;
 import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
+import static org.solovyev.android.messenger.realms.sms.SmsAccount.TAG;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
@@ -22,8 +25,12 @@ class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
 	@Nonnull
 	private final SmsAccount account;
 
-	SmsMessageConverter(@Nonnull SmsAccount account) {
+	@Nonnull
+	private final MessageService messageService;
+
+	SmsMessageConverter(@Nonnull SmsAccount account, @Nonnull MessageService messageService) {
 		this.account = account;
+		this.messageService = messageService;
 	}
 
 	@Nonnull
@@ -72,6 +79,13 @@ class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
 		}
 
 		message.setChat(getChatService().getPrivateChatId(user, participant));
+
+		final Message sameMessage = messageService.getSameMessage(message.getBody(), message.getSendDate(), message.getAuthor(), message.getRecipient());
+		if (sameMessage != null) {
+			// we cannot rely on message ids in SMS realm => need to use some heuristics to determine if message has already been merged
+			Log.i(TAG, "Message already merged: body: " + message.getBody() + ", send date: " + message.getSendDate() + ", author: " + message.getAuthor() + ", recipient: " + message.getRecipient());
+			throw new IllegalArgumentException("Already merged");
+		}
 
 		return message;
 	}

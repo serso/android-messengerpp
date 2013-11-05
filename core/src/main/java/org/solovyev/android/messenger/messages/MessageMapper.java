@@ -17,11 +17,6 @@ import javax.annotation.Nonnull;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
-/**
- * User: serso
- * Date: 6/9/12
- * Time: 10:15 PM
- */
 public class MessageMapper implements Converter<Cursor, Message> {
 
 	@Nonnull
@@ -33,25 +28,25 @@ public class MessageMapper implements Converter<Cursor, Message> {
 
 	@Nonnull
 	@Override
-	public Message convert(@Nonnull Cursor c) {
-		final Entity entity = EntityMapper.newInstanceFor(0).convert(c);
+	public Message convert(@Nonnull Cursor cursor) {
+		final Entity entity = EntityMapper.newInstanceFor(0).convert(cursor);
 
 		final MutableMessage message = newMessage(entity);
-		message.setChat(newEntityFromEntityId(c.getString(3)));
-		message.setAuthor(newEntityFromEntityId(c.getString(4)));
-		if (!c.isNull(5)) {
-			final String recipientId = c.getString(5);
+		message.setChat(newEntityFromEntityId(cursor.getString(3)));
+		message.setAuthor(newEntityFromEntityId(cursor.getString(4)));
+		if (!cursor.isNull(5)) {
+			final String recipientId = cursor.getString(5);
 			message.setRecipient(newEntityFromEntityId(recipientId));
 		}
-		message.setState(MessageState.valueOf(c.getString(11)));
+		message.setState(MessageState.valueOf(cursor.getString(11)));
 		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
 
-		message.setSendDate(dateTimeFormatter.parseDateTime(c.getString(6)));
-		final Long sendTime = c.getLong(7);
-		message.setTitle(c.getString(8));
-		message.setBody(c.getString(9));
+		message.setSendDate(dateTimeFormatter.parseDateTime(cursor.getString(6)));
+		final Long sendTime = cursor.getLong(7);
+		message.setTitle(cursor.getString(8));
+		message.setBody(cursor.getString(9));
 
-		final boolean read = c.getInt(10) == 1;
+		final boolean read = cursor.getInt(10) == 1;
 		message.setRead(read);
 
 		message.setProperties(dao.readPropertiesById(entity.getEntityId()));

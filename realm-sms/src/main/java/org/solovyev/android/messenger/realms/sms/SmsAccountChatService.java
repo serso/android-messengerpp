@@ -10,7 +10,6 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,7 @@ import static android.app.PendingIntent.getBroadcast;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static org.solovyev.android.messenger.App.getApplication;
+import static org.solovyev.android.messenger.App.getMessageService;
 import static org.solovyev.android.messenger.chats.Chats.newAccountChat;
 import static org.solovyev.android.messenger.realms.sms.SmsAccount.TAG;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.INTENT_EXTRA_SMS_ID;
@@ -97,7 +97,7 @@ final class SmsAccountChatService implements AccountChatService {
 	private List<MutableMessage> readMessages() {
 		final List<MutableMessage> messages = new ArrayList<MutableMessage>();
 
-		final SmsMessageConverter converter = new SmsMessageConverter(account);
+		final SmsMessageConverter converter = new SmsMessageConverter(account, getMessageService());
 		final Uri smsQueryUri = Uri.parse("content://sms/inbox");
 
 		Cursor cursor = null;
@@ -110,6 +110,8 @@ final class SmsAccountChatService implements AccountChatService {
 				while (hasCurrent) {
 					try {
 						messages.add(converter.convert(cursor));
+					} catch (IllegalArgumentException e) {
+						// do nothing, we ourselves throw it
 					} catch (Throwable e) {
 						Log.e(TAG, e.getMessage(), e);
 					}

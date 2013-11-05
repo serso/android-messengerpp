@@ -1,9 +1,9 @@
 package org.solovyev.android.messenger.messages;
 
-import android.app.Application;
 import android.widget.ImageView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.joda.time.DateTime;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.chats.AccountChatService;
@@ -22,11 +22,6 @@ import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.messages.Messages.copySentMessage;
 
-/**
- * User: serso
- * Date: 6/11/12
- * Time: 7:50 PM
- */
 @Singleton
 public class DefaultMessageService implements MessageService {
 
@@ -57,11 +52,7 @@ public class DefaultMessageService implements MessageService {
 	@GuardedBy("lock")
 	@Inject
 	@Nonnull
-	private MessageDao messageDao;
-
-	@Inject
-	@Nonnull
-	private Application context;
+	private MessageDao dao;
 
 	@Nonnull
 	private final PersistenceLock lock;
@@ -80,14 +71,22 @@ public class DefaultMessageService implements MessageService {
 	public List<Message> getMessages(@Nonnull Entity chat) {
 		// todo serso: think about lock
 		/*synchronized (lock) {*/
-			return messageDao.readMessages(chat.getEntityId());
+			return dao.readMessages(chat.getEntityId());
 		/*}*/
 	}
 
 	@Nullable
 	@Override
+	public Message getSameMessage(@Nonnull String body, @Nonnull DateTime sendTime, @Nonnull Entity author, @Nonnull Entity recipient) {
+		synchronized (lock) {
+			return dao.readSameMessage(body, sendTime, author, recipient);
+		}
+	}
+
+	@Nullable
+	@Override
 	public Message getMessage(@Nonnull String messageId) {
-		return messageDao.read(messageId);
+		return dao.read(messageId);
 	}
 
 	@Override
@@ -122,14 +121,14 @@ public class DefaultMessageService implements MessageService {
 	@Override
 	public Message getLastMessage(@Nonnull String chatId) {
 		synchronized (lock) {
-			return this.messageDao.readLastMessage(chatId);
+			return this.dao.readLastMessage(chatId);
 		}
 	}
 
 	@Override
 	public int getUnreadMessagesCount() {
 		synchronized (lock) {
-			return this.messageDao.getUnreadMessagesCount();
+			return this.dao.getUnreadMessagesCount();
 		}
 	}
 
