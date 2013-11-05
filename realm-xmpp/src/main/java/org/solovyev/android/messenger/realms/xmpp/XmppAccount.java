@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.jivesoftware.smack.packet.Message.Type.error;
+import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.messages.MessageState.received;
@@ -36,7 +37,7 @@ import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
 public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration> {
 
-	private static final String TAG = XmppAccount.class.getSimpleName();
+	private static final String TAG = newTag(XmppAccount.class.getSimpleName());
 
 	public XmppAccount(@Nonnull String id,
 					   @Nonnull Realm realm,

@@ -11,15 +11,10 @@ import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 3:29 PM
- */
 public interface AccountChatService {
 
 	@Nonnull
-	List<Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<? extends Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	@Nonnull
 	List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;

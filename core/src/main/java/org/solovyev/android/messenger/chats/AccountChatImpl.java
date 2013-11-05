@@ -101,4 +101,20 @@ class AccountChatImpl implements MutableAccountChat {
 		return new AccountChatImpl(chat, messages, participants);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AccountChatImpl)) return false;
+
+		AccountChatImpl that = (AccountChatImpl) o;
+
+		if (!chat.equals(that.chat)) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return chat.hashCode();
+	}
 }

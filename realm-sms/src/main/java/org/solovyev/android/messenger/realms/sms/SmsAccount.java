@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static android.content.Intent.ACTION_CALL;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.CompositeUserChoice.newCompositeUserChoice;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
@@ -32,6 +33,8 @@ import static org.solovyev.android.properties.Properties.newProperty;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
+
+	static final String TAG = newTag(SmsAccount.class.getSimpleName());
 
 	public SmsAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
 		super(id, realm, user, configuration, state);

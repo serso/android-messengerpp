@@ -373,7 +373,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public List<Message> syncMessages(@Nonnull Entity user) throws AccountException {
-		final List<Message> messages = getAccountByEntity(user).getAccountChatService().getMessages(user.getAccountEntityId());
+		final List<? extends Message> messages = getAccountByEntity(user).getAccountChatService().getMessages(user.getAccountEntityId());
 
 		final Multimap<Chat, Message> messagesByChats = ArrayListMultimap.create();
 

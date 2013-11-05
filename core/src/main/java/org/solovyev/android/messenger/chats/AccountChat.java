@@ -8,11 +8,6 @@ import javax.annotation.Nonnull;
 
 import java.util.List;
 
-/**
- * User: serso
- * Date: 5/24/12
- * Time: 9:10 PM
- */
 public interface AccountChat {
 
 	@Nonnull

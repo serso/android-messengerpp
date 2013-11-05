@@ -219,7 +219,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 	}
 
 	@Nonnull
-	private User findOrCreateContact(@Nonnull final String phone, @Nonnull List<User> contacts) {
+	public User findOrCreateContact(@Nonnull final String phone, @Nonnull List<User> contacts) {
 		User result = findContactByPhone(phone, contacts);
 		if (result == null) {
 			result = toUser(phone);
