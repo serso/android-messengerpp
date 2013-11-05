@@ -16,6 +16,7 @@ import org.solovyev.android.messenger.core.R;
 import roboguice.RoboGuice;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class MainPreferenceListFragment extends PreferenceListFragment {
 
@@ -58,7 +59,7 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 	}
 
 	@Override
-	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nonnull Bundle b) {
+	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nullable Bundle b) {
 		super.onCreateView(context, inflater, root, container, b);
 
 		multiPaneManager.onCreatePane(getActivity(), container, root);

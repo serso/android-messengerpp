@@ -95,7 +95,7 @@ public class PreferenceListFragment extends ListFragment {
 		return root;
 	}
 
-	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nonnull Bundle b) {
+	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nullable Bundle b) {
 	}
 
 	@Override
