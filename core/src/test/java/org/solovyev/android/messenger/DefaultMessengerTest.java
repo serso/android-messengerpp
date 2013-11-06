@@ -96,7 +96,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 			message.setRecipient(user.getEntity());
 		}
 
-		message.setBody(Strings.generateRandomString(10).replace("\"", ""));
+		message.setBody(Strings.generateRandomString(10).replace("\\", ""));
 		message.setSendDate(new DateTime().plusMinutes(i));
 		message.setRead(false);
 		message.setChat(newEntity("test", "test"));
