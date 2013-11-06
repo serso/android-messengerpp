@@ -98,7 +98,7 @@ final class SmsAccountChatService implements AccountChatService {
 		final List<MutableMessage> messages = new ArrayList<MutableMessage>();
 
 		final SmsMessageConverter converter = new SmsMessageConverter(account, getMessageService());
-		final Uri smsQueryUri = Uri.parse("content://sms/inbox");
+		final Uri smsQueryUri = Uri.parse("content://sms");
 
 		Cursor cursor = null;
 		try {
