@@ -1,14 +1,28 @@
+/*
+ * Copyright 2013 serso aka se.solovyev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import org.joda.time.DateTime;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
@@ -24,7 +38,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static android.view.View.*;
-import static org.solovyev.android.messenger.App.*;
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.getUiHandler;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.users.BaseEditUserFragment.newCreateUserFragmentDef;
@@ -62,9 +77,9 @@ public final class Users {
 
 	@Nonnull
 	public static MutableUser newUser(@Nonnull String accountId,
-							   @Nonnull String accountUserId,
-							   @Nonnull UserSyncData userSyncData,
-							   @Nonnull List<AProperty> properties) {
+									  @Nonnull String accountUserId,
+									  @Nonnull UserSyncData userSyncData,
+									  @Nonnull List<AProperty> properties) {
 		final Entity entity = newEntity(accountId, accountUserId);
 		return newUser(entity, userSyncData, properties);
 	}
@@ -81,15 +96,15 @@ public final class Users {
 
 	@Nonnull
 	public static MutableUser newUser(@Nonnull Entity entity,
-							   @Nonnull UserSyncData userSyncData,
-							   @Nonnull Collection<AProperty> properties) {
+									  @Nonnull UserSyncData userSyncData,
+									  @Nonnull Collection<AProperty> properties) {
 		return UserImpl.newInstance(entity, userSyncData, properties);
 	}
 
 	@Nonnull
 	public static MutableUser newUser(@Nonnull Entity entity,
-							   @Nonnull UserSyncData userSyncData,
-							   @Nonnull AProperties properties) {
+									  @Nonnull UserSyncData userSyncData,
+									  @Nonnull AProperties properties) {
 		return UserImpl.newInstance(entity, userSyncData, properties.getPropertiesCollection());
 	}
 
@@ -138,7 +153,7 @@ public final class Users {
 		final Realm realm = account.getRealm();
 		if (realm.canCreateUsers()) {
 			final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-			if(activity.isDualPane()) {
+			if (activity.isDualPane()) {
 				mpfm.setSecondFragment(newCreateUserFragmentDef(activity, account, false));
 			} else {
 				mpfm.setMainFragment(newCreateUserFragmentDef(activity, account, true));

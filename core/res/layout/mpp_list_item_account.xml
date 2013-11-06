@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ Copyright 2013 serso aka se.solovyev
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-	style="?mpp_list_item">
+			  style="?mpp_list_item">
 
 	<ImageView
-		a:id="@+id/mpp_li_account_icon_imageview"
-		style="?mpp_list_item_icon"/>
+			a:id="@+id/mpp_li_account_icon_imageview"
+			style="?mpp_list_item_icon"/>
 
 	<LinearLayout
-		a:orientation="vertical"
-		a:layout_weight="1"
-		a:layout_width="0dp"
-		a:layout_height="wrap_content"
-		a:layout_gravity="center_vertical">
+			a:orientation="vertical"
+			a:layout_weight="1"
+			a:layout_width="0dp"
+			a:layout_height="wrap_content"
+			a:layout_gravity="center_vertical">
 
 		<TextView
-			a:id="@+id/mpp_li_account_user_name_textview"
-			style="?mpp_list_item_name" />
+				a:id="@+id/mpp_li_account_user_name_textview"
+				style="?mpp_list_item_name"/>
 
 		<TextView
-			a:id="@+id/mpp_li_account_name_textview"
-			style="?mpp_list_item_text_secondary" />
+				a:id="@+id/mpp_li_account_name_textview"
+				style="?mpp_list_item_text_secondary"/>
 
 	</LinearLayout>
 
 	<ImageView
-		a:id="@+id/mpp_li_account_warning_imageview"
-		a:background="@drawable/mpp_li_warning_states"
-		style="?mpp_list_item_icon"
-		a:visibility="gone" />
+			a:id="@+id/mpp_li_account_warning_imageview"
+			a:background="@drawable/mpp_li_warning_states"
+			style="?mpp_list_item_icon"
+			a:visibility="gone"/>
 
 
 </LinearLayout>

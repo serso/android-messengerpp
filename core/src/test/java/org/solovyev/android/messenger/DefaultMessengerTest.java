@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013 serso aka se.solovyev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.solovyev.android.messenger;
 
 import android.app.Application;
@@ -76,7 +92,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		result.users.add(0, user);
 		for (User contact : result.getContacts()) {
 			final List<MutableMessage> messages = new ArrayList<MutableMessage>();
-			for(int i = 0; i < 10; i++) {
+			for (int i = 0; i < 10; i++) {
 				messages.add(generateMessage(i, user, contact, result.account));
 			}
 			result.chats.add(newPrivateAccountChat(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), user, contact, messages));
@@ -106,7 +122,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 	@Nonnull
 	private List<User> addUsers(@Nonnull Account account, int count) {
 		final List<User> contacts = new ArrayList<User>();
-		for(int i = 0; i < count; i++) {
+		for (int i = 0; i < count; i++) {
 			contacts.add(getContactForAccount(account, i));
 		}
 		userService.mergeUserContacts(account.getUser().getEntity(), contacts, false, false);

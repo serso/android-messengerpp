@@ -1,63 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2013 serso aka se.solovyev
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <animation-list xmlns:a="http://schemas.android.com/apk/res/android">
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_20" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_20"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_21" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_21"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_22" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_22"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_23" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_23"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_24" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_24"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_25" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_25"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_26" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_26"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_27" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_27"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_28" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_28"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_29" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_29"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_30" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_30"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_31" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_31"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_32" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_32"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_33" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_33"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_34" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_34"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_35" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_35"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_36" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_36"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_37" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_37"/>
 	<item
-		a:duration="33"
-		a:drawable="@drawable/mpp_ellipsis_38" />
+			a:duration="33"
+			a:drawable="@drawable/mpp_ellipsis_38"/>
 	<item
-		a:duration="500"
-		a:drawable="@drawable/mpp_ellipsis_39" />
+			a:duration="500"
+			a:drawable="@drawable/mpp_ellipsis_39"/>
 </animation-list>

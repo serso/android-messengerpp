@@ -1,12 +1,27 @@
+/*
+ * Copyright 2013 serso aka se.solovyev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.solovyev.android.list;
 
 import android.database.DataSetObserver;
 import android.util.SparseIntArray;
 import android.widget.SectionIndexer;
 
-import java.text.Collator;
-
 import javax.annotation.Nonnull;
+import java.text.Collator;
 
 /**
  * A helper class for adapters that implement the SectionIndexer interface.
@@ -80,7 +95,7 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 		final StringBuilder alphabet = new StringBuilder(50);
 		for (Object element : adapter.getAllElements()) {
 			final String s = element.toString();
-			if( s.length() > 0 ) {
+			if (s.length() > 0) {
 				alphabet.append(s.charAt(0));
 			}
 		}
@@ -116,9 +131,9 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 	 *
 	 * @param sectionIndex the section to search for
 	 * @return the row index of the first occurrence, or the nearest next letter.
-	 *         For instance, if searching for "T" and no "T" is found, then the first
-	 *         row starting with "U" or any higher letter is returned. If there is no
-	 *         data following "T" at all, then the list size is returned.
+	 * For instance, if searching for "T" and no "T" is found, then the first
+	 * row starting with "U" or any higher letter is returned. If there is no
+	 * data following "T" at all, then the list size is returned.
 	 */
 	public int getPositionForSection(int sectionIndex) {
 		if (sectionIndex < 0) {
@@ -229,7 +244,7 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 	public int getSectionForPosition(int position) {
 		if (position < 0) {
 			return 0;
-		} else if ( position >= adapter.getCount() ) {
+		} else if (position >= adapter.getCount()) {
 			return adapter.getCount() - 1;
 		}
 

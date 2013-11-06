@@ -1,18 +1,25 @@
+/*
+ * Copyright 2013 serso aka se.solovyev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.solovyev.android.messenger.realms.vk;
 
 import android.app.Application;
 import android.content.Context;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.crypto.SecretKey;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
@@ -32,8 +39,14 @@ import org.solovyev.common.msg.MessageType;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
 import static org.solovyev.android.messenger.notifications.Notifications.newOpenAccountConfSolution;
@@ -59,7 +72,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	private static final String REALM_ID = "vk";
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
@@ -153,15 +166,15 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	private String formatBirthDate(String value) {
 		int dateParts = 1;
 		for (int i = 0; i < value.length(); i++) {
-			if(value.charAt(i) == '.') {
+			if (value.charAt(i) == '.') {
 				dateParts++;
 			}
 		}
 
 
-		if(dateParts > 1) {
+		if (dateParts > 1) {
 			final SimpleDateFormat dt;
-			if(dateParts > 2) {
+			if (dateParts > 2) {
 				dt = new SimpleDateFormat("dd.MM.yyyy");
 			} else {
 				dt = new SimpleDateFormat("dd.MM");

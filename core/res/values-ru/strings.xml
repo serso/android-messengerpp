@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright 2013 serso aka se.solovyev
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <resources>
 	<string name="mpp_app_name">Messenger++</string>
 
@@ -75,7 +91,8 @@
 	<string name="mpp_notification_invalid_response">Сервер вернул невалидный ответ</string>
 	<string name="mpp_notification_undefined_error">Ошибка приложения</string>
 	<string name="mpp_notification_account_exception">Ошибка в аккаунте</string>
-	<string name="mpp_notification_account_connection_exception">Возникли проблемы при подключении к удалённому серверу, проверьте соединение с интернетом и повторите снова
+	<string name="mpp_notification_account_connection_exception">Возникли проблемы при подключении к удалённому серверу,
+		проверьте соединение с интернетом и повторите снова
 	</string>
 	<string name="mpp_notification_account_unsupported_exception">Аккаунт не задан в приложении</string>
 	<string name="mpp_dialog_do_not_ask_again">Не спрашивать снова</string>
@@ -91,7 +108,8 @@
 	<string name="mpp_preferences_appearance">Настройки внешнего вида</string>
 	<string name="mpp_preferences_other">Другие настройки</string>
 	<string name="mpp_preferences_show_icon_in_chat_title">Показывать иконки в сообщениях</string>
-	<string name="mpp_preferences_show_icon_in_chat_summary">Если включено, то иконки будут показаны в сообщениях</string>
+	<string name="mpp_preferences_show_icon_in_chat_summary">Если включено, то иконки будут показаны в сообщениях
+	</string>
 	<string name="mpp_preferences_reload_local_data_title">Обновить данные аккаунтов</string>
 	<string name="mpp_preferences_reload_local_data_summary">Обновить данные аккаунтов с сервером</string>
 	<string name="mpp_yesterday_at">Вчера в</string>

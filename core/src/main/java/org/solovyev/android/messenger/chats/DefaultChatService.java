@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013 serso aka se.solovyev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.solovyev.android.messenger.chats;
 
 import android.app.Application;
@@ -7,13 +23,15 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.accounts.*;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountException;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.*;
@@ -64,7 +82,7 @@ public class DefaultChatService implements ChatService {
 	private static final Character PRIVATE_CHAT_DELIMITER = ':';
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
@@ -263,7 +281,7 @@ public class DefaultChatService implements ChatService {
 		final MergeDaoResult<Chat, String> mergeResult = mergeUserChats(user, asList(chat));
 
 		Chat result = getFirst(mergeResult.getAddedObjects(), null);
-		if(result == null) {
+		if (result == null) {
 			result = getFirst(mergeResult.getUpdatedObjects(), null);
 		}
 
@@ -316,11 +334,11 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	private List<AccountChat> prepareChats(List<? extends AccountChat> chats) {
 		return newArrayList(transform(chats, new Function<AccountChat, AccountChat>() {
-				@Override
-				public AccountChat apply(AccountChat chat) {
-					return prepareChat(chat);
-				}
-			}));
+			@Override
+			public AccountChat apply(AccountChat chat) {
+				return prepareChat(chat);
+			}
+		}));
 	}
 
 	private void fireChatEvents(@Nonnull User user, @Nonnull ChatMergeDaoResult mergeResult) {
@@ -617,12 +635,12 @@ public class DefaultChatService implements ChatService {
 	@Override
 	public Entity getPrivateChatId(@Nonnull Entity user1, @Nonnull Entity user2) {
 		String firstPart = user1.getAccountEntityId();
-		if(!user1.isAccountEntityIdSet()) {
+		if (!user1.isAccountEntityIdSet()) {
 			firstPart = user1.getAppAccountEntityId();
 		}
 
 		String secondPart = user2.getAccountEntityId();
-		if(!user2.isAccountEntityIdSet()) {
+		if (!user2.isAccountEntityIdSet()) {
 			secondPart = user2.getAppAccountEntityId();
 		}
 

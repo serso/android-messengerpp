@@ -1,12 +1,26 @@
+/*
+ * Copyright 2013 serso aka se.solovyev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.solovyev.android.messenger.realms.sms;
 
 import android.app.Application;
 import android.content.Context;
 import android.telephony.TelephonyManager;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
@@ -45,8 +59,8 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	public static final String INTENT_SENT_PREFIX = "SMS_SENT";
 	public static final String INTENT_DELIVERED_PREFIX = "SMS_DELIVERED";
 	public static final String INTENT_EXTRA_SMS_ID = "sms_id";
-	public static final String INTENT_EXTRA_PDUS ="pdus";
-	public static final String INTENT_EXTRA_FORMAT ="format";
+	public static final String INTENT_EXTRA_PDUS = "pdus";
+	public static final String INTENT_EXTRA_FORMAT = "format";
 	public static final String TAG = newTag("SmsRealm");
 
 	/*
@@ -104,7 +118,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	}
 
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           STATIC
     *

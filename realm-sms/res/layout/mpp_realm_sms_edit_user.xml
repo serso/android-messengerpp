@@ -1,44 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+  ~ Copyright 2013 serso aka se.solovyev
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
-	a:layout_width="match_parent"
-	a:layout_height="match_parent">
+			a:layout_width="match_parent"
+			a:layout_height="match_parent">
 
 	<LinearLayout style="?mpp_fragment">
 
 		<TextView
-			a:id="@+id/mpp_fragment_title"
-			style="?mpp_fragment_title" />
+				a:id="@+id/mpp_fragment_title"
+				style="?mpp_fragment_title"/>
 
 		<TextView
-			a:text="@string/mpp_sms_first_name"
-			style="?mpp_form_label" />
+				a:text="@string/mpp_sms_first_name"
+				style="?mpp_form_label"/>
 
 		<EditText
-			a:id="@+id/mpp_sms_firstname_edittext"
-			style="?mpp_form_edittext" />
+				a:id="@+id/mpp_sms_firstname_edittext"
+				style="?mpp_form_edittext"/>
 
 		<TextView
-			a:text="@string/mpp_sms_last_name"
-			style="?mpp_form_label" />
+				a:text="@string/mpp_sms_last_name"
+				style="?mpp_form_label"/>
 
 		<EditText
-			a:id="@+id/mpp_sms_lastname_edittext"
-			style="?mpp_form_edittext" />
+				a:id="@+id/mpp_sms_lastname_edittext"
+				style="?mpp_form_edittext"/>
 
 		<TextView
-			a:text="@string/mpp_sms_phone"
-			style="?mpp_form_label" />
+				a:text="@string/mpp_sms_phone"
+				style="?mpp_form_label"/>
 
 		<EditText
-			a:id="@+id/mpp_sms_phone_edittext"
-			a:inputType="phone"
-			style="?mpp_form_edittext" />
+				a:id="@+id/mpp_sms_phone_edittext"
+				a:inputType="phone"
+				style="?mpp_form_edittext"/>
 
 		<CheckBox
-			a:id="@+id/mpp_sms_dont_save_into_phone_checkbox"
-			a:text="@string/mpp_sms_do_not_save_into_phone_contacts"
-			style="?mpp_form_checkbox"/>
+				a:id="@+id/mpp_sms_dont_save_into_phone_checkbox"
+				a:text="@string/mpp_sms_do_not_save_into_phone_contacts"
+				style="?mpp_form_checkbox"/>
 
 		<include layout="@layout/mpp_fragment_edit_buttons"/>
 
