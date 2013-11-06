@@ -7,6 +7,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -300,7 +301,7 @@ public class DefaultChatService implements ChatService {
 	@Nonnull
 	@Override
 	public MergeDaoResult<Chat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends AccountChat> chats) throws AccountException {
-		final MergeDaoResult<Chat, String> result;
+		final ChatMergeDaoResult result;
 
 		synchronized (lock) {
 			result = chatDao.mergeChats(user.getEntityId(), prepareChats(chats));
@@ -322,16 +323,21 @@ public class DefaultChatService implements ChatService {
 			}));
 	}
 
-	private void fireChatEvents(@Nonnull User user, @Nonnull MergeDaoResult<Chat, String> mergeResult) {
+	private void fireChatEvents(@Nonnull User user, @Nonnull ChatMergeDaoResult mergeResult) {
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>();
 		final List<ChatEvent> chatEvents = new ArrayList<ChatEvent>();
 
-		final List<Chat> addedObjects = mergeResult.getAddedObjects();
-		for (Chat addedChat : addedObjects) {
+		final List<Chat> addedChats = mergeResult.getAddedObjects();
+		for (Chat addedChat : addedChats) {
 			chatEvents.add(ChatEventType.added.newEvent(addedChat));
 		}
-		if (!addedObjects.isEmpty()) {
-			userEvents.add(UserEventType.chats_added.newEvent(user, addedObjects));
+
+		if (!addedChats.isEmpty()) {
+			userEvents.add(UserEventType.chats_added.newEvent(user, addedChats));
+		}
+
+		for (Map.Entry<Chat, Collection<Message>> entry : mergeResult.getNewMessages().entrySet()) {
+			chatEvents.add(ChatEventType.messages_added.newEvent(entry.getKey(), entry.getValue()));
 		}
 
 		for (String removedChatId : mergeResult.getRemovedObjectIds()) {

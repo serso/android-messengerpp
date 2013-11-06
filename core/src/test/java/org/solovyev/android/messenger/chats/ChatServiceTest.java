@@ -1,7 +1,12 @@
 package org.solovyev.android.messenger.chats;
 
-import com.google.common.base.Predicate;
-import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.annotation.Nonnull;
+
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTest;
@@ -14,20 +19,24 @@ import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserSameEqualizer;
 import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.users.Users;
+import org.solovyev.common.MutableObject;
+import org.solovyev.common.listeners.AbstractJEventListener;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.google.common.base.Predicate;
+import com.google.inject.Inject;
 
 import static com.google.common.collect.Iterables.any;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
+import static org.solovyev.android.messenger.messages.Messages.newIncomingMessage;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.Objects.areEqual;
 
 public class ChatServiceTest extends DefaultMessengerTest {
@@ -123,7 +132,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 	public void testShouldSaveParticipantIfDoesntExist() throws Exception {
 		final AccountData ad = getAccountData1();
 		final User user = ad.getAccount().getUser();
-		final User contact = Users.newEmptyUser(ad.getAccount().newEntity("test_sdfsde5t"));
+		final User contact = newEmptyUser(ad.getAccount().newEntity("test_sdfsde5t"));
 		final Entity chat = ad.getAccount().newChatEntity("test_23123123");
 		final MutableAccountChat accountChat = newPrivateAccountChat(chat, user, contact, Collections.<MutableMessage>emptyList());
 
@@ -154,6 +163,34 @@ public class ChatServiceTest extends DefaultMessengerTest {
 				return chat.isPrivate() && chat.getSecondUser().getEntityId().equals(contact.getId());
 			}
 		}));
+	}
 
+	@Test
+	public void testShouldNotifyAboutNewMessages() throws Exception {
+		final AccountData ad = getAccountData1();
+		final User user = ad.getAccount().getUser();
+		final User contact = newEmptyUser(ad.getAccount().newEntity("test_sdfsde5t"));
+		final Entity chat = ad.getAccount().newChatEntity("test_23123123");
+		final MutableAccountChat accountChat = newPrivateAccountChat(chat, user, contact, Collections.<MutableMessage>emptyList());
+		accountChat.addMessage(newIncomingMessage(ad.getAccount(), accountChat.getChat(), "test1", "", user.getEntity()));
+		accountChat.addMessage(newIncomingMessage(ad.getAccount(), accountChat.getChat(), "test2", "", user.getEntity()));
+
+		final MutableObject<List<Message>> addedMessages = new MutableObject<List<Message>>();
+		chatService.addListener(new AbstractJEventListener<ChatEvent>(ChatEvent.class) {
+			@Override
+			public void onEvent(@Nonnull ChatEvent event) {
+				switch (event.getType()) {
+					case messages_added:
+						addedMessages.setObject(event.getDataAsMessages());
+						break;
+				}
+			}
+		});
+
+		chatService.mergeUserChats(user.getEntity(), asList(accountChat));
+
+		assertEquals(2, addedMessages.getObject().size());
+		assertEquals("test1", addedMessages.getObject().get(0).getBody());
+		assertEquals("test2", addedMessages.getObject().get(1).getBody());
 	}
 }

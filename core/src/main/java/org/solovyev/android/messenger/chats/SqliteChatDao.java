@@ -228,8 +228,8 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<Chat, String> mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends AccountChat> chats) {
-		final MergeDaoResult<Chat, String> result = mergeLinkedEntities(userId, chats);
+	public ChatMergeDaoResult mergeChats(@Nonnull String userId, @Nonnull Iterable<? extends AccountChat> chats) {
+		final ChatMergeDaoResult result = new ChatMergeDaoResult(mergeLinkedEntities(userId, chats));
 
 		final List<DbExec> execs = new ArrayList<DbExec>();
 
@@ -244,6 +244,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 			for (Message message : chat.getMessages()) {
 				execs.add(new SqliteMessageDao.InsertMessage(message));
 			}
+			result.addNewMessages(addedChat, chat.getMessages());
 
 			for (User participant : chat.getParticipants()) {
 				final String participantId = participant.getId();
