@@ -29,7 +29,7 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.BaseListFragment;
+import org.solovyev.android.messenger.BaseAsyncListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
@@ -47,7 +47,7 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.UiEventType.new_message;
 
-public abstract class BaseChatsFragment extends BaseListFragment<UiChat, ChatListItem> implements DetachableFragment {
+public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, ChatListItem> implements DetachableFragment {
 
 	@Nonnull
 	protected static final String TAG = "ChatsFragment";

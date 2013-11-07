@@ -18,33 +18,35 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.actionbarsherlock.app.ActionBar;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
-import com.google.inject.Inject;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import org.solovyev.android.Threads;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.Filter;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import roboguice.event.EventManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListViewScroller;
 import org.solovyev.android.list.ListViewScrollerListener;
 import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.fragments.FragmentUiEventType;
 import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -56,11 +58,12 @@ import org.solovyev.android.view.OnRefreshListener2Adapter;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
+import com.actionbarsherlock.app.ActionBar;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
+import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import static android.view.Gravity.CENTER;
 import static android.view.Gravity.CENTER_VERTICAL;
@@ -71,7 +74,7 @@ import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
 import static org.solovyev.android.messenger.App.newTag;
 
-public abstract class BaseListFragment<T, LI extends MessengerListItem>
+public abstract class BaseListFragment<LI extends MessengerListItem>
 		extends RoboSherlockListFragment
 		implements ListViewScrollerListener, ListViewFilter.FilterableListView {
 
@@ -83,7 +86,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
     **********************************************************************
     */
 
-	private static final int NOT_SELECTED_POSITION = -1;
+	protected static final int NOT_SELECTED_POSITION = -1;
 
 	/**
 	 * Constants are copied from list fragment, see {@link android.support.v4.app.ListFragment}
@@ -142,19 +145,16 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	@Nullable
 	private JEventListener<UserEvent> userEventListener;
 
-	private BaseListItemAdapter<LI> adapter;
-
-	@Nullable
-	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
-
 	/**
 	 * Filter for list view, null if filter is disabled for current list fragment
 	 */
 	@Nullable
 	private final ListViewFilter listViewFilter;
 
+	private BaseListItemAdapter<LI> adapter;
+
 	@Nonnull
-	private final String tag;
+	protected final String tag;
 
 	@Nullable
 	private PublicPullToRefreshListView pullToRefreshListView;
@@ -174,10 +174,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	private final boolean selectFirstItemByDefault;
 
 	@Nonnull
-	private final Handler uiHandler = Threads.newUiHandler();
-
-	@Nonnull
-	private PostListLoadingRunnable onPostLoading;
+	private final Handler uiHandler = App.getUiHandler();
 
 	@Nonnull
 	private Context themeContext;
@@ -250,7 +247,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	}
 
 	@Nonnull
-	protected BaseListItemAdapter getAdapter() {
+	protected BaseListItemAdapter<LI> getAdapter() {
 		return adapter;
 	}
 
@@ -279,6 +276,15 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		return listeners;
 	}
 
+	public boolean isSelectFirstItemByDefault() {
+		return selectFirstItemByDefault;
+	}
+
+	@Nonnull
+	public Handler getUiHandler() {
+		return uiHandler;
+	}
+
 	/*
     **********************************************************************
     *
@@ -298,7 +304,9 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		super.onCreate(savedInstanceState);
 
 		listeners = new RoboListeners(App.getEventManager(getActivity()));
-		eventManager.fire(FragmentUiEventType.created.newEvent(this));
+
+		userEventListener = new UserEventListener();
+		userService.addListener(userEventListener);
 
 		lastSavedInstanceState = savedInstanceState;
 		viewCreated = false;
@@ -344,7 +352,9 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 			listViewFilter.onViewCreated();
 		}
 
-		eventManager.fire(FragmentUiEventType.shown.newEvent(this));
+		final ListView listView = getListView(root);
+		listView.setOnItemClickListener(new ListViewOnItemClickListener());
+		listView.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
 	}
 
 	public void toggleFilterBox() {
@@ -394,7 +404,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 		final View listView;
 
-		final Resources resources = context.getResources();
 		if (topRefreshListener == null && bottomRefreshListener == null) {
 			pullToRefreshMode = null;
 			listView = new ListView(context);
@@ -488,25 +497,16 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		root.addView(footerButton, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		userEventListener = new UiThreadUserEventListener();
-		userService.addListener(userEventListener);
-
-		final ListView lv = getListView();
-		lv.setOnItemClickListener(new ListViewOnItemClickListener());
-		lv.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
-
+	@Nonnull
+	protected ListItemAdapterSelection<LI> createAndAttachAdapter(@Nullable Bundle savedInstanceState) {
 		// as newly loaded list can differ from one used last time position may be not accurate
 		// better approach is to use list item which was previously selected and reuse it
 		Integer selectedPosition = null;
-		ListItem selectedListItem = null;
+		LI selectedListItem = null;
 		if (adapter != null) {
 			// adapter not null => this fragment has been created earlier (and now it just goes to the shown state)
 			selectedPosition = adapter.getSelectedItemPosition();
-			if (selectedPosition == NOT_SELECTED_POSITION && selectFirstItemByDefault) {
+			if (selectedPosition == NOT_SELECTED_POSITION && isSelectFirstItemByDefault()) {
 				// there were no elements in adapter => position == NOT_SELECTED_POSITION
 				// but we need to select first element if selectFirstItemByDefault == true => do it
 				selectedPosition = 0;
@@ -525,33 +525,13 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 		if (selectedPosition == null) {
 			if (savedInstanceState != null) {
-				selectedPosition = adapter.restoreSelectedPosition(savedInstanceState, selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION);
+				selectedPosition = adapter.restoreSelectedPosition(savedInstanceState, isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION);
 			} else {
-				selectedPosition = selectFirstItemByDefault ? 0 : NOT_SELECTED_POSITION;
+				selectedPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION;
 			}
 		}
 
-		onPostLoading = new PostListLoadingRunnable(selectedPosition, selectedListItem, getListView());
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		this.listLoader = createAsyncLoader(adapter, onPostLoading);
-		if (this.listLoader != null) {
-			this.listLoader.executeInParallel();
-		} else {
-			// we need to schedule onPostLoading in order to be after all pending transaction in fragment manager
-			uiHandler.post(onPostLoading);
-		}
-
-		eventManager.fire(FragmentUiEventType.started.newEvent(this));
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
+		return new ListItemAdapterSelection<LI>(adapter, selectedPosition, selectedListItem);
 	}
 
 	@Override
@@ -559,9 +539,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		super.onSaveInstanceState(outState);
 
 		if (viewCreated) {
-			if (adapter != null) {
-				adapter.saveState(outState);
-			}
+			adapter.saveState(outState);
 
 			if (listViewFilter != null) {
 				listViewFilter.saveState(outState);
@@ -581,32 +559,17 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		super.onPause();
 	}
 
-	@Override
-	public void onStop() {
-		if (listLoader != null) {
-			listLoader.cancel(false);
-			listLoader = null;
-		}
-
-		super.onStop();
-	}
-
 	@Nullable
 	protected CharSequence getFilterText() {
 		return listViewFilter != null ? listViewFilter.getFilterText() : null;
 	}
 
 	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
+	public void onDestroy() {
 		if (userEventListener != null) {
 			this.userService.removeListener(userEventListener);
 		}
-	}
 
-	@Override
-	public void onDestroy() {
 		super.onDestroy();
 	}
 
@@ -615,21 +578,22 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	}
 
 	public void filter(@Nullable  CharSequence filterText, @Nullable Filter.FilterListener filterListener) {
-		if (this.adapter != null && this.adapter.isInitialized()) {
-			this.adapter.filter(filterText == null ? null : filterText.toString(), filterListener);
+		final BaseListItemAdapter adapter = getAdapter();
+		if (adapter.isInitialized()) {
+			adapter.filter(filterText == null ? null : filterText.toString(), filterListener);
+		}
+	}
+
+	protected void onListLoaded(@Nonnull ListItemAdapterSelection<LI> selection) {
+		if (listViewFilter != null) {
+			filter(listViewFilter.getFilterText(), new PostListLoadingFilterListener(selection));
+		} else {
+			filter(null, new PostListLoadingFilterListener(selection));
 		}
 	}
 
 	@Nonnull
 	protected abstract BaseListItemAdapter<LI> createAdapter();
-
-	@Nullable
-	protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull BaseListItemAdapter<LI> adapter, @Nonnull Runnable onPostExecute);
-
-	@Nullable
-	protected MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull BaseListItemAdapter<LI> adapter) {
-		return createAsyncLoader(adapter, new EmptyRunnable());
-	}
 
     /*
     **********************************************************************
@@ -653,7 +617,7 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 	}
 
 	public final void clickItemById(@Nonnull String listItemId) {
-		if (adapter != null && adapter.isInitialized()) {
+		if (adapter.isInitialized()) {
 			final int size = adapter.getCount();
 			for (int i = 0; i < size; i++) {
 				final MessengerListItem listItem = adapter.getItem(i);
@@ -667,14 +631,30 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 	private void clickItem(int position) {
 		final View root = getView();
-		if (root != null) {
-			clickItem(this.getActivity(), position, getListView(root));
+		if (root != null && adapter != null && adapter.isInitialized()) {
+			clickItem(this.getActivity(), position, getListView(root), adapter);
 		}
 	}
 
-	private void clickItem(@Nonnull Activity activity, int position, @Nonnull ListView listView) {
+	protected void initialClickItem(@Nonnull final Activity activity, final int position, @Nonnull final ListView listView, @Nonnull final BaseListItemAdapter<LI> adapter) {
+		uiHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (getMultiPaneManager().isDualPane(activity)) {
+					if (adapter.isEmpty()) {
+						onEmptyList((BaseFragmentActivity) activity);
+					} else if (!canReuseFragment(adapter.getSelectedItem())) {
+						// in case of dual pane we need to make a real click (call click listener)
+						clickItem(activity, position, listView, adapter);
+					}
+				}
+			}
+		});
+	}
+
+	private void clickItem(@Nonnull Activity activity, int position, @Nonnull ListView listView, @Nonnull BaseListItemAdapter<LI> adapter) {
 		if (position >= 0 && position < adapter.getCount()) {
-			adapter.getSelectedItemListener().onItemClick(position);
+			adapter.getSelection().onItemClick(position);
 			final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
 			if (onClickAction != null) {
 				onClickAction.onClick(activity, adapter, listView);
@@ -690,100 +670,26 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
     **********************************************************************
     */
 
-	private class UiThreadUserEventListener extends AbstractJEventListener<UserEvent> {
+	private class UserEventListener extends AbstractJEventListener<UserEvent> {
 
-		private UiThreadUserEventListener() {
+		private UserEventListener() {
 			super(UserEvent.class);
 		}
 
 		@Override
 		public void onEvent(@Nonnull final UserEvent event) {
-			Threads2.tryRunOnUiThread(BaseListFragment.this, new Runnable() {
-				@Override
-				public void run() {
-					adapter.onEvent(event);
-				}
-			});
-		}
-	}
-
-	private class PostListLoadingRunnable implements Runnable {
-
-		private final int selectedPosition;
-
-		@Nullable
-		private final ListItem selectedListItem;
-
-		@Nonnull
-		private final ListView listView;
-
-		public PostListLoadingRunnable(int selectedPosition, @Nullable ListItem selectedListItem, @Nonnull ListView lv) {
-			this.selectedPosition = selectedPosition;
-			this.selectedListItem = selectedListItem;
-			this.listView = lv;
-		}
-
-		@Override
-		public void run() {
-			// change adapter state
-			adapter.setInitialized(true);
-
-			final Activity activity = getActivity();
-			if (activity != null) {
-
-				try {
-					runPostFilling();
-				} catch (IllegalStateException e) {
-					// todo serso: investigate the root of the problem
-					// oops, list view is not created yet
-					Log.w(tag, e.getMessage(), e);
-				}
-			}
-		}
-
-		private void runPostFilling() {
-			// apply filter if any
-			if (listViewFilter != null) {
-				filter(listViewFilter.getFilterText(), new PostListLoadingFilterListener());
-			} else {
-				filter(null, new PostListLoadingFilterListener());
-			}
-		}
-
-		private final class PostListLoadingFilterListener implements Filter.FilterListener {
-
-			@Override
-			public void onFilterComplete(int count) {
-				final Activity activity = getActivity();
-				if (activity != null && !activity.isFinishing() && !isDetached()) {
-
-					int position = -1;
-					if (selectedListItem != null) {
-						position = adapter.getSelectedItemListener().onItemClick(selectedListItem);
-					} else {
-						if (selectedPosition >= 0 && selectedPosition < adapter.getCount()) {
-							adapter.getSelectedItemListener().onItemClick(selectedPosition);
-						}
+			if (adapter != null && adapter.isInitialized()) {
+				Threads2.tryRunOnUiThread(BaseListFragment.this, new Runnable() {
+					@Override
+					public void run() {
+						adapter.onEvent(event);
 					}
-
-					if (position < 0) {
-						position = selectedPosition;
-					}
-
-					if(multiPaneManager.isDualPane(activity)) {
-						if (adapter.isEmpty()) {
-							onEmptyListLoaded((BaseFragmentActivity) activity);
-						} else if (!canReuseFragment(adapter.getSelectedItem())) {
-							// in case of dual pane we need to make a real click (call click listener)
-							clickItem(activity, position, listView);
-						}
-					}
-				}
+				});
 			}
 		}
 	}
 
-	protected void onEmptyListLoaded(@Nonnull BaseFragmentActivity activity) {
+	protected void onEmptyList(@Nonnull BaseFragmentActivity activity) {
 		activity.getMultiPaneFragmentManager().emptifySecondFragment();
 		if(multiPaneManager.isTriplePane(activity)) {
 			activity.getMultiPaneFragmentManager().emptifyThirdFragment();
@@ -813,9 +719,8 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 			if (itemAtPosition instanceof ListItem) {
 				final ListItem listItem = (ListItem) itemAtPosition;
-				// notify adapter
 
-				adapter.getSelectedItemListener().onItemClick(listItem);
+				adapter.getSelection().onItemClick(listItem);
 
 				final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
 				if (onClickAction != null) {
@@ -833,7 +738,6 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 
 			if (itemAtPosition instanceof ListItem) {
 				final ListItem listItem = (ListItem) itemAtPosition;
-				// notify adapter
 
 				final ListItem.OnClickAction onClickAction = listItem.getOnLongClickAction();
 				if (onClickAction != null) {
@@ -846,9 +750,44 @@ public abstract class BaseListFragment<T, LI extends MessengerListItem>
 		}
 	}
 
-	private static class EmptyRunnable implements Runnable {
+	private final class PostListLoadingFilterListener implements Filter.FilterListener {
+
+		@Nonnull
+		private final ListItemAdapterSelection<LI> selection;
+
+		public PostListLoadingFilterListener(@Nonnull ListItemAdapterSelection<LI> selection) {
+			this.selection = selection;
+		}
+
 		@Override
-		public void run() {
+		public void onFilterComplete(int count) {
+			final Activity activity = getActivity();
+			ListView listView = null;
+			try {
+				listView = getListView();
+			} catch (IllegalStateException e) {
+				// no view
+			}
+
+			if (activity != null && !activity.isFinishing() && !isDetached() && adapter.isInitialized() && listView != null) {
+				final LI selectedListItem = selection.getListItem();
+				final int selectedPosition = selection.getPosition();
+
+				int position = -1;
+				if (selectedListItem != null) {
+					position = adapter.getPosition(selectedListItem);
+				}
+
+				if (position < 0) {
+					position = selectedPosition;
+				}
+
+				if (position >= 0 && position < adapter.getCount()) {
+					adapter.getSelection().onItemClick(position);
+				}
+
+				initialClickItem(activity, position, listView, adapter);
+			}
 		}
 	}
 }

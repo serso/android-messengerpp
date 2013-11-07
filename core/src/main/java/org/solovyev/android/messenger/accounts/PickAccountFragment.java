@@ -72,11 +72,4 @@ public class PickAccountFragment extends BaseAccountsFragment {
 
 		return new AccountsAdapter(getActivity(), listItems, false, account_picked);
 	}
-
-
-	@Nullable
-	@Override
-	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull BaseListItemAdapter<AccountListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return null;
-	}
 }

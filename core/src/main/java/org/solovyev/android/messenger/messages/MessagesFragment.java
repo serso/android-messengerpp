@@ -79,7 +79,7 @@ import static org.solovyev.android.messenger.notifications.Notifications.newUnde
 import static org.solovyev.common.text.Strings.isEmpty;
 import static org.solovyev.common.text.Strings.toHtml;
 
-public final class MessagesFragment extends BaseListFragment<Message, MessageListItem> implements PullToRefreshListViewProvider {
+public final class MessagesFragment extends BaseAsyncListFragment<Message, MessageListItem> implements PullToRefreshListViewProvider {
 
 	/*
 	**********************************************************************
@@ -153,7 +153,7 @@ public final class MessagesFragment extends BaseListFragment<Message, MessageLis
 	}
 
 	@Override
-	protected void onEmptyListLoaded(@Nonnull BaseFragmentActivity activity) {
+	protected void onEmptyList(@Nonnull BaseFragmentActivity activity) {
 		//do nothing
 	}
 

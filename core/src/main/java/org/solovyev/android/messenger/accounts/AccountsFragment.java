@@ -89,12 +89,6 @@ public class AccountsFragment extends BaseAccountsFragment {
 		return new AccountsAdapter(getActivity(), listItems, true, account_view_requested);
 	}
 
-	@Nullable
-	@Override
-	protected MessengerAsyncTask<Void, Void, List<Account>> createAsyncLoader(@Nonnull BaseListItemAdapter<AccountListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return null;
-	}
-
     /*
 	**********************************************************************
     *

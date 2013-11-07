@@ -19,10 +19,9 @@ package org.solovyev.android.messenger.realms;
 import android.support.v4.app.Fragment;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.BaseListItemAdapter;
+import org.solovyev.android.messenger.BaseStaticListFragment;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RealmsFragment extends BaseListFragment<Realm, RealmListItem> implements DetachableFragment {
+public class RealmsFragment extends BaseStaticListFragment<RealmListItem> implements DetachableFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "realms";
@@ -75,11 +74,4 @@ public class RealmsFragment extends BaseListFragment<Realm, RealmListItem> imple
 		}
 		return new BaseListItemAdapter<RealmListItem>(getActivity(), listItems);
 	}
-
-	@Nullable
-	@Override
-	protected MessengerAsyncTask<Void, Void, List<Realm>> createAsyncLoader(@Nonnull BaseListItemAdapter<RealmListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return null;
-	}
-
 }

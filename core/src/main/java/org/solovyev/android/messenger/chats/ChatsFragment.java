@@ -29,11 +29,6 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.App.showToast;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 5:37 PM
- */
 public final class ChatsFragment extends BaseChatsFragment {
 
 	public ChatsFragment() {

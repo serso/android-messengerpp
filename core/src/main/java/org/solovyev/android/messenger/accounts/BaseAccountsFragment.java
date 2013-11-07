@@ -20,7 +20,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.BaseListFragment;
+import org.solovyev.android.messenger.BaseStaticListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -29,7 +29,7 @@ import org.solovyev.common.listeners.JEventListener;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class BaseAccountsFragment extends BaseListFragment<Account, AccountListItem> implements DetachableFragment {
+public abstract class BaseAccountsFragment extends BaseStaticListFragment<AccountListItem> implements DetachableFragment {
 
 	@Inject
 	@Nonnull

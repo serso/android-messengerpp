@@ -25,18 +25,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.fragments.DetachableFragment;
-import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.BaseListItemAdapter;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.BaseStaticListFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 5:56 PM
- */
-public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceGroup, PreferenceGroupListItem> implements DetachableFragment {
+public final class PreferenceGroupsFragment extends BaseStaticListFragment<PreferenceGroupListItem> implements DetachableFragment {
 
 	public static final String FRAGMENT_TAG = "preference-groups";
 
@@ -74,11 +68,5 @@ public final class PreferenceGroupsFragment extends BaseListFragment<PreferenceG
 		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-others", R.string.mpp_preferences_other, R.xml.mpp_preferences_others, R.drawable.mpp_settings_other_states)));
 
 		return new PreferencesAdapter(this.getActivity(), preferences);
-	}
-
-	@Nullable
-	@Override
-	protected MessengerAsyncTask<Void, Void, List<PreferenceGroup>> createAsyncLoader(@Nonnull BaseListItemAdapter<PreferenceGroupListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return null;
 	}
 }

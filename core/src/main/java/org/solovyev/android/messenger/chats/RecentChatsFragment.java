@@ -26,11 +26,6 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.MAX_RECENT_CHATS;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 5:37 PM
- */
 public final class RecentChatsFragment extends BaseChatsFragment {
 
 	private int maxRecentChats = MAX_RECENT_CHATS;

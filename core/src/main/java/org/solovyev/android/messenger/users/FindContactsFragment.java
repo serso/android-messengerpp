@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static org.solovyev.android.messenger.App.getUiHandler;
 import static org.solovyev.android.messenger.users.Users.MAX_SEARCH_CONTACTS;
 import static org.solovyev.common.text.Strings.isEmpty;
 
@@ -101,7 +100,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 
 		@Override
 		public void run() {
-			final BaseListItemAdapter adapter = getAdapter();
+			final BaseListItemAdapter<ContactListItem> adapter = getAdapter();
 			if (adapter.isInitialized()) {
 				adapter.unselect();
 				createAsyncLoader(adapter).executeInParallel();

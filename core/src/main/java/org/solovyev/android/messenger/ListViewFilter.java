@@ -35,11 +35,6 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
 
-/**
- * User: serso
- * Date: 3/5/13
- * Time: 8:14 PM
- */
 public class ListViewFilter {
 
 	/*

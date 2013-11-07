@@ -34,36 +34,10 @@ import java.util.List;
 
 public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
 
-    /*
-	**********************************************************************
-    *
-    *                           CONSTANTS
-    *
-    **********************************************************************
-    */
-
-	@Nonnull
-	private static final String POSITION = "position";
-
-	private static final int NOT_SELECTED = -1;
-
-    /*
-    **********************************************************************
-    *
-    *                           FIELDS
-    *
-    **********************************************************************
-    */
-
 	private volatile boolean initialized = false;
 
-	@Nullable
-	private ListItem selectedItem = null;
-
-	private int selectedItemPosition = NOT_SELECTED;
-
 	@Nonnull
-	private final SelectedItemListener selectedItemListener = new SelectedItemListener();
+	private final ListItemAdapterSelection<LI> selection = new ListItemAdapterSelection<LI>(this);
 
 	@Nonnull
 	private final SectionIndexer sectionIndexer;
@@ -104,18 +78,13 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 	public void saveState(@Nonnull Bundle outState) {
 		super.saveState(outState);
 
-		final int selectedItemPosition = this.getSelectedItemPosition();
-		if (saveSelection && selectedItemPosition != NOT_SELECTED) {
-			outState.putInt(POSITION, selectedItemPosition);
+		if (saveSelection) {
+			selection.saveState(outState);
 		}
 	}
 
-	public void restoreState(@Nonnull Bundle savedInstanceState) {
-		super.restoreState(savedInstanceState);
-	}
-
 	public int restoreSelectedPosition(@Nonnull Bundle savedInstanceState, int defaultPosition) {
-		return savedInstanceState.getInt(POSITION, defaultPosition);
+		return selection.restoreSelectedPosition(savedInstanceState, defaultPosition);
 	}
 
 	@Override
@@ -135,53 +104,12 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 
 	@Override
 	public void notifyDataSetChanged() {
-		if (selectedItem != null) {
-			if (!isAlreadySelected()) {
-				if (!findAndSelectItem(selectedItem)) {
-					if (selectedItemPosition >= 0 && selectedItemPosition < getCount()) {
-						selectedItemListener.onItemClick(selectedItemPosition, false);
-					} else if (!isEmpty()) {
-						selectedItemListener.onItemClick(0, false);
-					}
-				}
-			}
-		}
+		selection.onNotifyDataSetChanged();
 		super.notifyDataSetChanged();
 	}
 
-	private boolean isAlreadySelected() {
-		boolean alreadySelected = false;
-		if(selectedItemPosition >= 0 && selectedItemPosition < getCount()) {
-			if(selectedItem == getItem(selectedItemPosition)) {
-				alreadySelected = true;
-			}
-		}
-		return alreadySelected;
-	}
-
-	private boolean findAndSelectItem(@Nullable ListItem selectedItem) {
-		boolean selected = false;
-
-		for (int i = 0; i < getCount(); i++) {
-			final LI item = getItem(i);
-			if(selectedItem == item) {
-				selectedItemPosition = i;
-				if(!isSelected(item)) {
-					selectItem(item, true);
-				}
-				selected = true;
-			} else if (isSelected(item)) {
-				selectItem(item, false);
-			}
-		}
-
-		return selected;
-	}
-
 	public void unselect() {
-		selectedItem = null;
-		selectedItemPosition = NOT_SELECTED;
-		findAndSelectItem(null);
+		selection.unselect();
 	}
 
 	public static final class ListItemComparator implements Comparator<ListItem> {
@@ -200,70 +128,17 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		}
 	}
 
-	@Nonnull
-	public SelectedItemListener getSelectedItemListener() {
-		return selectedItemListener;
-	}
-
-	public final class SelectedItemListener {
-
-		public void onItemClick(int position) {
-			onItemClick(position, true);
-		}
-
-		private void onItemClick(int position, boolean notifyChange) {
-			final LI selectedItem = getItem(position);
-			onItemClick(position, selectedItem, notifyChange);
-		}
-
-		private void onItemClick(int position, @Nonnull LI selectedItem, boolean notifyChange) {
-			if (BaseListItemAdapter.this.selectedItem != selectedItem) {
-				selectItem(selectedItem, true);
-				selectItem(BaseListItemAdapter.this.selectedItem, false);
-
-				BaseListItemAdapter.this.selectedItem = selectedItem;
-				BaseListItemAdapter.this.selectedItemPosition = position;
-
-				if (notifyChange) {
-					notifyDataSetChanged();
-				}
-			}
-		}
-
-		public int onItemClick(@Nonnull ListItem selectedItem) {
-			final LI selectedListItem = (LI) selectedItem;
-			final int position = getPosition(selectedListItem);
-			if (position >= 0) {
-				onItemClick(position);
-				return position;
-			} else {
-				return NOT_SELECTED;
-			}
-		}
-
-	}
-
 	public int getSelectedItemPosition() {
-		return selectedItemPosition;
+		return selection.getPosition();
 	}
 
 	@Nullable
 	public ListItem getSelectedItem() {
-		return selectedItem;
+		return selection.getListItem();
 	}
 
-	private static void selectItem(@Nullable ListItem item, boolean selected) {
-		if (item instanceof Checkable) {
-			((Checkable) item).setChecked(selected);
-		}
+	@Nonnull
+	public ListItemAdapterSelection<LI> getSelection() {
+		return selection;
 	}
-
-	private static boolean isSelected(@Nullable ListItem item) {
-		if (item instanceof Checkable) {
-			return ((Checkable) item).isChecked();
-		}
-		return false;
-	}
-
-
 }
