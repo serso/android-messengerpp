@@ -18,7 +18,7 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.BaseAsyncLoader;
 import org.solovyev.android.messenger.App;
 
 import javax.annotation.Nonnull;
@@ -27,12 +27,7 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 3:12 PM
- */
-final class FindContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
+final class FindContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListItem> {
 
 	@Nullable
 	private String query;

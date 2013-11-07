@@ -35,11 +35,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 4:09 PM
- */
 public final class ContactsFragment extends BaseContactsFragment {
 
 	@Nonnull

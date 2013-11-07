@@ -18,8 +18,8 @@ package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
-import android.widget.Filter;
 
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -50,6 +50,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 	@Nonnull
 	@Override
 	protected BaseListItemAdapter<ContactListItem> createAdapter() {
+		Log.d(tag, "Creating adapter, filter text: " + getFilterText());
 		return new FoundContactsAdapter(getActivity(), isRecentContacts());
 	}
 
@@ -61,6 +62,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull BaseListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
 		final CharSequence filterText = getFilterText();
+		Log.d(tag, "Creating loader, filter text: " + filterText);
 		if (!isEmpty(filterText)) {
 			((FoundContactsAdapter) adapter).setRecentContacts(false);
 			return new FindContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
@@ -74,17 +76,10 @@ public class FindContactsFragment extends BaseContactsFragment {
 
 	@Override
 	public void filter(@Nullable CharSequence filterText) {
-		if (getAdapter().isInitialized()) {
+		if (isInitialLoadingDone()) {
 			final Handler handler = getUiHandler();
 			handler.removeCallbacks(runnable);
 			handler.postDelayed(runnable, SEARCH_DELAY_MILLIS);
-		}
-	}
-
-	@Override
-	public void filter(@Nullable CharSequence filterText, @Nullable Filter.FilterListener filterListener) {
-		if (filterListener != null) {
-			filterListener.onFilterComplete(0);
 		}
 	}
 
@@ -101,10 +96,8 @@ public class FindContactsFragment extends BaseContactsFragment {
 		@Override
 		public void run() {
 			final BaseListItemAdapter<ContactListItem> adapter = getAdapter();
-			if (adapter.isInitialized()) {
-				adapter.unselect();
-				createAsyncLoader(adapter).executeInParallel();
-			}
+			adapter.unselect();
+			createAsyncLoader(adapter).executeInParallel();
 		}
 	}
 

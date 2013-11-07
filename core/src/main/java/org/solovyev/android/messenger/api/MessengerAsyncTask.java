@@ -27,11 +27,6 @@ import org.solovyev.android.messenger.App;
 
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 4:33 PM
- */
 public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsyncTask<Param, Progress, R> {
 
 	protected MessengerAsyncTask() {

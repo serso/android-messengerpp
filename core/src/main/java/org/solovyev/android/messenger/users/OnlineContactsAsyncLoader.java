@@ -18,7 +18,7 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.BaseAsyncLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -36,7 +36,7 @@ import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
  * Date: 6/2/12
  * Time: 5:24 PM
  */
-public class OnlineContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
+public class OnlineContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListItem> {
 
 	@Nonnull
 	private final AccountService accountService;

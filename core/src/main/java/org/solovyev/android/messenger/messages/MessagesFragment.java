@@ -62,6 +62,7 @@ import org.solovyev.common.JPredicate;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
+import roboguice.RoboGuice;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -119,6 +120,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 	@Inject
 	@Nonnull
+
 	private NotificationService notificationService;
 
 
@@ -164,7 +166,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		RoboGuice.getInjector(getActivity()).injectMembers(this);
 
 		// first - restore state
 		final Entity chatId = getArguments().getParcelable(ARG_CHAT);
@@ -181,6 +183,8 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		}
 
 		setHasOptionsMenu(true);
+
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -511,7 +515,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		}
 	}
 
-	private class MessagesAsyncLoader extends AbstractAsyncLoader<Message, MessageListItem> {
+	private class MessagesAsyncLoader extends BaseAsyncLoader<Message, MessageListItem> {
 
 		public MessagesAsyncLoader(BaseListItemAdapter<MessageListItem> adapter, Runnable onPostExecute) {
 			super(MessagesFragment.this.getActivity(), adapter, onPostExecute);

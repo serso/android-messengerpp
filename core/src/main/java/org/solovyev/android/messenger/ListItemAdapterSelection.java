@@ -69,6 +69,10 @@ class ListItemAdapterSelection<LI extends ListItem> {
 		findAndSelectItem(null);
 	}
 
+	public void setListItem(@Nullable LI listItem) {
+		this.listItem = listItem;
+	}
+
 	private boolean findAndSelectItem(@Nullable ListItem selectedItem) {
 		boolean selected = false;
 

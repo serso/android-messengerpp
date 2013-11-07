@@ -1,48 +1,41 @@
 package org.solovyev.android.messenger;
 
-import android.os.Bundle;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.view.MessengerListItem;
 
 public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> extends BaseListFragment<LI> {
 
-	@Nonnull
-	private PostListLoadingRunnable onPostLoading;
-
 	@Nullable
 	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
+
+	private boolean initialLoadingDone = false;
 
 	public BaseAsyncListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
 		super(tag, filterEnabled, selectFirstItemByDefault);
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		final ListItemAdapterSelection<LI> selection = createAndAttachAdapter(savedInstanceState);
-		onPostLoading = new PostListLoadingRunnable(selection);
-	}
-
-	@Override
 	public void onStart() {
 		super.onStart();
 
-		this.listLoader = createAsyncLoader(getAdapter(), onPostLoading);
-		if (this.listLoader != null) {
-			this.listLoader.executeInParallel();
-		} else {
-			// we need to schedule onPostLoading in order to be after all pending transaction in fragment manager
-			getUiHandler().post(onPostLoading);
-		}
+		listLoader = createAsyncLoader(getAdapter(), new OnListLoadedRunnable());
+		listLoader.executeInParallel();
 	}
 
-	@Nullable
+	public boolean isInitialLoadingDone() {
+		return initialLoadingDone;
+	}
+
+	@Nonnull
 	protected abstract MessengerAsyncTask<Void, Void, List<T>> createAsyncLoader(@Nonnull BaseListItemAdapter<LI> adapter, @Nonnull Runnable onPostExecute);
 
 	@Nullable
@@ -52,6 +45,8 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 
 	@Override
 	public void onStop() {
+		initialLoadingDone = false;
+
 		if (listLoader != null) {
 			listLoader.cancel(false);
 			listLoader = null;
@@ -60,25 +55,12 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 		super.onStop();
 	}
 
-	private class PostListLoadingRunnable implements Runnable {
-
-		@Nonnull
-		private final ListItemAdapterSelection<LI> selection;
-
-		public PostListLoadingRunnable(@Nonnull ListItemAdapterSelection<LI> selection) {
-			this.selection = selection;
-		}
+	private class OnListLoadedRunnable implements Runnable {
 
 		@Override
 		public void run() {
-			// change adapter state
-			getAdapter().setInitialized(true);
-			runPostFilling();
-		}
-
-		private void runPostFilling() {
-			// apply filter if any
-			onListLoaded(selection);
+			initialLoadingDone = true;
+			onListLoaded();
 		}
 	}
 

@@ -18,7 +18,6 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.Checkable;
 import android.widget.SectionIndexer;
 import org.solovyev.android.list.AlphabetIndexer;
 import org.solovyev.android.list.EmptySectionIndexer;
@@ -33,8 +32,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
-
-	private volatile boolean initialized = false;
 
 	@Nonnull
 	private final ListItemAdapterSelection<LI> selection = new ListItemAdapterSelection<LI>(this);
@@ -56,14 +53,6 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 			sectionIndexer = EmptySectionIndexer.getInstance();
 		}
 		this.saveSelection = saveSelection;
-	}
-
-	public boolean isInitialized() {
-		return initialized;
-	}
-
-	public void setInitialized(boolean initialized) {
-		this.initialized = initialized;
 	}
 
 	/*@Override*/
@@ -133,7 +122,7 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 	}
 
 	@Nullable
-	public ListItem getSelectedItem() {
+	public LI getSelectedItem() {
 		return selection.getListItem();
 	}
 

@@ -18,7 +18,7 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.BaseAsyncLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.App.getUserService;
 
-final class RecentContactsAsyncLoader extends AbstractAsyncLoader<UiContact, ContactListItem> {
+final class RecentContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListItem> {
 
 	private final int maxCount;
 

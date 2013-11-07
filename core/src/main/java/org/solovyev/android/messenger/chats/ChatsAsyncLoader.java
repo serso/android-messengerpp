@@ -18,7 +18,7 @@ package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
 import org.solovyev.android.list.ListItemAdapter;
-import org.solovyev.android.messenger.AbstractAsyncLoader;
+import org.solovyev.android.messenger.BaseAsyncLoader;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -37,7 +37,7 @@ import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
  * Date: 6/7/12
  * Time: 6:23 PM
  */
-final class ChatsAsyncLoader extends AbstractAsyncLoader<UiChat, ChatListItem> {
+final class ChatsAsyncLoader extends BaseAsyncLoader<UiChat, ChatListItem> {
 
 	ChatsAsyncLoader(@Nonnull Context context, @Nonnull ListItemAdapter<ChatListItem> adapter, @Nullable Runnable onPostExecute) {
 		super(context, adapter, onPostExecute);

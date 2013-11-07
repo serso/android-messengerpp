@@ -52,7 +52,7 @@ public final class RecentChatsFragment extends BaseChatsFragment {
 		return new RecentChatsAdapter(getActivity());
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull BaseListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return new RecentChatsAsyncLoader(getActivity(), adapter, onPostExecute, maxRecentChats);

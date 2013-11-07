@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger;
 
 import android.content.Context;
+import android.widget.Filter;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -27,12 +28,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 5:22 PM
- */
-public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends MessengerAsyncTask<Void, Void, List<R>> {
+public abstract class BaseAsyncLoader<R, LI extends ListItem> extends MessengerAsyncTask<Void, Void, List<R>> {
 
 	@Nonnull
 	private final WeakReference<ListAdapter<LI>> adapterRef;
@@ -40,9 +36,9 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 	@Nullable
 	private Runnable onPostExecute;
 
-	public AbstractAsyncLoader(@Nonnull Context context,
-							   @Nonnull ListAdapter<LI> adapter,
-							   @Nullable Runnable onPostExecute) {
+	public BaseAsyncLoader(@Nonnull Context context,
+						   @Nonnull ListAdapter<LI> adapter,
+						   @Nullable Runnable onPostExecute) {
 		super(context);
 		this.adapterRef = new WeakReference<ListAdapter<LI>>(adapter);
 		this.onPostExecute = onPostExecute;
@@ -64,10 +60,9 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 
 	@Override
 	protected void onSuccessPostExecute(@Nullable final List<R> elements) {
-
-		if (elements != null && !elements.isEmpty()) {
-			final ListAdapter<LI> adapter = adapterRef.get();
-			if (adapter != null) {
+		final ListAdapter<LI> adapter = adapterRef.get();
+		if (adapter != null) {
+			if (elements != null && !elements.isEmpty()) {
 				adapter.doWork(new Runnable() {
 					@Override
 					public void run() {
@@ -77,16 +72,18 @@ public abstract class AbstractAsyncLoader<R, LI extends ListItem> extends Messen
 						}
 					}
 				});
-			}
-		} else {
-			final ListAdapter<LI> adapter = adapterRef.get();
-			if (adapter != null) {
+			} else {
 				adapter.clear();
 			}
-		}
 
-		if (onPostExecute != null) {
-			onPostExecute.run();
+			if (onPostExecute != null) {
+				adapter.getFilter().filter(adapter.getFilterText(), new Filter.FilterListener() {
+					@Override
+					public void onFilterComplete(int count) {
+						onPostExecute.run();
+					}
+				});
+			}
 		}
 	}
 

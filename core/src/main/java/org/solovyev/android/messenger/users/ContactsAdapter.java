@@ -20,11 +20,6 @@ import android.content.Context;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 6/1/12
- * Time: 7:03 PM
- */
 public final class ContactsAdapter extends AbstractContactsAdapter {
 
 	public ContactsAdapter(@Nonnull Context context) {
