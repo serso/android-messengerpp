@@ -34,7 +34,7 @@ import java.util.List;
 public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
 
 	@Nonnull
-	private final ListItemAdapterSelectionHelper<LI> selection = new ListItemAdapterSelectionHelper<LI>(this);
+	private final ListItemAdapterSelectionHelper<LI> selectionHelper= new ListItemAdapterSelectionHelper<LI>(this);
 
 	@Nonnull
 	private final SectionIndexer sectionIndexer;
@@ -75,12 +75,12 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		super.saveState(outState);
 
 		if (saveSelection) {
-			selection.saveState(outState);
+			selectionHelper.saveState(outState);
 		}
 	}
 
 	public int restoreSelectedPosition(@Nonnull Bundle savedInstanceState, int defaultPosition) {
-		return selection.restoreSelectedPosition(savedInstanceState, defaultPosition);
+		return selectionHelper.restoreSelectedPosition(savedInstanceState, defaultPosition);
 	}
 
 	@Override
@@ -105,12 +105,12 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 				onEmptyListListener.run();
 			}
 		}
-		selection.onNotifyDataSetChanged();
+		selectionHelper.onNotifyDataSetChanged();
 		super.notifyDataSetChanged();
 	}
 
 	public void unselect() {
-		selection.unselect();
+		selectionHelper.unselect();
 	}
 
 	public static final class ListItemComparator implements Comparator<ListItem> {
@@ -129,17 +129,13 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		}
 	}
 
-	public int getSelectedItemPosition() {
-		return selection.getPosition();
-	}
-
 	@Nullable
 	public LI getSelectedItem() {
-		return selection.getListItem();
+		return selectionHelper.getSelection().getItem();
 	}
 
 	@Nonnull
-	public ListItemAdapterSelectionHelper<LI> getSelection() {
-		return selection;
+	public ListItemAdapterSelectionHelper<LI> getSelectionHelper() {
+		return selectionHelper;
 	}
 }

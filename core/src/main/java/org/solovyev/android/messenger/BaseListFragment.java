@@ -73,6 +73,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
 import static org.solovyev.android.messenger.App.newTag;
+import static org.solovyev.android.messenger.AdapterSelection.newSelection;
 
 public abstract class BaseListFragment<LI extends MessengerListItem>
 		extends RoboSherlockListFragment
@@ -197,7 +198,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private boolean viewWasCreated = false;
 
 	@Nonnull
-	private ListItemAdapterSelectionHelper<LI> restoredAdapterSelection;
+	private AdapterSelection<LI> restoredAdapterSelection;
 
     /*
     **********************************************************************
@@ -524,7 +525,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	private void restoreAdapterSelection(@Nullable Bundle savedInstanceState) {
-		int selectedPosition = adapter.getSelectedItemPosition();
+		int selectedPosition = adapter.getSelectionHelper().getSelection().getPosition();
 
 		if (selectedPosition < 0) {
 			if (savedInstanceState != null) {
@@ -534,7 +535,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			}
 		}
 
-		restoredAdapterSelection = new ListItemAdapterSelectionHelper<LI>(adapter, selectedPosition, adapter.getSelectedItem());
+		restoredAdapterSelection = newSelection(selectedPosition, adapter.getSelectedItem());
 	}
 
 	@Override
@@ -585,7 +586,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		}
 
 		if (activity != null && !activity.isFinishing() && !isDetached() && listView != null) {
-			final LI selectedListItem = restoredAdapterSelection.getListItem();
+			final LI selectedListItem = restoredAdapterSelection.getItem();
 			final int selectedPosition = restoredAdapterSelection.getPosition();
 
 			int position = -1;
@@ -598,7 +599,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			}
 
 			if (position >= 0 && position < adapter.getCount()) {
-				adapter.getSelection().onItemClick(position);
+				adapter.getSelectionHelper().onItemClick(position);
 			}
 
 			initialClickItem(activity, position, listView, adapter);
@@ -665,7 +666,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	private void clickItem(@Nonnull Activity activity, int position, @Nonnull ListView listView, @Nonnull BaseListItemAdapter<LI> adapter) {
 		if (position >= 0 && position < adapter.getCount()) {
-			adapter.getSelection().onItemClick(position);
+			adapter.getSelectionHelper().onItemClick(position);
 			final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
 			if (onClickAction != null) {
 				onClickAction.onClick(activity, adapter, listView);
@@ -729,7 +730,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			if (itemAtPosition instanceof ListItem) {
 				final ListItem listItem = (ListItem) itemAtPosition;
 
-				adapter.getSelection().onItemClick(listItem);
+				adapter.getSelectionHelper().onItemClick(listItem);
 
 				final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
 				if (onClickAction != null) {

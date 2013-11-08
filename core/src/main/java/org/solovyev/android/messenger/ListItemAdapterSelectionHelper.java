@@ -8,78 +8,39 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.list.ListItem;
 
+import static org.solovyev.android.messenger.AdapterSelection.newNotSelected;
+import static org.solovyev.android.messenger.AdapterSelection.newSelection;
+
 class ListItemAdapterSelectionHelper<LI extends ListItem> {
-
-    /*
-	**********************************************************************
-    *
-    *                           CONSTANTS
-    *
-    **********************************************************************
-    */
-
-	@Nonnull
-	private static final String POSITION = "position";
-
-	private static final int NOT_SELECTED = -1;
-
-    /*
-    **********************************************************************
-    *
-    *                           FIELDS
-    *
-    **********************************************************************
-    */
 
 	@Nonnull
 	private final BaseListItemAdapter<LI> adapter;
 
-	private int position;
-
-	@Nullable
-	private LI listItem;
-
-	public ListItemAdapterSelectionHelper(@Nonnull BaseListItemAdapter<LI> adapter, int position, @Nullable LI listItem) {
-		this.adapter = adapter;
-		this.position = position;
-		this.listItem = listItem;
-	}
+	@Nonnull
+	private AdapterSelection<LI> selection;
 
 	public ListItemAdapterSelectionHelper(@Nonnull BaseListItemAdapter<LI> adapter) {
-		this(adapter, NOT_SELECTED, null);
-	}
-
-	public int getPosition() {
-		return position;
-	}
-
-	@Nullable
-	public LI getListItem() {
-		return listItem;
+		this.adapter = adapter;
+		this.selection = newNotSelected();
 	}
 
 	@Nonnull
-	public BaseListItemAdapter<LI> getAdapter() {
-		return adapter;
+	public AdapterSelection<LI> getSelection() {
+		return selection;
 	}
 
 	public void unselect() {
-		position = NOT_SELECTED;
-		listItem = null;
+		selection = newNotSelected();
 		findAndSelectItem(null);
 	}
 
-	public void setListItem(@Nullable LI listItem) {
-		this.listItem = listItem;
-	}
-
-	private boolean findAndSelectItem(@Nullable ListItem selectedItem) {
+	private boolean findAndSelectItem(@Nullable LI toBeSelectedItem) {
 		boolean selected = false;
 
 		for (int i = 0; i < adapter.getCount(); i++) {
 			final LI item = adapter.getItem(i);
-			if(selectedItem == item) {
-				position = i;
+			if(toBeSelectedItem == item) {
+				selection = newSelection(i, toBeSelectedItem);
 				if(!isSelected(item)) {
 					selectItem(item, true);
 				}
@@ -93,20 +54,20 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 	}
 
 	public void saveState(@Nonnull Bundle outState) {
-		if (position != NOT_SELECTED) {
-			outState.putInt(POSITION, position);
-		}
+		selection.saveState(outState);
 	}
 
 	public int restoreSelectedPosition(@Nonnull Bundle savedInstanceState, int defaultPosition) {
-		return savedInstanceState.getInt(POSITION, defaultPosition);
+		return selection.restoreSelectedPosition(savedInstanceState, defaultPosition);
 	}
 
 	void onNotifyDataSetChanged() {
 		if (!adapter.isEmpty()) {
+			final LI listItem = selection.getItem();
 			if (listItem != null) {
 				if (!isAlreadySelected()) {
 					if (!findAndSelectItem(listItem)) {
+						final int position = selection.getPosition();
 						if (position >= 0 && position < adapter.getCount()) {
 							onItemClick(position, false);
 						} else if (!adapter.isEmpty()) {
@@ -120,6 +81,9 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 
 	private boolean isAlreadySelected() {
 		boolean alreadySelected = false;
+
+		final int position = selection.getPosition();
+		final LI listItem = selection.getItem();
 		if(position >= 0 && position < adapter.getCount()) {
 			if(listItem == adapter.getItem(position)) {
 				alreadySelected = true;
@@ -146,12 +110,12 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 	}
 
 	private void onItemClick(int newPosition, @Nonnull LI newListItem, boolean notifyChange) {
+		final LI listItem = selection.getItem();
 		if (listItem != newListItem) {
 			selectItem(newListItem, true);
 			selectItem(listItem, false);
 
-			listItem = newListItem;
-			position = newPosition;
+			selection = newSelection(newPosition, newListItem);
 
 			if (notifyChange) {
 				adapter.notifyDataSetChanged();
@@ -166,7 +130,7 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 			onItemClick(position);
 			return position;
 		} else {
-			return NOT_SELECTED;
+			return AdapterSelection.NOT_SELECTED;
 		}
 	}
 
