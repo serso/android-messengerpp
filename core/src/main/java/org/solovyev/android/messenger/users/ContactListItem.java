@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,12 +45,7 @@ import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UiContact.newUiContact;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
-/**
- * User: serso
- * Date: 6/1/12
- * Time: 7:04 PM
- */
-public final class ContactListItem extends AbstractMessengerListItem<UiContact> /*implements UserEventListener*/ {
+public final class ContactListItem extends AbstractMessengerListItem<UiContact> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "contact_list_item_";
@@ -149,6 +145,11 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 
 		final TextView contactName = viewTag.getViewById(R.id.mpp_li_contact_name_textview);
 		contactName.setText(getDisplayName());
+		if (uiContact.getUnreadMessagesCount() > 0) {
+			contactName.setTypeface(null, Typeface.BOLD);
+		} else {
+			contactName.setTypeface(null, Typeface.NORMAL);
+		}
 
 		final AccountService accountService = getAccountService();
 		final Account account = uiContact.getAccount();

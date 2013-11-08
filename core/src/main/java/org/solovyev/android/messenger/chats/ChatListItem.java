@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -46,11 +47,6 @@ import static org.solovyev.android.messenger.messages.Messages.getMessageTime;
 import static org.solovyev.android.messenger.messages.Messages.getMessageTitle;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 6:24 PM
- */
 public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 
 	@Nonnull
@@ -124,6 +120,11 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 
 		final TextView chatTitle = viewTag.getViewById(R.id.mpp_li_chat_title_textview);
 		chatTitle.setText(getDisplayName());
+		if (uiChat.getUnreadMessagesCount() > 0) {
+			chatTitle.setTypeface(null, Typeface.BOLD);
+		} else {
+			chatTitle.setTypeface(null, Typeface.NORMAL);
+		}
 
 		final TextView lastMessageTextTime = viewTag.getViewById(R.id.mpp_li_last_message_text_time_textview);
 		final TextView lastMessageText = viewTag.getViewById(R.id.mpp_li_last_message_text_textview);
