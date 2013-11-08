@@ -30,11 +30,6 @@ import javax.annotation.Nullable;
 
 import static android.provider.Settings.ACTION_WIRELESS_SETTINGS;
 
-/**
- * User: serso
- * Date: 6/5/13
- * Time: 3:03 PM
- */
 public final class Notifications {
 
 

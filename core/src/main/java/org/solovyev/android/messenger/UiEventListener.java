@@ -29,11 +29,6 @@ import static org.solovyev.android.messenger.fragments.PrimaryFragment.pick_acco
 import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
 import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 
-/**
- * User: serso
- * Date: 3/8/13
- * Time: 10:35 PM
- */
 public class UiEventListener implements EventListener<UiEvent> {
 
 	@Nonnull

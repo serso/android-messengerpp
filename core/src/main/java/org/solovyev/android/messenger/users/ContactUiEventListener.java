@@ -35,11 +35,6 @@ import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 import static org.solovyev.android.messenger.users.ContactUiEventType.*;
 
-/**
- * User: serso
- * Date: 3/5/13
- * Time: 1:54 PM
- */
 public final class ContactUiEventListener implements EventListener<ContactUiEvent> {
 
 	@Nonnull

@@ -24,11 +24,6 @@ import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment.newCreateAccountConfigurationFragmentDef;
 
-/**
- * User: serso
- * Date: 3/8/13
- * Time: 11:46 AM
- */
 public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 
 	@Nonnull

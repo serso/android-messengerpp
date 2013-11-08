@@ -16,15 +16,12 @@
 
 package org.solovyev.android.messenger.chats;
 
-import com.actionbarsherlock.app.ActionBar;
-import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.android.messenger.users.ContactUiEventType;
 import org.solovyev.android.messenger.users.User;
 import roboguice.event.EventListener;
@@ -38,15 +35,7 @@ import static org.solovyev.android.messenger.users.ContactFragment.newViewContac
 import static org.solovyev.android.messenger.users.ContactsInfoFragment.newViewContactsFragmentDef;
 import static org.solovyev.android.messenger.users.Users.showViewUsersFragment;
 
-/**
- * User: serso
- * Date: 3/5/13
- * Time: 1:59 PM
- */
 public class ChatUiEventListener implements EventListener<ChatUiEvent> {
-
-	@Nonnull
-	private static final String TAG = ChatUiEventListener.class.getSimpleName();
 
 	@Nonnull
 	private final BaseFragmentActivity activity;
@@ -95,21 +84,18 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 	}
 
 	private void onOpenChatEvent(@Nonnull final Chat chat) {
-		final MultiPaneFragmentManager fragmentService = activity.getMultiPaneFragmentManager();
+		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
 		if (activity.getMultiPaneManager().isDualPane(activity)) {
-			if (!fragmentService.isFragmentShown(CHATS_FRAGMENT_TAG)) {
-				final ActionBar.Tab tab = activity.findTabByTag(CHATS_FRAGMENT_TAG);
-				if (tab != null) {
-					tab.select();
+			final BaseChatsFragment fragment = mpfm.getFragment(CHATS_FRAGMENT_TAG);
+			if (fragment != null && fragment.isVisible()) {
+				if(!fragment.clickItemById(chat.getId())) {
+					mpfm.setSecondFragment(newMessagesFragmentDef(activity, chat, true));
 				}
-			}
-
-			final BaseChatsFragment fragment = fragmentService.getFragment(CHATS_FRAGMENT_TAG);
-			if (fragment != null) {
-				fragment.clickItemById(chat.getId());
+			} else {
+				mpfm.setSecondFragment(newMessagesFragmentDef(activity, chat, true));
 			}
 		} else {
-			fragmentService.setMainFragment(MessagesFragment.newMessagesFragmentDef(activity, chat, true));
+			mpfm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
 		}
 	}
 

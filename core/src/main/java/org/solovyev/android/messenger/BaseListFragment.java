@@ -630,15 +630,18 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	public void onTopReached() {
 	}
 
-	public final void clickItemById(@Nonnull String listItemId) {
+	public final boolean clickItemById(@Nonnull String listItemId) {
 		final int size = adapter.getCount();
+
 		for (int i = 0; i < size; i++) {
 			final MessengerListItem listItem = adapter.getItem(i);
 			if (listItem.getId().equals(listItemId)) {
 				clickItem(i);
-				break;
+				return true;
 			}
 		}
+
+		return false;
 	}
 
 	private void clickItem(int position) {

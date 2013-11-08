@@ -43,11 +43,6 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.App.getUnreadMessagesCounter;
 
-/**
- * User: serso
- * Date: 3/31/13
- * Time: 1:18 PM
- */
 final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 
 	@Nonnull

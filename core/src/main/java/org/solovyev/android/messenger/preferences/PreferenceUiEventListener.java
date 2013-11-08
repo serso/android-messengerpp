@@ -25,11 +25,6 @@ import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManage
 
 import static org.solovyev.android.messenger.preferences.MainPreferenceListFragment.newPreferencesListFragmentDef;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 6:28 PM
- */
 public final class PreferenceUiEventListener implements EventListener<PreferenceUiEvent> {
 
 	@Nonnull
