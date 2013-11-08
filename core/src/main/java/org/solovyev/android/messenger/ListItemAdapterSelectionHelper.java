@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import org.solovyev.android.list.ListItem;
 
-class ListItemAdapterSelection<LI extends ListItem> {
+class ListItemAdapterSelectionHelper<LI extends ListItem> {
 
     /*
 	**********************************************************************
@@ -39,13 +39,13 @@ class ListItemAdapterSelection<LI extends ListItem> {
 	@Nullable
 	private LI listItem;
 
-	public ListItemAdapterSelection(@Nonnull BaseListItemAdapter<LI> adapter, int position, @Nullable LI listItem) {
+	public ListItemAdapterSelectionHelper(@Nonnull BaseListItemAdapter<LI> adapter, int position, @Nullable LI listItem) {
 		this.adapter = adapter;
 		this.position = position;
 		this.listItem = listItem;
 	}
 
-	public ListItemAdapterSelection(@Nonnull BaseListItemAdapter<LI> adapter) {
+	public ListItemAdapterSelectionHelper(@Nonnull BaseListItemAdapter<LI> adapter) {
 		this(adapter, NOT_SELECTED, null);
 	}
 
@@ -103,13 +103,15 @@ class ListItemAdapterSelection<LI extends ListItem> {
 	}
 
 	void onNotifyDataSetChanged() {
-		if (listItem != null) {
-			if (!isAlreadySelected()) {
-				if (!findAndSelectItem(listItem)) {
-					if (position >= 0 && position < adapter.getCount()) {
-						onItemClick(position, false);
-					} else if (!adapter.isEmpty()) {
-						onItemClick(0, false);
+		if (!adapter.isEmpty()) {
+			if (listItem != null) {
+				if (!isAlreadySelected()) {
+					if (!findAndSelectItem(listItem)) {
+						if (position >= 0 && position < adapter.getCount()) {
+							onItemClick(position, false);
+						} else if (!adapter.isEmpty()) {
+							onItemClick(0, false);
+						}
 					}
 				}
 			}

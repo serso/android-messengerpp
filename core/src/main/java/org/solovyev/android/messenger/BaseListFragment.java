@@ -197,7 +197,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private boolean viewWasCreated = false;
 
 	@Nonnull
-	private ListItemAdapterSelection<LI> restoredAdapterSelection;
+	private ListItemAdapterSelectionHelper<LI> restoredAdapterSelection;
 
     /*
     **********************************************************************
@@ -514,6 +514,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	private void createAdapter(@Nullable Bundle savedInstanceState) {
 		adapter = createAdapter();
+		adapter.setOnEmptyListListener(new OnEmptyListListener());
+
 		if (savedInstanceState != null) {
 			adapter.restoreState(savedInstanceState);
 		}
@@ -532,7 +534,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			}
 		}
 
-		restoredAdapterSelection = new ListItemAdapterSelection<LI>(adapter, selectedPosition, adapter.getSelectedItem());
+		restoredAdapterSelection = new ListItemAdapterSelectionHelper<LI>(adapter, selectedPosition, adapter.getSelectedItem());
 	}
 
 	@Override
@@ -754,6 +756,17 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			}
 
 			return false;
+		}
+	}
+
+	private class OnEmptyListListener implements Runnable {
+		@Override
+		public void run() {
+			final BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
+			if (activity != null) {
+				// todo serso: onEmptyList causes keyboard to hide
+				//onEmptyList(activity);
+			}
 		}
 	}
 }

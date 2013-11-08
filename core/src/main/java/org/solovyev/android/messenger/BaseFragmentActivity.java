@@ -36,6 +36,7 @@ import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
+import org.solovyev.android.messenger.messages.EmptyFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.users.UserService;
@@ -271,19 +272,20 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 				while (true) {
 					final Fragment secondFragment = fm.findFragmentById(R.id.content_second_pane);
 					if (secondFragment != null) {
+						// fragment should be copied before popping back stack
 						final MultiPaneFragmentDef fragmentDef = newCopyingFragmentDef(secondFragment, true);
 						if (!primaryFragment.isAddToBackStack()) {
 							if (fm.popBackStackImmediate()) {
-								fragmentDefs.push(fragmentDef);
+								tryPushSecondFragment(fragmentDefs, fragmentDef, secondFragment);
 							} else {
-								fragmentDefs.push(fragmentDef);
+								tryPushSecondFragment(fragmentDefs, fragmentDef, secondFragment);
 								// nothing to pop => stop
 								break;
 							}
 						} else {
 							// primary fragment itself is on back stack => we cannot pop back stack as we can pop it.
 							// let's just add latest fragment on the second pane and put it on on the stack
-							fragmentDefs.push(fragmentDef);
+							tryPushSecondFragment(fragmentDefs, fragmentDef, secondFragment);
 							break;
 						}
 					} else {
@@ -296,6 +298,12 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 					multiPaneFragmentManager.setMainFragment(fragmentDefs.pop());
 				}
 			}
+		}
+	}
+
+	private void tryPushSecondFragment(@Nonnull Stack<MultiPaneFragmentDef> fragmentDefs, @Nonnull MultiPaneFragmentDef secondFragmentCopy, @Nonnull Fragment secondFragment) {
+		if (!(secondFragment instanceof EmptyFragment)) {
+			fragmentDefs.push(secondFragmentCopy);
 		}
 	}
 
