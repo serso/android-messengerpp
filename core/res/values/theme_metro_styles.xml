@@ -75,9 +75,8 @@
 
 	<style name="mpp_list_item_text" parent="mpp_list_item_block">
 		<item name="android:textColor">@color/mpp_list_item_text_states</item>
-		<item name="android:lines">1</item>
-		<item name="android:maxLines">1</item>
-		<item name="android:ellipsize">end</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:ellipsize">marquee</item>
 	</style>
 
 	<style name="mpp_list_item_text_secondary" parent="mpp_list_item_text">
@@ -101,10 +100,6 @@
 
 	<style name="mpp_list_item_name" parent="mpp_list_item_text">
 		<item name="android:gravity">center_vertical</item>
-		<item name="android:lines">1</item>
-		<item name="android:maxLines">1</item>
-		<item name="android:ellipsize">none</item>
-		<item name="android:scrollHorizontally">false</item>
 	</style>
 
 	<!--FILTER-->
