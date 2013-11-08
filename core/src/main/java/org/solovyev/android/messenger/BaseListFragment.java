@@ -143,9 +143,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
     **********************************************************************
     */
 
-	@Nullable
-	private JEventListener<UserEvent> userEventListener;
-
 	/**
 	 * Filter for list view, null if filter is disabled for current list fragment
 	 */
@@ -322,9 +319,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		listeners = new RoboListeners(App.getEventManager(getActivity()));
 
 		createAdapter(savedInstanceState);
-
-		userEventListener = new UserEventListener();
-		userService.addListener(userEventListener);
 
 		lastSavedInstanceState = savedInstanceState;
 		viewWasCreated = false;
@@ -563,15 +557,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		super.onPause();
 	}
 
-	@Override
-	public void onDestroy() {
-		if (userEventListener != null) {
-			this.userService.removeListener(userEventListener);
-		}
-
-		super.onDestroy();
-	}
-
 	public void filter(@Nullable CharSequence filterText) {
 		adapter.filter(filterText == null ? null : filterText.toString(), null);
 	}
@@ -685,9 +670,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
     **********************************************************************
     */
 
-	private class UserEventListener extends AbstractJEventListener<UserEvent> {
+	protected class UserEventListener extends AbstractJEventListener<UserEvent> {
 
-		private UserEventListener() {
+		protected UserEventListener() {
 			super(UserEvent.class);
 		}
 

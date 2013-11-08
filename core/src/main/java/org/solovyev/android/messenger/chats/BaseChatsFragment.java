@@ -94,20 +94,20 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	protected void onListLoaded() {
+		super.onListLoaded();
 
 		chatEventListener = new UiThreadUserChatListener();
 		getChatService().addListener(chatEventListener);
 	}
 
 	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
+	public void onStop() {
 		if (chatEventListener != null) {
 			getChatService().removeListener(chatEventListener);
 		}
+
+		super.onStop();
 	}
 
 	private class UiThreadUserChatListener extends AbstractJEventListener<ChatEvent> {

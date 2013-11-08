@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.MessengerListItem;
+import org.solovyev.common.listeners.JEventListener;
 
 public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> extends BaseListFragment<LI> {
 
@@ -18,6 +20,9 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
 
 	private boolean initialLoadingDone = false;
+
+	@Nullable
+	private JEventListener<UserEvent> userEventListener;
 
 	public BaseAsyncListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
 		super(tag, filterEnabled, selectFirstItemByDefault);
@@ -44,6 +49,14 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	}
 
 	@Override
+	protected void onListLoaded() {
+		super.onListLoaded();
+
+		userEventListener = new UserEventListener();
+		getUserService().addListener(userEventListener);
+	}
+
+	@Override
 	public void onStop() {
 		initialLoadingDone = false;
 
@@ -52,8 +65,13 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 			listLoader = null;
 		}
 
+		if (userEventListener != null) {
+			getUserService().removeListener(userEventListener);
+		}
+
 		super.onStop();
 	}
+
 
 	private class OnListLoadedRunnable implements Runnable {
 

@@ -159,6 +159,14 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		//do nothing
 	}
 
+	@Override
+	protected void onListLoaded() {
+		// do not call super - we don't want to select message
+
+		chatEventListener = new UiThreadUserChatListener();
+		this.chatService.addListener(chatEventListener);
+	}
+
 	@Nonnull
 	public Chat getChat() {
 		return chat;
@@ -185,14 +193,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		setHasOptionsMenu(true);
 
 		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		chatEventListener = new UiThreadUserChatListener();
-		this.chatService.addListener(chatEventListener);
 	}
 
 	@Override
@@ -323,12 +323,12 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	}
 
 	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-
+	public void onStop() {
 		if (chatEventListener != null) {
 			this.chatService.removeListener(chatEventListener);
 		}
+
+		super.onStop();
 	}
 
 	@Override
