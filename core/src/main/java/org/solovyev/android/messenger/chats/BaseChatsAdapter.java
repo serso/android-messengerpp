@@ -38,9 +38,9 @@ import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatListItem.newChatListItem;
 
 
-abstract class AbstractChatsAdapter extends BaseListItemAdapter<ChatListItem> {
+abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 
-	public AbstractChatsAdapter(@Nonnull Context context) {
+	public BaseChatsAdapter(@Nonnull Context context) {
 		super(context, new ArrayList<ChatListItem>(), false, true);
 	}
 

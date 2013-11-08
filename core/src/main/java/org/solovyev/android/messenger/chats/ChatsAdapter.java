@@ -20,12 +20,7 @@ import android.content.Context;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 6/7/12
- * Time: 5:48 PM
- */
-public class ChatsAdapter extends AbstractChatsAdapter {
+public class ChatsAdapter extends BaseChatsAdapter {
 
 	public ChatsAdapter(@Nonnull Context context) {
 		super(context);

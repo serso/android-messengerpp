@@ -50,7 +50,7 @@ public class PickAccountFragment extends BaseAccountsFragment {
 		final Bundle arguments = new Bundle();
 		arguments.putStringArray(ARG_ACCOUNT_IDS, toArray(transform(accounts, new Function<Account, String>() {
 			@Override
-			public String apply(@Nullable Account account) {
+			public String apply(Account account) {
 				return account.getId();
 			}
 		}), String.class));

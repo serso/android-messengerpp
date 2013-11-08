@@ -129,11 +129,11 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 
 	@Nonnull
 	@Override
-	protected abstract AbstractChatsAdapter createAdapter();
+	protected abstract BaseChatsAdapter createAdapter();
 
 	@Nonnull
-	protected AbstractChatsAdapter getAdapter() {
-		return (AbstractChatsAdapter) super.getAdapter();
+	protected BaseChatsAdapter getAdapter() {
+		return (BaseChatsAdapter) super.getAdapter();
 	}
 
     /*

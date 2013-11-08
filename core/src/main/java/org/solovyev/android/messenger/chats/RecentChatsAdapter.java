@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 
-public class RecentChatsAdapter extends AbstractChatsAdapter {
+public class RecentChatsAdapter extends BaseChatsAdapter {
 
 	public RecentChatsAdapter(@Nonnull Context context) {
 		super(context);

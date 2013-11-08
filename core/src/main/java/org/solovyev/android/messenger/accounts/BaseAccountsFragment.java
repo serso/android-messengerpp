@@ -48,8 +48,8 @@ public abstract class BaseAccountsFragment extends BaseStaticListFragment<Accoun
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
 		accountEventListener = new UiAccountEventListener();
 		accountService.addListener(accountEventListener);
@@ -70,11 +70,12 @@ public abstract class BaseAccountsFragment extends BaseStaticListFragment<Accoun
 	}
 
 	@Override
-	public void onDestroyView() {
+	public void onDestroy() {
 		if (accountEventListener != null) {
 			accountService.removeListener(accountEventListener);
 		}
-		super.onDestroyView();
+
+		super.onDestroy();
 	}
 
 	@Nullable
