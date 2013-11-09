@@ -81,7 +81,7 @@
 				<type>apklib</type>
 			</dependency>
 
-			<dependency><version>1.0</version>
+			<dependency>
 				<groupId>org.solovyev.android.messenger</groupId>
 				<artifactId>android-messenger-realm-sms</artifactId>
 				<version>0.011</version>
