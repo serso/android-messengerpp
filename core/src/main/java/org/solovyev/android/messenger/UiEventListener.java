@@ -47,6 +47,12 @@ public class UiEventListener implements EventListener<UiEvent> {
 			case new_message:
 				onNewMessageEvent();
 				break;
+			case show_settings:
+				SettingsActivity.start(activity);
+				break;
+			case exit:
+				App.exit(activity);
+				break;
 			case new_contact:
 				onNewContactEvent();
 				break;

@@ -19,47 +19,52 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceScreen;
-
-import com.google.inject.Inject;
-
+import android.support.v4.app.FragmentTransaction;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
 import org.solovyev.android.messenger.chats.ChatUiEvent;
 import org.solovyev.android.messenger.chats.ChatUiEventListener;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.preferences.MessengerOnPreferenceAttachedListener;
-import org.solovyev.android.messenger.preferences.PreferenceListFragment;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
+import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.preferences.PreferenceUiEvent;
 import org.solovyev.android.messenger.preferences.PreferenceUiEventListener;
 import org.solovyev.android.messenger.realms.RealmUiEvent;
 import org.solovyev.android.messenger.realms.RealmUiEventListener;
-import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.ContactUiEventListener;
-import roboguice.event.EventListener;
+import org.solovyev.android.view.SwipeGestureListener;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.App.getUiHandler;
+import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.android.messenger.chats.Chats.openUnreadChat;
+import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager.tabFragments;
 import static org.solovyev.common.Objects.areEqual;
 
-public final class MainActivity extends BaseFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
-
-	private static final String INTENT_SHOW_UNREAD_MESSAGES_ACTION = "show_unread_messages";
+public final class MainActivity extends BaseFragmentActivity {
 
     /*
 	**********************************************************************
     *
-    *                           AUTO INJECTED FIELDS
+    *                           CONSTANTS
     *
     **********************************************************************
     */
 
-	@Inject
-	@Nonnull
-	private SyncService syncService;
+	private static final String SELECTED_TAB = "selected_tab";
+
+	private static final String INTENT_SHOW_UNREAD_MESSAGES_ACTION = "show_unread_messages";
 
     /*
     **********************************************************************
@@ -69,7 +74,16 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
     **********************************************************************
     */
 
-	private RoboListeners listeners;
+	private boolean tabsEnabled = false;
+
+	@Nonnull
+	private ActivityMenu<Menu, MenuItem> menu;
+
+	@Nullable
+	private GestureDetector gestureDetector;
+
+	@Nullable
+	private JEventListener<MessengerEvent> messengerEventListener;
 
     /*
     **********************************************************************
@@ -83,13 +97,13 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
 		super(R.layout.mpp_main);
 	}
 
-	public static void startActivity(@Nonnull Activity activity) {
+	public static void start(@Nonnull Activity activity) {
 		final Intent result = new Intent();
 		result.setClass(activity, MainActivity.class);
 		activity.startActivity(result);
 	}
 
-	public static void startActivityForUnreadMessages(@Nonnull Activity activity) {
+	public static void startForUnreadMessages(@Nonnull Activity activity) {
 		final Intent result = new Intent();
 		result.setClass(activity, MainActivity.class);
 		result.setAction(INTENT_SHOW_UNREAD_MESSAGES_ACTION);
@@ -108,13 +122,26 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		listeners = new RoboListeners(getEventManager());
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		// menu must be initialized before fragments as some fragments might add entries to menu
+		this.menu = new MainMenu(new HomeButtonListener());
+
+		initTabs(savedInstanceState);
+
+		initFragments();
+
+		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
+		this.getMessengerListeners().addListener(messengerEventListener);
+
+		final RoboListeners listeners = getListeners();
+
 		listeners.add(UiEvent.class, new UiEventListener(this));
 		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
 		listeners.add(RealmUiEvent.class, new RealmUiEventListener(this));
 		listeners.add(ContactUiEvent.class, new ContactUiEventListener(this, getAccountService()));
 		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
-		listeners.add(PreferenceUiEvent.class, new PreferenceUiEventListener(this));
 
 		handleIntent(getIntent());
 	}
@@ -137,20 +164,199 @@ public final class MainActivity extends BaseFragmentActivity implements Preferen
 	}
 
 	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		final boolean handled = gestureDetector != null && gestureDetector.onTouchEvent(event);
+		return handled || super.dispatchTouchEvent(event);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putInt(SELECTED_TAB, getSupportActionBar().getSelectedNavigationIndex());
+	}
+
+	@Override
 	protected void onDestroy() {
-		if (listeners != null) {
-			listeners.clearAll();
+		if (this.messengerEventListener != null) {
+			this.getMessengerListeners().removeListener(messengerEventListener);
 		}
 
 		super.onDestroy();
 	}
 
-	@Override
-	public void onPreferenceAttached(PreferenceScreen preferenceScreen, int preferenceResId) {
-		new MessengerOnPreferenceAttachedListener(this, syncService).onPreferenceAttached(preferenceScreen, preferenceResId);
+	private void initTabs(@Nullable Bundle savedInstanceState) {
+		final ActionBar actionBar = getSupportActionBar();
+
+		tabsEnabled = false;
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		for (PrimaryFragment tabFragment : tabFragments) {
+			addTab(tabFragment);
+		}
+
+		int selectedTab = -1;
+		if (savedInstanceState != null) {
+			selectedTab = savedInstanceState.getInt(SELECTED_TAB, -1);
+		}
+
+		if (selectedTab >= 0) {
+			actionBar.setSelectedNavigationItem(selectedTab);
+		}
+
+		gestureDetector = new GestureDetector(this, new SwipeTabsGestureListener());
+
+		tabsEnabled = true;
+
+		// activity created first time => we must select first tab
+		if (selectedTab == -1) {
+			actionBar.setSelectedNavigationItem(0);
+		}
 	}
 
-	public RoboListeners getListeners() {
-		return listeners;
+	/*
+    **********************************************************************
+    *
+    *                           MENU
+    *
+    **********************************************************************
+    */
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		return this.menu.onPrepareOptionsMenu(this, menu);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		return this.menu.onCreateOptionsMenu(this, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return this.menu.onOptionsItemSelected(this, item);
+	}
+
+	@Nullable
+	public ActionBar.Tab findTabByTag(@Nonnull String tag) {
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			for (int i = 0; i < actionBar.getTabCount(); i++) {
+				final ActionBar.Tab tab = actionBar.getTabAt(i);
+				if (tab != null && tag.equals(tab.getTag())) {
+					return tab;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private void changeTab(boolean next) {
+		final ActionBar actionBar = getSupportActionBar();
+		final int tabCount = actionBar.getTabCount();
+
+		int position = actionBar.getSelectedNavigationIndex();
+		if (next) {
+			if (position < tabCount - 1) {
+				position = position + 1;
+			} else {
+				position = 0;
+			}
+		} else {
+			if (position > 0) {
+				position = position - 1;
+			} else {
+				position = tabCount - 1;
+			}
+		}
+
+		if (position >= 0 && position < tabCount) {
+			actionBar.setSelectedNavigationItem(position);
+		}
+	}
+
+
+	private void addTab(@Nonnull final PrimaryFragment primaryFragment) {
+		final String fragmentTag = primaryFragment.getFragmentTag();
+
+		final ActionBar actionBar = getSupportActionBar();
+		final ActionBar.Tab tab = actionBar.newTab();
+		tab.setTag(fragmentTag);
+		tab.setText(primaryFragment.getTitleResId());
+		tab.setTabListener(new ActionBar.TabListener() {
+			@Override
+			public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+				if (tabsEnabled) {
+					final MessengerMultiPaneFragmentManager mpfm = getMultiPaneFragmentManager();
+					mpfm.clearBackStack();
+					mpfm.setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
+				}
+			}
+
+			@Override
+			public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+			}
+
+			@Override
+			public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+				if (tabsEnabled) {
+					final MessengerMultiPaneFragmentManager mpfm = getMultiPaneFragmentManager();
+					mpfm.clearBackStack();
+					// in some cases we reuse pane for another fragment under same tab -> we need to reset fragment (in case if fragment has not been changed nothing is done)
+					mpfm.setMainFragment(primaryFragment, getSupportFragmentManager(), ft);
+				}
+			}
+		});
+		actionBar.addTab(tab);
+	}
+
+	private class MessengerEventListener extends AbstractJEventListener<MessengerEvent> {
+
+		protected MessengerEventListener() {
+			super(MessengerEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull MessengerEvent event) {
+			switch (event.getType()) {
+				case unread_messages_count_changed:
+					invalidateOptionsMenu();
+					break;
+				case notification_removed:
+				case notification_added:
+					invalidateOptionsMenu();
+					break;
+			}
+		}
+	}
+
+	private class SwipeTabsGestureListener extends SwipeGestureListener {
+
+		public SwipeTabsGestureListener() {
+			super(MainActivity.this);
+		}
+
+		@Override
+		protected void onSwipeToRight() {
+			changeTab(false);
+		}
+
+		@Override
+		protected void onSwipeToLeft() {
+			changeTab(true);
+		}
+	}
+
+	private class HomeButtonListener implements Runnable {
+		@Override
+		public void run() {
+			if (!getMultiPaneFragmentManager().goBackImmediately()) {
+				final ActionBar.Tab tab = findTabByTag(PrimaryFragment.contacts.getFragmentTag());
+				if (tab != null) {
+					tab.select();
+				}
+			}
+		}
 	}
 }

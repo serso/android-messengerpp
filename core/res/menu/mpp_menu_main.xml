@@ -31,8 +31,13 @@
 			a:showAsAction="always|withText"/>
 
 	<item
+			a:id="@+id/mpp_menu_settings"
+			a:title="@string/mpp_menu_settings"
+			a:icon="?attr/mpp_ab_settings_icon"
+			a:showAsAction="never"/>
+
+	<item
 			a:id="@+id/mpp_menu_app_exit"
 			a:title="@string/mpp_menu_app_exit"
-			a:icon="@drawable/mpp_ab_exit"
 			a:showAsAction="never"/>
 </menu>

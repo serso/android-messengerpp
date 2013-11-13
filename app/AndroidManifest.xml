@@ -56,6 +56,7 @@
 
 
 		<activity android:label="@string/mpp_app_name" android:launchMode="singleTask" android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_app_name" android:launchMode="singleTask" android:name=".SettingsActivity" android:windowSoftInputMode="stateHidden"/>
 
 		<service android:name=".OngoingNotificationService"/>
 

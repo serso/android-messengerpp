@@ -21,19 +21,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import roboguice.activity.RoboActivity;
 
-import java.util.Collection;
-import java.util.List;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.Objects;
 
 import com.google.inject.Inject;
 
@@ -64,9 +55,9 @@ public class StartActivity extends RoboActivity {
 
 		final Intent intent = getIntent();
 		if(areEqual(intent.getAction(), INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
-			MainActivity.startActivityForUnreadMessages(this);
+			MainActivity.startForUnreadMessages(this);
 		} else {
-			MainActivity.startActivity(this);
+			MainActivity.start(this);
 		}
 
 		// we must start service from here because Android can cache application

@@ -22,7 +22,8 @@ public enum UiEventType {
 	show_realms,
 	new_message,
 	new_contact,
-	app_exit;
+	exit,
+	show_settings;
 
 	@Nonnull
 	private UiEvent uiEvent;

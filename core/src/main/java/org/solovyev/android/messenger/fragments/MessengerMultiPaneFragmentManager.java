@@ -16,19 +16,14 @@
 
 package org.solovyev.android.messenger.fragments;
 
-import android.support.v4.app.Fragment;
-
 import android.support.v4.app.FragmentManager;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.EmptyFragment;
-import org.solovyev.common.Builder;
-import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +39,6 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		mutableTabFragments.add(contacts);
 		mutableTabFragments.add(messages);
 		mutableTabFragments.add(accounts);
-		mutableTabFragments.add(settings);
 		tabFragments = unmodifiableList(mutableTabFragments);
 	}
 

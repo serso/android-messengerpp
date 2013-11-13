@@ -116,6 +116,7 @@
 	<string name="mpp_preferences_reload_local_data_title">Reload accounts data</string>
 	<string name="mpp_preferences_reload_local_data_summary">Synchronizes local data with server</string>
 	<string name="mpp_yesterday_at">Yesterday at</string>
+	<string name="mpp_menu_settings">Settings</string>
 
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message.</item>

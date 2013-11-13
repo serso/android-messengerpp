@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUnreadMessagesCounter;
 
 final class MainMenu implements ActivityMenu<Menu, MenuItem> {
@@ -100,7 +101,8 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>(1);
 			menuItems.add(new NotificationsMenuItem(activity));
 			menuItems.add(new UnreadMessagesCounterMenuItem());
-			menuItems.add(new MenuItemAppExitMenuItem(activity));
+			menuItems.add(new SettingsMenuItem());
+			menuItems.add(new MenuItemAppExitMenuItem());
 
 			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
 		}
@@ -128,11 +130,7 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 
 	private static final class MenuItemAppExitMenuItem implements IdentifiableMenuItem<MenuItem> {
 
-		@Nonnull
-		private final Activity activity;
-
-		private MenuItemAppExitMenuItem(@Nonnull Activity activity) {
-			this.activity = activity;
+		private MenuItemAppExitMenuItem() {
 		}
 
 		@Nonnull
@@ -143,7 +141,7 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-			App.exit(activity);
+			App.getEventManager(context).fire(UiEventType.exit);
 		}
 	}
 
@@ -222,6 +220,24 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 		@Override
 		public void onDismiss() {
 			notificationPopupWindow = null;
+		}
+	}
+
+
+	private static final class SettingsMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		private SettingsMenuItem() {
+		}
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_settings;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			getEventManager(context).fire(UiEventType.show_settings.newEvent());
 		}
 	}
 }
