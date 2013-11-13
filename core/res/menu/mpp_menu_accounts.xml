@@ -19,8 +19,8 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
 	<item
-			a:id="@+id/mpp_menu_account_add"
+			a:id="@+id/mpp_menu_add_account"
 			a:title="@string/mpp_account_add"
-			a:icon="@drawable/mpp_ab_add"
+			a:icon="?attr/mpp_ab_add_account_icon"
 			a:showAsAction="always"/>
 </menu>

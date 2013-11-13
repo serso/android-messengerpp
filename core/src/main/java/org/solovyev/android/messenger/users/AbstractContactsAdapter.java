@@ -40,11 +40,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.ContactListItem.loadContactListItem;
 
-/**
- * User: serso
- * Date: 6/2/12
- * Time: 5:55 PM
- */
 public abstract class AbstractContactsAdapter extends BaseListItemAdapter<ContactListItem> {
 
 	@Nonnull

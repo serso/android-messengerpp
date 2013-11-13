@@ -115,7 +115,7 @@ public class AccountsFragment extends BaseAccountsFragment {
 	}
 
 	private static enum AccountsMenu implements IdentifiableMenuItem<MenuItem> {
-		account_add(R.id.mpp_menu_account_add) {
+		add_account(R.id.mpp_menu_add_account) {
 			@Override
 			public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
 				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);

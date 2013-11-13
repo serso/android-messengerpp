@@ -16,16 +16,21 @@
 
 package org.solovyev.android.messenger.users;
 
-import android.os.Bundle;
+import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.fragments.DetachableFragment;
+import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.menu.IdentifiableMenuItem;
+import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseAsyncListFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
+import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
@@ -40,29 +45,18 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 	@Nonnull
 	private static String TAG = newTag("ContactsFragment");
 
+	@Nonnull
+	private final ActivityMenu<Menu, MenuItem> menu = ListActivityMenu.fromResource(R.menu.mpp_menu_contacts, ContactsMenu.class, SherlockMenuHelper.getInstance());
+
 	public BaseContactsFragment() {
 		super(TAG, true, true);
+
+		setHasOptionsMenu(true);
 	}
 
 	@Override
 	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
 		return null;
-	}
-
-	@Override
-	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
-
-		if (getAccountService().canCreateUsers()) {
-			addFooterButton(root, R.string.mpp_contact_add, new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					getEventManager().fire(new_contact.newEvent());
-				}
-			});
-		}
-
-		return root;
 	}
 
 	@Override
@@ -88,6 +82,56 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 				completeRefresh();
 				e.showMessage();
 			}
+		}
+	}
+
+	/*
+	**********************************************************************
+    *
+    *                           MENU
+    *
+    **********************************************************************
+    */
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		for (int i = 0; i < menu.size(); i++) {
+			final MenuItem item = menu.getItem(i);
+			if (item.getItemId() == R.id.mpp_menu_add_contact) {
+				item.setVisible(getAccountService().canCreateUsers());
+			}
+		}
+		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return this.menu.onOptionsItemSelected(this.getActivity(), item) || super.onOptionsItemSelected(item);
+	}
+
+	private static enum ContactsMenu implements IdentifiableMenuItem<MenuItem> {
+		add_contact(R.id.mpp_menu_add_contact) {
+			@Override
+			public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+				App.getEventManager(context).fire(new_contact.newEvent());
+			}
+		};
+
+		private final int menuItemId;
+
+		ContactsMenu(int menuItemId) {
+			this.menuItemId = menuItemId;
+		}
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return this.menuItemId;
 		}
 	}
 }

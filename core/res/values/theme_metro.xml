@@ -50,6 +50,13 @@
 		<item name="mpp_fragment">@style/mpp_fragment</item>
 		<item name="mpp_fragment_icon">@style/mpp_fragment_icon</item>
 		<item name="mpp_fragment_title">@style/mpp_fragment_title</item>
+
+		<item name="mpp_ab_search_icon">@drawable/mpp_ab_search</item>
+		<item name="mpp_ab_contact_icon">@drawable/mpp_ab_contact</item>
+		<item name="mpp_ab_contacts_icon">@drawable/mpp_ab_contacts</item>
+		<item name="mpp_ab_edit_icon">@drawable/mpp_ab_edit</item>
+		<item name="mpp_ab_add_account_icon">@drawable/mpp_ab_add_account</item>
+		<item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add_contact</item>
 	</style>
 
 	<style name="mpp_theme_metro_fragment" parent="Theme.Sherlock.Light">
