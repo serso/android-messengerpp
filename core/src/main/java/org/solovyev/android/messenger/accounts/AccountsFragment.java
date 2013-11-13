@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import org.solovyev.android.messenger.App;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -59,20 +60,6 @@ public class AccountsFragment extends BaseAccountsFragment {
 		super.onCreate(savedInstanceState);
 
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
-
-		addFooterButton(root, R.string.mpp_account_add, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getEventManager().fire(show_realms.newEvent());
-			}
-		});
-
-		return root;
 	}
 
 	@Nonnull
@@ -118,8 +105,7 @@ public class AccountsFragment extends BaseAccountsFragment {
 		add_account(R.id.mpp_menu_add_account) {
 			@Override
 			public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-				final EventManager eventManager = RoboGuice.getInjector(context).getInstance(EventManager.class);
-				eventManager.fire(show_realms.newEvent());
+				App.getEventManager(context).fire(show_realms.newEvent());
 			}
 		};
 
