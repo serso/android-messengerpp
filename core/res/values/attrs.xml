@@ -23,5 +23,7 @@
 		<attr name="mpp_ab_edit_icon" format="reference" />
 		<attr name="mpp_ab_add_account_icon" format="reference" />
 		<attr name="mpp_ab_add_contact_icon" format="reference" />
+		<attr name="mpp_ab_unread_messages_counter_icon" format="reference" />
+		<attr name="mpp_ab_notification_icon" format="reference" />
 	</declare-styleable>
 </resources>

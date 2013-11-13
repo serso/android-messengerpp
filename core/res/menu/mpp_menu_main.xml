@@ -21,13 +21,13 @@
 	<item
 			a:id="@+id/mpp_menu_notifications"
 			a:title="@string/mpp_menu_notifications"
-			a:icon="@drawable/mpp_ab_notification"
+			a:icon="?attr/mpp_ab_notification_icon"
 			a:showAsAction="always"/>
 
 	<item
 			a:id="@+id/mpp_menu_unread_messages_counter"
 			a:title="@string/mpp_menu_unread_messages_counter"
-			a:icon="@drawable/mpp_ab_unread_messages_counter"
+			a:icon="?attr/mpp_ab_unread_messages_counter_icon"
 			a:showAsAction="always|withText"/>
 
 	<item
