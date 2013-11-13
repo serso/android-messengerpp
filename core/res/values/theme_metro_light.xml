@@ -61,6 +61,7 @@
 		<item name="mpp_ab_notification_icon">@drawable/mpp_ab_notification_light</item>
 		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_light</item>
 		<item name="mpp_ab_settings_icon">@drawable/mpp_ab_settings_light</item>
+		<item name="mpp_ab_accounts_icon">@drawable/mpp_ab_accounts_light</item>
 	</style>
 
 </resources>

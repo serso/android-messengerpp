@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -131,8 +132,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
     **********************************************************************
     */
 
-	protected BaseFragmentActivity(int layoutId) {
-		this.layoutId = layoutId;
+	public BaseFragmentActivity() {
+		this.layoutId = R.layout.mpp_main;
 		this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
 	}
 
@@ -206,7 +207,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayUseLogoEnabled(false);
-		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(true);
 
@@ -390,5 +391,34 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		}
 
 		super.onDestroy();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				if (!getMultiPaneFragmentManager().goBackImmediately()) {
+					finish();
+				}
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+
+	@Nullable
+	public ActionBar.Tab findTabByTag(@Nonnull String tag) {
+		final ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			for (int i = 0; i < actionBar.getTabCount(); i++) {
+				final ActionBar.Tab tab = actionBar.getTabAt(i);
+				if (tab != null && tag.equals(tab.getTag())) {
+					return tab;
+				}
+			}
+		}
+
+		return null;
 	}
 }

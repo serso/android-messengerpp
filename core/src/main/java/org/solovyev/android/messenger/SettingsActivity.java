@@ -20,24 +20,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
-import org.solovyev.android.messenger.accounts.AccountUiEvent;
-import org.solovyev.android.messenger.accounts.AccountUiEventListener;
-import org.solovyev.android.messenger.chats.ChatUiEvent;
-import org.solovyev.android.messenger.chats.ChatUiEventListener;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.preferences.MessengerOnPreferenceAttachedListener;
 import org.solovyev.android.messenger.preferences.PreferenceListFragment;
 import org.solovyev.android.messenger.preferences.PreferenceUiEvent;
 import org.solovyev.android.messenger.preferences.PreferenceUiEventListener;
-import org.solovyev.android.messenger.realms.RealmUiEvent;
-import org.solovyev.android.messenger.realms.RealmUiEventListener;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.users.ContactUiEvent;
-import org.solovyev.android.messenger.users.ContactUiEventListener;
 
 import javax.annotation.Nonnull;
 
@@ -61,16 +50,9 @@ public final class SettingsActivity extends BaseFragmentActivity implements Pref
 		activity.startActivity(result);
 	}
 
-	public SettingsActivity() {
-		super(R.layout.mpp_main);
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		if (savedInstanceState == null) {
 			// first time
@@ -87,18 +69,5 @@ public final class SettingsActivity extends BaseFragmentActivity implements Pref
 	@Override
 	public void onPreferenceAttached(PreferenceScreen preferenceScreen, int preferenceResId) {
 		new MessengerOnPreferenceAttachedListener(this, syncService).onPreferenceAttached(preferenceScreen, preferenceResId);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				if (!getMultiPaneFragmentManager().goBackImmediately()) {
-					finish();
-				}
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
 	}
 }

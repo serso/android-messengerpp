@@ -19,11 +19,6 @@ package org.solovyev.android.messenger.accounts;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 3/5/13
- * Time: 12:49 PM
- */
 public enum AccountUiEventType {
 
 	/**

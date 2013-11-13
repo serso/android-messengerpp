@@ -23,7 +23,8 @@ public enum UiEventType {
 	new_message,
 	new_contact,
 	exit,
-	show_settings;
+	show_settings,
+	show_accounts;
 
 	@Nonnull
 	private UiEvent uiEvent;

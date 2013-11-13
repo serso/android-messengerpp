@@ -102,6 +102,7 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 			menuItems.add(new NotificationsMenuItem(activity));
 			menuItems.add(new UnreadMessagesCounterMenuItem());
 			menuItems.add(new SettingsMenuItem());
+			menuItems.add(new AccountsMenuItem());
 			menuItems.add(new MenuItemAppExitMenuItem());
 
 			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
@@ -129,9 +130,6 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
     */
 
 	private static final class MenuItemAppExitMenuItem implements IdentifiableMenuItem<MenuItem> {
-
-		private MenuItemAppExitMenuItem() {
-		}
 
 		@Nonnull
 		@Override
@@ -226,9 +224,6 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 
 	private static final class SettingsMenuItem implements IdentifiableMenuItem<MenuItem> {
 
-		private SettingsMenuItem() {
-		}
-
 		@Nonnull
 		@Override
 		public Integer getItemId() {
@@ -238,6 +233,20 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
 			getEventManager(context).fire(UiEventType.show_settings.newEvent());
+		}
+	}
+
+	private static final class AccountsMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_accounts;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			getEventManager(context).fire(UiEventType.show_accounts.newEvent());
 		}
 	}
 }

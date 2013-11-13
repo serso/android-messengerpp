@@ -29,18 +29,12 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import android.widget.*;
+import com.actionbarsherlock.app.ActionBar;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
+import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListViewScroller;
 import org.solovyev.android.list.ListViewScrollerListener;
@@ -55,15 +49,11 @@ import org.solovyev.android.messenger.view.MessengerListItem;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
-import org.solovyev.common.listeners.JEventListener;
+import roboguice.event.EventManager;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
-import com.google.inject.Inject;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static android.view.Gravity.CENTER;
 import static android.view.Gravity.CENTER_VERTICAL;
@@ -72,8 +62,8 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
-import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.AdapterSelection.newSelection;
+import static org.solovyev.android.messenger.App.newTag;
 
 public abstract class BaseListFragment<LI extends MessengerListItem>
 		extends RoboSherlockListFragment
@@ -342,7 +332,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 		// some fragments may change the title and icon of action bar => we need to reset it every time new fragment is shown
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setTitle(R.string.mpp_app_name);
+		actionBar.setTitle(getActivity().getTitle());
 		actionBar.setIcon(R.drawable.mpp_app_icon);
 
 		multiPaneManager.onCreatePane(getActivity(), container, root);
@@ -497,15 +487,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	@Nullable
 	protected abstract ListViewAwareOnRefreshListener getBottomPullRefreshListener();
-
-	protected void addFooterButton(@Nonnull ViewGroup root, int textResId, @Nonnull View.OnClickListener onClick) {
-		final Button footerButton = ViewFromLayoutBuilder.<Button>newInstance(R.layout.mpp_fragment_footer_button).build(getThemeContext());
-
-		footerButton.setText(textResId);
-		footerButton.setOnClickListener(onClick);
-
-		root.addView(footerButton, new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-	}
 
 	private void createAdapter(@Nullable Bundle savedInstanceState) {
 		adapter = createAdapter();

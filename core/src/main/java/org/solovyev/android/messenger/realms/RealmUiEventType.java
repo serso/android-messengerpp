@@ -18,11 +18,6 @@ package org.solovyev.android.messenger.realms;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 3/5/13
- * Time: 8:56 PM
- */
 public enum RealmUiEventType {
 
 	/**

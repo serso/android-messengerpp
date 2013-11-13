@@ -31,6 +31,12 @@
 			a:showAsAction="always|withText"/>
 
 	<item
+			a:id="@+id/mpp_menu_accounts"
+			a:title="@string/mpp_menu_accounts"
+			a:icon="?attr/mpp_ab_accounts_icon"
+			a:showAsAction="never"/>
+
+	<item
 			a:id="@+id/mpp_menu_settings"
 			a:title="@string/mpp_menu_settings"
 			a:icon="?attr/mpp_ab_settings_icon"

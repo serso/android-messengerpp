@@ -32,9 +32,9 @@ import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 public class UiEventListener implements EventListener<UiEvent> {
 
 	@Nonnull
-	private final MainActivity activity;
+	private final BaseFragmentActivity activity;
 
-	public UiEventListener(@Nonnull MainActivity activity) {
+	public UiEventListener(@Nonnull BaseFragmentActivity activity) {
 		this.activity = activity;
 	}
 
@@ -49,6 +49,9 @@ public class UiEventListener implements EventListener<UiEvent> {
 				break;
 			case show_settings:
 				SettingsActivity.start(activity);
+				break;
+			case show_accounts:
+				AccountsActivity.start(activity);
 				break;
 			case exit:
 				App.exit(activity);

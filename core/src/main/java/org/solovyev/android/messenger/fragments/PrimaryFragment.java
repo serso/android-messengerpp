@@ -31,11 +31,6 @@ import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 
-/**
- * User: serso
- * Date: 3/7/13
- * Time: 5:04 PM
- */
 public enum PrimaryFragment implements FragmentDef {
 
 	//contacts(MessengerContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_tab_contacts),

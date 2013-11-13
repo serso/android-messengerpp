@@ -30,13 +30,8 @@ import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
 import org.solovyev.android.messenger.chats.ChatUiEvent;
 import org.solovyev.android.messenger.chats.ChatUiEventListener;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
-import org.solovyev.android.messenger.preferences.PreferenceUiEvent;
-import org.solovyev.android.messenger.preferences.PreferenceUiEventListener;
-import org.solovyev.android.messenger.realms.RealmUiEvent;
-import org.solovyev.android.messenger.realms.RealmUiEventListener;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.ContactUiEventListener;
 import org.solovyev.android.view.SwipeGestureListener;
@@ -93,10 +88,6 @@ public final class MainActivity extends BaseFragmentActivity {
     **********************************************************************
     */
 
-	public MainActivity() {
-		super(R.layout.mpp_main);
-	}
-
 	public static void start(@Nonnull Activity activity) {
 		final Intent result = new Intent();
 		result.setClass(activity, MainActivity.class);
@@ -122,9 +113,6 @@ public final class MainActivity extends BaseFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-
 		// menu must be initialized before fragments as some fragments might add entries to menu
 		this.menu = new MainMenu(new HomeButtonListener());
 
@@ -139,7 +127,6 @@ public final class MainActivity extends BaseFragmentActivity {
 
 		listeners.add(UiEvent.class, new UiEventListener(this));
 		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
-		listeners.add(RealmUiEvent.class, new RealmUiEventListener(this));
 		listeners.add(ContactUiEvent.class, new ContactUiEventListener(this, getAccountService()));
 		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
 
@@ -235,21 +222,6 @@ public final class MainActivity extends BaseFragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return this.menu.onOptionsItemSelected(this, item);
-	}
-
-	@Nullable
-	public ActionBar.Tab findTabByTag(@Nonnull String tag) {
-		final ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			for (int i = 0; i < actionBar.getTabCount(); i++) {
-				final ActionBar.Tab tab = actionBar.getTabAt(i);
-				if (tab != null && tag.equals(tab.getTag())) {
-					return tab;
-				}
-			}
-		}
-
-		return null;
 	}
 
 	private void changeTab(boolean next) {

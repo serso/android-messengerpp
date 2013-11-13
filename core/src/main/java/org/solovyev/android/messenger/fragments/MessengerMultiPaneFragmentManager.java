@@ -38,7 +38,6 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		final List<PrimaryFragment> mutableTabFragments = new ArrayList<PrimaryFragment>();
 		mutableTabFragments.add(contacts);
 		mutableTabFragments.add(messages);
-		mutableTabFragments.add(accounts);
 		tabFragments = unmodifiableList(mutableTabFragments);
 	}
 
