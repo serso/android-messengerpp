@@ -205,27 +205,19 @@
 	</style>
 
 	<style name="mpp_button">
-		<item name="android:gravity">top|left</item>
-		<item name="android:layout_margin">2dp</item>
 		<item name="android:focusable">true</item>
 		<item name="android:layout_width">80dp</item>
 		<item name="android:layout_height">45dp</item>
 		<item name="android:minHeight">45dp</item>
-		<item name="android:textColor">@color/mpp_text</item>
 		<item name="android:textSize">15sp</item>
 
 		<item name="android:singleLine">true</item>
 		<item name="android:ellipsize">marquee</item>
 
 		<item name="android:padding">5dp</item>
-
-		<item name="android:background">@drawable/mpp_metro_button_gray</item>
-		<item name="android:textStyle">bold</item>
 	</style>
 
 	<style name="mpp_button_bright" parent="mpp_button">
-		<item name="android:background">@drawable/mpp_metro_button_blue</item>
-		<item name="android:textColor">@color/mpp_bg</item>
 	</style>
 
 	<style name="mpp_form_label">
