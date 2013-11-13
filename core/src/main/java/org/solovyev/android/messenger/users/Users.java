@@ -244,7 +244,7 @@ public final class Users {
 			if (contact.isOnline()) {
 				contactOnline.setVisibility(VISIBLE);
 			} else {
-				contactOnline.setVisibility(INVISIBLE);
+				contactOnline.setVisibility(GONE);
 			}
 		} else {
 			contactOnline.setVisibility(GONE);
