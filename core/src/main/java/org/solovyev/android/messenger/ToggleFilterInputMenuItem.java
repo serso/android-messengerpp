@@ -27,11 +27,6 @@ import org.solovyev.android.messenger.core.R;
 
 import com.actionbarsherlock.view.MenuItem;
 
-/**
- * User: serso
- * Date: 8/13/12
- * Time: 8:52 PM
- */
 public class ToggleFilterInputMenuItem implements IdentifiableMenuItem<MenuItem> {
 
 	@Nonnull

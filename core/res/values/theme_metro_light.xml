@@ -59,6 +59,7 @@
 		<item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add_contact_light</item>
 		<item name="mpp_ab_unread_messages_counter_icon">@drawable/mpp_ab_unread_messages_counter_light</item>
 		<item name="mpp_ab_notification_icon">@drawable/mpp_ab_notification_light</item>
+		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_light</item>
 	</style>
 
 </resources>

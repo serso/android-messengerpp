@@ -16,6 +16,7 @@
 
 package org.solovyev.android.messenger.chats;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseAsyncListFragment;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
@@ -77,20 +79,6 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 			canReuse = ((BaseUserFragment) fragment).getUser().getEntity().equals(contact);
 		}
 		return canReuse;
-	}
-
-	@Override
-	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
-
-		addFooterButton(root, R.string.mpp_new_message, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getEventManager().fire(new_message.newEvent());
-			}
-		});
-
-		return root;
 	}
 
 	@Override
@@ -161,8 +149,22 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 
 		menuItems.add(new ToggleFilterInputMenuItem(this));
+		menuItems.add(new NewMessageMenuItem());
 
 		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
 		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+	}
+
+	private static class NewMessageMenuItem implements IdentifiableMenuItem<MenuItem> {
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_new_message;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			App.getEventManager(context).fire(new_message.newEvent());
+		}
 	}
 }
