@@ -45,11 +45,6 @@ import static org.solovyev.android.messenger.messages.MessageState.received;
 import static org.solovyev.android.messenger.messages.MessageState.sending;
 import static org.solovyev.android.messenger.messages.MessageState.sent;
 
-/**
- * User: serso
- * Date: 3/7/13
- * Time: 3:50 PM
- */
 public final class Messages {
 
 	private Messages() {
@@ -72,7 +67,7 @@ public final class Messages {
 			return shortTime().print(localSendDateTime);
 		} else if (localSendDate.toDateTimeAtStartOfDay().compareTo(localYesterday.toDateTimeAtStartOfDay()) == 0) {
 			// yesterday
-			return getApplication().getString(R.string.mpp_yesterday_at) + shortTime().print(localSendDateTime);
+			return getApplication().getString(R.string.mpp_yesterday_at) + " " + shortTime().print(localSendDateTime);
 		} else {
 			// the days before yesterday
 			return shortDate().print(localSendDateTime);
