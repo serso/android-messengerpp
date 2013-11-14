@@ -58,7 +58,7 @@
 		<item name="mpp_ab_contacts_icon">@drawable/mpp_ab_contacts</item>
 		<item name="mpp_ab_edit_icon">@drawable/mpp_ab_edit</item>
 		<item name="mpp_ab_add_account_icon">@drawable/mpp_ab_add_account</item>
-		<item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add</item>
+		<item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add_contact</item>
 		<item name="mpp_ab_unread_messages_counter_icon">@drawable/mpp_ab_unread_messages_counter</item>
 		<item name="mpp_ab_notification_icon">@drawable/mpp_ab_notification</item>
 		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_2</item>
