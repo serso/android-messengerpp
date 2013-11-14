@@ -18,7 +18,10 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 import javax.annotation.Nonnull;
@@ -38,6 +41,6 @@ public interface MultiPaneManager {
 
 	void onCreatePane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane);
 
-	void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane);
-	void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane, boolean forceShowTitle);
+	void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, @Nullable CharSequence title);
+	void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, boolean forceShowTitle, @Nullable CharSequence title);
 }

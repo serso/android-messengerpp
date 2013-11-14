@@ -33,11 +33,6 @@ import android.widget.ListView;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 6:43 PM
- */
 public class PreferenceListFragment extends ListFragment {
 
 	private static final int NO_THEME = -1;

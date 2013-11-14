@@ -26,9 +26,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import org.solovyev.android.Activities;
+
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
@@ -42,7 +44,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static org.solovyev.android.messenger.App.getExceptionHandler;
 import static org.solovyev.android.messenger.App.getTaskService;
 
 public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSherlockFragment {
@@ -144,10 +145,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
-		fragmentTitle.setText(getFragmentTitle());
-
-		getMultiPaneManager().onPaneCreated(getActivity(), root);
+		getMultiPaneManager().showTitle(getSherlockActivity(), root, getFragmentTitle());
 	}
 
 	@Nullable

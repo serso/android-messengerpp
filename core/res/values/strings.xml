@@ -75,7 +75,7 @@
 	<string name="mpp_realm_configuration">Configuration of %1$s</string>
 	<string name="mpp_notification_title">Messenger++</string>
 	<string name="mpp_notification_text">Click to open app</string>
-	<string name="mpp_private_chat_title">Chat with %1$s</string>
+	<string name="mpp_private_chat_title">%1$s</string>
 	<string name="mpp_public_chat_title">Chat</string>
 	<string name="mpp_saving_account_title">Saving…</string>
 	<string name="mpp_saving_account_message">Wait a second while app is saving account</string>

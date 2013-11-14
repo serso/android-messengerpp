@@ -36,12 +36,11 @@ import org.solovyev.android.Views;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MultiPaneManager;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
@@ -149,9 +148,7 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 			App.getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 		}
 
-		multiPaneManager.onPaneCreated(this.getActivity(), root, true);
-
-		root.findViewById(R.id.mpp_fragment_title).setVisibility(View.VISIBLE);
+		multiPaneManager.showTitle(getSherlockActivity(), root, true, getString(R.string.mpp_chat_participants));
 	}
 }
 

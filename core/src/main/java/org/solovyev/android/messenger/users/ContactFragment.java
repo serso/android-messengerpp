@@ -42,6 +42,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -80,9 +81,6 @@ public class ContactFragment extends BaseUserFragment {
 		final User contact = getUser();
 		final FragmentActivity activity = getActivity();
 
-		final TextView contactName = (TextView) root.findViewById(R.id.mpp_fragment_title);
-		contactName.setText(contact.getDisplayName());
-
 		final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon_imageview);
 		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 
@@ -115,7 +113,7 @@ public class ContactFragment extends BaseUserFragment {
 			});
 		}
 
-		getMultiPaneManager().onPaneCreated(activity, root, true);
+		getMultiPaneManager().showTitle(getSherlockActivity(), root, true, contact.getDisplayName());
 	}
 
 	@Override

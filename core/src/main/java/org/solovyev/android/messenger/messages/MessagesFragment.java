@@ -256,16 +256,13 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 			}
 		});
 
-		// change title
-		if (!getMultiPaneManager().isDualPane(getActivity())) {
-			final com.actionbarsherlock.app.ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-			//actionBar.setIcon();
-			if (chat.isPrivate()) {
-				actionBar.setTitle(getString(R.string.mpp_private_chat_title, Users.getDisplayNameFor(chat.getSecondUser())));
-			} else {
-				actionBar.setTitle(getString(R.string.mpp_public_chat_title));
-			}
+		final String title;
+		if (chat.isPrivate()) {
+			title = getString(R.string.mpp_private_chat_title, Users.getDisplayNameFor(chat.getSecondUser()));
+		} else {
+			title = getString(R.string.mpp_public_chat_title);
 		}
+		getMultiPaneManager().showTitle(getSherlockActivity(), root, title);
 	}
 
 	@Override

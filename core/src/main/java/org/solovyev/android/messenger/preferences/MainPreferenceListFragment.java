@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.MultiPaneManager;
@@ -87,12 +89,7 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 
 		final PreferenceScreen preferenceScreen = getPreferenceScreen();
 		if (preferenceScreen != null) {
-			final TextView fragmentTitle = (TextView) root.findViewById(R.id.mpp_fragment_title);
-			if (fragmentTitle != null) {
-				fragmentTitle.setText(preferenceScreen.getTitle());
-			}
+			multiPaneManager.showTitle((SherlockFragmentActivity) getActivity(), root, preferenceScreen.getTitle());
 		}
-
-		multiPaneManager.onPaneCreated(getActivity(), root);
 	}
 }

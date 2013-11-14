@@ -75,7 +75,7 @@
 	<string name="mpp_realm_configuration">Настройка %1$s</string>
 	<string name="mpp_notification_title">Messenger++</string>
 	<string name="mpp_notification_text">Нажмите для открытия приложения</string>
-	<string name="mpp_private_chat_title">Чат: %1$s</string>
+	<string name="mpp_private_chat_title">%1$s</string>
 	<string name="mpp_public_chat_title">Чат</string>
 	<string name="mpp_saving_account_title">Сохраняем…</string>
 	<string name="mpp_saving_account_message">Подождите пока сохраняется аккаунт</string>

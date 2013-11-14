@@ -18,14 +18,16 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.content.res.Resources;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.text.Strings;
@@ -99,32 +101,14 @@ public class DefaultMultiPaneManager implements MultiPaneManager {
 	}
 
 	@Override
-	public void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane) {
-		onPaneCreated(activity, pane, false);
+	public void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, @Nullable CharSequence title) {
+		showTitle(activity, pane, false, title);
 	}
 	@Override
-	public void onPaneCreated(@Nonnull Activity activity, @Nonnull View pane, boolean forceShowTitle) {
-		final TextView fragmentTitleTextView = (TextView) pane.findViewById(R.id.mpp_fragment_title);
-		if (fragmentTitleTextView != null) {
-			if (!forceShowTitle) {
-				if (this.isDualPane(activity)) {
-					prepareTitle(fragmentTitleTextView);
-				} else {
-					fragmentTitleTextView.setVisibility(View.GONE);
-				}
-			} else {
-				prepareTitle(fragmentTitleTextView);
-			}
-		}
-	}
-
-	private void prepareTitle(@Nonnull TextView titleTextView) {
-		final CharSequence fragmentTitle = titleTextView.getText();
-		if (Strings.isEmpty(fragmentTitle)) {
-			titleTextView.setVisibility(View.GONE);
-		} else {
-			titleTextView.setText(String.valueOf(fragmentTitle).toUpperCase());
-			titleTextView.setVisibility(View.VISIBLE);
+	public void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, boolean forceShowTitle, @Nullable CharSequence title) {
+		if (title != null) {
+			final ActionBar actionBar = activity.getSupportActionBar();
+			actionBar.setTitle(title);
 		}
 	}
 }
