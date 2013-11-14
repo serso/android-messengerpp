@@ -17,7 +17,7 @@
 
 <resources>
 
-	<style name="mpp_theme_metro" parent="Theme.Sherlock">
+	<style name="mpp_theme_holo" parent="Theme.Sherlock">
 		<item name="android:listViewStyle">@style/mpp_list_view</item>
 
 		<item name="mpp_list_item">@style/mpp_list_item</item>
@@ -66,7 +66,7 @@
 		<item name="mpp_ab_accounts_icon">@drawable/mpp_ab_accounts</item>
 	</style>
 
-	<style name="mpp_theme_metro_fragment" parent="Theme.Sherlock.Light">
+	<style name="mpp_theme_holo_fragment" parent="Theme.Sherlock.Light">
 		<item name="mpp_list_item">@style/mpp_list_item</item>
 		<item name="mpp_list_item_block">@style/mpp_list_item_block</item>
 		<item name="mpp_list_item_icon">@style/mpp_list_item_icon</item>

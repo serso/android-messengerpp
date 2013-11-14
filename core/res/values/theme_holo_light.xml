@@ -17,7 +17,7 @@
 
 <resources>
 
-	<style name="mpp_theme_metro_light" parent="Theme.Sherlock.Light">
+	<style name="mpp_theme_holo_light" parent="Theme.Sherlock.Light">
 		<item name="android:listViewStyle">@style/mpp_list_view</item>
 
 		<item name="mpp_list_item">@style/mpp_list_item</item>

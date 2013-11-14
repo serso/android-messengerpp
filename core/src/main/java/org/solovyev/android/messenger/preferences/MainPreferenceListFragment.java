@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.inject.Inject;
@@ -56,7 +55,7 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 
 	@Nonnull
 	public static MultiPaneFragmentDef newPreferencesListFragmentDef(@Nonnull Context context, int preferencesResId, boolean addToBackStack) {
-		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_metro_fragment);
+		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_holo_fragment);
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MainPreferenceListFragment.class, context, arguments, PreferenceListFragmentReuseCondition.newInstance(preferencesResId));
 	}
 

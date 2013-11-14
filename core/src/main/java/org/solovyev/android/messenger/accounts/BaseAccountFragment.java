@@ -128,7 +128,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_metro_fragment);
+		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_holo_fragment);
 	}
 
 	@Override
