@@ -67,9 +67,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 			((FoundContactsAdapter) adapter).setRecentContacts(false);
 			return new FindContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
 		} else {
-			// in case of empty query we need to reset maxContacts
 			((FoundContactsAdapter) adapter).setRecentContacts(true);
-			maxContacts = MAX_SEARCH_CONTACTS;
 			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, maxContacts);
 		}
 	}
@@ -77,6 +75,10 @@ public class FindContactsFragment extends BaseContactsFragment {
 	@Override
 	public void filter(@Nullable CharSequence filterText) {
 		if (isInitialLoadingDone()) {
+			if (isEmpty(filterText)) {
+				// in case of empty query we need to reset maxContacts
+				maxContacts = MAX_SEARCH_CONTACTS;
+			}
 			final Handler handler = getUiHandler();
 			handler.removeCallbacks(runnable);
 			handler.postDelayed(runnable, SEARCH_DELAY_MILLIS);
@@ -105,9 +107,7 @@ public class FindContactsFragment extends BaseContactsFragment {
 	public void onBottomReached() {
 		super.onBottomReached();
 
-		if (!isRecentContacts()) {
-			maxContacts += MAX_SEARCH_CONTACTS;
-			getUiHandler().post(runnable);
-		}
+		maxContacts += MAX_SEARCH_CONTACTS;
+		getUiHandler().post(runnable);
 	}
 }
