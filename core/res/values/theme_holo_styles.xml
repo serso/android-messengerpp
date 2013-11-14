@@ -220,11 +220,9 @@
 	<style name="mpp_button_bright" parent="mpp_button">
 	</style>
 
-	<style name="mpp_form_label">
-		<item name="android:textColor">@color/mpp_text</item>
-		<item name="android:textStyle">bold</item>
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
+	<style name="mpp_form_label" parent="mpp_section_name">
+		<item name="android:paddingTop">10dp</item>
+		<item name="android:background">@null</item>
 	</style>
 
 	<style name="mpp_form_textview">
@@ -233,7 +231,7 @@
 		<item name="android:layout_height">wrap_content</item>
 	</style>
 
-	<style name="mpp_form_edittext" parent="mpp_form_label">
+	<style name="mpp_form_edittext" parent="mpp_section_content">
 		<item name="android:textStyle">normal</item>
 		<item name="android:lines">1</item>
 		<item name="android:maxLines">1</item>
