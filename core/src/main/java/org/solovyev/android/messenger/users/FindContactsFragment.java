@@ -41,12 +41,6 @@ public class FindContactsFragment extends BaseContactsFragment {
 	@Nonnull
 	private final FindContactsRunnable runnable = new FindContactsRunnable();
 
-	@Override
-	public void onViewCreated(View root, Bundle savedInstanceState) {
-		super.onViewCreated(root, savedInstanceState);
-		setFilterBoxVisible();
-	}
-
 	@Nonnull
 	@Override
 	protected BaseListItemAdapter<ContactListItem> createAdapter() {

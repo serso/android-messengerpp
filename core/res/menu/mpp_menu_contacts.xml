@@ -19,17 +19,15 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
 	<item
+			a:id="@+id/mpp_menu_toggle_filter_box"
+			a:title="@string/mpp_menu_search"
+			a:icon="?attr/mpp_ab_search_icon"
+			a:showAsAction="always"/>
+
+	<item
 			a:id="@+id/mpp_menu_add_contact"
 			a:title="@string/mpp_contact_add"
 			a:icon="?attr/mpp_ab_add_contact_icon"
 			a:showAsAction="always"/>
-
-	<item
-			a:id="@+id/mpp_menu_toggle_filter_box"
-			a:title="@string/mpp_menu_search"
-			a:icon="?attr/mpp_ab_search_icon"
-			a:visible="false"
-			a:showAsAction="always"/>
-
 
 </menu>
