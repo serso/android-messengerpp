@@ -81,6 +81,8 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 		super.onCreateView(context, inflater, root, container, b);
 
 		multiPaneManager.onCreatePane(getActivity(), container, root);
+		final int padding = context.getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
+		root.setPadding(padding, 0, padding, 0);
 	}
 
 	@Override

@@ -19,7 +19,9 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
@@ -64,7 +66,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	private final EditButtons buttons = new AccountEditButtons<A>(this);
 
 	protected BaseAccountConfigurationFragment(int layoutResId) {
-		super(layoutResId);
+		super(layoutResId, true);
 	}
 
 	@Nonnull
@@ -84,7 +86,6 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 		final JPredicate<Fragment> reuseCondition = new RealmFragmentReuseCondition(realm);
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, realm.getConfigurationFragmentClass(), context, null, reuseCondition);
 	}
-
 
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {

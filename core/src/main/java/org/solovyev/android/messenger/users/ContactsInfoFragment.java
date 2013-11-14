@@ -40,7 +40,6 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
@@ -86,9 +85,12 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View result = ViewFromLayoutBuilder.newInstance(R.layout.mpp_fragment_contacts).build(this.getActivity());
+		final View root = ViewFromLayoutBuilder.newInstance(R.layout.mpp_fragment_contacts).build(this.getActivity());
 
-		multiPaneManager.onCreatePane(this.getActivity(), container, result);
+		multiPaneManager.onCreatePane(this.getActivity(), container, root);
+
+		final int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
+		root.setPadding(padding, 0, padding, 0);
 
 		if (contacts == null) {
 			if (this.contactIds == null) {
@@ -111,7 +113,7 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 			}
 		}
 
-		return result;
+		return root;
 	}
 
 	@Override

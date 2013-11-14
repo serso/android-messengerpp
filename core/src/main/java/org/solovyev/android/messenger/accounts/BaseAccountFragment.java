@@ -25,11 +25,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import roboguice.event.EventManager;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.MultiPaneManager;
@@ -38,10 +37,9 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
-import roboguice.event.EventManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.messenger.App.getTaskService;
@@ -100,8 +98,11 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	@Nullable
 	private AccountEventListener accountEventListener;
 
-	protected BaseAccountFragment(int layoutResId) {
+	private final boolean addPadding;
+
+	protected BaseAccountFragment(int layoutResId, boolean addPadding) {
 		this.layoutResId = layoutResId;
+		this.addPadding = addPadding;
 	}
 
 	public BaseFragmentActivity getFragmentActivity() {
@@ -132,13 +133,18 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View result = ViewFromLayoutBuilder.newInstance(layoutResId).build(themeContext);
+		final View root = ViewFromLayoutBuilder.newInstance(layoutResId).build(themeContext);
 
-		getMultiPaneManager().onCreatePane(this.getActivity(), container, result);
+		getMultiPaneManager().onCreatePane(this.getActivity(), container, root);
 
-		result.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+		if (addPadding) {
+			final int padding = getThemeContext().getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
+			root.setPadding(padding, 0, padding, 0);
+		}
 
-		return result;
+		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+
+		return root;
 	}
 
 	@Override

@@ -18,10 +18,14 @@ package org.solovyev.android.messenger.users;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.BaseAccountFragment;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.listeners.AbstractJEventListener;
 
@@ -60,7 +64,7 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 	private UserEventListener userEventListener;
 
 	protected BaseUserFragment(int layoutResId) {
-		super(layoutResId);
+		super(layoutResId, true);
 	}
 
 	@Override

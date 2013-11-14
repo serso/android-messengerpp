@@ -40,11 +40,6 @@ import javax.annotation.Nonnull;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_requested;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_cancelled;
 
-/**
- * User: serso
- * Date: 3/1/13
- * Time: 8:57 PM
- */
 public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
     /*
@@ -87,7 +82,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	private EventManager eventManager;
 
 	public AccountFragment() {
-		super(R.layout.mpp_fragment_account);
+		super(R.layout.mpp_fragment_account, true);
 	}
 
 	@Nonnull

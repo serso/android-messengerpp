@@ -18,7 +18,10 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.Account;
