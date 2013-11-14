@@ -38,6 +38,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.android.messenger.users.BaseUserFragment;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -76,7 +77,8 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 			canReuse = ((MessagesFragment) fragment).getChat().equals(chat);
 		} else if (fragment instanceof BaseUserFragment && chat.isPrivate()) {
 			final Entity contact = chat.getSecondUser();
-			canReuse = ((BaseUserFragment) fragment).getUser().getEntity().equals(contact);
+			final User fragmentUser = ((BaseUserFragment) fragment).getUser();
+			canReuse = fragmentUser != null && fragmentUser.getEntity().equals(contact);
 		}
 		return canReuse;
 	}

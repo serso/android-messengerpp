@@ -66,7 +66,8 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 	@Override
 	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull ContactListItem selectedItem) {
 		if (fragment instanceof BaseUserFragment) {
-			return selectedItem.getContact().equals(((BaseUserFragment) fragment).getUser());
+			final User user = ((BaseUserFragment) fragment).getUser();
+			return user != null && selectedItem.getContact().equals(user);
 		}
 		return false;
 	}
