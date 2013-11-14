@@ -56,6 +56,7 @@
 		<TextView
 				a:id="@+id/mpp_xmpp_resource_label"
 				a:text="@string/mpp_xmpp_resource"
+				a:visibility="gone"
 				style="?mpp_form_label"/>
 
 		<EditText
