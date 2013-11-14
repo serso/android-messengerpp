@@ -42,7 +42,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -113,7 +112,7 @@ public class ContactFragment extends BaseUserFragment {
 			});
 		}
 
-		getMultiPaneManager().showTitle(getSherlockActivity(), root, true, contact.getDisplayName());
+		getMultiPaneManager().showTitle(getSherlockActivity(), this, contact.getDisplayName());
 	}
 
 	@Override

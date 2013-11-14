@@ -19,9 +19,8 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.app.Application;
 import android.content.res.Configuration;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -30,7 +29,6 @@ import com.google.inject.Singleton;
 
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -101,13 +99,11 @@ public class DefaultMultiPaneManager implements MultiPaneManager {
 	}
 
 	@Override
-	public void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, @Nullable CharSequence title) {
-		showTitle(activity, pane, false, title);
-	}
-	@Override
-	public void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, boolean forceShowTitle, @Nullable CharSequence title) {
-		if (title != null) {
-			final ActionBar actionBar = activity.getSupportActionBar();
+	public void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull Fragment pane, @Nullable CharSequence title) {
+		final ActionBar actionBar = activity.getSupportActionBar();
+		if (isDualPane(activity)) {
+			actionBar.setTitle(title);
+		} else if (pane.getId() == R.id.content_first_pane) {
 			actionBar.setTitle(title);
 		}
 	}

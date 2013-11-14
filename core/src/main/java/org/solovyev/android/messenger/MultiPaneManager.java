@@ -18,6 +18,7 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
@@ -41,6 +42,5 @@ public interface MultiPaneManager {
 
 	void onCreatePane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane);
 
-	void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, @Nullable CharSequence title);
-	void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull View pane, boolean forceShowTitle, @Nullable CharSequence title);
+	void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull Fragment pane, @Nullable CharSequence title);
 }

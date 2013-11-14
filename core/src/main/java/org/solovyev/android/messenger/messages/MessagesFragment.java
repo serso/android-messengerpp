@@ -262,7 +262,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		} else {
 			title = getString(R.string.mpp_public_chat_title);
 		}
-		getMultiPaneManager().showTitle(getSherlockActivity(), root, title);
+		getMultiPaneManager().showTitle(getSherlockActivity(), this, title);
 	}
 
 	@Override

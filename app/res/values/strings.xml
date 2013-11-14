@@ -15,8 +15,6 @@
   -->
 
 <resources>
-	<string name="mpp_app_name">Messenger++</string>
-	<string name="mpp_app_icon_name">Messenger++</string>
-	<string name="mpp_activity_settings">Messenger++ Settings</string>
-	<string name="mpp_activity_accounts">Messenger++ Accounts</string>
+	<string name="mpp_activity_settings">M++ Settings</string>
+	<string name="mpp_activity_accounts">M++ Accounts</string>
 </resources>

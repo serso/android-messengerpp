@@ -150,7 +150,7 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 			App.getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 		}
 
-		multiPaneManager.showTitle(getSherlockActivity(), root, true, getString(R.string.mpp_chat_participants));
+		multiPaneManager.showTitle(getSherlockActivity(), this, getString(R.string.mpp_chat_participants));
 	}
 }
 

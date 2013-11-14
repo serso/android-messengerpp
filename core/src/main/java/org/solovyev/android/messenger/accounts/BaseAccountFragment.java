@@ -151,7 +151,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		getMultiPaneManager().showTitle(getSherlockActivity(), root, getFragmentTitle());
+		getMultiPaneManager().showTitle(getSherlockActivity(), this, getFragmentTitle());
 	}
 
 	@Nullable

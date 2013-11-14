@@ -16,6 +16,7 @@
 
 <resources>
 	<string name="mpp_app_name">Messenger++</string>
+	<string name="mpp_app_short_name">M++</string>
 
 	<string name="mpp_captcha_message">Please enter the code from the image below</string>
 	<string name="mpp_captcha_title">Captcha</string>

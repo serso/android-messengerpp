@@ -90,7 +90,7 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 
 		final PreferenceScreen preferenceScreen = getPreferenceScreen();
 		if (preferenceScreen != null) {
-			multiPaneManager.showTitle((SherlockFragmentActivity) getActivity(), root, preferenceScreen.getTitle());
+			multiPaneManager.showTitle((SherlockFragmentActivity) getActivity(), this, preferenceScreen.getTitle());
 		}
 	}
 }
