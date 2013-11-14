@@ -47,5 +47,7 @@
 	<attr name="mpp_fragment" format="reference"/>
 	<attr name="mpp_fragment_icon" format="reference"/>
 	<attr name="mpp_fragment_title" format="reference"/>
+	<attr name="mpp_section_name" format="reference"/>
+	<attr name="mpp_section_content" format="reference"/>
 
 </resources>

@@ -139,7 +139,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 
 		if (addPadding) {
 			final int padding = getThemeContext().getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
-			root.setPadding(padding, 0, padding, 0);
+			root.setPadding(padding, padding, padding, padding);
 		}
 
 		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));

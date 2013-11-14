@@ -31,7 +31,8 @@
 			a:id="@+id/mpp_contact_properties_viewgroup"
 			a:layout_width="match_parent"
 			a:layout_height="wrap_content"
-			a:orientation="vertical"/>
+			a:orientation="vertical"
+			a:paddingBottom="10dp"/>
 
 	<include layout="@layout/mpp_fragment_edit_buttons"/>
 

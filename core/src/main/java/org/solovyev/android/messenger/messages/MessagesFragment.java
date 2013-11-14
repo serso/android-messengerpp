@@ -574,7 +574,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		final boolean triplePane = getMultiPaneManager().isTriplePane(getActivity());
 
-
 		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 
 		final ViewContactMenuItem viewContactMenuItem = new ViewContactMenuItem();

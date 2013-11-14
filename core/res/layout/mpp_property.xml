@@ -23,15 +23,10 @@
 
 	<TextView
 			a:id="@+id/mpp_property_label"
-			a:textColor="@color/mpp_blue"
-			a:layout_width="match_parent"
-			a:layout_height="wrap_content"/>
+			style="?attr/mpp_section_name"/>
 
 	<TextView
 			a:id="@+id/mpp_property_value"
-			a:textColor="@color/mpp_text"
-			a:layout_width="match_parent"
-			a:layout_height="wrap_content"/>
-
+			style="?attr/mpp_section_content"/>
 
 </LinearLayout>

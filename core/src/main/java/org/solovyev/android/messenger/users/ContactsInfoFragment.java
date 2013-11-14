@@ -90,7 +90,7 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 		multiPaneManager.onCreatePane(this.getActivity(), container, root);
 
 		final int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
-		root.setPadding(padding, 0, padding, 0);
+		root.setPadding(padding, padding, padding, padding);
 
 		if (contacts == null) {
 			if (this.contactIds == null) {

@@ -289,6 +289,24 @@
 		<item name="android:contentDescription">@string/mpp_icon</item>
 	</style>
 
+	<style name="mpp_section_name" parent="mpp_text">
+		<item name="android:background">@drawable/mpp_section_divider</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:gravity">center_vertical</item>
+		<item name="android:paddingLeft">8dip</item>
+		<item name="android:textSize">14sp</item>
+	</style>
+
+	<style name="mpp_section_content" parent="mpp_text">
+		<item name="android:paddingLeft">8dip</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">14sp</item>
+	</style>
+
 	<style name="mpp_fragment_title" parent="mpp_text">
 		<item name="android:textSize">@dimen/mpp_fragment_title_text_size</item>
 		<item name="android:gravity">center</item>
