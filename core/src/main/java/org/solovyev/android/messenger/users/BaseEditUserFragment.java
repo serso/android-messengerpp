@@ -18,10 +18,7 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.Account;
@@ -72,6 +69,14 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 		editButtons.onViewCreated(root, savedInstanceState);
+
+		final User user = getUser();
+		if (user != null) {
+			getMultiPaneManager().showTitle(getSherlockActivity(), this, user.getDisplayName());
+		} else {
+			getMultiPaneManager().showTitle(getSherlockActivity(), this, getString(R.string.mpp_new_contact));
+		}
+
 	}
 
 	@Override
