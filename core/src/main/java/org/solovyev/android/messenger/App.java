@@ -45,7 +45,7 @@ import javax.annotation.Nonnull;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public final class App {
+public final class App implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Nonnull
 	public static final String TAG = "M++";
@@ -115,9 +115,16 @@ public final class App {
 	@Nonnull
 	private Handler uiHandler;
 
+	@Nonnull
+	private MessengerTheme theme;
+
 	private void init0(@Nonnull Application application) {
 		this.application = application;
 		this.uiHandler = Threads.newUiHandler();
+
+		final SharedPreferences preferences = getPreferences();
+		preferences.registerOnSharedPreferenceChangeListener(this);
+		theme = getThemeFromPreferences();
 
 		RoboGuice.getBaseApplicationInjector(application).injectMembers(this);
 
@@ -138,6 +145,13 @@ public final class App {
 		accountConnectionsService.init();
 
 		networkStateService.startListening(application);
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+		if (MessengerPreferences.Gui.theme.isSameKey(key)) {
+			theme = MessengerPreferences.Gui.theme.getPreferenceNoError(getPreferences());
+		}
 	}
 
 	/*
@@ -269,6 +283,16 @@ public final class App {
 	@Nonnull
 	public static Class<? extends Activity> getMainActivityClass() {
 		return MainActivity.class;
+	}
+
+	@Nonnull
+	public static MessengerTheme getTheme() {
+		return instance.theme;
+	}
+
+	@Nonnull
+	public static MessengerTheme getThemeFromPreferences() {
+		return MessengerPreferences.Gui.theme.getPreferenceNoError(getPreferences());
 	}
 
 	/*

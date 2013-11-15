@@ -119,6 +119,9 @@
 	<string name="mpp_yesterday_at">Yesterday at</string>
 	<string name="mpp_menu_settings">Settings</string>
 	<string name="mpp_menu_accounts">Accounts</string>
+	<string name="mpp_preferences_theme_title">Theme</string>
+	<string name="mpp_preferences_theme_holo">Holo (Default)</string>
+	<string name="mpp_preferences_theme_holo_light_action_bar">Holo (Light Action Bar)</string>
 
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message.</item>

@@ -16,6 +16,7 @@
 
 package org.solovyev.android.messenger;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
+
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -47,9 +49,10 @@ import java.util.Stack;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.find;
 import static java.util.Arrays.asList;
+import static org.solovyev.android.Activities.restartActivity;
 import static org.solovyev.android.messenger.App.newTag;
 
-public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity {
+public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     /*
 	**********************************************************************
@@ -124,6 +127,9 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	private RoboListeners listeners;
 
+	@Nonnull
+	private MessengerTheme theme = MessengerTheme.holo;
+
     /*
     **********************************************************************
     *
@@ -192,6 +198,27 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	}
 
 	/*
+	**********************************************************************
+	*
+	*                           PREFERENCES
+	*
+	**********************************************************************
+	*/
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		tryUpdateTheme();
+	}
+
+	private void tryUpdateTheme() {
+		final MessengerTheme newTheme = App.getThemeFromPreferences();
+		if(!newTheme.equals(theme)) {
+			theme = newTheme;
+			restartActivity(this);
+		}
+	}
+
+	/*
     **********************************************************************
     *
     *                           LIFECYCLE
@@ -201,6 +228,9 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		theme = App.getTheme();
+		setTheme(theme.getThemeResId());
+
 		super.onCreate(savedInstanceState);
 
 		setContentView(layoutId);
@@ -382,6 +412,21 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 				return pf.getFragmentTag().equals(fragment.getTag());
 			}
 		}, null);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		tryUpdateTheme();
+		App.getPreferences().registerOnSharedPreferenceChangeListener(this);
+	}
+
+	@Override
+	protected void onPause() {
+		App.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
+
+		super.onPause();
 	}
 
 	@Override

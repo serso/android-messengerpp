@@ -28,6 +28,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import roboguice.RoboGuice;
@@ -55,7 +56,7 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 
 	@Nonnull
 	public static MultiPaneFragmentDef newPreferencesListFragmentDef(@Nonnull Context context, int preferencesResId, boolean addToBackStack) {
-		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, R.style.mpp_theme_holo_fragment);
+		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, App.getTheme().getContentThemeResId());
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MainPreferenceListFragment.class, context, arguments, PreferenceListFragmentReuseCondition.newInstance(preferencesResId));
 	}
 

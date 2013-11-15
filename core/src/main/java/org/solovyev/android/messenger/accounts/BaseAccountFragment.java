@@ -30,6 +30,7 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
@@ -128,7 +129,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_holo_fragment);
+		themeContext = new ContextThemeWrapper(activity, App.getTheme().getContentThemeResId());
 	}
 
 	@Override

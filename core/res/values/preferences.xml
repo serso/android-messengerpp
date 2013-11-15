@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<array name="mpp_theme_names">
+		<item>@string/mpp_preferences_theme_holo</item>
+		<item>@string/mpp_preferences_theme_holo_light_action_bar</item>
+	</array>
+
+	<array name="mpp_theme_keys">
+		<item>holo</item>
+		<item>holo_light_action_bar</item>
+	</array>
+
+</resources>

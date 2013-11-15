@@ -299,7 +299,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		themeContext = new ContextThemeWrapper(activity, R.style.mpp_theme_holo_fragment);
+		themeContext = new ContextThemeWrapper(activity, App.getTheme().getContentThemeResId());
 	}
 
 	@Override

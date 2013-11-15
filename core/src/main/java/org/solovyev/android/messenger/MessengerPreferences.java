@@ -22,7 +22,6 @@ import android.preference.PreferenceManager;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.prefs.BooleanPreference;
 import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
@@ -32,6 +31,7 @@ public final class MessengerPreferences {
 	public static void setDefaultValues(@Nonnull Context context) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+		Gui.theme.tryPutDefault(preferences);
 		Gui.Chat.Message.showIcon.tryPutDefault(preferences);
 
 	}
@@ -42,11 +42,15 @@ public final class MessengerPreferences {
 	}
 
 	public static final class Gui {
+
+		public static Preference<MessengerTheme> theme = StringPreference.ofEnum("gui.theme", MessengerTheme.holo, MessengerTheme.class);
+
 		public static final class Chat {
 
 			public static final class Message {
 				public static Preference<Boolean> showIcon = BooleanPreference.of("gui.chat.message.showIcon", false);
 			}
 		}
+
 	}
 }
