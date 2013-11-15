@@ -144,8 +144,9 @@ public class DefaultAccountConnectionsServiceTest {
 	}
 
 	@Test
-	public void testShouldNotifyUserIfNoInternet() throws Exception {
+	public void testShouldNotifyUserIfNoInternetAndExistsConnectionsRequiringInternet() throws Exception {
 		when(networkData.getState()).thenReturn(NOT_CONNECTED);
+		when(accountConnections.onNoInternetConnection()).thenReturn(true);
 		service.onNetworkEvent(networkData);
 
 		verify(notificationService, times(1)).add(Notifications.NO_INTERNET_NOTIFICATION);
