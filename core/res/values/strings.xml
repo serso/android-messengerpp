@@ -123,6 +123,8 @@
 	<string name="mpp_preferences_theme_holo">Holo (Default)</string>
 	<string name="mpp_preferences_theme_holo_light_action_bar">Holo (Light Action Bar)</string>
 	<string name="mpp_new_contact">New contact</string>
+	<string name="mpp_name">Name</string>
+	<string name="mpp_default_phone">Default phone</string>
 
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message.</item>

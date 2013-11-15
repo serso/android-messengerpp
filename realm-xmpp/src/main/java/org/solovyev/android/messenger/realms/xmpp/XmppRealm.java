@@ -30,15 +30,12 @@ import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -99,21 +96,6 @@ public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
-		final List<AProperty> result = new ArrayList<AProperty>(user.getPropertiesCollection().size());
-
-		for (AProperty property : user.getPropertiesCollection()) {
-			final String name = property.getName();
-			if (name.equals(User.PROPERTY_NICKNAME)) {
-				addUserProperty(context, result, R.string.mpp_nickname, property.getValue());
-			}
-		}
-
-		return result;
-	}
-
-	@Nonnull
-	@Override
 	public RealmIconService getRealmIconService() {
 		return new XmppRealmIconService(context, R.drawable.mpp_icon_user, R.drawable.mpp_icon_users);
 	}
@@ -125,7 +107,7 @@ public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           STATIC/INNER CLASSES
     *

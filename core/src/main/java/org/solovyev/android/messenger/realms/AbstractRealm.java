@@ -17,12 +17,19 @@
 package org.solovyev.android.messenger.realms;
 
 import android.content.Context;
-import org.solovyev.android.messenger.accounts.*;
+import com.google.common.base.Splitter;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.BaseEditUserFragment;
+import org.solovyev.android.messenger.users.Gender;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.properties.Properties.newProperty;
@@ -127,6 +134,39 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	@Override
 	public void init(@Nonnull Context context) {
 	}
+
+	@Nonnull
+	@Override
+	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
+		final List<AProperty> result = new ArrayList<AProperty>(user.getPropertiesCollection().size());
+
+		addUserProperty(context, result, R.string.mpp_name, user.getDisplayName());
+
+		final String nickname = user.getPropertyValueByName(User.PROPERTY_NICKNAME);
+		if (!isEmpty(nickname)) {
+			addUserProperty(context, result, R.string.mpp_nickname, nickname);
+		}
+
+		final String sex = user.getPropertyValueByName(User.PROPERTY_SEX);
+		if (!isEmpty(sex)) {
+			addUserProperty(context, result, R.string.mpp_sex, context.getString(Gender.valueOf(sex).getCaptionResId()));
+		}
+
+		final String defaultPhone = user.getPropertyValueByName(User.PROPERTY_PHONE);
+		if (!isEmpty(defaultPhone)) {
+			addUserProperty(context, result, R.string.mpp_default_phone, defaultPhone);
+		}
+
+		final String phones = user.getPropertyValueByName(User.PROPERTY_PHONES);
+		if (!isEmpty(phones)) {
+			for (String phone : Splitter.on(User.PROPERTY_PHONES_SEPARATOR).split(phones)) {
+				addUserProperty(context, result, R.string.mpp_phone, phone);
+			}
+		}
+
+		return result;
+	}
+
 
 	@Override
 	public boolean shouldWaitForDeliveryReport() {

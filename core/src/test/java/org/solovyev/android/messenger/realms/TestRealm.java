@@ -26,12 +26,10 @@ import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
 
 @Singleton
@@ -64,12 +62,6 @@ public class TestRealm extends AbstractRealm {
 	@Override
 	public AccountBuilder newAccountBuilder(@Nonnull AccountConfiguration configuration, @Nullable Account editedAccount) {
 		return new TestAccountBuilder(this, (TestAccountConfiguration) configuration, (TestAccount) editedAccount);
-	}
-
-	@Nonnull
-	@Override
-	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
-		return Collections.emptyList();
 	}
 
 	@Nonnull

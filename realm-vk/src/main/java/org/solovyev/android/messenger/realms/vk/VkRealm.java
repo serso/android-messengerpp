@@ -32,7 +32,6 @@ import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.notifications.Notifications;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.realms.vk.http.VkResponseErrorException;
-import org.solovyev.android.messenger.users.Gender;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.msg.MessageType;
@@ -45,18 +44,13 @@ import javax.crypto.SecretKey;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.notifications.Notifications.newNotification;
 import static org.solovyev.android.messenger.notifications.Notifications.newOpenAccountConfSolution;
 import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 8/12/12
- * Time: 10:34 PM
- */
 @Singleton
 public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 
@@ -143,27 +137,21 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	@Nonnull
 	@Override
 	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
-		final List<AProperty> result = new ArrayList<AProperty>(user.getPropertiesCollection().size());
+		final List<AProperty> result = super.getUserDisplayProperties(user, context);
 
-		for (AProperty property : user.getPropertiesCollection()) {
-			final String name = property.getName();
-			if (name.equals(User.PROPERTY_NICKNAME)) {
-				addUserProperty(context, result, R.string.mpp_nickname, property.getValue());
-			} else if (name.equals(User.PROPERTY_SEX)) {
-				result.add(newProperty(context.getString(R.string.mpp_sex), context.getString(Gender.valueOf(property.getValue()).getCaptionResId())));
-			} else if (name.equals("bdate")) {
-				final String birthDate = formatBirthDate(property.getValue());
-				if (birthDate != null) {
-					result.add(newProperty(context.getString(R.string.mpp_birth_date), birthDate));
-				}
+		final String bdate = user.getPropertyValueByName("bdate");
+		if (!isEmpty(bdate)) {
+			final String birthDate = formatBirthDate(bdate);
+			if (birthDate != null) {
+				result.add(newProperty(context.getString(R.string.mpp_birth_date), birthDate));
 			}
-
 		}
 
 		return result;
 	}
 
-	private String formatBirthDate(String value) {
+	@Nullable
+	private String formatBirthDate(@Nonnull String value) {
 		int dateParts = 1;
 		for (int i = 0; i < value.length(); i++) {
 			if (value.charAt(i) == '.') {

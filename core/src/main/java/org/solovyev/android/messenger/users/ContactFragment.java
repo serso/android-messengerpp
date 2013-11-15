@@ -23,6 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.menu.AMenuItem;
 import org.solovyev.android.menu.ActivityMenu;
@@ -38,13 +43,10 @@ import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import java.util.Map;
 
 import static android.view.View.GONE;
 import static org.solovyev.android.messenger.App.getUserService;
@@ -84,15 +86,22 @@ public class ContactFragment extends BaseUserFragment {
 		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
-		final List<AProperty> contactProperties = getAccountService().getUserProperties(contact, activity);
-		for (AProperty contactProperty : contactProperties) {
+
+		final Multimap<String, String> properties = ArrayListMultimap.create();
+		for (AProperty property : getAccountService().getUserProperties(contact, activity)) {
+			properties.put(property.getName(), property.getValue());
+		}
+
+		for (Map.Entry<String, Collection<String>> entry : properties.asMap().entrySet()) {
 			final View propertyView = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property).build(activity);
 
 			final TextView propertyLabel = (TextView) propertyView.findViewById(R.id.mpp_property_label);
-			propertyLabel.setText(contactProperty.getName());
+			propertyLabel.setText(entry.getKey());
 
-			final TextView propertyValue = (TextView) propertyView.findViewById(R.id.mpp_property_value);
-			propertyValue.setText(contactProperty.getValue());
+			for (String propertyValue : entry.getValue()) {
+				final TextView propertyValueTextView = (TextView) propertyView.findViewById(R.id.mpp_property_value);
+				propertyValueTextView.setText(propertyValue);
+			}
 
 			propertiesViewGroup.addView(propertyView);
 		}

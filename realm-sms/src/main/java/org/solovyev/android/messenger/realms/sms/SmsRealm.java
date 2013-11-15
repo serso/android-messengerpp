@@ -28,15 +28,12 @@ import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
-import java.util.Collections;
-import java.util.List;
 
 import static android.telephony.TelephonyManager.PHONE_TYPE_NONE;
 import static org.solovyev.android.messenger.App.newTag;
@@ -90,13 +87,6 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	@Override
 	public AccountBuilder newAccountBuilder(@Nonnull SmsAccountConfiguration configuration, @Nullable Account editedAccount) {
 		return new SmsAccountBuilder(this, (SmsAccount) editedAccount, configuration);
-	}
-
-	@Nonnull
-	@Override
-	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
-		// todo serso: implement
-		return Collections.emptyList();
 	}
 
 	@Override
