@@ -19,5 +19,4 @@
 <FrameLayout
 		xmlns:a="http://schemas.android.com/apk/res/android"
 		a:id="@+id/content_first_pane"
-		a:layout_width="match_parent"
-		a:layout_height="match_parent"/>
+		style="?mpp_content"/>

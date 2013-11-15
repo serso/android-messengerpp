@@ -116,8 +116,9 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 				break;
 			case UNKNOWN:
 			case NOT_CONNECTED:
-				notificationService.add(NO_INTERNET_NOTIFICATION);
-				accountConnections.onNoInternetConnection();
+				if (accountConnections.onNoInternetConnection()) {
+					notificationService.add(NO_INTERNET_NOTIFICATION);
+				}
 				break;
 		}
 	}

@@ -85,16 +85,12 @@ public class DefaultMultiPaneManager implements MultiPaneManager {
 				// border may add padding => set to zeros
 				pane.setPadding(0, 0, 0, 0);
 			} else if (this.isSecondPane(paneParent)) {
-				pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
+				// activity background should be used
 			} else if (this.isTriplePane(activity) && this.isThirdPane(paneParent)) {
 				if (Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
 					pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_left));
-				} else {
-					pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
 				}
 			}
-		} else {
-			pane.setBackgroundColor(context.getResources().getColor(R.color.mpp_bg));
 		}
 	}
 

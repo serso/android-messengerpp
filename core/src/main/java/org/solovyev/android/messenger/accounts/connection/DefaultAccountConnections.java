@@ -151,14 +151,19 @@ public final class DefaultAccountConnections implements AccountConnections {
 	}
 
 	@Override
-	public void onNoInternetConnection() {
+	public boolean onNoInternetConnection() {
+		boolean stopped = false;
+
 		synchronized (this.connections) {
 			for (AccountConnection connection : connections) {
 				if (connection.isInternetConnectionRequired() && !connection.isStopped()) {
+					stopped = true;
 					connection.stop();
 				}
 			}
 		}
+
+		return stopped;
 	}
 
 	@Override

@@ -139,7 +139,7 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-			App.getEventManager(context).fire(UiEventType.exit);
+			App.getEventManager(context).fire(UiEventType.exit.newEvent());
 		}
 	}
 

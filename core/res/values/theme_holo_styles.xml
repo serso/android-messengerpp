@@ -298,6 +298,14 @@
 		<item name="android:textSize">14sp</item>
 	</style>
 
+	<style name="mpp_content">
+		<item name="android:background">@color/mpp_bg</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">match_parent</item>
+		<item name="android:orientation">horizontal</item>
+		<item name="android:baselineAligned">false</item>
+	</style>
+
 	<style name="mpp_section_content" parent="mpp_text">
 		<item name="android:paddingLeft">8dip</item>
 		<item name="android:layout_width">match_parent</item>

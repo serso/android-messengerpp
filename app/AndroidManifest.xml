@@ -30,13 +30,17 @@
 	<uses-permission android:name="android.permission.READ_SMS"/>
 	<uses-permission android:name="android.permission.RECEIVE_SMS"/>
 
-	<!--<uses-permission android:name="com.android.vending.BILLING"/>-->
+	<supports-screens android:smallScreens="true"/>
+	<supports-screens android:normalScreens="true"/>
+	<supports-screens android:largeScreens="true"/>
+	<supports-screens android:xlargeScreens="true"/>
+	<supports-screens android:anyDensity="true"/>
 
 	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18"/>
 
 	<application android:allowBackup="true" android:debuggable="true" android:hardwareAccelerated="true" android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
 
-		<activity android:label="@string/mpp_app_short_name" android:name=".StartActivity" android:windowSoftInputMode="adjustPan">
+		<activity android:label="@string/mpp_app_name" android:name=".StartActivity" android:windowSoftInputMode="adjustPan">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

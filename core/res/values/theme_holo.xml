@@ -52,6 +52,7 @@
 		<item name="mpp_fragment_title">@style/mpp_fragment_title</item>
 		<item name="mpp_section_name">@style/mpp_section_name</item>
 		<item name="mpp_section_content">@style/mpp_section_content</item>
+		<item name="mpp_content">@style/mpp_content</item>
 
 		<item name="mpp_ab_search_icon">@drawable/mpp_ab_search</item>
 		<item name="mpp_ab_contact_icon">@drawable/mpp_ab_contact</item>

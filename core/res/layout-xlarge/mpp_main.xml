@@ -17,10 +17,7 @@
   -->
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  a:layout_width="match_parent"
-			  a:layout_height="match_parent"
-			  a:orientation="horizontal"
-			  a:baselineAligned="false">
+			  style="?mpp_content">
 
 	<FrameLayout
 			a:layout_width="0dp"

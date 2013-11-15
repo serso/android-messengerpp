@@ -30,7 +30,7 @@ public interface AccountConnections {
 
 	void tryStopAll();
 
-	void onNoInternetConnection();
+	boolean onNoInternetConnection();
 
 	void tryStopFor(@Nonnull Account account);
 
