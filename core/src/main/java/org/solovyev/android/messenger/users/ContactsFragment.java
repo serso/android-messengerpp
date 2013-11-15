@@ -43,7 +43,7 @@ public class ContactsFragment extends BaseContactsFragment {
 	@Override
 	protected BaseListItemAdapter<ContactListItem> createAdapter() {
 		Log.d(tag, "Creating adapter, filter text: " + getFilterText());
-		return new FoundContactsAdapter(getActivity(), isRecentContacts());
+		return new ContactsAdapter(getActivity(), isRecentContacts());
 	}
 
 	private boolean isRecentContacts() {
@@ -56,10 +56,10 @@ public class ContactsFragment extends BaseContactsFragment {
 		final CharSequence filterText = getFilterText();
 		Log.d(tag, "Creating loader, filter text: " + filterText);
 		if (!isEmpty(filterText)) {
-			((FoundContactsAdapter) adapter).setRecentContacts(false);
+			((ContactsAdapter) adapter).setRecentContacts(false);
 			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
 		} else {
-			((FoundContactsAdapter) adapter).setRecentContacts(true);
+			((ContactsAdapter) adapter).setRecentContacts(true);
 			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, maxContacts);
 		}
 	}

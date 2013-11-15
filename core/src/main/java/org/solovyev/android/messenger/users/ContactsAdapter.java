@@ -28,14 +28,14 @@ import java.util.Comparator;
 import static org.solovyev.android.messenger.users.Users.DEFAULT_CONTACTS_MODE;
 import static org.solovyev.common.Objects.areEqual;
 
-public class FoundContactsAdapter extends AbstractContactsAdapter {
+public class ContactsAdapter extends BaseContactsAdapter {
 
 	@Nonnull
 	private ContactFilter contactFilter = new ContactFilter(null, DEFAULT_CONTACTS_MODE);
 
 	private boolean recentContacts;
 
-	public FoundContactsAdapter(@Nonnull Context context, boolean recentContacts) {
+	public ContactsAdapter(@Nonnull Context context, boolean recentContacts) {
 		super(context, false);
 		this.recentContacts = recentContacts;
 	}

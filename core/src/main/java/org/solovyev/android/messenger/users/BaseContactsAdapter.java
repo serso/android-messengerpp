@@ -40,7 +40,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.ContactListItem.loadContactListItem;
 
-public abstract class AbstractContactsAdapter extends BaseListItemAdapter<ContactListItem> {
+public abstract class BaseContactsAdapter extends BaseListItemAdapter<ContactListItem> {
 
 	@Nonnull
 	private static final String TAG = newTag("ContactsAdapter");
@@ -51,11 +51,11 @@ public abstract class AbstractContactsAdapter extends BaseListItemAdapter<Contac
 	@Nonnull
 	private ContactsDisplayMode mode = Users.DEFAULT_CONTACTS_MODE;
 
-	public AbstractContactsAdapter(@Nonnull Context context) {
+	public BaseContactsAdapter(@Nonnull Context context) {
 		super(context, new ArrayList<ContactListItem>());
 	}
 
-	public AbstractContactsAdapter(@Nonnull Context context, boolean fastScrollEnabled) {
+	public BaseContactsAdapter(@Nonnull Context context, boolean fastScrollEnabled) {
 		super(context, new ArrayList<ContactListItem>(), fastScrollEnabled, true);
 	}
 

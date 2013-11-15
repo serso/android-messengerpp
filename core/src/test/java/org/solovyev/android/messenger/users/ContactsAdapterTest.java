@@ -29,11 +29,11 @@ import static org.robolectric.Robolectric.application;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 import static org.solovyev.common.Objects.areEqual;
 
-public class FoundContactsAdapterTest extends DefaultMessengerTest {
+public class ContactsAdapterTest extends DefaultMessengerTest {
 
 	@Test
 	public void testShouldUpdateUserPresence() throws Exception {
-		FoundContactsAdapter adapter = new FoundContactsAdapter(application, true);
+		ContactsAdapter adapter = new ContactsAdapter(application, true);
 
 		final AccountData ad = getAccountData1();
 		final List<User> contacts = ad.getContacts();
