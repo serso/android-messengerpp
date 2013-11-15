@@ -27,17 +27,17 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
 
-final class FindContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListItem> {
+final class ContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListItem> {
 
 	@Nullable
 	private String query;
 	private final int maxCount;
 
-	FindContactsAsyncLoader(@Nonnull Context context,
-							@Nonnull ListAdapter<ContactListItem> adapter,
-							@Nullable Runnable onPostExecute,
-							@Nullable String query,
-							int maxCount) {
+	ContactsAsyncLoader(@Nonnull Context context,
+						@Nonnull ListAdapter<ContactListItem> adapter,
+						@Nullable Runnable onPostExecute,
+						@Nullable String query,
+						int maxCount) {
 		super(context, adapter, onPostExecute);
 		this.query = query;
 		this.maxCount = maxCount;

@@ -57,7 +57,7 @@ public class ContactsFragment extends BaseContactsFragment {
 		Log.d(tag, "Creating loader, filter text: " + filterText);
 		if (!isEmpty(filterText)) {
 			((FoundContactsAdapter) adapter).setRecentContacts(false);
-			return new FindContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
+			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
 		} else {
 			((FoundContactsAdapter) adapter).setRecentContacts(true);
 			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, maxContacts);
