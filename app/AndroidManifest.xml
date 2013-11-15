@@ -36,6 +36,9 @@
 	<supports-screens android:xlargeScreens="true"/>
 	<supports-screens android:anyDensity="true"/>
 
+	<uses-feature android:name="android.hardware.wifi" android:required="false"/>
+	<uses-feature android:name="android.hardware.telephony" android:required="false"/>
+
 	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18"/>
 
 	<application android:allowBackup="true" android:debuggable="true" android:hardwareAccelerated="true" android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
