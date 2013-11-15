@@ -52,7 +52,7 @@ import static java.util.Arrays.asList;
 import static org.solovyev.android.Activities.restartActivity;
 import static org.solovyev.android.messenger.App.newTag;
 
-public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener, FragmentManager.OnBackStackChangedListener {
 
     /*
 	**********************************************************************
@@ -237,15 +237,18 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayUseLogoEnabled(false);
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(true);
+
+		getSupportFragmentManager().addOnBackStackChangedListener(this);
 
 		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
 
 		listeners = new RoboListeners(getEventManager());
 
+		onBackStackChanged();
 	}
 
 	protected void initFragments() {
@@ -465,5 +468,11 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		}
 
 		return null;
+	}
+
+	@Override
+	public void onBackStackChanged() {
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 }

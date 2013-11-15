@@ -224,6 +224,16 @@ public final class MainActivity extends BaseFragmentActivity {
 		return this.menu.onOptionsItemSelected(this, item);
 	}
 
+	@Override
+	public void onBackStackChanged() {
+		final ActionBar actionBar = getSupportActionBar();
+		if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		} else {
+			actionBar.setDisplayHomeAsUpEnabled(false);
+		}
+	}
+
 	private void changeTab(boolean next) {
 		final ActionBar actionBar = getSupportActionBar();
 		final int tabCount = actionBar.getTabCount();
