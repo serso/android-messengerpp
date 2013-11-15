@@ -24,7 +24,7 @@ import org.solovyev.android.messenger.chats.RecentChatsFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.PreferenceGroupsFragment;
 import org.solovyev.android.messenger.realms.RealmsFragment;
-import org.solovyev.android.messenger.users.FindContactsFragment;
+import org.solovyev.android.messenger.users.ContactsFragment;
 import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 public enum PrimaryFragment implements FragmentDef {
 
 	//contacts(MessengerContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_tab_contacts),
-	contacts(FindContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_tab_contacts),
+	contacts(ContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_tab_contacts),
 	//messages(MessengerChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
 	messages(RecentChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
 	accounts(AccountsFragment.class, AccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts),

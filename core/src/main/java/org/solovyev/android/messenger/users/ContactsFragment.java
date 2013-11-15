@@ -16,10 +16,8 @@
 
 package org.solovyev.android.messenger.users;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -32,7 +30,7 @@ import java.util.List;
 import static org.solovyev.android.messenger.users.Users.MAX_SEARCH_CONTACTS;
 import static org.solovyev.common.text.Strings.isEmpty;
 
-public class FindContactsFragment extends BaseContactsFragment {
+public class ContactsFragment extends BaseContactsFragment {
 
 	private int maxContacts = MAX_SEARCH_CONTACTS;
 
