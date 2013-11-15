@@ -26,14 +26,14 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.App.getChatService;
 
-public class RecentChatsAsyncLoader extends BaseAsyncLoader<UiChat, ChatListItem> {
+public class ChatsAsyncLoader extends BaseAsyncLoader<UiChat, ChatListItem> {
 
 	private final int maxCount;
 
-	public RecentChatsAsyncLoader(@Nonnull Context context,
-								  @Nonnull ListItemAdapter<ChatListItem> adapter,
-								  @Nullable Runnable onPostExecute,
-								  int maxCount) {
+	public ChatsAsyncLoader(@Nonnull Context context,
+							@Nonnull ListItemAdapter<ChatListItem> adapter,
+							@Nullable Runnable onPostExecute,
+							int maxCount) {
 		super(context, adapter, onPostExecute);
 		this.maxCount = maxCount;
 	}

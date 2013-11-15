@@ -23,9 +23,9 @@ import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 
-public class RecentChatsAdapter extends BaseChatsAdapter {
+public class ChatsAdapter extends BaseChatsAdapter {
 
-	public RecentChatsAdapter(@Nonnull Context context) {
+	public ChatsAdapter(@Nonnull Context context) {
 		super(context);
 	}
 

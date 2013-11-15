@@ -26,11 +26,11 @@ import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.MAX_RECENT_CHATS;
 
-public final class RecentChatsFragment extends BaseChatsFragment {
+public final class ChatsFragment extends BaseChatsFragment {
 
 	private int maxRecentChats = MAX_RECENT_CHATS;
 
-	public RecentChatsFragment() {
+	public ChatsFragment() {
 		super();
 	}
 
@@ -48,14 +48,14 @@ public final class RecentChatsFragment extends BaseChatsFragment {
 
 	@Nonnull
 	@Override
-	protected RecentChatsAdapter createAdapter() {
-		return new RecentChatsAdapter(getActivity());
+	protected ChatsAdapter createAdapter() {
+		return new ChatsAdapter(getActivity());
 	}
 
 	@Nonnull
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull BaseListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return new RecentChatsAsyncLoader(getActivity(), adapter, onPostExecute, maxRecentChats);
+		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, maxRecentChats);
 	}
 
 	@Override
