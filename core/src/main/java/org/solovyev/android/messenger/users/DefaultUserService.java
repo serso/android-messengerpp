@@ -47,6 +47,7 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
+import org.solovyev.common.text.Strings;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -61,6 +62,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
+import static org.solovyev.android.Threads.isUiThread;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UserEventType.added;
@@ -70,6 +72,7 @@ import static org.solovyev.android.messenger.users.UserEventType.contact_removed
 import static org.solovyev.android.messenger.users.UserEventType.contacts_changed;
 import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
+import static org.solovyev.common.text.Strings.fromStackTrace;
 
 @Singleton
 public class DefaultUserService implements UserService {
@@ -156,7 +159,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public User getUserById(@Nonnull Entity user) {
-		return getUserById(user, true);
+		return getUserById(user, false);
 	}
 
 	@Nonnull
@@ -184,12 +187,17 @@ public class DefaultUserService implements UserService {
 
 			if (result == null) {
 				if (tryFindInAccount) {
-					try {
-						final Account account = getAccountByEntity(user);
-						result = account.getAccountUserService().getUserById(user.getAccountEntityId());
-					} catch (AccountException e) {
-						// unable to load from realm => just return empty user
-						Log.e(TAG, e.getMessage(), e);
+					if (!isUiThread()) {
+						try {
+							final Account account = getAccountByEntity(user);
+							result = account.getAccountUserService().getUserById(user.getAccountEntityId());
+						} catch (AccountException e) {
+							// unable to load from realm => just return empty user
+							Log.e(TAG, e.getMessage(), e);
+						}
+					} else {
+						final Exception e = new Exception();
+						Log.e(TAG, "Trying to load users on UI thread " + fromStackTrace(e.getStackTrace()));
 					}
 				}
 			}
@@ -546,7 +554,7 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public int getUnreadMessagesCount(@Nonnull Entity contact) {
-		if (!Threads.isUiThread()) {
+		if (!isUiThread()) {
 			final Chat chat = chatService.getPrivateChat(getAccountByEntity(contact).getUser().getEntity(), contact);
 			if (chat != null) {
 				return unreadMessagesCounter.getUnreadMessagesCountForChat(chat.getEntity());

@@ -55,7 +55,7 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 
 		final Realm<C> realm = (Realm<C>) getRealmService().getRealmById(realmId);
 		// realm is not loaded => no way we can find user in realm services
-		final User user = getUserService().getUserById(Entities.newEntityFromEntityId(userId), false);
+		final User user = getUserService().getUserById(Entities.newEntityFromEntityId(userId));
 
 		final C encryptedConfiguration = new Gson().fromJson(configuration, realm.getConfigurationClass());
 

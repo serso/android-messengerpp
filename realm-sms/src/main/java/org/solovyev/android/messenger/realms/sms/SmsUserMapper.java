@@ -80,7 +80,7 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 		}
 
 		if (!account.isCompositeUserDefined(user)) {
-			final User oldUser = App.getUserService().getUserById(user.getEntity(), false);
+			final User oldUser = App.getUserService().getUserById(user.getEntity());
 			final String phone = oldUser.getPropertyValueByName(User.PROPERTY_PHONE);
 			if (!isEmpty(phone)) {
 				user.getProperties().setProperty(User.PROPERTY_PHONE, phone);

@@ -145,7 +145,7 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 
 	private void fillContactPresence(@Nonnull UiChat uiChat, @Nonnull ViewAwareTag viewTag, @Nonnull Context context) {
 		final Entity secondUser = uiChat.getChat().getSecondUser();
-		fillContactPresenceViews(context, viewTag, getUserService().getUserById(secondUser, false), uiChat.getAccount());
+		fillContactPresenceViews(context, viewTag, getUserService().getUserById(secondUser), uiChat.getAccount());
 	}
 
 	private void fillContactPresences(UiChat uiChat, ViewAwareTag viewTag) {
