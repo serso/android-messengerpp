@@ -16,19 +16,25 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  style="?mpp_fragment">
 
-	<TextView
-			a:id="@+id/mpp_fragment_title"
-			style="?mpp_fragment_title"
-			a:text="@string/mpp_chat_participants"/>
+<ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
+			a:layout_width="match_parent"
+			a:layout_height="match_parent">
 
-	<LinearLayout a:id="@+id/contacts_container"
-				  a:layout_width="match_parent"
-				  a:layout_height="match_parent"
-				  a:padding="5dp"
-				  a:gravity="top|center_horizontal"
-				  a:orientation="vertical"/>
+	<LinearLayout style="?mpp_fragment">
 
-</LinearLayout>
+		<TextView
+				a:id="@+id/mpp_fragment_title"
+				style="?mpp_fragment_title"
+				a:text="@string/mpp_chat_participants"/>
+
+		<LinearLayout a:id="@+id/contacts_container"
+					  a:layout_width="match_parent"
+					  a:layout_height="match_parent"
+					  a:padding="5dp"
+					  a:gravity="top|center_horizontal"
+					  a:orientation="vertical"/>
+
+	</LinearLayout>
+
+</ScrollView>
