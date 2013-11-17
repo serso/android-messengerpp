@@ -2,21 +2,20 @@ package org.solovyev.android.messenger;
 
 import android.os.Bundle;
 import android.view.View;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.MessengerListItem;
 import org.solovyev.common.listeners.JEventListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class BaseStaticListFragment<LI extends MessengerListItem> extends BaseListFragment<LI> {
 
 	@Nullable
 	private JEventListener<UserEvent> userEventListener;
 
-	public BaseStaticListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
-		super(tag, filterEnabled, selectFirstItemByDefault);
+	public BaseStaticListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault) {
+		super(tag, titleResId, filterEnabled, selectFirstItemByDefault);
 	}
 
 	@Override

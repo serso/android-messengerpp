@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -61,13 +60,11 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
-
 import roboguice.RoboGuice;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +141,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	public MessagesFragment() {
-		super(TAG, false, false);
+		super(TAG, R.string.mpp_chat, false, false);
 	}
 
 	@Nonnull
@@ -152,11 +149,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		final Bundle arguments = new Bundle();
 		arguments.putParcelable(ARG_CHAT, chat.getEntity());
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MessagesFragment.class, context, arguments, MessagesFragmentReuseCondition.forChat(chat));
-	}
-
-	@Override
-	protected void onEmptyList(@Nonnull BaseFragmentActivity activity) {
-		//do nothing
 	}
 
 	@Override

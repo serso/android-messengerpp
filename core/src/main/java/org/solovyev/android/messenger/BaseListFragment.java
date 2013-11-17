@@ -145,6 +145,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Nonnull
 	protected final String tag;
 
+	private final int titleResId;
+
 	@Nullable
 	private PublicPullToRefreshListView pullToRefreshListView;
 
@@ -195,7 +197,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
     **********************************************************************
     */
 
-	public BaseListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
+	public BaseListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault) {
+		this.titleResId = titleResId;
 		this.tag = newTag(tag);
 		if (filterEnabled) {
 			this.listViewFilter = new ListViewFilter(this, this);
@@ -330,10 +333,15 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		params.gravity = CENTER_VERTICAL;
 		root.addView(listViewParent, params);
 
-		// some fragments may change the title and icon of action bar => we need to reset it every time new fragment is shown
-		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setTitle(getActivity().getTitle());
-		actionBar.setIcon(R.drawable.mpp_app_icon);
+		if (!getMultiPaneManager().isDualPane(getActivity())) {
+			// only one pane is shown => can update action bar options
+			updateActionBar();
+		} else {
+			// several panes are shown
+			if (getId() != R.id.content_first_pane) {
+				updateActionBar();
+			}
+		}
 
 		multiPaneManager.onCreatePane(getActivity(), container, root);
 
@@ -342,6 +350,12 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		viewWasCreated = true;
 
 		return root;
+	}
+
+	private void updateActionBar() {
+		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+		actionBar.setTitle(titleResId);
+		actionBar.setIcon(R.drawable.mpp_app_icon);
 	}
 
 	@Override
@@ -669,9 +683,13 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	protected void onEmptyList(@Nonnull BaseFragmentActivity activity) {
-		activity.getMultiPaneFragmentManager().emptifySecondFragment();
-		if(multiPaneManager.isTriplePane(activity)) {
-			activity.getMultiPaneFragmentManager().emptifyThirdFragment();
+		if (getId() == R.id.content_first_pane) {
+			activity.getMultiPaneFragmentManager().emptifySecondFragment();
+			if (multiPaneManager.isTriplePane(activity)) {
+				activity.getMultiPaneFragmentManager().emptifyThirdFragment();
+			}
+
+			updateActionBar();
 		}
 	}
 

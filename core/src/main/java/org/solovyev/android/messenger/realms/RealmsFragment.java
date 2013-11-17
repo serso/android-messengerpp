@@ -22,6 +22,7 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.BaseStaticListFragment;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
@@ -39,7 +40,7 @@ public class RealmsFragment extends BaseStaticListFragment<RealmListItem> implem
 	private RealmService realmService;
 
 	public RealmsFragment() {
-		super("Realms", false, true);
+		super("Realms", R.string.mpp_accounts, false, true);
 	}
 
 	@Override

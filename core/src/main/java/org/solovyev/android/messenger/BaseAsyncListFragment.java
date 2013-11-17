@@ -1,18 +1,13 @@
 package org.solovyev.android.messenger;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.MessengerListItem;
 import org.solovyev.common.listeners.JEventListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> extends BaseListFragment<LI> {
 
@@ -24,8 +19,8 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	@Nullable
 	private JEventListener<UserEvent> userEventListener;
 
-	public BaseAsyncListFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
-		super(tag, filterEnabled, selectFirstItemByDefault);
+	public BaseAsyncListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault) {
+		super(tag, titleResId, filterEnabled, selectFirstItemByDefault);
 	}
 
 	@Override

@@ -17,25 +17,23 @@
 package org.solovyev.android.messenger.preferences;
 
 import android.support.v4.app.Fragment;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.BaseStaticListFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
 public final class PreferenceGroupsFragment extends BaseStaticListFragment<PreferenceGroupListItem> implements DetachableFragment {
 
 	public static final String FRAGMENT_TAG = "preference-groups";
 
 	public PreferenceGroupsFragment() {
-		super(FRAGMENT_TAG, false, true);
+		super(FRAGMENT_TAG, R.string.mpp_preferences, false, true);
 	}
 
 	@Nullable
@@ -53,7 +51,7 @@ public final class PreferenceGroupsFragment extends BaseStaticListFragment<Prefe
 	@Override
 	protected boolean canReuseFragment(@Nonnull Fragment fragment, @Nonnull PreferenceGroupListItem selectedItem) {
 		boolean canReuse = false;
-		if(fragment instanceof PreferenceListFragment) {
+		if (fragment instanceof PreferenceListFragment) {
 			canReuse = selectedItem.getPreferenceGroup().getPreferencesResId() == ((PreferenceListFragment) fragment).getPreferencesResId();
 		}
 		return canReuse;

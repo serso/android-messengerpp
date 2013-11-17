@@ -125,6 +125,11 @@
 	<string name="mpp_new_contact">New contact</string>
 	<string name="mpp_name">Name</string>
 	<string name="mpp_default_phone">Default phone</string>
+	<string name="mpp_accounts">Accounts</string>
+	<string name="mpp_preferences">Settings</string>
+	<string name="mpp_messages">Messages</string>
+	<string name="mpp_contacts">Contacts</string>
+	<string name="mpp_chat">Chat</string>
 
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message.</item>

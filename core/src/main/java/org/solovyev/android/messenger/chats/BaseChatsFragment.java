@@ -19,10 +19,6 @@ package org.solovyev.android.messenger.chats;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -59,7 +55,7 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 	private JEventListener<ChatEvent> chatEventListener;
 
 	public BaseChatsFragment() {
-		super(TAG, true, true);
+		super(TAG, R.string.mpp_messages, true, true);
 	}
 
 	@Override

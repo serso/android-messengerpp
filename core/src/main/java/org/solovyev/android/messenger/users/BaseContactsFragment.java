@@ -18,10 +18,6 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -29,7 +25,6 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseAsyncListFragment;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
@@ -40,6 +35,8 @@ import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.App.showToast;
@@ -53,7 +50,7 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	public BaseContactsFragment() {
-		super(TAG, true, true);
+		super(TAG, R.string.mpp_contacts, true, true);
 
 		setHasOptionsMenu(true);
 	}
