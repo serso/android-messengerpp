@@ -16,16 +16,11 @@
 
 package org.solovyev.android.messenger.sync;
 
+import org.solovyev.android.messenger.accounts.Account;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.accounts.Account;
-
-/**
- * User: serso
- * Date: 6/8/12
- * Time: 6:14 PM
- */
 public interface SyncService {
 
 	/**
@@ -40,6 +35,8 @@ public interface SyncService {
 	 * @throws SyncAllTaskIsAlreadyRunning if task for synchronization is already running
 	 */
 	void syncAll(boolean force) throws SyncAllTaskIsAlreadyRunning;
+
+	boolean isSyncAllTaskRunning();
 
 	/**
 	 * Method runs all synchronization tasks for specified <var>realm</var>

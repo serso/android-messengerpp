@@ -21,9 +21,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 
@@ -64,7 +64,7 @@ public final class DefaultAccountConnections implements AccountConnections {
 	static final String TAG = newTag("AccountConnections");
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           FIELDS
     *
@@ -129,12 +129,19 @@ public final class DefaultAccountConnections implements AccountConnections {
 		postStartExecutor.schedule(new Runnable() {
 			@Override
 			public void run() {
+				// after account connection is started we have to check user presences and new messages
+				final SyncService syncService = getSyncService();
+
 				try {
-					// after realm connection is started we have to check user presences
-					getSyncService().sync(SyncTask.user_contacts_statuses, null);
+					syncService.sync(SyncTask.user_contacts_statuses, null);
 				} catch (TaskIsAlreadyRunningException e) {
-					// do not care
 				}
+
+				try {
+					syncService.sync(SyncTask.user_chats, null);
+				} catch (TaskIsAlreadyRunningException e) {
+				}
+
 			}
 		}, POST_START_DELAY, TimeUnit.SECONDS);
 	}
@@ -182,7 +189,7 @@ public final class DefaultAccountConnections implements AccountConnections {
 		synchronized (this.connections) {
 			for (AccountConnection connection : connections) {
 				if (connection.isStopped()) {
-					if(!connection.isInternetConnectionRequired() || internetConnectionExists) {
+					if (!connection.isInternetConnectionRequired() || internetConnectionExists) {
 						startConnection(connection);
 					}
 				}

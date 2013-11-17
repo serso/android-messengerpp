@@ -30,6 +30,7 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.Realms;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
+import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.PersistenceLock;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -51,9 +52,7 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
-import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;
-import static org.solovyev.android.messenger.accounts.AccountState.enabled;
-import static org.solovyev.android.messenger.accounts.AccountState.removed;
+import static org.solovyev.android.messenger.accounts.AccountState.*;
 
 @Singleton
 public class DefaultAccountService implements AccountService {
@@ -85,6 +84,10 @@ public class DefaultAccountService implements AccountService {
 
 	@Inject
 	@Nonnull
+	private SyncService syncService;
+
+	@Inject
+	@Nonnull
 	private MessageService messageService;
 
 	@Nonnull
@@ -104,6 +107,15 @@ public class DefaultAccountService implements AccountService {
 	public DefaultAccountService(@Nonnull PersistenceLock lock, @Nonnull Executor eventExecutor) {
 		this.lock = lock;
 		this.listeners = Listeners.newEventListenersBuilderFor(AccountEvent.class).withHardReferences().withExecutor(eventExecutor).create();
+	}
+
+	public void waitWhileSyncFinished() {
+		while (syncService.isSyncAllTaskRunning()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 
 	@Override
@@ -200,6 +212,8 @@ public class DefaultAccountService implements AccountService {
 	@Nonnull
 	@Override
 	public <A extends Account> A saveAccount(@Nonnull AccountBuilder<A> accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException {
+		waitWhileSyncFinished();
+
 		A result;
 
 		try {
@@ -337,6 +351,8 @@ public class DefaultAccountService implements AccountService {
 
 	@Override
 	public void removeAccount(@Nonnull String accountId) {
+		waitWhileSyncFinished();
+
 		final Account account;
 
 		synchronized (accounts) {

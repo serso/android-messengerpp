@@ -24,11 +24,6 @@ import org.solovyev.common.listeners.Listeners;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
-/**
- * User: serso
- * Date: 3/23/13
- * Time: 5:26 PM
- */
 @Singleton
 public final class DefaultMessengerListeners implements MessengerListeners {
 

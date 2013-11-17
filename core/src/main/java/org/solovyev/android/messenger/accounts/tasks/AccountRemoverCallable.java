@@ -22,11 +22,6 @@ import org.solovyev.android.messenger.accounts.Account;
 import javax.annotation.Nonnull;
 import java.util.concurrent.Callable;
 
-/**
- * User: serso
- * Date: 4/13/13
- * Time: 1:02 PM
- */
 public final class AccountRemoverCallable implements Callable<Account> {
 
 	@Nonnull

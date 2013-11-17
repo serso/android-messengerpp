@@ -113,7 +113,7 @@ public enum SyncTask {
 
 			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
 			final DateTime lastChatsSyncDate = user.getUserSyncData().getLastChatsSyncDate();
-			if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(24).isBefore(DateTime.now())) {
+			if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(1).isBefore(DateTime.now())) {
 				result = true;
 			}
 

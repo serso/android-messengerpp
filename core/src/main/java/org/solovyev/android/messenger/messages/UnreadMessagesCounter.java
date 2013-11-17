@@ -16,6 +16,23 @@
 
 package org.solovyev.android.messenger.messages;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import org.solovyev.android.messenger.MessengerEventType;
+import org.solovyev.android.messenger.MessengerListeners;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountEvent;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.PersistenceLock;
+import org.solovyev.common.listeners.AbstractJEventListener;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -25,31 +42,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import org.solovyev.android.messenger.MessengerEventType;
-import org.solovyev.android.messenger.MessengerListeners;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatEvent;
-import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.PersistenceLock;
-import org.solovyev.common.listeners.JEventListener;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-/**
- * User: serso
- * Date: 3/23/13
- * Time: 3:49 PM
- */
-
 @Singleton
-public final class UnreadMessagesCounter implements JEventListener<ChatEvent> {
+public final class UnreadMessagesCounter {
 
     /*
 	**********************************************************************
@@ -116,36 +110,30 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent> {
 	}
 
 	public void init() {
+		updateCounters();
+
+		chatService.addListener(new ChatEventListener());
+		accountService.addListener(new AccountEventListener());
+	}
+
+	private void updateCounters() {
 		synchronized (lock) {
+			countersByChats.clear();
+			counter.set(0);
+
 			for (Map.Entry<Entity, Integer> entry : chatService.getUnreadChats().entrySet()) {
 				final Integer unreadInChat = entry.getValue();
 				if (unreadInChat > 0) {
-					countersByChats.put(entry.getKey(), new AtomicInteger(unreadInChat));
-					counter.addAndGet(unreadInChat);
+					final Entity chat = entry.getKey();
+					final Account account = accountService.getAccountByEntity(chat);
+					if (account.isEnabled()) {
+						countersByChats.put(chat, new AtomicInteger(unreadInChat));
+						counter.addAndGet(unreadInChat);
+					}
 				}
 			}
-		}
-		chatService.addListener(this);
-	}
 
-	@Nonnull
-	@Override
-	public Class<ChatEvent> getEventType() {
-		return ChatEvent.class;
-	}
-
-	@Override
-	public void onEvent(@Nonnull ChatEvent event) {
-		switch (event.getType()) {
-			case message_read:
-				handleReadMessage(event.getChat());
-				break;
-			case message_added:
-				handleNewMessages(event.getChat(), Arrays.asList(event.getDataAsMessage()));
-				break;
-			case messages_added:
-				handleNewMessages(event.getChat(), event.getDataAsMessages());
-				break;
+			fireCounterChanged(false);
 		}
 	}
 
@@ -248,6 +236,51 @@ public final class UnreadMessagesCounter implements JEventListener<ChatEvent> {
 				return 0;
 			} else {
 				return counterByChat.get();
+			}
+		}
+	}
+
+	private final class ChatEventListener extends AbstractJEventListener<ChatEvent> {
+
+		private ChatEventListener() {
+			super(ChatEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull ChatEvent event) {
+			switch (event.getType()) {
+				case message_read:
+					handleReadMessage(event.getChat());
+					break;
+				case message_added:
+					handleNewMessages(event.getChat(), Arrays.asList(event.getDataAsMessage()));
+					break;
+				case messages_added:
+					handleNewMessages(event.getChat(), event.getDataAsMessages());
+					break;
+			}
+		}
+	}
+
+	private final class AccountEventListener extends AbstractJEventListener<AccountEvent> {
+
+		private AccountEventListener() {
+			super(AccountEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull AccountEvent event) {
+			final Account account = event.getAccount();
+			switch (event.getType()) {
+				case state_changed:
+					switch (account.getState()) {
+						case removed:
+						case disabled_by_app:
+						case disabled_by_user:
+							updateCounters();
+							break;
+					}
+					break;
 			}
 		}
 	}

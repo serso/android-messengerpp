@@ -16,16 +16,10 @@
 
 package org.solovyev.android.messenger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.common.msg.Message;
 
-/**
- * User: serso
- * Date: 3/23/13
- * Time: 5:17 PM
- */
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Common messenger events

@@ -34,11 +34,6 @@ import java.util.List;
 import static android.app.PendingIntent.getActivity;
 import static org.solovyev.android.messenger.StartActivity.newUnreadMessagesStartIntent;
 
-/**
- * User: serso
- * Date: 3/25/13
- * Time: 12:09 AM
- */
 @Singleton
 public final class UnreadMessagesNotifier extends AbstractJEventListener<MessengerEvent> {
 
