@@ -66,6 +66,9 @@ public final class NewContactActivity extends BaseFragmentActivity {
 			switch (event.getType()) {
 				case account_picked:
 					tryShowCreateUserFragment(account);
+					if (isTriplePane()) {
+						getMultiPaneFragmentManager().emptifyThirdFragment();
+					}
 					break;
 			}
 		}

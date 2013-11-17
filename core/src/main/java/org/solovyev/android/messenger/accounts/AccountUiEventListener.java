@@ -42,7 +42,7 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 
 		switch (event.getType()) {
 			case show_account:
-				onAccountViewRequestedEvent(account);
+				onShowAccountEvent(account);
 				break;
 			case edit_account:
 				onAccountEditRequestedEvent(account);
@@ -63,7 +63,7 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 		}
 	}
 
-	private void onAccountViewRequestedEvent(@Nonnull Account account) {
+	private void onShowAccountEvent(@Nonnull Account account) {
 		MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
 
 		if (activity.isDualPane()) {
