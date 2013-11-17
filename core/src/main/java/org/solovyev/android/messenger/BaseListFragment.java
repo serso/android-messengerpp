@@ -41,6 +41,7 @@ import org.solovyev.android.list.ListViewScrollerListener;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -686,9 +687,12 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	protected void onEmptyList(@Nonnull BaseFragmentActivity activity) {
 		if (getId() == R.id.content_first_pane) {
-			activity.getMultiPaneFragmentManager().emptifySecondFragment();
-			if (multiPaneManager.isTriplePane(activity)) {
-				activity.getMultiPaneFragmentManager().emptifyThirdFragment();
+			if (getMultiPaneManager().isDualPane(activity)) {
+				final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
+				mpfm.emptifySecondFragment();
+				if (multiPaneManager.isTriplePane(activity)) {
+					mpfm.emptifyThirdFragment();
+				}
 			}
 
 			updateActionBar();
