@@ -549,6 +549,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Override
 	public void onPause() {
 		listeners.clearAll();
+		restoredAdapterSelection = adapter.getSelectionHelper().getSelection();
 		super.onPause();
 	}
 
