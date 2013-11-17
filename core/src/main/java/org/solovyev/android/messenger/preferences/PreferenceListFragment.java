@@ -23,11 +23,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.ListFragment;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.view.*;
 import android.widget.ListView;
 
 import javax.annotation.Nonnull;
@@ -106,7 +102,7 @@ public class PreferenceListFragment extends ListFragment {
 		return root;
 	}
 
-	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nullable Bundle b) {
+	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nullable ViewGroup container, @Nullable Bundle b) {
 	}
 
 	@Override

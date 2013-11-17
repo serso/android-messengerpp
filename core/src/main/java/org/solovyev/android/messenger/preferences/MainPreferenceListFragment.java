@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
@@ -77,7 +76,7 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 	}
 
 	@Override
-	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nonnull ViewGroup container, @Nullable Bundle b) {
+	protected void onCreateView(@Nonnull Context context, @Nonnull LayoutInflater inflater, @Nonnull View root, @Nullable ViewGroup container, @Nullable Bundle b) {
 		super.onCreateView(context, inflater, root, container, b);
 
 		multiPaneManager.onCreatePane(getActivity(), container, root);
