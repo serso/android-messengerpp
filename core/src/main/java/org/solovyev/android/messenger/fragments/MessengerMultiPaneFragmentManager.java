@@ -17,8 +17,6 @@
 package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import org.solovyev.android.fragments.FragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.BaseFragmentActivity;
@@ -73,22 +71,5 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 	public void clearBackStack() {
 		final FragmentManager fm = getActivity().getSupportFragmentManager();
 		fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-	}
-
-	@Override
-	protected void setFragment(int fragmentViewId, @Nonnull MultiPaneFragmentDef mpfd) {
-		if (fragmentViewId == R.id.content_first_pane) {
-			removeFragment(R.id.content_second_pane);
-			removeFragment(R.id.content_third_pane);
-		}
-
-		super.setFragment(fragmentViewId, mpfd);
-	}
-
-	@Override
-	public void setMainFragment(@Nonnull FragmentDef fragmentDef, @Nonnull FragmentManager fm, @Nonnull FragmentTransaction ft) {
-		removeFragment(R.id.content_second_pane);
-		removeFragment(R.id.content_third_pane);
-		super.setMainFragment(fragmentDef, fm, ft);
 	}
 }
