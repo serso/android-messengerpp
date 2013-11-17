@@ -64,6 +64,7 @@ import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
 import static org.solovyev.android.messenger.AdapterSelection.newSelection;
 import static org.solovyev.android.messenger.App.newTag;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 public abstract class BaseListFragment<LI extends MessengerListItem>
 		extends RoboSherlockListFragment
@@ -753,8 +754,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		public void run() {
 			final BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
 			if (activity != null) {
-				// todo serso: onEmptyList causes keyboard to hide
-				//onEmptyList(activity);
+				if (isEmpty(adapter.getFilterText())) {
+					// only for lists which have become empty because of lack of items (and not because of filter)
+					onEmptyList(activity);
+				}
 			}
 		}
 	}
