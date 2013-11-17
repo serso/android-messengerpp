@@ -24,18 +24,13 @@ public enum AccountUiEventType {
 	/**
 	 * Fired when account view is requested (e.g. account is clicked in the list of accounts)
 	 */
-	account_view_requested,
+	show_account,
 	account_picked,
-
-	/**
-	 * Fired when account view is cancelled (e.g. user pressed 'Back' button)
-	 */
-	account_view_cancelled,
 
 	/**
 	 * Fired when editing of account is requested (e.g. 'Edit' button clicked)
 	 */
-	account_edit_requested,
+	edit_account,
 
 	/**
 	 * Fired when editing of account is finished (e.g. user pressed 'Back' or 'Save' button)

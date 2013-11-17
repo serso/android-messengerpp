@@ -37,12 +37,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static android.view.View.*;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUiHandler;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
-import static org.solovyev.android.messenger.users.BaseEditUserFragment.newCreateUserFragmentDef;
 import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserFragmentDef;
 import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
 import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
@@ -147,21 +147,6 @@ public final class Users {
 				properties.add(newProperty(User.PROPERTY_FIRST_NAME, fullName));
 			}
 		}
-	}
-
-	public static boolean tryShowCreateUserFragment(@Nonnull Account account, @Nonnull BaseFragmentActivity activity) {
-		final Realm realm = account.getRealm();
-		if (realm.canCreateUsers()) {
-			final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-			if (activity.isDualPane()) {
-				mpfm.setSecondFragment(newCreateUserFragmentDef(activity, account, false));
-			} else {
-				mpfm.setMainFragment(newCreateUserFragmentDef(activity, account, true));
-			}
-			return true;
-		}
-
-		return false;
 	}
 
 	public static boolean tryShowEditUserFragment(@Nonnull final User user, @Nonnull final BaseFragmentActivity activity) {

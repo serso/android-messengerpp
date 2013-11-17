@@ -21,11 +21,6 @@ import org.solovyev.common.listeners.AbstractTypedJEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 8/16/12
- * Time: 1:07 AM
- */
 public class ContactUiEvent extends AbstractTypedJEvent<User, ContactUiEventType> {
 
 	public ContactUiEvent(@Nonnull User contact, @Nonnull ContactUiEventType type, @Nullable Object data) {

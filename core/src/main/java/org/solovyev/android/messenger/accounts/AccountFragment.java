@@ -37,8 +37,7 @@ import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_requested;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_cancelled;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
 
 public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
@@ -54,7 +53,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	public static final String FRAGMENT_TAG = "account";
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
@@ -106,7 +105,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		backButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				eventManager.fire(account_view_cancelled.newEvent(account));
+				getFragmentActivity().getSupportFragmentManager().popBackStack();
 			}
 		});
 		if (multiPaneManager.isDualPane(getActivity())) {
@@ -147,7 +146,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 				changeState();
 			}
 		});
-		if(!realm.isEnabled()) {
+		if (!realm.isEnabled()) {
 			changeStateButton.setEnabled(false);
 		}
 
@@ -172,7 +171,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	}
 
 	private void editAccount() {
-		eventManager.fire(account_edit_requested.newEvent(getAccount()));
+		eventManager.fire(edit_account.newEvent(getAccount()));
 	}
 
 	private void removeAccount() {

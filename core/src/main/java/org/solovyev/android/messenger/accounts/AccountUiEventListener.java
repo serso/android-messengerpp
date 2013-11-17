@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.accounts;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.android.messenger.users.Users;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -28,11 +27,6 @@ import static org.solovyev.android.messenger.accounts.AccountFragment.newAccount
 import static org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment.newEditAccountConfigurationFragmentDef;
 
 
-/**
- * User: serso
- * Date: 3/5/13
- * Time: 1:50 PM
- */
 public final class AccountUiEventListener implements EventListener<AccountUiEvent> {
 
 	@Nonnull
@@ -47,26 +41,16 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 		final Account account = event.getAccount();
 
 		switch (event.getType()) {
-			case account_view_requested:
+			case show_account:
 				onAccountViewRequestedEvent(account);
 				break;
-			case account_view_cancelled:
-				onAccountViewCancelledEvent(account);
-				break;
-			case account_edit_requested:
+			case edit_account:
 				onAccountEditRequestedEvent(account);
 				break;
 			case account_edit_finished:
 				onAccountEditFinishedEvent(event);
 				break;
-			case account_picked:
-				Users.tryShowCreateUserFragment(account, activity);
-				break;
 		}
-	}
-
-	private void onAccountViewCancelledEvent(@Nonnull Account account) {
-		activity.getSupportFragmentManager().popBackStack();
 	}
 
 	private void onAccountEditRequestedEvent(@Nonnull Account account) {

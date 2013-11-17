@@ -17,4 +17,5 @@
 <resources>
 	<string name="mpp_activity_settings">M++ Settings</string>
 	<string name="mpp_activity_accounts">M++ Accounts</string>
+	<string name="mpp_activity_new_contact">M++ New Contact</string>
 </resources>

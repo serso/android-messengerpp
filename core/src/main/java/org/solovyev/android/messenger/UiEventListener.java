@@ -17,15 +17,10 @@
 package org.solovyev.android.messenger;
 
 import com.actionbarsherlock.app.ActionBar;
-import org.solovyev.android.messenger.accounts.Account;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 
-import static org.solovyev.android.messenger.App.getAccountService;
-import static org.solovyev.android.messenger.accounts.PickAccountFragment.newPickAccountArguments;
-import static org.solovyev.android.messenger.fragments.PrimaryFragment.pick_account;
 import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
 import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 
@@ -63,11 +58,7 @@ public class UiEventListener implements EventListener<UiEvent> {
 	}
 
 	private void onNewContactEvent() {
-		final Collection<Account> accounts = getAccountService().getAccountsCreatingUsers();
-		final int size = accounts.size();
-		if (size > 0) {
-			activity.getMultiPaneFragmentManager().setMainFragment(pick_account, newPickAccountArguments(accounts));
-		}
+		NewContactActivity.start(activity);
 	}
 
 	private void onNewMessageEvent() {

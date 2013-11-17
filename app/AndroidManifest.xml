@@ -47,7 +47,8 @@
 				 android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name"
 				 android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
 
-	<activity android:label="@string/mpp_app_name" android:name=".StartActivity" android:windowSoftInputMode="adjustPan">
+		<activity android:label="@string/mpp_app_name" android:name=".StartActivity"
+				  android:windowSoftInputMode="adjustPan">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -66,9 +67,14 @@
 		</activity>
 
 
-		<activity android:label="@string/mpp_app_short_name" android:launchMode="singleTask" android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
-		<activity android:label="@string/mpp_activity_settings" android:launchMode="singleTask" android:name=".SettingsActivity" android:windowSoftInputMode="stateHidden"/>
-		<activity android:label="@string/mpp_activity_accounts" android:launchMode="singleTask" android:name=".AccountsActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_app_short_name" android:launchMode="singleTask"
+				  android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_activity_settings" android:launchMode="singleTask"
+				  android:name=".SettingsActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_activity_accounts" android:launchMode="singleTask"
+				  android:name=".AccountsActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_activity_new_contact" android:launchMode="singleTask"
+				  android:name=".NewContactActivity" android:windowSoftInputMode="stateHidden"/>
 
 		<service android:name=".OngoingNotificationService"/>
 

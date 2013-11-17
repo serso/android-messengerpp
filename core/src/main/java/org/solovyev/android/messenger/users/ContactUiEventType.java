@@ -19,11 +19,6 @@ package org.solovyev.android.messenger.users;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 8/16/12
- * Time: 1:07 AM
- */
 public enum ContactUiEventType {
 
 	contact_clicked,

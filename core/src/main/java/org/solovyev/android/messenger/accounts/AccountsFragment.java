@@ -18,31 +18,23 @@ package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import org.solovyev.android.messenger.App;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.solovyev.android.messenger.UiEventType.show_realms;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_view_requested;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.show_account;
 
 public class AccountsFragment extends BaseAccountsFragment {
 
@@ -68,10 +60,10 @@ public class AccountsFragment extends BaseAccountsFragment {
 		final List<AccountListItem> listItems = new ArrayList<AccountListItem>();
 		for (Account account : getAccountService().getAccounts()) {
 			if (account.getState() != AccountState.removed) {
-				listItems.add(new AccountListItem(account, account_view_requested));
+				listItems.add(new AccountListItem(account, show_account));
 			}
 		}
-		return new AccountsAdapter(getActivity(), listItems, true, account_view_requested);
+		return new AccountsAdapter(getActivity(), listItems, true, show_account);
 	}
 
     /*
