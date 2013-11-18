@@ -35,7 +35,7 @@ import org.solovyev.android.messenger.view.ViewAwareTag;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static android.view.View.INVISIBLE;
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUserService;
@@ -149,10 +149,12 @@ public class ChatListItem extends AbstractMessengerListItem<UiChat> {
 
 	private void fillContactPresences(UiChat uiChat, ViewAwareTag viewTag) {
 		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
+		viewTag.getViewById(R.id.mpp_li_contact_call_view).setVisibility(GONE);
+		viewTag.getViewById(R.id.mpp_li_contact_divider_view).setVisibility(GONE);
 		if (uiChat.isOnline()) {
 			contactOnline.setVisibility(VISIBLE);
 		} else {
-			contactOnline.setVisibility(INVISIBLE);
+			contactOnline.setVisibility(GONE);
 		}
 	}
 
