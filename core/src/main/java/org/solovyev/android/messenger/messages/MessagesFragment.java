@@ -302,7 +302,10 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		final Message message = trySendMessage(getActivity(), account, chat, recipient, toHtml(messageEditText.getText()));
 		if (message != null) {
 			messageEditText.setText("");
-			getAdapter().addSendingMessage(message);
+			final MessagesAdapter adapter = getAdapter();
+			adapter.addSendingMessage(message);
+			getListView().smoothScrollToPosition(adapter.getCount());
+
 		}
 	}
 
