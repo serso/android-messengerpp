@@ -125,7 +125,7 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 									chat = newAccountChat(chatId, true);
 
 									chat.addParticipant(user);
-									chat.addParticipant(userService.getUserById(secondUser));
+									chat.addParticipant(userService.getUserById(secondUser, true));
 
 									fakeChats.put(chatId.getEntityId(), chat);
 								}
@@ -148,7 +148,7 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 							final String participantsStr = jsonMessage.getChat_active();
 							if (!Strings.isEmpty(participantsStr)) {
 								for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
-									chat.addParticipant(userService.getUserById(account.newUserEntity(String.valueOf(participantId))));
+									chat.addParticipant(userService.getUserById(account.newUserEntity(String.valueOf(participantId)), true));
 								}
 							}
 

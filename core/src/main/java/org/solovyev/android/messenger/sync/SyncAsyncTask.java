@@ -27,11 +27,6 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 
-/**
- * User: serso
- * Date: 6/1/12
- * Time: 6:58 PM
- */
 class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
 	@Nonnull

@@ -257,7 +257,7 @@ public interface LongPollUpdate {
 
 		@Override
 		public void doUpdate(@Nonnull User user, @Nonnull Account account) {
-			final User contact = getUserService().getUserById(account.newUserEntity(realmFriendId)).cloneWithNewStatus(online);
+			final User contact = getUserService().getUserById(account.newUserEntity(realmFriendId), true).cloneWithNewStatus(online);
 			getUserService().onContactPresenceChanged(user, contact, online);
 		}
 

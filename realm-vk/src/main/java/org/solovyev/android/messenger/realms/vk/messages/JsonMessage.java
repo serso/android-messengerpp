@@ -153,16 +153,20 @@ public class JsonMessage {
 			switch (messageDirection) {
 				case in:
 					message.setAuthor(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
-					message.setRecipient(user.getEntity());
+					if (this.chat_id == null) {
+						message.setRecipient(user.getEntity());
+					}
 					break;
 				case out:
 					message.setAuthor(user.getEntity());
-					message.setRecipient(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
+					if (this.chat_id == null) {
+						message.setRecipient(account.newUserEntity(explicitUserId == null ? uid : explicitUserId));
+					}
 					break;
 			}
 		} else {
 			message.setAuthor(account.newUserEntity(uid));
-			if (explicitUserId != null) {
+			if (explicitUserId != null && this.chat_id == null) {
 				message.setRecipient(account.newUserEntity(explicitUserId));
 			}
 		}

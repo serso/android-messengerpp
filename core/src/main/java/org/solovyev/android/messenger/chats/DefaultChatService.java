@@ -419,13 +419,20 @@ public class DefaultChatService implements ChatService {
 		final Multimap<Chat, Message> messagesByChats = ArrayListMultimap.create();
 
 		for (Message message : messages) {
-			if (message.isPrivate()) {
-				final Entity participant = message.getSecondUser(user);
-				assert participant != null;
-				final Chat chat = getOrCreatePrivateChat(user, participant);
+			final Entity chatEntity = message.getChat();
+			Chat chat = getChatById(chatEntity);
+			if (chat == null) {
+				if (message.isPrivate()) {
+					final Entity participant = message.getSecondUser(user);
+					assert participant != null;
+					chat =  getOrCreatePrivateChat(user, participant);
+				} else {
+					// todo serso: we need to create MUC here
+				}
+			}
+
+			if (chat != null) {
 				messagesByChats.put(chat, message);
-			} else {
-				// todo serso: we need link to chat here
 			}
 		}
 
