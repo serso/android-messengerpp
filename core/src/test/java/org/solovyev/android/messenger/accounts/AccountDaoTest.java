@@ -23,6 +23,7 @@ import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
 import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.users.UserDao;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.security.Cipherer;
 import org.solovyev.common.security.CiphererException;
 
@@ -54,6 +55,10 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Inject
 	private TestRealm realm;
 
+	@Nonnull
+	@Inject
+	private UserService userService;
+
 	public AccountDaoTest() {
 		super(new AccountSameEqualizer());
 	}
@@ -61,7 +66,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Test
 	public void testShouldInsertAccount() throws Exception {
 		final Account expected = new TestAccount(realm, 100).copyForNewState(disabled_by_user);
-		dao.create(expected);
+		getDao().create(expected);
 
 		final Account actual = findAccountInDao(expected);
 		assertNotNull(actual);
@@ -82,7 +87,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Test
 	public void testShouldDeleteExistingAccount() throws Exception {
 		final Account account = new TestAccount(realm, 100);
-		dao.create(account);
+		getDao().create(account);
 		dao.deleteById(account.getId());
 		assertNull(findAccountInDao(account));
 	}
@@ -194,7 +199,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Nonnull
 	@Override
 	protected Dao<Account> getDao() {
-		return dao;
+		return new UserCreatingDao(dao, userService);
 	}
 
 	@Nonnull
@@ -220,5 +225,64 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Override
 	protected Account changeEntity(@Nonnull Account entity) {
 		return entity.copyForNewState(AccountState.disabled_by_user);
+	}
+
+	private static class UserCreatingDao implements Dao<Account> {
+
+		@Nonnull
+		private final Dao<Account> dao;
+
+		@Nonnull
+		private final UserService userService;
+
+		private UserCreatingDao(@Nonnull Dao<Account> dao, @Nonnull UserService userService) {
+			this.dao = dao;
+			this.userService = userService;
+		}
+
+		@Override
+		public long create(@Nonnull Account account) {
+			long result = dao.create(account);
+			userService.saveAccountUser(account.getUser());
+			return result;
+		}
+
+		@Override
+		@Nullable
+		public Account read(@Nonnull String id) {
+			return dao.read(id);
+		}
+
+		@Override
+		@Nonnull
+		public Collection<Account> readAll() {
+			return dao.readAll();
+		}
+
+		@Override
+		@Nonnull
+		public Collection<String> readAllIds() {
+			return dao.readAllIds();
+		}
+
+		@Override
+		public long update(@Nonnull Account entity) {
+			return dao.update(entity);
+		}
+
+		@Override
+		public void delete(@Nonnull Account entity) {
+			dao.delete(entity);
+		}
+
+		@Override
+		public void deleteById(@Nonnull String id) {
+			dao.deleteById(id);
+		}
+
+		@Override
+		public void deleteAll() {
+			dao.deleteAll();
+		}
 	}
 }
