@@ -51,6 +51,9 @@ public abstract class BaseContactsAdapter extends BaseListItemAdapter<ContactLis
 	@Nonnull
 	private ContactsDisplayMode mode = Users.DEFAULT_CONTACTS_MODE;
 
+	@Nonnull
+	private String query = "";
+
 	public BaseContactsAdapter(@Nonnull Context context) {
 		super(context, new ArrayList<ContactListItem>());
 	}
@@ -105,6 +108,15 @@ public abstract class BaseContactsAdapter extends BaseListItemAdapter<ContactLis
 				onContactsChanged(event);
 				break;
 		}
+	}
+
+	@Nonnull
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(@Nullable CharSequence query) {
+		this.query = query == null ? "" : query.toString();
 	}
 
 	@Override

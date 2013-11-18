@@ -31,7 +31,7 @@ import static org.solovyev.common.Objects.areEqual;
 public class ContactsAdapter extends BaseContactsAdapter {
 
 	@Nonnull
-	private ContactFilter contactFilter = new ContactFilter(null, DEFAULT_CONTACTS_MODE);
+	private ContactFilter filter = new ContactFilter(null, DEFAULT_CONTACTS_MODE);
 
 	private boolean recentContacts;
 
@@ -50,12 +50,11 @@ public class ContactsAdapter extends BaseContactsAdapter {
 
 	@Override
 	protected boolean canAddContact(@Nonnull User contact) {
-		final CharSequence filterText = getFilterText();
-		final String prefix = filterText == null ? null : filterText.toString();
-		if (!areEqual(contactFilter.getPrefix(), prefix)) {
-			contactFilter = new ContactFilter(prefix, DEFAULT_CONTACTS_MODE);
+		final String query = getQuery();
+		if (!areEqual(filter.getPrefix(), query)) {
+			filter = new ContactFilter(query, DEFAULT_CONTACTS_MODE);
 		}
-		return contactFilter.apply(contact);
+		return filter.apply(contact);
 	}
 
 	@Nonnull

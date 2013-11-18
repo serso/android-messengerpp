@@ -137,10 +137,6 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		syncService.init();
 		unreadMessagesCounter.init();
 
-		// load persistence data
-		accountService.load();
-
-
 		// must be done after all loadings
 		accountConnectionsService.init();
 

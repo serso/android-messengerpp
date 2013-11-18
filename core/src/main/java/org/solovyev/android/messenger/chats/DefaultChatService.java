@@ -27,6 +27,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -516,15 +517,19 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<UiChat> getLastChats(@Nonnull User user, int count) {
+	public List<UiChat> getLastChats(@Nonnull User user, @Nullable String query, int count) {
 		final List<UiChat> result = new ArrayList<UiChat>();
 
 		final List<Chat> chats = userService.getUserChats(user.getEntity());
 
+		final PrefixFilter<String> chatFilter = new PrefixFilter<String>(query == null ? "" : query);
 		for (Chat chat : chats) {
 			final Message lastMessage = getLastMessage(chat.getEntity());
 			if (lastMessage != null) {
-				result.add(loadUiChat(user, chat));
+				final UiChat uiChat = loadUiChat(user, chat);
+				if (chatFilter.apply(uiChat.getDisplayName())) {
+					result.add(uiChat);
+				}
 			}
 		}
 
@@ -533,13 +538,13 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<UiChat> getLastChats(int count) {
+	public List<UiChat> getLastChats(@Nullable String query, int count) {
 		final List<UiChat> result = new ArrayList<UiChat>(count);
 
 		final AccountService accountService = getAccountService();
 
 		for (User user : accountService.getEnabledAccountUsers()) {
-			result.addAll(getLastChats(user, count));
+			result.addAll(getLastChats(user, query, count));
 		}
 
 		return getLastChatsByDate(result, count);

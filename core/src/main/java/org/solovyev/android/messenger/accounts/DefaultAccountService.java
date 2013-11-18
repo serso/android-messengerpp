@@ -150,6 +150,8 @@ public class DefaultAccountService implements AccountService {
 				}
 			}
 		}
+
+		loadAccounts();
 	}
 
 	@Nonnull
@@ -382,8 +384,7 @@ public class DefaultAccountService implements AccountService {
 		return Realms.makeAccountId(realm.getId(), accountCounter.getAndIncrement());
 	}
 
-	@Override
-	public void load() {
+	private void loadAccounts() {
 		final Collection<Account> realmsFromDb = accountDao.readAll();
 		synchronized (accounts) {
 			int maxRealmIndex = 0;

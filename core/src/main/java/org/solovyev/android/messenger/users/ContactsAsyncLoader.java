@@ -31,6 +31,7 @@ final class ContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListIt
 
 	@Nullable
 	private String query;
+
 	private final int maxCount;
 
 	ContactsAsyncLoader(@Nonnull Context context,

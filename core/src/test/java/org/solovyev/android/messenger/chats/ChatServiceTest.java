@@ -72,7 +72,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 
 		createChats(account, user, true);
 
-		final List<UiChat> chats = chatService.getLastChats(user, MAX_VALUE);
+		final List<UiChat> chats = chatService.getLastChats(user, null, MAX_VALUE);
 		assertTrue(!chats.isEmpty());
 		for (int i = 1; i < chats.size(); i++) {
 			final Message prevMessage = chats.get(i - 1).getLastMessage();
@@ -111,7 +111,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		createChats(account, user, true);
 		createChats(account, user, false);
 
-		final List<UiChat> chats = chatService.getLastChats(user, MAX_VALUE);
+		final List<UiChat> chats = chatService.getLastChats(user, null, MAX_VALUE);
 		assertTrue(!chats.isEmpty());
 		for (UiChat chat : chats) {
 			assertNotNull(chat.getLastMessage());

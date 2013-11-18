@@ -17,6 +17,8 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
+import android.os.Bundle;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -37,8 +39,10 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatListItem.newChatListItem;
 
-
 abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
+
+	@Nonnull
+	private String query = "";
 
 	public BaseChatsAdapter(@Nonnull Context context) {
 		super(context, new ArrayList<ChatListItem>(), false, true);
@@ -46,10 +50,10 @@ abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 
 	/*@Override*/
 	public void onEvent(@Nonnull UserEvent event) {
-		final User eventUser = event.getUser();
+		final User user = event.getUser();
 		switch (event.getType()) {
 			case contacts_presence_changed:
-				final Iterable<ChatListItem> chatListItems = findChatListItemsForUser(eventUser);
+				final Iterable<ChatListItem> chatListItems = findChatListItemsForUser(user);
 
 				boolean changed = false;
 				for (ChatListItem chatListItem : chatListItems) {
@@ -62,19 +66,28 @@ abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 				break;
 			case chat_removed:
 				final String chatId = event.getDataAsChatId();
-				removeListItem(eventUser, chatId);
+				removeListItem(user, chatId);
 				break;
 			case chat_added:
-				final Chat chat = event.getDataAsChat();
-				if (canAddChat(chat)) {
-					addListItem(eventUser, chat);
+				final ChatListItem chatListItem = newChatListItem(user, event.getDataAsChat());
+				if (canAddChat(chatListItem)) {
+					add(chatListItem);
 				}
 				break;
 			case chats_added:
 				final List<Chat> chats = event.getDataAsChats();
-				addAll(toChatListItems(eventUser, chats));
+				addAll(toChatListItems(user, chats));
 				break;
 		}
+	}
+
+	@Nonnull
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(@Nullable CharSequence query) {
+		this.query = query == null ? "" : query.toString();
 	}
 
 	@Nonnull
@@ -89,20 +102,22 @@ abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 
 	@Nonnull
 	private Iterable<ChatListItem> toChatListItems(@Nonnull final User eventUser, @Nonnull List<Chat> chats) {
-		return transform(Iterables.filter(chats, new Predicate<Chat>() {
-			@Override
-			public boolean apply(Chat chat) {
-				return canAddChat(chat);
-			}
-		}), new Function<Chat, ChatListItem>() {
+		final Iterable<ChatListItem> chatListItems = transform(chats, new Function<Chat, ChatListItem>() {
 			@Override
 			public ChatListItem apply(Chat chat) {
 				return newChatListItem(eventUser, chat);
 			}
 		});
+
+		return Iterables.filter(chatListItems, new Predicate<ChatListItem>() {
+			@Override
+			public boolean apply(ChatListItem chat) {
+				return canAddChat(chat);
+			}
+		});
 	}
 
-	protected abstract boolean canAddChat(@Nonnull Chat chat);
+	protected abstract boolean canAddChat(@Nonnull ChatListItem chat);
 
 	protected void addAll(@Nonnull Iterable<ChatListItem> iterable) {
 		super.addAll(newArrayList(iterable));
@@ -117,7 +132,10 @@ abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 	}
 
 	protected void addListItem(@Nonnull User user, @Nonnull Chat chat) {
-		add(newChatListItem(user, chat));
+		final ChatListItem chatListItem = newChatListItem(user, chat);
+		if (canAddChat(chatListItem)) {
+			add(chatListItem);
+		}
 	}
 
 	@Override

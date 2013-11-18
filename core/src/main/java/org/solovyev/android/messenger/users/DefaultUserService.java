@@ -29,7 +29,6 @@ import java.util.concurrent.Executor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
@@ -47,7 +46,6 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
-import org.solovyev.common.text.Strings;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -401,7 +399,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<UiContact> getLastChatedContacts(int count) {
-		final List<UiChat> chats = chatService.getLastChats(count);
+		final List<UiChat> chats = chatService.getLastChats(null, count);
 		final List<UiContact> result = new ArrayList<UiContact>(chats.size());
 		for (UiChat uiChat : chats) {
 			final Chat chat = uiChat.getChat();

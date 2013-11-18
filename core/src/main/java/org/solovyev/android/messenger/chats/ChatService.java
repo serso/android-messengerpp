@@ -109,10 +109,10 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	List<User> getParticipantsExcept(@Nonnull Entity chat, @Nonnull Entity user);
 
 	@Nonnull
-	List<UiChat> getLastChats(@Nonnull User user, int count);
+	List<UiChat> getLastChats(@Nonnull User user, @Nullable String query, int count);
 
 	@Nonnull
-	List<UiChat> getLastChats(int count);
+	List<UiChat> getLastChats(@Nullable String query, int count);
 
 	void removeEmptyChats(@Nonnull User user);
 

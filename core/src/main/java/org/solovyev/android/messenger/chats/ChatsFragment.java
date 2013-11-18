@@ -16,6 +16,8 @@
 
 package org.solovyev.android.messenger.chats;
 
+import android.os.Handler;
+
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
@@ -25,14 +27,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static org.solovyev.android.messenger.chats.Chats.MAX_RECENT_CHATS;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 public final class ChatsFragment extends BaseChatsFragment {
 
-	private int maxRecentChats = MAX_RECENT_CHATS;
+	private int maxChats = MAX_RECENT_CHATS;
 
-	public ChatsFragment() {
-		super();
-	}
+	private static final long SEARCH_DELAY_MILLIS = 500;
+
+	@Nonnull
+	private final FindChatsRunnable runnable = new FindChatsRunnable();
 
 	@Nullable
 	@Override
@@ -55,23 +59,45 @@ public final class ChatsFragment extends BaseChatsFragment {
 	@Nonnull
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiChat>> createAsyncLoader(@Nonnull BaseListItemAdapter<ChatListItem> adapter, @Nonnull Runnable onPostExecute) {
-		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, maxRecentChats);
+		final CharSequence filterText = getFilterText();
+		final String query = filterText == null ? null : filterText.toString();
+		((BaseChatsAdapter) adapter).setQuery(query);
+		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, query, maxChats);
+	}
+
+	@Override
+	public void filter(@Nullable CharSequence filterText) {
+		if (isInitialLoadingDone()) {
+			if (isEmpty(filterText)) {
+				// in case of empty query we need to reset maxChats
+				maxChats = MAX_RECENT_CHATS;
+			}
+			final Handler handler = getUiHandler();
+			handler.removeCallbacks(runnable);
+			handler.postDelayed(runnable, SEARCH_DELAY_MILLIS);
+		}
 	}
 
 	@Override
 	public void onBottomReached() {
 		super.onBottomReached();
 
+
 		final int count = getAdapter().getCount();
-		if (count < maxRecentChats) {
+		if (count < maxChats) {
 			// no more chats
 		} else {
-			maxRecentChats += MAX_RECENT_CHATS;
-			reloadRecentChats();
+			maxChats += MAX_RECENT_CHATS;
+			getUiHandler().post(runnable);
 		}
 	}
 
-	private void reloadRecentChats() {
-		createAsyncLoader(getAdapter()).executeInParallel();
+	private class FindChatsRunnable implements Runnable {
+		@Override
+		public void run() {
+			final BaseListItemAdapter<ChatListItem> adapter = getAdapter();
+			adapter.unselect();
+			createAsyncLoader(adapter).executeInParallel();
+		}
 	}
 }

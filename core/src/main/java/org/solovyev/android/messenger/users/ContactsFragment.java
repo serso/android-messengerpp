@@ -39,6 +39,11 @@ public class ContactsFragment extends BaseContactsFragment {
 	@Nonnull
 	private final FindContactsRunnable runnable = new FindContactsRunnable();
 
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return null;
+	}
+
 	@Nonnull
 	@Override
 	protected BaseListItemAdapter<ContactListItem> createAdapter() {
@@ -57,9 +62,11 @@ public class ContactsFragment extends BaseContactsFragment {
 		Log.d(tag, "Creating loader, filter text: " + filterText);
 		if (!isEmpty(filterText)) {
 			((ContactsAdapter) adapter).setRecentContacts(false);
+			((BaseContactsAdapter) adapter).setQuery(filterText.toString());
 			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
 		} else {
 			((ContactsAdapter) adapter).setRecentContacts(true);
+			((BaseContactsAdapter) adapter).setQuery(null);
 			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, maxContacts);
 		}
 	}
@@ -78,28 +85,19 @@ public class ContactsFragment extends BaseContactsFragment {
 	}
 
 	@Override
-	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-		return null;
+	public void onBottomReached() {
+		super.onBottomReached();
+
+		maxContacts += MAX_SEARCH_CONTACTS;
+		getUiHandler().post(runnable);
 	}
 
 	private class FindContactsRunnable implements Runnable {
-
-		public FindContactsRunnable() {
-		}
-
 		@Override
 		public void run() {
 			final BaseListItemAdapter<ContactListItem> adapter = getAdapter();
 			adapter.unselect();
 			createAsyncLoader(adapter).executeInParallel();
 		}
-	}
-
-	@Override
-	public void onBottomReached() {
-		super.onBottomReached();
-
-		maxContacts += MAX_SEARCH_CONTACTS;
-		getUiHandler().post(runnable);
 	}
 }
