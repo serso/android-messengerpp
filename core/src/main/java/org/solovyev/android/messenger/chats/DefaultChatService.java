@@ -19,18 +19,13 @@ package org.solovyev.android.messenger.chats;
 import android.app.Application;
 import android.util.Log;
 import android.widget.ImageView;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.concurrent.Executor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MergeDaoResult;
@@ -40,17 +35,8 @@ import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.android.messenger.messages.MessageDao;
-import org.solovyev.android.messenger.messages.MessageService;
-import org.solovyev.android.messenger.messages.MessageState;
-import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
-import org.solovyev.android.messenger.users.PersistenceLock;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserEvent;
-import org.solovyev.android.messenger.users.UserEventType;
-import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.android.messenger.users.Users;
+import org.solovyev.android.messenger.messages.*;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -58,13 +44,11 @@ import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.*;
+import java.util.concurrent.Executor;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getFirst;
@@ -437,7 +421,7 @@ public class DefaultChatService implements ChatService {
 		}
 
 		for (Chat chat : messagesByChats.keySet()) {
-			saveMessages(chat.getEntity(), messagesByChats.get(chat), true);
+			saveMessages(chat, messagesByChats.get(chat), true);
 		}
 
 		return unmodifiableList(messages);
@@ -467,44 +451,48 @@ public class DefaultChatService implements ChatService {
 		Chat chat = this.getChatById(chatId);
 
 		if (chat != null) {
-			final MutableAccountChat accountChat = Chats.newEmptyAccountChat(chat, getParticipants(chat.getEntity()));
-
-			boolean added = false;
-			for (Message message : messages) {
-				added |= accountChat.addParticipant(Users.newEmptyUser(message.getAuthor()));
-				final Entity recipient = message.getRecipient();
-				if (recipient != null) {
-					added |= accountChat.addParticipant(Users.newEmptyUser(recipient));
-				}
-			}
-
-			if (added) {
-				saveChat(getAccountByEntity(chat.getEntity()).getUser().getEntity(), accountChat);
-			}
-
-			final MergeDaoResult<Message, String> result;
-			synchronized (lock) {
-				result = getMessageDao().mergeMessages(chat.getId(), messages);
-
-				// update sync data
-				if (updateChatSyncDate) {
-					chat = chat.updateMessagesSyncDate();
-					updateChat(chat);
-				}
-			}
-
-			final List<ChatEvent> events = new ArrayList<ChatEvent>(messages.size());
-
-			events.add(ChatEventType.messages_added.newEvent(chat, result.getAddedObjects()));
-
-			for (Message updatedMessage : result.getUpdatedObjects()) {
-				events.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));
-			}
-
-			fireEvents(events);
+			saveMessages(chat, messages, updateChatSyncDate);
 		} else {
 			Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + chatId.getEntityId());
 		}
+	}
+
+	private void saveMessages(@Nonnull Chat chat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate) {
+		final MutableAccountChat accountChat = Chats.newEmptyAccountChat(chat, getParticipants(chat.getEntity()));
+
+		boolean added = false;
+		for (Message message : messages) {
+			added |= accountChat.addParticipant(Users.newEmptyUser(message.getAuthor()));
+			final Entity recipient = message.getRecipient();
+			if (recipient != null) {
+				added |= accountChat.addParticipant(Users.newEmptyUser(recipient));
+			}
+		}
+
+		if (added) {
+			saveChat(getAccountByEntity(chat.getEntity()).getUser().getEntity(), accountChat);
+		}
+
+		final MergeDaoResult<Message, String> result;
+		synchronized (lock) {
+			result = getMessageDao().mergeMessages(chat.getId(), messages);
+
+			// update sync data
+			if (updateChatSyncDate) {
+				chat = chat.updateMessagesSyncDate();
+				updateChat(chat);
+			}
+		}
+
+		final List<ChatEvent> events = new ArrayList<ChatEvent>(messages.size());
+
+		events.add(ChatEventType.messages_added.newEvent(chat, result.getAddedObjects()));
+
+		for (Message updatedMessage : result.getUpdatedObjects()) {
+			events.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));
+		}
+
+		fireEvents(events);
 	}
 
 	@Override
