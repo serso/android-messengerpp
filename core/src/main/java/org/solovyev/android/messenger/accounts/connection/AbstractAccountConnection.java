@@ -19,12 +19,15 @@ package org.solovyev.android.messenger.accounts.connection;
 import android.content.Context;
 import android.util.Log;
 
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.DefaultAccountService;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.solovyev.android.messenger.App.getSyncService;
 import static org.solovyev.android.messenger.App.newTag;
 
 
@@ -76,6 +79,8 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 	@Override
 	public final void start() throws AccountConnectionException {
 		stopped.compareAndSet(true, false);
+
+		getSyncService().waitWhileSyncFinished();
 
 		start0();
 	}

@@ -32,11 +32,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import static org.solovyev.android.messenger.App.getChatService;
 
-/**
- * User: serso
- * Date: 6/11/12
- * Time: 3:33 PM
- */
 public class SyncMessagesForChatAsyncTask extends MessengerAsyncTask<SyncMessagesForChatAsyncTask.Input, Void, SyncMessagesForChatAsyncTask.Input> {
 
 	@Nullable

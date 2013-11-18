@@ -85,6 +85,7 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 	@Nonnull
 	@Override
 	public List<AccountChat> convert(@Nonnull String json) {
+		// todo serso: we need to save title for chat somewhere
 		final Gson gson = new GsonBuilder()
 				.registerTypeAdapter(JsonMessages.class, new JsonMessages.Adapter())
 				.registerTypeAdapter(JsonMessageTypedAttachment.class, new JsonMessageTypedAttachment.Adapter())

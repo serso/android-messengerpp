@@ -51,7 +51,6 @@ public class DefaultSyncService implements SyncService {
 	@Nonnull
 	private AccountService accountService;
 
-
     /*
 	**********************************************************************
     *
@@ -127,6 +126,16 @@ public class DefaultSyncService implements SyncService {
 				throw new TaskIsAlreadyRunningException(syncTask);
 			}
 			runningTasks.add(syncTask);
+		}
+	}
+
+	@Override
+	public void waitWhileSyncFinished() {
+		while (this.isSyncAllTaskRunning()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
 		}
 	}
 

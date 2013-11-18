@@ -22,12 +22,6 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import javax.annotation.Nonnull;
 
 /**
- * User: serso
- * Date: 7/25/12
- * Time: 5:52 PM
- */
-
-/**
  * Connection to remote realm.
  * <p/>
  * This class is often used in background and listens to remote events (e.g. implementing long polling).

@@ -109,15 +109,6 @@ public class DefaultAccountService implements AccountService {
 		this.listeners = Listeners.newEventListenersBuilderFor(AccountEvent.class).withHardReferences().withExecutor(eventExecutor).create();
 	}
 
-	public void waitWhileSyncFinished() {
-		while (syncService.isSyncAllTaskRunning()) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-			}
-		}
-	}
-
 	@Override
 	public void init() {
 		accountDao.init();
@@ -214,7 +205,7 @@ public class DefaultAccountService implements AccountService {
 	@Nonnull
 	@Override
 	public <A extends Account> A saveAccount(@Nonnull AccountBuilder<A> accountBuilder) throws InvalidCredentialsException, AccountAlreadyExistsException {
-		waitWhileSyncFinished();
+		syncService.waitWhileSyncFinished();
 
 		A result;
 
@@ -353,7 +344,7 @@ public class DefaultAccountService implements AccountService {
 
 	@Override
 	public void removeAccount(@Nonnull String accountId) {
-		waitWhileSyncFinished();
+		syncService.waitWhileSyncFinished();
 
 		final Account account;
 

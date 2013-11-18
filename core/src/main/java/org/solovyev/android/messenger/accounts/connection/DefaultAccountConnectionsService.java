@@ -38,11 +38,6 @@ import java.util.Collection;
 import static org.solovyev.android.messenger.notifications.Notifications.NO_INTERNET_NOTIFICATION;
 import static org.solovyev.android.messenger.notifications.Notifications.newAccountConnectionErrorNotification;
 
-/**
- * User: serso
- * Date: 4/15/13
- * Time: 8:17 PM
- */
 @Singleton
 public final class DefaultAccountConnectionsService implements AccountConnectionsService, NetworkStateListener {
 
@@ -70,23 +65,11 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 	@Nonnull
 	private NotificationService notificationService;
 
-	@Nonnull
-	private final Application context;
-
-	/*
-	**********************************************************************
-	*
-	*                           OWN FIELDS
-	*
-	**********************************************************************
-	*/
 	@Inject
 	@Nonnull
 	private AccountConnections accountConnections;
 
-	@Inject
-	public DefaultAccountConnectionsService(@Nonnull Application context) {
-		this.context = context;
+	public DefaultAccountConnectionsService() {
 	}
 
 	@Override

@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountEvent;
@@ -70,7 +69,7 @@ public class DefaultAccountConnectionsServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		service = new DefaultAccountConnectionsService(Robolectric.application);
+		service = new DefaultAccountConnectionsService();
 		accountConnections = mock(AccountConnections.class);
 		notificationService = mock(NotificationService.class);
 

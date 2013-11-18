@@ -232,7 +232,9 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 			}
 
 			clone.body = that.getBody();
-			clone.title = that.getTitle();
+			if (!isEmpty(that.getTitle())) {
+				clone.title = that.getTitle();
+			}
 			clone.sendDate = that.getSendDate();
 			// NOTE: we don't remove properties here as some properties are application related, e.g. PROPERTY_ORIGINAL_ID
 			clone.properties.setPropertiesFrom(that.getProperties().getPropertiesCollection());

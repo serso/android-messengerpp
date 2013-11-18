@@ -47,4 +47,6 @@ public interface SyncService {
 	void syncAllForAccount(@Nonnull Account account, boolean force) throws SyncAllTaskIsAlreadyRunning;
 
 	void sync(@Nonnull SyncTask syncTask, @Nullable Runnable afterSyncCallback) throws TaskIsAlreadyRunningException;
+
+	void waitWhileSyncFinished();
 }

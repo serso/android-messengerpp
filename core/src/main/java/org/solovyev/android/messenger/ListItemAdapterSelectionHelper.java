@@ -69,6 +69,7 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 					if (!findAndSelectItem(listItem)) {
 						final int position = selection.getPosition();
 						if (position >= 0 && position < adapter.getCount()) {
+							// todo serso: use onClickAction to do a real click, need to update ACL
 							onItemClick(position, false);
 						} else if (!adapter.isEmpty()) {
 							onItemClick(0, false);
