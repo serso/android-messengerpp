@@ -33,12 +33,6 @@ import java.util.NoSuchElementException;
 import static org.solovyev.android.messenger.App.newTag;
 
 /**
- * User: serso
- * Date: 5/24/12
- * Time: 9:12 PM
- */
-
-/**
  * Implementation of this class must provide thread safeness
  */
 @ThreadSafe
@@ -70,7 +64,7 @@ public interface UserService {
 	/**
 	 * NOTE: finding user by id always return user object, if real user cannot be found via API (e.g. user was removed) service must return dummy user object
 	 *
-	 * @param user           user to be found
+	 * @param user             user to be found
 	 * @param tryFindInAccount user search will be done in account service if user was not found in persistence and this parameter is set to true
 	 * @return user instance identified by specified <var>user</var> entity
 	 */
@@ -96,13 +90,16 @@ public interface UserService {
 
 	void saveUser(@Nonnull User user);
 
+	// special method for saving account users
+	void saveAccountUser(@Nonnull User user);
+
 	void removeUser(@Nonnull User user);
 
 	@Nonnull
 	UserIconsService getIconsService();
 
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONTACTS
     *

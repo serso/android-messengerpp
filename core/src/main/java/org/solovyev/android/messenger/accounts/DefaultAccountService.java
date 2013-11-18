@@ -290,7 +290,7 @@ public class DefaultAccountService implements AccountService {
 					final User newUser = newAccount.getUser();
 					if (oldUser.equals(newUser)) {
 						accountDao.update(newAccount);
-						userService.saveUser(newAccount.getUser());
+						userService.saveAccountUser(newAccount.getUser());
 						accounts.put(newAccount.getId(), newAccount);
 						listeners.fireEvent(AccountEventType.changed.newEvent(newAccount, null));
 					} else {
@@ -298,7 +298,7 @@ public class DefaultAccountService implements AccountService {
 					}
 				} else {
 					accountDao.create(newAccount);
-					userService.saveUser(newAccount.getUser());
+					userService.saveAccountUser(newAccount.getUser());
 					accounts.put(newAccount.getId(), newAccount);
 					listeners.fireEvent(AccountEventType.created.newEvent(newAccount, null));
 				}
@@ -452,7 +452,7 @@ public class DefaultAccountService implements AccountService {
 				case changed:
 					final User user = event.getUser();
 					for (Account account : getAccounts()) {
-						if(account.getUser().equals(user)) {
+						if (account.getUser().equals(user)) {
 							account.setUser(user);
 						}
 					}

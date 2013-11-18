@@ -17,25 +17,16 @@
 package org.solovyev.android.messenger.users;
 
 import android.database.Cursor;
-
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
 import static org.solovyev.android.messenger.users.Users.newUser;
 
-/**
- * User: serso
- * Date: 5/30/12
- * Time: 7:03 PM
- */
 public class UserMapper implements Converter<Cursor, User> {
 
 	@Nonnull

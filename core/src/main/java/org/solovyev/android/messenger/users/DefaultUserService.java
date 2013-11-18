@@ -16,13 +16,11 @@
 
 package org.solovyev.android.messenger.users;
 
-import android.app.Application;
 import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -79,14 +77,6 @@ public class DefaultUserService implements UserService {
 	@Inject
 	@Nonnull
 	private UserDao userDao;
-
-	@Inject
-	@Nonnull
-	private Application context;
-
-	@Inject
-	@Nonnull
-	private ExceptionHandler exceptionHandler;
 
 	@Inject
 	@Nonnull
@@ -211,21 +201,37 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void saveUser(@Nonnull User user) {
-		final UserEventType eventType;
+	public void saveAccountUser(@Nonnull User user) {
+		saveUser(user, null);
+	}
 
+	@Override
+	public void saveUser(@Nonnull User user) {
+		final Account account = getAccountByEntity(user.getEntity());
+		if (!account.getUser().equals(user)) {
+			saveUser(user, account);
+		} else {
+			saveAccountUser(user);
+		}
+	}
+
+	private void saveUser(@Nonnull User newUser, @Nullable Account account) {
 		synchronized (lock) {
-			final User userFromDb = userDao.read(user.getEntity().getEntityId());
+			final User userFromDb = userDao.read(newUser.getEntity().getEntityId());
 			if (userFromDb == null) {
-				userDao.create(user);
-				eventType = added;
+				if (account != null) {
+					final User user = account.getUser();
+					userDao.createContact(user.getId(), newUser);
+					listeners.fireEvent(contacts_added.newEvent(user, asList(newUser)));
+				} else {
+					userDao.create(newUser);
+					listeners.fireEvent(added.newEvent(newUser));
+				}
 			} else {
-				userDao.update(user);
-				eventType = changed;
+				userDao.update(newUser);
+				listeners.fireEvent(changed.newEvent(newUser));
 			}
 		}
-
-		listeners.fireEvent(eventType.newEvent(user));
 	}
 
 	@Override
@@ -398,7 +404,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           SYNC
     *

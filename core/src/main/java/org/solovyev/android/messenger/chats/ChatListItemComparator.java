@@ -22,11 +22,6 @@ import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.messages.Messages.compareSendDatesLatestFirst;
 
-/**
- * User: serso
- * Date: 3/7/13
- * Time: 3:51 PM
- */
 final class ChatListItemComparator implements java.util.Comparator<ChatListItem> {
 
 	@Nonnull

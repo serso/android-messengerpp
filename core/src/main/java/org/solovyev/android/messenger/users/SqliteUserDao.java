@@ -22,7 +22,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -30,8 +29,8 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.LinkedEntitiesDao;
-import org.solovyev.android.messenger.ReplacePropertyExec;
 import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.ReplacePropertyExec;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.common.Converter;
 import org.solovyev.common.collections.Collections;
@@ -40,11 +39,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
-import static org.solovyev.android.db.AndroidDbUtils.doDbExec;
-import static org.solovyev.android.db.AndroidDbUtils.doDbExecs;
-import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
+import static org.solovyev.android.db.AndroidDbUtils.*;
 import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
 
 /**
@@ -79,6 +79,16 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 		final long result = dao.create(user);
 		if (result != DbExec.SQL_ERROR) {
 			doDbExec(getSqliteOpenHelper(), new InsertProperties(user));
+		}
+		return result;
+	}
+
+	@Override
+	public long createContact(@Nonnull String userId, @Nonnull User contact) {
+		final long result = dao.create(contact);
+		if (result != DbExec.SQL_ERROR) {
+			doDbExec(getSqliteOpenHelper(), new InsertProperties(contact));
+			doDbExec(getSqliteOpenHelper(), new InsertContact(userId, contact.getId()));
 		}
 		return result;
 	}
@@ -181,8 +191,8 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 	}
 
 	@Nonnull
-	private ReplacePropertyExec newReplacePropertyExec( @Nonnull User user,
-														@Nonnull AProperty property) {
+	private ReplacePropertyExec newReplacePropertyExec(@Nonnull User user,
+													   @Nonnull AProperty property) {
 		return new ReplacePropertyExec(user, "user_properties", "user_id", property.getName(), property.getValue());
 	}
 

@@ -37,7 +37,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.newSubTag;
@@ -227,33 +226,21 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		@Nonnull
 		private final Account account;
 
-		@Nonnull
-		private final String accountUserId;
-
 		private UserContactsLoader(@Nonnull Account account) {
 			this.account = account;
-			this.accountUserId = account.getUser().getEntity().getAccountEntityId();
 		}
 
 		@Override
 		public List<User> call(@Nonnull final Connection connection) throws AccountConnectionException, XMPPException {
+			final Roster roster = connection.getRoster();
+			final Collection<RosterEntry> entries = roster.getEntries();
 
-			if (account.getUser().getEntity().getAccountEntityId().equals(accountUserId)) {
-				// realm user => load contacts through the roster
-				final Roster roster = connection.getRoster();
-				final Collection<RosterEntry> entries = roster.getEntries();
-
-				final List<User> result = new ArrayList<User>(entries.size());
-				for (RosterEntry entry : entries) {
-					result.add(toUser(account.getId(), entry.getUser(), entry.getName(), connection, account));
-				}
-
-				return result;
-			} else {
-				// we cannot load contacts for contacts in xmpp
-				return Collections.emptyList();
+			final List<User> result = new ArrayList<User>(entries.size());
+			for (RosterEntry entry : entries) {
+				result.add(toUser(account.getId(), entry.getUser(), entry.getName(), connection, account));
 			}
 
+			return result;
 		}
 	}
 

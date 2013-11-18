@@ -34,15 +34,12 @@ import java.util.List;
 public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
 
 	@Nonnull
-	private final ListItemAdapterSelectionHelper<LI> selectionHelper= new ListItemAdapterSelectionHelper<LI>(this);
+	private final ListItemAdapterSelectionHelper<LI> selectionHelper = new ListItemAdapterSelectionHelper<LI>(this);
 
 	@Nonnull
 	private final SectionIndexer sectionIndexer;
 
 	private final boolean saveSelection;
-
-	@Nullable
-	private Runnable onEmptyListListener;
 
 	public BaseListItemAdapter(@Nonnull Context context, @Nonnull List<? extends LI> listItems) {
 		this(context, listItems, true, true);
@@ -56,10 +53,6 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 			sectionIndexer = EmptySectionIndexer.getInstance();
 		}
 		this.saveSelection = saveSelection;
-	}
-
-	public void setOnEmptyListListener(@Nullable Runnable onEmptyListListener) {
-		this.onEmptyListListener = onEmptyListListener;
 	}
 
 	/*@Override*/
@@ -96,17 +89,6 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 	@Override
 	public int getSectionForPosition(int position) {
 		return sectionIndexer.getSectionForPosition(position);
-	}
-
-	@Override
-	public void notifyDataSetChanged() {
-		if (isEmpty()) {
-			if (onEmptyListListener != null) {
-				onEmptyListListener.run();
-			}
-		}
-		selectionHelper.onNotifyDataSetChanged();
-		super.notifyDataSetChanged();
 	}
 
 	public void unselect() {

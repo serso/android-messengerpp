@@ -18,6 +18,7 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -506,7 +507,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	private void createAdapter(@Nullable Bundle savedInstanceState) {
 		adapter = createAdapter();
-		adapter.setOnEmptyListListener(new OnEmptyListListener());
+		adapter.registerDataSetObserver(new EmptyAdapterObserver());
 
 		if (savedInstanceState != null) {
 			adapter.restoreState(savedInstanceState);
@@ -580,6 +581,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			}
 
 			initialClickItem(activity, position, adapter);
+
+			adapter.registerDataSetObserver(new AdapterChangedObserver());
 		}
 	}
 
@@ -622,10 +625,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	private void clickItem(int position) {
-		final View root = getView();
-		if (root != null) {
-			clickItem(this.getActivity(), position, adapter);
-		}
+		clickItem(this.getActivity(), position, adapter);
 	}
 
 	protected void initialClickItem(@Nonnull final Activity activity, final int position, @Nonnull final BaseListItemAdapter<LI> adapter) {
@@ -647,9 +647,12 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private void clickItem(@Nonnull Activity activity, int position, @Nonnull BaseListItemAdapter<LI> adapter) {
 		if (position >= 0 && position < adapter.getCount()) {
 			adapter.getSelectionHelper().onItemClick(position);
-			final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
-			if (onClickAction != null) {
-				onClickAction.onClick(activity, adapter);
+
+			if (getMultiPaneManager().isDualPane(activity)) {
+				final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
+				if (onClickAction != null) {
+					onClickAction.onClick(activity, adapter);
+				}
 			}
 		}
 	}
@@ -747,14 +750,41 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		}
 	}
 
-	private class OnEmptyListListener implements Runnable {
+	private class AdapterChangedObserver extends DataSetObserver {
+
 		@Override
-		public void run() {
-			final BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
-			if (activity != null) {
-				if (isEmpty(adapter.getFilterText())) {
-					// only for lists which have become empty because of lack of items (and not because of filter)
-					onEmptyList(activity);
+		public void onChanged() {
+			if (!adapter.isEmpty()) {
+				final ListItemAdapterSelectionHelper<LI> sh = adapter.getSelectionHelper();
+
+				final AdapterSelection<LI> selection = sh.getSelection();
+				final LI listItem = selection.getItem();
+				if (listItem != null) {
+					if (!sh.isAlreadySelected()) {
+						if (!sh.findAndSelectItem(listItem)) {
+							final int position = selection.getPosition();
+							if (position >= 0 && position < adapter.getCount()) {
+								clickItem(position);
+							} else if (!adapter.isEmpty()) {
+								clickItem(0);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private class EmptyAdapterObserver extends DataSetObserver {
+		@Override
+		public void onChanged() {
+			if (adapter.isEmpty()) {
+				final BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
+				if (activity != null) {
+					if (isEmpty(adapter.getFilterText())) {
+						// only for lists which have become empty because of lack of items (and not because of filter)
+						onEmptyList(activity);
+					}
 				}
 			}
 		}

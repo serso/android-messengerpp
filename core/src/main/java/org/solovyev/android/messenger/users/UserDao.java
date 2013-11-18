@@ -50,6 +50,8 @@ public interface UserDao extends LinkedEntitiesDao<User>, Dao<User> {
 	 */
 	long create(@Nonnull User user);
 
+	long createContact(@Nonnull String userId, @Nonnull User contact);
+
 	/**
 	 * Method loads user by if from storage
 	 *
@@ -87,7 +89,7 @@ public interface UserDao extends LinkedEntitiesDao<User>, Dao<User> {
 	void deleteAll();
 
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONTACTS
     *
@@ -111,7 +113,6 @@ public interface UserDao extends LinkedEntitiesDao<User>, Dao<User> {
 	/**
 	 * Method merges passed user <var>contacts</var> with contacts stored in the storage.
 	 * The result of an operation might be adding, removal, updating of user contacts.
-	 *
 	 *
 	 * @param userId       id of a user for which merge should be done
 	 * @param contacts     list of ALL contacts of a user

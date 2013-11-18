@@ -2,11 +2,10 @@ package org.solovyev.android.messenger;
 
 import android.os.Bundle;
 import android.widget.Checkable;
+import org.solovyev.android.list.ListItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.list.ListItem;
 
 import static org.solovyev.android.messenger.AdapterSelection.newNotSelected;
 import static org.solovyev.android.messenger.AdapterSelection.newSelection;
@@ -34,7 +33,7 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 		findAndSelectItem(null);
 	}
 
-	private boolean findAndSelectItem(@Nullable LI toBeSelectedItem) {
+	boolean findAndSelectItem(@Nullable LI toBeSelectedItem) {
 		boolean selected = false;
 
 		for (int i = 0; i < adapter.getCount(); i++) {
@@ -61,26 +60,7 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 		return selection.restoreSelectedPosition(savedInstanceState, defaultPosition);
 	}
 
-	void onNotifyDataSetChanged() {
-		if (!adapter.isEmpty()) {
-			final LI listItem = selection.getItem();
-			if (listItem != null) {
-				if (!isAlreadySelected()) {
-					if (!findAndSelectItem(listItem)) {
-						final int position = selection.getPosition();
-						if (position >= 0 && position < adapter.getCount()) {
-							// todo serso: use onClickAction to do a real click, need to update ACL
-							onItemClick(position, false);
-						} else if (!adapter.isEmpty()) {
-							onItemClick(0, false);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private boolean isAlreadySelected() {
+	boolean isAlreadySelected() {
 		boolean alreadySelected = false;
 
 		final int position = selection.getPosition();
@@ -106,17 +86,17 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 	}
 
 	private void onItemClick(int position, boolean notifyChange) {
-		final LI selectedItem = adapter.getItem(position);
-		onItemClick(position, selectedItem, notifyChange);
+		final LI newItem = adapter.getItem(position);
+		onItemClick(position, newItem, notifyChange);
 	}
 
-	private void onItemClick(int newPosition, @Nonnull LI newListItem, boolean notifyChange) {
-		final LI listItem = selection.getItem();
-		if (listItem != newListItem) {
-			selectItem(newListItem, true);
-			selectItem(listItem, false);
+	private void onItemClick(int newPosition, @Nonnull LI newItem, boolean notifyChange) {
+		final LI item = selection.getItem();
+		if (item != newItem) {
+			selectItem(newItem, true);
+			selectItem(item, false);
 
-			selection = newSelection(newPosition, newListItem);
+			selection = newSelection(newPosition, newItem);
 
 			if (notifyChange) {
 				adapter.notifyDataSetChanged();
@@ -124,8 +104,8 @@ class ListItemAdapterSelectionHelper<LI extends ListItem> {
 		}
 	}
 
-	public int onItemClick(@Nonnull ListItem selectedItem) {
-		final LI selectedListItem = (LI) selectedItem;
+	public int onItemClick(@Nonnull ListItem item) {
+		final LI selectedListItem = (LI) item;
 		final int position = adapter.getPosition(selectedListItem);
 		if (position >= 0) {
 			onItemClick(position);
