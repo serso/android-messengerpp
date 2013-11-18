@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.notifications;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
@@ -42,7 +41,7 @@ public final class NotificationListItem implements ListItem {
 	public OnClickAction getOnClickAction() {
 		return new OnClickAction() {
 			@Override
-			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
+			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter) {
 				notification.solveOnClick();
 			}
 		};

@@ -18,27 +18,18 @@ package org.solovyev.android.messenger.preferences;
 
 import android.content.Context;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.App.getEventManager;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 5:57 PM
- */
 public final class PreferenceGroupListItem extends AbstractMessengerListItem<PreferenceGroup> {
 
 	@Nonnull
@@ -73,7 +64,7 @@ public final class PreferenceGroupListItem extends AbstractMessengerListItem<Pre
 	public OnClickAction getOnClickAction() {
 		return new OnClickAction() {
 			@Override
-			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
+			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter) {
 				getEventManager(context).fire(PreferenceUiEventType.preference_group_clicked.newEvent(getData()));
 			}
 		};

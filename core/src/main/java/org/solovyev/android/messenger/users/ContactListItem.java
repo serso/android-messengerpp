@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.users;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
@@ -37,10 +36,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.view.View.*;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.users.ContactUiEventType.*;
+import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
+import static org.solovyev.android.messenger.users.ContactUiEventType.mark_all_messages_read;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UiContact.newUiContact;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
@@ -74,7 +75,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 	public OnClickAction getOnClickAction() {
 		return new OnClickAction() {
 			@Override
-			public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
+			public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter) {
 				getEventManager(context).fire(contact_clicked.newEvent(getContact()));
 			}
 		};

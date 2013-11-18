@@ -561,14 +561,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	protected void onListLoaded() {
 		final Activity activity = getActivity();
-		ListView listView = null;
-		try {
-			listView = getListView();
-		} catch (IllegalStateException e) {
-			// no view
-		}
 
-		if (activity != null && !activity.isFinishing() && !isDetached() && listView != null) {
+		if (activity != null && !activity.isFinishing() && !isDetached()) {
 			final LI selectedListItem = restoredAdapterSelection.getItem();
 			final int selectedPosition = restoredAdapterSelection.getPosition();
 
@@ -585,7 +579,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				adapter.getSelectionHelper().onItemClick(position);
 			}
 
-			initialClickItem(activity, position, listView, adapter);
+			initialClickItem(activity, position, adapter);
 		}
 	}
 
@@ -630,11 +624,11 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private void clickItem(int position) {
 		final View root = getView();
 		if (root != null) {
-			clickItem(this.getActivity(), position, getListView(root), adapter);
+			clickItem(this.getActivity(), position, adapter);
 		}
 	}
 
-	protected void initialClickItem(@Nonnull final Activity activity, final int position, @Nonnull final ListView listView, @Nonnull final BaseListItemAdapter<LI> adapter) {
+	protected void initialClickItem(@Nonnull final Activity activity, final int position, @Nonnull final BaseListItemAdapter<LI> adapter) {
 		uiHandler.post(new Runnable() {
 			@Override
 			public void run() {
@@ -643,19 +637,19 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 						onEmptyList((BaseFragmentActivity) activity);
 					} else if (!canReuseFragment((FragmentActivity) activity, adapter.getSelectedItem())) {
 						// in case of dual pane we need to make a real click (call click listener)
-						clickItem(activity, position, listView, adapter);
+						clickItem(activity, position, adapter);
 					}
 				}
 			}
 		});
 	}
 
-	private void clickItem(@Nonnull Activity activity, int position, @Nonnull ListView listView, @Nonnull BaseListItemAdapter<LI> adapter) {
+	private void clickItem(@Nonnull Activity activity, int position, @Nonnull BaseListItemAdapter<LI> adapter) {
 		if (position >= 0 && position < adapter.getCount()) {
 			adapter.getSelectionHelper().onItemClick(position);
 			final ListItem.OnClickAction onClickAction = adapter.getItem(position).getOnClickAction();
 			if (onClickAction != null) {
-				onClickAction.onClick(activity, adapter, listView);
+				onClickAction.onClick(activity, adapter);
 			}
 		}
 	}
@@ -727,7 +721,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 				final ListItem.OnClickAction onClickAction = listItem.getOnClickAction();
 				if (onClickAction != null) {
-					onClickAction.onClick(getActivity(), adapter, getListView());
+					onClickAction.onClick(getActivity(), adapter);
 				}
 			}
 		}
@@ -744,7 +738,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 				final ListItem.OnClickAction onClickAction = listItem.getOnLongClickAction();
 				if (onClickAction != null) {
-					onClickAction.onClick(getActivity(), adapter, getListView());
+					onClickAction.onClick(getActivity(), adapter);
 					return true;
 				}
 			}

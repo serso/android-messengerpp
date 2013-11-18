@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.realms;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
@@ -47,7 +46,7 @@ class RealmListItem extends AbstractMessengerListItem<Realm> {
 	public OnClickAction getOnClickAction() {
 		return new OnClickAction() {
 			@Override
-			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter, @Nonnull ListView listView) {
+			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter) {
 				getEventManager(context).fire(realm_clicked.newEvent(getRealm()));
 			}
 		};
