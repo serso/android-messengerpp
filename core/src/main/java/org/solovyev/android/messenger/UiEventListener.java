@@ -17,10 +17,12 @@
 package org.solovyev.android.messenger;
 
 import com.actionbarsherlock.app.ActionBar;
+import org.solovyev.android.messenger.core.R;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
 import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 
@@ -62,6 +64,7 @@ public class UiEventListener implements EventListener<UiEvent> {
 	}
 
 	private void onNewMessageEvent() {
+		showToast(R.string.mpp_pick_contact_to_start_chat);
 		final ActionBar.Tab tab = activity.findTabByTag(CONTACTS_FRAGMENT_TAG);
 		if (tab != null) {
 			tab.select();
