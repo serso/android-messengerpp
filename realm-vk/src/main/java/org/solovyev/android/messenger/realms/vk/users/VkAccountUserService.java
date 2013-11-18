@@ -62,9 +62,9 @@ public class VkAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<User> getUserContacts() throws AccountConnectionException {
 		try {
-			return execute(VkFriendsGetHttpTransaction.newInstance(account, accountUserId));
+			return execute(VkFriendsGetHttpTransaction.newInstance(account, account.getUser().getEntity().getAccountEntityId()));
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {

@@ -16,18 +16,12 @@
 
 package org.solovyev.android.messenger.users;
 
-import java.util.List;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-import org.solovyev.android.messenger.accounts.AccountConnectionException;
-
-/**
- * User: serso
- * Date: 5/25/12
- * Time: 8:33 PM
- */
 public interface AccountUserService {
 
 	/**
@@ -38,11 +32,10 @@ public interface AccountUserService {
 	User getUserById(@Nonnull String accountUserId) throws AccountConnectionException;
 
 	/**
-	 * @param accountUserId account user id
 	 * @return list of user contacts (users to which current user can write messages and is aware of theirs presence in chat)
 	 */
 	@Nonnull
-	List<User> getUserContacts(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<User> getUserContacts() throws AccountConnectionException;
 
 	/**
 	 * Method checks if user in <var>users</var> list is online

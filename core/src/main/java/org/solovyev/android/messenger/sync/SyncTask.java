@@ -67,8 +67,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			getUserService().syncUserContacts(user.getEntity());
+			getUserService().syncUserContacts(getAccountService().getAccountById(syncData.getAccountId()));
 		}
 	},
 

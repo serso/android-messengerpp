@@ -18,17 +18,10 @@ package org.solovyev.android.messenger.users;
 
 import android.app.Application;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.Executor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.messenger.ExceptionHandler;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
@@ -47,14 +40,12 @@ import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.concurrent.Executor;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -63,12 +54,7 @@ import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.Threads.isUiThread;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
-import static org.solovyev.android.messenger.users.UserEventType.added;
-import static org.solovyev.android.messenger.users.UserEventType.changed;
-import static org.solovyev.android.messenger.users.UserEventType.chat_removed;
-import static org.solovyev.android.messenger.users.UserEventType.contact_removed;
-import static org.solovyev.android.messenger.users.UserEventType.contacts_changed;
-import static org.solovyev.android.messenger.users.UserEventType.contacts_presence_changed;
+import static org.solovyev.android.messenger.users.UserEventType.*;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.text.Strings.fromStackTrace;
 
@@ -430,12 +416,11 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	@Nonnull
-	public List<User> syncUserContacts(@Nonnull Entity user) throws AccountException {
-		final Account account = getAccountByEntity(user);
-		final List<User> contacts = account.getAccountUserService().getUserContacts(user.getAccountEntityId());
+	public List<User> syncUserContacts(@Nonnull Account<?> account) throws AccountException {
+		final List<User> contacts = account.getAccountUserService().getUserContacts();
 
 		if (!contacts.isEmpty()) {
-			mergeUserContacts(user, contacts, false, true);
+			mergeUserContacts(account.getUser().getEntity(), contacts, false, true);
 		} else {
 			Log.w(TAG, "User contacts synchronization returned empty list for realm " + account.getId());
 		}

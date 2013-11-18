@@ -104,7 +104,7 @@ public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 	}
 
 	public void testGetUserContacts() throws Exception {
-		List<User> contacts1 = accountUserService.getUserContacts(TestXmppConfiguration.USER_LOGIN);
+		List<User> contacts1 = accountUserService.getUserContacts();
 		assertTrue(contacts1.size() >= 2);
 		assertTrue(Iterables.any(contacts1, new Predicate<User>() {
 			@Override
@@ -113,7 +113,7 @@ public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 			}
 		}));
 
-		contacts1 = accountUserService.getUserContacts(TestXmppConfiguration.USER_LOGIN2);
+		contacts1 = accountUserService.getUserContacts();
 		assertTrue(contacts1.isEmpty());
 
 	}

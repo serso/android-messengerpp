@@ -105,8 +105,8 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull final String accountUserId) throws AccountConnectionException {
-		return doOnConnection(new UserContactsLoader(getAccount(), accountUserId));
+	public List<User> getUserContacts() throws AccountConnectionException {
+		return doOnConnection(new UserContactsLoader(getAccount()));
 	}
 
 	@Nonnull
@@ -230,9 +230,9 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		@Nonnull
 		private final String accountUserId;
 
-		private UserContactsLoader(@Nonnull Account account, @Nonnull String accountUserId) {
+		private UserContactsLoader(@Nonnull Account account) {
 			this.account = account;
-			this.accountUserId = accountUserId;
+			this.accountUserId = account.getUser().getEntity().getAccountEntityId();
 		}
 
 		@Override

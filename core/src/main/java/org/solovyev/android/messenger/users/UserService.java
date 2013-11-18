@@ -16,6 +16,7 @@
 
 package org.solovyev.android.messenger.users;
 
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
@@ -168,11 +169,11 @@ public interface UserService {
 	 * <p/>
 	 * NOTE: some realms do not support user contacts retrieval, in that case empty list is returned
 	 *
-	 * @param user user for whom synchronization must be done
+	 * @param account account for which synchronization must be done
 	 * @return updated list of user contacts
 	 */
 	@Nonnull
-	List<User> syncUserContacts(@Nonnull Entity user) throws AccountException;
+	List<User> syncUserContacts(@Nonnull Account<?> account) throws AccountException;
 
 	/**
 	 * Method synchronizes local users chats with remote user chats

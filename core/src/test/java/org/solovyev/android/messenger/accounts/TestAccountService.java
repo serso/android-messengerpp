@@ -16,7 +16,10 @@
 
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.chats.AccountChat;
+import org.solovyev.android.messenger.chats.AccountChatService;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.Chats;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
@@ -42,7 +45,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String accountUserId) {
+	public List<User> getUserContacts() {
 		return Collections.emptyList();
 	}
 

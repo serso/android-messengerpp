@@ -95,7 +95,7 @@ final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<User> getUserContacts() throws AccountConnectionException {
 		final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1";
 		final ContentResolver cr = getApplication().getContentResolver();
 		final Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, SmsUserMapper.COLUMNS, selection, null, null);
