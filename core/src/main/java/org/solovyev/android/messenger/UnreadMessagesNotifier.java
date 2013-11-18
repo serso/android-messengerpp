@@ -65,7 +65,7 @@ public final class UnreadMessagesNotifier extends AbstractJEventListener<Messeng
 						// todo serso: make proper notification (unread messages text, small icon, etc)
 						// we are not at the top => show notification
 						final NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
-						nb.setSmallIcon(R.drawable.mpp_sb_unread_messages_counter);
+						nb.setSmallIcon(R.drawable.mpp_sb_unread_messages_icon);
 						nb.setContentText(context.getResources().getQuantityString(R.plurals.mpp_unread_messages_count_notification, unreadMessagesCount, unreadMessagesCount));
 						nb.setContentIntent(getActivity(context, 0, newUnreadMessagesStartIntent(context), 0));
 						nb.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
