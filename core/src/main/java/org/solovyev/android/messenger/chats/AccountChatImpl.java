@@ -17,10 +17,14 @@
 package org.solovyev.android.messenger.chats;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+
+import org.solovyev.android.messenger.EntityAwareByIdFinder;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
@@ -70,6 +74,11 @@ class AccountChatImpl implements MutableAccountChat {
 	@Override
 	public void addMessage(@Nonnull MutableMessage message) {
 		message.setChat(this.chat.getEntity());
+		addParticipant(message.getAuthor());
+		final Entity recipient = message.getRecipient();
+		if (recipient != null) {
+			addParticipant(recipient);
+		}
 		this.messages.add(message);
 	}
 
@@ -93,6 +102,20 @@ class AccountChatImpl implements MutableAccountChat {
 				}
 			}
 			return participants.add(participant);
+		}
+
+		return false;
+	}
+
+	private boolean addParticipant(@Nonnull Entity participant) {
+		final boolean contains = Iterables.find(participants, new EntityAwareByIdFinder(participant.getEntityId()), null) != null;
+		if (!contains) {
+			if (this.chat.isPrivate()) {
+				if (participants.size() == 2) {
+					throw new IllegalArgumentException("Only 2 participants can be in private chat!");
+				}
+			}
+			return participants.add(Users.newEmptyUser(participant));
 		}
 
 		return false;

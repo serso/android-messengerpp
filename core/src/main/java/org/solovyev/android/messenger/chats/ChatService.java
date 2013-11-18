@@ -247,7 +247,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return merge result
 	 */
 	@Nonnull
-	MergeDaoResult<Chat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends AccountChat> chats) throws AccountException;
+	MergeDaoResult<Chat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends AccountChat> chats);
 
 	/**
 	 * Method tries to save chat.
