@@ -24,29 +24,19 @@ import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 6/10/12
- * Time: 10:05 PM
- */
 public class VkMessagesGetHttpTransaction extends AbstractVkHttpTransaction<List<Message>> {
 
 	@Nullable
 	private Integer count;
 
-	@Nonnull
-	private User user;
-
-	protected VkMessagesGetHttpTransaction(@Nonnull VkAccount realm, @Nonnull User user) {
-		super(realm, "messages.get");
-		this.user = user;
+	protected VkMessagesGetHttpTransaction(@Nonnull VkAccount account) {
+		super(account, "messages.get");
 	}
 
 	@Nonnull
@@ -63,7 +53,7 @@ public class VkMessagesGetHttpTransaction extends AbstractVkHttpTransaction<List
 
 	@Override
 	protected List<Message> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-		final List<AccountChat> chats = new JsonChatConverter(user, null, null, App.getUserService(), getAccount()).convert(json);
+		final List<AccountChat> chats = new JsonChatConverter(getAccount().getUser(), null, null, App.getUserService(), getAccount()).convert(json);
 
 		// todo serso: optimize - convert json to the messages directly
 		final List<Message> messages = new ArrayList<Message>(chats.size() * 10);

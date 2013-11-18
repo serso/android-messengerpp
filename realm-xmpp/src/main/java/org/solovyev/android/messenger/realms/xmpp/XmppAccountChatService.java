@@ -45,7 +45,7 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getMessages() throws AccountConnectionException {
 		return doOnConnection(new XmppConnectedCallable<List<Message>>() {
 			@Override
 			public List<Message> call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {

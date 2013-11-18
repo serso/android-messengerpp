@@ -63,7 +63,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<Message> getMessages(@Nonnull String accountUserId) {
+	public List<Message> getMessages() {
 		return Collections.emptyList();
 	}
 

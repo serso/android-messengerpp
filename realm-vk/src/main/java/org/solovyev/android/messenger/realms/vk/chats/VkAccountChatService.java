@@ -75,9 +75,9 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getMessages() throws AccountConnectionException {
 		try {
-			return HttpTransactions.execute(new VkMessagesGetHttpTransaction(account, getUser(accountUserId)));
+			return HttpTransactions.execute(new VkMessagesGetHttpTransaction(account));
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {

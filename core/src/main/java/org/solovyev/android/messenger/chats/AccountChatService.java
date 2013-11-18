@@ -16,21 +16,20 @@
 
 package org.solovyev.android.messenger.chats;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
 public interface AccountChatService {
 
 	@Nonnull
-	List<? extends Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<? extends Message> getMessages() throws AccountConnectionException;
 
 	@Nonnull
 	List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;

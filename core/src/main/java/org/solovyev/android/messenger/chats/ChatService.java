@@ -18,6 +18,7 @@ package org.solovyev.android.messenger.chats;
 
 import android.widget.ImageView;
 import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
@@ -208,14 +209,15 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
     */
 
 	/**
-	 * Method synchronizes all chat messages for user.
+	 * Method synchronizes all chat messages for user in account.
 	 * NOTE: some realms might not return ALL user messages but only new
 	 *
-	 * @param user user for which sync should be done
+	 *
+	 * @param account account for which sync should be done
 	 * @return new chat messages for user
 	 */
 	@Nonnull
-	List<Message> syncMessages(@Nonnull Entity user) throws AccountException;
+	List<Message> syncMessages(@Nonnull Account<?> account) throws AccountException;
 
 	/**
 	 * Method synchronizes newer chat messages for <var>chat</var>

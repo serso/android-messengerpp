@@ -64,7 +64,7 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<? extends Message> getMessages(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<? extends Message> getMessages() throws AccountConnectionException {
 		return readMessages();
 	}
 
