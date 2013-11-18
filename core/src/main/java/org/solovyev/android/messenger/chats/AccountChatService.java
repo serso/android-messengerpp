@@ -32,13 +32,13 @@ public interface AccountChatService {
 	List<? extends Message> getMessages() throws AccountConnectionException;
 
 	@Nonnull
-	List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException;
+	List<Message> getNewerMessagesForChat(@Nonnull String accountChatId) throws AccountConnectionException;
 
 	@Nonnull
-	List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException;
+	List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull Integer offset) throws AccountConnectionException;
 
 	@Nonnull
-	List<AccountChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException;
+	List<AccountChat> getChats() throws AccountConnectionException;
 
 	/**
 	 * Method sends message to the account and, if possible, returns message id. If message id could not be returned

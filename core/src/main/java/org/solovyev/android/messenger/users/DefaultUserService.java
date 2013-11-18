@@ -269,7 +269,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONTACTS
     *
@@ -453,7 +453,7 @@ public class DefaultUserService implements UserService {
 			userEvents.add(UserEventType.contact_removed.newEvent(user, removedContactId));
 		}
 
-		if(!result.getUpdatedObjects().isEmpty()) {
+		if (!result.getUpdatedObjects().isEmpty()) {
 			userEvents.add(contacts_changed.newEvent(user, result.getUpdatedObjects()));
 			userEvents.add(contacts_presence_changed.newEvent(user, result.getUpdatedObjects()));
 		}
@@ -464,7 +464,7 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
-		final List<AccountChat> accountChats = getAccountByEntity(user).getAccountChatService().getChats(user.getAccountEntityId());
+		final List<AccountChat> accountChats = getAccountByEntity(user).getAccountChatService().getChats();
 
 		final List<Chat> chats = newArrayList(transform(accountChats, new Function<AccountChat, Chat>() {
 			@Override

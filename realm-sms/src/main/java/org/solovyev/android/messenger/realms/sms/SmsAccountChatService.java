@@ -70,19 +70,19 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
+	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId) throws AccountConnectionException {
 		return emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) throws AccountConnectionException {
+	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull Integer offset) throws AccountConnectionException {
 		return emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<AccountChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<AccountChat> getChats() throws AccountConnectionException {
 		final Map<Entity, AccountChat> chats = new HashMap<Entity, AccountChat>();
 
 		final List<MutableMessage> messages = readMessages();

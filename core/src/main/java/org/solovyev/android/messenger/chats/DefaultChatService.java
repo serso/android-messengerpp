@@ -434,7 +434,7 @@ public class DefaultChatService implements ChatService {
 		final Account account = getAccountByEntity(chat);
 		final AccountChatService accountChatService = account.getAccountChatService();
 
-		final List<Message> messages = accountChatService.getNewerMessagesForChat(chat.getAccountEntityId(), account.getUser().getEntity().getAccountEntityId());
+		final List<Message> messages = accountChatService.getNewerMessagesForChat(chat.getAccountEntityId());
 
 		saveMessages(chat, messages, true);
 
@@ -615,7 +615,7 @@ public class DefaultChatService implements ChatService {
 	public List<Message> syncOlderMessagesForChat(@Nonnull Entity chat, @Nonnull Entity user) throws AccountException {
 		final Integer offset = messageService.getMessages(chat).size();
 
-		final List<Message> messages = getAccountByEntity(user).getAccountChatService().getOlderMessagesForChat(chat.getAccountEntityId(), user.getAccountEntityId(), offset);
+		final List<Message> messages = getAccountByEntity(user).getAccountChatService().getOlderMessagesForChat(chat.getAccountEntityId(), offset);
 		saveMessages(chat, messages);
 
 		return unmodifiableList(messages);

@@ -29,7 +29,6 @@ import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.UserService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,8 +86,8 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) throws AccountConnectionException {
-		return getMessagesForChat(accountChatId, accountUserId, new VkHttpTransactionForMessagesForChatProvider() {
+	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId) throws AccountConnectionException {
+		return getMessagesForChat(accountChatId, new VkHttpTransactionForMessagesForChatProvider() {
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<Message>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
@@ -103,30 +102,30 @@ public class VkAccountChatService implements AccountChatService {
 		});
 	}
 
-	private List<Message> getMessagesForChat(@Nonnull String realmChatId, @Nonnull String realmUserId, @Nonnull VkHttpTransactionForMessagesForChatProvider p) throws AccountConnectionException {
-		final Chat chat = getChatService().getChatById(account.newChatEntity(realmChatId));
+	private List<Message> getMessagesForChat(@Nonnull String accountChatId, @Nonnull VkHttpTransactionForMessagesForChatProvider p) throws AccountConnectionException {
+		final Chat chat = getChatService().getChatById(account.newChatEntity(accountChatId));
 
 		if (chat != null) {
 			try {
 				if (chat.isPrivate()) {
-					final int index = realmChatId.indexOf(":");
+					final int index = accountChatId.indexOf(":");
 					if (index >= 0) {
 
-						final String secondUserId = realmChatId.substring(index + 1, realmChatId.length());
+						final String secondUserId = accountChatId.substring(index + 1, accountChatId.length());
 						final List<Message> result = new ArrayList<Message>(100);
-						for (List<Message> messages : HttpTransactions.execute(p.getForPrivateChat(getUser(realmUserId), secondUserId))) {
+						for (List<Message> messages : HttpTransactions.execute(p.getForPrivateChat(account.getUser(), secondUserId))) {
 							result.addAll(messages);
 						}
 						return result;
 
 					} else {
-						Log.e(TAG, "Chat is private but don't have ':', chat id: " + realmChatId);
+						Log.e(TAG, "Chat is private but don't have ':', chat id: " + accountChatId);
 						return Collections.emptyList();
 					}
 
 				} else {
 					final List<Message> result = new ArrayList<Message>(100);
-					for (List<Message> messages : HttpTransactions.execute(p.getForChat(getUser(realmUserId), realmChatId))) {
+					for (List<Message> messages : HttpTransactions.execute(p.getForChat(account.getUser(), accountChatId))) {
 						result.addAll(messages);
 					}
 					return result;
@@ -137,15 +136,15 @@ public class VkAccountChatService implements AccountChatService {
 				throw new AccountConnectionException(account.getId(), e);
 			}
 		} else {
-			Log.e(TAG, "Chat is not found for chat id: " + realmChatId);
+			Log.e(TAG, "Chat is not found for chat id: " + accountChatId);
 			return Collections.emptyList();
 		}
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull final Integer offset) throws AccountConnectionException {
-		return getMessagesForChat(accountChatId, accountUserId, new VkHttpTransactionForMessagesForChatProvider() {
+	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull final Integer offset) throws AccountConnectionException {
+		return getMessagesForChat(accountChatId, new VkHttpTransactionForMessagesForChatProvider() {
 			@Nonnull
 			@Override
 			public List<? extends HttpTransaction<List<Message>>> getForPrivateChat(@Nonnull User user, @Nonnull String secondUserId) {
@@ -170,16 +169,6 @@ public class VkAccountChatService implements AccountChatService {
 	}
 
 	@Nonnull
-	private User getUser(@Nonnull String realmUserId) {
-		return getUserService().getUserById(account.newUserEntity(realmUserId));
-	}
-
-	@Nonnull
-	private UserService getUserService() {
-		return App.getUserService();
-	}
-
-	@Nonnull
 	private ChatService getChatService() {
 		return App.getChatService();
 	}
@@ -187,10 +176,9 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public List<AccountChat> getChats(@Nonnull String accountUserId) throws AccountConnectionException {
+	public List<AccountChat> getChats() throws AccountConnectionException {
 		try {
-			final User user = App.getUserService().getUserById(account.newUserEntity(accountUserId));
-			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(account, user));
+			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(account));
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {

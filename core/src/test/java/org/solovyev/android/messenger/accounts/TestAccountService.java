@@ -69,19 +69,19 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId) {
+	public List<Message> getNewerMessagesForChat(@Nonnull String accountChatId) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull String accountUserId, @Nonnull Integer offset) {
+	public List<Message> getOlderMessagesForChat(@Nonnull String accountChatId, @Nonnull Integer offset) {
 		return Collections.emptyList();
 	}
 
 	@Nonnull
 	@Override
-	public List<AccountChat> getChats(@Nonnull String accountUserId) {
+	public List<AccountChat> getChats() {
 		return Collections.emptyList();
 	}
 

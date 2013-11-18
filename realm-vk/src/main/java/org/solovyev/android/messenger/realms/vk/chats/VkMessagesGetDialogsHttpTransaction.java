@@ -29,11 +29,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 1:03 PM
- */
 public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransaction<List<AccountChat>> {
 
 	@Nonnull
@@ -42,18 +37,14 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
 	@Nonnull
 	private final Integer count;
 
-	@Nonnull
-	private final User user;
-
-	private VkMessagesGetDialogsHttpTransaction(@Nonnull VkAccount realm, @Nonnull Integer count, @Nonnull User user) {
-		super(realm, "messages.getDialogs");
+	private VkMessagesGetDialogsHttpTransaction(@Nonnull VkAccount account, @Nonnull Integer count) {
+		super(account, "messages.getDialogs");
 		this.count = count;
-		this.user = user;
 	}
 
 	@Nonnull
-	public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull VkAccount realm, @Nonnull User user) {
-		return new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user);
+	public static VkMessagesGetDialogsHttpTransaction newInstance(@Nonnull VkAccount account) {
+		return new VkMessagesGetDialogsHttpTransaction(account, MAX_COUNT);
 	}
 
 	@Nonnull
@@ -61,11 +52,11 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
 		final List<VkMessagesGetDialogsHttpTransaction> result = new ArrayList<VkMessagesGetDialogsHttpTransaction>();
 
 		for (int i = 0; i < count / MAX_COUNT; i++) {
-			result.add(new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT, user));
+			result.add(new VkMessagesGetDialogsHttpTransaction(realm, MAX_COUNT));
 		}
 
 		if (count % MAX_COUNT != 0) {
-			result.add(new VkMessagesGetDialogsHttpTransaction(realm, count % MAX_COUNT, user));
+			result.add(new VkMessagesGetDialogsHttpTransaction(realm, count % MAX_COUNT));
 		}
 
 		return result;
@@ -83,6 +74,6 @@ public class VkMessagesGetDialogsHttpTransaction extends AbstractVkHttpTransacti
 
 	@Override
 	protected List<AccountChat> getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-		return new JsonChatConverter(user, null, null, App.getUserService(), getAccount()).convert(json);
+		return new JsonChatConverter(getAccount().getUser(), null, null, App.getUserService(), getAccount()).convert(json);
 	}
 }
