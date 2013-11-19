@@ -21,6 +21,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.os.Handler;
 import com.google.inject.Inject;
 import org.solovyev.android.Threads;
@@ -43,6 +44,7 @@ import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 
+import static android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public final class App implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -368,5 +370,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		final Intent serviceIntent = new Intent();
 		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
 		instance.application.startService(serviceIntent);
+	}
+
+	public static boolean isDebuggable() {
+		final ApplicationInfo applicationInfo = getApplication().getApplicationInfo();
+		return (applicationInfo.flags & FLAG_DEBUGGABLE) == FLAG_DEBUGGABLE;
 	}
 }
