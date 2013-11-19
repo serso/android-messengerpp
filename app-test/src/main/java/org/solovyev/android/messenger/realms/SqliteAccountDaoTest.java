@@ -29,16 +29,19 @@ import org.solovyev.android.messenger.realms.vk.VkAccountConfiguration;
 import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.xmpp.CustomXmppRealm;
 import org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguration;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.messenger.users.Users;
 
 import java.util.Collection;
 
 import static com.google.common.collect.Iterables.getFirst;
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
 import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
 
 public class SqliteAccountDaoTest extends BaseInstrumentationTest {
+
+	@Inject
+	private UserService userService;
 
 	@Inject
 	private AccountDao dao;
@@ -54,19 +57,19 @@ public class SqliteAccountDaoTest extends BaseInstrumentationTest {
 
 	public void setUp() throws Exception {
 		super.setUp();
-		dao.deleteAll();
+		getDao().deleteAll();
 	}
 
 	public void testVkAccountShouldBeSaved() throws Exception {
-		Collection<Account> accounts = dao.readAll();
+		Collection<Account> accounts = getDao().readAll();
 		Assert.assertTrue(accounts.isEmpty());
 
 		final VkAccountConfiguration expectedConfiguration = new VkAccountConfiguration("login", "password");
 		expectedConfiguration.setAccessParameters("token", "user_id");
 		final Account expectedAccount = vkRealm.newAccount("test~01", Users.newEmptyUser(Entities.newEntity("test~01", "user01")), expectedConfiguration, AccountState.enabled);
-		dao.create(expectedAccount);
+		getDao().create(expectedAccount);
 
-		accounts = dao.readAll();
+		accounts = getDao().readAll();
 		assertTrue(accounts.size() == 1);
 		final Account<VkAccountConfiguration> actualAccount = getFirst(accounts, null);
 		assertNotNull(actualAccount);
@@ -79,9 +82,9 @@ public class SqliteAccountDaoTest extends BaseInstrumentationTest {
 		assertEquals("token", actualAccount.getConfiguration().getAccessToken());
 		assertEquals("user_id", actualAccount.getConfiguration().getUserId());
 
-		dao.deleteById(expectedAccount.getId());
+		getDao().deleteById(expectedAccount.getId());
 
-		accounts = dao.readAll();
+		accounts = getDao().readAll();
 		assertTrue(accounts.isEmpty());
 	}
 
@@ -96,15 +99,19 @@ public class SqliteAccountDaoTest extends BaseInstrumentationTest {
 			}
 			final String accountId = makeAccountId(realm.getId(), index);
 			final Account account = realm.newAccount(accountId, Users.newEmptyUser(Entities.newEntity(accountId, String.valueOf(index))), configuration, AccountState.enabled);
-			dao.create(account);
+			getDao().create(account);
 		}
 
-		final Collection<Account> accounts = dao.readAll();
+		final Collection<Account> accounts = getDao().readAll();
 		assertTrue(accounts.size() == 3);
 	}
 
+	private AccountDao getDao() {
+		return new UserSavingAccountDao(userService, dao);
+	}
+
 	public void tearDown() throws Exception {
-		dao.deleteAll();
+		getDao().deleteAll();
 		super.tearDown();
 	}
 }

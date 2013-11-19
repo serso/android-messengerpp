@@ -22,19 +22,26 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.google.gson.Gson;
-import com.google.inject.Singleton;
-import org.solovyev.android.db.*;
-import org.solovyev.android.messenger.users.UserService;
-import org.solovyev.common.Converter;
-import org.solovyev.common.security.Cipherer;
-import org.solovyev.common.security.CiphererException;
+
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
-import java.util.Collection;
+
+import org.solovyev.android.db.AbstractDbQuery;
+import org.solovyev.android.db.AbstractSQLiteHelper;
+import org.solovyev.android.db.Dao;
+import org.solovyev.android.db.ListMapper;
+import org.solovyev.android.db.SqliteDao;
+import org.solovyev.android.db.SqliteDaoEntityMapper;
+import org.solovyev.common.Converter;
+import org.solovyev.common.security.Cipherer;
+import org.solovyev.common.security.CiphererException;
+
+import com.google.gson.Gson;
+import com.google.inject.Singleton;
 
 import static java.util.Collections.emptyList;
 import static org.solovyev.android.db.AndroidDbUtils.doDbQuery;
@@ -44,33 +51,21 @@ import static org.solovyev.android.messenger.App.getSecurityService;
 @Singleton
 public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao {
 
-	@Inject
-	@Nonnull
-	private UserService userService;
-
-	@Inject
-	@Nonnull
-	private AccountService accountService;
-
-	@Nullable
-	private SecretKey secret;
-
 	@Nonnull
 	private Dao<Account> dao;
+
+	@Nonnull
+	private AccountDaoMapper daoMapper;
 
 	@Inject
 	public SqliteAccountDao(@Nonnull Application context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
 		super(context, sqliteOpenHelper);
 	}
 
-	SqliteAccountDao(@Nonnull Context context, @Nonnull SQLiteOpenHelper sqliteOpenHelper) {
-		super(context, sqliteOpenHelper);
-	}
-
 	@Override
 	public void init() {
-		secret = getSecurityService().getSecretKey();
-		dao = new SqliteDao<Account>("accounts", "id", new AccountDaoMapper(secret), getContext(), getSqliteOpenHelper());
+		daoMapper = new AccountDaoMapper(getSecurityService().getSecretKey());
+		dao = new SqliteDao<Account>("accounts", "id", daoMapper, getContext(), getSqliteOpenHelper());
 	}
 
 	@Override
@@ -209,7 +204,7 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 		@Nonnull
 		@Override
 		public Collection<Account> retrieveData(@Nonnull Cursor cursor) {
-			return new ListMapper<Account>(new AccountMapper(secret)).convert(cursor);
+			return new ListMapper<Account>(daoMapper.getCursorMapper()).convert(cursor);
 		}
 	}
 }

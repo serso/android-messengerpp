@@ -454,7 +454,7 @@ public class DefaultChatService implements ChatService {
 		if (chat != null) {
 			saveMessages(chat, messages, updateChatSyncDate);
 		} else {
-			Log.e(this.getClass().getSimpleName(), "Not chat found - chat id: " + chatId.getEntityId());
+			Log.e(this.getClass().getSimpleName(), "No chat found - chat id: " + chatId.getEntityId());
 		}
 	}
 

@@ -18,6 +18,9 @@ package org.solovyev.android.messenger.accounts;
 
 import android.database.Cursor;
 import android.util.Log;
+
+import java.util.NoSuchElementException;
+
 import com.google.gson.Gson;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
@@ -52,8 +55,13 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 		final String state = cursor.getString(4);
 
 		final Realm<C> realm = (Realm<C>) getRealmService().getRealmById(realmId);
-		// realm is not loaded => no way we can find user in realm services
-		final User user = getUserService().getUserById(Entities.newEntityFromEntityId(userId), false, false);
+
+		final User user;
+		try {
+			user = getUserService().getUserById(Entities.newEntityFromEntityId(userId), false, false);
+		} catch (NoSuchElementException e) {
+			throw new AccountRuntimeException(accountId, e);
+		}
 
 		final C encryptedConfiguration = new Gson().fromJson(configuration, realm.getConfigurationClass());
 

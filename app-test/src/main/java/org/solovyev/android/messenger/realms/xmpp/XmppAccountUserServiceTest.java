@@ -112,10 +112,6 @@ public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 				return contact != null && contact.getEntity().getAccountEntityId().equals(TestXmppConfiguration.USER_LOGIN2);
 			}
 		}));
-
-		contacts1 = accountUserService.getUserContacts();
-		assertTrue(contacts1.isEmpty());
-
 	}
 
 	public void testCheckOnlineUsers() throws Exception {

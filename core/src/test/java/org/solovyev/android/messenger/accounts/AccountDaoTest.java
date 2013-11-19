@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
 import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.realms.UserSavingAccountDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.security.Cipherer;
@@ -199,7 +200,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Nonnull
 	@Override
 	protected Dao<Account> getDao() {
-		return new UserCreatingDao(dao, userService);
+		return new UserSavingAccountDao(userService, dao);
 	}
 
 	@Nonnull
@@ -225,64 +226,5 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 	@Override
 	protected Account changeEntity(@Nonnull Account entity) {
 		return entity.copyForNewState(AccountState.disabled_by_user);
-	}
-
-	private static class UserCreatingDao implements Dao<Account> {
-
-		@Nonnull
-		private final Dao<Account> dao;
-
-		@Nonnull
-		private final UserService userService;
-
-		private UserCreatingDao(@Nonnull Dao<Account> dao, @Nonnull UserService userService) {
-			this.dao = dao;
-			this.userService = userService;
-		}
-
-		@Override
-		public long create(@Nonnull Account account) {
-			long result = dao.create(account);
-			userService.saveAccountUser(account.getUser());
-			return result;
-		}
-
-		@Override
-		@Nullable
-		public Account read(@Nonnull String id) {
-			return dao.read(id);
-		}
-
-		@Override
-		@Nonnull
-		public Collection<Account> readAll() {
-			return dao.readAll();
-		}
-
-		@Override
-		@Nonnull
-		public Collection<String> readAllIds() {
-			return dao.readAllIds();
-		}
-
-		@Override
-		public long update(@Nonnull Account entity) {
-			return dao.update(entity);
-		}
-
-		@Override
-		public void delete(@Nonnull Account entity) {
-			dao.delete(entity);
-		}
-
-		@Override
-		public void deleteById(@Nonnull String id) {
-			dao.deleteById(id);
-		}
-
-		@Override
-		public void deleteAll() {
-			dao.deleteAll();
-		}
 	}
 }
