@@ -29,6 +29,7 @@ import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.ChatService;
+import org.solovyev.android.messenger.chats.MutableAccountChat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.Realm;
@@ -143,7 +144,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nonnull
-	static AccountChat toAccountChat(@Nonnull Chat smackChat, @Nonnull List<Message> smackMessages, @Nonnull Account account) {
+	static MutableAccountChat toAccountChat(@Nonnull Chat smackChat, @Nonnull List<Message> smackMessages, @Nonnull Account account) {
 		final User participant = toUser(smackChat.getParticipant(), account);
 
 		final Entity chat;

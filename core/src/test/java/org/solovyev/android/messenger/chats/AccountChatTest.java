@@ -34,7 +34,7 @@ public class AccountChatTest {
 
 	@Test
 	public void testShouldUpdateChatInMessagesOnIdUpdate() throws Exception {
-		final Chat chat = Chats.newEmptyChat("test:test");
+		final MutableChat chat = Chats.newEmptyChat("test:test");
 		final List<Message> messages = new ArrayList<Message>();
 		for (int i = 0; i < 10; i++) {
 			final MutableMessage message = Messages.newEmptyMessage("test:test" + i);

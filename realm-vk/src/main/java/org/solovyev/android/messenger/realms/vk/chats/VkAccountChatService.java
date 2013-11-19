@@ -204,7 +204,7 @@ public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) {
+	public MutableChat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) {
 		return Chats.newPrivateChat(account.newChatEntity(accountUserId1 + CHAT_DELIMITER + accountUserId2));
 	}
 }

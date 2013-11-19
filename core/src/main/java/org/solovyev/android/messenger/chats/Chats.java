@@ -39,12 +39,8 @@ import static org.solovyev.android.messenger.App.getChatService;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUnreadMessagesCounter;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 3/7/13
- * Time: 3:49 PM
- */
 public final class Chats {
 
 	@Nonnull
@@ -66,23 +62,32 @@ public final class Chats {
 
 	@Nonnull
 	static String getDisplayName(@Nonnull Chat chat, @Nullable Message message, @Nonnull User user) {
-		final String title = message != null ? message.getTitle() : null;
-		if (Strings.isEmpty(title) || title.equals(" ... ")) {
+		final String chatTitle = chat.getTitle();
+		if (isEmptyTitle(chatTitle)) {
+			final String messageTitle = message != null ? message.getTitle() : null;
+			if (isEmptyTitle(messageTitle)) {
 
-			if (chat.isPrivate()) {
-				return Users.getDisplayNameFor(chat.getSecondUser());
+				if (chat.isPrivate()) {
+					return Users.getDisplayNameFor(chat.getSecondUser());
+				} else {
+					return "";
+				}
 			} else {
-				return "";
+				return messageTitle;
 			}
 		} else {
-			return title;
+			return chatTitle;
 		}
+	}
+
+	private static boolean isEmptyTitle(@Nullable String title) {
+		return isEmpty(title) || title.equals(" ... ");
 	}
 
 	@Nonnull
 	public static MutableChat newChat(@Nonnull Entity entity,
-							   @Nonnull List<AProperty> properties,
-							   @Nullable DateTime lastMessageSyncDate) {
+									  @Nonnull Collection<AProperty> properties,
+									  @Nullable DateTime lastMessageSyncDate) {
 		return new ChatImpl(entity, properties, lastMessageSyncDate);
 	}
 
@@ -119,8 +124,17 @@ public final class Chats {
 	}
 
 	@Nonnull
-	public static MutableAccountChat newEmptyAccountChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
+	public static MutableAccountChat newEmptyAccountChat(@Nonnull MutableChat chat, @Nonnull List<User> participants) {
 		return new AccountChatImpl(chat, Collections.<Message>emptyList(), participants);
+	}
+
+	@Nonnull
+	public static MutableAccountChat newEmptyAccountChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
+		if (chat instanceof MutableChat) {
+			return newEmptyAccountChat((MutableChat)chat, participants);
+		} else {
+			return new AccountChatImpl(Chats.newChat(chat.getEntity(), chat.getPropertiesCollection(), chat.getLastMessagesSyncDate()), Collections.<Message>emptyList(), participants);
+		}
 	}
 
 	@Nonnull

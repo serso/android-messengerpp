@@ -111,9 +111,15 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 		return clone;
 	}
 
+	@Nullable
+	@Override
+	public String getTitle() {
+		return properties.getPropertyValue(PROPERTY_TITLE);
+	}
+
 	@Nonnull
 	@Override
-	public Chat copyWithNewId(@Nonnull Entity id) {
+	public MutableChat copyWithNewId(@Nonnull Entity id) {
 		return new ChatImpl(id, this.properties.getPropertiesCollection(), this.lastMessageSyncDate);
 	}
 
@@ -177,5 +183,10 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 			clone.properties.setPropertiesFrom(that.getPropertiesCollection());
 			return clone;
 		}
+	}
+
+	@Override
+	public void setTitle(@Nonnull String title) {
+		properties.setProperty(PROPERTY_TITLE, title);
 	}
 }

@@ -26,4 +26,7 @@ public interface MutableAccountChat extends AccountChat {
 	void addMessage(@Nonnull MutableMessage message);
 
 	boolean addParticipant(@Nonnull User participant);
+
+	@Nonnull
+	MutableChat getChat();
 }

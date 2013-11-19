@@ -187,7 +187,7 @@ public class DefaultChatService implements ChatService {
 				// no private chat exists => create one
 				final AccountChatService acs = account.getAccountChatService();
 
-				Chat chat = acs.newPrivateChat(accountChat, user1.getAccountEntityId(), user2.getAccountEntityId());
+				MutableChat chat = acs.newPrivateChat(accountChat, user1.getAccountEntityId(), user2.getAccountEntityId());
 
 				chat = preparePrivateChat(chat, user1, user2);
 
@@ -214,7 +214,7 @@ public class DefaultChatService implements ChatService {
 	 * @return prepared chat
 	 */
 	@Nonnull
-	private Chat preparePrivateChat(@Nonnull Chat chat, @Nonnull Entity user1, @Nonnull Entity user2) throws UnsupportedAccountException {
+	private MutableChat preparePrivateChat(@Nonnull MutableChat chat, @Nonnull Entity user1, @Nonnull Entity user2) throws UnsupportedAccountException {
 		final Account account = getAccountByEntity(user1);
 		final Entity chatEntity = getPrivateChatId(user1, user2);
 

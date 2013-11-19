@@ -16,5 +16,14 @@
 
 package org.solovyev.android.messenger.chats;
 
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.entities.Entity;
+
 public interface MutableChat extends Chat {
+
+	void setTitle(@Nonnull String title);
+
+	@Nonnull
+	MutableChat copyWithNewId(@Nonnull Entity id);
 }

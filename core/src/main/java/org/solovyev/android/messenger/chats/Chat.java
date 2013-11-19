@@ -30,6 +30,7 @@ import java.util.Collection;
 public interface Chat extends Identifiable, EntityAware, Mergeable<Chat> {
 
 	String PROPERTY_PRIVATE = "private";
+	String PROPERTY_TITLE = "title";
 	String PROPERTY_DRAFT_MESSAGE = "draft_message";
 
 	@Nonnull
@@ -49,6 +50,9 @@ public interface Chat extends Identifiable, EntityAware, Mergeable<Chat> {
 
 	@Nonnull
 	Chat updateMessagesSyncDate();
+
+	@Nullable
+	String getTitle();
 
 	/**
 	 * Method creates copy of this object with new account id

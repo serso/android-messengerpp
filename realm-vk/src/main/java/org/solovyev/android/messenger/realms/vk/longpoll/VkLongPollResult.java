@@ -20,7 +20,6 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.longpoll.LongPollResult;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,10 +55,10 @@ public class VkLongPollResult implements LongPollResult {
 	}
 
 	@Override
-	public void doUpdates(@Nonnull User user, @Nonnull Account account) {
+	public void doUpdates(@Nonnull Account account) {
 		for (LongPollUpdate update : updates) {
 			try {
-				update.doUpdate(user, account);
+				update.doUpdate(account);
 			} catch (AccountException e) {
 				App.getExceptionHandler().handleException(e);
 			}

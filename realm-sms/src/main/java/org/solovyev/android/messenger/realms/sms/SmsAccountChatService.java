@@ -188,7 +188,7 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	@Override
-	public Chat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException {
+	public MutableChat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException {
 		return Chats.newPrivateChat(accountChat);
 	}
 }

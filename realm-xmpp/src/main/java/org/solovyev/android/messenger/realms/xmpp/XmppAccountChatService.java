@@ -24,6 +24,7 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.MutableChat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
@@ -98,10 +99,10 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public Chat newPrivateChat(@Nonnull final Entity accountChat, @Nonnull String accountUserId1, @Nonnull final String accountUserId2) throws AccountConnectionException {
-		return doOnConnection(new XmppConnectedCallable<Chat>() {
+	public MutableChat newPrivateChat(@Nonnull final Entity accountChat, @Nonnull String accountUserId1, @Nonnull final String accountUserId2) throws AccountConnectionException {
+		return doOnConnection(new XmppConnectedCallable<MutableChat>() {
 			@Override
-			public Chat call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
+			public MutableChat call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
 				org.jivesoftware.smack.Chat smackChat = connection.getChatManager().createChat(accountUserId2, accountChat.getEntityId(), new XmppMessageListener(getAccount(), accountChat));
 				return XmppAccount.toAccountChat(smackChat, Collections.<org.jivesoftware.smack.packet.Message>emptyList(), getAccount()).getChat();
 			}

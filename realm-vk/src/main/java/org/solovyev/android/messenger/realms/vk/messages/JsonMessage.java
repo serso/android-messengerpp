@@ -17,6 +17,9 @@
 package org.solovyev.android.messenger.realms.vk.messages;
 
 import android.util.Log;
+
+import java.util.Collections;
+
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.MessageDirection;
@@ -27,12 +30,19 @@ import org.solovyev.android.messenger.users.User;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+
 import static org.solovyev.android.messenger.chats.MessageDirection.in;
 import static org.solovyev.android.messenger.messages.MessageState.*;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 import static org.solovyev.common.text.Strings.getNotEmpty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 public class JsonMessage {
+
+	private static final Splitter splitter = Splitter.on(",");
 
 	@Nullable
 	private String mid;
@@ -218,6 +228,42 @@ public class JsonMessage {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	/*
+	**********************************************************************
+	*
+	*                           TRANSFORMATIONS
+	*
+	**********************************************************************
+	*/
+
+	@Nonnull
+	public Iterable<Integer> getParticipantIds() {
+		if (!isEmpty(chat_active)) {
+			return Iterables.transform(splitter.split(chat_active), ToIntFunction.getInstance());
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	private static class ToIntFunction implements Function<String, Integer> {
+
+		@Nonnull
+		private static final ToIntFunction instance = new ToIntFunction();
+
+		private ToIntFunction() {
+		}
+
+		@Nonnull
+		public static ToIntFunction getInstance() {
+			return instance;
+		}
+
+		@Override
+		public Integer apply(@Nullable String input) {
+			return Integer.valueOf(input);
 		}
 	}
 }

@@ -42,7 +42,7 @@ import static org.solovyev.android.properties.Properties.newProperty;
 class AccountChatImpl implements MutableAccountChat {
 
 	@Nonnull
-	private Chat chat;
+	private MutableChat chat;
 
 	@Nonnull
 	private List<Message> messages;
@@ -50,7 +50,7 @@ class AccountChatImpl implements MutableAccountChat {
 	@Nonnull
 	private List<User> participants;
 
-	AccountChatImpl(@Nonnull Chat chat, @Nonnull List<Message> messages, @Nonnull List<User> participants) {
+	AccountChatImpl(@Nonnull MutableChat chat, @Nonnull List<Message> messages, @Nonnull List<User> participants) {
 		this.chat = chat;
 		this.messages = messages;
 		this.participants = participants;
@@ -123,14 +123,14 @@ class AccountChatImpl implements MutableAccountChat {
 
 	@Override
 	@Nonnull
-	public Chat getChat() {
+	public MutableChat getChat() {
 		return chat;
 	}
 
 	@Nonnull
 	@Override
 	public AccountChat copyWithNewId(@Nonnull final Entity id) {
-		final Chat chat = this.chat.copyWithNewId(id);
+		final MutableChat chat = this.chat.copyWithNewId(id);
 		final List<Message> messages = newArrayList(transform(this.messages, new Function<Message, Message>() {
 			@Override
 			public Message apply(Message message) {

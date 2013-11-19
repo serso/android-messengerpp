@@ -25,7 +25,6 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
-import org.solovyev.android.messenger.users.User;
 
 import static org.solovyev.android.messenger.App.newTag;
 
@@ -57,11 +56,10 @@ public abstract class LongPollAccountConnection extends AbstractAccountConnectio
 				while (!isStopped()) {
 					Log.i(TAG, "Long polling started!");
 
-					final User user = getAccount().getUser();
 					final LongPollResult longPollResult = realmLongPollService.waitForResult(longPollingData);
 					if (longPollResult != null) {
 						longPollingData = longPollResult.updateLongPollServerData(longPollingData);
-						longPollResult.doUpdates(user, getAccount());
+						longPollResult.doUpdates(getAccount());
 					}
 
 					Log.i(TAG, "Long polling ended!");

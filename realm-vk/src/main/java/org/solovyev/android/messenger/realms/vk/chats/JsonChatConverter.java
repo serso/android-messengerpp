@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.solovyev.android.messenger.chats.Chats.newAccountChat;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 /**
  * User: serso
@@ -102,8 +103,6 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 		final Map<String, MutableAccountChat> fakeChats = new HashMap<String, MutableAccountChat>();
 
 		try {
-			final Splitter splitter = Splitter.on(",");
-
 			if (!Collections.isEmpty(jsonMessages)) {
 				for (JsonMessage jsonMessage : jsonMessages) {
 					final MutableMessage message = jsonMessage.toMessage(user, explicitUserId, account);
@@ -138,23 +137,25 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 
 					} else {
 						// real chat
-						final String realmChatId = apiChatId == null ? explicitChatId : String.valueOf(apiChatId);
+						final String accountChatId = apiChatId == null ? explicitChatId : String.valueOf(apiChatId);
 
-						MutableAccountChat chat = chats.get(realmChatId);
+						MutableAccountChat chat = chats.get(accountChatId);
 						if (chat == null) {
 							// create new chat object
-							chat = newAccountChat(account.newChatEntity(realmChatId), false);
+							chat = newAccountChat(account.newChatEntity(accountChatId), false);
 
-							final String participantsStr = jsonMessage.getChat_active();
-							if (!Strings.isEmpty(participantsStr)) {
-								for (Integer participantId : Iterables.transform(splitter.split(participantsStr), ToIntFunction.getInstance())) {
-									chat.addParticipant(userService.getUserById(account.newUserEntity(String.valueOf(participantId)), true));
-								}
+							final String title = jsonMessage.getTitle();
+							if (!isEmpty(title)) {
+								chat.getChat().setTitle(title);
+							}
+
+							for (Integer participantId : jsonMessage.getParticipantIds()) {
+								chat.addParticipant(userService.getUserById(account.newUserEntity(String.valueOf(participantId)), true));
 							}
 
 							chat.addParticipant(user);
 
-							chats.put(realmChatId, chat);
+							chats.put(accountChatId, chat);
 						}
 
 						chat.addMessage(message);
@@ -169,24 +170,5 @@ public class JsonChatConverter implements Converter<String, List<AccountChat>> {
 		result.addAll(chats.values());
 		result.addAll(fakeChats.values());
 		return result;
-	}
-
-	private static class ToIntFunction implements Function<String, Integer> {
-
-		@Nonnull
-		private static final ToIntFunction instance = new ToIntFunction();
-
-		private ToIntFunction() {
-		}
-
-		@Nonnull
-		public static ToIntFunction getInstance() {
-			return instance;
-		}
-
-		@Override
-		public Integer apply(@Nullable String input) {
-			return Integer.valueOf(input);
-		}
 	}
 }
