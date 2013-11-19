@@ -65,6 +65,9 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	@Nonnull
 	private static final String REALM_ID = "vk";
 
+	@Nonnull
+	public static final String TAG = App.newTag("VK");
+
     /*
 	**********************************************************************
     *

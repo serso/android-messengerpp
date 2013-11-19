@@ -16,7 +16,13 @@
 
 package org.solovyev.android.messenger.realms.vk.longpoll;
 
-import com.google.gson.*;
+import android.util.Log;
+
+import java.lang.reflect.Type;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -24,18 +30,16 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserService;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Type;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
-/**
- * User: serso
- * Date: 6/24/12
- * Time: 12:53 AM
- */
 public interface LongPollUpdate {
 
 	void doUpdate(@Nonnull User user, @Nonnull Account account) throws AccountException;
@@ -198,19 +202,19 @@ public interface LongPollUpdate {
 	static class MessageAdded implements LongPollUpdate {
 
 		@Nullable
-		private String realmFriendId;
+		private String accountFriendId;
 
 		@Nullable
-		private String realmChatId;
+		private String accountChatId;
 
 		private MessageAdded() {
 		}
 
-		public static MessageAdded forChat(@Nonnull String realmChatId) {
+		public static MessageAdded forChat(@Nonnull String accountChatId) {
 			final MessageAdded result = new MessageAdded();
 
-			result.realmFriendId = null;
-			result.realmChatId = realmChatId;
+			result.accountFriendId = null;
+			result.accountChatId = accountChatId;
 
 			return result;
 		}
@@ -218,23 +222,29 @@ public interface LongPollUpdate {
 		public static MessageAdded forFriend(@Nonnull String realmFriendId) {
 			final MessageAdded result = new MessageAdded();
 
-			result.realmFriendId = realmFriendId;
-			result.realmChatId = null;
+			result.accountFriendId = realmFriendId;
+			result.accountChatId = null;
 
 			return result;
 		}
 
 		@Override
 		public void doUpdate(@Nonnull User user, @Nonnull Account account) throws AccountException {
-			final Entity realmChat;
-			if (this.realmChatId != null) {
-				realmChat = account.newChatEntity(this.realmChatId);
+			final Chat chat;
+			if (this.accountChatId != null) {
+				final Entity chatId = account.newChatEntity(this.accountChatId);
+				chat = getChatService().getChatById(chatId);
+				if (chat == null) {
+					Log.e(VkRealm.TAG, "Unable to find chat: " + this.accountChatId);
+				}
 			} else {
-				assert realmFriendId != null;
-				realmChat = getChatService().getPrivateChatId(user.getEntity(), account.newUserEntity(realmFriendId));
+				assert accountFriendId != null;
+				chat = getChatService().getOrCreatePrivateChat(user.getEntity(), account.newUserEntity(accountFriendId));
 			}
 
-			getChatService().syncNewerMessagesForChat(realmChat);
+			if (chat != null) {
+				getChatService().syncNewerMessagesForChat(chat.getEntity());
+			}
 		}
 
 		@Nonnull
