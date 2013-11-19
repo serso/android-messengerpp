@@ -18,6 +18,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import com.google.gson.Gson;
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
 
@@ -104,7 +105,9 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	public AndroidConnectionConfiguration toXmppConfiguration() {
 		final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, null);
 
-		connectionConfiguration.setDebuggerEnabled(DEBUG);
+		if (App.isDebuggable()) {
+			connectionConfiguration.setDebuggerEnabled(DEBUG);
+		}
 
 		return connectionConfiguration;
 	}
