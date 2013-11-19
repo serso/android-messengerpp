@@ -40,7 +40,7 @@ import static org.joda.time.DateTimeZone.UTC;
 import static org.solovyev.android.messenger.App.getAccountService;
 
 @ReportsCrashes(formKey = "",
-		mailTo = "se.solovyev+programming+messengerpp+crashes+1.0@gmail.com",
+		mailTo = "se.solovyev+programming+messengerpp+crashes+0.000@gmail.com",
 		mode = ReportingInteractionMode.SILENT)
 public class MessengerApplication extends Application {
 
