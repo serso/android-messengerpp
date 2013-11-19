@@ -17,9 +17,12 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
