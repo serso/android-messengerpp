@@ -243,7 +243,7 @@ public abstract class AbstractMessengerListItem<D extends Identifiable> implemen
 				}
 			}
 		});
-		view.setBackgroundColor(resources.getColor(android.R.color.transparent));
+		view.setBackgroundDrawable(resources.getDrawable(R.drawable.mpp_li_states));
 
 		setOnlineContactMarker(view, resources, false);
 	}

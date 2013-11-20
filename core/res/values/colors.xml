@@ -28,7 +28,7 @@
 	<color name="text_name">#ff0e1825</color>
 	<!--<color name="text_link">#ff3266a2</color>-->
 	<color name="text_link">#ff363636</color>
-	<color name="mpp_selected">#cc33b5e5</color>
+	<color name="mpp_selected">#ff33b5e5</color>
 	<color name="mpp_blue">#ff33b5e5</color>
 	<color name="mpp_black">#ff000000</color>
 	<color name="mpp_blue_darker">#ff247697</color>
