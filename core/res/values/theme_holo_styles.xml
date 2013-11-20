@@ -221,8 +221,6 @@
 	</style>
 
 	<style name="mpp_form_label" parent="mpp_section_name">
-		<item name="android:paddingTop">10dp</item>
-		<item name="android:background">@null</item>
 	</style>
 
 	<style name="mpp_form_textview">
@@ -289,7 +287,7 @@
 	</style>
 
 	<style name="mpp_section_name" parent="mpp_text">
-		<item name="android:background">@drawable/mpp_section_divider</item>
+		<item name="android:paddingTop">10dp</item>
 		<item name="android:textAllCaps">true</item>
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
