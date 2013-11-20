@@ -161,7 +161,11 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		} else {
 			accountName.setVisibility(VISIBLE);
 			if (account != null) {
-				accountName.setText("[" + account.getDisplayName(context) + "/" + account.getUser().getDisplayName() + "]");
+				if (accountService.isOneAccount(account.getRealm())) {
+					accountName.setText(account.getDisplayName(context));
+				} else {
+					accountName.setText(account.getDisplayName(context) + "/" + account.getUser().getDisplayName());
+				}
 			}
 		}
 

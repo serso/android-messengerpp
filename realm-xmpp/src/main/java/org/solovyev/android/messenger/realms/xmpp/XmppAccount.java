@@ -75,9 +75,12 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	public String getDisplayName(@Nonnull Context context) {
 		final StringBuilder sb = new StringBuilder();
 
-		sb.append(context.getText(getRealm().getNameResId()));
-		sb.append("@");
-		sb.append(getConfiguration().getServer());
+		final Realm realm = getRealm();
+		sb.append(context.getText(realm.getNameResId()));
+		if (realm instanceof CustomXmppRealm) {
+			sb.append("@");
+			sb.append(getConfiguration().getServer());
+		}
 
 		return sb.toString();
 	}

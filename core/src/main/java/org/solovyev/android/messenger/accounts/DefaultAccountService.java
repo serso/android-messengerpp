@@ -364,6 +364,23 @@ public class DefaultAccountService implements AccountService {
 		}
 	}
 
+	@Override
+	public boolean isOneAccount(@Nonnull Realm realm) {
+		synchronized (accounts) {
+			int count = 0;
+			for (Account account : accounts.values()) {
+				if (account.getRealm().equals(realm)) {
+					count++;
+					if (count > 1) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+	}
+
 	@Nonnull
 	@Override
 	public Account getAccountByEntity(@Nonnull Entity entity) throws UnsupportedAccountException {

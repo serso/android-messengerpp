@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityAware;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -74,6 +75,8 @@ public interface AccountService {
 	void removeAccount(@Nonnull String accountId);
 
 	boolean isOneAccount();
+
+	boolean isOneAccount(@Nonnull Realm realm);
 
 	boolean canCreateUsers();
 
