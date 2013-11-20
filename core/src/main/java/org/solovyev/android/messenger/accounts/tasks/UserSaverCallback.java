@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.accounts.tasks;
 
 import com.google.common.util.concurrent.FutureCallback;
 import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.NewContactActivity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.tasks.ContextCallback;
 import org.solovyev.android.tasks.Tasks;
@@ -32,7 +33,11 @@ public class UserSaverCallback implements ContextCallback<BaseFragmentActivity, 
 
 	@Override
 	public void onSuccess(@Nonnull BaseFragmentActivity activity, User user) {
-		activity.finish();
+		if (activity instanceof NewContactActivity) {
+			activity.finish();
+		} else {
+			activity.getSupportFragmentManager().popBackStack();
+		}
 	}
 
 	@Override
