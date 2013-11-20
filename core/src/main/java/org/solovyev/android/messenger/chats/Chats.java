@@ -17,7 +17,6 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
@@ -25,7 +24,6 @@ import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
-import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,11 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.Math.min;
-import static java.util.Collections.sort;
-import static org.solovyev.android.messenger.App.getChatService;
-import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.App.getUnreadMessagesCounter;
+import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.common.text.Strings.isEmpty;
 
@@ -131,17 +125,10 @@ public final class Chats {
 	@Nonnull
 	public static MutableAccountChat newEmptyAccountChat(@Nonnull Chat chat, @Nonnull List<User> participants) {
 		if (chat instanceof MutableChat) {
-			return newEmptyAccountChat((MutableChat)chat, participants);
+			return newEmptyAccountChat((MutableChat) chat, participants);
 		} else {
 			return new AccountChatImpl(Chats.newChat(chat.getEntity(), chat.getPropertiesCollection(), chat.getLastMessagesSyncDate()), Collections.<Message>emptyList(), participants);
 		}
-	}
-
-	@Nonnull
-	static List<UiChat> getLastChatsByDate(@Nonnull List<UiChat> result, int count) {
-		sort(result, new LastMessageDateChatComparator());
-
-		return result.subList(0, min(result.size(), count));
 	}
 
 	public static void openUnreadChat(@Nonnull Context context) {

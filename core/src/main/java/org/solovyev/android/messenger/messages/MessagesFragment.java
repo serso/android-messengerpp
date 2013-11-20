@@ -18,7 +18,6 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -35,7 +34,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
-import org.solovyev.android.http.ImageLoader;
 import org.solovyev.android.menu.AMenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -109,10 +107,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 	@Inject
 	@Nonnull
-	private ImageLoader imageLoader;
-
-	@Inject
-	@Nonnull
 	private AccountService accountService;
 
 	@Inject
@@ -157,6 +151,18 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 		chatEventListener = new UiThreadUserChatListener();
 		this.chatService.addListener(chatEventListener);
+
+		scrollToTheEnd(0);
+
+		new SyncMessagesForChatAsyncTask(null, getActivity()) {
+			@Override
+			protected void onSuccessPostExecute(@Nonnull Input result) {
+				super.onSuccessPostExecute(result);
+				// let's wait 0.5 sec while sorting & filtering
+				scrollToTheEnd(500);
+			}
+		}.executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+
 	}
 
 	@Nonnull
@@ -372,8 +378,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 				pullToRefreshListView.setRefreshingInternal(false);
 			}
 
-			final int count = lv.getCount();
-
 			new SyncMessagesForChatAsyncTask(this, getActivity()) {
 				@Override
 				protected void onSuccessPostExecute(@Nonnull Input result) {
@@ -382,7 +386,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 					} finally {
 
 						// NOTE: small delay for data to be applied on the list
-						lv.postDelayed(new ListViewPostActions(lv, transcriptMode, count), 500);
+						lv.postDelayed(new ListViewPostActions(lv, transcriptMode), 500);
 					}
 				}
 
@@ -393,7 +397,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 					} finally {
 
 						// NOTE: small delay for data to be applied on the list
-						lv.postDelayed(new ListViewPostActions(lv, transcriptMode, count), 500);
+						lv.postDelayed(new ListViewPostActions(lv, transcriptMode), 500);
 
 					}
 				}
@@ -464,23 +468,14 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		@Nonnull
 		private final Integer transcriptMode;
 
-		private final int count;
-
-		public ListViewPostActions(@Nonnull ListView lv, @Nonnull Integer transcriptMode, int count) {
+		public ListViewPostActions(@Nonnull ListView lv, @Nonnull Integer transcriptMode) {
 			this.lv = lv;
 			this.transcriptMode = transcriptMode;
-			this.count = count;
 		}
 
 		@Override
 		public void run() {
 			lv.setTranscriptMode(transcriptMode);
-			final int newCount = lv.getCount();
-			int newPosition = newCount - count + 1;
-			if (newPosition >= 0) {
-				// todo serso: think
-				//lv.setSelection(newPosition);
-			}
 		}
 	}
 
@@ -523,26 +518,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		@Override
 		protected MessageListItem createListItem(@Nonnull Message message) {
 			return newMessageListItem(getUser(), chat, message);
-		}
-
-		@Override
-		protected void onSuccessPostExecute(@Nullable List<Message> elements) {
-			super.onSuccessPostExecute(elements);
-
-			scrollToTheEnd(200);
-
-			// load new messages for chat
-			final FragmentActivity activity = getActivity();
-			if (activity != null) {
-				new SyncMessagesForChatAsyncTask(null, activity) {
-					@Override
-					protected void onSuccessPostExecute(@Nonnull Input result) {
-						super.onSuccessPostExecute(result);
-						// let's wait 0.5 sec while sorting & filtering
-						scrollToTheEnd(500);
-					}
-				}.executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
-			}
 		}
 	}
 

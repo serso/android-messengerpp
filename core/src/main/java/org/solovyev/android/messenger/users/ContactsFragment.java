@@ -18,7 +18,6 @@ package org.solovyev.android.messenger.users;
 
 import android.os.Handler;
 import android.util.Log;
-
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
@@ -34,6 +33,8 @@ public class ContactsFragment extends BaseContactsFragment {
 	private int maxContacts = MAX_SEARCH_CONTACTS;
 
 	private static final long SEARCH_DELAY_MILLIS = 500;
+
+	private int totalLoaded = 0;
 
 	@Nonnull
 	private final FindContactsRunnable runnable = new FindContactsRunnable();
@@ -71,6 +72,7 @@ public class ContactsFragment extends BaseContactsFragment {
 			if (isEmpty(filterText)) {
 				// in case of empty query we need to reset maxContacts
 				maxContacts = MAX_SEARCH_CONTACTS;
+				totalLoaded = 0;
 			}
 			final Handler handler = getUiHandler();
 			handler.removeCallbacks(runnable);
@@ -79,11 +81,17 @@ public class ContactsFragment extends BaseContactsFragment {
 	}
 
 	@Override
-	public void onBottomReached() {
-		super.onBottomReached();
+	public void onItemReachedFromTop(int position, int total) {
+		super.onItemReachedFromTop(position, total);
 
-		maxContacts += MAX_SEARCH_CONTACTS;
-		getUiHandler().post(runnable);
+		final float rate = (float) position / (float) total;
+		if (rate > 0.75f) {
+			if (totalLoaded != total) {
+				totalLoaded = total;
+				maxContacts = 2 * maxContacts;
+				getUiHandler().post(runnable);
+			}
+		}
 	}
 
 	private class FindContactsRunnable implements Runnable {

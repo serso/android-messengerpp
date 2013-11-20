@@ -46,12 +46,20 @@ public class ChatsAsyncLoader extends BaseAsyncLoader<UiChat, ChatListItem> {
 	@Nonnull
 	@Override
 	protected List<UiChat> getElements(@Nonnull Context context) {
-		return getChatService().getLastChats(query, maxCount);
+		return getChatService().getLastUiChats(query, maxCount);
 	}
 
 	@Nonnull
 	@Override
 	protected ChatListItem createListItem(@Nonnull UiChat uiChat) {
 		return ChatListItem.newInstance(uiChat);
+	}
+
+	@Override
+	public String toString() {
+		return "ChatsAsyncLoader{" +
+				"query='" + query + '\'' +
+				", maxCount=" + maxCount +
+				'}';
 	}
 }

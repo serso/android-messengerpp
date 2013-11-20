@@ -18,19 +18,17 @@ package org.solovyev.android.list;
 
 import android.app.ListActivity;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.ListView;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import org.solovyev.android.messenger.App;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * User: serso
- * Date: 6/4/13
- * Time: 7:55 PM
- */
 public final class ListViewScroller implements AbsListView.OnScrollListener {
+
+	private static final String TAG = App.newTag("ListScroller");
 
 	/**
 	 * First visible item in list view. The value is changed due to list view scroll changes
@@ -92,21 +90,23 @@ public final class ListViewScroller implements AbsListView.OnScrollListener {
 			switch (view.getId()) {
 				case android.R.id.list:
 					if (scrollUp && firstVisibleItem == 0) {
+						Log.d(TAG, "Top reached");
 						// reach top
 						listener.onTopReached();
 					} else {
 						if (scrollDown && lastVisibleItem == totalItemCount) {
 							// reach bottom
+							Log.d(TAG, "Bottom reached");
 							listener.onBottomReached();
 						}
 					}
 
 					if (scrollDown) {
-						listener.onItemReachedFromTop(lastVisibleItem);
+						listener.onItemReachedFromTop(lastVisibleItem, totalItemCount);
 					}
 
 					if (scrollUp) {
-						listener.onItemReachedFromBottom(lastVisibleItem);
+						listener.onItemReachedFromBottom(lastVisibleItem, totalItemCount);
 					}
 
 					break;

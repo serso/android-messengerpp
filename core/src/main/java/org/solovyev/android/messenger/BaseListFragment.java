@@ -92,7 +92,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
@@ -178,10 +178,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	/**
 	 * Last saved instance state (the last state which has been passed through onCreate method)
-	 *
+	 * <p/>
 	 * Problem: When fragment is in back stack and has not been shown during activity lifecycle then
 	 * onSaveInstanceState() saves nothing on activity destruction (as no view has been created). If later we return to this fragment using back button we loose state.
-	 *
+	 * <p/>
 	 * Solution: Save last state and if fragment hsa not been shown - use it.
 	 */
 	@Nullable
@@ -541,7 +541,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				listViewFilter.saveState(outState);
 			}
 		} else {
-			if(lastSavedInstanceState != null) {
+			if (lastSavedInstanceState != null) {
 				outState.putAll(lastSavedInstanceState);
 			}
 		}
@@ -598,10 +598,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
     */
 
 
-	public void onItemReachedFromTop(int position) {
+	public void onItemReachedFromTop(int position, int total) {
 	}
 
-	public void onItemReachedFromBottom(int position) {
+	public void onItemReachedFromBottom(int position, int total) {
 	}
 
 	public void onBottomReached() {

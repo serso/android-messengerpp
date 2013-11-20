@@ -18,14 +18,6 @@ package org.solovyev.android.messenger;
 
 import android.app.Application;
 import android.content.Context;
-import roboguice.RoboGuice;
-
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -35,6 +27,13 @@ import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
+import roboguice.RoboGuice;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.joda.time.DateTimeZone.UTC;
 import static org.solovyev.android.messenger.App.getAccountService;
@@ -77,16 +76,19 @@ public class MessengerApplication extends Application {
 
 		boolean syncDone = true;
 
+		final List<Account> syncedAccounts = new ArrayList<Account>(accounts.size());
 		for (Account account : accounts) {
 			final User user = account.getUser();
 
 			if (!user.getUserSyncData().isFirstSyncDone()) {
 				syncDone = false;
 			} else {
-				// prefetch data
-				new PreloadCachedData(this).executeInParallel(user);
+				syncedAccounts.add(account);
 			}
 		}
+
+		// prefetch data
+		new PreloadCachedData(this).executeInParallel(syncedAccounts.toArray(new Account[syncedAccounts.size()]));
 
 		if (!syncDone) {
 			// todo serso: actually synchronization must be done only for not synced realms (NOT for all as it is now)
@@ -99,19 +101,22 @@ public class MessengerApplication extends Application {
 		}
 	}
 
-	private static final class PreloadCachedData extends MessengerAsyncTask<User, Void, Void> {
+	private static final class PreloadCachedData extends MessengerAsyncTask<Account, Void, Void> {
 
 		private PreloadCachedData(@Nonnull Context context) {
 			super(context);
 		}
 
 		@Override
-		protected Void doWork(@Nonnull List<User> users) {
+		protected Void doWork(@Nonnull List<Account> accounts) {
 			Context context = getContext();
 			if (context != null) {
-				for (User user : users) {
-					App.getUserService().getUserContacts(user.getEntity());
-					App.getUserService().getUserChats(user.getEntity());
+				for (Account account : accounts) {
+					App.getUserService().getUserContacts(account.getUser().getEntity());
+				}
+
+				for (Account account : accounts) {
+					App.getUserService().getUserChats(account.getUser().getEntity());
 				}
 			}
 
@@ -120,7 +125,6 @@ public class MessengerApplication extends Application {
 
 		@Override
 		protected void onSuccessPostExecute(@Nullable Void result) {
-
 		}
 	}
 }

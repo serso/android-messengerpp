@@ -17,7 +17,6 @@
 package org.solovyev.android.messenger.chats;
 
 import android.os.Handler;
-
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
@@ -33,6 +32,8 @@ public final class ChatsFragment extends BaseChatsFragment {
 	private int maxChats = MAX_RECENT_CHATS;
 
 	private static final long SEARCH_DELAY_MILLIS = 500;
+
+	private int loadingStartedForTotal = 0;
 
 	@Nonnull
 	private final FindChatsRunnable runnable = new FindChatsRunnable();
@@ -58,6 +59,7 @@ public final class ChatsFragment extends BaseChatsFragment {
 			if (isEmpty(filterText)) {
 				// in case of empty query we need to reset maxChats
 				maxChats = MAX_RECENT_CHATS;
+				loadingStartedForTotal = 0;
 			}
 			final Handler handler = getUiHandler();
 			handler.removeCallbacks(runnable);
@@ -66,16 +68,16 @@ public final class ChatsFragment extends BaseChatsFragment {
 	}
 
 	@Override
-	public void onBottomReached() {
-		super.onBottomReached();
+	public void onItemReachedFromTop(int position, int total) {
+		super.onItemReachedFromTop(position, total);
 
-
-		final int count = getAdapter().getCount();
-		if (count < maxChats) {
-			// no more chats
-		} else {
-			maxChats += MAX_RECENT_CHATS;
-			getUiHandler().post(runnable);
+		final float rate = (float) position / (float) total;
+		if (rate > 0.75f) {
+			if (loadingStartedForTotal != total) {
+				loadingStartedForTotal = total;
+				maxChats = 2 * maxChats;
+				getUiHandler().post(runnable);
+			}
 		}
 	}
 

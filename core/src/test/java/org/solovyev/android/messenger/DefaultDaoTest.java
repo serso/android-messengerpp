@@ -17,7 +17,6 @@
 package org.solovyev.android.messenger;
 
 import com.google.common.base.Predicate;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,8 +77,8 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 	}
 
 	@Nonnull
-	private Entity<? extends E> insertEntity() {
-		final Entity<? extends E> entity = newInsertEntity();
+	private DaoEntity<? extends E> insertEntity() {
+		final DaoEntity<? extends E> entity = newInsertEntity();
 		dao.create(entity.entity);
 		return entity;
 	}
@@ -143,14 +142,14 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 
 	@Test
 	public void testShouldReadEntityById() throws Exception {
-		final Entity<? extends E> entity = insertEntity();
+		final DaoEntity<? extends E> entity = insertEntity();
 		assertEntitiesSame(entity.entity, dao.read(entity.id));
 	}
 
 	@Test
 	public void testShouldUpdateEntity() throws Exception {
-		final Entity<? extends E> e1 = insertEntity();
-		final Entity<E> e2 = newEntity(changeEntity(e1.entity), e1.id);
+		final DaoEntity<? extends E> e1 = insertEntity();
+		final DaoEntity<E> e2 = newEntity(changeEntity(e1.entity), e1.id);
 		dao.update(e2.entity);
 		assertTrue(any(dao.readAll(), new SamePredicate(e2.entity)));
 	}
@@ -159,19 +158,19 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 	protected abstract Collection<E> populateEntities(@Nonnull Dao<E> dao);
 
 	@Nonnull
-	protected abstract Entity<? extends E> newInsertEntity();
+	protected abstract DaoEntity<? extends E> newInsertEntity();
 
 	@Nonnull
 	protected abstract E changeEntity(@Nonnull E entity);
 
 	@Nonnull
-	protected static <E extends EntityAware> Entity<E> newEntity(@Nonnull E entity) {
-		return new Entity<E>(entity, entity.getEntity().getEntityId());
+	protected static <E extends EntityAware> DaoEntity<E> newEntity(@Nonnull E entity) {
+		return new DaoEntity<E>(entity, entity.getEntity().getEntityId());
 	}
 
 	@Nonnull
-	protected static <E> Entity<E> newEntity(@Nonnull E entity, @Nonnull String id) {
-		return new Entity<E>(entity, id);
+	protected static <E> DaoEntity<E> newEntity(@Nonnull E entity, @Nonnull String id) {
+		return new DaoEntity<E>(entity, id);
 	}
 
 	/*
@@ -214,14 +213,14 @@ public abstract class DefaultDaoTest<E> extends DefaultMessengerTest {
 	**********************************************************************
 	*/
 
-	protected static final class Entity<E> {
+	protected static final class DaoEntity<E> {
 		@Nonnull
 		private final E entity;
 
 		@Nonnull
 		private final String id;
 
-		private Entity(@Nonnull E entity, @Nonnull String id) {
+		private DaoEntity(@Nonnull E entity, @Nonnull String id) {
 			this.entity = entity;
 			this.id = id;
 		}

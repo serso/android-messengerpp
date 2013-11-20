@@ -23,6 +23,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -56,18 +57,13 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
-import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.Chat.PROPERTY_DRAFT_MESSAGE;
-import static org.solovyev.android.messenger.chats.Chats.getLastChatsByDate;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
+import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 2:43 AM
- */
 @Singleton
 public class DefaultChatService implements ChatService {
 
@@ -544,37 +540,56 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<UiChat> getLastChats(@Nonnull User user, @Nullable String query, int count) {
-		final List<UiChat> result = new ArrayList<UiChat>();
-
-		final List<Chat> chats = userService.getUserChats(user.getEntity());
-
-		final PrefixFilter<String> chatFilter = new PrefixFilter<String>(query == null ? "" : query);
-		for (Chat chat : chats) {
-			final Message lastMessage = getLastMessage(chat.getEntity());
-			if (lastMessage != null) {
-				final UiChat uiChat = loadUiChat(user, chat);
-				if (chatFilter.apply(uiChat.getDisplayName())) {
-					result.add(uiChat);
-				}
-			}
-		}
-
-		return getLastChatsByDate(result, count);
+	public List<UiChat> getLastUiChats(@Nonnull User user, @Nullable String query, int count) {
+		final List<String> chatIds = chatDao.readLastChatIds(user.getId(), false, isEmpty(query) ? count : Integer.MAX_VALUE);
+		return toUiChats(user, query, chatIds);
 	}
 
 	@Nonnull
 	@Override
-	public List<UiChat> getLastChats(@Nullable String query, int count) {
-		final List<UiChat> result = new ArrayList<UiChat>(count);
+	public List<UiChat> getLastUiChats(@Nullable String query, int count) {
+		final List<String> chatIds = chatDao.readLastChatIds(null, false, isEmpty(query) ? count : Integer.MAX_VALUE);
+		return toUiChats(null, query, chatIds);
+	}
 
-		final AccountService accountService = getAccountService();
+	@Nonnull
+	@Override
+	public List<Chat> getLastChats(boolean privateChat, int count) {
+		final List<String> chatIds = chatDao.readLastChatIds(null, privateChat, count);
+		return Lists.transform(chatIds, new Function<String, Chat>() {
+			@Override
+			public Chat apply(String chatId) {
+				return getChatById(newEntityFromEntityId(chatId));
+			}
+		});
+	}
 
-		for (User user : accountService.getEnabledAccountUsers()) {
-			result.addAll(getLastChats(user, query, count));
+	@Nonnull
+	private List<UiChat> toUiChats(@Nullable User user, @Nullable String query, @Nonnull List<String> chatIds) {
+		final List<UiChat> result = new ArrayList<UiChat>(chatIds.size());
+
+		final PrefixFilter<String> chatFilter = new PrefixFilter<String>(query == null ? "" : query);
+
+		for (String chatId : chatIds) {
+			final Chat chat = getChatById(newEntityFromEntityId(chatId));
+			if (chat != null) {
+				final Message lastMessage = getLastMessage(chat.getEntity());
+				if (lastMessage != null) {
+					final UiChat uiChat;
+					if (user != null) {
+						uiChat = loadUiChat(user, chat);
+					} else {
+						uiChat = loadUiChat(chat);
+					}
+
+					if (chatFilter.apply(uiChat.getDisplayName())) {
+						result.add(uiChat);
+					}
+				}
+			}
 		}
 
-		return getLastChatsByDate(result, count);
+		return result;
 	}
 
 	@Override

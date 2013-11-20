@@ -140,7 +140,7 @@ public class DefaultSyncService implements SyncService {
 	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           INNER CLASSES
     *
@@ -190,6 +190,13 @@ public class DefaultSyncService implements SyncService {
 			if (afterSyncCallback != null) {
 				afterSyncCallback.run();
 			}
+		}
+
+		@Override
+		public String toString() {
+			return "ServiceSyncAsyncTask{" +
+					"syncTask=" + syncTask +
+					'}';
 		}
 	}
 

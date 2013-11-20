@@ -18,20 +18,16 @@ package org.solovyev.android;
 
 import android.util.Log;
 import com.google.inject.Singleton;
+import org.solovyev.android.messenger.App;
 
 import javax.annotation.Nonnull;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static android.os.SystemClock.elapsedRealtime;
-import static org.solovyev.android.messenger.App.newTag;
 
 @Singleton
 public final class TimeLoggingExecutor implements Executor {
-
-	private static final String TAG = newTag("Executor");
 
 	private static final long MAX_WAIT_MILLIS = 100;
 	private static final long MAX_WORK_MILLIS = 100;
@@ -40,9 +36,9 @@ public final class TimeLoggingExecutor implements Executor {
 
 	@Override
 	public void execute(@Nonnull final Runnable command) {
-		final StringWriter stringWriter = new StringWriter();
+		/*final StringWriter stringWriter = new StringWriter();
 		new Throwable().printStackTrace(new PrintWriter(stringWriter));
-		final String stackTrace = stringWriter.toString();
+		final String stackTrace = stringWriter.toString();*/
 
 		final long addedToQueueTime = elapsedRealtime();
 		executor.execute(new Runnable() {
@@ -55,11 +51,11 @@ public final class TimeLoggingExecutor implements Executor {
 					final long endTime = elapsedRealtime();
 					final long waitMillis = startTime - addedToQueueTime;
 					if (waitMillis > MAX_WAIT_MILLIS) {
-						Log.e(TAG, "Wait time is too long (" + waitMillis + " ms) at " + stackTrace);
+						Log.e(App.TAG_TIME, "Wait time is too long (" + waitMillis + " ms) for " + command.getClass().getSimpleName());
 					}
 					final long workMillis = endTime - startTime;
 					if (workMillis > MAX_WORK_MILLIS) {
-						Log.e(TAG, "Work time is too long (" + workMillis + " ms) at " + stackTrace);
+						Log.e(App.TAG_TIME, "Work time is too long (" + workMillis + " ms) for " + command.getClass().getSimpleName());
 					}
 				}
 			}

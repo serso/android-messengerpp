@@ -22,7 +22,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -33,6 +32,8 @@ import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
 import org.solovyev.android.messenger.LinkedEntitiesDao;
 import org.solovyev.android.messenger.MergeDaoResult;
+import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.db.StringIdMapper;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.EntityMapper;
 import org.solovyev.android.messenger.messages.Message;
@@ -51,12 +52,8 @@ import java.util.*;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
 import static org.solovyev.android.db.AndroidDbUtils.*;
+import static org.solovyev.common.text.Strings.isEmpty;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 3:27 PM
- */
 @Singleton
 public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 
@@ -126,6 +123,12 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 	@Override
 	public void delete(@Nonnull User user, @Nonnull Chat chat) {
 		doDbExec(getSqliteOpenHelper(), new RemoveChats(user.getId(), chat));
+	}
+
+	@Nonnull
+	@Override
+	public List<String> readLastChatIds(@Nullable String userId, boolean privateChat, int count) {
+		return doDbQuery(getSqliteOpenHelper(), new LoadLastChatIds(userId, privateChat, count));
 	}
 
 	@Nonnull
@@ -514,6 +517,44 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		@Override
 		public Converter<Cursor, Chat> getCursorMapper() {
 			return chatMapper;
+		}
+	}
+
+	private class LoadLastChatIds extends AbstractDbQuery<List<String>> {
+
+		@Nullable
+		private final String userId;
+
+		private final boolean privateChat;
+
+		private final int count;
+
+		public LoadLastChatIds(@Nullable String userId, boolean privateChat, int count) {
+			super(SqliteChatDao.this.getContext(), SqliteChatDao.this.getSqliteOpenHelper());
+			this.userId = userId;
+			this.privateChat = privateChat;
+			this.count = count;
+		}
+
+		@Nonnull
+		@Override
+		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
+			String start = "select c.id, m.send_time from chats c, messages m, user_chats uc where c.id = m.chat_id and uc.chat_id = c.id ";
+			if (privateChat) {
+				start += "and exists (select * from chat_properties cp where cp.chat_id = c.id and cp.property_name = 'private' and cp.property_value = 'true') ";
+			}
+			final String end = "group by c.id order by m.send_time desc limit " + count;
+			if (!isEmpty(userId)) {
+				return db.rawQuery(start + "and uc.user_id = ? " + end, new String[]{userId});
+			} else {
+				return db.rawQuery(start + "and uc.user_id in (select a.user_id from accounts a where a.state = ?) " + end, new String[]{AccountState.enabled.name()});
+			}
+		}
+
+		@Nonnull
+		@Override
+		public List<String> retrieveData(@Nonnull Cursor cursor) {
+			return new ListMapper<String>(StringIdMapper.getInstance()).convert(cursor);
 		}
 	}
 }

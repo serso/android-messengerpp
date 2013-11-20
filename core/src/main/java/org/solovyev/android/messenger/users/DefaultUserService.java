@@ -29,7 +29,6 @@ import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
-import org.solovyev.android.messenger.chats.UiChat;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
@@ -391,10 +390,9 @@ public class DefaultUserService implements UserService {
 	@Nonnull
 	@Override
 	public List<UiContact> getLastChatedContacts(int count) {
-		final List<UiChat> chats = chatService.getLastChats(null, count);
+		final List<Chat> chats = chatService.getLastChats(true, count);
 		final List<UiContact> result = new ArrayList<UiContact>(chats.size());
-		for (UiChat uiChat : chats) {
-			final Chat chat = uiChat.getChat();
+		for (Chat chat : chats) {
 			if (chat.isPrivate()) {
 				final User contact = getUserById(chat.getSecondUser());
 				result.add(loadUiContact(contact));
@@ -505,7 +503,7 @@ public class DefaultUserService implements UserService {
 	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           LISTENERS
     *

@@ -86,6 +86,12 @@ public final class UiChat implements Identifiable {
 	}
 
 	@Nonnull
+	static UiChat loadUiChat(@Nonnull Chat chat) {
+		final Account account = getAccountService().getAccountByEntity(chat.getEntity());
+		return loadUiChat(account.getUser(), chat, account);
+	}
+
+	@Nonnull
 	public static UiChat newEmptyUiChat(@Nonnull User user, @Nonnull Chat chat) {
 		return newUiChat(user, chat, null, null, 0, "", false);
 	}

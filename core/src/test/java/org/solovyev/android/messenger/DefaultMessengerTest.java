@@ -114,7 +114,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 
 		message.setBody(Strings.generateRandomString(10).replace("\\", ""));
 		message.setSendDate(new DateTime().plusMinutes(i));
-		message.setRead(false);
+		message.setRead(i % 3 == 0);
 		message.setChat(newEntity("test", "test"));
 		return message;
 	}

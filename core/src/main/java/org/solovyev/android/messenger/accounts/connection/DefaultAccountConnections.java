@@ -24,8 +24,6 @@ import com.google.inject.Singleton;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.sync.SyncTask;
-import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,15 +130,11 @@ public final class DefaultAccountConnections implements AccountConnections {
 				// after account connection is started we have to check user presences and new messages
 				final SyncService syncService = getSyncService();
 
-				try {
+				// todo serso: investigate why this operation takes so long and uncomment after fix
+				/*try {
 					syncService.sync(SyncTask.user_contacts_statuses, null);
 				} catch (TaskIsAlreadyRunningException e) {
-				}
-
-				try {
-					syncService.sync(SyncTask.user_chats, null);
-				} catch (TaskIsAlreadyRunningException e) {
-				}
+				}*/
 
 			}
 		}, POST_START_DELAY, TimeUnit.SECONDS);

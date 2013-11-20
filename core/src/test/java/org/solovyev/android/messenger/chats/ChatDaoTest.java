@@ -22,16 +22,17 @@ import com.google.inject.Inject;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessageDao;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.chats.Chats.newPrivateChat;
 
 public class ChatDaoTest extends DefaultDaoTest<Chat> {
@@ -59,16 +60,30 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 	@Nonnull
 	@Override
 	protected Collection<Chat> populateEntities(@Nonnull Dao<Chat> dao) {
-		final List<AccountChat> chats = new ArrayList<AccountChat>();
-		chats.addAll(getAccountData1().getChats());
-		chats.addAll(getAccountData2().getChats());
-		chats.addAll(getAccountData3().getChats());
+		final Collection<AccountChat> chats = getAllChats().values();
 		return Collections2.transform(chats, new Function<AccountChat, Chat>() {
 			@Override
-			public Chat apply(@Nullable AccountChat accountChat) {
+			public Chat apply(AccountChat accountChat) {
 				return accountChat.getChat();
 			}
 		});
+	}
+
+	private Map<String, AccountChat> getAllChats() {
+		final Map<String, AccountChat> chats = new HashMap<String, AccountChat>();
+		addChatsFromAccount(chats, getAccountData1());
+		addChatsFromAccount(chats, getAccountData2());
+		addChatsFromAccount(chats, getAccountData3());
+		return chats;
+	}
+
+	@Nonnull
+	private Map<String, AccountChat> addChatsFromAccount(@Nonnull Map<String, AccountChat> chats, @Nonnull AccountData ad) {
+		for (AccountChat chat : ad.getChats()) {
+			chats.put(chat.getChat().getId(), chat);
+		}
+
+		return chats;
 	}
 
 	@Test
@@ -104,7 +119,7 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 
 	@Nonnull
 	@Override
-	protected Entity<MutableChat> newInsertEntity() {
+	protected DaoEntity<MutableChat> newInsertEntity() {
 		return newEntity(newPrivateChat(getAccount1().newChatEntity("test_chat_1")));
 	}
 
@@ -112,5 +127,72 @@ public class ChatDaoTest extends DefaultDaoTest<Chat> {
 	@Override
 	protected Chat changeEntity(@Nonnull Chat chat) {
 		return chat;
+	}
+
+	@Test
+	public void testShouldReadChatsMostRecentFirst() throws Exception {
+		final List<String> chatIds = dao.readLastChatIds(null, false, Integer.MAX_VALUE);
+		final Map<String, AccountChat> chats = getAllChats();
+		checkChatsAreSortedRecentFirst(chats, chatIds);
+		assertEquals(chats.size(), chatIds.size());
+	}
+
+	@Test
+	public void testShouldReadPrivateChatsMostRecentFirst() throws Exception {
+		final List<String> chatIds = dao.readLastChatIds(null, true, Integer.MAX_VALUE);
+		final Map<String, AccountChat> chats = getAllChats();
+		checkChatsAreSortedRecentFirst(chats, chatIds);
+		assertEquals(chats.size(), chatIds.size());
+	}
+
+	@Test
+	public void testShouldReadChatsMostRecentFirstWithLimit() throws Exception {
+		final List<String> chatIds = dao.readLastChatIds(null, false, 10);
+		final Map<String, AccountChat> chats = getAllChats();
+		checkChatsAreSortedRecentFirst(chats, chatIds);
+		assertEquals(10, chatIds.size());
+	}
+
+	@Test
+	public void testShouldReadChatsMostRecentFirstWithLimitForUser() throws Exception {
+		final AccountData ad = getAccountData3();
+		final List<String> chatIds = dao.readLastChatIds(ad.getAccount().getUser().getId(), false, 10);
+		final Map<String, AccountChat> chats = addChatsFromAccount(new HashMap<String, AccountChat>(), ad);
+		checkChatsAreSortedRecentFirst(chats, chatIds);
+		assertEquals(10, chatIds.size());
+	}
+
+	private void checkChatsAreSortedRecentFirst(@Nonnull Map<String, AccountChat> chats, @Nonnull List<String> chatIds) {
+		AccountChat previousChat = null;
+		for (String chatId : chatIds) {
+			final AccountChat chat = chats.get(chatId);
+			if (previousChat != null) {
+				final Message previousFirstMessage = previousChat.getMessages().get(previousChat.getMessages().size() - 1);
+				final Message firstMessage = chat.getMessages().get(chat.getMessages().size() - 1);
+				assertTrue(!previousFirstMessage.getSendDate().isBefore(firstMessage.getSendDate()));
+			}
+			previousChat = chat;
+		}
+	}
+
+	@Test
+	public void testShouldLoadAllUnreadChats() throws Exception {
+		final Map<Entity, Integer> unreadChats = dao.getUnreadChats();
+
+		Map<String, AccountChat> chats = getAllChats();
+		for (Map.Entry<Entity, Integer> entry : unreadChats.entrySet()) {
+			final AccountChat chat = chats.get(entry.getKey().getEntityId());
+
+			Integer unreadMessages = 0;
+			for (Message message : chat.getMessages()) {
+				if (!message.isRead()) {
+					unreadMessages++;
+				}
+			}
+
+			assertTrue(entry.getValue() > 0);
+			assertEquals(unreadMessages, entry.getValue());
+		}
+
 	}
 }

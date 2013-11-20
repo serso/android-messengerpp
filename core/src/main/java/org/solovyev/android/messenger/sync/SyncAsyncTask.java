@@ -16,14 +16,12 @@
 
 package org.solovyev.android.messenger.sync;
 
-import java.util.List;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import java.util.List;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 
@@ -53,5 +51,12 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onSuccessPostExecute(@Nullable Void result) {
+	}
+
+	@Override
+	public String toString() {
+		return "SyncAsyncTask{" +
+				"syncTasks=" + syncTasks +
+				'}';
 	}
 }

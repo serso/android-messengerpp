@@ -54,4 +54,11 @@ final class RecentContactsAsyncLoader extends BaseAsyncLoader<UiContact, Contact
 	protected ContactListItem createListItem(@Nonnull UiContact uiContact) {
 		return ContactListItem.newContactListItem(uiContact);
 	}
+
+	@Override
+	public String toString() {
+		return "RecentContactsAsyncLoader{" +
+				"maxCount=" + maxCount +
+				'}';
+	}
 }

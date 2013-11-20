@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Handler;
+import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -37,8 +38,6 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.tasks.TaskService;
-
-import android.widget.Toast;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
@@ -51,6 +50,9 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	@Nonnull
 	public static final String TAG = "M++";
+
+	@Nonnull
+	public static final String TAG_TIME = App.newTag("Time");
 
 	@Nonnull
 	private static App instance = new App();

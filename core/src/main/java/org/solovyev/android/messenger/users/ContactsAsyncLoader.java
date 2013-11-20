@@ -18,8 +18,8 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import org.solovyev.android.list.ListAdapter;
-import org.solovyev.android.messenger.BaseAsyncLoader;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.BaseAsyncLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,5 +53,13 @@ final class ContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListIt
 	@Override
 	protected ContactListItem createListItem(@Nonnull UiContact uiContact) {
 		return newContactListItem(uiContact);
+	}
+
+	@Override
+	public String toString() {
+		return "ContactsAsyncLoader{" +
+				"query='" + query + '\'' +
+				", maxCount=" + maxCount +
+				'}';
 	}
 }

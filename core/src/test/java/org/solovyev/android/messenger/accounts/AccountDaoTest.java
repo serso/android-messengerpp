@@ -217,7 +217,7 @@ public class AccountDaoTest extends DefaultDaoTest<Account> {
 
 	@Nonnull
 	@Override
-	protected Entity<Account> newInsertEntity() {
+	protected DaoEntity<Account> newInsertEntity() {
 		final Account account = new TestAccount(realm, 100);
 		return newEntity(account, account.getId());
 	}

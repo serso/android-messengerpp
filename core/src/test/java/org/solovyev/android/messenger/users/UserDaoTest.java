@@ -21,7 +21,6 @@ import com.google.inject.Inject;
 import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
-import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.TestAccount;
 import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.properties.AProperty;
@@ -31,7 +30,10 @@ import org.solovyev.common.equals.CollectionEqualizer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
@@ -79,7 +81,7 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 		final List<User> contacts = accountData.getContacts();
 
 		assertTrue(areSame(account.getUser(), dao.read(account.getUser().getId())));
-		for(int i = 0; i < contacts.size(); i++) {
+		for (int i = 0; i < contacts.size(); i++) {
 			final User user = dao.read(getEntityForContact(account, i).getEntityId());
 			assertTrue(areSame(contacts.get(i), user));
 		}
@@ -174,7 +176,7 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 
 	@Nonnull
 	@Override
-	protected Entity<User> newInsertEntity() {
+	protected DaoEntity<User> newInsertEntity() {
 		final MutableAProperties properties = newProperties(Collections.<String, AProperty>emptyMap());
 		final org.solovyev.android.messenger.entities.Entity entity = getAccount1().newUserEntity("test");
 		final User user = newUser(entity, newNeverSyncedUserSyncData(), properties);

@@ -16,13 +16,8 @@
 
 package org.solovyev.android.messenger.chats;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.base.Predicate;
+import com.google.inject.Inject;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTest;
@@ -38,17 +33,16 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.MutableObject;
 import org.solovyev.common.listeners.AbstractJEventListener;
 
-import com.google.common.base.Predicate;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.google.common.collect.Iterables.any;
 import static java.lang.Integer.MAX_VALUE;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.chats.Chats.newPrivateAccountChat;
 import static org.solovyev.android.messenger.messages.Messages.newIncomingMessage;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
@@ -72,7 +66,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 
 		createChats(account, user, true);
 
-		final List<UiChat> chats = chatService.getLastChats(user, null, MAX_VALUE);
+		final List<UiChat> chats = chatService.getLastUiChats(user, null, MAX_VALUE);
 		assertTrue(!chats.isEmpty());
 		for (int i = 1; i < chats.size(); i++) {
 			final Message prevMessage = chats.get(i - 1).getLastMessage();
@@ -111,7 +105,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 		createChats(account, user, true);
 		createChats(account, user, false);
 
-		final List<UiChat> chats = chatService.getLastChats(user, null, MAX_VALUE);
+		final List<UiChat> chats = chatService.getLastUiChats(user, null, MAX_VALUE);
 		assertTrue(!chats.isEmpty());
 		for (UiChat chat : chats) {
 			assertNotNull(chat.getLastMessage());

@@ -31,15 +31,12 @@ import org.solovyev.common.Objects;
 import org.solovyev.common.equals.Equalizer;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessage;
 
 public class MessageDaoTest extends DefaultDaoTest<Message> {
@@ -194,7 +191,7 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 
 	@Nonnull
 	@Override
-	protected Entity<Message> newInsertEntity() {
+	protected DaoEntity<Message> newInsertEntity() {
 		final Message message = newMessageWithProperties(getAccountData1());
 		return newEntity(message, message.getId());
 	}

@@ -18,7 +18,6 @@ package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.LinkedEntitiesDao;
-import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.AProperty;
@@ -71,4 +70,7 @@ public interface ChatDao extends LinkedEntitiesDao<Chat>, Dao<Chat> {
 	Map<Entity, Integer> getUnreadChats();
 
 	void delete(@Nonnull User user, @Nonnull Chat chat);
+
+	@Nonnull
+	List<String> readLastChatIds(@Nullable String userId, boolean privateChat, int count);
 }
