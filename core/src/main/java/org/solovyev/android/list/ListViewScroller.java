@@ -59,7 +59,14 @@ public final class ListViewScroller implements AbsListView.OnScrollListener {
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// do nothing
+		switch (scrollState) {
+			case SCROLL_STATE_FLING:
+				view.setScrollingCacheEnabled(false);
+				break;
+			case SCROLL_STATE_IDLE:
+				view.setScrollingCacheEnabled(true);
+				break;
+		}
 	}
 
 	@Override
