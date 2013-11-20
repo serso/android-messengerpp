@@ -26,6 +26,7 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.BaseAsyncListFragment;
+import org.solovyev.android.messenger.SyncRefreshListener;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
@@ -35,11 +36,12 @@ import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.newTag;
-import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.UiEventType.new_contact;
 
 public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiContact, ContactListItem> implements DetachableFragment {
@@ -69,22 +71,10 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 		return false;
 	}
 
-	protected class ContactsSyncRefreshListener extends AbstractOnRefreshListener {
-		@Override
-		public void onRefresh() {
-			try {
-				getSyncService().sync(SyncTask.user_contacts_statuses, new Runnable() {
-					@Override
-					public void run() {
-						completeRefresh();
-					}
-				});
-				showToast(R.string.mpp_updating_contacts);
-			} catch (TaskIsAlreadyRunningException e) {
-				completeRefresh();
-				e.showMessage();
-			}
-		}
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return new SyncRefreshListener(SyncTask.user_contacts);
 	}
 
 	/*

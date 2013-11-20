@@ -176,12 +176,20 @@ public class DefaultSyncService implements SyncService {
 			// just in case
 			releaseRunningTask(syncTask);
 			super.onCancelled();
+
+			if (afterSyncCallback != null) {
+				afterSyncCallback.run();
+			}
 		}
 
 		@Override
 		protected void onFailurePostExecute(@Nonnull Exception e) {
 			releaseRunningTask(syncTask);
 			super.onFailurePostExecute(e);
+
+			if (afterSyncCallback != null) {
+				afterSyncCallback.run();
+			}
 		}
 	}
 

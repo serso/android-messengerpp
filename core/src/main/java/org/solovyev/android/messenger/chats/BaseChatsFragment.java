@@ -28,14 +28,17 @@ import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseAsyncListFragment;
+import org.solovyev.android.messenger.SyncRefreshListener;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.MessagesFragment;
+import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.users.BaseUserFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
+import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -120,6 +123,18 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 	@Nonnull
 	protected BaseChatsAdapter getAdapter() {
 		return (BaseChatsAdapter) super.getAdapter();
+	}
+
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
+		return null;
+	}
+
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return new SyncRefreshListener(SyncTask.user_chats);
 	}
 
     /*

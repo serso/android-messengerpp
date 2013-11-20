@@ -21,7 +21,6 @@ import android.util.Log;
 
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
-import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,11 +37,6 @@ public class ContactsFragment extends BaseContactsFragment {
 
 	@Nonnull
 	private final FindContactsRunnable runnable = new FindContactsRunnable();
-
-	@Override
-	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-		return null;
-	}
 
 	@Nonnull
 	@Override
