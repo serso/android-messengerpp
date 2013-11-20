@@ -159,6 +159,7 @@
 	</style>
 
 	<style name="mpp_list_item_message_text_editor">
+		<item name="android:background">@drawable/mpp_edit_text_holo_light</item>
 		<item name="android:hint">@string/mpp_type_message_hint</item>
 		<item name="android:imeOptions">actionSend</item>
 		<item name="android:minLines">1</item>
