@@ -44,7 +44,7 @@ public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsync
 		getExceptionHandler().handleException(e);
 	}
 
-	@Override
+	/*@Override
 	protected void onPostExecute(@Nonnull Result<R> r) {
 		final long endTime = currentTimeMillis();
 		final long workMillis = endTime - startTime;
@@ -52,7 +52,7 @@ public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsync
 			Log.e(App.TAG_TIME, "Work time is too long (" + workMillis + " ms) for " + getClass().getSimpleName() + " (" + this + ")");
 		}
 		super.onPostExecute(r);
-	}
+	}*/
 
 	@Nonnull
 	public final AsyncTask<Param, Progress, Result<R>> executeInParallel(Param... params) {
