@@ -2,6 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -26,6 +27,8 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
 
 	private boolean initialLoadingDone = false;
+
+	private boolean onListLoadedCallNeeded = false;
 
 	private int maxSize = DEFAULT_MAX_SIZE;
 
@@ -55,6 +58,14 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 		startLoading();
 	}
 
+	@Override
+	public void onViewCreated(View root, Bundle savedInstanceState) {
+		super.onViewCreated(root, savedInstanceState);
+
+		if (onListLoadedCallNeeded) {
+			onListLoaded();
+		}
+	}
 
 	private void startLoading() {
 		listLoader = createAsyncLoader(getAdapter(), new OnListLoadedRunnable());
@@ -120,6 +131,12 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 		if (isViewWasCreated()) {
 			outState.putInt(BUNDLE_MAX_SIZE, maxSize);
 		}
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		onListLoadedCallNeeded = true;
 	}
 
 	@Override
