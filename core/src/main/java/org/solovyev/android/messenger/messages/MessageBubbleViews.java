@@ -17,22 +17,16 @@
 package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.Views;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerPreferences;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.users.User;
 
 final class MessageBubbleViews {
 
@@ -87,16 +81,6 @@ final class MessageBubbleViews {
 		} else {
 			messageLayoutParent.setPadding(outerSidePaddingDps, outerPaddingDps, outerPaddingDps, outerPaddingDps);
 			messageLayout.setPadding(innerPaddingDps, innerPaddingDps, innerSidePaddingDps, innerPaddingDps);
-		}
-	}
-
-	static void setMessageBubbleMessageIcon(@Nonnull Context context, @Nonnull Message message, @Nonnull ImageView messageIcon) {
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
-			messageIcon.setVisibility(View.VISIBLE);
-			App.getMessageService().setMessageIcon(message, messageIcon);
-		} else {
-			messageIcon.setVisibility(View.GONE);
 		}
 	}
 }

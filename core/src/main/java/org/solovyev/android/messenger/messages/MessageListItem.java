@@ -18,30 +18,35 @@ package org.solovyev.android.messenger.messages;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.ClipboardManager;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.Arrays;
+
+import javax.annotation.Nonnull;
+
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.MessengerPreferences;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-
+import static android.text.Html.fromHtml;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.getPreferences;
 import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
@@ -94,8 +99,7 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 	protected void fillView(@Nonnull Message message, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
 		final ViewGroup messageLayout = viewTag.getViewById(R.id.mpp_li_message_linearlayout);
 
-		final TextView messageText = viewTag.getViewById(R.id.mpp_li_message_body_textview);
-		messageText.setText(Html.fromHtml(message.getBody()));
+		final TextView messageTextView = viewTag.getViewById(R.id.mpp_li_message_body_textview);
 
 		final TextView messageDate = viewTag.getViewById(R.id.mpp_li_message_date_textview);
 		final ImageView messageProgress = viewTag.getViewById(R.id.mpp_li_message_progress_imageview);
@@ -113,12 +117,24 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 			animation.stop();
 		}
 
+		String messageBody = message.getBody();
 		final ImageView messageIcon = viewTag.getViewById(R.id.mpp_li_message_icon_imageview);
-		MessageBubbleViews.setMessageBubbleMessageIcon(context, message, messageIcon);
+
+		final SharedPreferences preferences = getPreferences();
+		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
+			messageIcon.setVisibility(View.VISIBLE);
+			App.getMessageService().setMessageIcon(message, messageIcon);
+		} else {
+			messageIcon.setVisibility(View.GONE);
+			if (!chat.isPrivate() && !userMessage) {
+				messageBody = "<b>" + Users.getDisplayNameFor(message.getAuthor()) + ":</b> " + messageBody;
+			}
+		}
+		messageTextView.setText(fromHtml(messageBody));
 
 		final View root = viewTag.getView();
 
-		fillMessageBubbleViews(context, root, messageLayout, messageText, messageDate, userMessage);
+		fillMessageBubbleViews(context, root, messageLayout, messageTextView, messageDate, userMessage);
 
 		if (message.canRead()) {
 			final Message readMessage = message.cloneRead();
