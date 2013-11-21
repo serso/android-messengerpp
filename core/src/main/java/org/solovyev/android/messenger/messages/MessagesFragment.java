@@ -116,7 +116,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           OWN FIELDS
     *
@@ -135,7 +135,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	public MessagesFragment() {
-		super(TAG, R.string.mpp_chat, false, false, true);
+		super(TAG, R.string.mpp_chat, false, false);
 	}
 
 	@Nonnull
@@ -149,10 +149,17 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	protected void onListLoaded() {
 		// do not call super - we don't want to select message
 
-		chatEventListener = new UiThreadUserChatListener();
-		this.chatService.addListener(chatEventListener);
+		attachListeners();
 
 		new SyncMessagesForChatAsyncTask(null, getActivity()).executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+	}
+
+	@Override
+	protected void attachListeners() {
+		super.attachListeners();
+
+		chatEventListener = new UiThreadUserChatListener();
+		this.chatService.addListener(chatEventListener);
 	}
 
 	@Nonnull
@@ -189,7 +196,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		final Context context = getThemeContext();
 
 		final View messageLayoutParent = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(context);
-		if(!account.canSendMessage(chat)) {
+		if (!account.canSendMessage(chat)) {
 			messageLayoutParent.setVisibility(View.GONE);
 		}
 
@@ -311,12 +318,16 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	}
 
 	@Override
-	public void onStop() {
+	protected void detachListeners() {
 		if (chatEventListener != null) {
 			this.chatService.removeListener(chatEventListener);
 		}
+		super.detachListeners();
+	}
 
-		super.onStop();
+	@Override
+	public void onItemReachedFromTop(int position, int total) {
+		// do nothing
 	}
 
 	@Override
@@ -405,30 +416,15 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	public void onPause() {
 		super.onPause();
 
-		if(chat != null && messageBody != null) {
+		if (chat != null && messageBody != null) {
 			getChatService().saveDraftMessage(chat, messageBody.getText().toString());
 		}
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
 	}
 
 	@Nonnull
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<Message>> createAsyncLoader(@Nonnull BaseListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return new MessagesAsyncLoader(adapter, onPostExecute);
-	}
-
-	@Nullable
-	private ListView getListViewById() {
-		final View view = getView();
-		if (view != null) {
-			return (ListView) view.findViewById(android.R.id.list);
-		} else {
-			return null;
-		}
 	}
 
 	@Nonnull

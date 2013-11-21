@@ -26,11 +26,8 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.BaseAsyncListFragment;
-import org.solovyev.android.messenger.SyncRefreshListener;
-import org.solovyev.android.messenger.Threads2;
-import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
+import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.MessagesFragment;
@@ -135,6 +132,16 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 	@Override
 	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
 		return new SyncRefreshListener(SyncTask.user_chats);
+	}
+
+	@Override
+	protected void onEvent(@Nonnull AccountEvent event) {
+		super.onEvent(event);
+		switch (event.getType()) {
+			case state_changed:
+				postReload();
+				break;
+		}
 	}
 
     /*

@@ -16,28 +16,16 @@
 
 package org.solovyev.android.messenger.users;
 
-import android.os.Handler;
 import android.util.Log;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
-import static org.solovyev.android.messenger.users.Users.MAX_SEARCH_CONTACTS;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public class ContactsFragment extends BaseContactsFragment {
-
-	private int maxContacts = MAX_SEARCH_CONTACTS;
-
-	private static final long SEARCH_DELAY_MILLIS = 500;
-
-	private int totalLoaded = 0;
-
-	@Nonnull
-	private final FindContactsRunnable runnable = new FindContactsRunnable();
 
 	@Nonnull
 	@Override
@@ -58,48 +46,11 @@ public class ContactsFragment extends BaseContactsFragment {
 		if (!isEmpty(filterText)) {
 			((ContactsAdapter) adapter).setRecentContacts(false);
 			((BaseContactsAdapter) adapter).setQuery(filterText.toString());
-			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), maxContacts);
+			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), getMaxSize());
 		} else {
 			((ContactsAdapter) adapter).setRecentContacts(true);
 			((BaseContactsAdapter) adapter).setQuery(null);
-			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, maxContacts);
-		}
-	}
-
-	@Override
-	public void filter(@Nullable CharSequence filterText) {
-		if (isInitialLoadingDone()) {
-			if (isEmpty(filterText)) {
-				// in case of empty query we need to reset maxContacts
-				maxContacts = MAX_SEARCH_CONTACTS;
-				totalLoaded = 0;
-			}
-			final Handler handler = getUiHandler();
-			handler.removeCallbacks(runnable);
-			handler.postDelayed(runnable, SEARCH_DELAY_MILLIS);
-		}
-	}
-
-	@Override
-	public void onItemReachedFromTop(int position, int total) {
-		super.onItemReachedFromTop(position, total);
-
-		final float rate = (float) position / (float) total;
-		if (rate > 0.75f) {
-			if (totalLoaded != total) {
-				totalLoaded = total;
-				maxContacts = 2 * maxContacts;
-				getUiHandler().post(runnable);
-			}
-		}
-	}
-
-	private class FindContactsRunnable implements Runnable {
-		@Override
-		public void run() {
-			final BaseListItemAdapter<ContactListItem> adapter = getAdapter();
-			adapter.unselect();
-			createAsyncLoader(adapter).executeInParallel();
+			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, getMaxSize());
 		}
 	}
 }

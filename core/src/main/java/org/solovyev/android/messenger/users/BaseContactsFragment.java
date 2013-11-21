@@ -28,16 +28,14 @@ import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.BaseAsyncListFragment;
 import org.solovyev.android.messenger.SyncRefreshListener;
 import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
+import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
-import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
-import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +75,17 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 		return new SyncRefreshListener(SyncTask.user_contacts);
 	}
 
+	@Override
+	protected void onEvent(@Nonnull AccountEvent event) {
+		super.onEvent(event);
+		switch (event.getType()) {
+			case state_changed:
+				postReload();
+				break;
+		}
+	}
+
+
 	/*
 	**********************************************************************
     *
@@ -87,7 +96,7 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if(this.menu == null) {
+		if (this.menu == null) {
 			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 			menuItems.add(new ToggleFilterInputMenuItem(this));
 			menuItems.add(new AddContactMenuItem());

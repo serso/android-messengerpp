@@ -19,18 +19,15 @@ package org.solovyev.android.messenger.users;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAware;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 
-/**
- * User: serso
- * Date: 3/25/13
- * Time: 10:09 PM
- */
-final class UiContact implements Identifiable {
+final class UiContact implements Identifiable, EntityAware {
 
 	@Nonnull
 	private final User contact;
@@ -130,5 +127,11 @@ final class UiContact implements Identifiable {
 	@Nonnull
 	public UiContact copyForNewUnreadMessagesCount(@Nonnull Integer unreadMessagesCount) {
 		return newUiContact(this.contact, unreadMessagesCount, this.account);
+	}
+
+	@Nonnull
+	@Override
+	public Entity getEntity() {
+		return contact.getEntity();
 	}
 }

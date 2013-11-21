@@ -1,7 +1,8 @@
 package org.solovyev.android.messenger;
 
 import android.os.Bundle;
-
+import android.os.Handler;
+import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.MessengerListItem;
@@ -11,43 +12,49 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static org.solovyev.common.text.Strings.isEmpty;
+
 public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> extends BaseListFragment<LI> {
 
-	private final boolean loadOnCreate;
+	private static final long SEARCH_DELAY_MILLIS = 500;
+
+	private static final int DEFAULT_MAX_SIZE = 20;
+
+	private static final String BUNDLE_MAX_SIZE = "max_size";
 
 	@Nullable
 	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
 
 	private boolean initialLoadingDone = false;
 
+	private int maxSize = DEFAULT_MAX_SIZE;
+
+	private int loadingStartedForTotal = 0;
+
+	private boolean wasFiltered = false;
+
+	@Nonnull
+	private final ReloadRunnable runnable = new ReloadRunnable();
+
 	@Nullable
 	private JEventListener<UserEvent> userEventListener;
 
-	public BaseAsyncListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault) {
-		this(tag, titleResId, filterEnabled, selectFirstItemByDefault, false);
-	}
+	@Nullable
+	private JEventListener<AccountEvent> accountEventListener;
 
-	public BaseAsyncListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault, boolean loadOnCreate) {
+	public BaseAsyncListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault) {
 		super(tag, titleResId, filterEnabled, selectFirstItemByDefault);
-		this.loadOnCreate = loadOnCreate;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (loadOnCreate) {
-			startLoading();
+		if (savedInstanceState != null) {
+			maxSize = savedInstanceState.getInt(BUNDLE_MAX_SIZE, DEFAULT_MAX_SIZE);
 		}
+		startLoading();
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		if (!loadOnCreate) {
-			startLoading();
-		}
-	}
 
 	private void startLoading() {
 		listLoader = createAsyncLoader(getAdapter(), new OnListLoadedRunnable());
@@ -56,6 +63,10 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 
 	public boolean isInitialLoadingDone() {
 		return initialLoadingDone;
+	}
+
+	protected int getMaxSize() {
+		return maxSize;
 	}
 
 	@Nonnull
@@ -70,17 +81,15 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	protected void onListLoaded() {
 		super.onListLoaded();
 
-		userEventListener = new UserEventListener();
-		getUserService().addListener(userEventListener);
+		attachListeners();
 	}
 
-	@Override
-	public void onStop() {
-		if (!loadOnCreate) {
-			stopLoading();
-		}
+	protected void attachListeners() {
+		userEventListener = new UserEventListener();
+		getUserService().addListener(userEventListener);
 
-		super.onStop();
+		accountEventListener = new AccountEventListener();
+		getAccountService().addListener(accountEventListener);
 	}
 
 	private void stopLoading() {
@@ -91,17 +100,83 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 			listLoader = null;
 		}
 
+		detachListeners();
+	}
+
+	protected void detachListeners() {
 		if (userEventListener != null) {
 			getUserService().removeListener(userEventListener);
+		}
+
+		if (accountEventListener != null) {
+			getAccountService().removeListener(accountEventListener);
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		if (isViewWasCreated()) {
+			outState.putInt(BUNDLE_MAX_SIZE, maxSize);
 		}
 	}
 
 	@Override
 	public void onDestroy() {
-		if (loadOnCreate) {
-			stopLoading();
-		}
+		stopLoading();
 		super.onDestroy();
+	}
+
+	@Override
+	public void filter(@Nullable CharSequence filterText) {
+		if (isInitialLoadingDone()) {
+			if (isEmpty(filterText)) {
+				if (wasFiltered) {
+					// in case of empty query we need to reset maxSize
+					maxSize = DEFAULT_MAX_SIZE;
+					loadingStartedForTotal = 0;
+					wasFiltered = false;
+					postFilter();
+				}
+			} else {
+				wasFiltered = true;
+				postFilter();
+			}
+		}
+	}
+
+	private void postFilter() {
+		final Handler handler = getUiHandler();
+		handler.removeCallbacks(runnable);
+		handler.postDelayed(runnable, SEARCH_DELAY_MILLIS);
+	}
+
+	@Override
+	public void onItemReachedFromTop(int position, int total) {
+		super.onItemReachedFromTop(position, total);
+
+		final float rate = (float) position / (float) total;
+		if (rate > 0.75f) {
+			if (loadingStartedForTotal != total) {
+				loadingStartedForTotal = total;
+				maxSize = 2 * maxSize;
+				postReload();
+			}
+		}
+	}
+
+	protected void postReload() {
+		getUiHandler().post(runnable);
+	}
+
+	private class ReloadRunnable implements Runnable {
+		@Override
+		public void run() {
+			final BaseListItemAdapter<LI> adapter = getAdapter();
+			adapter.unselect();
+			createAsyncLoader(adapter).executeInParallel();
+		}
 	}
 
 	private class OnListLoadedRunnable implements Runnable {

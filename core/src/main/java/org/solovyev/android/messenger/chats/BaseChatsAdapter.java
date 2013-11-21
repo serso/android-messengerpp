@@ -17,8 +17,6 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-import android.os.Bundle;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -48,7 +46,7 @@ abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 		super(context, new ArrayList<ChatListItem>(), false, true);
 	}
 
-	/*@Override*/
+	@Override
 	public void onEvent(@Nonnull UserEvent event) {
 		final User user = event.getUser();
 		switch (event.getType()) {

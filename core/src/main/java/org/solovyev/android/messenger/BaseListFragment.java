@@ -39,6 +39,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListViewScroller;
 import org.solovyev.android.list.ListViewScrollerListener;
+import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
@@ -259,9 +260,14 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		return multiPaneManager;
 	}
 
-	@Nonnull
-	protected ListView getListView(@Nonnull View root) {
-		return (ListView) root.findViewById(android.R.id.list);
+	@Nullable
+	protected ListView getListViewById() {
+		final View view = getView();
+		if (view != null) {
+			return (ListView) view.findViewById(android.R.id.list);
+		} else {
+			return null;
+		}
 	}
 
 	@Nullable
@@ -283,7 +289,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		return uiHandler;
 	}
 
-
 	@Nonnull
 	public Context getThemeContext() {
 		return themeContext;
@@ -292,6 +297,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Nullable
 	protected CharSequence getFilterText() {
 		return listViewFilter != null ? listViewFilter.getFilterText() : null;
+	}
+
+	public boolean isViewWasCreated() {
+		return viewWasCreated;
 	}
 
 	/*
@@ -369,9 +378,11 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			listViewFilter.onViewCreated();
 		}
 
-		final ListView listView = getListView(root);
-		listView.setOnItemClickListener(new ListViewOnItemClickListener());
-		listView.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
+		final ListView listView = getListViewById();
+		if (listView != null) {
+			listView.setOnItemClickListener(new ListViewOnItemClickListener());
+			listView.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
+		}
 	}
 
 	public void toggleFilterBox() {
@@ -589,6 +600,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Nonnull
 	protected abstract BaseListItemAdapter<LI> createAdapter();
 
+	protected void onEvent(@Nonnull AccountEvent event) {
+	}
+
     /*
     **********************************************************************
     *
@@ -676,6 +690,24 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			Threads2.tryRunOnUiThread(BaseListFragment.this, new Runnable() {
 				@Override
 				public void run() {
+					adapter.onEvent(event);
+				}
+			});
+		}
+	}
+
+	protected class AccountEventListener extends AbstractJEventListener<AccountEvent> {
+
+		protected AccountEventListener() {
+			super(AccountEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull final AccountEvent event) {
+			Threads2.tryRunOnUiThread(BaseListFragment.this, new Runnable() {
+				@Override
+				public void run() {
+					BaseListFragment.this.onEvent(event);
 					adapter.onEvent(event);
 				}
 			});

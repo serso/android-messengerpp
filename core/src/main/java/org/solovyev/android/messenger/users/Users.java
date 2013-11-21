@@ -49,11 +49,6 @@ import static org.solovyev.android.messenger.users.ContactUiEventType.call_conta
 import static org.solovyev.android.messenger.users.ContactsInfoFragment.newViewContactsFragmentDef;
 import static org.solovyev.android.properties.Properties.newProperty;
 
-/**
- * User: serso
- * Date: 3/7/13
- * Time: 3:17 PM
- */
 public final class Users {
 
 	@Nonnull
@@ -61,8 +56,6 @@ public final class Users {
 
 	@Nonnull
 	public static final String CREATE_USER_FRAGMENT_TAG = "create_user";
-
-	static final int MAX_SEARCH_CONTACTS = 20;
 
 	@Nonnull
 	static final ContactsDisplayMode DEFAULT_CONTACTS_MODE = ContactsDisplayMode.all_contacts;

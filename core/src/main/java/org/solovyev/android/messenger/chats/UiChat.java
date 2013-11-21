@@ -19,6 +19,8 @@ package org.solovyev.android.messenger.chats;
 import com.google.common.base.Predicate;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 
@@ -32,7 +34,7 @@ import static org.solovyev.android.messenger.App.getChatService;
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI
  */
-public final class UiChat implements Identifiable {
+public final class UiChat implements Identifiable, EntityAware {
 
 	@Nonnull
 	private User user;
@@ -203,5 +205,11 @@ public final class UiChat implements Identifiable {
 
 	public boolean updateOnlineStatus() {
 		return setOnline(isParticipantsOnline(this.user, this.chat));
+	}
+
+	@Nonnull
+	@Override
+	public Entity getEntity() {
+		return getChat().getEntity();
 	}
 }

@@ -27,13 +27,12 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+
+import javax.annotation.Nonnull;
 
 public abstract class AbstractMessengerListItem<D extends Identifiable> implements MessengerListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
 
@@ -147,7 +146,7 @@ public abstract class AbstractMessengerListItem<D extends Identifiable> implemen
 	}
 
 	@Nonnull
-	protected final D getData() {
+	public final D getData() {
 		return data;
 	}
 

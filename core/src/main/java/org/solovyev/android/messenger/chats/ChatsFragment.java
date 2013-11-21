@@ -16,27 +16,13 @@
 
 package org.solovyev.android.messenger.chats;
 
-import android.os.Handler;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
-import static org.solovyev.android.messenger.chats.Chats.MAX_RECENT_CHATS;
-import static org.solovyev.common.text.Strings.isEmpty;
-
 public final class ChatsFragment extends BaseChatsFragment {
-
-	private int maxChats = MAX_RECENT_CHATS;
-
-	private static final long SEARCH_DELAY_MILLIS = 500;
-
-	private int loadingStartedForTotal = 0;
-
-	@Nonnull
-	private final FindChatsRunnable runnable = new FindChatsRunnable();
 
 	@Nonnull
 	@Override
@@ -50,43 +36,6 @@ public final class ChatsFragment extends BaseChatsFragment {
 		final CharSequence filterText = getFilterText();
 		final String query = filterText == null ? null : filterText.toString();
 		((BaseChatsAdapter) adapter).setQuery(query);
-		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, query, maxChats);
-	}
-
-	@Override
-	public void filter(@Nullable CharSequence filterText) {
-		if (isInitialLoadingDone()) {
-			if (isEmpty(filterText)) {
-				// in case of empty query we need to reset maxChats
-				maxChats = MAX_RECENT_CHATS;
-				loadingStartedForTotal = 0;
-			}
-			final Handler handler = getUiHandler();
-			handler.removeCallbacks(runnable);
-			handler.postDelayed(runnable, SEARCH_DELAY_MILLIS);
-		}
-	}
-
-	@Override
-	public void onItemReachedFromTop(int position, int total) {
-		super.onItemReachedFromTop(position, total);
-
-		final float rate = (float) position / (float) total;
-		if (rate > 0.75f) {
-			if (loadingStartedForTotal != total) {
-				loadingStartedForTotal = total;
-				maxChats = 2 * maxChats;
-				getUiHandler().post(runnable);
-			}
-		}
-	}
-
-	private class FindChatsRunnable implements Runnable {
-		@Override
-		public void run() {
-			final BaseListItemAdapter<ChatListItem> adapter = getAdapter();
-			adapter.unselect();
-			createAsyncLoader(adapter).executeInParallel();
-		}
+		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, query, getMaxSize());
 	}
 }

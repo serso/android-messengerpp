@@ -39,7 +39,6 @@ public final class Chats {
 
 	@Nonnull
 	public static final String CHATS_FRAGMENT_TAG = "chats";
-	static final int MAX_RECENT_CHATS = 20;
 
 	private Chats() {
 		throw new AssertionError();

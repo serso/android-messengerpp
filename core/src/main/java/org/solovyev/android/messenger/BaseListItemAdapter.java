@@ -19,11 +19,12 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.SectionIndexer;
-import org.solovyev.android.list.AlphabetIndexer;
-import org.solovyev.android.list.EmptySectionIndexer;
-import org.solovyev.android.list.ListItem;
-import org.solovyev.android.list.ListItemAdapter;
+import com.google.common.base.Predicate;
+import org.solovyev.android.list.*;
+import org.solovyev.android.messenger.accounts.AccountEvent;
+import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.users.UserEvent;
+import org.solovyev.android.messenger.view.AbstractMessengerListItem;
 import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer /*implements UserEventListener*/ {
+public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer {
 
 	@Nonnull
 	private final ListItemAdapterSelectionHelper<LI> selectionHelper = new ListItemAdapterSelectionHelper<LI>(this);
@@ -55,8 +56,10 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		this.saveSelection = saveSelection;
 	}
 
-	/*@Override*/
 	public void onEvent(@Nonnull UserEvent event) {
+	}
+
+	public void onEvent(@Nonnull AccountEvent event) {
 	}
 
 	@Nullable
@@ -119,5 +122,19 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 	@Nonnull
 	public ListItemAdapterSelectionHelper<LI> getSelectionHelper() {
 		return selectionHelper;
+	}
+
+	protected static <D extends EntityAware & Identifiable> void removeIf(@Nonnull final ListAdapter<? extends AbstractMessengerListItem<D>> adapter, @Nonnull final Predicate<D> filter) {
+		adapter.doWork(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = adapter.getCount() - 1; i >= 0; i--) {
+					final AbstractMessengerListItem<D> item = adapter.getItem(i);
+					if (filter.apply(item.getData())) {
+						adapter.removeAt(i);
+					}
+				}
+			}
+		});
 	}
 }
