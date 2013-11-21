@@ -1,5 +1,7 @@
 package org.solovyev.android.messenger;
 
+import android.os.Bundle;
+
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.MessengerListItem;
@@ -11,6 +13,8 @@ import java.util.List;
 
 public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> extends BaseListFragment<LI> {
 
+	private final boolean loadOnCreate;
+
 	@Nullable
 	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
 
@@ -20,13 +24,32 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	private JEventListener<UserEvent> userEventListener;
 
 	public BaseAsyncListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault) {
+		this(tag, titleResId, filterEnabled, selectFirstItemByDefault, false);
+	}
+
+	public BaseAsyncListFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault, boolean loadOnCreate) {
 		super(tag, titleResId, filterEnabled, selectFirstItemByDefault);
+		this.loadOnCreate = loadOnCreate;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (loadOnCreate) {
+			startLoading();
+		}
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 
+		if (!loadOnCreate) {
+			startLoading();
+		}
+	}
+
+	private void startLoading() {
 		listLoader = createAsyncLoader(getAdapter(), new OnListLoadedRunnable());
 		listLoader.executeInParallel();
 	}
@@ -53,6 +76,14 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 
 	@Override
 	public void onStop() {
+		if (!loadOnCreate) {
+			stopLoading();
+		}
+
+		super.onStop();
+	}
+
+	private void stopLoading() {
 		initialLoadingDone = false;
 
 		if (listLoader != null) {
@@ -63,10 +94,15 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 		if (userEventListener != null) {
 			getUserService().removeListener(userEventListener);
 		}
-
-		super.onStop();
 	}
 
+	@Override
+	public void onDestroy() {
+		if (loadOnCreate) {
+			stopLoading();
+		}
+		super.onDestroy();
+	}
 
 	private class OnListLoadedRunnable implements Runnable {
 

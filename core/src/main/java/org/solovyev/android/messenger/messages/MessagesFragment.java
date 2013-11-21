@@ -135,7 +135,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	public MessagesFragment() {
-		super(TAG, R.string.mpp_chat, false, false);
+		super(TAG, R.string.mpp_chat, false, false, true);
 	}
 
 	@Nonnull
@@ -152,17 +152,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		chatEventListener = new UiThreadUserChatListener();
 		this.chatService.addListener(chatEventListener);
 
-		scrollToTheEnd(0);
-
-		new SyncMessagesForChatAsyncTask(null, getActivity()) {
-			@Override
-			protected void onSuccessPostExecute(@Nonnull Input result) {
-				super.onSuccessPostExecute(result);
-				// let's wait 0.5 sec while sorting & filtering
-				scrollToTheEnd(500);
-			}
-		}.executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
-
+		new SyncMessagesForChatAsyncTask(null, getActivity()).executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 	}
 
 	@Nonnull
@@ -429,19 +419,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<Message>> createAsyncLoader(@Nonnull BaseListItemAdapter<MessageListItem> adapter, @Nonnull Runnable onPostExecute) {
 		return new MessagesAsyncLoader(adapter, onPostExecute);
-	}
-
-	private void scrollToTheEnd(long delayMillis) {
-		// set initial position to the end
-		final ListView lv = getListViewById();
-		if (lv != null) {
-			lv.postDelayed(new Runnable() {
-				public void run() {
-					final int position = lv.getCount() - 1;
-					lv.setSelection(position);
-				}
-			}, delayMillis);
-		}
 	}
 
 	@Nullable

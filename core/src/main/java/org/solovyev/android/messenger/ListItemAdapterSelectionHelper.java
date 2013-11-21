@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import static org.solovyev.android.messenger.AdapterSelection.newNotSelected;
 import static org.solovyev.android.messenger.AdapterSelection.newSelection;
 
-class ListItemAdapterSelectionHelper<LI extends ListItem> {
+public class ListItemAdapterSelectionHelper<LI extends ListItem> {
 
 	@Nonnull
 	private final BaseListItemAdapter<LI> adapter;

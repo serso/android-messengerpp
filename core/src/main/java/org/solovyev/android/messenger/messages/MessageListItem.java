@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.ClipboardManager;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -130,7 +131,9 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 				messageBody = "<b>" + Users.getDisplayNameFor(message.getAuthor()) + ":</b> " + messageBody;
 			}
 		}
+
 		messageTextView.setText(fromHtml(messageBody));
+		Linkify.addLinks(messageTextView, Linkify.ALL);
 
 		final View root = viewTag.getView();
 
