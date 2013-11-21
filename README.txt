@@ -6,14 +6,14 @@ Alpha version of application is available here: https://docs.google.com/file/d/0
 INSTALLATION
 
 The project is based on Maven 3. In order to build it you need to install Apache Maven and run 'mvn install' command.
-NOTE: currently you have to use Maven 3.0.x in order to build problem. Support of Maven 3.1.x or higher will be added in the future.
+NOTE: You need Maven 3.1.x or higher in order to build the project.
 
 Some modules of project contain dependencies not included in Maven Central - to build such modules you need first install
 these dependencies in your local repository. To do this, please, download Android SDK Deployer:
 git clone git://github.com/serso/maven-android-sdk-deployer.git
 And then:
 cd ./maven-android-sdk-deployer/
-git checkout tags/api-19
+git checkout tags/api-19-mvn3.1
 mvn install -P4.2
 
 LICENSE
