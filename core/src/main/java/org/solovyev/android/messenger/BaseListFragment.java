@@ -24,6 +24,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextThemeWrapper;
@@ -91,6 +92,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private static final int INTERNAL_PROGRESS_CONTAINER_ID = 0x00ff0002;
 
 	private static final int INTERNAL_LIST_CONTAINER_ID = 0x00ff0003;
+
+	private static final String BUNDLE_LISTVIEW_STATE = "listview_state";
 
     /*
 	**********************************************************************
@@ -192,6 +195,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	@Nonnull
 	private AdapterSelection<LI> restoredAdapterSelection;
+
+	@Nullable
+	private Parcelable restoredListViewState;
 
     /*
     **********************************************************************
@@ -539,6 +545,11 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		}
 
 		restoredAdapterSelection = newSelection(selectedPosition, adapter.getSelectedItem());
+		if (savedInstanceState != null) {
+			restoredListViewState = savedInstanceState.getParcelable(BUNDLE_LISTVIEW_STATE);
+		} else {
+			restoredListViewState = null;
+		}
 	}
 
 	@Override
@@ -551,6 +562,13 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			if (listViewFilter != null) {
 				listViewFilter.saveState(outState);
 			}
+
+			final Parcelable listViewState = createListViewState();
+			if (listViewState != null) {
+				outState.putParcelable(BUNDLE_LISTVIEW_STATE, listViewState);
+			} else {
+				outState.putParcelable(BUNDLE_LISTVIEW_STATE, restoredListViewState);
+			}
 		} else {
 			if (lastSavedInstanceState != null) {
 				outState.putAll(lastSavedInstanceState);
@@ -560,10 +578,21 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		lastSavedInstanceState = null;
 	}
 
+	@Nullable
+	private Parcelable createListViewState() {
+		final ListView listView = getListViewById();
+		if (listView != null) {
+			return listView.onSaveInstanceState();
+		}
+
+		return null;
+	}
+
 	@Override
 	public void onPause() {
 		listeners.clearAll();
 		restoredAdapterSelection = adapter.getSelectionHelper().getSelection();
+		restoredListViewState = createListViewState();
 		super.onPause();
 	}
 
@@ -575,6 +604,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		final Activity activity = getActivity();
 
 		if (activity != null && !activity.isFinishing() && !isDetached()) {
+			restoreListViewState();
+
 			final LI selectedListItem = restoredAdapterSelection.getItem();
 			final int selectedPosition = restoredAdapterSelection.getPosition();
 
@@ -587,13 +618,15 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				position = selectedPosition;
 			}
 
-			if (position >= 0 && position < adapter.getCount()) {
-				adapter.getSelectionHelper().onItemClick(position);
-			}
-
 			initialClickItem(activity, position, adapter);
+		}
+	}
 
-			adapter.registerDataSetObserver(new AdapterChangedObserver());
+	protected void restoreListViewState() {
+		final ListView listView = getListViewById();
+		final Parcelable listViewState = restoredListViewState;
+		if (listView != null && listViewState != null) {
+			listView.onRestoreInstanceState(listViewState);
 		}
 	}
 
@@ -646,6 +679,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		uiHandler.post(new Runnable() {
 			@Override
 			public void run() {
+				if (position >= 0 && position < adapter.getCount()) {
+					adapter.getSelectionHelper().onItemClick(position);
+				}
+
 				if (getMultiPaneManager().isDualPane(activity)) {
 					if (adapter.isEmpty()) {
 						onEmptyList((BaseFragmentActivity) activity);
@@ -654,6 +691,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 						clickItem(activity, position, adapter);
 					}
 				}
+
+				adapter.registerDataSetObserver(new AdapterChangedObserver());
 			}
 		});
 	}
