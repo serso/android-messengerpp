@@ -28,8 +28,8 @@ public abstract class BaseStaticListFragment<LI extends MessengerListItem> exten
 
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
+		setOnListLoadedCallNeeded(true);
 		super.onViewCreated(root, savedInstanceState);
-		onListLoaded();
 	}
 
 	@Override

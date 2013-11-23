@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
 import static org.solovyev.android.messenger.AdapterSelection.newSelection;
+import static org.solovyev.android.messenger.AdapterSelection.restoreSelection;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.common.text.Strings.isEmpty;
 
@@ -199,6 +201,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Nullable
 	private Parcelable restoredListViewState;
 
+	private boolean onListLoadedCallNeeded = false;
+
+
     /*
     **********************************************************************
     *
@@ -309,6 +314,11 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		return viewWasCreated;
 	}
 
+	public void setOnListLoadedCallNeeded(boolean onListLoadedCallNeeded) {
+		this.onListLoadedCallNeeded = onListLoadedCallNeeded;
+	}
+
+
 	/*
     **********************************************************************
     *
@@ -388,6 +398,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		if (listView != null) {
 			listView.setOnItemClickListener(new ListViewOnItemClickListener());
 			listView.setOnItemLongClickListener(new ListViewOnItemLongClickListener());
+		}
+
+		if (onListLoadedCallNeeded) {
+			onListLoaded();
 		}
 	}
 
@@ -534,17 +548,23 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	private void restoreAdapterSelection(@Nullable Bundle savedInstanceState) {
-		int selectedPosition = adapter.getSelectionHelper().getSelection().getPosition();
+		final AdapterSelection<LI> selection = adapter.getSelectionHelper().getSelection();
+		final int position = selection.getPosition();
 
-		if (selectedPosition < 0) {
+		if (position < 0) {
+			final int defaultPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION;
 			if (savedInstanceState != null) {
-				selectedPosition = adapter.restoreSelectedPosition(savedInstanceState, isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION);
+				restoredAdapterSelection = restoreSelection(savedInstanceState, defaultPosition);
 			} else {
-				selectedPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION;
+				restoredAdapterSelection = newSelection(defaultPosition, null, null);
 			}
+		} else {
+			// adapter already has selection
+			restoredAdapterSelection = selection;
 		}
 
-		restoredAdapterSelection = newSelection(selectedPosition, adapter.getSelectedItem());
+		Log.d(tag, "Restored adapter selection: " + restoredAdapterSelection);
+
 		if (savedInstanceState != null) {
 			restoredListViewState = savedInstanceState.getParcelable(BUNDLE_LISTVIEW_STATE);
 		} else {
@@ -578,6 +598,12 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		lastSavedInstanceState = null;
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		onListLoadedCallNeeded = true;
+	}
+
 	@Nullable
 	private Parcelable createListViewState() {
 		final ListView listView = getListViewById();
@@ -603,22 +629,27 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	protected void onListLoaded() {
 		final Activity activity = getActivity();
 
-		if (activity != null && !activity.isFinishing() && !isDetached()) {
+		if (activity != null && !activity.isFinishing() && !isDetached() && viewWasCreated) {
 			restoreListViewState();
 
-			final LI selectedListItem = restoredAdapterSelection.getItem();
-			final int selectedPosition = restoredAdapterSelection.getPosition();
+			if (adapter.isSaveSelection()) {
+				final String selectedItemId = restoredAdapterSelection.getId();
+				final int selectedPosition = restoredAdapterSelection.getPosition();
 
-			int position = -1;
-			if (selectedListItem != null) {
-				position = adapter.getPosition(selectedListItem);
+				int position = -1;
+				if (selectedItemId != null) {
+					position = adapter.getPositionById(selectedItemId);
+				}
+
+				if (position < 0) {
+					position = selectedPosition;
+				}
+
+				initialClickItem(activity, position, adapter);
 			}
-
-			if (position < 0) {
-				position = selectedPosition;
-			}
-
-			initialClickItem(activity, position, adapter);
+			onListLoadedCallNeeded = false;
+		} else {
+			onListLoadedCallNeeded = true;
 		}
 	}
 
@@ -693,6 +724,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				}
 
 				adapter.registerDataSetObserver(new AdapterChangedObserver());
+
+				Log.d(tag, "Selection after initial click: " + adapter.getSelectionHelper().getSelection());
 			}
 		});
 	}
@@ -828,17 +861,19 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			if (!adapter.isEmpty()) {
 				final ListItemAdapterSelectionHelper<LI> sh = adapter.getSelectionHelper();
 
+				// if adapter has changed we need to check that our saved selected position is still the same
 				final AdapterSelection<LI> selection = sh.getSelection();
-				final LI listItem = selection.getItem();
-				if (listItem != null) {
-					if (!sh.isAlreadySelected()) {
-						if (!sh.findAndSelectItem(listItem)) {
-							final int position = selection.getPosition();
-							if (position >= 0 && position < adapter.getCount()) {
-								clickItem(position);
-							} else if (!adapter.isEmpty()) {
-								clickItem(0);
-							}
+				if (!selection.isAlreadySelected(adapter)) {
+					// position has changed => we need to reselect list item
+					final LI listItem = selection.getItem();
+					if (!sh.findAndSelectItem(listItem)) {
+						// item can't be reselected => item is removed
+						// in that case let's select item on the same position or the first element if such selection can't be done
+						final int position = selection.getPosition();
+						if (position >= 0 && position < adapter.getCount()) {
+							clickItem(position);
+						} else if (!adapter.isEmpty()) {
+							clickItem(0);
 						}
 					}
 				}

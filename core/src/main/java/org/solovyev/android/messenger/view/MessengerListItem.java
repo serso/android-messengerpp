@@ -16,11 +16,12 @@
 
 package org.solovyev.android.messenger.view;
 
+import org.solovyev.android.list.ListItem;
+import org.solovyev.android.messenger.Identifiable;
+
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.list.ListItem;
-
-public interface MessengerListItem extends ListItem {
+public interface MessengerListItem extends ListItem, Identifiable {
 
 	@Nonnull
 	String getId();

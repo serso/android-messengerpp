@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI> implements SectionIndexer {
+public class BaseListItemAdapter<LI extends ListItem & Identifiable> extends ListItemAdapter<LI> implements SectionIndexer {
 
 	@Nonnull
 	private final ListItemAdapterSelectionHelper<LI> selectionHelper = new ListItemAdapterSelectionHelper<LI>(this);
@@ -75,8 +75,8 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 		}
 	}
 
-	public int restoreSelectedPosition(@Nonnull Bundle savedInstanceState, int defaultPosition) {
-		return selectionHelper.restoreSelectedPosition(savedInstanceState, defaultPosition);
+	public boolean isSaveSelection() {
+		return saveSelection;
 	}
 
 	@Override
@@ -96,6 +96,17 @@ public class BaseListItemAdapter<LI extends ListItem> extends ListItemAdapter<LI
 
 	public void unselect() {
 		selectionHelper.unselect();
+	}
+
+	public int getPositionById(@Nonnull String id) {
+		for (int i = 0; i < getCount(); i++) {
+			final LI item = getItem(i);
+			if (item.getId().equals(id)) {
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	public static final class ListItemComparator implements Comparator<ListItem> {

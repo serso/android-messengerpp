@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import static org.solovyev.android.messenger.AdapterSelection.newNotSelected;
 import static org.solovyev.android.messenger.AdapterSelection.newSelection;
 
-public class ListItemAdapterSelectionHelper<LI extends ListItem> {
+public class ListItemAdapterSelectionHelper<LI extends ListItem & Identifiable> {
 
 	@Nonnull
 	private final BaseListItemAdapter<LI> adapter;
@@ -38,9 +38,10 @@ public class ListItemAdapterSelectionHelper<LI extends ListItem> {
 
 		for (int i = 0; i < adapter.getCount(); i++) {
 			final LI item = adapter.getItem(i);
-			if(toBeSelectedItem == item) {
+			if (toBeSelectedItem == item) {
+				assert toBeSelectedItem != null;
 				selection = newSelection(i, toBeSelectedItem);
-				if(!isSelected(item)) {
+				if (!isSelected(item)) {
 					selectItem(item, true);
 				}
 				selected = true;
@@ -55,24 +56,6 @@ public class ListItemAdapterSelectionHelper<LI extends ListItem> {
 	public void saveState(@Nonnull Bundle outState) {
 		selection.saveState(outState);
 	}
-
-	public int restoreSelectedPosition(@Nonnull Bundle savedInstanceState, int defaultPosition) {
-		return selection.restoreSelectedPosition(savedInstanceState, defaultPosition);
-	}
-
-	boolean isAlreadySelected() {
-		boolean alreadySelected = false;
-
-		final int position = selection.getPosition();
-		final LI listItem = selection.getItem();
-		if(position >= 0 && position < adapter.getCount()) {
-			if(listItem == adapter.getItem(position)) {
-				alreadySelected = true;
-			}
-		}
-		return alreadySelected;
-	}
-
 
 	private static boolean isSelected(@Nullable ListItem item) {
 		if (item instanceof Checkable) {
@@ -91,8 +74,9 @@ public class ListItemAdapterSelectionHelper<LI extends ListItem> {
 	}
 
 	private void onItemClick(int newPosition, @Nonnull LI newItem, boolean notifyChange) {
+		final String id = selection.getId();
 		final LI item = selection.getItem();
-		if (item != newItem) {
+		if (!newItem.getId().equals(id)) {
 			selectItem(newItem, true);
 			selectItem(item, false);
 

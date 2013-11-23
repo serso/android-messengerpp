@@ -147,7 +147,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 	@Override
 	protected void onListLoaded() {
-		// do not call super - we don't want to select message
+		super.onListLoaded();
 
 		attachListeners();
 
