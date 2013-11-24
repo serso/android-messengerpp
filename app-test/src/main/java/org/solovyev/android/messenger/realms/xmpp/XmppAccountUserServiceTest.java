@@ -31,7 +31,6 @@ import org.solovyev.android.messenger.users.Users;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
 
 public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
@@ -133,8 +132,7 @@ public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 			Thread.sleep(100);
 
 
-			final User user2InRealm1 = Users.newEmptyUser(realm1.newUserEntity(realm2.getUser().getEntity().getAccountEntityId()));
-			final List<User> users1 = accountUserService.checkOnlineUsers(Arrays.asList(user2InRealm1, realm1.getUser()));
+			final List<User> users1 = accountUserService.getOnlineUsers();
 			assertNotNull(users1);
 			assertTrue(!users1.isEmpty());
 

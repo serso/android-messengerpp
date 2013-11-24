@@ -104,7 +104,7 @@ final class SmsAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException {
+	public List<User> getOnlineUsers() throws AccountConnectionException {
 		// users always offline => do not need update
 		return emptyList();
 	}

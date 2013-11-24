@@ -19,14 +19,14 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import com.google.inject.Inject;
+import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.messenger.sync.SyncTask;
+import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import roboguice.activity.RoboActivity;
 
 import javax.annotation.Nonnull;
-
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.sync.SyncService;
-
-import com.google.inject.Inject;
 
 import static org.solovyev.common.Objects.areEqual;
 
@@ -54,7 +54,7 @@ public class StartActivity extends RoboActivity {
 		super.onCreate(savedInstanceState);
 
 		final Intent intent = getIntent();
-		if(areEqual(intent.getAction(), INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
+		if (areEqual(intent.getAction(), INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
 			MainActivity.startForUnreadMessages(this);
 		} else {
 			MainActivity.start(this);
@@ -63,6 +63,11 @@ public class StartActivity extends RoboActivity {
 		// we must start service from here because Android can cache application
 		// and Application#onCreate() is never called!
 		App.startBackgroundService();
+
+		try {
+			App.getSyncService().sync(SyncTask.user_contacts_statuses, null);
+		} catch (TaskIsAlreadyRunningException e) {
+		}
 
 		this.finish();
 	}

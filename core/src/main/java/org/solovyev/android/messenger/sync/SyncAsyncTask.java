@@ -16,6 +16,7 @@
 
 package org.solovyev.android.messenger.sync;
 
+import android.util.Log;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 
@@ -23,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+import static org.solovyev.android.messenger.App.TAG_TIME;
 import static org.solovyev.android.messenger.App.getAccountService;
 
 class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
@@ -42,7 +45,13 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 			final SyncData syncData = new SyncDataImpl(account.getId());
 
 			for (SyncTask syncTask : syncTasks) {
+				final long start = currentTimeMillis();
 				syncTask.doTask(syncData);
+				final long end = currentTimeMillis();
+				final long duration = end - start;
+				if (duration > 100) {
+					Log.e(TAG_TIME, "Work time is too long for account: " + account + " and task: " + syncTask + ". Time: " + duration + "ms");
+				}
 			}
 		}
 

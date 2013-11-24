@@ -16,11 +16,7 @@
 
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.chats.AccountChat;
-import org.solovyev.android.messenger.chats.AccountChatService;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.Chats;
-import org.solovyev.android.messenger.chats.MutableChat;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
@@ -52,7 +48,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<User> checkOnlineUsers(@Nonnull List<User> users) {
+	public List<User> getOnlineUsers() {
 		return Collections.emptyList();
 	}
 

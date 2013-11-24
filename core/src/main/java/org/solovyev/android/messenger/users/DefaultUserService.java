@@ -21,6 +21,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.android.messenger.EntityAwareByIdFinder;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -309,17 +310,12 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void onContactPresenceChanged(@Nonnull User user, @Nonnull final User contact, final boolean available) {
-		onContactsPresenceChanged(user, asList(contact.cloneWithNewStatus(available)));
-	}
-
-	private void onContactsPresenceChanged(@Nonnull User user, @Nonnull List<User> contacts) {
+		final User newContact = contact.cloneWithNewStatus(available);
 		synchronized (lock) {
-			for (User contact : contacts) {
-				userDao.updateOnlineStatus(contact);
-			}
+			userDao.updateOnlineStatus(newContact);
 		}
 
-		listeners.fireEvent(contacts_presence_changed.newEvent(user, contacts));
+		listeners.fireEvent(contacts_presence_changed.newEvent(user, asList(newContact)));
 	}
 
 	@Nonnull
@@ -495,11 +491,30 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void syncUserContactsStatuses(@Nonnull Entity userEntity) throws AccountException {
-		final List<User> contacts = getAccountByEntity(userEntity).getAccountUserService().checkOnlineUsers(getUserContacts(userEntity));
+		final List<User> contacts = getAccountByEntity(userEntity).getAccountUserService().getOnlineUsers();
 
 		final User user = getUserById(userEntity);
 
-		onContactsPresenceChanged(user, contacts);
+		final List<User> offlineContacts = new ArrayList<User>();
+
+		synchronized (lock) {
+			for (User contact : contacts) {
+				userDao.updateOnlineStatus(contact);
+			}
+
+			final List<User> oldContacts = getOnlineUserContacts(user.getEntity());
+			for (User oldContact : oldContacts) {
+				if (!any(contacts, new EntityAwareByIdFinder(oldContact.getId()))) {
+					// contact was online, but now is not => update database
+					final User offlineContact = oldContact.cloneWithNewStatus(false);
+					userDao.updateOnlineStatus(offlineContact);
+					offlineContacts.add(offlineContact);
+				}
+			}
+		}
+
+		listeners.fireEvent(contacts_presence_changed.newEvent(user, contacts));
+		listeners.fireEvent(contacts_presence_changed.newEvent(user, offlineContacts));
 	}
 
     /*

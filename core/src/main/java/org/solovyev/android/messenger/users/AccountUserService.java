@@ -38,13 +38,10 @@ public interface AccountUserService {
 	List<User> getUserContacts() throws AccountConnectionException;
 
 	/**
-	 * Method checks if user in <var>users</var> list is online
-	 *
-	 * @param users list of users for which online check should be done
-	 * @return list of users with updated statuses (online/offline)
+	 * @return list of users who are online now
 	 */
 	@Nonnull
-	List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException;
+	List<User> getOnlineUsers() throws AccountConnectionException;
 
 	@Nonnull
 	User saveUser(@Nonnull User user);

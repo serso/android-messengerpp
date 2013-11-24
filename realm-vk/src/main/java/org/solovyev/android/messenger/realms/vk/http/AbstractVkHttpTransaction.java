@@ -37,11 +37,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 5/28/12
- * Time: 1:13 PM
- */
 public abstract class AbstractVkHttpTransaction<R> extends AbstractHttpTransaction<R> {
 
 	private static final String URI = "https://api.vk.com/method/";

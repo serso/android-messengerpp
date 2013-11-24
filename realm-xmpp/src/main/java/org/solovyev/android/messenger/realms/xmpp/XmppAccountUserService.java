@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.App.newSubTag;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
@@ -53,22 +54,19 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	}
 
 	@Nonnull
-	private static List<User> checkPresenceStatuses(@Nonnull Connection connection, @Nonnull List<User> users, @Nonnull Account account) {
-		final List<User> result = new ArrayList<User>(users.size());
+	private static List<User> getOnlineUsers(@Nonnull Connection connection, @Nonnull Account account) {
+		final List<User> result = new ArrayList<User>();
 
 		final Roster roster = connection.getRoster();
-		for (final User user : users) {
-			result.add(checkPresence(account, roster, user));
+		for (RosterEntry entry : roster.getEntries()) {
+			final Presence presence = roster.getPresence(entry.getUser());
+			if (presence.isAvailable()) {
+				final User user = getUserService().getUserById(account.newUserEntity(entry.getUser()));
+				result.add(user.cloneWithNewStatus(true));
+			}
 		}
 
 		return result;
-	}
-
-	@Nonnull
-	private static User checkPresence(@Nonnull Account account, @Nonnull Roster roster, @Nonnull final User user) {
-		final boolean online = isUserOnline(account, roster, user.getEntity());
-		logUserPresence("XmppAccountUserService", account, online, user.getLogin());
-		return user.cloneWithNewStatus(online);
 	}
 
 	public static void logUserPresence(@Nonnull String subTag, @Nonnull Account account, boolean online, @Nonnull String userName) {
@@ -110,8 +108,8 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<User> checkOnlineUsers(@Nonnull final List<User> users) throws AccountConnectionException {
-		return doOnConnection(new OnlineUsersChecker(getAccount(), users));
+	public List<User> getOnlineUsers() throws AccountConnectionException {
+		return doOnConnection(new OnlineUsersGetter(getAccount()));
 	}
 
 	@Nonnull
@@ -244,22 +242,18 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		}
 	}
 
-	private static class OnlineUsersChecker implements XmppConnectedCallable<List<User>> {
+	private static class OnlineUsersGetter implements XmppConnectedCallable<List<User>> {
 
 		@Nonnull
 		private final Account account;
 
-		@Nonnull
-		private final List<User> users;
-
-		public OnlineUsersChecker(@Nonnull Account account, @Nonnull List<User> users) {
+		public OnlineUsersGetter(@Nonnull Account account) {
 			this.account = account;
-			this.users = users;
 		}
 
 		@Override
 		public List<User> call(@Nonnull Connection connection) throws AccountConnectionException, XMPPException {
-			return checkPresenceStatuses(connection, users, account);
+			return getOnlineUsers(connection, account);
 		}
 	}
 }

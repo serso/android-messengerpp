@@ -269,4 +269,11 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	@Override
 	public void call(@Nonnull User contact, @Nonnull Context context) {
 	}
+
+	@Override
+	public String toString() {
+		return "Account{" +
+				"id='" + id + '\'' +
+				'}';
+	}
 }

@@ -24,6 +24,8 @@ import com.google.inject.Singleton;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.sync.SyncService;
+import org.solovyev.android.messenger.sync.SyncTask;
+import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,11 +42,6 @@ import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.solovyev.android.messenger.App.getSyncService;
 import static org.solovyev.android.messenger.App.newTag;
 
-/**
- * User: serso
- * Date: 3/6/13
- * Time: 10:47 PM
- */
 @Singleton
 public final class DefaultAccountConnections implements AccountConnections {
 
@@ -131,10 +128,10 @@ public final class DefaultAccountConnections implements AccountConnections {
 				final SyncService syncService = getSyncService();
 
 				// todo serso: investigate why this operation takes so long and uncomment after fix
-				/*try {
+				try {
 					syncService.sync(SyncTask.user_contacts_statuses, null);
 				} catch (TaskIsAlreadyRunningException e) {
-				}*/
+				}
 
 			}
 		}, POST_START_DELAY, TimeUnit.SECONDS);

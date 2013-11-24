@@ -17,11 +17,12 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
 import org.solovyev.android.http.HttpRuntimeIoException;
-import org.solovyev.android.messenger.EntityAwareByIdFinder;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
 
 import javax.annotation.Nonnull;
@@ -29,10 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Iterables.find;
-import static java.util.Arrays.asList;
 import static org.solovyev.android.http.HttpTransactions.execute;
-import static org.solovyev.android.messenger.realms.vk.users.ApiUserField.online;
 
 /**
  * User: serso
@@ -75,48 +73,18 @@ public class VkAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> checkOnlineUsers(@Nonnull List<User> users) throws AccountConnectionException {
-		final List<User> result = new ArrayList<User>(users.size());
+	public List<User> getOnlineUsers() throws AccountConnectionException {
+		final List<User> result = new ArrayList<User>();
 
 		try {
-			for (VkUsersGetHttpTransaction vkUsersGetHttpTransaction : VkUsersGetHttpTransaction.newInstancesForUsers(account, users, asList(online))) {
-				result.addAll(execute(vkUsersGetHttpTransaction));
+			final UserService userService = App.getUserService();
+			for (String accountUserId : execute(new VkFriendsGetOnlineHttpTransaction(account))) {
+				result.add(userService.getUserById(account.newUserEntity(accountUserId)).cloneWithNewStatus(true));
 			}
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
 			throw new AccountConnectionException(account.getId(), e);
-		}
-
-		return actualizeOnlineUsers(users, result);
-	}
-
-	@Nonnull
-	private List<User> actualizeOnlineUsers(@Nonnull List<User> actualUsers, @Nonnull List<User> users) {
-		final List<User> result = new ArrayList<User>(users.size());
-
-		final boolean sameSize = actualUsers.size() == users.size();
-		for (int i = 0; i < users.size(); i++) {
-			final User user = users.get(i);
-
-			boolean actualized = false;
-			if (sameSize) {
-				// if we have same size => try same index first
-				final User actualUser = actualUsers.get(i);
-				if (user.equals(actualUser)) {
-					result.add(actualUser.cloneWithNewStatus(user.isOnline()));
-					actualized = true;
-				}
-			}
-
-			if (!actualized) {
-				final User actualUser = find(actualUsers, new EntityAwareByIdFinder(user.getId()));
-				if (actualUser == null) {
-					result.add(user);
-				} else {
-					result.add(actualUser.cloneWithNewStatus(user.isOnline()));
-				}
-			}
 		}
 
 		return result;
