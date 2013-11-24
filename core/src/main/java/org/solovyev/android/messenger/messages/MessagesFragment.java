@@ -149,9 +149,21 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	protected void onListLoaded() {
 		super.onListLoaded();
 
+		// we can set transcript mode only after list is loaded as list is scrolled to the bottom because of transcript mode (new items are added during load)
+		// and no state is restored (position is lost for some reason)
+		final ListView listView = getListViewById();
+		if (listView != null) {
+			listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+		}
+
 		attachListeners();
 
 		new SyncMessagesForChatAsyncTask(null, getActivity()).executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+	}
+
+	@Override
+	protected boolean isScrollToEndByDefault() {
+		return true;
 	}
 
 	@Override
@@ -335,8 +347,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		super.fillListView(lv, context);
 
 		lv.setDividerHeight(0);
-
-		lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		lv.setStackFromBottom(true);
 		lv.setFastScrollEnabled(false);
 	}

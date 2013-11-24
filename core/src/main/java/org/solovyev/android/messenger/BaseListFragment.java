@@ -656,9 +656,22 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	protected void restoreListViewState() {
 		final ListView listView = getListViewById();
 		final Parcelable listViewState = restoredListViewState;
-		if (listView != null && listViewState != null) {
-			listView.onRestoreInstanceState(listViewState);
+		if (listView != null) {
+			if (listViewState != null) {
+				listView.onRestoreInstanceState(listViewState);
+			} else {
+				if (isScrollToEndByDefault()) {
+					final int count = getAdapter().getCount();
+					if (count > 0) {
+						listView.setSelection(count - 1);
+					}
+				}
+			}
 		}
+	}
+
+	protected boolean isScrollToEndByDefault() {
+		return false;
 	}
 
 	@Nonnull
