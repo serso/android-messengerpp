@@ -26,7 +26,6 @@ import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.MutableAccountChat;
@@ -88,7 +87,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	@Nonnull
 	@Override
 	public AccountUserService getAccountUserService() {
-		return new XmppAccountUserService(this, getXmppConnectionAware());
+		return new XmppAccountUserService(this, getXmppConnectionAware(), App.getUserService());
 	}
 
 	@Nonnull

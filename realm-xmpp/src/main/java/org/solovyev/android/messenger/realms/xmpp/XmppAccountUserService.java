@@ -26,10 +26,7 @@ import org.jivesoftware.smackx.packet.VCard;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.AccountUserService;
-import org.solovyev.android.messenger.users.MutableUser;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.Users;
+import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.security.base64.ABase64StringEncoder;
 
@@ -39,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.App.newSubTag;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
@@ -49,19 +45,23 @@ import static org.solovyev.android.properties.Properties.newProperty;
 
 class XmppAccountUserService extends AbstractXmppRealmService implements AccountUserService {
 
-	XmppAccountUserService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware) {
+	@Nonnull
+	private final UserService userService;
+
+	XmppAccountUserService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware, @Nonnull UserService userService) {
 		super(realm, connectionAware);
+		this.userService = userService;
 	}
 
 	@Nonnull
-	private static List<User> getOnlineUsers(@Nonnull Connection connection, @Nonnull Account account) {
+	private List<User> getOnlineUsers(@Nonnull Connection connection, @Nonnull Account account) {
 		final List<User> result = new ArrayList<User>();
 
 		final Roster roster = connection.getRoster();
 		for (RosterEntry entry : roster.getEntries()) {
 			final Presence presence = roster.getPresence(entry.getUser());
 			if (presence.isAvailable()) {
-				final User user = getUserService().getUserById(account.newUserEntity(entry.getUser()));
+				final User user = userService.getUserById(account.newUserEntity(entry.getUser()));
 				result.add(user.cloneWithNewStatus(true));
 			}
 		}
@@ -242,7 +242,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 		}
 	}
 
-	private static class OnlineUsersGetter implements XmppConnectedCallable<List<User>> {
+	private class OnlineUsersGetter implements XmppConnectedCallable<List<User>> {
 
 		@Nonnull
 		private final Account account;
