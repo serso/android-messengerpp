@@ -337,6 +337,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (listViewFilter != null) {
+			listViewFilter.onCreate(savedInstanceState);
+		}
+
 		listeners = new RoboListeners(App.getEventManager(getActivity()));
 
 		createAdapter(savedInstanceState);

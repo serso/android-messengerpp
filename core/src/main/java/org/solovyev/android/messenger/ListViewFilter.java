@@ -27,13 +27,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ListViewFilter {
 
@@ -45,7 +44,7 @@ public class ListViewFilter {
 	**********************************************************************
 	*/
 	@Nonnull
-	private static final String FILTER = "filter";
+	private static final String BUNDLE_FILTER = "filter";
 
 	@Nonnull
 	private static final String TAG = "ListViewFilter";
@@ -69,9 +68,16 @@ public class ListViewFilter {
 	 */
 	private EditText filterEditText;
 
+	@Nullable
+	private Bundle lastSavedInstanceState;
+
 	public ListViewFilter(@Nonnull ListFragment fragment, @Nonnull FilterableListView filterableListView) {
 		this.fragment = fragment;
 		this.filterableListView = filterableListView;
+	}
+
+	public void onCreate(@Nonnull Bundle savedInstanceState) {
+		lastSavedInstanceState = savedInstanceState;
 	}
 
 	@Nonnull
@@ -82,8 +88,7 @@ public class ListViewFilter {
 
 			filterEditText = (EditText) result.findViewById(R.id.mpp_filter_edittext);
 			if (savedInstanceState != null) {
-				final String filter = savedInstanceState.getString(FILTER);
-				filterEditText.setText(filter);
+				filterEditText.setText(savedInstanceState.getString(BUNDLE_FILTER));
 			}
 			filterEditText.addTextChangedListener(new TextWatcher() {
 				@Override
@@ -175,7 +180,7 @@ public class ListViewFilter {
 
 	public void saveState(Bundle outState) {
 		if (filterEditText != null) {
-			outState.putString(FILTER, filterEditText.getText().toString());
+			outState.putString(BUNDLE_FILTER, filterEditText.getText().toString());
 		}
 	}
 
@@ -184,7 +189,7 @@ public class ListViewFilter {
 		if (filterEditText != null) {
 			return filterEditText.getText();
 		} else {
-			return null;
+			return lastSavedInstanceState != null ? lastSavedInstanceState.getString(BUNDLE_FILTER) : null;
 		}
 	}
 
