@@ -2,6 +2,7 @@ package org.solovyev.android.messenger;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -174,11 +175,23 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	private class ReloadRunnable implements Runnable {
 		@Override
 		public void run() {
+			unregisterAdapterChangedObserver();
+
 			final BaseListItemAdapter<LI> adapter = getAdapter();
+			final AdapterSelection<LI> selection = adapter.getSelectionHelper().getSelection();
 			adapter.unselect();
-			createAsyncLoader(adapter).executeInParallel();
+			createAsyncLoader(adapter, new Runnable() {
+				@Override
+				public void run() {
+					final FragmentActivity activity = getActivity();
+					if (activity != null) {
+						restoreAdapterSelection(activity, selection);
+					}
+				}
+			}).executeInParallel();
 		}
 	}
+
 
 	private class OnListLoadedRunnable implements Runnable {
 

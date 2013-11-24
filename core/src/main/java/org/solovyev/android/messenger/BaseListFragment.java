@@ -203,6 +203,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	private boolean onListLoadedCallNeeded = false;
 
+	@Nullable
+	private BaseListFragment<LI>.AdapterChangedObserver adapterChangedObserver;
+
 
     /*
     **********************************************************************
@@ -318,7 +321,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		this.onListLoadedCallNeeded = onListLoadedCallNeeded;
 	}
 
-
 	/*
     **********************************************************************
     *
@@ -377,7 +379,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 		multiPaneManager.onCreatePane(getActivity(), container, root);
 
-		restoreAdapterSelection(savedInstanceState);
+		initViewStates(savedInstanceState);
 
 		viewWasCreated = true;
 
@@ -551,7 +553,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		setListAdapter(adapter);
 	}
 
-	private void restoreAdapterSelection(@Nullable Bundle savedInstanceState) {
+	private void initViewStates(@Nullable Bundle savedInstanceState) {
 		final AdapterSelection<LI> selection = adapter.getSelectionHelper().getSelection();
 		final int position = selection.getPosition();
 
@@ -636,24 +638,30 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		if (activity != null && !activity.isFinishing() && !isDetached() && viewWasCreated) {
 			restoreListViewState();
 
-			if (adapter.isSaveSelection()) {
-				final String selectedItemId = restoredAdapterSelection.getId();
-				final int selectedPosition = restoredAdapterSelection.getPosition();
-
-				int position = -1;
-				if (selectedItemId != null) {
-					position = adapter.getPositionById(selectedItemId);
-				}
-
-				if (position < 0) {
-					position = selectedPosition;
-				}
-
-				initialClickItem(activity, position, adapter);
-			}
+			restoreAdapterSelection(activity, restoredAdapterSelection);
 			onListLoadedCallNeeded = false;
 		} else {
 			onListLoadedCallNeeded = true;
+		}
+	}
+
+	protected void restoreAdapterSelection(@Nonnull Activity activity, @Nonnull AdapterSelection<LI> selection) {
+		if (adapter.isSaveSelection()) {
+			final String selectedItemId = selection.getId();
+			final int selectedPosition = selection.getPosition();
+
+			int position = -1;
+			if (selectedItemId != null) {
+				position = adapter.getPositionById(selectedItemId);
+			}
+
+			if (position < 0) {
+				position = selectedPosition;
+			}
+
+			initialClickItem(activity, position, adapter);
+
+			registerAdapterChangedObserver();
 		}
 	}
 
@@ -682,6 +690,20 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	protected abstract BaseListItemAdapter<LI> createAdapter();
 
 	protected void onEvent(@Nonnull AccountEvent event) {
+	}
+
+	protected final void unregisterAdapterChangedObserver() {
+		if (adapterChangedObserver != null) {
+			adapter.unregisterDataSetObserver(adapterChangedObserver);
+			adapterChangedObserver = null;
+		}
+	}
+
+	protected final void registerAdapterChangedObserver() {
+		if (adapterChangedObserver == null) {
+			adapterChangedObserver = new AdapterChangedObserver();
+			adapter.registerDataSetObserver(adapterChangedObserver);
+		}
 	}
 
     /*
@@ -739,8 +761,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 						clickItem(activity, position, adapter);
 					}
 				}
-
-				adapter.registerDataSetObserver(new AdapterChangedObserver());
 
 				Log.d(tag, "Selection after initial click: " + adapter.getSelectionHelper().getSelection());
 			}
