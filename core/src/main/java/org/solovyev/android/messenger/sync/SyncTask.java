@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.sync;
 import android.util.Log;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
@@ -100,8 +101,8 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			getUserService().syncUserContactsStatuses(user.getEntity());
+			final Account account = getAccountService().getAccountById(syncData.getAccountId());
+			getUserService().syncUserContactsStatuses(account);
 		}
 	},
 

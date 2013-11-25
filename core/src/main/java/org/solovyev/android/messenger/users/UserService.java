@@ -190,9 +190,9 @@ public interface UserService {
 	/**
 	 * Method synchronizes user contacts statuses (presences/availabilities)
 	 *
-	 * @param user user whose contacts statuses should be synchronized
+	 * @param account account for which synchronization should be done
 	 */
-	void syncUserContactsStatuses(@Nonnull Entity user) throws AccountException;
+	void syncUserContactsStatuses(@Nonnull Account account) throws AccountException;
 
     /*
     **********************************************************************

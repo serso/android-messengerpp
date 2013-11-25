@@ -490,10 +490,10 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void syncUserContactsStatuses(@Nonnull Entity userEntity) throws AccountException {
-		final List<User> contacts = getAccountByEntity(userEntity).getAccountUserService().getOnlineUsers();
+	public void syncUserContactsStatuses(@Nonnull Account account) throws AccountException {
+		final List<User> contacts = account.getAccountUserService().getOnlineUsers();
 
-		final User user = getUserById(userEntity);
+		final User user = account.getUser();
 
 		final List<User> offlineContacts = new ArrayList<User>();
 
