@@ -47,12 +47,12 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 
 	@Nonnull
 	@Override
-	public Account<C> convert(@Nonnull Cursor cursor) {
-		final String accountId = cursor.getString(0);
-		final String realmId = cursor.getString(1);
-		final String userId = cursor.getString(2);
-		final String configuration = cursor.getString(3);
-		final String state = cursor.getString(4);
+	public Account<C> convert(@Nonnull Cursor c) {
+		final String accountId = c.getString(0);
+		final String realmId = c.getString(1);
+		final String userId = c.getString(2);
+		final String configuration = c.getString(3);
+		final String state = c.getString(4);
 
 		final Realm<C> realm = (Realm<C>) getRealmService().getRealmById(realmId);
 
@@ -67,7 +67,9 @@ public class AccountMapper<C extends AccountConfiguration> implements Converter<
 
 		final C decryptedConfiguration = decryptConfiguration(realm, encryptedConfiguration);
 
-		return realm.newAccount(accountId, user, decryptedConfiguration, AccountState.valueOf(state));
+		final AccountSyncData syncData = Accounts.newUserSyncData(c.getString(5), c.getString(6), c.getString(7));
+
+		return realm.newAccount(accountId, user, decryptedConfiguration, AccountState.valueOf(state), syncData);
 	}
 
 	@Nonnull

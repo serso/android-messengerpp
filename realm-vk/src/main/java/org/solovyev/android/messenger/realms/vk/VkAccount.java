@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.realms.vk;
 import android.content.Context;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.realms.Realm;
@@ -31,8 +32,8 @@ import javax.annotation.Nonnull;
 
 public final class VkAccount extends AbstractAccount<VkAccountConfiguration> {
 
-	public VkAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state) {
-		super(id, realm, user, configuration, state);
+	public VkAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull VkAccountConfiguration configuration, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
+		super(id, realm, user, configuration, state, syncData);
 	}
 
 	@Nonnull

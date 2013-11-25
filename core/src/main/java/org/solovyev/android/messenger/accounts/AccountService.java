@@ -72,6 +72,8 @@ public interface AccountService {
 	@Nonnull
 	Account changeAccountState(@Nonnull Account account, @Nonnull AccountState newState);
 
+	void saveAccount(@Nonnull Account account);
+
 	void removeAccount(@Nonnull String accountId);
 
 	boolean isOneAccount();

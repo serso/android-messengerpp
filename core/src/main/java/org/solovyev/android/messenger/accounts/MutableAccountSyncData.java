@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.users;
+package org.solovyev.android.messenger.accounts;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 7/19/12
- * Time: 2:33 PM
- */
-public interface MutableUserSyncData {
+public interface MutableAccountSyncData extends AccountSyncData {
 
 	@Nonnull
-	MutableUserSyncData updateChatsSyncDate();
+	MutableAccountSyncData updateChatsSyncDate();
 
 	@Nonnull
-	MutableUserSyncData updatePropertiesSyncDate();
+	MutableAccountSyncData updateContactsSyncDate();
 
 	@Nonnull
-	MutableUserSyncData updateContactsSyncDate();
-
-	@Nonnull
-	MutableUserSyncData updateUserIconsSyncDate();
+	MutableAccountSyncData updateUserIconsSyncDate();
 
 }

@@ -97,7 +97,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 			}
 			result.chats.add(newPrivateAccountChat(chatService.getPrivateChatId(user.getEntity(), contact.getEntity()), user, contact, messages));
 		}
-		chatService.mergeUserChats(user.getEntity(), result.chats);
+		chatService.mergeChats(user.getEntity(), result.chats);
 		return result;
 	}
 
@@ -125,7 +125,7 @@ public abstract class DefaultMessengerTest extends AbstractMessengerTest {
 		for (int i = 0; i < count; i++) {
 			contacts.add(getContactForAccount(account, i));
 		}
-		userService.mergeUserContacts(account.getUser().getEntity(), contacts, false, false);
+		userService.mergeContacts(account, contacts, false, false);
 		return contacts;
 	}
 

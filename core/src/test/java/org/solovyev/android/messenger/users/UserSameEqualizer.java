@@ -33,11 +33,6 @@ public class UserSameEqualizer implements Equalizer<User> {
 
 		same &= Objects.areEqual(u1.getProperties(), u2.getProperties(), new PropertiesEqualizer());
 
-		same &= Objects.areEqual(u1.getUserSyncData().getLastChatsSyncDate(), u2.getUserSyncData().getLastChatsSyncDate());
-		same &= Objects.areEqual(u1.getUserSyncData().getLastContactsSyncDate(), u2.getUserSyncData().getLastContactsSyncDate());
-		same &= Objects.areEqual(u1.getUserSyncData().getLastPropertiesSyncDate(), u2.getUserSyncData().getLastPropertiesSyncDate());
-		same &= Objects.areEqual(u1.getUserSyncData().getLastUserIconsSyncData(), u2.getUserSyncData().getLastUserIconsSyncData());
-
 		return same;
 	}
 }

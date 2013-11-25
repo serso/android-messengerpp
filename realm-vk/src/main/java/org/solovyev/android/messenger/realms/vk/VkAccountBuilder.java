@@ -22,6 +22,8 @@ import org.solovyev.android.http.AHttpClient;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
+import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkOauthHttpTransaction;
@@ -37,6 +39,7 @@ import java.util.List;
 
 import static org.solovyev.android.http.HttpTransactions.execute;
 import static org.solovyev.android.http.HttpTransactions.newHttpClient;
+import static org.solovyev.android.messenger.accounts.Accounts.newNeverSyncedData;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.android.messenger.users.Users.newUser;
@@ -55,12 +58,12 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccount, VkAccoun
 
 		MutableUser result;
 		try {
-			final List<User> users = execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(accountId, getRealm(), defaultUser, getConfiguration(), AccountState.removed), userId, null));
+			final List<User> users = execute(VkUsersGetHttpTransaction.newInstance(new VkAccount(accountId, getRealm(), defaultUser, getConfiguration(), AccountState.removed, newNeverSyncedData()), userId, null));
 			if (users.isEmpty()) {
 				result = defaultUser;
 			} else {
 				final User user = users.get(0);
-				result = newUser(user.getEntity(), user.getUserSyncData(), user.getProperties());
+				result = newUser(user.getEntity(), user.getProperties());
 			}
 		} catch (IOException e) {
 			Log.e("VkRealmBuilder", e.getMessage(), e);
@@ -72,8 +75,8 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccount, VkAccoun
 
 	@Nonnull
 	@Override
-	protected VkAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new VkAccount(id, getRealm(), user, getConfiguration(), state);
+	protected VkAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
+		return new VkAccount(id, getRealm(), user, getConfiguration(), state, syncData);
 	}
 
 	@Override

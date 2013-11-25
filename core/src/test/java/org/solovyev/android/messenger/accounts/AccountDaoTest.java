@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.solovyev.android.db.Dao;
 import org.solovyev.android.messenger.DefaultDaoTest;
 import org.solovyev.android.messenger.realms.TestRealm;
-import org.solovyev.android.messenger.realms.UserSavingAccountDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.security.Cipherer;

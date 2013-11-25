@@ -23,6 +23,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
@@ -69,8 +70,8 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 
 	@Nonnull
 	@Override
-	protected XmppAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new XmppAccount(id, getRealm(), user, getConfiguration(), state);
+	protected XmppAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
+		return new XmppAccount(id, getRealm(), user, getConfiguration(), state, syncData);
 	}
 
 	@Override

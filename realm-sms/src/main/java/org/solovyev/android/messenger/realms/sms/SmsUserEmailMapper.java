@@ -50,6 +50,6 @@ public final class SmsUserEmailMapper implements Converter<Cursor, User> {
 		final List<AProperty> properties = new ArrayList<AProperty>();
 		Users.tryParseNameProperties(properties, cursor.getString(2));
 		properties.add(Properties.newProperty(User.PROPERTY_EMAIL, email));
-		return Users.newUser(realm.getId(), userId, Users.newNeverSyncedUserSyncData(), properties);
+		return Users.newUser(realm.getId(), userId, properties);
 	}
 }

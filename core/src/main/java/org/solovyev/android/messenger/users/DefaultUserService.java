@@ -121,7 +121,7 @@ public class DefaultUserService implements UserService {
 	@Override
 	public void init() {
 		chats.init();
-		iconsService = new DefaultUserIconsService(this);
+		iconsService = new DefaultUserIconsService(this, accountService);
 	}
 
 	@Override
@@ -252,12 +252,12 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<Chat> getUserChats(@Nonnull Entity user) {
+	public List<Chat> getChats(@Nonnull Entity user) {
 		List<Chat> result = chats.getChats(user);
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
 			synchronized (lock) {
-				result = chatService.loadUserChats(user);
+				result = chatService.loadChats(user);
 			}
 			chats.update(user, result);
 		}
@@ -284,7 +284,7 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts(@Nonnull Entity user) {
+	public List<User> getContacts(@Nonnull Entity user) {
 		List<User> result = contacts.getContacts(user);
 
 		if (result == ThreadSafeMultimap.NO_VALUE) {
@@ -299,8 +299,8 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<User> getOnlineUserContacts(@Nonnull Entity user) {
-		return newArrayList(filter(getUserContacts(user), new Predicate<User>() {
+	public List<User> getOnlineContacts(@Nonnull Entity user) {
+		return newArrayList(filter(getContacts(user), new Predicate<User>() {
 			@Override
 			public boolean apply(@javax.annotation.Nullable User contact) {
 				return contact != null && contact.isOnline();
@@ -324,7 +324,7 @@ public class DefaultUserService implements UserService {
 		Log.d(TAG, "Find contacts for user: " + user.getLogin() + ", query: " + query);
 		final List<UiContact> result = new ArrayList<UiContact>();
 
-		final List<User> contacts = getUserContacts(user.getEntity());
+		final List<User> contacts = getContacts(user.getEntity());
 		final ContactFilter filter = new ContactFilter(query, all_contacts);
 
 		final Account account = accountService.getAccountByEntity(user.getEntity());
@@ -406,21 +406,12 @@ public class DefaultUserService implements UserService {
     */
 
 	@Override
-	public void syncUser(@Nonnull Entity userEntity) throws AccountException {
-		User user = getAccountByEntity(userEntity).getAccountUserService().getUserById(userEntity.getAccountEntityId());
-		if (user != null) {
-			user = user.updatePropertiesSyncDate();
-			updateUser(user);
-		}
-	}
-
-	@Override
 	@Nonnull
-	public List<User> syncUserContacts(@Nonnull Account<?> account) throws AccountException {
+	public List<User> syncContacts(@Nonnull Account<?> account) throws AccountException {
 		final List<User> contacts = account.getAccountUserService().getUserContacts();
 
 		if (!contacts.isEmpty()) {
-			mergeUserContacts(account.getUser().getEntity(), contacts, false, true);
+			mergeContacts(account, contacts, false, true);
 		} else {
 			Log.w(TAG, "User contacts synchronization returned empty list for realm " + account.getId());
 		}
@@ -429,16 +420,16 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void mergeUserContacts(@Nonnull Entity userEntity, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
-		User user = getUserById(userEntity);
+	public void mergeContacts(@Nonnull Account account, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate) {
+		final User user = account.getUser();
+
 		final MergeDaoResult<User, String> result;
 		synchronized (lock) {
-			result = userDao.mergeLinkedEntities(userEntity.getEntityId(), contacts, allowRemoval, allowUpdate);
-
-			// update sync data
-			user = user.updateContactsSyncDate();
-			updateUser(user);
+			result = userDao.mergeLinkedEntities(user.getId(), contacts, allowRemoval, allowUpdate);
 		}
+
+		// update sync data
+		accountService.saveAccount(account.updateContactsSyncDate());
 
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
@@ -463,8 +454,8 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException {
-		final List<AccountChat> accountChats = getAccountByEntity(user).getAccountChatService().getChats();
+	public List<Chat> syncChats(@Nonnull Account account) throws AccountException {
+		final List<AccountChat> accountChats = account.getAccountChatService().getChats();
 
 		final List<Chat> chats = newArrayList(transform(accountChats, new Function<AccountChat, Chat>() {
 			@Override
@@ -474,23 +465,21 @@ public class DefaultUserService implements UserService {
 			}
 		}));
 
-		mergeUserChats(user, accountChats);
+		mergeChats(account, accountChats);
 
 		return unmodifiableList(chats);
 	}
 
 	@Override
-	public void mergeUserChats(@Nonnull Entity userEntity, @Nonnull List<? extends AccountChat> apiChats) throws AccountException {
-		User user = this.getUserById(userEntity);
-
-		chatService.mergeUserChats(userEntity, apiChats);
+	public void mergeChats(@Nonnull Account account, @Nonnull List<? extends AccountChat> apiChats) throws AccountException {
+		chatService.mergeChats(account.getUser().getEntity(), apiChats);
 
 		// update sync data
-		updateUser(user.updateChatsSyncDate());
+		accountService.saveAccount(account.updateChatsSyncDate());
 	}
 
 	@Override
-	public void syncUserContactsStatuses(@Nonnull Account account) throws AccountException {
+	public void syncContactStatuses(@Nonnull Account account) throws AccountException {
 		final List<User> contacts = account.getAccountUserService().getOnlineUsers();
 
 		final User user = account.getUser();
@@ -502,7 +491,7 @@ public class DefaultUserService implements UserService {
 				userDao.updateOnlineStatus(contact);
 			}
 
-			final List<User> oldContacts = getOnlineUserContacts(user.getEntity());
+			final List<User> oldContacts = getOnlineContacts(user.getEntity());
 			for (User oldContact : oldContacts) {
 				if (!any(contacts, new EntityAwareByIdFinder(oldContact.getId()))) {
 					// contact was online, but now is not => update database

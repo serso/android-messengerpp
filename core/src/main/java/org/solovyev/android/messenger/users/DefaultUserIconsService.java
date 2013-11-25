@@ -16,7 +16,6 @@
 
 package org.solovyev.android.messenger.users;
 
-import android.content.Context;
 import android.widget.ImageView;
 
 import java.util.List;
@@ -25,6 +24,7 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
@@ -36,24 +36,29 @@ class DefaultUserIconsService implements UserIconsService {
 	@Nonnull
 	private final UserService userService;
 
-	public DefaultUserIconsService(@Nonnull UserService userService) {
+	@Nonnull
+	private final AccountService accountService;
+
+	public DefaultUserIconsService(@Nonnull UserService userService, @Nonnull AccountService accountService) {
 		this.userService = userService;
+		this.accountService = accountService;
 	}
 
 	@Override
-	public void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedAccountException {
-		final RealmIconService realmIconService = getRealmIconServiceByUser(user);
+	public void fetchUserAndContactsIcons(@Nonnull Account account) throws UnsupportedAccountException {
+		final RealmIconService realmIconService = account.getRealm().getRealmIconService();
+		final User user = account.getUser();
 
 		// fetch self icon
 		realmIconService.fetchUsersIcons(asList(user));
 
 		// fetch icons for all contacts
-		final List<User> contacts = userService.getUserContacts(user.getEntity());
+		final List<User> contacts = userService.getContacts(user.getEntity());
 		realmIconService.fetchUsersIcons(contacts);
 
 		// update sync data
-		user = user.updateUserIconsSyncDate();
-		userService.updateUser(user);
+		account = account.updateUserIconsSyncDate();
+		accountService.saveAccount(account);
 	}
 
 	@Nonnull

@@ -18,14 +18,21 @@ package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
 import android.util.Log;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.realms.Realms;
@@ -41,18 +48,18 @@ import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
-import static org.solovyev.android.messenger.accounts.AccountState.*;
+import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;
+import static org.solovyev.android.messenger.accounts.AccountState.enabled;
+import static org.solovyev.android.messenger.accounts.AccountState.removed;
 
 @Singleton
 public class DefaultAccountService implements AccountService {
@@ -80,15 +87,7 @@ public class DefaultAccountService implements AccountService {
 
 	@Inject
 	@Nonnull
-	private ChatService chatService;
-
-	@Inject
-	@Nonnull
 	private SyncService syncService;
-
-	@Inject
-	@Nonnull
-	private MessageService messageService;
 
 	@Nonnull
 	private final Object lock;
@@ -340,6 +339,18 @@ public class DefaultAccountService implements AccountService {
 		} else {
 			return account;
 		}
+	}
+
+	@Override
+	public void saveAccount(@Nonnull Account account) {
+		synchronized (accounts) {
+			this.accounts.put(account.getId(), account);
+			synchronized (lock) {
+				this.accountDao.update(account);
+			}
+		}
+
+		listeners.fireEvent(AccountEventType.changed.newEvent(account, null));
 	}
 
 	@Override

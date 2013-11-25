@@ -372,16 +372,9 @@ public final class SqliteUserDao extends AbstractSQLiteHelper implements UserDao
 	private static ContentValues toContentValues(@Nonnull User user) {
 		final ContentValues values = new ContentValues();
 
-		final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
-
-		final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
-		final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
-
 		values.put("id", user.getEntity().getEntityId());
 		values.put("account_id", user.getEntity().getAccountId());
 		values.put("account_user_id", user.getEntity().getAccountEntityId());
-		values.put("last_properties_sync_date", lastPropertiesSyncDate == null ? null : dateTimeFormatter.print(lastPropertiesSyncDate));
-		values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
 
 		return values;
 	}

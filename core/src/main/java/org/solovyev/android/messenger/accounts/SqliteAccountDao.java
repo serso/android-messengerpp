@@ -30,6 +30,9 @@ import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.AbstractDbQuery;
 import org.solovyev.android.db.AbstractSQLiteHelper;
 import org.solovyev.android.db.Dao;
@@ -172,6 +175,16 @@ public class SqliteAccountDao extends AbstractSQLiteHelper implements AccountDao
 			}
 
 			values.put("state", account.getState().name());
+
+			final DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.basicDateTime();
+
+			final AccountSyncData syncData = account.getSyncData();
+			final DateTime lastContactsSyncDate = syncData.getLastContactsSyncDate();
+			final DateTime lastChatsSyncDate = syncData.getLastChatsSyncDate();
+			final DateTime lastUserIconsSyncDate = syncData.getLastUserIconsSyncData();
+			values.put("last_contacts_sync_date", lastContactsSyncDate == null ? null : dateTimeFormatter.print(lastContactsSyncDate));
+			values.put("last_chats_sync_date", lastChatsSyncDate == null ? null : dateTimeFormatter.print(lastChatsSyncDate));
+			values.put("last_user_icons_sync_date", lastUserIconsSyncDate == null ? null : dateTimeFormatter.print(lastUserIconsSyncDate));
 
 			return values;
 		}

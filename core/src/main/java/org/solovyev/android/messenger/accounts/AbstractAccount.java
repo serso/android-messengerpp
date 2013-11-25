@@ -49,6 +49,9 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	@Nonnull
 	private AccountState state;
 
+	@Nonnull
+	private AccountSyncData syncData;
+
 	/**
 	 * Last created account connection
 	 */
@@ -59,7 +62,8 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 						   @Nonnull Realm realm,
 						   @Nonnull User user,
 						   @Nonnull C configuration,
-						   @Nonnull AccountState state) {
+						   @Nonnull AccountState state,
+						   @Nonnull AccountSyncData syncData) {
 		if (!user.getEntity().getAccountId().equals(id)) {
 			throw new IllegalArgumentException("User must belong to account!");
 		}
@@ -69,6 +73,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 		this.user = user;
 		this.configuration = configuration;
 		this.state = state;
+		this.syncData = syncData;
 	}
 
 	@Nonnull
@@ -153,6 +158,36 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
+	public AbstractAccount<C> updateChatsSyncDate() {
+		final AbstractAccount<C> clone = this.clone();
+		clone.syncData = clone.syncData.updateChatsSyncDate();
+		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public AbstractAccount<C> updateContactsSyncDate() {
+		final AbstractAccount<C> clone = this.clone();
+		clone.syncData = clone.syncData.updateContactsSyncDate();
+		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public AbstractAccount<C> updateUserIconsSyncDate() {
+		final AbstractAccount<C> clone = this.clone();
+		clone.syncData = clone.syncData.updateUserIconsSyncDate();
+		return clone;
+	}
+
+	@Nonnull
+	@Override
+	public AccountSyncData getSyncData() {
+		return syncData;
+	}
+
+	@Nonnull
+	@Override
 	public final Account copyForNewState(@Nonnull AccountState newState) {
 		final AbstractAccount clone = clone();
 		clone.state = newState;
@@ -161,11 +196,11 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 
 	@Nonnull
 	@Override
-	public AbstractAccount clone() {
-		final AbstractAccount clone = (AbstractAccount) super.clone();
+	public AbstractAccount<C> clone() {
+		final AbstractAccount<C> clone = (AbstractAccount<C>) super.clone();
 
 		clone.user = this.user.clone();
-		clone.configuration = this.configuration.clone();
+		clone.configuration = (C) this.configuration.clone();
 
 		return clone;
 	}

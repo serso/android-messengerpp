@@ -23,6 +23,7 @@ import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
@@ -71,15 +72,14 @@ public final class Users {
 	@Nonnull
 	public static MutableUser newUser(@Nonnull String accountId,
 									  @Nonnull String accountUserId,
-									  @Nonnull UserSyncData userSyncData,
 									  @Nonnull List<AProperty> properties) {
 		final Entity entity = newEntity(accountId, accountUserId);
-		return newUser(entity, userSyncData, properties);
+		return newUser(entity, properties);
 	}
 
 	@Nonnull
 	public static MutableUser newEmptyUser(@Nonnull Entity accountUser) {
-		return newUser(accountUser, Users.newNeverSyncedUserSyncData(), Collections.<AProperty>emptyList());
+		return newUser(accountUser, Collections.<AProperty>emptyList());
 	}
 
 	@Nonnull
@@ -89,37 +89,14 @@ public final class Users {
 
 	@Nonnull
 	public static MutableUser newUser(@Nonnull Entity entity,
-									  @Nonnull UserSyncData userSyncData,
 									  @Nonnull Collection<AProperty> properties) {
-		return UserImpl.newInstance(entity, userSyncData, properties);
+		return UserImpl.newInstance(entity, properties);
 	}
 
 	@Nonnull
 	public static MutableUser newUser(@Nonnull Entity entity,
-									  @Nonnull UserSyncData userSyncData,
 									  @Nonnull AProperties properties) {
-		return UserImpl.newInstance(entity, userSyncData, properties.getPropertiesCollection());
-	}
-
-	@Nonnull
-	public static UserSyncData newNeverSyncedUserSyncData() {
-		return UserSyncDataImpl.newNeverSyncedInstance();
-	}
-
-	@Nonnull
-	public static UserSyncData newUserSyncData(@Nullable DateTime lastPropertiesSyncDate,
-											   @Nullable DateTime lastContactsSyncDate,
-											   @Nullable DateTime lastChatsSyncDate,
-											   @Nullable DateTime lastUserIconsSyncDate) {
-		return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
-	}
-
-	@Nonnull
-	public static UserSyncData newUserSyncData(@Nullable String lastPropertiesSyncDate,
-											   @Nullable String lastContactsSyncDate,
-											   @Nullable String lastChatsSyncDate,
-											   @Nullable String lastUserIconsSyncDate) {
-		return UserSyncDataImpl.newInstance(lastPropertiesSyncDate, lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
+		return UserImpl.newInstance(entity, properties.getPropertiesCollection());
 	}
 
 	public static void tryParseNameProperties(@Nonnull List<AProperty> properties, @Nullable String fullName) {

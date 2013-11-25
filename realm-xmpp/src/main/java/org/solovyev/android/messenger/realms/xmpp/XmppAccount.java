@@ -25,6 +25,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -59,8 +60,9 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 					   @Nonnull Realm realm,
 					   @Nonnull User user,
 					   @Nonnull XmppAccountConfiguration configuration,
-					   @Nonnull AccountState state) {
-		super(id, realm, user, configuration, state);
+					   @Nonnull AccountState state,
+					   @Nonnull AccountSyncData syncData) {
+		super(id, realm, user, configuration, state, syncData);
 	}
 
 	@Nonnull

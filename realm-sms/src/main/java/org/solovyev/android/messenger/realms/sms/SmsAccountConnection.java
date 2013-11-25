@@ -176,7 +176,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			final UserService userService = getUserService();
 			final ChatService chatService = getChatService();
 
-			final List<User> contacts = userService.getUserContacts(user.getEntity());
+			final List<User> contacts = userService.getContacts(user.getEntity());
 
 			for (Map.Entry<String, Collection<String>> entry : messagesByPhoneNumber.asMap().entrySet()) {
 				final User contact = findOrCreateContact(entry.getKey(), contacts);
@@ -240,7 +240,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 			result = toUser(phone);
 
 			final SmsAccount account = getAccount();
-			App.getUserService().mergeUserContacts(account.getUser().getEntity(), asList(result), false, false);
+			App.getUserService().mergeContacts(account, asList(result), false, false);
 		}
 		return result;
 	}
@@ -292,7 +292,7 @@ final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
 		if (!isEmpty(number)) {
 			final SmsAccount account = getAccount();
 			final User user = account.getUser();
-			final List<User> contacts = getUserService().getUserContacts(user.getEntity());
+			final List<User> contacts = getUserService().getContacts(user.getEntity());
 			final User contact = findOrCreateContact(number, contacts);
 			try {
 				final Chat chat = getChatService().getOrCreatePrivateChat(user.getEntity(), contact.getEntity());

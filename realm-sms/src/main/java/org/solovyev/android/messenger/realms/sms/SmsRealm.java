@@ -25,6 +25,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.users.User;
@@ -79,8 +80,8 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public Account<SmsAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
-		return new SmsAccount(accountId, this, user, configuration, state);
+	public Account<SmsAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
+		return new SmsAccount(accountId, this, user, configuration, state, syncData);
 	}
 
 	@Nonnull

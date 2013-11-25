@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.realms.sms;
 import org.solovyev.android.captcha.ResolvedCaptcha;
 import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.MutableUser;
@@ -44,8 +45,8 @@ final class SmsAccountBuilder extends AbstractAccountBuilder<SmsAccount, SmsAcco
 
 	@Nonnull
 	@Override
-	protected SmsAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state) {
-		return new SmsAccount(id, getRealm(), user, getConfiguration(), state);
+	protected SmsAccount newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
+		return new SmsAccount(id, getRealm(), user, getConfiguration(), state, syncData);
 	}
 
 	@Override

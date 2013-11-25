@@ -79,7 +79,7 @@ public interface UserService {
 	 * @return all user chats
 	 */
 	@Nonnull
-	List<Chat> getUserChats(@Nonnull Entity user);
+	List<Chat> getChats(@Nonnull Entity user);
 
 	/**
 	 * Method updates user in application
@@ -111,7 +111,7 @@ public interface UserService {
 	 * @return list of all user contacts
 	 */
 	@Nonnull
-	List<User> getUserContacts(@Nonnull Entity user);
+	List<User> getContacts(@Nonnull Entity user);
 
 	/**
 	 * NOTE: method do not check real status of user on the current moment of time but get one from the cache => it might be different
@@ -120,7 +120,7 @@ public interface UserService {
 	 * @return list of all online user contacts
 	 */
 	@Nonnull
-	List<User> getOnlineUserContacts(@Nonnull Entity user);
+	List<User> getOnlineContacts(@Nonnull Entity user);
 
 	/**
 	 * Call this method when presence of user's contact has been changed.
@@ -155,13 +155,6 @@ public interface UserService {
     */
 
 	/**
-	 * Method synchronizes local user data with remote user data
-	 *
-	 * @param user user for whom synchronization must be done
-	 */
-	void syncUser(@Nonnull Entity user) throws AccountException;
-
-	/**
 	 * Method synchronizes local users contacts with remote user contacts
 	 * <p/>
 	 * NOTE: some realms do not support user contacts retrieval, in that case empty list is returned
@@ -170,29 +163,30 @@ public interface UserService {
 	 * @return updated list of user contacts
 	 */
 	@Nonnull
-	List<User> syncUserContacts(@Nonnull Account<?> account) throws AccountException;
+	List<User> syncContacts(@Nonnull Account<?> account) throws AccountException;
 
 	/**
 	 * Method synchronizes local users chats with remote user chats
 	 * <p/>
 	 * NOTE: some realms do not support user chats retrieval, in that case empty list is returned
 	 *
-	 * @param user user for whom synchronization must be done
-	 * @return updated list of chats in which user is participated
+	 *
+	 * @param account account in which synchronization must be done
+	 * @return updated list of chats
 	 */
 	@Nonnull
-	List<Chat> syncUserChats(@Nonnull Entity user) throws AccountException;
+	List<Chat> syncChats(@Nonnull Account account) throws AccountException;
 
-	void mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends AccountChat> apiChats) throws AccountException;
+	void mergeChats(@Nonnull Account account, @Nonnull List<? extends AccountChat> apiChats) throws AccountException;
 
-	void mergeUserContacts(@Nonnull Entity user, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
+	void mergeContacts(@Nonnull Account account, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
 
 	/**
 	 * Method synchronizes user contacts statuses (presences/availabilities)
 	 *
 	 * @param account account for which synchronization should be done
 	 */
-	void syncUserContactsStatuses(@Nonnull Account account) throws AccountException;
+	void syncContactStatuses(@Nonnull Account account) throws AccountException;
 
     /*
     **********************************************************************

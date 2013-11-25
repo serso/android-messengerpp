@@ -41,9 +41,6 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	private String login;
 
 	@Nonnull
-	private UserSyncData userSyncData;
-
-	@Nonnull
 	private MutableAProperties properties;
 
 	@Nullable
@@ -54,13 +51,11 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	}
 
 	@Nonnull
-	static MutableUser newInstance( @Nonnull Entity entity,
-									@Nonnull UserSyncData userSyncData,
-									@Nonnull Collection<AProperty> properties) {
+	static MutableUser newInstance(@Nonnull Entity entity,
+								   @Nonnull Collection<AProperty> properties) {
 		final UserImpl result = new UserImpl(entity);
 
 		result.login = entity.getAccountEntityId();
-		result.userSyncData = userSyncData;
 		result.properties = Properties.newProperties(properties);
 
 		return result;
@@ -80,12 +75,6 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 	@Override
 	public boolean isOnline() {
 		return Boolean.valueOf(getPropertyValueByName(PROPERTY_ONLINE));
-	}
-
-	@Override
-	@Nonnull
-	public UserSyncData getUserSyncData() {
-		return userSyncData;
 	}
 
 	@Nonnull
@@ -164,38 +153,6 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 		}
 
 		return phones;
-	}
-
-	@Nonnull
-	@Override
-	public User updateChatsSyncDate() {
-		final UserImpl clone = this.clone();
-		clone.userSyncData = clone.userSyncData.updateChatsSyncDate();
-		return clone;
-	}
-
-	@Nonnull
-	@Override
-	public User updatePropertiesSyncDate() {
-		final UserImpl clone = this.clone();
-		clone.userSyncData = clone.userSyncData.updatePropertiesSyncDate();
-		return clone;
-	}
-
-	@Nonnull
-	@Override
-	public User updateContactsSyncDate() {
-		final UserImpl clone = this.clone();
-		clone.userSyncData = clone.userSyncData.updateContactsSyncDate();
-		return clone;
-	}
-
-	@Nonnull
-	@Override
-	public User updateUserIconsSyncDate() {
-		final UserImpl clone = this.clone();
-		clone.userSyncData = clone.userSyncData.updateUserIconsSyncDate();
-		return clone;
 	}
 
 	@Override

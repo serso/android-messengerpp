@@ -46,9 +46,9 @@ public interface UserIconsService {
 	void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView);
 
 	/**
-	 * Method fetches user icons for specified <var>user</var> and for ALL user contacts
+	 * Method fetches user icons for specified <var>account</var>
 	 *
-	 * @param user for which icon fetching must be done
+	 * @param account for which icon fetching must be done
 	 */
-	void fetchUserAndContactsIcons(@Nonnull User user) throws UnsupportedAccountException;
+	void fetchUserAndContactsIcons(@Nonnull Account account) throws UnsupportedAccountException;
 }

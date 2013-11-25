@@ -36,7 +36,6 @@ import java.util.Set;
 import static com.google.common.collect.Iterables.getFirst;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
-import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.common.text.Strings.isEmpty;
 
@@ -64,7 +63,7 @@ public final class SmsUserMapper implements Converter<Cursor, User> {
 
 		final List<AProperty> propertiesList = new ArrayList<AProperty>();
 		Users.tryParseNameProperties(propertiesList, cursor.getString(1));
-		final MutableUser user = newUser(newEntity(account.getId(), userId), newNeverSyncedUserSyncData(), propertiesList);
+		final MutableUser user = newUser(newEntity(account.getId(), userId), propertiesList);
 
 		if (phoneNumbers.size() == 1) {
 			user.getProperties().setProperty(User.PROPERTY_PHONE, getFirst(phoneNumbers, null));

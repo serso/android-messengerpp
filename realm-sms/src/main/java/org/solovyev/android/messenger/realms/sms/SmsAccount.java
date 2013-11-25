@@ -23,6 +23,7 @@ import com.google.common.base.Function;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AbstractAccount;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.chats.Chat;
@@ -52,8 +53,8 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
 	static final String TAG = newTag(SmsAccount.class.getSimpleName());
 
-	public SmsAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state) {
-		super(id, realm, user, configuration, state);
+	public SmsAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull SmsAccountConfiguration configuration, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
+		super(id, realm, user, configuration, state, syncData);
 	}
 
 	@Nonnull

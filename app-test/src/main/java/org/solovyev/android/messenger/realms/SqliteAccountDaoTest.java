@@ -23,6 +23,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.AccountDao;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.UserSavingAccountDao;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.sms.SmsRealm;
 import org.solovyev.android.messenger.realms.vk.VkAccountConfiguration;
@@ -36,6 +37,7 @@ import java.util.Collection;
 
 import static com.google.common.collect.Iterables.getFirst;
 import static java.util.Arrays.asList;
+import static org.solovyev.android.messenger.accounts.Accounts.newNeverSyncedData;
 import static org.solovyev.android.messenger.realms.Realms.makeAccountId;
 
 public class SqliteAccountDaoTest extends BaseInstrumentationTest {
@@ -66,7 +68,7 @@ public class SqliteAccountDaoTest extends BaseInstrumentationTest {
 
 		final VkAccountConfiguration expectedConfiguration = new VkAccountConfiguration("login", "password");
 		expectedConfiguration.setAccessParameters("token", "user_id");
-		final Account expectedAccount = vkRealm.newAccount("test~01", Users.newEmptyUser(Entities.newEntity("test~01", "user01")), expectedConfiguration, AccountState.enabled);
+		final Account expectedAccount = vkRealm.newAccount("test~01", Users.newEmptyUser(Entities.newEntity("test~01", "user01")), expectedConfiguration, AccountState.enabled, newNeverSyncedData());
 		getDao().create(expectedAccount);
 
 		accounts = getDao().readAll();
@@ -98,7 +100,7 @@ public class SqliteAccountDaoTest extends BaseInstrumentationTest {
 				((XmppAccountConfiguration) configuration).setPassword("test");
 			}
 			final String accountId = makeAccountId(realm.getId(), index);
-			final Account account = realm.newAccount(accountId, Users.newEmptyUser(Entities.newEntity(accountId, String.valueOf(index))), configuration, AccountState.enabled);
+			final Account account = realm.newAccount(accountId, Users.newEmptyUser(Entities.newEntity(accountId, String.valueOf(index))), configuration, AccountState.enabled, newNeverSyncedData());
 			getDao().create(account);
 		}
 

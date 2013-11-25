@@ -27,7 +27,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.http.ImageLoader;
+
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
@@ -102,10 +102,6 @@ public class DefaultChatService implements ChatService {
 	@Inject
 	@Nonnull
 	private UserService userService;
-
-	@Inject
-	@Nonnull
-	private ImageLoader imageLoader;
 
 	@Inject
 	@Nonnull
@@ -192,7 +188,7 @@ public class DefaultChatService implements ChatService {
 				participants.add(userService.getUserById(user2));
 				final AccountChat apiChat = Chats.newEmptyAccountChat(chat, participants);
 
-				userService.mergeUserChats(user1, asList(apiChat));
+				userService.mergeChats(account, asList(apiChat));
 
 				result = apiChat.getChat();
 			}
@@ -266,7 +262,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public List<Chat> loadUserChats(@Nonnull Entity user) {
+	public List<Chat> loadChats(@Nonnull Entity user) {
 		synchronized (lock) {
 			return chatDao.readChatsByUserId(user.getEntityId());
 		}
@@ -275,7 +271,7 @@ public class DefaultChatService implements ChatService {
 	@Nullable
 	@Override
 	public Chat saveChat(@Nonnull Entity user, @Nonnull AccountChat chat) {
-		final MergeDaoResult<Chat, String> mergeResult = mergeUserChats(user, asList(chat));
+		final MergeDaoResult<Chat, String> mergeResult = mergeChats(user, asList(chat));
 
 		Chat result = getFirst(mergeResult.getAddedObjects(), null);
 		if (result == null) {
@@ -315,7 +311,7 @@ public class DefaultChatService implements ChatService {
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<Chat, String> mergeUserChats(@Nonnull final Entity user, @Nonnull List<? extends AccountChat> chats) {
+	public MergeDaoResult<Chat, String> mergeChats(@Nonnull final Entity user, @Nonnull List<? extends AccountChat> chats) {
 		final ChatMergeDaoResult result;
 
 		synchronized (lock) {
@@ -594,7 +590,7 @@ public class DefaultChatService implements ChatService {
 
 	@Override
 	public void removeEmptyChats(@Nonnull User user) {
-		final List<Chat> chats = userService.getUserChats(user.getEntity());
+		final List<Chat> chats = userService.getChats(user.getEntity());
 
 		for (Chat chat : chats) {
 			final Message lastMessage = getLastMessage(chat.getEntity());

@@ -30,6 +30,7 @@ import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.accounts.Accounts.newNeverSyncedData;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 @Singleton
@@ -41,12 +42,12 @@ public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 	}
 
 	public TestAccount(@Nonnull TestRealm realm, int index) {
-		super(realm.getId() + "~" + index, realm, newEmptyUser(Entities.newEntity(realm.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled);
+		super(realm.getId() + "~" + index, realm, newEmptyUser(Entities.newEntity(realm.getId() + "~" + index, "user" + index)), new TestAccountConfiguration("test_field", 42), AccountState.enabled, newNeverSyncedData());
 	}
 
 
 	public TestAccount(@Nonnull String id, @Nonnull Realm realm, @Nonnull User user, @Nonnull TestAccountConfiguration configuration, @Nonnull AccountState state) {
-		super(id, realm, user, configuration, state);
+		super(id, realm, user, configuration, state, newNeverSyncedData());
 	}
 
 	@Nonnull

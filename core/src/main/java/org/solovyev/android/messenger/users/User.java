@@ -29,7 +29,7 @@ import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
 
-public interface User extends MutableUserSyncData, Identifiable, EntityAware, Mergeable<User> {
+public interface User extends Identifiable, EntityAware, Mergeable<User> {
 
     /*
 	**********************************************************************
@@ -119,9 +119,6 @@ public interface User extends MutableUserSyncData, Identifiable, EntityAware, Me
 	String getPropertyValueByName(@Nonnull String name);
 
 	@Nonnull
-	UserSyncData getUserSyncData();
-
-	@Nonnull
 	String getDisplayName();
 
 	@Nonnull
@@ -135,24 +132,4 @@ public interface User extends MutableUserSyncData, Identifiable, EntityAware, Me
 
 	@Nonnull
 	User cloneWithNewProperties(@Nonnull AProperties properties);
-
-    /*
-    **********************************************************************
-    *
-    *                           UPDATE SYNC DATA
-    *
-    **********************************************************************
-    */
-
-	@Nonnull
-	User updateChatsSyncDate();
-
-	@Nonnull
-	User updatePropertiesSyncDate();
-
-	@Nonnull
-	User updateContactsSyncDate();
-
-	@Nonnull
-	User updateUserIconsSyncDate();
 }

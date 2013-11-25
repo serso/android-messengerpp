@@ -70,7 +70,7 @@ class XmppRosterListener implements RosterListener {
 			}));
 
 			// we cannot allow delete because we don't know if user is really deleted on remote server - we only know that his presence was changed
-			getUserService().mergeUserContacts(account.getUser().getEntity(), contacts, false, true);
+			getUserService().mergeContacts(account, contacts, false, true);
 
 		} catch (AccountRuntimeException e) {
 			App.getExceptionHandler().handleException(new AccountException(e));

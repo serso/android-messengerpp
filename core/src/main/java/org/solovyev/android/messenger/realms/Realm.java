@@ -67,7 +67,7 @@ public interface Realm<C extends AccountConfiguration> extends Identifiable {
 	Class<? extends BaseAccountConfigurationFragment> getConfigurationFragmentClass();
 
 	@Nonnull
-	Account<C> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull C configuration, @Nonnull AccountState state);
+	Account<C> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull C configuration, @Nonnull AccountState state, @Nonnull AccountSyncData syncData);
 
 	@Nonnull
 	Class<? extends C> getConfigurationClass();

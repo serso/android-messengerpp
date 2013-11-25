@@ -20,8 +20,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.concurrent.Callable;
 
 import static java.util.Arrays.asList;
@@ -45,7 +44,7 @@ public class UserSaverCallable implements Callable<User> {
 
 	@Override
 	public User call() {
-		getUserService().mergeUserContacts(account.getUser().getEntity(), asList(user), false, true);
+		getUserService().mergeContacts(account, asList(user), false, true);
 		return user;
 	}
 }

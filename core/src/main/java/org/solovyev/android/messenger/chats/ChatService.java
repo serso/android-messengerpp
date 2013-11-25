@@ -36,12 +36,6 @@ import java.util.Map;
 import static org.solovyev.android.messenger.App.newTag;
 
 /**
- * User: serso
- * Date: 5/24/12
- * Time: 9:11 PM
- */
-
-/**
  * Implementation of this class must provide thread safeness
  */
 @ThreadSafe
@@ -69,7 +63,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return list of chats of current user
 	 */
 	@Nonnull
-	List<Chat> loadUserChats(@Nonnull Entity user);
+	List<Chat> loadChats(@Nonnull Entity user);
 
 	/**
 	 * Method updates chat (it's properties) in storage
@@ -252,7 +246,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	 * @return merge result
 	 */
 	@Nonnull
-	MergeDaoResult<Chat, String> mergeUserChats(@Nonnull Entity user, @Nonnull List<? extends AccountChat> chats);
+	MergeDaoResult<Chat, String> mergeChats(@Nonnull Entity user, @Nonnull List<? extends AccountChat> chats);
 
 	/**
 	 * Method tries to save chat.

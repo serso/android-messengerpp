@@ -18,6 +18,7 @@ package org.solovyev.android.messenger.realms.vk.users;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.http.IllegalJsonException;
 import org.solovyev.android.messenger.users.*;
 import org.solovyev.android.properties.AProperty;
@@ -79,8 +80,7 @@ class JsonUser {
 			throw new IllegalJsonException();
 		}
 
-		final UserSyncData userSyncData = Users.newUserSyncData(DateTime.now(), null, null, null);
-		final MutableUser user = Users.newUser(account.newUserEntity(uid), userSyncData, Collections.<AProperty>emptyList());
+		final MutableUser user = Users.newUser(account.newUserEntity(uid), Collections.<AProperty>emptyList());
 
 		if (first_name != null) {
 			user.setFirstName(first_name);

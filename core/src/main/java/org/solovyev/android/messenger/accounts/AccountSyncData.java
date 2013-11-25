@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.users;
+package org.solovyev.android.messenger.accounts;
 
 import org.joda.time.DateTime;
 import org.solovyev.common.JCloneable;
@@ -22,17 +22,9 @@ import org.solovyev.common.JCloneable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * User: serso
- * Date: 5/30/12
- * Time: 10:43 PM
- */
-public interface UserSyncData extends MutableUserSyncData, JCloneable<UserSyncData> {
+public interface AccountSyncData extends JCloneable<AccountSyncData> {
 
 	boolean isFirstSyncDone();
-
-	@Nullable
-	DateTime getLastPropertiesSyncDate();
 
 	@Nullable
 	DateTime getLastContactsSyncDate();
@@ -52,18 +44,11 @@ public interface UserSyncData extends MutableUserSyncData, JCloneable<UserSyncDa
     */
 
 	@Nonnull
-	@Override
-	UserSyncData updateChatsSyncDate();
+	AccountSyncData updateChatsSyncDate();
 
 	@Nonnull
-	@Override
-	UserSyncData updatePropertiesSyncDate();
+	AccountSyncData updateContactsSyncDate();
 
 	@Nonnull
-	@Override
-	UserSyncData updateContactsSyncDate();
-
-	@Nonnull
-	@Override
-	UserSyncData updateUserIconsSyncDate();
+	AccountSyncData updateUserIconsSyncDate();
 }

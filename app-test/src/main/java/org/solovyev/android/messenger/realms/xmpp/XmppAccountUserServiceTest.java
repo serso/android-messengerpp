@@ -25,6 +25,7 @@ import org.solovyev.android.messenger.BaseInstrumentationTest;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
@@ -40,6 +41,7 @@ import java.util.List;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.solovyev.android.messenger.accounts.Accounts.newNeverSyncedData;
 
 public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 
@@ -175,13 +177,13 @@ public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 	protected XmppAccount newRealm1() {
 		final String realmId = xmppRealm.getId() + "~01";
 		XmppAccountConfiguration instance = TestXmppConfiguration.getInstance();
-		return new XmppAccount(realmId, xmppRealm, Users.newEmptyUser(Entities.newEntity(realmId, instance.getLogin())), instance, AccountState.enabled);
+		return new XmppAccount(realmId, xmppRealm, Users.newEmptyUser(Entities.newEntity(realmId, instance.getLogin())), instance, AccountState.enabled, newNeverSyncedData());
 	}
 
 	@Nonnull
 	protected XmppAccount newRealm2() {
 		final String realmId = xmppRealm.getId() + "~02";
 		XmppAccountConfiguration instance2 = TestXmppConfiguration.getInstance2();
-		return new XmppAccount(realmId, xmppRealm, Users.newEmptyUser(Entities.newEntity(realmId, instance2.getLogin())), instance2, AccountState.enabled);
+		return new XmppAccount(realmId, xmppRealm, Users.newEmptyUser(Entities.newEntity(realmId, instance2.getLogin())), instance2, AccountState.enabled, newNeverSyncedData());
 	}
 }

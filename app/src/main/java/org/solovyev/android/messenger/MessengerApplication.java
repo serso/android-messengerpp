@@ -25,7 +25,6 @@ import org.joda.time.DateTimeZone;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
-import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 import roboguice.RoboGuice;
 
@@ -78,9 +77,7 @@ public class MessengerApplication extends Application {
 
 		final List<Account> syncedAccounts = new ArrayList<Account>(accounts.size());
 		for (Account account : accounts) {
-			final User user = account.getUser();
-
-			if (!user.getUserSyncData().isFirstSyncDone()) {
+			if (!account.getSyncData().isFirstSyncDone()) {
 				syncDone = false;
 			} else {
 				syncedAccounts.add(account);
@@ -112,11 +109,11 @@ public class MessengerApplication extends Application {
 			Context context = getContext();
 			if (context != null) {
 				for (Account account : accounts) {
-					App.getUserService().getUserContacts(account.getUser().getEntity());
+					App.getUserService().getContacts(account.getUser().getEntity());
 				}
 
 				for (Account account : accounts) {
-					App.getUserService().getUserChats(account.getUser().getEntity());
+					App.getUserService().getChats(account.getUser().getEntity());
 				}
 			}
 

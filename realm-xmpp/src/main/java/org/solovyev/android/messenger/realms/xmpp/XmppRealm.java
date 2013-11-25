@@ -27,6 +27,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.users.User;
@@ -72,8 +73,8 @@ public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 
 	@Nonnull
 	@Override
-	public Account<XmppAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull XmppAccountConfiguration configuration, @Nonnull AccountState state) {
-		return new XmppAccount(accountId, this, user, configuration, state);
+	public Account<XmppAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull XmppAccountConfiguration configuration, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
+		return new XmppAccount(accountId, this, user, configuration, state, syncData);
 	}
 
 	@Override

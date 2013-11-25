@@ -99,7 +99,7 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 
 		final User user = getUser();
 		if (user != null) {
-			result = newUser(user.getEntity(), user.getUserSyncData(), user.getProperties().getPropertiesCollection());
+			result = newUser(user.getEntity(), user.getProperties().getPropertiesCollection());
 		} else {
 			result = newEmptyUser(generateEntity(getAccount()));
 		}

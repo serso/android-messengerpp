@@ -80,7 +80,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 	private void createChats(@Nonnull Account account, @Nonnull User user, boolean createMessages) throws AccountException {
 		final DateTime now = DateTime.now();
 
-		final List<User> contacts = userService.getUserContacts(user.getEntity());
+		final List<User> contacts = userService.getContacts(user.getEntity());
 		assert !contacts.isEmpty();
 
 		for (int i = 0; i < contacts.size(); i++) {
@@ -153,7 +153,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 			// ok, user doesn't exist
 		}
 
-		chatService.mergeUserChats(user.getEntity(), asList(accountChat));
+		chatService.mergeChats(user.getEntity(), asList(accountChat));
 
 		final User actual = userService.getUserById(contact.getEntity());
 		assertTrue(areEqual(contact, actual, new UserSameEqualizer()));
@@ -166,7 +166,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 
 		userService.removeUser(contact);
 
-		final List<Chat> chats = userService.getUserChats(ad.getAccount().getUser().getEntity());
+		final List<Chat> chats = userService.getChats(ad.getAccount().getUser().getEntity());
 		assertFalse(any(chats, new Predicate<Chat>() {
 			@Override
 			public boolean apply(Chat chat) {
@@ -197,7 +197,7 @@ public class ChatServiceTest extends DefaultMessengerTest {
 			}
 		});
 
-		chatService.mergeUserChats(user.getEntity(), asList(accountChat));
+		chatService.mergeChats(user.getEntity(), asList(accountChat));
 
 		assertEquals(2, addedMessages.getObject().size());
 		assertEquals("test1", addedMessages.getObject().get(0).getBody());

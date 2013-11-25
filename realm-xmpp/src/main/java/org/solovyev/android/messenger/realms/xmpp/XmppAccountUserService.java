@@ -39,7 +39,6 @@ import java.util.List;
 import static org.solovyev.android.messenger.App.newSubTag;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
-import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
 
@@ -164,7 +163,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	public static User toUser(@Nonnull String accountId, @Nonnull String accountUserId, @Nullable String name, @Nonnull Connection connection, @Nonnull Account account) throws XMPPException {
 		final Entity entity = newEntity(accountId, accountUserId);
 		final List<AProperty> properties = loadUserProperties(true, accountUserId, connection, name);
-		final MutableUser user = newUser(entity, newNeverSyncedUserSyncData(), properties);
+		final MutableUser user = newUser(entity, properties);
 		user.setOnline(isUserOnline(account, connection.getRoster(), entity));
 		return user;
 	}
@@ -173,7 +172,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 	public static MutableUser toAccountUser(@Nonnull String accountId, @Nonnull String accountUserId, @Nullable String name, @Nonnull Connection connection) throws XMPPException {
 		final Entity entity = newEntity(accountId, accountUserId);
 		final List<AProperty> properties = loadUserProperties(true, accountUserId, connection, name);
-		final MutableUser user = newUser(entity, newNeverSyncedUserSyncData(), properties);
+		final MutableUser user = newUser(entity, properties);
 		user.setOnline(true);
 		return user;
 	}

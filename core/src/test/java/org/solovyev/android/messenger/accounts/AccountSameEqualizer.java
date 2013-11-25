@@ -29,6 +29,9 @@ public class AccountSameEqualizer implements Equalizer<Account> {
 		same &= Objects.areEqual(a1.getState(), a2.getState());
 		same &= a1.getConfiguration().isSame(a2.getConfiguration());
 		same &= Objects.areEqual(a1.getUser(), a2.getUser());
+		same &= Objects.areEqual(a1.getSyncData().getLastChatsSyncDate(), a2.getSyncData().getLastChatsSyncDate());
+		same &= Objects.areEqual(a1.getSyncData().getLastContactsSyncDate(), a2.getSyncData().getLastContactsSyncDate());
+		same &= Objects.areEqual(a1.getSyncData().getLastUserIconsSyncData(), a2.getSyncData().getLastUserIconsSyncData());
 		return same;
 	}
 }

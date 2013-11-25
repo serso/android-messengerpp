@@ -23,6 +23,8 @@ import org.solovyev.android.messenger.users.User;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.solovyev.android.messenger.accounts.Accounts.newNeverSyncedData;
+
 public abstract class AbstractAccountBuilder<A extends Account<C>, C extends AccountConfiguration> implements AccountBuilder<A> {
 
 	@Nonnull
@@ -57,7 +59,7 @@ public abstract class AbstractAccountBuilder<A extends Account<C>, C extends Acc
 		// account user should always be online
 		user.setOnline(true);
 
-		return newAccount(accountId, user, AccountState.enabled);
+		return newAccount(accountId, user, AccountState.enabled, newNeverSyncedData());
 	}
 
 	@Nonnull
@@ -75,5 +77,5 @@ public abstract class AbstractAccountBuilder<A extends Account<C>, C extends Acc
 	}
 
 	@Nonnull
-	protected abstract A newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state);
+	protected abstract A newAccount(@Nonnull String id, @Nonnull User user, @Nonnull AccountState state, @Nonnull AccountSyncData syncData);
 }

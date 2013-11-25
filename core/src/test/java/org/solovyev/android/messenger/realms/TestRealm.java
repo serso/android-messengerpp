@@ -54,7 +54,7 @@ public class TestRealm extends AbstractRealm {
 
 	@Nonnull
 	@Override
-	public Account<TestAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull AccountState state) {
+	public Account<TestAccountConfiguration> newAccount(@Nonnull String accountId, @Nonnull User user, @Nonnull AccountConfiguration configuration, @Nonnull AccountState state, @Nonnull AccountSyncData syncData) {
 		return new TestAccount(accountId, this, user, (TestAccountConfiguration) configuration, state);
 	}
 

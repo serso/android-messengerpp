@@ -77,7 +77,7 @@ class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
 		if (connection == null) {
 			throw new IllegalArgumentException();
 		} else {
-			participant = connection.findOrCreateContact(address, getUserService().getUserContacts(user)).getEntity();
+			participant = connection.findOrCreateContact(address, getUserService().getContacts(user)).getEntity();
 		}
 
 		message.setRead(getBoolean(cursor, "read"));

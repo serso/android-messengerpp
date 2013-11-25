@@ -139,4 +139,24 @@ public interface Account<C extends AccountConfiguration> extends Identifiable {
 	AccountConnection newConnection(@Nonnull Context context);
 
 	int getCompositeDialogTitleResId();
+
+	/*
+    **********************************************************************
+    *
+    *                           UPDATE SYNC DATA
+    *
+    **********************************************************************
+    */
+
+	@Nonnull
+	Account<C> updateChatsSyncDate();
+
+	@Nonnull
+	Account<C> updateContactsSyncDate();
+
+	@Nonnull
+	Account<C> updateUserIconsSyncDate();
+
+	@Nonnull
+	AccountSyncData getSyncData();
 }

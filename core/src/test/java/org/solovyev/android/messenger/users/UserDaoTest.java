@@ -39,7 +39,6 @@ import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.*;
-import static org.solovyev.android.messenger.users.Users.newNeverSyncedUserSyncData;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperties;
 
@@ -179,7 +178,7 @@ public class UserDaoTest extends DefaultDaoTest<User> {
 	protected DaoEntity<User> newInsertEntity() {
 		final MutableAProperties properties = newProperties(Collections.<String, AProperty>emptyMap());
 		final org.solovyev.android.messenger.entities.Entity entity = getAccount1().newUserEntity("test");
-		final User user = newUser(entity, newNeverSyncedUserSyncData(), properties);
+		final User user = newUser(entity, properties);
 		return newEntity(user);
 	}
 

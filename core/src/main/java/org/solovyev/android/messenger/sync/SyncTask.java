@@ -23,7 +23,6 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 
@@ -31,34 +30,13 @@ import static org.solovyev.android.messenger.App.*;
 
 public enum SyncTask {
 
-	user {
-		@Override
-		public boolean isTime(@Nonnull SyncData syncData) {
-			boolean result = false;
-
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			final DateTime lastPropertiesSyncDate = user.getUserSyncData().getLastPropertiesSyncDate();
-			if (lastPropertiesSyncDate == null || lastPropertiesSyncDate.plusHours(1).isBefore(DateTime.now())) {
-				result = true;
-			}
-
-			return result;
-		}
-
-		@Override
-		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			getUserService().syncUser(user.getEntity());
-		}
-	},
-
 	user_contacts {
 		@Override
 		public boolean isTime(@Nonnull SyncData syncData) {
 			boolean result = false;
 
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			final DateTime lastContactsSyncDate = user.getUserSyncData().getLastContactsSyncDate();
+			final Account account = getAccountService().getAccountById(syncData.getAccountId());
+			final DateTime lastContactsSyncDate = account.getSyncData().getLastContactsSyncDate();
 			if (lastContactsSyncDate == null || lastContactsSyncDate.plusHours(1).isBefore(DateTime.now())) {
 				result = true;
 			}
@@ -68,7 +46,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			getUserService().syncUserContacts(getAccountService().getAccountById(syncData.getAccountId()));
+			getUserService().syncContacts(getAccountService().getAccountById(syncData.getAccountId()));
 		}
 	},
 
@@ -77,8 +55,8 @@ public enum SyncTask {
 		public boolean isTime(@Nonnull SyncData syncData) {
 			boolean result = false;
 
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			final DateTime lastUserIconsSyncDate = user.getUserSyncData().getLastUserIconsSyncData();
+			final Account account = getAccountService().getAccountById(syncData.getAccountId());
+			final DateTime lastUserIconsSyncDate = account.getSyncData().getLastUserIconsSyncData();
 			if (lastUserIconsSyncDate == null || lastUserIconsSyncDate.plusDays(1).isBefore(DateTime.now())) {
 				result = true;
 			}
@@ -88,8 +66,8 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws UnsupportedAccountException {
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			getUserService().getIconsService().fetchUserAndContactsIcons(user);
+			final Account account = getAccountService().getAccountById(syncData.getAccountId());
+			getUserService().getIconsService().fetchUserAndContactsIcons(account);
 		}
 	},
 
@@ -102,7 +80,7 @@ public enum SyncTask {
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
 			final Account account = getAccountService().getAccountById(syncData.getAccountId());
-			getUserService().syncUserContactsStatuses(account);
+			getUserService().syncContactStatuses(account);
 		}
 	},
 
@@ -111,8 +89,8 @@ public enum SyncTask {
 		public boolean isTime(@Nonnull SyncData syncData) {
 			boolean result = false;
 
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			final DateTime lastChatsSyncDate = user.getUserSyncData().getLastChatsSyncDate();
+			final Account account = getAccountService().getAccountById(syncData.getAccountId());
+			final DateTime lastChatsSyncDate = account.getSyncData().getLastChatsSyncDate();
 			if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(1).isBefore(DateTime.now())) {
 				result = true;
 			}
@@ -122,8 +100,8 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final User user = getAccountService().getAccountById(syncData.getAccountId()).getUser();
-			getUserService().syncUserChats(user.getEntity());
+			final Account account = getAccountService().getAccountById(syncData.getAccountId());
+			getUserService().syncChats(account);
 		}
 	},
 

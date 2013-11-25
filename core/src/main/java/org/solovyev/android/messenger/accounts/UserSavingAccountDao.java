@@ -1,4 +1,4 @@
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.accounts;
 
 import java.util.Collection;
 
