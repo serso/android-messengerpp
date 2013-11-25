@@ -42,7 +42,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts() {
+	public List<User> getContacts() {
 		return Collections.emptyList();
 	}
 

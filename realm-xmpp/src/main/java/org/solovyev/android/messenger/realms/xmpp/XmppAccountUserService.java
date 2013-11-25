@@ -101,7 +101,7 @@ class XmppAccountUserService extends AbstractXmppRealmService implements Account
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts() throws AccountConnectionException {
+	public List<User> getContacts() throws AccountConnectionException {
 		return doOnConnection(new UserContactsLoader(getAccount()));
 	}
 

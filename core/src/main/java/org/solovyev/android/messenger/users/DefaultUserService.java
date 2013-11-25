@@ -408,7 +408,7 @@ public class DefaultUserService implements UserService {
 	@Override
 	@Nonnull
 	public List<User> syncContacts(@Nonnull Account<?> account) throws AccountException {
-		final List<User> contacts = account.getAccountUserService().getUserContacts();
+		final List<User> contacts = account.getAccountUserService().getContacts();
 
 		if (!contacts.isEmpty()) {
 			mergeContacts(account, contacts, false, true);

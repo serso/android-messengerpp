@@ -60,7 +60,7 @@ public class VkAccountUserService implements AccountUserService {
 
 	@Nonnull
 	@Override
-	public List<User> getUserContacts() throws AccountConnectionException {
+	public List<User> getContacts() throws AccountConnectionException {
 		try {
 			return execute(VkFriendsGetHttpTransaction.newInstance(account, account.getUser().getEntity().getAccountEntityId()));
 		} catch (HttpRuntimeIoException e) {

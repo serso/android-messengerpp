@@ -25,7 +25,6 @@ import org.solovyev.android.messenger.BaseInstrumentationTest;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.accounts.AccountState;
-import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
@@ -121,7 +120,7 @@ public class XmppAccountUserServiceTest extends BaseInstrumentationTest {
 	}
 
 	public void testGetUserContacts() throws Exception {
-		List<User> contacts1 = accountUserService.getUserContacts();
+		List<User> contacts1 = accountUserService.getContacts();
 		assertTrue(contacts1.size() >= 2);
 		assertTrue(Iterables.any(contacts1, new Predicate<User>() {
 			@Override

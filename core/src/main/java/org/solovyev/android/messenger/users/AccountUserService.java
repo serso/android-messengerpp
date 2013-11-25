@@ -35,7 +35,7 @@ public interface AccountUserService {
 	 * @return list of user contacts (users to which current user can write messages and is aware of theirs presence in chat)
 	 */
 	@Nonnull
-	List<User> getUserContacts() throws AccountConnectionException;
+	List<User> getContacts() throws AccountConnectionException;
 
 	/**
 	 * @return list of users who are online now
