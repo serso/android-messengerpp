@@ -18,17 +18,16 @@ package org.solovyev.android.messenger.longpoll;
 
 import android.content.Context;
 import android.util.Log;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
+import org.solovyev.android.messenger.accounts.connection.BaseAccountConnection;
+
+import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.newTag;
 
-public abstract class LongPollAccountConnection extends AbstractAccountConnection<Account> {
+public abstract class LongPollAccountConnection extends BaseAccountConnection<Account> {
 
 	public static final String TAG = newTag("LongPolling");
 

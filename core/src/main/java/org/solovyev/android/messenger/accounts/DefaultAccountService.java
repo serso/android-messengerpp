@@ -18,19 +18,10 @@ package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
@@ -48,18 +39,18 @@ import org.solovyev.common.listeners.JEventListener;
 import org.solovyev.common.listeners.JEventListeners;
 import org.solovyev.common.listeners.Listeners;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.accounts.AccountEventType.configuration_changed;
-import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;
-import static org.solovyev.android.messenger.accounts.AccountState.enabled;
-import static org.solovyev.android.messenger.accounts.AccountState.removed;
+import static org.solovyev.android.messenger.accounts.AccountState.*;
 
 @Singleton
 public class DefaultAccountService implements AccountService {
@@ -434,13 +425,6 @@ public class DefaultAccountService implements AccountService {
 	@Override
 	public void removeListener(@Nonnull JEventListener<AccountEvent> listener) {
 		listeners.removeListener(listener);
-	}
-
-	@Override
-	public void stopAllRealmConnections() {
-		for (Account account : getAccounts()) {
-			listeners.fireEvent(AccountEventType.stop.newEvent(account, null));
-		}
 	}
 
 	@Override

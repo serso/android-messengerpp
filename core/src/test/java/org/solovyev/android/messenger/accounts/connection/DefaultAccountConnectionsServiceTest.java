@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountEvent;
@@ -69,7 +70,7 @@ public class DefaultAccountConnectionsServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		service = new DefaultAccountConnectionsService();
+		service = new DefaultAccountConnectionsService(Robolectric.application);
 		accountConnections = mock(AccountConnections.class);
 		notificationService = mock(NotificationService.class);
 
@@ -100,9 +101,11 @@ public class DefaultAccountConnectionsServiceTest {
 	}
 
 	@Test
-	public void testShouldReturnFalseForUnknownConnection() throws Exception {
+	public void testShouldCheckRecheckConnectionIfConnectionUnknown() throws Exception {
 		when(networkData.getState()).thenReturn(UNKNOWN);
-		assertFalse(service.isInternetConnectionExists());
+		service = spy(service);
+		service.isInternetConnectionExists();
+		verify(service, times(1)).isConnected();
 	}
 
 	@Test
@@ -114,6 +117,8 @@ public class DefaultAccountConnectionsServiceTest {
 	@Test
 	public void testShouldStartConnectionsIfTryStartConnectionsForIsCalledWithUnknownConnection() throws Exception {
 		when(networkData.getState()).thenReturn(UNKNOWN);
+		service = spy(service);
+		when(service.isConnected()).thenReturn(false);
 		service.tryStartConnectionsFor(accounts);
 		verify(accountConnections, times(1)).startConnectionsFor(accounts, false);
 	}
@@ -175,10 +180,10 @@ public class DefaultAccountConnectionsServiceTest {
 		final Account account = newMockAccountWithStaticConnection();
 		l.onEvent(changed.newEvent(account, null));
 
-		verify(accountConnections, times(1)).updateAccount(account, true);
+		verify(accountConnections, times(1)).restartConnectionForChangedAccount(account, true);
 
 		l.onEvent(configuration_changed.newEvent(account, null));
-		verify(accountConnections, times(2)).updateAccount(account, true);
+		verify(accountConnections, times(2)).restartConnectionForChangedAccount(account, true);
 	}
 
 	@Test

@@ -30,7 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.robolectric.Robolectric.application;
@@ -126,13 +127,13 @@ public class AccountConnectionsTest {
 		final Connections c = new Connections(10);
 
 		this.connections.startConnectionsFor(c.accounts, true);
-		for(int i = 0; i < c.count; i++) {
+		for (int i = 0; i < c.count; i++) {
 			final AccountConnection connection = c.getConnection(i);
 			verify(connection, times(1)).start();
 			assertFalse(connection.isStopped());
 		}
 
-		for(int i = 0; i < c.count/2; i++) {
+		for (int i = 0; i < c.count / 2; i++) {
 			c.getConnection(i).stop();
 		}
 
@@ -145,7 +146,7 @@ public class AccountConnectionsTest {
 		final Connections c = new Connections(10);
 
 		int runningUpTo = c.count / 2;
-		for(int i = 0; i < runningUpTo; i++) {
+		for (int i = 0; i < runningUpTo; i++) {
 			when(c.getConnection(i).isInternetConnectionRequired()).thenReturn(false);
 		}
 
@@ -172,7 +173,7 @@ public class AccountConnectionsTest {
 	}
 
 	private void tryStopAndCheck(Connections c, int stoppedUpTo) {
-		for(int i = 0; i < stoppedUpTo; i++) {
+		for (int i = 0; i < stoppedUpTo; i++) {
 			connections.tryStopFor(c.getAccount(i));
 		}
 		c.assertStoppedUpTo(stoppedUpTo);
@@ -233,7 +234,7 @@ public class AccountConnectionsTest {
 		final Connections c = new Connections(10);
 		connections.startConnectionsFor(c.accounts, true);
 
-		connections.updateAccount(c.getAccount(0), true);
+		connections.restartConnectionForChangedAccount(c.getAccount(0), true);
 		c.assertAllRunning();
 
 		verify(c.getConnection(0), times(1)).stop();
@@ -258,7 +259,7 @@ public class AccountConnectionsTest {
 
 		private Connections(int count) {
 			this.count = count;
-			for(int i = 0; i < count; i++) {
+			for (int i = 0; i < count; i++) {
 				final Account account = AccountsTest.newMockAccountWithStaticConnection();
 				accounts.add(account);
 				connections.add(account.newConnection(application));
@@ -280,7 +281,7 @@ public class AccountConnectionsTest {
 		}
 
 		public void assertStoppedFrom(int from) {
-			for(int i = from; i < this.count; i++) {
+			for (int i = from; i < this.count; i++) {
 				final AccountConnection connection = connections.get(i);
 				verify(connection, times(1)).stop();
 				assertTrue(connection.isStopped());
@@ -288,9 +289,8 @@ public class AccountConnectionsTest {
 		}
 
 
-
 		public void assertStoppedUpTo(int upTo) {
-			for(int i = 0; i < upTo; i++) {
+			for (int i = 0; i < upTo; i++) {
 				final AccountConnection connection = connections.get(i);
 				verify(connection, times(1)).stop();
 				assertTrue(connection.isStopped());
@@ -302,14 +302,14 @@ public class AccountConnectionsTest {
 		}
 
 		public void assertRunningFrom(int from) {
-			for(int i = from; i < this.count; i++) {
+			for (int i = from; i < this.count; i++) {
 				final AccountConnection connection = connections.get(i);
 				assertFalse(connection.isStopped());
 			}
 		}
 
 		public void assertRunningUpTo(int upTo) {
-			for(int i = 0; i < upTo; i++) {
+			for (int i = 0; i < upTo; i++) {
 				final AccountConnection connection = connections.get(i);
 				assertFalse(connection.isStopped());
 			}

@@ -19,11 +19,6 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.inject.Inject;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.android.messenger.sync.SyncTask;
-import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import roboguice.activity.RoboActivity;
 
 import javax.annotation.Nonnull;
@@ -55,11 +50,7 @@ public class StartActivity extends RoboActivity {
 		// we must start service from here because Android can cache application
 		// and Application#onCreate() is never called!
 		App.startBackgroundService();
-
-		try {
-			App.getSyncService().sync(SyncTask.user_contacts_statuses, null);
-		} catch (TaskIsAlreadyRunningException e) {
-		}
+		App.getAccountConnectionsService().tryStartAll();
 
 		this.finish();
 	}

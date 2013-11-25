@@ -18,18 +18,16 @@ package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
 import android.util.Log;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
+
+import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.solovyev.android.messenger.App.newTag;
 
 
-public abstract class AbstractAccountConnection<A extends Account> implements AccountConnection {
+public abstract class BaseAccountConnection<A extends Account> implements AccountConnection {
 
 	@Nonnull
 	protected final String TAG = newTag(getClass().getName());
@@ -49,11 +47,11 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 
 	private final int retryCount;
 
-	protected AbstractAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
+	protected BaseAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
 		this(account, context, internetConnectionRequired, DEFAULT_RETRY_COUNT);
 	}
 
-	protected AbstractAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired, int retryCount) {
+	protected BaseAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired, int retryCount) {
 		this.account = account;
 		this.context = context;
 		this.internetConnectionRequired = internetConnectionRequired;
@@ -63,6 +61,10 @@ public abstract class AbstractAccountConnection<A extends Account> implements Ac
 	@Nonnull
 	public final A getAccount() {
 		return account;
+	}
+
+	public void setAccount(@Nonnull A account) {
+		this.account = account;
 	}
 
 	@Nonnull

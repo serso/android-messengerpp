@@ -36,7 +36,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.connection.AbstractAccountConnection;
+import org.solovyev.android.messenger.accounts.connection.BaseAccountConnection;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.Message;
@@ -79,7 +79,7 @@ import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.text.Strings.isEmpty;
 
-final class SmsAccountConnection extends AbstractAccountConnection<SmsAccount> {
+final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 
 	@Nullable
 	private volatile ReportsBroadcastReceiver receiver;

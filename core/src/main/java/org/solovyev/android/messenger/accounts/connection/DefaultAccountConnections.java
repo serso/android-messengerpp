@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.PredicateSpy;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -38,6 +39,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.collect.Iterables.find;
 import static java.util.concurrent.Executors.newCachedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static org.solovyev.android.messenger.App.getSyncService;
@@ -55,7 +57,7 @@ public final class DefaultAccountConnections implements AccountConnections {
     */
 
 	// seconds
-	private static final int POST_START_DELAY = 20;
+	private static final int POST_START_DELAY = 5;
 
 	static final String TAG = newTag("AccountConnections");
 
@@ -99,7 +101,7 @@ public final class DefaultAccountConnections implements AccountConnections {
 		synchronized (connections) {
 			for (final Account account : accounts) {
 				// are there any connections for current account?
-				AccountConnection connection = Iterables.find(connections, new ConnectionFinder(account), null);
+				AccountConnection connection = find(connections, new ConnectionFinder(account), null);
 
 				if (connection == null) {
 					// there is no connection for current account => need to add
@@ -128,6 +130,18 @@ public final class DefaultAccountConnections implements AccountConnections {
 			@Override
 			public void run() {
 				final SyncService syncService = getSyncService();
+
+				try {
+					App.getSyncService().sync(SyncTask.user_contacts_statuses, null);
+				} catch (TaskIsAlreadyRunningException e) {
+					// don't care
+				}
+
+				try {
+					App.getSyncService().sync(SyncTask.chat_messages, null);
+				} catch (TaskIsAlreadyRunningException e) {
+					// don't care
+				}
 
 				for (Account startedAccount : startedAccounts) {
 					try {
@@ -214,10 +228,20 @@ public final class DefaultAccountConnections implements AccountConnections {
 	}
 
 	@Override
-	public void updateAccount(@Nonnull Account account, boolean internetConnectionExists) {
+	public void restartConnectionForChangedAccount(@Nonnull Account account, boolean internetConnectionExists) {
 		synchronized (this.connections) {
 			removeConnectionFor(account);
 			startConnectionsFor(Arrays.asList(account), internetConnectionExists);
+		}
+	}
+
+	@Override
+	public void updateAccount(@Nonnull Account account) {
+		synchronized (this.connections) {
+			final AccountConnection connection = find(this.connections, new ConnectionFinder(account), null);
+			if (connection instanceof BaseAccountConnection) {
+				((BaseAccountConnection) connection).setAccount(account);
+			}
 		}
 	}
 

@@ -256,7 +256,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	}
 
 	public static void exit(Activity activity) {
-		getAccountService().stopAllRealmConnections();
+		getAccountConnectionsService().tryStopAll();
 
 		final Intent serviceIntent = new Intent();
 		serviceIntent.setClass(instance.application, OngoingNotificationService.class);

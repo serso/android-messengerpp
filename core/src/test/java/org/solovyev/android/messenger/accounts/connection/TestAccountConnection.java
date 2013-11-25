@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * Date: 3/4/13
  * Time: 5:05 PM
  */
-public class TestAccountConnection extends AbstractAccountConnection<TestAccount> {
+public class TestAccountConnection extends BaseAccountConnection<TestAccount> {
 
 	public TestAccountConnection(@Nonnull TestAccount account, @Nonnull Context context) {
 		super(account, context, false);

@@ -23,12 +23,11 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.currentThread;
 
-public abstract class LoopedAccountConnection<A extends Account> extends AbstractAccountConnection<A> {
+public abstract class LoopedAccountConnection<A extends Account> extends BaseAccountConnection<A> {
 
 	private static final long DEFAULT_WAIT_MILLIS = 30L * 60L * 1000L;
 	private static final long MIN_WAIT_MILLIS = 5L * 60L * 1000L;
@@ -41,9 +40,10 @@ public abstract class LoopedAccountConnection<A extends Account> extends Abstrac
 	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
 		this(account, context, internetConnectionRequired, DEFAULT_WAIT_MILLIS);
 	}
+
 	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired, long waitMillis) {
 		super(account, context, internetConnectionRequired);
-		if(waitMillis < MIN_WAIT_MILLIS) {
+		if (waitMillis < MIN_WAIT_MILLIS) {
 			Log.w(TAG, "Too small connection wait time may lead to fast battery drain. Wait time should be more than 5 minutes.");
 		}
 		this.waitMillis = waitMillis;
@@ -84,7 +84,7 @@ public abstract class LoopedAccountConnection<A extends Account> extends Abstrac
 			disconnect();
 		} finally {
 			// finish loop
-   			continueLoop();
+			continueLoop();
 		}
 	}
 

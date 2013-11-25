@@ -38,11 +38,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 6/6/12
- * Time: 3:30 PM
- */
 public class VkAccountChatService implements AccountChatService {
 
 	@Nonnull
@@ -57,20 +52,6 @@ public class VkAccountChatService implements AccountChatService {
 	public VkAccountChatService(@Nonnull VkAccount account) {
 		this.account = account;
 	}
-
-    /*@Nonnull
-	@Override
-    public List<Chat> getChats(@Nonnull Integer userId) {
-        try {
-            final List<Chat> result = new ArrayList<Chat>();
-            for (VkMessagesGetDialogsHttpTransaction vkMessagesGetDialogsHttpTransaction : VkMessagesGetDialogsHttpTransaction.newInstances(100)) {
-                result.addAll(HttpTransactions.execute(vkMessagesGetDialogsHttpTransaction));
-            }
-            return result;
-        } catch (IOException e) {
-            throw new HttpRuntimeIoException(e);
-        }
-    }*/
 
 	@Nonnull
 	@Override

@@ -17,9 +17,11 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.solovyev.android.messenger.MessengerListeners;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.accounts.AccountService;
@@ -39,7 +41,7 @@ import static org.solovyev.android.messenger.notifications.Notifications.NO_INTE
 import static org.solovyev.android.messenger.notifications.Notifications.newAccountConnectionErrorNotification;
 
 @Singleton
-public final class DefaultAccountConnectionsService implements AccountConnectionsService, NetworkStateListener {
+public class DefaultAccountConnectionsService implements AccountConnectionsService, NetworkStateListener {
 
     /*
 	**********************************************************************
@@ -59,17 +61,19 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 
 	@Inject
 	@Nonnull
-	private MessengerListeners messengerListeners;
-
-	@Inject
-	@Nonnull
 	private NotificationService notificationService;
 
 	@Inject
 	@Nonnull
 	private AccountConnections accountConnections;
 
-	public DefaultAccountConnectionsService() {
+	@Inject
+	@Nonnull
+	private Context context;
+
+	@Inject
+	public DefaultAccountConnectionsService(@Nonnull Application context) {
+		this.context = context;
 	}
 
 	@Override
@@ -80,13 +84,49 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 		tryStartConnectionsFor(accountService.getEnabledAccounts());
 	}
 
+	@Override
+	public void tryStopAll() {
+		accountConnections.tryStopAll();
+	}
+
+	@Override
+	public void tryStartAll() {
+		accountConnections.tryStartAll(isInternetConnectionExists());
+	}
+
 	void tryStartConnectionsFor(@Nonnull Collection<Account> accounts) {
 		accountConnections.startConnectionsFor(accounts, isInternetConnectionExists());
 	}
 
 	boolean isInternetConnectionExists() {
 		final NetworkData networkData = networkStateService.getNetworkData();
-		return networkData.getState() == NetworkState.CONNECTED;
+		if (networkData.getState() == NetworkState.UNKNOWN) {
+			return isConnected();
+		} else {
+			return networkData.getState() == NetworkState.CONNECTED;
+		}
+	}
+
+	boolean isConnected() {
+		// todo serso: move this to NetworkStateService
+		final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		final NetworkInfo wifiNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		if (wifiNetwork != null && wifiNetwork.isConnected()) {
+			return true;
+		}
+
+		final NetworkInfo mobileNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (mobileNetwork != null && mobileNetwork.isConnected()) {
+			return true;
+		}
+
+		final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		if (activeNetwork != null && activeNetwork.isConnected()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -119,10 +159,12 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 				case created:
 					tryStartConnectionsFor(Arrays.asList(account));
 					break;
-				case sync_data_changed:
 				case configuration_changed:
 				case changed:
-					accountConnections.updateAccount(account, isInternetConnectionExists());
+					accountConnections.restartConnectionForChangedAccount(account, isInternetConnectionExists());
+					break;
+				case sync_data_changed:
+					accountConnections.updateAccount(account);
 					break;
 				case state_changed:
 					switch (account.getState()) {

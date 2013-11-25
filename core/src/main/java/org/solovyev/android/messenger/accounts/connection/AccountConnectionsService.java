@@ -17,5 +17,11 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 public interface AccountConnectionsService {
+
 	void init();
+
+	void tryStopAll();
+
+	void tryStartAll();
+
 }

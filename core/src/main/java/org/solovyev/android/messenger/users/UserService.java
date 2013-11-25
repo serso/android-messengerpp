@@ -147,7 +147,7 @@ public interface UserService {
 	List<UiContact> getLastChatedContacts(int count);
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           SYNC
     *
@@ -170,14 +170,13 @@ public interface UserService {
 	 * <p/>
 	 * NOTE: some realms do not support user chats retrieval, in that case empty list is returned
 	 *
-	 *
 	 * @param account account in which synchronization must be done
 	 * @return updated list of chats
 	 */
 	@Nonnull
 	List<Chat> syncChats(@Nonnull Account account) throws AccountException;
 
-	void mergeChats(@Nonnull Account account, @Nonnull List<? extends AccountChat> apiChats) throws AccountException;
+	void mergeChats(@Nonnull Account account, @Nonnull List<? extends AccountChat> accountChats) throws AccountException;
 
 	void mergeContacts(@Nonnull Account account, @Nonnull List<User> contacts, boolean allowRemoval, boolean allowUpdate);
 

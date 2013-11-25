@@ -16,6 +16,7 @@
 
 package org.solovyev.android.messenger.realms.xmpp;
 
+import android.util.Log;
 import com.google.common.base.Function;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
@@ -37,6 +38,7 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.transform;
 import static org.solovyev.android.messenger.realms.xmpp.XmppAccount.toMessages;
+import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
 
 class XmppAccountChatService extends AbstractXmppRealmService implements AccountChatService {
 
@@ -62,6 +64,9 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 					}
 				} catch (XMPPException e) {
 					// ok, not supported by server
+				} catch (NullPointerException e) {
+					// sometimes NPE occurred inside supportsFlexibleRetrieval() => just log
+					Log.e(TAG, e.getMessage(), e);
 				}
 
 				return Collections.emptyList();

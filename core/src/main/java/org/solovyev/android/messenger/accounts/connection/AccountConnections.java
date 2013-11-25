@@ -16,12 +16,11 @@
 
 package org.solovyev.android.messenger.accounts.connection;
 
-import java.util.Collection;
+import org.solovyev.android.messenger.accounts.Account;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-
-import org.solovyev.android.messenger.accounts.Account;
+import java.util.Collection;
 
 @ThreadSafe
 public interface AccountConnections {
@@ -38,5 +37,7 @@ public interface AccountConnections {
 
 	void removeConnectionFor(@Nonnull Account account);
 
-	void updateAccount(@Nonnull Account account, boolean internetConnectionExists);
+	void restartConnectionForChangedAccount(@Nonnull Account account, boolean internetConnectionExists);
+
+	void updateAccount(@Nonnull Account account);
 }

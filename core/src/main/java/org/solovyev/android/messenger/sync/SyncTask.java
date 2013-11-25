@@ -92,8 +92,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			final Account account = getAccountService().getAccountById(syncData.getAccountId());
-			getUserService().syncChats(account);
+			getUserService().syncChats(getAccountService().getAccountById(syncData.getAccountId()));
 		}
 	},
 
@@ -105,7 +104,7 @@ public enum SyncTask {
 
 		@Override
 		protected void doTask0(@Nonnull SyncData syncData) throws AccountException {
-			App.getChatService().syncMessages(getAccountService().getAccountById(syncData.getAccountId()));
+			getChatService().syncMessages(getAccountService().getAccountById(syncData.getAccountId()));
 		}
 	};
 
@@ -141,7 +140,7 @@ public enum SyncTask {
 		Log.i(TAG, "Sync task finished: " + this + " for account: " + syncData.getAccountId());
 	}
 
-	private static boolean isTimeForChatsUpdate(SyncData syncData) {
+	private static boolean isTimeForChatsUpdate(@Nonnull SyncData syncData) {
 		boolean result = false;
 
 		final Account account = getAccountService().getAccountById(syncData.getAccountId());

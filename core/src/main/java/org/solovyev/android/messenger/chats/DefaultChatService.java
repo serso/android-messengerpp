@@ -27,7 +27,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
@@ -51,16 +50,17 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
 import java.util.concurrent.Executor;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.*;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.messenger.chats.Chat.PROPERTY_DRAFT_MESSAGE;
+import static org.solovyev.android.messenger.chats.Chats.newEmptyAccountChat;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.android.properties.Properties.newProperty;
 import static org.solovyev.common.text.Strings.isEmpty;
 
@@ -186,7 +186,7 @@ public class DefaultChatService implements ChatService {
 				final List<User> participants = new ArrayList<User>(2);
 				participants.add(userService.getUserById(user1));
 				participants.add(userService.getUserById(user2));
-				final AccountChat apiChat = Chats.newEmptyAccountChat(chat, participants);
+				final AccountChat apiChat = newEmptyAccountChat(chat, participants);
 
 				userService.mergeChats(account, asList(apiChat));
 
@@ -318,6 +318,19 @@ public class DefaultChatService implements ChatService {
 			result = chatDao.mergeChats(user.getEntityId(), prepareChats(chats));
 		}
 
+		for (final Chat chat : result.getUpdatedObjects()) {
+			final AccountChat accountChat = find(chats, new Predicate<AccountChat>() {
+				@Override
+				public boolean apply(AccountChat accountChat) {
+					return accountChat.getChat().equals(chat);
+				}
+			}, null);
+
+			if (accountChat != null) {
+				saveMessages(chat, accountChat.getMessages(), false);
+			}
+		}
+
 		fireChatEvents(userService.getUserById(user), result);
 
 		return result;
@@ -402,7 +415,7 @@ public class DefaultChatService implements ChatService {
 				if (message.isPrivate()) {
 					final Entity participant = message.getSecondUser(user);
 					assert participant != null;
-					chat =  getOrCreatePrivateChat(user, participant);
+					chat = getOrCreatePrivateChat(user, participant);
 				} else {
 					// todo serso: we need to create MUC here
 				}
@@ -450,15 +463,15 @@ public class DefaultChatService implements ChatService {
 		}
 	}
 
-	private void saveMessages(@Nonnull Chat chat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate) {
-		final MutableAccountChat accountChat = Chats.newEmptyAccountChat(chat, getParticipants(chat.getEntity()));
+	private void saveMessages(@Nonnull Chat chat, @Nonnull Collection<? extends Message> messages, boolean updateMessagesSyncDate) {
+		final MutableAccountChat accountChat = newEmptyAccountChat(chat, getParticipants(chat.getEntity()));
 
 		boolean added = false;
 		for (Message message : messages) {
-			added |= accountChat.addParticipant(Users.newEmptyUser(message.getAuthor()));
+			added |= accountChat.addParticipant(newEmptyUser(message.getAuthor()));
 			final Entity recipient = message.getRecipient();
 			if (recipient != null) {
-				added |= accountChat.addParticipant(Users.newEmptyUser(recipient));
+				added |= accountChat.addParticipant(newEmptyUser(recipient));
 			}
 		}
 
@@ -471,7 +484,7 @@ public class DefaultChatService implements ChatService {
 			result = getMessageDao().mergeMessages(chat.getId(), messages);
 
 			// update sync data
-			if (updateChatSyncDate) {
+			if (updateMessagesSyncDate) {
 				chat = chat.updateMessagesSyncDate();
 				updateChat(chat);
 			}

@@ -17,12 +17,9 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
@@ -32,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
-public class AbstractAccountConnectionTest {
+public class BaseAccountConnectionTest {
 
 	@Test
 	public void testStartShouldBeCalledIfAlreadyStarted() throws Exception {
@@ -79,7 +76,7 @@ public class AbstractAccountConnectionTest {
 		assertEquals(0, connection.stopCounter.get());
 	}
 
-	private static final class TestAccountConnection extends AbstractAccountConnection {
+	private static final class TestAccountConnection extends BaseAccountConnection {
 
 		private AtomicInteger startCounter = new AtomicInteger(0);
 		private AtomicInteger stopCounter = new AtomicInteger(0);
