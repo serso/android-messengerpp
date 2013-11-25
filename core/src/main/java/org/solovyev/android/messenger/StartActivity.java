@@ -34,14 +34,6 @@ public class StartActivity extends RoboActivity {
 
 	private static final String INTENT_SHOW_UNREAD_MESSAGES_ACTION = "show_unread_messages";
 
-	@Inject
-	@Nonnull
-	private AccountService accountService;
-
-	@Inject
-	@Nonnull
-	private SyncService syncService;
-
 	@Nonnull
 	public static Intent newUnreadMessagesStartIntent(@Nonnull Context context) {
 		final Intent intent = new Intent(context, StartActivity.class);

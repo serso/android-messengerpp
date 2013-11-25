@@ -342,7 +342,7 @@ public class DefaultAccountService implements AccountService {
 	}
 
 	@Override
-	public void saveAccount(@Nonnull Account account) {
+	public void saveAccountSyncData(@Nonnull Account account) {
 		synchronized (accounts) {
 			this.accounts.put(account.getId(), account);
 			synchronized (lock) {
@@ -350,7 +350,7 @@ public class DefaultAccountService implements AccountService {
 			}
 		}
 
-		listeners.fireEvent(AccountEventType.changed.newEvent(account, null));
+		listeners.fireEvent(AccountEventType.sync_data_changed.newEvent(account, null));
 	}
 
 	@Override

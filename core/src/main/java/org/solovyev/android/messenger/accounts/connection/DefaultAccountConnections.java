@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
@@ -93,6 +94,8 @@ public final class DefaultAccountConnections implements AccountConnections {
 
 	@Override
 	public void startConnectionsFor(@Nonnull Collection<Account> accounts, boolean internetConnectionExists) {
+		final Collection<Account> startedAccounts = new ArrayList<Account>(accounts.size());
+
 		synchronized (connections) {
 			for (final Account account : accounts) {
 				// are there any connections for current account?
@@ -107,30 +110,31 @@ public final class DefaultAccountConnections implements AccountConnections {
 				if (connection.isStopped()) {
 					if (internetConnectionExists || !connection.isInternetConnectionRequired()) {
 						startConnection(connection);
+						startedAccounts.add(account);
 					}
 				}
 			}
 		}
 
-		onConnectionsStarted();
+		onConnectionsStarted(startedAccounts);
 	}
 
 	private void startConnection(@Nonnull final AccountConnection connection) {
 		executor.execute(new ConnectionRunnable(connection));
 	}
 
-	// todo serso: better approach is to fire "realm_connected" events from realm connection and do sync for each realm separately (as soon as it is connected)
-	private void onConnectionsStarted() {
+	private void onConnectionsStarted(@Nonnull final Collection<Account> startedAccounts) {
 		postStartExecutor.schedule(new Runnable() {
 			@Override
 			public void run() {
-				// after account connection is started we have to check user presences and new messages
 				final SyncService syncService = getSyncService();
 
-				// todo serso: investigate why this operation takes so long and uncomment after fix
-				try {
-					syncService.sync(SyncTask.user_contacts_statuses, null);
-				} catch (TaskIsAlreadyRunningException e) {
+				for (Account startedAccount : startedAccounts) {
+					try {
+						syncService.syncAllForAccount(startedAccount, false);
+					} catch (SyncAllTaskIsAlreadyRunning syncAllTaskIsAlreadyRunning) {
+						// don't care
+					}
 				}
 
 			}
@@ -177,17 +181,20 @@ public final class DefaultAccountConnections implements AccountConnections {
 
 	@Override
 	public void tryStartAll(boolean internetConnectionExists) {
+		final Collection<Account> startedAccounts = new ArrayList<Account>(connections.size());
+
 		synchronized (this.connections) {
 			for (AccountConnection connection : connections) {
 				if (connection.isStopped()) {
 					if (!connection.isInternetConnectionRequired() || internetConnectionExists) {
 						startConnection(connection);
+						startedAccounts.add(connection.getAccount());
 					}
 				}
 			}
 		}
 
-		onConnectionsStarted();
+		onConnectionsStarted(startedAccounts);
 	}
 
 	@Override

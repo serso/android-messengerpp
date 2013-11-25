@@ -103,6 +103,7 @@ final class SmsAccountChatService implements AccountChatService {
 
 	@Nonnull
 	private List<MutableMessage> readMessages() {
+		Log.d(TAG, "Reading messages...");
 		final List<MutableMessage> messages = new ArrayList<MutableMessage>();
 
 		final SmsMessageConverter converter = new SmsMessageConverter(account, getMessageService());
@@ -131,6 +132,8 @@ final class SmsAccountChatService implements AccountChatService {
 				cursor.close();
 			}
 		}
+
+		Log.d(TAG, "Messages read");
 
 		return messages;
 	}

@@ -25,6 +25,8 @@ import org.joda.time.DateTimeZone;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
+import org.solovyev.android.messenger.sync.SyncTask;
+import org.solovyev.android.messenger.sync.TaskIsAlreadyRunningException;
 import org.solovyev.common.datetime.FastDateTimeZoneProvider;
 import roboguice.RoboGuice;
 

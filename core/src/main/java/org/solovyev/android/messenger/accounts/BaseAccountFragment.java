@@ -241,6 +241,8 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 		public void onEvent(@Nonnull AccountEvent event) {
 			final Account eventAccount = event.getAccount();
 			switch (event.getType()) {
+				case configuration_changed:
+				case sync_data_changed:
 				case changed:
 					if (eventAccount.equals(account)) {
 						account = (A) eventAccount;

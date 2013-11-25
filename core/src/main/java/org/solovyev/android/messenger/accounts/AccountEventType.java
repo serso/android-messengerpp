@@ -37,6 +37,11 @@ public enum AccountEventType {
 	changed,
 
 	/**
+	 * Fired when only sync data configuration has been changed
+	 */
+	sync_data_changed,
+
+	/**
 	 * Fired when only account configuration has been changed
 	 */
 	configuration_changed,

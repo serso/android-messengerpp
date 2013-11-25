@@ -16,6 +16,8 @@
 
 package org.solovyev.android.messenger.sync;
 
+import android.util.Log;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.App;
@@ -35,6 +37,8 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.System.currentTimeMillis;
 
 @Singleton
 public class DefaultSyncService implements SyncService {
@@ -208,6 +212,8 @@ public class DefaultSyncService implements SyncService {
 
 	private class SyncRunnable implements Runnable {
 
+		private final String TAG_TIME = App.newSubTag(App.TAG_TIME, "ServiceSync");
+
 		private final boolean force;
 
 		@Nonnull
@@ -230,7 +236,13 @@ public class DefaultSyncService implements SyncService {
 							try {
 								checkRunningTask(syncTask);
 								if (force || syncTask.isTime(syncData)) {
+									final long start = currentTimeMillis();
 									syncTask.doTask(syncData);
+									final long end = currentTimeMillis();
+									final long duration = end - start;
+									if (duration > 1000) {
+										Log.e(TAG_TIME, "Work time is too long for account: " + account + " and task: " + syncTask + ". Time: " + duration + "ms");
+									}
 								}
 							} finally {
 								releaseRunningTask(syncTask);

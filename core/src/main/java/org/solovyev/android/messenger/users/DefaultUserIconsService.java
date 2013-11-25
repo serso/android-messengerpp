@@ -57,8 +57,7 @@ class DefaultUserIconsService implements UserIconsService {
 		realmIconService.fetchUsersIcons(contacts);
 
 		// update sync data
-		account = account.updateUserIconsSyncDate();
-		accountService.saveAccount(account);
+		accountService.saveAccountSyncData(account.updateUserIconsSyncDate());
 	}
 
 	@Nonnull

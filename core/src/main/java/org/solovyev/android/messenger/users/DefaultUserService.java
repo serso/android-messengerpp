@@ -429,7 +429,7 @@ public class DefaultUserService implements UserService {
 		}
 
 		// update sync data
-		accountService.saveAccount(account.updateContactsSyncDate());
+		accountService.saveAccountSyncData(account.updateContactsSyncDate());
 
 		final List<UserEvent> userEvents = new ArrayList<UserEvent>(contacts.size());
 
@@ -459,9 +459,8 @@ public class DefaultUserService implements UserService {
 
 		final List<Chat> chats = newArrayList(transform(accountChats, new Function<AccountChat, Chat>() {
 			@Override
-			public Chat apply(@javax.annotation.Nullable AccountChat input) {
-				assert input != null;
-				return input.getChat();
+			public Chat apply(AccountChat accountChat) {
+				return accountChat.getChat();
 			}
 		}));
 
@@ -475,7 +474,7 @@ public class DefaultUserService implements UserService {
 		chatService.mergeChats(account.getUser().getEntity(), apiChats);
 
 		// update sync data
-		accountService.saveAccount(account.updateChatsSyncDate());
+		accountService.saveAccountSyncData(account.updateChatsSyncDate());
 	}
 
 	@Override

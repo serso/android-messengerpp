@@ -87,15 +87,7 @@ public enum SyncTask {
 	user_chats {
 		@Override
 		public boolean isTime(@Nonnull SyncData syncData) {
-			boolean result = false;
-
-			final Account account = getAccountService().getAccountById(syncData.getAccountId());
-			final DateTime lastChatsSyncDate = account.getSyncData().getLastChatsSyncDate();
-			if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(1).isBefore(DateTime.now())) {
-				result = true;
-			}
-
-			return result;
+			return isTimeForChatsUpdate(syncData);
 		}
 
 		@Override
@@ -108,7 +100,7 @@ public enum SyncTask {
 	chat_messages {
 		@Override
 		public boolean isTime(@Nonnull SyncData syncData) {
-			return true;
+			return isTimeForChatsUpdate(syncData);
 		}
 
 		@Override
@@ -147,5 +139,17 @@ public enum SyncTask {
 
 	private void logTaskFinished(@Nonnull SyncData syncData) {
 		Log.i(TAG, "Sync task finished: " + this + " for account: " + syncData.getAccountId());
+	}
+
+	private static boolean isTimeForChatsUpdate(SyncData syncData) {
+		boolean result = false;
+
+		final Account account = getAccountService().getAccountById(syncData.getAccountId());
+		final DateTime lastChatsSyncDate = account.getSyncData().getLastChatsSyncDate();
+		if (lastChatsSyncDate == null || lastChatsSyncDate.plusHours(1).isBefore(DateTime.now())) {
+			result = true;
+		}
+
+		return result;
 	}
 }

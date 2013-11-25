@@ -119,6 +119,7 @@ public final class DefaultAccountConnectionsService implements AccountConnection
 				case created:
 					tryStartConnectionsFor(Arrays.asList(account));
 					break;
+				case sync_data_changed:
 				case configuration_changed:
 				case changed:
 					accountConnections.updateAccount(account, isInternetConnectionExists());

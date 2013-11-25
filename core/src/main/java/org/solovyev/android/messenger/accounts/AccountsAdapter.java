@@ -58,6 +58,8 @@ public class AccountsAdapter extends BaseListItemAdapter<AccountListItem> {
 					add(createListItem(account));
 				}
 				break;
+			case configuration_changed:
+			case sync_data_changed:
 			case changed:
 				final AccountListItem listItem = findInAllElements(account);
 				if (listItem != null) {
