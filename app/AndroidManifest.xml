@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto"
-		  android:versionCode="15" android:versionName="0.015" package="org.solovyev.android.messenger">
+		  android:versionCode="16" android:versionName="0.016" package="org.solovyev.android.messenger">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -50,7 +50,7 @@
 		<activity android:label="@string/mpp_app_name" android:name=".StartActivity"
 				  android:windowSoftInputMode="adjustPan">
 
-			<intent-filter>
+		<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
@@ -71,8 +71,8 @@
 				  android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
 		<activity android:label="@string/mpp_preferences" android:launchMode="singleTask"
 				  android:name=".SettingsActivity" android:windowSoftInputMode="stateHidden"/>
-		<activity android:label="@string/mpp_accounts" android:launchMode="singleTask"
-				  android:name=".AccountsActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_accounts" android:launchMode="singleTask" android:name=".AccountsActivity"
+				  android:windowSoftInputMode="stateHidden"/>
 		<activity android:label="@string/mpp_new_contact" android:launchMode="singleTask"
 				  android:name=".NewContactActivity" android:windowSoftInputMode="stateHidden"/>
 
