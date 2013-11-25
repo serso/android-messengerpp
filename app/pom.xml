@@ -244,11 +244,6 @@
 									<type>apk</type>
 									<classifier>signed-aligned</classifier>
 								</artifact>
-								<artifact>
-									<file>${project.build.directory}/proguard/mapping.txt</file>
-									<type>map</type>
-									<classifier>release</classifier>
-								</artifact>
 							</artifacts>
 						</configuration>
 						<executions>
