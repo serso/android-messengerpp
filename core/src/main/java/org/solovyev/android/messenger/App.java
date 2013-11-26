@@ -54,6 +54,8 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static final String TAG_TIME = App.newTag("Time");
 
+	private static final boolean MONKEY_RUNNER = false;
+
 	@Nonnull
 	private static App instance = new App();
 
@@ -377,5 +379,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	public static boolean isDebuggable() {
 		final ApplicationInfo applicationInfo = getApplication().getApplicationInfo();
 		return (applicationInfo.flags & FLAG_DEBUGGABLE) == FLAG_DEBUGGABLE;
+	}
+
+	public static boolean isMonkeyRunner() {
+		// NOTE: this code is only for monkeyrunner
+		return MONKEY_RUNNER;
 	}
 }
