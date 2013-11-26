@@ -19,15 +19,15 @@ package org.solovyev.android.messenger.accounts;
 import com.google.inject.Inject;
 import org.junit.Test;
 import org.solovyev.android.messenger.DefaultMessengerTest;
-import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.realms.test.TestAccount;
+import org.solovyev.android.messenger.realms.test.TestAccountBuilder;
+import org.solovyev.android.messenger.realms.test.TestAccountConfiguration;
+import org.solovyev.android.messenger.realms.test.TestRealm;
 import org.solovyev.android.messenger.users.UserDao;
 
 import javax.annotation.Nonnull;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.accounts.AccountState.removed;
 
 public class AccountServiceTest extends DefaultMessengerTest {

@@ -17,8 +17,8 @@
 package org.solovyev.android.messenger.realms.vk.users;
 
 import org.junit.Test;
-import org.solovyev.android.messenger.accounts.TestAccount;
-import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.realms.test.TestAccount;
+import org.solovyev.android.messenger.realms.test.TestRealm;
 import org.solovyev.android.messenger.users.User;
 
 import java.util.List;

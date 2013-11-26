@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.accounts;
+package org.solovyev.android.messenger.realms.test;
 
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.solovyev.android.messenger.accounts.AbstractAccount;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.accounts.connection.TestAccountConnection;
 import org.solovyev.android.messenger.chats.AccountChatService;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.TestRealm;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
 
@@ -65,12 +65,12 @@ public class TestAccount extends AbstractAccount<TestAccountConfiguration> {
 	@Nonnull
 	@Override
 	public AccountUserService getAccountUserService() {
-		return new TestAccountService();
+		return new TestAccountService(this);
 	}
 
 	@Nonnull
 	@Override
 	public AccountChatService getAccountChatService() {
-		return new TestAccountService();
+		return new TestAccountService(this);
 	}
 }

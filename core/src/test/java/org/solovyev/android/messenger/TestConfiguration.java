@@ -19,7 +19,7 @@ package org.solovyev.android.messenger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.realms.test.TestRealm;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

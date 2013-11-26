@@ -16,21 +16,22 @@
 
 package org.solovyev.android.messenger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.sms.SmsRealm;
+import org.solovyev.android.messenger.realms.test.TestRealm;
 import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.xmpp.CustomXmppRealm;
 import org.solovyev.android.messenger.realms.xmpp.FacebookXmppRealm;
 import org.solovyev.android.messenger.realms.xmpp.GoogleXmppRealm;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.solovyev.android.messenger.App.isMonkeyRunner;
 
 @Singleton
 public class DefaultConfiguration implements Configuration {
@@ -58,6 +59,10 @@ public class DefaultConfiguration implements Configuration {
 	@Nonnull
 	private SmsRealm smsRealm;
 
+	@Inject
+	@Nonnull
+	private TestRealm testRealm;
+
 	public DefaultConfiguration() {
 	}
 
@@ -71,6 +76,9 @@ public class DefaultConfiguration implements Configuration {
 				realms.add(googleXmppRealm);
 				realms.add(vkRealm);
 				realms.add(smsRealm);
+				if (isMonkeyRunner()) {
+					realms.add(testRealm);
+				}
 			}
 		}
 

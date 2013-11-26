@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.accounts;
+package org.solovyev.android.messenger.realms.test;
 
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
+import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.realms.TestRealm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

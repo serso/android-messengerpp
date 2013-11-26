@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.realms;
+package org.solovyev.android.messenger.realms.test;
 
 import android.content.Context;
 import android.widget.ImageView;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
-import org.solovyev.android.messenger.accounts.connection.TestAccountConnection;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
+import org.solovyev.android.messenger.realms.AbstractRealm;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.security.Cipherer;
 

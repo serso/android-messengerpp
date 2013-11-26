@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.accounts.connection;
+package org.solovyev.android.messenger.realms.test;
 
 import android.content.Context;
-import org.solovyev.android.messenger.accounts.TestAccount;
+import org.solovyev.android.messenger.accounts.connection.BaseAccountConnection;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 3/4/13
- * Time: 5:05 PM
- */
 public class TestAccountConnection extends BaseAccountConnection<TestAccount> {
 
 	public TestAccountConnection(@Nonnull TestAccount account, @Nonnull Context context) {

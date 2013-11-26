@@ -18,7 +18,8 @@ package org.solovyev.android.messenger.accounts;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.solovyev.android.messenger.realms.TestRealm;
+import org.solovyev.android.messenger.realms.test.TestAccount;
+import org.solovyev.android.messenger.realms.test.TestRealm;
 
 import static org.junit.Assert.assertNotSame;
 import static org.solovyev.android.messenger.accounts.AccountState.disabled_by_app;

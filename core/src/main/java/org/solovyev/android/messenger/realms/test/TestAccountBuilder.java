@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.accounts;
+package org.solovyev.android.messenger.realms.test;
 
 
 import org.solovyev.android.captcha.ResolvedCaptcha;
+import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
+import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.MutableUser;
@@ -42,7 +45,7 @@ public class TestAccountBuilder extends AbstractAccountBuilder<TestAccount, Test
 		String accountEntityId = "test_user";
 
 		final Integer accountUserId = configuration.getAccountUserId();
-		if(accountUserId != null) {
+		if (accountUserId != null) {
 			accountEntityId += "_" + accountUserId;
 		}
 		final MutableUser user = newEmptyUser(newEntity(accountId, accountEntityId));

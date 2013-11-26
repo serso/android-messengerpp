@@ -74,6 +74,8 @@ public interface AccountService {
 
 	void removeAccount(@Nonnull String accountId);
 
+	void removeAllAccounts();
+
 	boolean isOneAccount();
 
 	boolean isOneAccount(@Nonnull Realm realm);

@@ -26,13 +26,21 @@ import android.os.Handler;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.Threads;
+import org.solovyev.android.messenger.accounts.AccountAlreadyExistsException;
+import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
+import org.solovyev.android.messenger.realms.UnsupportedRealmException;
+import org.solovyev.android.messenger.realms.test.TestAccountBuilder;
+import org.solovyev.android.messenger.realms.test.TestAccountConfiguration;
+import org.solovyev.android.messenger.realms.test.TestRealm;
+import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
@@ -143,10 +151,26 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		syncService.init();
 		unreadMessagesCounter.init();
 
+		if (isMonkeyRunner()) {
+			prepareMonkeyRunnerData();
+		}
+
 		// must be done after all loadings
 		accountConnectionsService.init();
 
 		networkStateService.startListening(application);
+	}
+
+	private void prepareMonkeyRunnerData() {
+		accountService.removeAllAccounts();
+
+		try {
+			final Realm<? extends AccountConfiguration> realm = realmService.getRealmById(TestRealm.REALM_ID);
+			accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration(), null));
+		} catch (UnsupportedRealmException e) {
+		} catch (InvalidCredentialsException e) {
+		} catch (AccountAlreadyExistsException e) {
+		}
 	}
 
 	@Override

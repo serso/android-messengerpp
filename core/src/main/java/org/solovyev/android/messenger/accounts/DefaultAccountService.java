@@ -360,6 +360,17 @@ public class DefaultAccountService implements AccountService {
 	}
 
 	@Override
+	public void removeAllAccounts() {
+		synchronized (accounts) {
+			accounts.clear();
+		}
+
+		synchronized (lock) {
+			accountDao.deleteAll();
+		}
+	}
+
+	@Override
 	public boolean isOneAccount() {
 		synchronized (accounts) {
 			return accounts.size() == 1;
