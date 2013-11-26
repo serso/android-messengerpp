@@ -34,7 +34,7 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 import javax.annotation.Nonnull;
 
-public abstract class AbstractMessengerListItem<D extends Identifiable> implements MessengerListItem, Checkable, Comparable<AbstractMessengerListItem<D>> {
+public abstract class BaseMessengerListItem<D extends Identifiable> implements MessengerListItem, Checkable, Comparable<BaseMessengerListItem<D>> {
 
 	private boolean checked;
 
@@ -53,11 +53,11 @@ public abstract class AbstractMessengerListItem<D extends Identifiable> implemen
 
 	private boolean dataChanged = true;
 
-	protected AbstractMessengerListItem(@Nonnull String tagPrefix, @Nonnull D data, int layoutResId) {
+	protected BaseMessengerListItem(@Nonnull String tagPrefix, @Nonnull D data, int layoutResId) {
 		this(tagPrefix, data, layoutResId, true);
 	}
 
-	protected AbstractMessengerListItem(@Nonnull String tagPrefix, @Nonnull D data, int layoutResId, boolean canBeSelected) {
+	protected BaseMessengerListItem(@Nonnull String tagPrefix, @Nonnull D data, int layoutResId, boolean canBeSelected) {
 		this.tagPrefix = tagPrefix;
 		this.layoutResId = layoutResId;
 		this.data = data;
@@ -158,7 +158,7 @@ public abstract class AbstractMessengerListItem<D extends Identifiable> implemen
 
 	/**
 	 * Should be called when inner state of data class is changed (for example, properties)
-	 * Method is called inside {@link AbstractMessengerListItem#setData(D)} => no need to call this method after setting new data
+	 * Method is called inside {@link BaseMessengerListItem#setData(D)} => no need to call this method after setting new data
 	 */
 	public void onDataChanged() {
 		dataChanged = true;
@@ -170,11 +170,11 @@ public abstract class AbstractMessengerListItem<D extends Identifiable> implemen
 			return true;
 		}
 
-		if (!(o instanceof AbstractMessengerListItem)) {
+		if (!(o instanceof BaseMessengerListItem)) {
 			return false;
 		}
 
-		final AbstractMessengerListItem that = (AbstractMessengerListItem) o;
+		final BaseMessengerListItem that = (BaseMessengerListItem) o;
 
 		if (!data.equals(that.data)) {
 			return false;
@@ -200,7 +200,7 @@ public abstract class AbstractMessengerListItem<D extends Identifiable> implemen
 	}
 
 	@Override
-	public final int compareTo(@Nonnull AbstractMessengerListItem<D> another) {
+	public final int compareTo(@Nonnull BaseMessengerListItem<D> another) {
 		return this.toString().compareTo(another.toString());
 	}
 

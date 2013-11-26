@@ -23,7 +23,7 @@ import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
 import javax.annotation.Nonnull;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_clicked;
 
-class RealmListItem extends AbstractMessengerListItem<Realm> {
+class RealmListItem extends BaseMessengerListItem<Realm> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "realm_list_item_";

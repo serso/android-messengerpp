@@ -29,7 +29,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.UserEvent;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
 import javax.annotation.Nonnull;
@@ -46,7 +46,7 @@ import static org.solovyev.android.messenger.messages.Messages.getMessageTime;
 import static org.solovyev.android.messenger.messages.Messages.getMessageTitle;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
-public class ChatListItem extends AbstractMessengerListItem<UiChat> {
+public class ChatListItem extends BaseMessengerListItem<UiChat> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "chat_list_item_";

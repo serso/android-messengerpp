@@ -24,7 +24,7 @@ import org.solovyev.android.list.*;
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.users.UserEvent;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
@@ -130,17 +130,22 @@ public class BaseListItemAdapter<LI extends ListItem & Identifiable> extends Lis
 		return selectionHelper.getSelection().getItem();
 	}
 
+	@Override
+	public long getItemId(int position) {
+		return getItem(position).getId().hashCode();
+	}
+
 	@Nonnull
 	public ListItemAdapterSelectionHelper<LI> getSelectionHelper() {
 		return selectionHelper;
 	}
 
-	protected static <D extends EntityAware & Identifiable> void removeIf(@Nonnull final ListAdapter<? extends AbstractMessengerListItem<D>> adapter, @Nonnull final Predicate<D> filter) {
+	protected static <D extends EntityAware & Identifiable> void removeIf(@Nonnull final ListAdapter<? extends BaseMessengerListItem<D>> adapter, @Nonnull final Predicate<D> filter) {
 		adapter.doWork(new Runnable() {
 			@Override
 			public void run() {
 				for (int i = adapter.getCount() - 1; i >= 0; i--) {
-					final AbstractMessengerListItem<D> item = adapter.getItem(i);
+					final BaseMessengerListItem<D> item = adapter.getItem(i);
 					if (filter.apply(item.getData())) {
 						adapter.removeAt(i);
 					}

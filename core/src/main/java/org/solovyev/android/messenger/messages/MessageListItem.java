@@ -26,11 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Arrays;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
@@ -40,19 +35,20 @@ import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 import static android.text.Html.fromHtml;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.App.getPreferences;
-import static org.solovyev.android.messenger.App.showToast;
+import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
 
-public final class MessageListItem extends AbstractMessengerListItem<Message> /*, ChatEventListener*/ {
+public final class MessageListItem extends BaseMessengerListItem<Message> /*, ChatEventListener*/ {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "message_list_item_";
@@ -106,7 +102,7 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 		final ImageView messageProgress = viewTag.getViewById(R.id.mpp_li_message_progress_imageview);
 		final AnimationDrawable animation = (AnimationDrawable) messageProgress.getDrawable();
 
-		if(message.getState() == MessageState.sending) {
+		if (message.getState() == MessageState.sending) {
 			messageDate.setVisibility(GONE);
 			messageProgress.setVisibility(VISIBLE);
 			messageDate.setText(null);
@@ -184,7 +180,6 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 		},
 
 		quote(R.string.mpp_quote) {
-
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
 				getEventManager(context).fire(MessageUiEventType.quote.newEvent(data.getDataObject().getMessage()));
@@ -192,7 +187,6 @@ public final class MessageListItem extends AbstractMessengerListItem<Message> /*
 		},
 
 		remove(R.string.mpp_remove) {
-
 			@Override
 			public void onClick(@Nonnull ListItemOnClickData<MessageListItem> data, @Nonnull Context context) {
 				final MessageListItem listItem = data.getDataObject();

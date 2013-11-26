@@ -24,7 +24,7 @@ import android.widget.TextView;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 
-public final class AccountListItem extends AbstractMessengerListItem<Account> {
+public final class AccountListItem extends BaseMessengerListItem<Account> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "account_list_item_";

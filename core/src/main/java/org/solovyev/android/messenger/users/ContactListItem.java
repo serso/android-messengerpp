@@ -29,7 +29,7 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.view.AbstractMessengerListItem;
+import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
 import javax.annotation.Nonnull;
@@ -46,7 +46,7 @@ import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UiContact.newUiContact;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
-public final class ContactListItem extends AbstractMessengerListItem<UiContact> {
+public final class ContactListItem extends BaseMessengerListItem<UiContact> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "contact_list_item_";
@@ -86,7 +86,7 @@ public final class ContactListItem extends AbstractMessengerListItem<UiContact> 
 		final List<LabeledMenuItem<ListItemOnClickData<User>>> menuItems = new ArrayList<LabeledMenuItem<ListItemOnClickData<User>>>();
 		final User contact = getContact();
 		for (Menu menuItem : Menu.values()) {
-			if(menuItem.isVisible(getData())) {
+			if (menuItem.isVisible(getData())) {
 				menuItems.add(menuItem);
 			}
 		}
