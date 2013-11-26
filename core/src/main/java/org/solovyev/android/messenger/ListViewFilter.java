@@ -76,7 +76,7 @@ public class ListViewFilter {
 		this.filterableListView = filterableListView;
 	}
 
-	public void onCreate(@Nonnull Bundle savedInstanceState) {
+	public void onCreate(@Nullable Bundle savedInstanceState) {
 		lastSavedInstanceState = savedInstanceState;
 	}
 
