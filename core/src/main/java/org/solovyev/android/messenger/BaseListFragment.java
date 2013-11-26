@@ -336,7 +336,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		if (listViewFilter != null) {
@@ -352,7 +352,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	@Override
-	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
 		final LinearLayout root = new LinearLayout(themeContext);
 		root.setOrientation(VERTICAL);
 
