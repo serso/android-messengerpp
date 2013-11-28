@@ -26,20 +26,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import org.solovyev.android.Fragments2;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
+import com.google.inject.Inject;
+import org.solovyev.android.Fragments;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockDialogFragment;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 import static org.solovyev.android.Activities.restartActivity;
 import static org.solovyev.android.messenger.App.getEventManager;
@@ -133,7 +130,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 			}
 		}
 
-		if(nextEventType == null) {
+		if (nextEventType == null) {
 			nextEventType = (ContactUiEventType) getArguments().getSerializable(ARG_NEXT_EVENT_TYPE);
 		}
 
@@ -207,7 +204,7 @@ public final class CompositeUserDialogFragment extends RoboSherlockDialogFragmen
 		args.putSerializable(ARG_NEXT_EVENT_TYPE, nextEventType);
 		fragment.setArguments(args);
 
-		Fragments2.showDialog(fragment, CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
+		Fragments.showDialog(fragment, CompositeUserDialogFragment.FRAGMENT_TAG, activity.getSupportFragmentManager());
 	}
 
 

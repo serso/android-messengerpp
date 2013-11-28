@@ -135,7 +135,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private EventManager eventManager;
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           OWN FIELDS
     *
@@ -796,12 +796,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 		@Override
 		public void onEvent(@Nonnull final UserEvent event) {
-			Threads2.tryRunOnUiThread(BaseListFragment.this, new Runnable() {
-				@Override
-				public void run() {
-					adapter.onEvent(event);
-				}
-			});
+			adapter.onEvent(event);
 		}
 	}
 
@@ -813,13 +808,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 		@Override
 		public void onEvent(@Nonnull final AccountEvent event) {
-			Threads2.tryRunOnUiThread(BaseListFragment.this, new Runnable() {
-				@Override
-				public void run() {
-					BaseListFragment.this.onEvent(event);
-					adapter.onEvent(event);
-				}
-			});
+			BaseListFragment.this.onEvent(event);
+			adapter.onEvent(event);
 		}
 	}
 

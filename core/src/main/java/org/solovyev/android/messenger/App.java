@@ -18,19 +18,13 @@ package org.solovyev.android.messenger;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.widget.Toast;
-import roboguice.RoboGuice;
-import roboguice.event.EventManager;
-
-import javax.annotation.Nonnull;
-
+import com.google.inject.Inject;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.accounts.AccountAlreadyExistsException;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
@@ -52,11 +46,14 @@ import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.tasks.TaskService;
+import roboguice.RoboGuice;
+import roboguice.event.EventManager;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
 
 import static android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static org.solovyev.android.Android.enableComponent;
 
 public final class App implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -183,25 +180,9 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 			theme = MessengerPreferences.Gui.theme.getPreferenceNoError(preferences);
 		} else if (MessengerPreferences.startOnBoot.isSameKey(key)) {
 			final Boolean startOnBoot = MessengerPreferences.startOnBoot.getPreference(preferences);
-
-			// todo serso: use the version from ACL
-			enableComponent(startOnBoot);
+			enableComponent(application, OnBootBroadcastReceiver.class, startOnBoot);
 		}
 	}
-
-	private void enableComponent(boolean enable) {
-		final PackageManager pm = application.getPackageManager();
-
-		final int componentState;
-		if (enable) {
-			componentState = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-		} else {
-			componentState = PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-		}
-
-		pm.setComponentEnabledSetting(new ComponentName(application, OnBootBroadcastReceiver.class), componentState, PackageManager.DONT_KILL_APP);
-	}
-
 	/*
 	**********************************************************************
 	*

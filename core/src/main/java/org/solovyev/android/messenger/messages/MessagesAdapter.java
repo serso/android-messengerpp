@@ -41,7 +41,7 @@ import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
 import static org.solovyev.android.messenger.messages.Messages.newMessage;
 
-public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*implements ChatEventListener, UserEventListener*/ {
+public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> {
 
     /*
 	**********************************************************************
@@ -64,7 +64,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	/*private*/ static final String TYPING_POSTFIX = "_typing";
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           FIELDS
     *
@@ -110,7 +110,6 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 		this.chat = chat;
 	}
 
-	/*@Override*/
 	public void onEvent(@Nonnull ChatEvent event) {
 		Log.d(TAG, "On event: " + event);
 		final ChatEventType type = event.getType();
@@ -181,7 +180,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 	private void removeSendingListItem(Message message) {
 		if (message.isOutgoing()) {
 			final MessageListItem sendingListItem = sendingListItems.remove(message.getOriginalId());
-			if(sendingListItem != null) {
+			if (sendingListItem != null) {
 				remove(sendingListItem);
 			}
 		}
@@ -198,7 +197,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> /*impl
 				break;
 			default:
 				final MessageListItem listItem = findInAllElements(message);
-				if(listItem != null) {
+				if (listItem != null) {
 					listItem.onMessageChanged(message);
 					notifyDataSetChanged();
 				}

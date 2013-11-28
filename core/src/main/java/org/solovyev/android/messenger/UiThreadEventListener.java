@@ -24,11 +24,6 @@ import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 3/23/13
- * Time: 6:47 PM
- */
 public final class UiThreadEventListener<E extends JEvent> implements JEventListener<E> {
 
 	private final Activity activity;
@@ -69,7 +64,7 @@ public final class UiThreadEventListener<E extends JEvent> implements JEventList
 				}
 			});
 		} else {
-			Threads2.tryRunOnUiThread(fragment, new Runnable() {
+			Threads.tryRunOnUiThread(fragment, new Runnable() {
 				@Override
 				public void run() {
 					eventListener.onEvent(event);

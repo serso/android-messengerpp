@@ -38,7 +38,10 @@ import org.solovyev.android.menu.AMenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.BaseAsyncListFragment;
+import org.solovyev.android.messenger.BaseAsyncLoader;
+import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
@@ -69,6 +72,7 @@ import java.util.List;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_SEND;
+import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.android.messenger.messages.MessageListItem.newMessageListItem;
 import static org.solovyev.android.messenger.messages.UiMessageSender.trySendMessage;
 import static org.solovyev.android.messenger.notifications.Notifications.newUndefinedErrorNotification;
@@ -170,7 +174,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	protected void attachListeners() {
 		super.attachListeners();
 
-		chatEventListener = new UiThreadUserChatListener();
+		chatEventListener = onUiThread(this, new ChatEventListener());
 		this.chatService.addListener(chatEventListener);
 	}
 
@@ -462,26 +466,21 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		}
 	}
 
-	private class UiThreadUserChatListener extends AbstractJEventListener<ChatEvent> {
+	private class ChatEventListener extends AbstractJEventListener<ChatEvent> {
 
-		private UiThreadUserChatListener() {
+		private ChatEventListener() {
 			super(ChatEvent.class);
 		}
 
 		@Override
 		public void onEvent(@Nonnull final ChatEvent event) {
-			if (event.getType() == ChatEventType.changed) {
-				if (chat.equals(event.getChat())) {
+			if (chat.equals(event.getChat())) {
+				if (event.getType() == ChatEventType.changed) {
 					chat = event.getChat();
 				}
-			}
 
-			Threads2.tryRunOnUiThread(MessagesFragment.this, new Runnable() {
-				@Override
-				public void run() {
-					getAdapter().onEvent(event);
-				}
-			});
+				getAdapter().onEvent(event);
+			}
 		}
 	}
 

@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> extends BaseListFragment<LI> {
@@ -87,10 +88,10 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	protected void attachListeners() {
 		detachListeners();
 
-		userEventListener = new UserEventListener();
+		userEventListener = onUiThread(this, new UserEventListener());
 		getUserService().addListener(userEventListener);
 
-		accountEventListener = new AccountEventListener();
+		accountEventListener = onUiThread(this, new AccountEventListener());
 		getAccountService().addListener(accountEventListener);
 	}
 

@@ -21,7 +21,6 @@ import android.support.v4.app.Fragment;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.BaseStaticListFragment;
-import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -29,6 +28,8 @@ import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 
 public abstract class BaseAccountsFragment extends BaseStaticListFragment<AccountListItem> implements DetachableFragment {
 
@@ -52,7 +53,7 @@ public abstract class BaseAccountsFragment extends BaseStaticListFragment<Accoun
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		accountEventListener = new UiAccountEventListener();
+		accountEventListener = onUiThread(this, new AccountEventListener());
 		accountService.addListener(accountEventListener);
 	}
 
@@ -97,20 +98,15 @@ public abstract class BaseAccountsFragment extends BaseStaticListFragment<Accoun
 		return (AccountsAdapter) super.getAdapter();
 	}
 
-	private class UiAccountEventListener extends AbstractJEventListener<AccountEvent> {
+	private class AccountEventListener extends AbstractJEventListener<AccountEvent> {
 
-		private UiAccountEventListener() {
+		private AccountEventListener() {
 			super(AccountEvent.class);
 		}
 
 		@Override
 		public void onEvent(@Nonnull final AccountEvent accountEvent) {
-			Threads2.tryRunOnUiThread(BaseAccountsFragment.this, new Runnable() {
-				@Override
-				public void run() {
-					getAdapter().onAccountEvent(accountEvent);
-				}
-			});
+			getAdapter().onAccountEvent(accountEvent);
 		}
 	}
 }

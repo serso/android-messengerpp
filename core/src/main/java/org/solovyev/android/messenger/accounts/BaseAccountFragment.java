@@ -19,18 +19,17 @@ package org.solovyev.android.messenger.accounts;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import com.google.inject.Inject;
+import org.solovyev.android.messenger.BaseFragment;
+import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.UiThreadEventListener;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.messenger.BaseFragment;
-import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.Threads2;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.common.listeners.AbstractJEventListener;
-
-import com.google.inject.Inject;
 
 public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFragment {
 
@@ -41,12 +40,12 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	*
 	**********************************************************************
 	*/
-	
+
 	@Nonnull
 	protected static final String ARG_ACCOUNT_ID = "account_id";
 	
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
@@ -72,7 +71,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	private A account;
 
 	@Nullable
-	private AccountEventListener accountEventListener;
+	private JEventListener<AccountEvent> accountEventListener;
 
 	protected BaseAccountFragment(int layoutResId, boolean addPadding) {
 		super(layoutResId, addPadding);
@@ -92,7 +91,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 			if (accountId != null) {
 				account = (A) accountService.getAccountById(accountId);
 
-				accountEventListener = new AccountEventListener();
+				accountEventListener = UiThreadEventListener.onUiThread(this, new AccountEventListener());
 				accountService.addListener(accountEventListener);
 			}
 		}
@@ -170,15 +169,10 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 				case state_changed:
 					if (eventAccount.equals(account)) {
 						account = (A) eventAccount;
-						Threads2.tryRunOnUiThread(BaseAccountFragment.this, new Runnable() {
-							@Override
-							public void run() {
-								final View view = getView();
-								if (view != null) {
-									onAccountStateChanged(view);
-								}
-							}
-						});
+						final View view = getView();
+						if (view != null) {
+							onAccountStateChanged(view);
+						}
 					}
 					break;
 			}

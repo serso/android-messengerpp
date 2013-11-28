@@ -17,7 +17,6 @@
 package org.solovyev.android.messenger;
 
 import android.app.Application;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -39,9 +38,10 @@ import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
-import org.solovyev.android.messenger.messages.*;
 import org.solovyev.android.messenger.messages.DefaultMessageService;
+import org.solovyev.android.messenger.messages.MessageDao;
 import org.solovyev.android.messenger.messages.MessageService;
+import org.solovyev.android.messenger.messages.SqliteMessageDao;
 import org.solovyev.android.messenger.notifications.DefaultNotificationService;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.DefaultRealmService;

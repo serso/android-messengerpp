@@ -83,7 +83,7 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 	protected void onListLoaded() {
 		super.onListLoaded();
 
-		chatEventListener = new UiThreadUserChatListener();
+		chatEventListener = UiThreadEventListener.onUiThread(this, new ChatEventListener());
 		getChatService().addListener(chatEventListener);
 	}
 
@@ -96,20 +96,15 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 		super.onStop();
 	}
 
-	private class UiThreadUserChatListener extends AbstractJEventListener<ChatEvent> {
+	private class ChatEventListener extends AbstractJEventListener<ChatEvent> {
 
-		private UiThreadUserChatListener() {
+		private ChatEventListener() {
 			super(ChatEvent.class);
 		}
 
 		@Override
 		public void onEvent(@Nonnull final ChatEvent event) {
-			Threads2.tryRunOnUiThread(BaseChatsFragment.this, new Runnable() {
-				@Override
-				public void run() {
-					getAdapter().onEvent(event);
-				}
-			});
+			getAdapter().onEvent(event);
 		}
 	}
 
