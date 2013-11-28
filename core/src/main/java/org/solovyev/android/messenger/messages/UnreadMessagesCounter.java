@@ -33,7 +33,6 @@ import org.solovyev.common.listeners.AbstractJEventListener;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +40,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.Arrays.asList;
 
 @Singleton
 public final class UnreadMessagesCounter {
@@ -137,7 +138,7 @@ public final class UnreadMessagesCounter {
 		}
 	}
 
-	private void handleReadMessage(@Nonnull Chat chat) {
+	private void onMessageRead(@Nonnull Chat chat) {
 		changeCounter(chat, -1);
 		// many messages can be read at once (e.g. chat was opened => wait a little bit for them, too)
 		fireCounterChanged(false);
@@ -163,7 +164,7 @@ public final class UnreadMessagesCounter {
 		}
 	}
 
-	private void handleNewMessages(@Nonnull Chat chat, @Nonnull List<Message> messages) {
+	private void onMessageAdded(@Nonnull Chat chat, @Nonnull List<Message> messages) {
 		int unread = 0;
 		for (Message message : messages) {
 			if (message.canRead()) {
@@ -250,13 +251,13 @@ public final class UnreadMessagesCounter {
 		public void onEvent(@Nonnull ChatEvent event) {
 			switch (event.getType()) {
 				case message_read:
-					handleReadMessage(event.getChat());
+					onMessageRead(event.getChat());
 					break;
 				case message_added:
-					handleNewMessages(event.getChat(), Arrays.asList(event.getDataAsMessage()));
+					onMessageAdded(event.getChat(), asList(event.getDataAsMessage()));
 					break;
 				case messages_added:
-					handleNewMessages(event.getChat(), event.getDataAsMessages());
+					onMessageAdded(event.getChat(), event.getDataAsMessages());
 					break;
 			}
 		}

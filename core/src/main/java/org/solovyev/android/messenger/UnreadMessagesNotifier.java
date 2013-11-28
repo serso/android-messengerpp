@@ -39,14 +39,20 @@ public final class UnreadMessagesNotifier extends AbstractJEventListener<Messeng
 
 	private static final int NOTIFICATION_ID_UNREAD_MESSAGES = 10002030;
 
+	@Inject
 	@Nonnull
-	private final Application context;
+	private MessengerListeners messengerListeners;
+
+	@Nonnull
+	private final Context context;
 
 	@Inject
-	public UnreadMessagesNotifier(@Nonnull Application context, @Nonnull MessengerListeners messengerListeners) {
+	public UnreadMessagesNotifier(@Nonnull Application context) {
 		super(MessengerEvent.class);
 		this.context = context;
+	}
 
+	public void init() {
 		messengerListeners.addListener(this);
 	}
 
@@ -66,7 +72,8 @@ public final class UnreadMessagesNotifier extends AbstractJEventListener<Messeng
 						// we are not at the top => show notification
 						final NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
 						nb.setSmallIcon(R.drawable.mpp_sb_unread_messages_icon);
-						nb.setContentText(context.getResources().getQuantityString(R.plurals.mpp_unread_messages_count_notification, unreadMessagesCount, unreadMessagesCount));
+						nb.setContentTitle(context.getResources().getQuantityString(R.plurals.mpp_unread_messages_count_notification, unreadMessagesCount, unreadMessagesCount));
+						nb.setContentText(context.getString(R.string.mpp_notification_text));
 						nb.setContentIntent(getActivity(context, 0, newUnreadMessagesStartIntent(context), 0));
 						nb.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 						final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

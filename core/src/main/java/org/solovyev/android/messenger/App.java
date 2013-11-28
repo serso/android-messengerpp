@@ -150,6 +150,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		chatService.init();
 		messageService.init();
 		syncService.init();
+		unreadMessagesNotifier.init();
 		unreadMessagesCounter.init();
 
 		if (isMonkeyRunner()) {
