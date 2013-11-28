@@ -58,6 +58,11 @@ class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
 		final Entity entity;
 		if (!isEmpty(messageId)) {
 			entity = account.newMessageEntity(messageId);
+			final Message message = messageService.getMessage(entity.getEntityId());
+			if (message != null) {
+				Log.d(TAG, "Message already merged: id: " + entity);
+				throw new IllegalArgumentException("Already merged");
+			}
 		} else {
 			entity = generateEntity(account);
 		}
