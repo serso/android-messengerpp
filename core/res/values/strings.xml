@@ -114,8 +114,11 @@
 	<string name="mpp_preferences_show_icon_in_chat_summary">If checked user icon will be shown in message bubble in
 		chat
 	</string>
+	<string name="mpp_synchronization_started">Synchronization started!</string>
 	<string name="mpp_preferences_reload_local_data_title">Reload accounts data</string>
 	<string name="mpp_preferences_reload_local_data_summary">Synchronizes local data with server</string>
+	<string name="mpp_preferences_start_on_boot_data_title">Start on boot</string>
+	<string name="mpp_preferences_start_on_boot_data_summary">If set app will start on boot</string>
 	<string name="mpp_yesterday_at">Yesterday at</string>
 	<string name="mpp_menu_settings">Settings</string>
 	<string name="mpp_menu_accounts">Accounts</string>

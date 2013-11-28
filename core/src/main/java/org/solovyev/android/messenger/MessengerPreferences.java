@@ -33,8 +33,11 @@ public final class MessengerPreferences {
 
 		Gui.theme.tryPutDefault(preferences);
 		Gui.Chat.Message.showIcon.tryPutDefault(preferences);
-
+		startOnBoot.tryPutDefault(preferences);
 	}
+
+	public static Preference<Boolean> startOnBoot = BooleanPreference.of("startOnBoot", true);
+
 
 	public static final class Security {
 		public static Preference<String> uuid = StringPreference.of("security.uuid", null);

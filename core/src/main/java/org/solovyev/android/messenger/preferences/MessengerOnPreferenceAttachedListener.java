@@ -22,9 +22,12 @@ import android.preference.PreferenceScreen;
 
 import javax.annotation.Nonnull;
 
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
+
+import static org.solovyev.android.messenger.App.showToast;
 
 
 public final class MessengerOnPreferenceAttachedListener implements PreferenceListFragment.OnPreferenceAttachedListener {
@@ -42,19 +45,19 @@ public final class MessengerOnPreferenceAttachedListener implements PreferenceLi
 
 	@Override
 	public void onPreferenceAttached(PreferenceScreen preferenceScreen, int preferenceResId) {
-		if (preferenceResId == R.xml.mpp_preferences_others) {
+		if (preferenceResId == R.xml.mpp_preferences_other) {
 			onOtherPreferencesAttached(preferenceScreen);
 		}
 	}
 
 	private void onOtherPreferencesAttached(PreferenceScreen preferenceScreen) {
-		final Preference reloadData = preferenceScreen.findPreference("reload_data");
+		final Preference reloadData = preferenceScreen.findPreference("reloadData");
 
 		reloadData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				// todo serso: show user message that action has been started
 				SyncAllAsyncTask.newForAllAccounts(context, syncService).executeInParallel((Void) null);
+				showToast(R.string.mpp_synchronization_started);
 				return true;
 			}
 		});

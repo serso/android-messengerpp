@@ -19,8 +19,13 @@
 <PreferenceScreen xmlns:a="http://schemas.android.com/apk/res/android"
 				  a:title="@string/mpp_preferences_other">
 
+	<CheckBoxPreference
+			a:key="startOnBoot"
+			a:title="@string/mpp_preferences_start_on_boot_data_title"
+			a:summary="@string/mpp_preferences_start_on_boot_data_summary"/>
+
 	<Preference
-			a:key="reload_data"
+			a:key="reloadData"
 			a:title="@string/mpp_preferences_reload_local_data_title"
 			a:summary="@string/mpp_preferences_reload_local_data_summary"/>
 

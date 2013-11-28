@@ -63,7 +63,7 @@ public final class PreferenceGroupsFragment extends BaseStaticListFragment<Prefe
 		final List<PreferenceGroupListItem> preferences = new ArrayList<PreferenceGroupListItem>();
 
 		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-appearance", R.string.mpp_preferences_appearance, R.xml.mpp_preferences_appearance, R.drawable.mpp_settings_appearance_states)));
-		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-others", R.string.mpp_preferences_other, R.xml.mpp_preferences_others, R.drawable.mpp_settings_other_states)));
+		preferences.add(new PreferenceGroupListItem(new PreferenceGroup("preferences-others", R.string.mpp_preferences_other, R.xml.mpp_preferences_other, R.drawable.mpp_settings_other_states)));
 
 		return new PreferencesAdapter(this.getActivity(), preferences);
 	}
