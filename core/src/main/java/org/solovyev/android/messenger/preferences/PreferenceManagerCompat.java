@@ -32,11 +32,6 @@ import java.lang.reflect.Method;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 8:09 PM
- */
 public class PreferenceManagerCompat {
 
 	private static final String TAG = "M++/PreferenceManagerCompat";

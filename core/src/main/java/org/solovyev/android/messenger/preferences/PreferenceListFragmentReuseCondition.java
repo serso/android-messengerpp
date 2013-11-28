@@ -20,11 +20,6 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.fragments.AbstractFragmentReuseCondition;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 8:00 PM
- */
 public final class PreferenceListFragmentReuseCondition extends AbstractFragmentReuseCondition<PreferenceListFragment> {
 
 	private final int preferenceResId;

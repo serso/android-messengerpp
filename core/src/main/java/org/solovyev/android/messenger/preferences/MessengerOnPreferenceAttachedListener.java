@@ -26,11 +26,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
 import org.solovyev.android.messenger.sync.SyncService;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 7:35 PM
- */
+
 public final class MessengerOnPreferenceAttachedListener implements PreferenceListFragment.OnPreferenceAttachedListener {
 
 	@Nonnull

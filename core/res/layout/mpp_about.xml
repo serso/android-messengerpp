@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
+			  a:layout_width="match_parent"
+			  a:layout_height="match_parent">
+
+	<TextView a:id="@+id/mpp_about_textview"
+			  a:layout_width="match_parent"
+			  a:layout_height="wrap_content"/>
+
+</ScrollView>

@@ -31,23 +31,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.solovyev.android.Views;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.BaseFragment;
 import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
 
-public class ContactsInfoFragment extends RoboSherlockFragment {
+public class ContactsInfoFragment extends BaseFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "contacts-info";
@@ -68,6 +69,7 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 	private Iterable<String> contactIds;
 
 	public ContactsInfoFragment() {
+		super(R.layout.mpp_fragment_contacts, true);
 	}
 
 	@Nonnull
@@ -85,12 +87,7 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View root = ViewFromLayoutBuilder.newInstance(R.layout.mpp_fragment_contacts).build(this.getActivity());
-
-		multiPaneManager.onCreatePane(this.getActivity(), container, root);
-
-		final int padding = this.getActivity().getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
-		root.setPadding(padding, padding, padding, padding);
+		final View root = super.onCreateView(inflater, container, savedInstanceState);
 
 		if (contacts == null) {
 			if (this.contactIds == null) {
@@ -149,8 +146,12 @@ public class ContactsInfoFragment extends RoboSherlockFragment {
 			final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon_imageview);
 			App.getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 		}
+	}
 
-		multiPaneManager.showTitle(getSherlockActivity(), this, getString(R.string.mpp_chat_participants));
+	@Nullable
+	@Override
+	protected CharSequence getFragmentTitle() {
+		return getString(R.string.mpp_chat_participants);
 	}
 }
 

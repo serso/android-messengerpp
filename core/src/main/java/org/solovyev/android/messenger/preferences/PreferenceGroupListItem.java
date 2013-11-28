@@ -65,7 +65,7 @@ public final class PreferenceGroupListItem extends BaseMessengerListItem<Prefere
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter) {
-				getEventManager(context).fire(PreferenceUiEventType.preference_group_clicked.newEvent(getData()));
+				getEventManager(context).fire(new PreferenceUiEvent.Clicked(getData()));
 			}
 		};
 	}

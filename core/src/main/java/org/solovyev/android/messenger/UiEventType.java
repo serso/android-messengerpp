@@ -24,6 +24,7 @@ public enum UiEventType {
 	new_contact,
 	exit,
 	show_settings,
+	show_about,
 	show_accounts;
 
 	@Nonnull

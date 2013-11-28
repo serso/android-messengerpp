@@ -20,11 +20,6 @@ import javax.annotation.Nonnull;
 
 import org.solovyev.android.messenger.Identifiable;
 
-/**
- * User: serso
- * Date: 3/17/13
- * Time: 5:58 PM
- */
 public final class PreferenceGroup implements Identifiable {
 
 	private static final int NO_ICON = -1;

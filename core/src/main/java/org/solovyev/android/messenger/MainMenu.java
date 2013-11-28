@@ -102,6 +102,7 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 			menuItems.add(new NotificationsMenuItem(activity));
 			menuItems.add(new UnreadMessagesCounterMenuItem());
 			menuItems.add(new SettingsMenuItem());
+			menuItems.add(new AboutMenuItem());
 			menuItems.add(new AccountsMenuItem());
 			menuItems.add(new MenuItemAppExitMenuItem());
 
@@ -233,6 +234,20 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
 			getEventManager(context).fire(UiEventType.show_settings.newEvent());
+		}
+	}
+
+	private static final class AboutMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_about;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			getEventManager(context).fire(UiEventType.show_about.newEvent());
 		}
 	}
 

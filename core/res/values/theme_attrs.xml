@@ -62,6 +62,7 @@
 		<attr name="mpp_ab_notification_icon" format="reference" />
 		<attr name="mpp_ab_new_message_icon" format="reference" />
 		<attr name="mpp_ab_settings_icon" format="reference" />
+		<attr name="mpp_ab_about_icon" format="reference" />
 		<attr name="mpp_ab_accounts_icon" format="reference" />
 	</declare-styleable>
 

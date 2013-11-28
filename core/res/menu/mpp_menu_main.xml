@@ -44,6 +44,12 @@
 			a:showAsAction="never"/>
 
 	<item
+			a:id="@+id/mpp_menu_about"
+			a:title="@string/mpp_about"
+			a:icon="?attr/mpp_ab_about_icon"
+			a:showAsAction="never"/>
+
+	<item
 			a:id="@+id/mpp_menu_app_exit"
 			a:title="@string/mpp_menu_app_exit"
 			a:showAsAction="never"/>

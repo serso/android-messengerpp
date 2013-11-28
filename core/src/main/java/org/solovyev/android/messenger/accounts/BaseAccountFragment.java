@@ -16,36 +16,23 @@
 
 package org.solovyev.android.messenger.accounts;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.BaseFragment;
 import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.MultiPaneManager;
 import org.solovyev.android.messenger.Threads2;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.tasks.TaskListeners;
-import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static org.solovyev.android.messenger.App.getTaskService;
-
-public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSherlockFragment {
+public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFragment {
 
 	/*
 	**********************************************************************
@@ -72,10 +59,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 
 	@Inject
 	@Nonnull
-	private MultiPaneManager multiPaneManager;
-
-	@Inject
-	@Nonnull
 	private EventManager eventManager;
 	
 	/*
@@ -88,22 +71,11 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 
 	private A account;
 
-	private final int layoutResId;
-
-	@Nonnull
-	private Context themeContext;
-
-	@Nonnull
-	private final TaskListeners taskListeners = new TaskListeners(getTaskService());
-
 	@Nullable
 	private AccountEventListener accountEventListener;
 
-	private final boolean addPadding;
-
 	protected BaseAccountFragment(int layoutResId, boolean addPadding) {
-		this.layoutResId = layoutResId;
-		this.addPadding = addPadding;
+		super(layoutResId, addPadding);
 	}
 
 	public BaseFragmentActivity getFragmentActivity() {
@@ -126,38 +98,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 		}
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		themeContext = new ContextThemeWrapper(activity, App.getTheme().getContentThemeResId());
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View root = ViewFromLayoutBuilder.newInstance(layoutResId).build(themeContext);
-
-		getMultiPaneManager().onCreatePane(this.getActivity(), container, root);
-
-		if (addPadding) {
-			final int padding = getThemeContext().getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
-			root.setPadding(padding, padding, padding, padding);
-		}
-
-		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-
-		return root;
-	}
-
-	@Override
-	public void onViewCreated(View root, Bundle savedInstanceState) {
-		super.onViewCreated(root, savedInstanceState);
-
-		getMultiPaneManager().showTitle(getSherlockActivity(), this, getFragmentTitle());
-	}
-
-	@Nullable
-	protected abstract CharSequence getFragmentTitle();
-
 	protected void onAccountStateChanged(@Nonnull View root) {
 		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
 		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
@@ -170,12 +110,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 		}
 	}
 
-
-	@Override
-	public void onPause() {
-		getTaskListeners().removeAllTaskListeners();
-		super.onPause();
-	}
 
 	@Override
 	public void onDestroy() {
@@ -193,27 +127,12 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends RoboSher
 	}
 
 	@Nonnull
-	public MultiPaneManager getMultiPaneManager() {
-		return multiPaneManager;
-	}
-
-	@Nonnull
 	protected EventManager getEventManager() {
 		return eventManager;
 	}
 
 	public A getAccount() {
 		return account;
-	}
-
-	@Nonnull
-	public Context getThemeContext() {
-		return themeContext;
-	}
-
-	@Nonnull
-	public TaskListeners getTaskListeners() {
-		return taskListeners;
 	}
 
 	/*

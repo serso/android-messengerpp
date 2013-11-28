@@ -18,6 +18,7 @@ package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.Fragment;
 import org.solovyev.android.fragments.FragmentDef;
+import org.solovyev.android.messenger.about.AboutItemsFragment;
 import org.solovyev.android.messenger.accounts.AccountsFragment;
 import org.solovyev.android.messenger.accounts.PickAccountFragment;
 import org.solovyev.android.messenger.chats.ChatsFragment;
@@ -38,7 +39,9 @@ public enum PrimaryFragment implements FragmentDef {
 	accounts(AccountsFragment.class, AccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts),
 	pick_account(PickAccountFragment.class, PickAccountFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, false),
 	realms(RealmsFragment.class, RealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, true),
-	settings(PreferenceGroupsFragment.class, PreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences);
+	settings(PreferenceGroupsFragment.class, PreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences),
+	about(AboutItemsFragment.class, AboutItemsFragment.FRAGMENT_TAG, R.string.mpp_about),
+	;
 
 	@Nonnull
 	private final Class<? extends Fragment> fragmentClass;

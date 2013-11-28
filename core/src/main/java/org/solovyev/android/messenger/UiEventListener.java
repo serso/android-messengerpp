@@ -17,7 +17,11 @@
 package org.solovyev.android.messenger;
 
 import com.actionbarsherlock.app.ActionBar;
+
+import org.solovyev.android.messenger.about.AboutActivity;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.preferences.PreferencesActivity;
+
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -45,7 +49,10 @@ public class UiEventListener implements EventListener<UiEvent> {
 				onNewMessageEvent();
 				break;
 			case show_settings:
-				SettingsActivity.start(activity);
+				PreferencesActivity.start(activity);
+				break;
+			case show_about:
+				AboutActivity.start(activity);
 				break;
 			case show_accounts:
 				AccountsActivity.start(activity);

@@ -19,16 +19,22 @@ package org.solovyev.android.messenger.preferences;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.solovyev.common.listeners.AbstractTypedJEvent;
+import org.solovyev.android.messenger.about.AboutType;
 
-public final class PreferenceUiEvent extends AbstractTypedJEvent<PreferenceGroup, PreferenceUiEventType> {
+interface PreferenceUiEvent {
 
-	public PreferenceUiEvent(@Nonnull PreferenceGroup eventObject, @Nonnull PreferenceUiEventType type, @Nullable Object data) {
-		super(eventObject, type, data);
-	}
+	public static class Clicked implements PreferenceUiEvent {
 
-	@Nonnull
-	public PreferenceGroup getPreferenceScreen() {
-		return getEventObject();
+		@Nonnull
+		private final PreferenceGroup group;
+
+		Clicked(@Nonnull PreferenceGroup group) {
+			this.group = group;
+		}
+
+		@Nonnull
+		public PreferenceGroup getGroup() {
+			return group;
+		}
 	}
 }

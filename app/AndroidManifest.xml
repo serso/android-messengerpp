@@ -69,8 +69,13 @@
 
 		<activity android:label="@string/mpp_app_short_name" android:launchMode="singleTask"
 				  android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
+
 		<activity android:label="@string/mpp_preferences" android:launchMode="singleTask"
-				  android:name=".SettingsActivity" android:windowSoftInputMode="stateHidden"/>
+				  android:name=".preferences.PreferencesActivity" android:windowSoftInputMode="stateHidden"/>
+
+		<activity android:label="@string/mpp_about" android:launchMode="singleTask"
+				  android:name=".about.AboutActivity" android:windowSoftInputMode="stateHidden"/>
+
 		<activity android:label="@string/mpp_accounts" android:launchMode="singleTask" android:name=".AccountsActivity"
 				  android:windowSoftInputMode="stateHidden"/>
 		<activity android:label="@string/mpp_new_contact" android:launchMode="singleTask"

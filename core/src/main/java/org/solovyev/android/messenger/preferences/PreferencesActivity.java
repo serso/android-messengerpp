@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.preferences;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
+import roboguice.event.EventListener;
+
 import com.google.inject.Inject;
+
+import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.RoboListeners;
+import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
-import org.solovyev.android.messenger.preferences.MessengerOnPreferenceAttachedListener;
-import org.solovyev.android.messenger.preferences.PreferenceListFragment;
-import org.solovyev.android.messenger.preferences.PreferenceUiEvent;
-import org.solovyev.android.messenger.preferences.PreferenceUiEventListener;
 import org.solovyev.android.messenger.sync.SyncService;
 
 import javax.annotation.Nonnull;
 
-public final class SettingsActivity extends BaseFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
+import static org.solovyev.android.messenger.preferences.MessengerPreferenceListFragment.newPreferencesListFragmentDef;
+
+public final class PreferencesActivity extends BaseFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
 
 	/*
 	**********************************************************************
@@ -46,7 +50,7 @@ public final class SettingsActivity extends BaseFragmentActivity implements Pref
 
 	public static void start(@Nonnull Activity activity) {
 		final Intent result = new Intent();
-		result.setClass(activity, SettingsActivity.class);
+		result.setClass(activity, PreferencesActivity.class);
 		activity.startActivity(result);
 	}
 
@@ -60,7 +64,7 @@ public final class SettingsActivity extends BaseFragmentActivity implements Pref
 		}
 
 		final RoboListeners listeners = getListeners();
-		listeners.add(PreferenceUiEvent.class, new PreferenceUiEventListener(this));
+		listeners.add(PreferenceUiEvent.Clicked.class, new OnPreferenceClickedListener());
 
 		initFragments();
 	}
@@ -69,5 +73,24 @@ public final class SettingsActivity extends BaseFragmentActivity implements Pref
 	@Override
 	public void onPreferenceAttached(PreferenceScreen preferenceScreen, int preferenceResId) {
 		new MessengerOnPreferenceAttachedListener(this, syncService).onPreferenceAttached(preferenceScreen, preferenceResId);
+	}
+
+	private class OnPreferenceClickedListener implements EventListener<PreferenceUiEvent.Clicked> {
+		@Override
+		public void onEvent(PreferenceUiEvent.Clicked event) {
+			final MessengerMultiPaneFragmentManager fm = getMultiPaneFragmentManager();
+
+			final PreferenceGroup group = event.getGroup();
+			final int preferencesResId = group.getPreferencesResId();
+
+			if (isDualPane()) {
+				fm.setSecondFragment(newPreferencesListFragmentDef(PreferencesActivity.this, preferencesResId, false));
+				if (isTriplePane()) {
+					fm.emptifyThirdFragment();
+				}
+			} else {
+				fm.setMainFragment(newPreferencesListFragmentDef(PreferencesActivity.this, preferencesResId, true));
+			}
+		}
 	}
 }

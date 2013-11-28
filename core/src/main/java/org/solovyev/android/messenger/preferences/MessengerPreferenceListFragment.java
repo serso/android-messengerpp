@@ -35,7 +35,7 @@ import roboguice.RoboGuice;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class MainPreferenceListFragment extends PreferenceListFragment {
+public final class MessengerPreferenceListFragment extends PreferenceListFragment {
 
     /*
 	**********************************************************************
@@ -49,14 +49,14 @@ public final class MainPreferenceListFragment extends PreferenceListFragment {
 	@Nonnull
 	private MultiPaneManager multiPaneManager;
 
-	public MainPreferenceListFragment() {
+	public MessengerPreferenceListFragment() {
 		super();
 	}
 
 	@Nonnull
 	public static MultiPaneFragmentDef newPreferencesListFragmentDef(@Nonnull Context context, int preferencesResId, boolean addToBackStack) {
 		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, App.getTheme().getContentThemeResId());
-		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MainPreferenceListFragment.class, context, arguments, PreferenceListFragmentReuseCondition.newInstance(preferencesResId));
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MessengerPreferenceListFragment.class, context, arguments, PreferenceListFragmentReuseCondition.newInstance(preferencesResId));
 	}
 
 	@Override
