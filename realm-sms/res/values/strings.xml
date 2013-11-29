@@ -20,7 +20,7 @@
 	<string name="mpp_sms_composite_dialog_title">Choose phone number</string>
 	<string name="mpp_sms_incoming_call">User called you</string>
 	<string name="mpp_sms_outgoing_call">You called user</string>
-	<string name="mpp_sms_phone_must_be_set">Phone number must be set!</string>
+	<string name="mpp_sms_phone_must_be_set">Phone number must be set</string>
 	<string name="mpp_sms_first_name">First name</string>
 	<string name="mpp_sms_last_name">Last name</string>
 	<string name="mpp_sms_phone">Phone</string>
