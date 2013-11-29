@@ -7,4 +7,3 @@ Source code is available on github: https://github.com/serso/android-messengerpp
 If you want to help translating project, please, visit the following link: http://crowdin.net/project/messengerpp
 
 If you have any suggestions or found a bug, please, leave a note on github: https://github.com/serso/android-messengerpp/issues
-
