@@ -19,9 +19,7 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
@@ -127,7 +125,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	@Nonnull
 	protected CharSequence getFragmentTitle() {
 		final String realmName = getString(getRealm().getNameResId());
-		return getString(R.string.mpp_realm_configuration, realmName);
+		return getString(R.string.mpp_account_configuration, realmName);
 	}
 
 }

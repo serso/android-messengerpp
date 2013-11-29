@@ -17,14 +17,14 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
-import android.util.Log;
+
 import com.google.common.base.Function;
 
 import org.solovyev.android.messenger.BaseListItemAdapter;
-import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.core.R;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +42,7 @@ public class PickAccountFragment extends BaseAccountsFragment {
 	private static final String ARG_ACCOUNT_IDS = "account_ids";
 
 	public PickAccountFragment() {
-		super("PickAccount", false, true);
+		super("PickAccount", R.string.mpp_pick_account, false, true);
 	}
 
 	@Nonnull

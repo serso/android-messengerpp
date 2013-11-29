@@ -34,12 +34,12 @@ import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 
 public enum PrimaryFragment implements FragmentDef {
 
-	contacts(ContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_tab_contacts),
-	messages(ChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_tab_messages),
-	accounts(AccountsFragment.class, AccountsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts),
-	pick_account(PickAccountFragment.class, PickAccountFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, false),
-	realms(RealmsFragment.class, RealmsFragment.FRAGMENT_TAG, R.string.mpp_tab_accounts, true),
-	settings(PreferenceGroupsFragment.class, PreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_tab_preferences),
+	contacts(ContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_contacts),
+	messages(ChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_messages),
+	accounts(AccountsFragment.class, AccountsFragment.FRAGMENT_TAG, R.string.mpp_accounts),
+	pick_account(PickAccountFragment.class, PickAccountFragment.FRAGMENT_TAG, R.string.mpp_pick_account, false),
+	realms(RealmsFragment.class, RealmsFragment.FRAGMENT_TAG, R.string.mpp_accounts, true),
+	settings(PreferenceGroupsFragment.class, PreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_preferences),
 	about(AboutItemsFragment.class, AboutItemsFragment.FRAGMENT_TAG, R.string.mpp_about),
 	;
 

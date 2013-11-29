@@ -37,6 +37,6 @@ public class TaskIsAlreadyRunningException extends Exception {
 	}
 
 	public void showMessage() {
-		showToast(R.string.mpp_task_is_already_running);
+		showToast(R.string.mpp_synchronization_is_already_running);
 	}
 }

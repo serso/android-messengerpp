@@ -21,7 +21,6 @@ import android.support.v4.app.Fragment;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.messenger.BaseStaticListFragment;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -40,8 +39,8 @@ public abstract class BaseAccountsFragment extends BaseStaticListFragment<Accoun
 	@Nullable
 	private JEventListener<AccountEvent> accountEventListener;
 
-	public BaseAccountsFragment(@Nonnull String tag, boolean filterEnabled, boolean selectFirstItemByDefault) {
-		super(tag, R.string.mpp_accounts, filterEnabled, selectFirstItemByDefault);
+	public BaseAccountsFragment(@Nonnull String tag, int titleResId, boolean filterEnabled, boolean selectFirstItemByDefault) {
+		super(tag, titleResId, filterEnabled, selectFirstItemByDefault);
 	}
 
 	@Nonnull

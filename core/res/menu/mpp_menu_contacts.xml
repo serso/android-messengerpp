@@ -20,7 +20,7 @@
 
 	<item
 			a:id="@+id/mpp_menu_toggle_filter_box"
-			a:title="@string/mpp_menu_search"
+			a:title="@string/mpp_search"
 			a:icon="?attr/mpp_ab_search_icon"
 			a:showAsAction="always"/>
 

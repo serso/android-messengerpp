@@ -44,7 +44,7 @@ public class AccountsFragment extends BaseAccountsFragment {
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	public AccountsFragment() {
-		super("Accounts", false, true);
+		super("Accounts", R.string.mpp_accounts, false, true);
 	}
 
 	@Override
