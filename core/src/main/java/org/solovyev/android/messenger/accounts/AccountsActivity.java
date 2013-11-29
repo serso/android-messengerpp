@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import org.solovyev.android.messenger.accounts.AccountUiEvent;
-import org.solovyev.android.messenger.accounts.AccountUiEventListener;
+import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.RoboListeners;
+import org.solovyev.android.messenger.UiEvent;
+import org.solovyev.android.messenger.UiEventListener;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.realms.RealmUiEvent;
 import org.solovyev.android.messenger.realms.RealmUiEventListener;
 
 import javax.annotation.Nonnull;
-
-import com.actionbarsherlock.app.ActionBar;
 
 public final class AccountsActivity extends BaseFragmentActivity {
 

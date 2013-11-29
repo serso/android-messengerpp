@@ -50,7 +50,7 @@
 		<activity android:label="@string/mpp_app_name" android:name=".StartActivity"
 				  android:windowSoftInputMode="adjustPan">
 
-		<intent-filter>
+			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
@@ -76,8 +76,10 @@
 		<activity android:label="@string/mpp_about" android:launchMode="singleTask"
 				  android:name=".about.AboutActivity" android:windowSoftInputMode="stateHidden"/>
 
-		<activity android:label="@string/mpp_accounts" android:launchMode="singleTask" android:name=".AccountsActivity"
+		<activity android:label="@string/mpp_accounts" android:launchMode="singleTask"
+				  android:name=".accounts.AccountsActivity"
 				  android:windowSoftInputMode="stateHidden"/>
+
 		<activity android:label="@string/mpp_new_contact" android:launchMode="singleTask"
 				  android:name=".NewContactActivity" android:windowSoftInputMode="stateHidden"/>
 

@@ -17,11 +17,10 @@
 package org.solovyev.android.messenger;
 
 import com.actionbarsherlock.app.ActionBar;
-
 import org.solovyev.android.messenger.about.AboutActivity;
+import org.solovyev.android.messenger.accounts.AccountsActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.PreferencesActivity;
-
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;

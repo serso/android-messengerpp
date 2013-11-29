@@ -32,7 +32,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.solovyev.android.messenger.messages.Messages.newIncomingMessage;
+import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 import static org.solovyev.android.messenger.users.Users.newUser;
 
 public class TestAccountService implements AccountUserService, AccountChatService {
@@ -168,7 +171,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	@Nonnull
 	@Override
 	public List<User> getOnlineUsers() {
-		return Collections.emptyList();
+		return getContacts().subList(0, 10);
 	}
 
 	@Nonnull
@@ -198,7 +201,46 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	@Nonnull
 	@Override
 	public List<AccountChat> getChats() {
-		return Collections.emptyList();
+		final AtomicInteger index = new AtomicInteger();
+
+		final List<User> contacts = getContacts();
+		final User user = account.getUser();
+
+		final List<AccountChat> chats = new ArrayList<AccountChat>();
+		chats.add(createChat(index, contacts, user));
+		chats.add(createChat(index, contacts, user));
+		return chats;
+	}
+
+	private MutableAccountChat createChat(@Nonnull AtomicInteger index, @Nonnull List<User> contacts, @Nonnull User user) {
+		final int id = index.getAndIncrement();
+		final User contact = contacts.get(id);
+
+		final MutableAccountChat chat = Chats.newAccountChat(account.newChatEntity(String.valueOf(id)), true);
+		chat.addParticipant(user);
+		chat.addParticipant(contact);
+
+		switch (id) {
+			case 0:
+				chat.addMessage(newIncomingMessage(account, chat.getChat(), "What did you have for breakfast?", null, contact.getEntity()));
+				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "Chicken liver and mashed potatoes with chocolate milk and a pineapple.", null));
+				break;
+			case 1:
+				chat.addMessage(newIncomingMessage(account, chat.getChat(), "What are you talking about Tema?", null, contact.getEntity()));
+				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "My two cats.", null));
+				break;
+			case 2:
+				chat.addMessage(newIncomingMessage(account, chat.getChat(), "Why do you boast of mischief, mighty man?", null, contact.getEntity()).cloneRead());
+				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "I say it because I don't like you.", null));
+				break;
+			case 3:
+				chat.addMessage(newIncomingMessage(account, chat.getChat(), "Will you make me a cup of coffee?", null, contact.getEntity()));
+				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "No.", null));
+				chat.addMessage(newIncomingMessage(account, chat.getChat(), "Why?", null, contact.getEntity()));
+				break;
+		}
+
+		return chat;
 	}
 
 	@Nonnull

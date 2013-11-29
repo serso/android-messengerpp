@@ -19,8 +19,10 @@ package org.solovyev.android.messenger.realms.test;
 import android.content.Context;
 import android.widget.ImageView;
 import com.google.inject.Singleton;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.accounts.connection.AccountConnection;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.icons.RealmIconService;
@@ -39,7 +41,7 @@ public class TestRealm extends AbstractRealm {
 	public static final String REALM_ID = "test";
 
 	public TestRealm() {
-		super(REALM_ID, 0, 0, TestAccountConfigurationFragment.class, TestAccountConfiguration.class, false, null);
+		super(REALM_ID, R.string.mpp_test_account, R.drawable.mpp_test_realm, TestAccountConfigurationFragment.class, TestAccountConfiguration.class, false, null);
 	}
 
 	@Nonnull
@@ -70,11 +72,36 @@ public class TestRealm extends AbstractRealm {
 		return new RealmIconService() {
 			@Override
 			public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
+				imageView.setImageDrawable(App.getApplication().getResources().getDrawable(getContactIconResId(user)));
+			}
 
+			private int getContactIconResId(User user) {
+				int iconResId = R.drawable.mpp_icon_user;
+
+				try {
+					final Integer accountEntityId = Integer.valueOf(user.getEntity().getAccountEntityId());
+					switch (accountEntityId) {
+						case 0:
+							iconResId = R.drawable.mpp_test_contact_0_icon;
+							break;
+						case 1:
+							iconResId = R.drawable.mpp_test_contact_1_icon;
+							break;
+						case 2:
+							iconResId = R.drawable.mpp_test_contact_2_icon;
+							break;
+						case 3:
+							iconResId = R.drawable.mpp_test_contact_3_icon;
+							break;
+					}
+				} catch (NumberFormatException e) {
+				}
+				return iconResId;
 			}
 
 			@Override
 			public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
+				imageView.setImageDrawable(App.getApplication().getResources().getDrawable(getContactIconResId(user)));
 			}
 
 			@Override
@@ -83,7 +110,7 @@ public class TestRealm extends AbstractRealm {
 
 			@Override
 			public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
-				//To change body of implemented methods use File | Settings | File Templates.
+				imageView.setImageDrawable(App.getApplication().getResources().getDrawable(R.drawable.mpp_icon_users));
 			}
 		};
 	}
