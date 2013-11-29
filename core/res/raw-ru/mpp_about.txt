@@ -1,0 +1,9 @@
+Мессенджер++ - это мультипротокольный открытый мессенджер для Android.
+
+Создан и поддерживается Соловьёвым Сергеем (email: se.solovyev@gmail.com, персональная страница: http://se.solovyev.org/).
+
+Исходный код доступен на github: https://github.com/serso/android-messengerpp. Если вы  хотите поучаствовать в разработке, пожалуйста, напишите письмо сюда: se.solovyev@gmail.com.
+
+Если вы хотите помочь перевести приложение, пожалуйста, посетите следующую ссылку: http://crowdin.net/project/messengerpp
+
+Если у вас есть предложения или вы нашли баг, пожалуйста, оставьте заметку на github: https://github.com/serso/android-messengerpp/issues

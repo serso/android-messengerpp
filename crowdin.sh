@@ -15,11 +15,20 @@ function copyTranslation {
     cp $from $to
 }
 
-copyTranslation "translations/en/strings.xml" "core/res/values"
-copyTranslation "translations/en/raw/*" "core/res/raw"
-copyTranslation "translations/en/sms/*" "realm-sms/res/values"
-copyTranslation "translations/en/vk/*" "realm-vk/res/values"
-copyTranslation "translations/en/xmpp/*" "realm-xmpp/res/values"
+function copyTranslations {
+    language=$1
+    resourcePostfix=$2
+
+	copyTranslation "translations/$language/strings.xml" "core/res/values$resourcePostfix"
+	copyTranslation "translations/$language/raw/*" "core/res/raw$resourcePostfix"
+	copyTranslation "translations/$language/sms/*" "realm-sms/res/values$resourcePostfix"
+	copyTranslation "translations/$language/vk/*" "realm-vk/res/values$resourcePostfix"
+	copyTranslation "translations/$language/xmpp/*" "realm-xmpp/res/values$resourcePostfix"
+}
+
+
+copyTranslations "en" ""
+copyTranslations "ru" "-ru"
 
 
 rm -r translations
