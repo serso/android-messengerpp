@@ -41,6 +41,8 @@ import static org.solovyev.android.messenger.messages.MessagesMock.newMockMessag
 
 public class MessageDaoTest extends DefaultDaoTest<Message> {
 
+	private static final int MILLIS_IN_MINUTE = 60000;
+
 	@Inject
 	@Nonnull
 	private SqliteMessageDao dao;
@@ -127,13 +129,13 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 	}
 
 	@Test
-	public void testShouldReturnSameMessageWithinASecond() throws Exception {
+	public void testShouldReturnSameMessageWithinAMinute() throws Exception {
 		final AccountData ad = getAccountData1();
 		final AccountChat chat = ad.getChats().get(0);
 		final Message expected = chat.getMessages().get(0);
 
-		checkSameMessage(expected, expected.getSendDate().minus(999));
-		checkSameMessage(expected, expected.getSendDate().plus(999));
+		checkSameMessage(expected, expected.getSendDate().minus(MILLIS_IN_MINUTE - 1));
+		checkSameMessage(expected, expected.getSendDate().plus(MILLIS_IN_MINUTE - 1));
 	}
 
 	@Test
@@ -142,8 +144,8 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 		final AccountChat chat = ad.getChats().get(0);
 		final Message expected = chat.getMessages().get(0);
 
-		assertNull(dao.readSameMessage(expected.getBody(), expected.getSendDate().minus(1000), expected.getAuthor(), expected.getRecipient()));
-		assertNull(dao.readSameMessage(expected.getBody(), expected.getSendDate().plus(1000), expected.getAuthor(), expected.getRecipient()));
+		assertNull(dao.readSameMessage(expected.getBody(), expected.getSendDate().minus(MILLIS_IN_MINUTE), expected.getAuthor(), expected.getRecipient()));
+		assertNull(dao.readSameMessage(expected.getBody(), expected.getSendDate().plus(MILLIS_IN_MINUTE), expected.getAuthor(), expected.getRecipient()));
 	}
 
 

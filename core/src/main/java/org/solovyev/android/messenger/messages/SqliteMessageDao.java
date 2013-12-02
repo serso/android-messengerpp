@@ -601,7 +601,7 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
 			final String sendTime = String.valueOf(this.sendTime.getMillis());
-			return db.query("messages", null, "body = ? and author_id = ? and recipient_id = ? and abs(send_time - ?) < 1000", new String[]{body, author.getEntityId(), recipient.getEntityId(), sendTime}, null, null, null);
+			return db.query("messages", null, "body = ? and author_id = ? and recipient_id = ? and abs(send_time - ?) < 60000", new String[]{body, author.getEntityId(), recipient.getEntityId(), sendTime}, null, null, null);
 		}
 
 		@Nonnull
