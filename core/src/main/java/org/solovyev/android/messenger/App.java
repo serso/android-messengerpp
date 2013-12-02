@@ -63,7 +63,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static final String TAG_TIME = App.newTag("Time");
 
-	private static final boolean MONKEY_RUNNER = true;
+	private static final boolean MONKEY_RUNNER = false;
 
 	@Nonnull
 	private static App instance = new App();
