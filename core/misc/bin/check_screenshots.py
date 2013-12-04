@@ -3,7 +3,7 @@ import time
 
 import sys
 import subprocess
-
+import os.path
 import config
 
 out_folder = sys.argv[1]
@@ -16,9 +16,15 @@ ACCEPTANCE = 0.99
 
 def check_screenshot(filename_postfix):
     new_filename = out_folder + '/' + device_name + '_' + filename_postfix + '.png'
+    if not os.path.isfile(new_filename):
+        print('Image ' + new_filename + " doesn't exist, skipping.")
+        return
     new_screenshot = MonkeyRunner.loadImageFromFile(new_filename)
 
     old_filename = in_folder + '/' + device_name + '_' + filename_postfix + '.png'
+    if not os.path.isfile(old_filename):
+        print('Image ' + old_filename + " doesn't exist, skipping.")
+        return
     old_screenshot = MonkeyRunner.loadImageFromFile(old_filename)
 
     print("Comparing: " + old_filename + " and " + new_filename)

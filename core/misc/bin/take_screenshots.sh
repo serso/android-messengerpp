@@ -2,7 +2,7 @@
 
 scale=0.51
 
-names=(Nexus-4 Nexus-7)
+names=(Android-2.3 Nexus-4 Nexus-7)
 for name in ${names[*]}
 do
      $ANDROID_HOME/tools/emulator -ports 5580,5581 -avd $name -scale $scale &

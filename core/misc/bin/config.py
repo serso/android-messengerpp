@@ -27,6 +27,7 @@ def get_device_actions():
 def open_menu(device):
     start_activity(device, '.StartActivity')
     device.press('KEYCODE_MENU', "DOWN_AND_UP")
+    time.sleep(3)
 
 
 def vertical_scroll(device):
@@ -48,8 +49,8 @@ def open_contacts_filter(device):
 
 
 def start_activity(device, activity):
-    run_component = get_package() + '/' + activity
-    device.startActivity(run_component)
+    run_component = get_package() + '/' + get_package() + activity
+    device.startActivity(component=run_component)
     time.sleep(5)
 
 

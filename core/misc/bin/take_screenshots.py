@@ -31,7 +31,7 @@ if device:
     for name, action in config.get_actions(device_name).iteritems():
         print('Running action: ' + name)
         action(device)
-        MonkeyRunner.sleep(1)
+        time.sleep(3)
 
         take_screenshot(name)
         device.shell('am force-stop ' + config.get_package())

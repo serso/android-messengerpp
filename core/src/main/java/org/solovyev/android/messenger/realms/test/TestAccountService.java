@@ -17,14 +17,15 @@
 package org.solovyev.android.messenger.realms.test;
 
 import com.google.common.base.Splitter;
+import org.joda.time.DateTime;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
+import org.solovyev.android.messenger.messages.Messages;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.users.AccountUserService;
 import org.solovyev.android.messenger.users.User;
-import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
@@ -33,10 +34,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static org.solovyev.android.messenger.messages.Messages.newIncomingMessage;
-import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
-import static org.solovyev.android.messenger.users.Users.newUser;
+import static org.joda.time.DateTime.now;
+import static org.solovyev.android.messenger.users.Users.*;
 
 public class TestAccountService implements AccountUserService, AccountChatService {
 
@@ -142,6 +143,9 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 			"Adam Ornelas\n";
 
 	@Nonnull
+	private static AtomicLong nextSendDate = new AtomicLong(now().getMillis());
+
+	@Nonnull
 	private final TestAccount account;
 
 	public TestAccountService(@Nonnull TestAccount account) {
@@ -161,7 +165,10 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 		int index = 0;
 		for (String contactName : Splitter.on('\n').split(contactNames)) {
 			final List<AProperty> properties = new ArrayList<AProperty>();
-			Users.tryParseNameProperties(properties, contactName);
+			tryParseNameProperties(properties, contactName);
+			if (index % 2 == 0) {
+				properties.add(newOnlineProperty(true));
+			}
 			contacts.add(newUser(account.newUserEntity(String.valueOf(index)), properties));
 			index++;
 		}
@@ -171,7 +178,13 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	@Nonnull
 	@Override
 	public List<User> getOnlineUsers() {
-		return getContacts().subList(0, 10);
+		final List<User> contacts = new ArrayList<User>();
+		for (User contact : getContacts()) {
+			if (contact.isOnline()) {
+				contacts.add(contact);
+			}
+		}
+		return contacts;
 	}
 
 	@Nonnull
@@ -209,6 +222,8 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 		final List<AccountChat> chats = new ArrayList<AccountChat>();
 		chats.add(createChat(index, contacts, user));
 		chats.add(createChat(index, contacts, user));
+		chats.add(createChat(index, contacts, user));
+		chats.add(createChat(index, contacts, user));
 		return chats;
 	}
 
@@ -222,25 +237,44 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 		switch (id) {
 			case 0:
-				chat.addMessage(newIncomingMessage(account, chat.getChat(), "What did you have for breakfast?", null, contact.getEntity()));
-				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "Chicken liver and mashed potatoes with chocolate milk and a pineapple.", null));
+				chat.addMessage(newIncomingMessage(contact, chat, "What did you have for breakfast?"));
+				chat.addMessage(newOutgoingMessage(chat, "Chicken liver and mashed potatoes with chocolate milk and a pineapple."));
 				break;
 			case 1:
-				chat.addMessage(newIncomingMessage(account, chat.getChat(), "What are you talking about Tema?", null, contact.getEntity()));
-				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "My two cats.", null));
+				chat.addMessage(newIncomingMessage(contact, chat, "What are you talking about Tema?"));
+				chat.addMessage(newOutgoingMessage(chat, "My two cats."));
 				break;
 			case 2:
-				chat.addMessage(newIncomingMessage(account, chat.getChat(), "Why do you boast of mischief, mighty man?", null, contact.getEntity()).cloneRead());
-				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "I say it because I don't like you.", null));
+				chat.addMessage(newIncomingMessage(contact, chat, "Why do you boast of mischief, mighty man?").cloneRead());
+				chat.addMessage(newOutgoingMessage(chat, "I say it because I don't like you."));
 				break;
 			case 3:
-				chat.addMessage(newIncomingMessage(account, chat.getChat(), "Will you make me a cup of coffee?", null, contact.getEntity()));
-				chat.addMessage(newOutgoingMessage(account, chat.getChat(), "No.", null));
-				chat.addMessage(newIncomingMessage(account, chat.getChat(), "Why?", null, contact.getEntity()));
+				chat.addMessage(newIncomingMessage(contact, chat, "Will you make me a cup of coffee?"));
+				chat.addMessage(newOutgoingMessage(chat, "No."));
+				chat.addMessage(newIncomingMessage(contact, chat, "Why?"));
 				break;
 		}
 
 		return chat;
+	}
+
+	@Nonnull
+	private MutableMessage newOutgoingMessage(@Nonnull MutableAccountChat chat, @Nonnull String textBody) {
+		final MutableMessage message = Messages.newOutgoingMessage(account, chat.getChat(), textBody, null);
+		message.setSendDate(getNextSendDate());
+		return message;
+	}
+
+	@Nonnull
+	private DateTime getNextSendDate() {
+		return new DateTime(nextSendDate.getAndAdd(10000L));
+	}
+
+	@Nonnull
+	private MutableMessage newIncomingMessage(@Nonnull User contact, @Nonnull MutableAccountChat chat, @Nonnull String textBody) {
+		final MutableMessage message = Messages.newIncomingMessage(account, chat.getChat(), textBody, null, contact.getEntity());
+		message.setSendDate(getNextSendDate());
+		return message;
 	}
 
 	@Nonnull
