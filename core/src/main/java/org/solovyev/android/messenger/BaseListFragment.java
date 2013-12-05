@@ -195,7 +195,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	private boolean viewWasCreated = false;
 
-	@Nonnull
+	@Nullable
 	private AdapterSelection<LI> restoredAdapterSelection;
 
 	@Nullable
@@ -353,6 +353,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	@Override
 	public ViewGroup onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
+		Log.d(tag, "onCreateView");
 		final LinearLayout root = new LinearLayout(themeContext);
 		root.setOrientation(VERTICAL);
 
@@ -381,8 +382,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 		initViewStates(savedInstanceState);
 
-		viewWasCreated = true;
-
 		return root;
 	}
 
@@ -395,6 +394,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
+		Log.d(tag, "onViewCreated");
+		viewWasCreated = true;
 
 		if (listViewFilter != null) {
 			listViewFilter.onViewCreated();
@@ -554,28 +555,32 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	private void initViewStates(@Nullable Bundle savedInstanceState) {
-		final AdapterSelection<LI> selection = adapter.getSelectionHelper().getSelection();
-		final int position = selection.getPosition();
+		if (restoredAdapterSelection == null) {
+			final AdapterSelection<LI> selection = adapter.getSelectionHelper().getSelection();
+			final int position = selection.getPosition();
 
-		if (position < 0) {
-			final int defaultPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION;
-			if (savedInstanceState != null) {
-				restoredAdapterSelection = restoreSelection(savedInstanceState, defaultPosition);
+			if (position < 0) {
+				final int defaultPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION;
+				if (savedInstanceState != null) {
+					restoredAdapterSelection = restoreSelection(savedInstanceState, defaultPosition);
+				} else {
+					restoredAdapterSelection = newSelection(defaultPosition, null, null);
+				}
 			} else {
-				restoredAdapterSelection = newSelection(defaultPosition, null, null);
+				// adapter already has selection
+				restoredAdapterSelection = selection;
 			}
-		} else {
-			// adapter already has selection
-			restoredAdapterSelection = selection;
 		}
 
-		Log.d(tag, "Restored adapter selection: " + restoredAdapterSelection);
-
-		if (savedInstanceState != null) {
-			restoredListViewState = savedInstanceState.getParcelable(BUNDLE_LISTVIEW_STATE);
-		} else {
-			restoredListViewState = null;
+		if (restoredListViewState == null) {
+			if (savedInstanceState != null) {
+				restoredListViewState = savedInstanceState.getParcelable(BUNDLE_LISTVIEW_STATE);
+			} else {
+				restoredListViewState = null;
+			}
 		}
+
+		Log.d(tag, "Restoring view states:\nselection=" + restoredAdapterSelection + "\nlist view state=" + restoredListViewState);
 	}
 
 	@Override
@@ -625,6 +630,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		listeners.clearAll();
 		restoredAdapterSelection = adapter.getSelectionHelper().getSelection();
 		restoredListViewState = createListViewState();
+		Log.d(tag, "Saving view states:\nselection=" + restoredAdapterSelection + "\nlist view state=" + restoredListViewState);
 		super.onPause();
 	}
 
@@ -633,14 +639,19 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	protected void onListLoaded() {
+		Log.d(tag, "onListLoaded");
 		final Activity activity = getActivity();
 
 		if (activity != null && !activity.isFinishing() && !isDetached() && viewWasCreated) {
+			Log.d(tag, "Restoring list properties");
 			restoreListViewState();
 
-			restoreAdapterSelection(activity, restoredAdapterSelection);
+			if (restoredAdapterSelection != null) {
+				restoreAdapterSelection(activity, restoredAdapterSelection);
+			}
 			onListLoadedCallNeeded = false;
 		} else {
+			Log.d(tag, "onListLoaded should be called again");
 			onListLoadedCallNeeded = true;
 		}
 	}
@@ -659,6 +670,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				position = selectedPosition;
 			}
 
+			Log.d(tag, "Restoring adapter: position=" + position);
 			initialClickItem(activity, position, adapter);
 
 			registerAdapterChangedObserver();
@@ -669,6 +681,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		final ListView listView = getListViewById();
 		final Parcelable listViewState = restoredListViewState;
 		if (listView != null) {
+			Log.d(tag, "Restoring list view(size=" + listView.getCount() + "): " + listViewState);
 			if (listViewState != null) {
 				listView.onRestoreInstanceState(listViewState);
 			} else {
@@ -749,6 +762,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		uiHandler.post(new Runnable() {
 			@Override
 			public void run() {
+
+				Log.d(tag, "Initial click: position=" + position);
 				if (position >= 0 && position < adapter.getCount()) {
 					adapter.getSelectionHelper().onItemClick(position);
 				}

@@ -39,13 +39,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.UiEventType.new_contact;
 
 public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiContact, ContactListItem> implements DetachableFragment {
 
 	@Nonnull
-	private static String TAG = newTag("ContactsFragment");
+	private static String TAG = "ContactsFragment";
 
 	private ActivityMenu<Menu, MenuItem> menu;
 

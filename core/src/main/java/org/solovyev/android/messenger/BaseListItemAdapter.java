@@ -132,7 +132,15 @@ public class BaseListItemAdapter<LI extends ListItem & Identifiable> extends Lis
 
 	@Override
 	public long getItemId(int position) {
-		return getItem(position).getId().hashCode();
+		return intToPositiveLong(getItem(position).getId().hashCode());
+	}
+
+	static long intToPositiveLong(int value) {
+		if (value >= 0) {
+			return value;
+		} else {
+			return (long) Integer.MAX_VALUE - value;
+		}
 	}
 
 	@Nonnull
