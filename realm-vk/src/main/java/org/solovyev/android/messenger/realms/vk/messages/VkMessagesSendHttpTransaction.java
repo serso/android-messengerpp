@@ -27,15 +27,8 @@ import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 6/25/12
- * Time: 11:25 PM
- */
 public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<String> {
 
 	@Nonnull
@@ -44,8 +37,8 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 	@Nonnull
 	private final Chat chat;
 
-	public VkMessagesSendHttpTransaction(@Nonnull VkAccount realm, @Nonnull Message message, @Nonnull Chat chat) {
-		super(realm, "messages.send");
+	public VkMessagesSendHttpTransaction(@Nonnull VkAccount account, @Nonnull Message message, @Nonnull Chat chat) {
+		super(account, "messages.send");
 		this.message = message;
 		this.chat = chat;
 	}
@@ -55,24 +48,17 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 	public List<NameValuePair> getRequestParameters() {
 		final List<NameValuePair> result = super.getRequestParameters();
 
-		try {
-
-			if (chat.isPrivate()) {
-				result.add(new BasicNameValuePair("uid", chat.getSecondUser().getAccountEntityId()));
-			}
-
-			if (!chat.isPrivate()) {
-				result.add(new BasicNameValuePair("chat_id", chat.getEntity().getAccountEntityId()));
-			}
-
-			result.add(new BasicNameValuePair("message", URLEncoder.encode(message.getBody(), "utf-8")));
-
-			result.add(new BasicNameValuePair("title", URLEncoder.encode(message.getTitle(), "utf-8")));
-			result.add(new BasicNameValuePair("type", message.isPrivate() ? "0" : "1"));
-
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
+		if (chat.isPrivate()) {
+			result.add(new BasicNameValuePair("uid", chat.getSecondUser().getAccountEntityId()));
 		}
+
+		if (!chat.isPrivate()) {
+			result.add(new BasicNameValuePair("chat_id", chat.getEntity().getAccountEntityId()));
+		}
+
+		result.add(new BasicNameValuePair("message", message.getBody()));
+		result.add(new BasicNameValuePair("title", message.getTitle()));
+		result.add(new BasicNameValuePair("type", message.isPrivate() ? "0" : "1"));
 
 		return result;
 	}
