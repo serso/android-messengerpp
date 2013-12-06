@@ -33,7 +33,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.joda.time.DateTime.now;
@@ -214,28 +213,23 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	@Nonnull
 	@Override
 	public List<AccountChat> getChats() {
-		final AtomicInteger index = new AtomicInteger();
-
 		final List<User> contacts = getContacts();
 		final User user = account.getUser();
 
 		final List<AccountChat> chats = new ArrayList<AccountChat>();
-		chats.add(createChat(index, contacts, user));
-		chats.add(createChat(index, contacts, user));
-		chats.add(createChat(index, contacts, user));
-		chats.add(createChat(index, contacts, user));
+		for (int i = 0; i < contacts.size(); i++) {
+			User contact = contacts.get(i);
+			chats.add(createChat(user, contact, i, contacts.size()));
+		}
 		return chats;
 	}
 
-	private MutableAccountChat createChat(@Nonnull AtomicInteger index, @Nonnull List<User> contacts, @Nonnull User user) {
-		final int id = index.getAndIncrement();
-		final User contact = contacts.get(id);
-
-		final MutableAccountChat chat = Chats.newAccountChat(account.newChatEntity(String.valueOf(id)), true);
+	private MutableAccountChat createChat(@Nonnull User user, @Nonnull User contact, int position, int size) {
+		final MutableAccountChat chat = Chats.newAccountChat(account.newChatEntity(contact.getId()), true);
 		chat.addParticipant(user);
 		chat.addParticipant(contact);
 
-		switch (id) {
+		switch (size - position - 1) {
 			case 0:
 				chat.addMessage(newIncomingMessage(contact, chat, "What did you have for breakfast?"));
 				chat.addMessage(newOutgoingMessage(chat, "Chicken liver and mashed potatoes with chocolate milk and a pineapple."));
@@ -252,6 +246,15 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 				chat.addMessage(newIncomingMessage(contact, chat, "Will you make me a cup of coffee?"));
 				chat.addMessage(newOutgoingMessage(chat, "No."));
 				chat.addMessage(newIncomingMessage(contact, chat, "Why?"));
+				break;
+			case 4:
+				chat.addMessage(newIncomingMessage(contact, chat, "Hi, how are you?"));
+				break;
+			case 5:
+				chat.addMessage(newOutgoingMessage(chat, "Haven't heard from you for ages!"));
+				break;
+			default:
+				chat.addMessage(newIncomingMessage(contact, chat, "Hi! My name is " + contact.getDisplayName()).cloneRead());
 				break;
 		}
 

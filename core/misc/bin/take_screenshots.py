@@ -28,6 +28,10 @@ if device:
     device.removePackage(package)
     device.installPackage(apk_location)
 
+    config.start_activity(device, config.get_start_activity())
+    time.sleep(7)
+    device.shell('am force-stop ' + config.get_package())
+
     for name, action in config.get_actions(device_name).iteritems():
         print('Running action: ' + name)
         action(device)

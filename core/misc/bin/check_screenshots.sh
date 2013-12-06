@@ -2,6 +2,8 @@
 
 scale=0.51
 
+rm -f ../screenshots-failed/*.png
+
 names=(Android-2.3 Nexus-4 Nexus-7)
 for name in ${names[*]}
 do
