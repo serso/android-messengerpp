@@ -278,10 +278,15 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	protected ListView getListViewById() {
 		final View view = getView();
 		if (view != null) {
-			return (ListView) view.findViewById(android.R.id.list);
+			return getListView(view);
 		} else {
 			return null;
 		}
+	}
+
+	@Nonnull
+	protected ListView getListView(@Nonnull View root) {
+		return (ListView) root.findViewById(android.R.id.list);
 	}
 
 	@Nullable
@@ -674,6 +679,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			initialClickItem(activity, position, adapter);
 
 			registerAdapterChangedObserver();
+		} else {
+			Log.d(tag, "Adapter doesn't save selection");
 		}
 	}
 

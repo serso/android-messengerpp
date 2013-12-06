@@ -153,14 +153,9 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	protected void onListLoaded() {
 		super.onListLoaded();
 
-		// we can set transcript mode only after list is loaded as list is scrolled to the bottom because of transcript mode (new items are added during load)
-		// and no state is restored (position is lost for some reason)
-		final ListView listView = getListViewById();
-		if (listView != null) {
-			listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+		if(isViewWasCreated()) {
+			setTranscriptMode(getListView(), ListView.TRANSCRIPT_MODE_NORMAL);
 		}
-
-		attachListeners();
 
 		new SyncMessagesForChatAsyncTask(null, getActivity()).executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 	}
@@ -399,9 +394,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 					try {
 						super.onSuccessPostExecute(result);
 					} finally {
-
-						// NOTE: small delay for data to be applied on the list
-						lv.postDelayed(new ListViewPostActions(lv, transcriptMode), 500);
+						setTranscriptMode(lv, transcriptMode);
 					}
 				}
 
@@ -410,14 +403,16 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 					try {
 						super.onFailurePostExecute(e);
 					} finally {
-
-						// NOTE: small delay for data to be applied on the list
-						lv.postDelayed(new ListViewPostActions(lv, transcriptMode), 500);
-
+						setTranscriptMode(lv, transcriptMode);
 					}
 				}
 			}.executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), true));
 		}
+	}
+
+	private void setTranscriptMode(@Nonnull ListView lv, @Nonnull Integer transcriptMode) {
+		// NOTE: small delay for data to be applied on the list
+		lv.postDelayed(new ListViewPostActions(lv, transcriptMode), 500);
 	}
 
 	@Nonnull

@@ -51,10 +51,10 @@ public class SyncMessagesForChatAsyncTask extends MessengerAsyncTask<SyncMessage
 		final Context context = getContext();
 		if (context != null) {
 			try {
-				if (!input.older) {
-					getChatService().syncNewerMessagesForChat(input.realmChat);
+				if (!input.loadOlder) {
+					getChatService().syncNewerMessagesForChat(input.chat);
 				} else {
-					getChatService().syncOlderMessagesForChat(input.realmChat, input.realmUser);
+					getChatService().syncOlderMessagesForChat(input.chat, input.user);
 				}
 			} catch (AccountException e) {
 				throwException(e);
@@ -88,19 +88,19 @@ public class SyncMessagesForChatAsyncTask extends MessengerAsyncTask<SyncMessage
 	public static class Input {
 
 		@Nonnull
-		private Entity realmUser;
+		private Entity user;
 
 		@Nonnull
-		private Entity realmChat;
+		private Entity chat;
 
-		private boolean older;
+		private boolean loadOlder;
 
-		public Input(@Nonnull Entity realmUser,
-					 @Nonnull Entity realmChat,
-					 boolean older) {
-			this.realmUser = realmUser;
-			this.realmChat = realmChat;
-			this.older = older;
+		public Input(@Nonnull Entity user,
+					 @Nonnull Entity chat,
+					 boolean loadOlder) {
+			this.user = user;
+			this.chat = chat;
+			this.loadOlder = loadOlder;
 		}
 	}
 }

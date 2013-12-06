@@ -3,6 +3,8 @@ package org.solovyev.android.messenger;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -18,11 +20,27 @@ import static org.solovyev.common.text.Strings.isEmpty;
 
 public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> extends BaseListFragment<LI> {
 
+	/*
+	**********************************************************************
+	*
+	*                           CONSTANTS
+	*
+	**********************************************************************
+	*/
+
 	private static final long SEARCH_DELAY_MILLIS = 500;
 
 	private static final int DEFAULT_MAX_SIZE = 20;
 
 	private static final String BUNDLE_MAX_SIZE = "max_size";
+
+	/*
+	**********************************************************************
+	*
+	*                           FIELDS
+	*
+	**********************************************************************
+	*/
 
 	@Nullable
 	private MessengerAsyncTask<Void, Void, List<T>> listLoader;
@@ -79,8 +97,21 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	}
 
 	@Override
+	public void onViewCreated(View root, Bundle savedInstanceState) {
+		super.onViewCreated(root, savedInstanceState);
+
+		if (!initialLoadingDone) {
+			setListShown(false);
+		}
+	}
+
+	@Override
 	protected void onListLoaded() {
 		super.onListLoaded();
+
+		if (isViewWasCreated()) {
+			setListShown(true);
+		}
 
 		attachListeners();
 	}
