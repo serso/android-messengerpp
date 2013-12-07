@@ -22,14 +22,14 @@
 	<parent>
 		<groupId>org.solovyev.android.messenger</groupId>
 		<artifactId>android-messenger</artifactId>
-		<version>0.018</version>
+		<version>0.019</version>
 	</parent>
 
 	<packaging>apklib</packaging>
 
 	<artifactId>android-messenger-realm-xmpp</artifactId>
 	<name>Android Messenger Realm Xmpp</name>
-	<version>0.018</version>
+	<version>0.019</version>
 
 	<dependencies>
 
