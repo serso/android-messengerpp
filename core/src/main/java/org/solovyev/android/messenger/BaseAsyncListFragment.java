@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.users.UserEvent;
@@ -109,7 +108,7 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	protected void onListLoaded() {
 		super.onListLoaded();
 
-		if (isViewWasCreated()) {
+		if (isViewCreated()) {
 			setListShown(true);
 		}
 

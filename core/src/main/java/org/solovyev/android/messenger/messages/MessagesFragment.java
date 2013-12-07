@@ -153,7 +153,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	protected void onListLoaded() {
 		super.onListLoaded();
 
-		if(isViewWasCreated()) {
+		if (isViewCreated()) {
 			setTranscriptMode(getListView(), ListView.TRANSCRIPT_MODE_NORMAL);
 		}
 

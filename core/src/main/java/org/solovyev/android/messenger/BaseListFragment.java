@@ -322,6 +322,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		return viewWasCreated;
 	}
 
+	public boolean isViewCreated() {
+		return getView() != null;
+	}
+
 	public void setOnListLoadedCallNeeded(boolean onListLoadedCallNeeded) {
 		this.onListLoadedCallNeeded = onListLoadedCallNeeded;
 	}
