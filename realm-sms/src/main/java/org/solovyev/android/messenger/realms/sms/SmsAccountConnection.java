@@ -31,6 +31,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import org.joda.time.DateTime;
 import org.solovyev.android.Threads;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
@@ -169,7 +170,7 @@ final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 
 	private void onSmsReceived(@Nonnull BroadcastReceiver broadcastReceiver, @Nonnull Intent intent) throws AccountException {
 		final SmsAccount account = getAccount();
-		final Multimap<String, String> messagesByPhoneNumber = getMessagesByPhoneNumber(intent);
+		final Multimap<String, SmsData> messagesByPhoneNumber = getMessagesByPhoneNumber(intent);
 
 		if (!messagesByPhoneNumber.isEmpty()) {
 			final User user = account.getUser();
@@ -178,13 +179,13 @@ final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 
 			final List<User> contacts = userService.getContacts(user.getEntity());
 
-			for (Map.Entry<String, Collection<String>> entry : messagesByPhoneNumber.asMap().entrySet()) {
+			for (Map.Entry<String, Collection<SmsData>> entry : messagesByPhoneNumber.asMap().entrySet()) {
 				final User contact = findOrCreateContact(entry.getKey(), contacts);
 				final Chat chat = chatService.getOrCreatePrivateChat(user.getEntity(), contact.getEntity());
 
 				final List<Message> messages = new ArrayList<Message>(entry.getValue().size());
-				for (String messageBody : entry.getValue()) {
-					final Message message = toMessage(messageBody, account, contact, chat);
+				for (SmsData smsData : entry.getValue()) {
+					final Message message = toMessage(smsData, account, contact, chat);
 					if (message != null) {
 						messages.add(message);
 					}
@@ -200,8 +201,8 @@ final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 	}
 
 	@Nonnull
-	private Multimap<String, String> getMessagesByPhoneNumber(@Nonnull Intent intent) {
-		final Multimap<String, String> smss = ArrayListMultimap.create();
+	private Multimap<String, SmsData> getMessagesByPhoneNumber(@Nonnull Intent intent) {
+		final Multimap<String, SmsData> smss = ArrayListMultimap.create();
 
 		final Bundle extras = intent.getExtras();
 		if (extras != null) {
@@ -209,25 +210,42 @@ final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 			final String smsFormat = extras.getString(SmsRealm.INTENT_EXTRA_FORMAT);
 
 			String fromAddress = null;
+			Long sendTime = null;
 			final StringBuilder message = new StringBuilder(255 * smsExtras.length);
 			for (Object smsExtra : smsExtras) {
-				final SmsMessage smsPart = createFromPdu((byte[]) smsExtra);
-				message.append(smsPart.getMessageBody());
-				fromAddress = smsPart.getOriginatingAddress();
+				final SmsMessage smsMessage = createFromPdu((byte[]) smsExtra);
+				message.append(smsMessage.getMessageBody());
+				fromAddress = smsMessage.getOriginatingAddress();
+				sendTime = smsMessage.getTimestampMillis();
 			}
 
-			if (!isEmpty(message) && !isEmpty(fromAddress)) {
-				smss.put(fromAddress, message.toString());
+			if (!isEmpty(message) && !isEmpty(fromAddress) && sendTime != null) {
+				smss.put(fromAddress, new SmsData(message.toString(), sendTime));
 			}
 		}
 
 		return smss;
 	}
 
+	private static class SmsData {
+
+		@Nonnull
+		private final String body;
+
+		private final long sendTime;
+
+		private SmsData(@Nonnull String body, long sendTime) {
+			this.body = body;
+			this.sendTime = sendTime;
+		}
+	}
+
 	@Nullable
-	private static Message toMessage(@Nonnull String messageBody, @Nonnull Account account, @Nonnull User from, @Nonnull Chat chat) {
-		if (!isEmpty(messageBody)) {
-			return newIncomingMessage(account, chat, messageBody, null, from.getEntity());
+	private static Message toMessage(@Nonnull SmsData smsData, @Nonnull Account account, @Nonnull User from, @Nonnull Chat chat) {
+		if (!isEmpty(smsData.body)) {
+			final MutableMessage message = newIncomingMessage(account, chat, smsData.body, null, from.getEntity());
+			message.setSendDate(new DateTime(smsData.sendTime));
+			return message;
 		} else {
 			return null;
 		}

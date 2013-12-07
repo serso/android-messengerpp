@@ -27,6 +27,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MutableMessage;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
+import org.solovyev.android.messenger.realms.vk.messages.VkMessagesMarkAsReadHttpTransaction;
 import org.solovyev.android.messenger.realms.vk.messages.VkMessagesSendHttpTransaction;
 import org.solovyev.android.messenger.users.User;
 
@@ -56,13 +57,7 @@ public class VkAccountChatService implements AccountChatService {
 	@Nonnull
 	@Override
 	public List<Message> getMessages() throws AccountConnectionException {
-		try {
-			return HttpTransactions.execute(new VkMessagesGetHttpTransaction(account));
-		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		} catch (IOException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		}
+		return executeHttpRequest(new VkMessagesGetHttpTransaction(account));
 	}
 
 	@Nonnull
@@ -158,20 +153,18 @@ public class VkAccountChatService implements AccountChatService {
 	@Nonnull
 	@Override
 	public List<AccountChat> getChats() throws AccountConnectionException {
-		try {
-			return HttpTransactions.execute(VkMessagesGetDialogsHttpTransaction.newInstance(account));
-		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		} catch (IOException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		}
+		return executeHttpRequest(VkMessagesGetDialogsHttpTransaction.newInstance(account));
 	}
 
 	@Nonnull
 	@Override
 	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
+		return executeHttpRequest(new VkMessagesSendHttpTransaction(account, message, chat));
+	}
+
+	private <R> R executeHttpRequest(HttpTransaction<R> transaction) throws AccountConnectionException {
 		try {
-			return HttpTransactions.execute(new VkMessagesSendHttpTransaction(account, message, chat));
+			return HttpTransactions.execute(transaction);
 		} catch (HttpRuntimeIoException e) {
 			throw new AccountConnectionException(account.getId(), e);
 		} catch (IOException e) {
@@ -187,5 +180,10 @@ public class VkAccountChatService implements AccountChatService {
 	@Override
 	public MutableChat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) {
 		return Chats.newPrivateChat(account.newChatEntity(accountUserId1 + CHAT_DELIMITER + accountUserId2));
+	}
+
+	@Override
+	public boolean markMessageRead(@Nonnull Message message) throws AccountConnectionException {
+		return executeHttpRequest(new VkMessagesMarkAsReadHttpTransaction(account, message.getEntity().getAccountEntityId()));
 	}
 }

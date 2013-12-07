@@ -73,6 +73,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	@Inject
 	@Nonnull
+	private Background background;
+
+	@Inject
+	@Nonnull
 	private MessageService messageService;
 
 	@Inject
@@ -285,6 +289,11 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		return instance.application;
 	}
 
+	@Nonnull
+	public static Background getBackground() {
+		return instance.background;
+	}
+
 	public static void exit(Activity activity) {
 		getAccountConnectionsService().tryStopAll();
 
@@ -323,6 +332,35 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static MessengerTheme getThemeFromPreferences() {
 		return MessengerPreferences.Gui.theme.getPreferenceNoError(getPreferences());
+	}
+
+	public static void startBackgroundService() {
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
+		instance.application.startService(serviceIntent);
+	}
+
+	public static boolean isDebuggable() {
+		final ApplicationInfo applicationInfo = getApplication().getApplicationInfo();
+		return (applicationInfo.flags & FLAG_DEBUGGABLE) == FLAG_DEBUGGABLE;
+	}
+
+	public static boolean isMonkeyRunner() {
+		// NOTE: this code is only for monkeyrunner
+		return MONKEY_RUNNER;
+	}
+
+	public static void executeInBackground(@Nonnull final Runnable runnable) {
+		instance.background.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					runnable.run();
+				} catch (Exception e) {
+					instance.exceptionHandler.handleException(e);
+				}
+			}
+		});
 	}
 
 	/*
@@ -396,21 +434,5 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	public void setSecurityService(@Nonnull MessengerSecurityService securityService) {
 		this.securityService = securityService;
-	}
-
-	public static void startBackgroundService() {
-		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
-		instance.application.startService(serviceIntent);
-	}
-
-	public static boolean isDebuggable() {
-		final ApplicationInfo applicationInfo = getApplication().getApplicationInfo();
-		return (applicationInfo.flags & FLAG_DEBUGGABLE) == FLAG_DEBUGGABLE;
-	}
-
-	public static boolean isMonkeyRunner() {
-		// NOTE: this code is only for monkeyrunner
-		return MONKEY_RUNNER;
 	}
 }

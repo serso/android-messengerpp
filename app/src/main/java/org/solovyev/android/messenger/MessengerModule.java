@@ -59,17 +59,21 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
 import org.solovyev.tasks.TaskService;
-import org.solovyev.tasks.Tasks;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
+
+import static org.solovyev.tasks.Tasks.newTaskService;
 
 public class MessengerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		bind(Executor.class).to(TimeLoggingExecutor.class);
-		bind(TaskService.class).toInstance(Tasks.newTaskService());
+
+		final Background background = new Background();
+		bind(Background.class).toInstance(background);
+		bind(TaskService.class).toInstance(newTaskService(background.getExecutor()));
 
 		bind(MessengerSecurityService.class).to(DefaultSecurityService.class);
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);

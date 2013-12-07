@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.chats;
 import android.widget.ImageView;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
@@ -129,7 +130,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	void saveMessages(@Nonnull Entity accountChat, @Nonnull Collection<? extends Message> messages, boolean updateChatSyncDate);
 
-	void onMessageRead(@Nonnull Chat chat, @Nonnull Message message);
+	void markMessageRead(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException;
 
 	void removeChat(@Nonnull Entity chat);
 
@@ -155,7 +156,7 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           PRIVATE CHAT
     *
@@ -208,7 +209,6 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 	/**
 	 * Method synchronizes all chat messages for user in account.
 	 * NOTE: some realms might not return ALL user messages but only new
-	 *
 	 *
 	 * @param account account for which sync should be done
 	 * @return new chat messages for user

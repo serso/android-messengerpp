@@ -55,4 +55,7 @@ public interface AccountChatService {
 
 	@Nonnull
 	MutableChat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException;
+
+	// true if message status has been changed (not read -> read)
+	boolean markMessageRead(@Nonnull Message message) throws AccountConnectionException;
 }

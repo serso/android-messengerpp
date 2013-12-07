@@ -29,10 +29,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountException;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.UnsupportedAccountException;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.*;
@@ -502,19 +499,23 @@ public class DefaultChatService implements ChatService {
 	}
 
 	@Override
-	public void onMessageRead(@Nonnull Chat chat, @Nonnull Message message) {
+	public void markMessageRead(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
 		if (!message.isRead()) {
 			message = message.cloneRead();
 		}
 
-		final boolean changed;
-		synchronized (lock) {
-			changed = messageDao.changeReadStatus(message.getId(), true);
-		}
+		final Account account = getAccountByEntity(message.getEntity());
 
-		if (changed) {
-			fireEvent(ChatEventType.message_changed.newEvent(chat, message));
-			fireEvent(ChatEventType.message_read.newEvent(chat, message));
+		if (account.getAccountChatService().markMessageRead(message)) {
+			final boolean changed;
+			synchronized (lock) {
+				changed = messageDao.changeReadStatus(message.getId(), true);
+			}
+
+			if (changed) {
+				fireEvent(ChatEventType.message_changed.newEvent(chat, message));
+				fireEvent(ChatEventType.message_read.newEvent(chat, message));
+			}
 		}
 	}
 

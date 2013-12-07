@@ -36,10 +36,10 @@ public final class TimeLoggingExecutor implements Executor {
 
 	@Override
 	public void execute(@Nonnull final Runnable command) {
-		/*final StringWriter stringWriter = new StringWriter();
-		new Throwable().printStackTrace(new PrintWriter(stringWriter));
-		final String stackTrace = stringWriter.toString();*/
+		executeOnExecutor(executor, command);
+	}
 
+	public static void executeOnExecutor(@Nonnull Executor executor, @Nonnull final Runnable command) {
 		final long addedToQueueTime = elapsedRealtime();
 		executor.execute(new Runnable() {
 			@Override
@@ -51,11 +51,11 @@ public final class TimeLoggingExecutor implements Executor {
 					final long endTime = elapsedRealtime();
 					final long waitMillis = startTime - addedToQueueTime;
 					if (waitMillis > MAX_WAIT_MILLIS) {
-						Log.e(App.TAG_TIME, "Wait time is too long (" + waitMillis + " ms) for " + command.getClass().getSimpleName());
+						Log.e(App.TAG_TIME, "Wait time is too long (" + waitMillis + " ms) for " + command + "(" + command.getClass().getSimpleName() + ")");
 					}
 					final long workMillis = endTime - startTime;
 					if (workMillis > MAX_WORK_MILLIS) {
-						Log.e(App.TAG_TIME, "Work time is too long (" + workMillis + " ms) for " + command.getClass().getSimpleName());
+						Log.e(App.TAG_TIME, "Work time is too long (" + workMillis + " ms) for " + command + "(" + command.getClass().getSimpleName() + ")");
 					}
 				}
 			}

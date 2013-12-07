@@ -19,4 +19,18 @@ public final class Accounts {
 												  @Nullable String lastUserIconsSyncDate) {
 		return AccountSyncDataImpl.newInstance(lastContactsSyncDate, lastChatsSyncDate, lastUserIconsSyncDate);
 	}
+
+	@Nonnull
+	public static Runnable withAccountException(@Nonnull final AccountRunnable runnable) {
+		return new Runnable() {
+			@Override
+			public void run() {
+				try {
+					runnable.run();
+				} catch (AccountException e) {
+					throw new AccountRuntimeException(e);
+				}
+			}
+		};
+	}
 }

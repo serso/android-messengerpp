@@ -19,6 +19,8 @@ package org.solovyev.android.messenger.chats;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountRunnable;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.messages.Message;
@@ -29,6 +31,8 @@ import roboguice.event.EventListener;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static org.solovyev.android.messenger.App.executeInBackground;
+import static org.solovyev.android.messenger.accounts.Accounts.withAccountException;
 import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.messages.MessagesFragment.newMessagesFragmentDef;
 import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
@@ -88,7 +92,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		if (activity.getMultiPaneManager().isDualPane(activity)) {
 			final BaseChatsFragment fragment = mpfm.getFragment(CHATS_FRAGMENT_TAG);
 			if (fragment != null && fragment.isVisible()) {
-				if(!fragment.clickItemById(chat.getId())) {
+				if (!fragment.clickItemById(chat.getId())) {
 					mpfm.setSecondFragment(newMessagesFragmentDef(activity, chat, true));
 				}
 			} else {
@@ -99,8 +103,13 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		}
 	}
 
-	private void onMessageReadEvent(@Nonnull Chat chat, @Nonnull Message message) {
-		chatService.onMessageRead(chat, message);
+	private void onMessageReadEvent(@Nonnull final Chat chat, @Nonnull final Message message) {
+		executeInBackground(withAccountException(new AccountRunnable() {
+			@Override
+			public void run() throws AccountConnectionException {
+				chatService.markMessageRead(chat, message);
+			}
+		}));
 	}
 
 	private void onChatClickedEvent(@Nonnull final Chat chat) {

@@ -17,9 +17,7 @@
 package org.solovyev.android.messenger.realms.sms;
 
 import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.SmsManager;
@@ -53,7 +51,11 @@ import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 
 final class SmsAccountChatService implements AccountChatService {
 
+	@Nonnull
 	static final String MESSAGE_PROPERTY_PHONE = "phone_number";
+
+	@Nonnull
+	private static final Uri SMS_URI = Uri.parse("content://sms");
 
 	@Nonnull
 	private final SmsAccount account;
@@ -107,11 +109,10 @@ final class SmsAccountChatService implements AccountChatService {
 		final List<MutableMessage> messages = new ArrayList<MutableMessage>();
 
 		final SmsMessageConverter converter = new SmsMessageConverter(account, getMessageService());
-		final Uri smsQueryUri = Uri.parse("content://sms");
 
 		Cursor cursor = null;
 		try {
-			cursor = getApplication().getContentResolver().query(smsQueryUri, null, null, null, null);
+			cursor = getApplication().getContentResolver().query(SMS_URI, null, null, null, null);
 			if (cursor == null) {
 				Log.w(TAG, "Unable to read chats - cursor is null");
 			} else {
@@ -193,5 +194,42 @@ final class SmsAccountChatService implements AccountChatService {
 	@Override
 	public MutableChat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) throws AccountConnectionException {
 		return Chats.newPrivateChat(accountChat);
+	}
+
+	@Override
+	public boolean markMessageRead(@Nonnull Message message) throws AccountConnectionException {
+		final ContentResolver cr = getApplication().getContentResolver();
+
+		try {
+			final int messageId = findMessageId(message, cr);
+			if (messageId >= 0) {
+				final ContentValues values = new ContentValues();
+				values.put("read", true);
+				cr.update(SMS_URI, values, "_id=" + messageId, null);
+			}
+		} catch (Exception e) {
+			// OK, we can't update SMS in the inbox
+			Log.e(TAG, e.getMessage(), e);
+		}
+
+		// we always want to update read marker in local storage => always return true
+		return true;
+	}
+
+	private int findMessageId(@Nonnull Message message, @Nonnull ContentResolver cr) {
+		int messageId = -1;
+
+		final Cursor cursor = cr.query(SMS_URI, new String[]{"_id", "address", "body", "date_sent"}, "address = ? and date_sent = ?", new String[]{message.getAuthor().getAccountEntityId(), String.valueOf(message.getSendDate().getMillis())}, null);
+		if (cursor != null) {
+			try {
+				if (cursor.moveToFirst()) {
+					messageId = cursor.getInt(0);
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+
+		return messageId;
 	}
 }

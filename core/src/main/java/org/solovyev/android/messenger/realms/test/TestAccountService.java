@@ -295,4 +295,9 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	public MutableChat newPrivateChat(@Nonnull Entity accountChat, @Nonnull String accountUserId1, @Nonnull String accountUserId2) {
 		return Chats.newPrivateChat(accountChat);
 	}
+
+	@Override
+	public boolean markMessageRead(@Nonnull Message message) throws AccountConnectionException {
+		return true;
+	}
 }

@@ -114,4 +114,8 @@ class XmppAccountChatService extends AbstractXmppRealmService implements Account
 		});
 	}
 
+	@Override
+	public boolean markMessageRead(@Nonnull Message message) throws AccountConnectionException {
+		return true;
+	}
 }

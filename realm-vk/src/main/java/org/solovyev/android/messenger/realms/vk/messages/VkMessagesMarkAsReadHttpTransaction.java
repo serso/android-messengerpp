@@ -18,9 +18,7 @@ package org.solovyev.android.messenger.realms.vk.messages;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.http.IllegalJsonException;
-import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.realms.vk.JsonResult;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
@@ -28,42 +26,27 @@ import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<String> {
+public class VkMessagesMarkAsReadHttpTransaction extends AbstractVkHttpTransaction<Boolean> {
 
 	@Nonnull
-	private final Message message;
+	private final String messageId;
 
-	@Nonnull
-	private final Chat chat;
-
-	public VkMessagesSendHttpTransaction(@Nonnull VkAccount account, @Nonnull Message message, @Nonnull Chat chat) {
-		super(account, "messages.send");
-		this.message = message;
-		this.chat = chat;
+	public VkMessagesMarkAsReadHttpTransaction(@Nonnull VkAccount account, @Nonnull String messageId) {
+		super(account, "messages.markAsRead");
+		this.messageId = messageId;
 	}
 
 	@Nonnull
 	@Override
 	public List<NameValuePair> getRequestParameters() {
 		final List<NameValuePair> result = super.getRequestParameters();
-
-		if (chat.isPrivate()) {
-			result.add(new BasicNameValuePair("uid", chat.getSecondUser().getAccountEntityId()));
-		}
-
-		if (!chat.isPrivate()) {
-			result.add(new BasicNameValuePair("chat_id", chat.getEntity().getAccountEntityId()));
-		}
-
-		result.add(new BasicNameValuePair("message", message.getBody()));
-		result.add(new BasicNameValuePair("title", message.getTitle()));
-		result.add(new BasicNameValuePair("type", message.isPrivate() ? "0" : "1"));
-
+		result.add(new BasicNameValuePair("mids", messageId));
 		return result;
 	}
 
 	@Override
-	protected String getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
-		return JsonResult.asString(json);
+	protected Boolean getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
+		return JsonResult.asBoolean(json);
 	}
+
 }
