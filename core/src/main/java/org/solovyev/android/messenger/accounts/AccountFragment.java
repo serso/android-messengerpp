@@ -36,6 +36,7 @@ import org.solovyev.common.JPredicate;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
 
@@ -150,7 +151,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 			changeStateButton.setEnabled(false);
 		}
 
-		onAccountStateChanged(root);
+		onAccountStateChanged(account, root);
 	}
 
 	@Override
@@ -189,5 +190,23 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	@Nonnull
 	public static Bundle newAccountArguments(@Nonnull Account account) {
 		return BaseAccountFragment.newAccountArguments(account);
+	}
+
+	protected void onAccountStateChanged(@Nonnull Account<?> account, @Nullable View root) {
+		if (root != null) {
+			updateAccountViews(account, root);
+		}
+	}
+
+	static void updateAccountViews(@Nonnull Account<?> account, @Nonnull View root) {
+		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
+		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
+		if (account.isEnabled()) {
+			changeStateButton.setText(R.string.mpp_disable);
+			syncButton.setVisibility(View.VISIBLE);
+		} else {
+			changeStateButton.setText(R.string.mpp_enable);
+			syncButton.setVisibility(View.GONE);
+		}
 	}
 }

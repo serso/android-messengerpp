@@ -20,7 +20,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
-
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
@@ -33,6 +32,7 @@ import org.solovyev.common.JPredicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.solovyev.android.messenger.accounts.AccountFragment.updateAccountViews;
 import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
 import static org.solovyev.android.messenger.accounts.tasks.AccountSaverListener.newAccountSaverListener;
 
@@ -128,4 +128,9 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 		return getString(R.string.mpp_account_configuration, realmName);
 	}
 
+	protected void onAccountStateChanged(@Nonnull A account, @Nullable View root) {
+		if (root != null) {
+			updateAccountViews(account, root);
+		}
+	}
 }

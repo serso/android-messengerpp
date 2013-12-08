@@ -770,6 +770,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	protected void initialClickItem(@Nonnull final Activity activity, final int position, @Nonnull final BaseListItemAdapter<LI> adapter) {
+		// let's use UI handler to avoid recursive execution of pending transactions
 		uiHandler.post(new Runnable() {
 			@Override
 			public void run() {

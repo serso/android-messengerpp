@@ -18,12 +18,10 @@ package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.BaseFragment;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.UiThreadEventListener;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 import roboguice.event.EventManager;
@@ -97,18 +95,8 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 		}
 	}
 
-	protected void onAccountStateChanged(@Nonnull View root) {
-		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
-		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
-		if (getAccount().isEnabled()) {
-			changeStateButton.setText(R.string.mpp_disable);
-			syncButton.setVisibility(View.VISIBLE);
-		} else {
-			changeStateButton.setText(R.string.mpp_enable);
-			syncButton.setVisibility(View.GONE);
-		}
+	protected void onAccountStateChanged(@Nonnull A account, @Nullable View root) {
 	}
-
 
 	@Override
 	public void onDestroy() {
@@ -169,10 +157,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 				case state_changed:
 					if (eventAccount.equals(account)) {
 						account = (A) eventAccount;
-						final View view = getView();
-						if (view != null) {
-							onAccountStateChanged(view);
-						}
+						onAccountStateChanged(account, getView());
 					}
 					break;
 			}
