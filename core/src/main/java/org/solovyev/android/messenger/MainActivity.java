@@ -62,7 +62,7 @@ public final class MainActivity extends BaseFragmentActivity {
 	private static final String INTENT_SHOW_UNREAD_MESSAGES_ACTION = "show_unread_messages";
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           FIELDS
     *
@@ -120,16 +120,6 @@ public final class MainActivity extends BaseFragmentActivity {
 
 		initFragments();
 
-		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
-		this.getMessengerListeners().addListener(messengerEventListener);
-
-		final RoboListeners listeners = getListeners();
-
-		listeners.add(UiEvent.class, new UiEventListener(this));
-		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
-		listeners.add(ContactUiEvent.class, new ContactUiEventListener(this, getAccountService()));
-		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
-
 		handleIntent(getIntent());
 	}
 
@@ -157,6 +147,21 @@ public final class MainActivity extends BaseFragmentActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+
+		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
+		this.getMessengerListeners().addListener(messengerEventListener);
+
+		final RoboListeners listeners = getListeners();
+
+		listeners.add(UiEvent.class, new UiEventListener(this));
+		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
+		listeners.add(ContactUiEvent.class, new ContactUiEventListener(this, getAccountService()));
+		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
@@ -164,12 +169,13 @@ public final class MainActivity extends BaseFragmentActivity {
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onPause() {
 		if (this.messengerEventListener != null) {
 			this.getMessengerListeners().removeListener(messengerEventListener);
+			this.messengerEventListener = null;
 		}
 
-		super.onDestroy();
+		super.onPause();
 	}
 
 	private void initTabs(@Nullable Bundle savedInstanceState) {

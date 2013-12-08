@@ -51,10 +51,15 @@ public final class NewContactActivity extends BaseFragmentActivity {
 			getMultiPaneFragmentManager().setMainFragment(pick_account, newPickAccountArguments(accounts));
 		}
 
+		initFragments();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
 		final RoboListeners listeners = getListeners();
 		listeners.add(AccountUiEvent.class, new AccountUiEventListener());
-
-		initFragments();
 	}
 
 	private final class AccountUiEventListener implements EventListener<AccountUiEvent> {

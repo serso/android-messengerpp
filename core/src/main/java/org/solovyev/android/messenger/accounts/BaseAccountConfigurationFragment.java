@@ -53,7 +53,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	private static final String TAG = "AccountConfiguration";
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           VIEWS
     *

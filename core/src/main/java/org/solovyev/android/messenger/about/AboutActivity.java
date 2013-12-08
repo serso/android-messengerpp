@@ -3,14 +3,13 @@ package org.solovyev.android.messenger.about;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import roboguice.event.EventListener;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.RoboListeners;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
+import roboguice.event.EventListener;
+
+import javax.annotation.Nonnull;
 
 public class AboutActivity extends BaseFragmentActivity {
 
@@ -29,10 +28,15 @@ public class AboutActivity extends BaseFragmentActivity {
 			getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.about);
 		}
 
+		initFragments();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
 		final RoboListeners listeners = getListeners();
 		listeners.add(AboutUiEvent.Clicked.class, new OnAboutClickedListener());
-
-		initFragments();
 	}
 
 	private class OnAboutClickedListener implements EventListener<AboutUiEvent.Clicked> {

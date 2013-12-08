@@ -434,15 +434,15 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	protected void onPause() {
 		App.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
 
+		if (listeners != null) {
+			listeners.clearAll();
+		}
+
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (listeners != null) {
-			listeners.clearAll();
-		}
-
 		super.onDestroy();
 	}
 

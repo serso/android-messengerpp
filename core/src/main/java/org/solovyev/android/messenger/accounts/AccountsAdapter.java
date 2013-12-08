@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
-
 import org.solovyev.android.messenger.BaseListItemAdapter;
 
 import javax.annotation.Nonnull;
@@ -64,6 +63,7 @@ public class AccountsAdapter extends BaseListItemAdapter<AccountListItem> {
 				final AccountListItem listItem = findInAllElements(account);
 				if (listItem != null) {
 					listItem.onAccountChangedEvent(account);
+					notifyDataSetChanged();
 				}
 				break;
 			case state_changed:
@@ -74,6 +74,7 @@ public class AccountsAdapter extends BaseListItemAdapter<AccountListItem> {
 						final AccountListItem accountListItem = findInAllElements(account);
 						if (accountListItem != null) {
 							accountListItem.onAccountChangedEvent(account);
+							notifyDataSetChanged();
 						}
 						break;
 					case removed:

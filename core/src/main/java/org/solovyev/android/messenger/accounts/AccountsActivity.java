@@ -46,12 +46,17 @@ public final class AccountsActivity extends BaseFragmentActivity {
 			getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.accounts);
 		}
 
+		initFragments();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
 		final RoboListeners listeners = getListeners();
 
 		listeners.add(UiEvent.class, new UiEventListener(this));
 		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
 		listeners.add(RealmUiEvent.class, new RealmUiEventListener(this));
-
-		initFragments();
 	}
 }

@@ -20,15 +20,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
-import roboguice.event.EventListener;
-
 import com.google.inject.Inject;
-
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.RoboListeners;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.sync.SyncService;
+import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
@@ -63,12 +61,16 @@ public final class PreferencesActivity extends BaseFragmentActivity implements P
 			getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.settings);
 		}
 
-		final RoboListeners listeners = getListeners();
-		listeners.add(PreferenceUiEvent.Clicked.class, new OnPreferenceClickedListener());
-
 		initFragments();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		final RoboListeners listeners = getListeners();
+		listeners.add(PreferenceUiEvent.Clicked.class, new OnPreferenceClickedListener());
+	}
 
 	@Override
 	public void onPreferenceAttached(PreferenceScreen preferenceScreen, int preferenceResId) {
