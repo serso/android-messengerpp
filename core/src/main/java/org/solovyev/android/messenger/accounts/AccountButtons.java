@@ -6,13 +6,13 @@ import android.widget.Button;
 
 import javax.annotation.Nonnull;
 
-import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
 
 import static org.solovyev.android.messenger.App.getSyncService;
+import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
 
-public class AccountButtons extends EditButtons<AccountFragment>{
+public class AccountButtons extends BaseAccountButtons<Account<?>, AccountFragment>{
 
 	public AccountButtons(@Nonnull AccountFragment fragment) {
 		super(fragment);
@@ -29,7 +29,7 @@ public class AccountButtons extends EditButtons<AccountFragment>{
 		editButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fragment.editAccount();
+				editAccount();
 			}
 		});
 
@@ -45,7 +45,7 @@ public class AccountButtons extends EditButtons<AccountFragment>{
 		changeStateButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fragment.changeState();
+				changeState();
 			}
 		});
 		if (!account.getRealm().isEnabled()) {
@@ -53,14 +53,13 @@ public class AccountButtons extends EditButtons<AccountFragment>{
 		}
 	}
 
-	@Override
-	protected boolean isRemoveButtonVisible() {
-		return true;
+	void editAccount() {
+		getFragment().getEventManager().fire(edit_account.newEvent(getAccount()));
 	}
 
-	@Override
-	protected void onRemoveButtonPressed() {
-		getFragment().removeAccount();
+	void changeState() {
+		final AccountFragment fragment = getFragment();
+		fragment.getTaskListeners().run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(getAccount()), AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 	}
 
 	@Override

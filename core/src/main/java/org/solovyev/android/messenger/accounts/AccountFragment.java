@@ -20,49 +20,23 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
-import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
-import org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.JPredicate;
 
-import com.google.inject.Inject;
-
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
+import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
 
 public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
-    /*
-	**********************************************************************
-    *
-    *                           CONSTANTS
-    *
-    **********************************************************************
-    */
-
 	@Nonnull
 	public static final String FRAGMENT_TAG = "account";
-
-    /*
-	**********************************************************************
-    *
-    *                           AUTO INJECTED FIELDS
-    *
-    **********************************************************************
-    */
-
-	@Inject
-	@Nonnull
-	private EventManager eventManager;
 
 	private final AccountButtons buttons = new AccountButtons(this);
 
@@ -102,19 +76,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		super.onResume();
 
 		getTaskListeners().addTaskListener(AccountChangeStateCallable.TASK_NAME, AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
-	}
-
-	void changeState() {
-		getTaskListeners().run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(getAccount()), AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-	}
-
-	void editAccount() {
-		eventManager.fire(edit_account.newEvent(getAccount()));
-	}
-
-	void removeAccount() {
-		getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), AccountRemoverListener.newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	/*

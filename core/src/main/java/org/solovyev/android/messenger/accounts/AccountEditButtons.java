@@ -16,15 +16,17 @@
 
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.messenger.EditButtons;
-
 import javax.annotation.Nonnull;
+
+import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
+import org.solovyev.android.messenger.core.R;
 
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.back;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
+import static org.solovyev.android.messenger.accounts.tasks.AccountSaverListener.newAccountSaverListener;
 import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_edit_finished;
 
-public class AccountEditButtons<A extends Account<?>> extends EditButtons<BaseAccountConfigurationFragment<A>> {
+public class AccountEditButtons<A extends Account<?>> extends BaseAccountButtons<A, BaseAccountConfigurationFragment<A>> {
 
 	public AccountEditButtons(@Nonnull BaseAccountConfigurationFragment<A> fragment) {
 		super(fragment);
@@ -35,7 +37,7 @@ public class AccountEditButtons<A extends Account<?>> extends EditButtons<BaseAc
 		final AccountConfiguration configuration = fragment.validateData();
 		if (configuration != null) {
 			final AccountBuilder accountBuilder = fragment.getRealm().newAccountBuilder(configuration, fragment.getEditedAccount());
-			fragment.saveAccount(accountBuilder);
+			saveAccount(accountBuilder);
 		}
 	}
 
@@ -55,13 +57,11 @@ public class AccountEditButtons<A extends Account<?>> extends EditButtons<BaseAc
 	}
 
 	@Override
-	protected void onRemoveButtonPressed() {
-		final BaseAccountConfigurationFragment<A> fragment = getFragment();
-		fragment.removeAccount(fragment.getEditedAccount());
-	}
-
-	@Override
 	protected boolean isBackButtonVisible() {
 		return true;
+	}
+
+	public void saveAccount(@Nonnull AccountBuilder accountBuilder) {
+		getFragment().getTaskListeners().run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), newAccountSaverListener(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 	}
 }

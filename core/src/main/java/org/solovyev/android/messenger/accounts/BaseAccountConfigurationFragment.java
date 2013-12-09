@@ -107,14 +107,6 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 		return getEditedAccount() == null;
 	}
 
-	protected final void removeAccount(@Nonnull Account account) {
-		getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(account), newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
-	}
-
-	public void saveAccount(@Nonnull AccountBuilder accountBuilder) {
-		getTaskListeners().run(AccountSaverCallable.TASK_NAME, new AccountSaverCallable(accountBuilder), newAccountSaverListener(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-	}
-
 	@Nullable
 	public abstract AccountConfiguration validateData();
 
