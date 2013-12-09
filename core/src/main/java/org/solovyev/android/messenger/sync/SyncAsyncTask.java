@@ -37,10 +37,9 @@ class SyncAsyncTask extends MessengerAsyncTask<Void, Void, Void> {
 	private final List<SyncTask> syncTasks;
 
 	public SyncAsyncTask(@Nonnull List<SyncTask> syncTasks) {
-		super();
+		super(true);
 		this.syncTasks = syncTasks;
 	}
-
 
 	@Override
 	protected Void doWork(@Nonnull List<Void> voids) {

@@ -73,7 +73,7 @@ public class MessengerModule extends AbstractModule {
 
 		final Background background = new Background();
 		bind(Background.class).toInstance(background);
-		bind(TaskService.class).toInstance(newTaskService(background.getExecutor()));
+		bind(TaskService.class).toInstance(newTaskService(background.getHighPriorityExecutor()));
 
 		bind(MessengerSecurityService.class).to(DefaultSecurityService.class);
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);

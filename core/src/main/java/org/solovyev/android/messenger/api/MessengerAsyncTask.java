@@ -19,23 +19,34 @@ package org.solovyev.android.messenger.api;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import org.solovyev.android.async.CommonAsyncTask;
 
 import javax.annotation.Nonnull;
 
-import static java.lang.System.currentTimeMillis;
-import static org.solovyev.android.messenger.App.getBackground;
+import org.solovyev.android.async.CommonAsyncTask;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.Background;
+
 import static org.solovyev.android.messenger.App.getExceptionHandler;
 
 public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsyncTask<Param, Progress, R> {
 
-	private long startTime = 0;
+	private final boolean lowPriority;
 
 	protected MessengerAsyncTask() {
+		this(false);
+	}
+
+	protected MessengerAsyncTask(boolean lowPriority) {
+		this.lowPriority = lowPriority;
 	}
 
 	protected MessengerAsyncTask(@Nonnull Context context) {
+		this(context, false);
+	}
+
+	protected MessengerAsyncTask(@Nonnull Context context, boolean lowPriority) {
 		super(context);
+		this.lowPriority = lowPriority;
 	}
 
 	@Override
@@ -43,27 +54,27 @@ public abstract class MessengerAsyncTask<Param, Progress, R> extends CommonAsync
 		getExceptionHandler().handleException(e);
 	}
 
-	/*@Override
-	protected void onPostExecute(@Nonnull Result<R> r) {
-		final long endTime = currentTimeMillis();
-		final long workMillis = endTime - startTime;
-		if (workMillis > 100) {
-			Log.e(App.TAG_TIME, "Work time is too long (" + workMillis + " ms) for " + getClass().getSimpleName() + " (" + this + ")");
-		}
-		super.onPostExecute(r);
-	}*/
-
 	@Nonnull
 	public final AsyncTask<Param, Progress, Result<R>> executeInParallel(Param... params) {
-		startTime = currentTimeMillis();
 		return executeInParallel(this, params);
 	}
 
 	public static <Param, Progress, R> AsyncTask<Param, Progress, Result<R>> executeInParallel(@Nonnull AsyncTask<Param, Progress, Result<R>> task, Param... params) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			return task.executeOnExecutor(getBackground(), params);
+			final Background background = App.getBackground();
+
+			final boolean lowPriority;
+			if (task instanceof MessengerAsyncTask) {
+				lowPriority = ((MessengerAsyncTask) task).lowPriority;
+			} else {
+				lowPriority = false;
+			}
+
+			task.executeOnExecutor(lowPriority ? background.getLowPriorityExecutor() : background.getHighPriorityExecutor(), params);
+			return task;
 		} else {
-			return task.execute(params);
+			task.execute(params);
+			return task;
 		}
 	}
 }

@@ -16,41 +16,60 @@
 
 package org.solovyev.android.messenger;
 
-import com.google.inject.Singleton;
-import org.solovyev.android.TimeLoggingExecutor;
-
-import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
+
+import org.solovyev.android.TimeLoggingExecutor;
+
+import com.google.inject.Singleton;
+
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 @Singleton
 public final class Background implements Executor {
 
 	private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
-	private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
+	private static final int POOL_SIZE = CPU_COUNT + 1;
+
+	private final AtomicInteger count = new AtomicInteger();
 
 	@Nonnull
-	private final Executor executor = Executors.newFixedThreadPool(MAXIMUM_POOL_SIZE, new BackgroundThreadFactory());
+	private final Executor lowPriorityExecutor = newFixedThreadPool(POOL_SIZE, new BackgroundThreadFactory(Thread.MIN_PRIORITY));
+
+	@Nonnull
+	private final Executor highPriorityExecutor = newFixedThreadPool(POOL_SIZE, new BackgroundThreadFactory(Thread.MAX_PRIORITY));
 
 	@Override
 	public void execute(@Nonnull Runnable command) {
-		TimeLoggingExecutor.executeOnExecutor(executor, command);
+		TimeLoggingExecutor.executeOnExecutor(lowPriorityExecutor, command);
 	}
 
 	@Nonnull
-	public Executor getExecutor() {
-		return executor;
+	public Executor getLowPriorityExecutor() {
+		return lowPriorityExecutor;
 	}
 
-	private static class BackgroundThreadFactory implements ThreadFactory {
+	@Nonnull
+	public Executor getHighPriorityExecutor() {
+		return highPriorityExecutor;
+	}
 
-		private final AtomicInteger count = new AtomicInteger();
+	private class BackgroundThreadFactory implements ThreadFactory {
+
+		private final int priority;
+
+		public BackgroundThreadFactory(int priority) {
+			this.priority = priority;
+		}
 
 		@Override
 		public Thread newThread(@Nonnull Runnable r) {
-			return new Thread(r, "Background thread #" + count.getAndIncrement());
+			final Thread thread = new Thread(r, "Background thread #" + count.getAndIncrement() + " (priority=" + priority + ")");
+			thread.setPriority(priority);
+			return thread;
 		}
 	}
 }

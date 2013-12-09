@@ -103,7 +103,7 @@ public class MessengerApplication extends Application {
 	private static final class PreloadCachedData extends MessengerAsyncTask<Account, Void, Void> {
 
 		private PreloadCachedData(@Nonnull Context context) {
-			super(context);
+			super(context, true);
 		}
 
 		@Override
