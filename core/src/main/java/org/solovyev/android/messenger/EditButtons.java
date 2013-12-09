@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.solovyev.android.messenger.core.R;
 
@@ -34,13 +35,13 @@ public abstract class EditButtons<F extends Fragment> {
 	@Nonnull
 	private final F fragment;
 
-	@Nonnull
+	@Nullable
 	private Button backButton;
 
-	@Nonnull
+	@Nullable
 	private Button saveButton;
 
-	@Nonnull
+	@Nullable
 	private Button removeButton;
 
 	public EditButtons(@Nonnull F fragment) {
@@ -50,39 +51,45 @@ public abstract class EditButtons<F extends Fragment> {
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		backButton = (Button) root.findViewById(R.id.mpp_back_button);
 
-		if (isBackButtonVisible()) {
-			backButton.setVisibility(VISIBLE);
-			backButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onBackButtonPressed();
-				}
-			});
-		} else {
-			backButton.setVisibility(GONE);
+		if (backButton != null) {
+			if (isBackButtonVisible()) {
+				backButton.setVisibility(VISIBLE);
+				backButton.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						onBackButtonPressed();
+					}
+				});
+			} else {
+				backButton.setVisibility(GONE);
+			}
 		}
 
 		removeButton = (Button) root.findViewById(R.id.mpp_remove_button);
-		if (isRemoveButtonVisible()) {
-			removeButton.setVisibility(VISIBLE);
-			removeButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onRemoveButtonPressed();
-				}
-			});
-		} else {
-			removeButton.setVisibility(GONE);
+		if (removeButton != null) {
+			if (isRemoveButtonVisible()) {
+				removeButton.setVisibility(VISIBLE);
+				removeButton.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						onRemoveButtonPressed();
+					}
+				});
+			} else {
+				removeButton.setVisibility(GONE);
+			}
 		}
 
 
 		saveButton = (Button) root.findViewById(R.id.mpp_save_button);
-		saveButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onSaveButtonPressed();
-			}
-		});
+		if (saveButton != null) {
+			saveButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onSaveButtonPressed();
+				}
+			});
+		}
 	}
 
 	@Nonnull

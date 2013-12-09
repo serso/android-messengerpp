@@ -22,21 +22,20 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import com.google.inject.Inject;
-import org.solovyev.android.fragments.MultiPaneFragmentDef;
-import org.solovyev.android.messenger.ExceptionHandler;
-import org.solovyev.android.messenger.MultiPaneManager;
-import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
-import org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener;
-import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
-import org.solovyev.android.messenger.sync.SyncService;
-import org.solovyev.common.JPredicate;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.solovyev.android.fragments.MultiPaneFragmentDef;
+import org.solovyev.android.messenger.EditButtons;
+import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
+import org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.common.JPredicate;
+
+import com.google.inject.Inject;
 
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
 
@@ -63,23 +62,9 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 	@Inject
 	@Nonnull
-	private AccountService accountService;
-
-	@Inject
-	@Nonnull
-	private SyncService syncService;
-
-	@Inject
-	@Nonnull
-	private MultiPaneManager multiPaneManager;
-
-	@Inject
-	@Nonnull
-	private ExceptionHandler exceptionHandler;
-
-	@Inject
-	@Nonnull
 	private EventManager eventManager;
+
+	private final AccountButtons buttons = new AccountButtons(this);
 
 	public AccountFragment() {
 		super(R.layout.mpp_fragment_account, true);
@@ -102,54 +87,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
 		realmIconImageView.setImageDrawable(getResources().getDrawable(realm.getIconResId()));
 
-		final Button backButton = (Button) root.findViewById(R.id.mpp_account_back_button);
-		backButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getFragmentActivity().getSupportFragmentManager().popBackStack();
-			}
-		});
-		if (multiPaneManager.isDualPane(getActivity())) {
-			// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-			backButton.setVisibility(View.GONE);
-		} else {
-			backButton.setVisibility(View.VISIBLE);
-		}
-
-		final Button removeButton = (Button) root.findViewById(R.id.mpp_account_remove_button);
-		removeButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				removeAccount();
-			}
-		});
-
-		final Button editButton = (Button) root.findViewById(R.id.mpp_account_edit_button);
-		editButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				editAccount();
-			}
-		});
-
-		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
-		syncButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SyncAllAsyncTask.newForAccount(getActivity(), syncService, account).executeInParallel((Void) null);
-			}
-		});
-
-		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
-		changeStateButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				changeState();
-			}
-		});
-		if (!realm.isEnabled()) {
-			changeStateButton.setEnabled(false);
-		}
+		buttons.onViewCreated(root, savedInstanceState);
 
 		onAccountStateChanged(account, root);
 	}
@@ -167,15 +105,15 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, AccountRemoverListener.newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
-	private void changeState() {
+	void changeState() {
 		getTaskListeners().run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(getAccount()), AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 	}
 
-	private void editAccount() {
+	void editAccount() {
 		eventManager.fire(edit_account.newEvent(getAccount()));
 	}
 
-	private void removeAccount() {
+	void removeAccount() {
 		getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), AccountRemoverListener.newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
@@ -194,19 +132,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 	protected void onAccountStateChanged(@Nonnull Account<?> account, @Nullable View root) {
 		if (root != null) {
-			updateAccountViews(account, root);
-		}
-	}
-
-	static void updateAccountViews(@Nonnull Account<?> account, @Nonnull View root) {
-		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
-		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
-		if (account.isEnabled()) {
-			changeStateButton.setText(R.string.mpp_disable);
-			syncButton.setVisibility(View.VISIBLE);
-		} else {
-			changeStateButton.setText(R.string.mpp_enable);
-			syncButton.setVisibility(View.GONE);
+			buttons.updateAccountViews(account, root);
 		}
 	}
 }
