@@ -67,6 +67,7 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 		MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
 
 		if (activity.isDualPane()) {
+			mpfm.clearBackStack();
 			mpfm.setSecondFragment(newAccountFragmentDef(activity, account, false));
 			if (activity.isTriplePane()) {
 				mpfm.emptifyThirdFragment();
