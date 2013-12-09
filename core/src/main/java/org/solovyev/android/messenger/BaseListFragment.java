@@ -470,46 +470,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 		if (topRefreshListener == null && bottomRefreshListener == null) {
 			pullToRefreshMode = null;
-			listView = new ListView(context);
-			fillListView((ListView) listView, context);
-			listView.setId(android.R.id.list);
-		} else if (topRefreshListener != null && bottomRefreshListener != null) {
-			pullToRefreshMode = PullToRefreshBase.Mode.BOTH;
-			pullToRefreshListView = new PublicPullToRefreshListView(context, pullToRefreshMode);
-
-			topRefreshListener.setListView(pullToRefreshListView);
-			bottomRefreshListener.setListView(pullToRefreshListView);
-
-			fillListView(pullToRefreshListView.getRefreshableView(), context);
-			pullToRefreshListView.setShowIndicator(false);
-
-			pullToRefreshListView.setOnRefreshListener(new OnRefreshListener2Adapter(topRefreshListener, bottomRefreshListener));
-			listView = pullToRefreshListView;
-		} else if (topRefreshListener != null) {
-			pullToRefreshMode = PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH;
-			pullToRefreshListView = new PublicPullToRefreshListView(context, pullToRefreshMode);
-
-			topRefreshListener.setListView(pullToRefreshListView);
-
-			fillListView(pullToRefreshListView.getRefreshableView(), context);
-
-			pullToRefreshListView.setShowIndicator(false);
-
-			pullToRefreshListView.setOnRefreshListener(topRefreshListener);
-
-			listView = pullToRefreshListView;
+			listView = createListView(context);
 		} else {
-			pullToRefreshMode = PullToRefreshBase.Mode.PULL_UP_TO_REFRESH;
-			pullToRefreshListView = new PublicPullToRefreshListView(context, pullToRefreshMode);
-
-			bottomRefreshListener.setListView(pullToRefreshListView);
-
-			fillListView(pullToRefreshListView.getRefreshableView(), context);
-			pullToRefreshListView.setShowIndicator(false);
-
-			pullToRefreshListView.setOnRefreshListener(bottomRefreshListener);
-
-			listView = pullToRefreshListView;
+			listView = createPullToRefreshListView(context, topRefreshListener, bottomRefreshListener);
 		}
 
 		listViewContainer.addView(listView, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -521,6 +484,48 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		root.setLayoutParams(new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		return root;
+	}
+
+	@Nonnull
+	private View createPullToRefreshListView(@Nonnull Context context,
+											 @Nullable ListViewAwareOnRefreshListener topRefreshListener,
+											 @Nullable ListViewAwareOnRefreshListener bottomRefreshListener) {
+		if (topRefreshListener != null && bottomRefreshListener != null) {
+			pullToRefreshMode = PullToRefreshBase.Mode.BOTH;
+		} else if (topRefreshListener != null) {
+			pullToRefreshMode = PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH;
+		} else {
+			pullToRefreshMode = PullToRefreshBase.Mode.PULL_UP_TO_REFRESH;
+		}
+		pullToRefreshListView = new PublicPullToRefreshListView(context, pullToRefreshMode);
+
+		if (topRefreshListener != null) {
+			topRefreshListener.setListView(pullToRefreshListView);
+		}
+
+		if (bottomRefreshListener != null) {
+			bottomRefreshListener.setListView(pullToRefreshListView);
+		}
+
+		fillListView(pullToRefreshListView.getRefreshableView(), context);
+		pullToRefreshListView.setShowIndicator(false);
+
+		if (topRefreshListener != null && bottomRefreshListener != null) {
+			pullToRefreshListView.setOnRefreshListener(new OnRefreshListener2Adapter(topRefreshListener, bottomRefreshListener));
+		} else if (topRefreshListener != null) {
+			pullToRefreshListView.setOnRefreshListener(topRefreshListener);
+		} else {
+			pullToRefreshListView.setOnRefreshListener(bottomRefreshListener);
+		}
+		return pullToRefreshListView;
+	}
+
+	@Nonnull
+	private View createListView(@Nonnull Context context) {
+		final View listView = new ListView(context);
+		fillListView((ListView) listView, context);
+		listView.setId(android.R.id.list);
+		return listView;
 	}
 
 	protected void fillListView(@Nonnull ListView lv, @Nonnull Context context) {
