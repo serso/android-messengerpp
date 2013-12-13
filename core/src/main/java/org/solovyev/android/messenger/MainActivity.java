@@ -35,16 +35,21 @@ import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.ContactUiEventListener;
 import org.solovyev.android.view.SwipeGestureListener;
+import org.solovyev.android.wizard.Wizard;
+import org.solovyev.android.wizard.Wizards;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static org.solovyev.android.messenger.App.getUiHandler;
+import static org.solovyev.android.messenger.App.*;
+import static org.solovyev.android.messenger.MessengerPreferences.isNewInstallation;
 import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.android.messenger.chats.Chats.openUnreadChat;
 import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager.tabFragments;
+import static org.solovyev.android.messenger.wizard.MessengerWizards.FIRST_TIME_WIZARD;
+import static org.solovyev.android.wizard.WizardUi.continueWizard;
 import static org.solovyev.common.Objects.areEqual;
 
 public final class MainActivity extends BaseFragmentActivity {
@@ -81,7 +86,7 @@ public final class MainActivity extends BaseFragmentActivity {
 	private JEventListener<MessengerEvent> messengerEventListener;
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTRUCTORS
     *
@@ -159,6 +164,16 @@ public final class MainActivity extends BaseFragmentActivity {
 		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
 		listeners.add(ContactUiEvent.class, new ContactUiEventListener(this, getAccountService()));
 		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
+
+		if (!isMonkeyRunner()) {
+			if (isNewInstallation()) {
+				final Wizards wizards = getWizards();
+				final Wizard wizard = wizards.getWizard(FIRST_TIME_WIZARD);
+				if (!wizard.isFinished()) {
+					continueWizard(wizards, wizard.getName(), this);
+				}
+			}
+		}
 	}
 
 	@Override

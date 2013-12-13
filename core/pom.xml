@@ -107,6 +107,12 @@
 			<type>apklib</type>
 		</dependency>
 
+		<dependency>
+			<groupId>org.solovyev.android</groupId>
+			<artifactId>android-common-wizard</artifactId>
+			<type>apklib</type>
+		</dependency>
+
 		<!-- OTHER -->
 
 		<!-- Pull-to-Refresh -->

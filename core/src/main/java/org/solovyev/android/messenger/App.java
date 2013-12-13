@@ -45,6 +45,7 @@ import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.android.network.NetworkStateService;
+import org.solovyev.android.wizard.Wizards;
 import org.solovyev.tasks.TaskService;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
@@ -64,6 +65,9 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	public static final String TAG_TIME = App.newTag("Time");
 
 	private static final boolean MONKEY_RUNNER = false;
+
+	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";
+	public static final String GITHUB_URL = "https://github.com/serso/android-messengerpp";
 
 	@Nonnull
 	private static App instance = new App();
@@ -130,6 +134,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Inject
 	@Nonnull
 	private MessengerSecurityService securityService;
+
+	@Inject
+	@Nonnull
+	private Wizards wizards;
 
 	@Nonnull
 	private Handler uiHandler;
@@ -329,6 +337,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		return instance.theme;
 	}
 
+	public static Wizards getWizards() {
+		return instance.wizards;
+	}
+
 	@Nonnull
 	public static MessengerTheme getThemeFromPreferences() {
 		return MessengerPreferences.Gui.theme.getPreferenceNoError(getPreferences());
@@ -435,4 +447,5 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	public void setSecurityService(@Nonnull MessengerSecurityService securityService) {
 		this.securityService = securityService;
 	}
+
 }

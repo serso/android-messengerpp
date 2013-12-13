@@ -83,6 +83,9 @@
 		<activity android:label="@string/mpp_new_contact" android:launchMode="singleTask"
 				  android:name=".NewContactActivity" android:windowSoftInputMode="stateHidden"/>
 
+		<activity android:launchMode="singleTop" android:name=".wizard.WizardActivity"
+				  android:theme="@style/mpp_theme_holo_dialog"/>
+
 		<service android:name=".OngoingNotificationService"/>
 
 		<receiver android:name=".OnBootBroadcastReceiver">

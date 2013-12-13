@@ -19,14 +19,19 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.prefs.BooleanPreference;
+import org.solovyev.android.prefs.IntegerPreference;
 import org.solovyev.android.prefs.Preference;
 import org.solovyev.android.prefs.StringPreference;
 
+import javax.annotation.Nonnull;
+
+import static org.solovyev.android.Android.getAppVersionCode;
+import static org.solovyev.android.messenger.App.getPreferences;
+
 public final class MessengerPreferences {
+
+	private static final int NO_VERSION = -1;
 
 	public static void setDefaultValues(@Nonnull Context context) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -34,9 +39,25 @@ public final class MessengerPreferences {
 		Gui.theme.tryPutDefault(preferences);
 		Gui.Chat.Message.showIcon.tryPutDefault(preferences);
 		startOnBoot.tryPutDefault(preferences);
+
+		final int versionCode = getAppVersionCode(context);
+		final Integer version = MessengerPreferences.version.getPreference(preferences);
+		if (version > NO_VERSION) {
+			if (version < versionCode) {
+				// application update
+				MessengerPreferences.previousVersion.putPreference(preferences, version);
+				MessengerPreferences.version.putPreference(preferences, versionCode);
+			}
+		} else {
+			// new install
+			MessengerPreferences.version.putPreference(preferences, versionCode);
+		}
 	}
 
 	public static Preference<Boolean> startOnBoot = BooleanPreference.of("startOnBoot", true);
+	public static Preference<Integer> version = IntegerPreference.of("version", NO_VERSION);
+	public static Preference<Integer> previousVersion = IntegerPreference.of("previousVersion", NO_VERSION);
+	public static Preference<Integer> startCount = IntegerPreference.of("startCount", 0);
 
 
 	public static final class Security {
@@ -55,5 +76,9 @@ public final class MessengerPreferences {
 			}
 		}
 
+	}
+
+	public static boolean isNewInstallation() {
+		return MessengerPreferences.previousVersion.getPreference(getPreferences()) == NO_VERSION;
 	}
 }

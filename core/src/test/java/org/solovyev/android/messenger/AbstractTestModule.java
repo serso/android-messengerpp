@@ -36,9 +36,10 @@ import org.solovyev.android.messenger.chats.ChatDao;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.chats.DefaultChatService;
 import org.solovyev.android.messenger.chats.SqliteChatDao;
-import org.solovyev.android.messenger.messages.*;
 import org.solovyev.android.messenger.messages.DefaultMessageService;
+import org.solovyev.android.messenger.messages.MessageDao;
 import org.solovyev.android.messenger.messages.MessageService;
+import org.solovyev.android.messenger.messages.SqliteMessageDao;
 import org.solovyev.android.messenger.notifications.DefaultNotificationService;
 import org.solovyev.android.messenger.notifications.NotificationService;
 import org.solovyev.android.messenger.realms.DefaultRealmService;
@@ -49,8 +50,10 @@ import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.wizard.MessengerWizards;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
+import org.solovyev.android.wizard.Wizards;
 import org.solovyev.tasks.TaskService;
 import roboguice.RoboGuice;
 import roboguice.inject.RoboInjector;
@@ -86,6 +89,7 @@ public abstract class AbstractTestModule extends AbstractModule {
 		bind(SQLiteOpenHelperConfiguration.class).to(TestMessengerDbConfiguration.class);
 		bind(SQLiteOpenHelper.class).to(TestSQLiteOpenHelper.class);
 
+		bind(Wizards.class).to(MessengerWizards.class);
 		bind(MessengerSecurityService.class).to(TestSecurityService.class);
 		bind(TaskService.class).toInstance(newTaskService());
 

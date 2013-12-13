@@ -18,6 +18,7 @@ package org.solovyev.android.messenger;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import roboguice.activity.RoboActivity;
 
@@ -44,6 +45,7 @@ public class StartActivity extends RoboActivity {
 		if (areEqual(intent.getAction(), INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
 			MainActivity.startForUnreadMessages(this);
 		} else {
+			updateStartCounter();
 			MainActivity.start(this);
 		}
 
@@ -53,5 +55,11 @@ public class StartActivity extends RoboActivity {
 		App.getAccountConnectionsService().tryStartAll();
 
 		this.finish();
+	}
+
+	private void updateStartCounter() {
+		final SharedPreferences preferences = App.getPreferences();
+		final Integer startCount = MessengerPreferences.startCount.getPreference(preferences);
+		MessengerPreferences.startCount.putPreference(preferences, startCount + 1);
 	}
 }

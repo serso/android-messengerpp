@@ -74,7 +74,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jcl.version>1.0.7</jcl.version>
-		<acl.version>1.1.10</acl.version>
+		<acl.version>1.1.11</acl.version>
 	</properties>
 
 	<dependencyManagement>
@@ -280,6 +280,13 @@
 			<dependency>
 				<groupId>org.solovyev.android</groupId>
 				<artifactId>android-common-tasks</artifactId>
+				<version>${acl.version}</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android</groupId>
+				<artifactId>android-common-wizard</artifactId>
 				<version>${acl.version}</version>
 				<type>apklib</type>
 			</dependency>

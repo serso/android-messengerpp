@@ -16,7 +16,6 @@
 
 package org.solovyev.android.messenger;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,11 +47,10 @@ import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.find;
 import static java.util.Arrays.asList;
-import static org.solovyev.android.Activities.restartActivity;
 import static org.solovyev.android.messenger.App.isMonkeyRunner;
 import static org.solovyev.android.messenger.App.newTag;
 
-public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener, FragmentManager.OnBackStackChangedListener {
+public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity implements FragmentManager.OnBackStackChangedListener {
 
     /*
 	**********************************************************************
@@ -66,7 +64,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	protected final String TAG = newTag(this.getClass().getSimpleName());
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           AUTO INJECTED FIELDS
     *
@@ -101,11 +99,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	@Nonnull
 	private NotificationService notificationService;
 
-	@Inject
-	@Nonnull
-	private EventManager eventManager;
-
-
     /*
     **********************************************************************
     *
@@ -125,10 +118,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	@Nonnull
 	private final MessengerMultiPaneFragmentManager multiPaneFragmentManager;
 
-	private RoboListeners listeners;
-
 	@Nonnull
-	private MessengerTheme theme = MessengerTheme.holo;
+	private final ActivityUi ui = new ActivityUi(this);
 
     /*
     **********************************************************************
@@ -170,6 +161,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	public AccountService getAccountService() {
 		return accountService;
 	}
+
 	@Nonnull
 	public MultiPaneManager getMultiPaneManager() {
 		return multiPaneManager;
@@ -194,28 +186,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	}
 
 	public RoboListeners getListeners() {
-		return listeners;
-	}
-
-	/*
-	**********************************************************************
-	*
-	*                           PREFERENCES
-	*
-	**********************************************************************
-	*/
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		tryUpdateTheme();
-	}
-
-	private void tryUpdateTheme() {
-		final MessengerTheme newTheme = App.getThemeFromPreferences();
-		if(!newTheme.equals(theme)) {
-			theme = newTheme;
-			restartActivity(this);
-		}
+		return ui.getListeners();
 	}
 
 	/*
@@ -228,10 +199,9 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		theme = App.getTheme();
-		setTheme(theme.getThemeResId());
-
+		ui.onBeforeCreate();
 		super.onCreate(savedInstanceState);
+		ui.onCreate(savedInstanceState);
 
 		setContentView(layoutId);
 
@@ -245,8 +215,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
-
-		listeners = new RoboListeners(getEventManager());
 
 		// let's disable locking of screen for monkeyrunner
 		if (isMonkeyRunner()) {
@@ -326,7 +294,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		while (true) {
 			final Fragment mainFragment = fm.findFragmentById(R.id.content_first_pane);
 			if (mainFragment != null) {
-				if(!isPrimaryFragment(mainFragment)) {
+				if (!isPrimaryFragment(mainFragment)) {
 					// NOTE: we must save local copies before popping the back stack as these values might change
 					final MultiPaneFragmentDef fragmentDef = newCopyingFragmentDef(mainFragment, false);
 
@@ -334,7 +302,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 						fragmentDefs.push(fragmentDef);
 					} else {
 						// nothing to pop => stop
-						if(fragmentDefs.isEmpty()) {
+						if (fragmentDefs.isEmpty()) {
 							final ActionBar.Tab selectedTab = getSupportActionBar().getSelectedTab();
 							if (selectedTab != null) {
 								selectedTab.select();
@@ -425,25 +393,13 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		tryUpdateTheme();
-		App.getPreferences().registerOnSharedPreferenceChangeListener(this);
+		ui.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		App.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
-
-		if (listeners != null) {
-			listeners.clearAll();
-		}
-
+		ui.onPause();
 		super.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	@Override

@@ -29,13 +29,26 @@ import org.solovyev.android.messenger.realms.RealmUiEventListener;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
+
 public final class AccountsActivity extends BaseFragmentActivity {
 
+	@Nonnull
+	private static final String EXTRA_NEW_ACCOUNTS = "new-accounts";
+
 	public static void start(@Nonnull Activity activity) {
-		final Intent result = new Intent();
-		result.setClass(activity, AccountsActivity.class);
-		activity.startActivity(result);
+		final Intent intent = new Intent();
+		intent.setClass(activity, AccountsActivity.class);
+		activity.startActivity(intent);
 	}
+
+	public static void startForNewAccounts(@Nonnull Activity activity) {
+		final Intent intent = new Intent();
+		intent.putExtra(EXTRA_NEW_ACCOUNTS, true);
+		intent.setClass(activity, AccountsActivity.class);
+		activity.startActivity(intent);
+	}
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +57,11 @@ public final class AccountsActivity extends BaseFragmentActivity {
 		if (savedInstanceState == null) {
 			// first time
 			getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.accounts);
+
+			// show realms if needed
+			if (getIntent().getBooleanExtra(EXTRA_NEW_ACCOUNTS, false)) {
+				getMultiPaneFragmentManager().setMainFragment(realms);
+			}
 		}
 
 		initFragments();

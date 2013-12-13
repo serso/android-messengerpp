@@ -56,8 +56,10 @@ import org.solovyev.android.messenger.users.DefaultUserService;
 import org.solovyev.android.messenger.users.SqliteUserDao;
 import org.solovyev.android.messenger.users.UserDao;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.wizard.MessengerWizards;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.network.NetworkStateServiceImpl;
+import org.solovyev.android.wizard.Wizards;
 import org.solovyev.tasks.TaskService;
 
 import javax.annotation.Nonnull;
@@ -74,6 +76,8 @@ public class MessengerModule extends AbstractModule {
 		final Background background = new Background();
 		bind(Background.class).toInstance(background);
 		bind(TaskService.class).toInstance(newTaskService(background.getHighPriorityExecutor()));
+
+		bind(Wizards.class).to(MessengerWizards.class);
 
 		bind(MessengerSecurityService.class).to(DefaultSecurityService.class);
 		bind(MessengerListeners.class).to(DefaultMessengerListeners.class);
