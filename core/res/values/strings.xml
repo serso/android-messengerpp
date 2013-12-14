@@ -110,7 +110,7 @@
 	<string name="mpp_wizard_choose_theme">Choose theme</string>
 	<string name="mpp_wizard_add_accounts">Add accounts</string>
 	<string name="mpp_wizard_add_accounts_text">Before you can chat you need to configure accounts. You can skip this
-		step and setup accounts later
+		step and setup accounts later.
 	</string>
 	<string name="mpp_wizard_add_accounts_now">Add accounts now</string>
 	<string name="mpp_wizard_final">Almost done!</string>
