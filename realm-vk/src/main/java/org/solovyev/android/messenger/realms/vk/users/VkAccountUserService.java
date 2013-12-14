@@ -16,7 +16,7 @@
 
 package org.solovyev.android.messenger.realms.vk.users;
 
-import org.solovyev.android.http.HttpRuntimeIoException;
+import org.solovyev.android.http.HttpTransaction;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.realms.vk.VkAccount;
@@ -26,17 +26,11 @@ import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.collections.Collections;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.http.HttpTransactions.execute;
 
-/**
- * User: serso
- * Date: 5/28/12
- * Time: 1:18 PM
- */
 public class VkAccountUserService implements AccountUserService {
 
 	@Nonnull
@@ -48,24 +42,21 @@ public class VkAccountUserService implements AccountUserService {
 
 	@Override
 	public User getUserById(@Nonnull String accountUserId) throws AccountConnectionException {
-		try {
-			final List<User> users = execute(VkUsersGetHttpTransaction.newInstance(account, accountUserId, null));
-			return Collections.getFirstListElement(users);
-		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		} catch (IOException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		}
+		final List<User> users = executeHttpTransaction(VkUsersGetHttpTransaction.newInstance(account, accountUserId, null));
+		return Collections.getFirstListElement(users);
 	}
 
 	@Nonnull
 	@Override
 	public List<User> getContacts() throws AccountConnectionException {
+		return executeHttpTransaction(VkFriendsGetHttpTransaction.newInstance(account, account.getUser().getEntity().getAccountEntityId()));
+	}
+
+	@Nonnull
+	private <R> R executeHttpTransaction(@Nonnull HttpTransaction<R> transaction) throws AccountConnectionException {
 		try {
-			return execute(VkFriendsGetHttpTransaction.newInstance(account, account.getUser().getEntity().getAccountEntityId()));
-		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		} catch (IOException e) {
+			return execute(transaction);
+		} catch (Exception e) {
 			throw new AccountConnectionException(account.getId(), e);
 		}
 	}
@@ -76,15 +67,9 @@ public class VkAccountUserService implements AccountUserService {
 	public List<User> getOnlineUsers() throws AccountConnectionException {
 		final List<User> result = new ArrayList<User>();
 
-		try {
-			final UserService userService = App.getUserService();
-			for (String accountUserId : execute(new VkFriendsGetOnlineHttpTransaction(account))) {
-				result.add(userService.getUserById(account.newUserEntity(accountUserId)).cloneWithNewStatus(true));
-			}
-		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		} catch (IOException e) {
-			throw new AccountConnectionException(account.getId(), e);
+		final UserService userService = App.getUserService();
+		for (String accountUserId : executeHttpTransaction(new VkFriendsGetOnlineHttpTransaction(account))) {
+			result.add(userService.getUserById(account.newUserEntity(accountUserId)).cloneWithNewStatus(true));
 		}
 
 		return result;

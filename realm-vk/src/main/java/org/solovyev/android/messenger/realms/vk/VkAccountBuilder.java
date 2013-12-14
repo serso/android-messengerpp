@@ -23,7 +23,6 @@ import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountRuntimeException;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.AccountSyncData;
-import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.vk.auth.JsonAuthResult;
 import org.solovyev.android.messenger.realms.vk.auth.VkOauthHttpTransaction;
@@ -65,8 +64,8 @@ public class VkAccountBuilder extends AbstractAccountBuilder<VkAccount, VkAccoun
 				final User user = users.get(0);
 				result = newUser(user.getEntity(), user.getProperties());
 			}
-		} catch (IOException e) {
-			Log.e("VkRealmBuilder", e.getMessage(), e);
+		} catch (Exception e) {
+			Log.e(VkRealm.TAG, e.getMessage(), e);
 			result = defaultUser;
 		}
 

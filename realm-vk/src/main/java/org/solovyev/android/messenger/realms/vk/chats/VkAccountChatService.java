@@ -165,9 +165,7 @@ public class VkAccountChatService implements AccountChatService {
 	private <R> R executeHttpRequest(HttpTransaction<R> transaction) throws AccountConnectionException {
 		try {
 			return HttpTransactions.execute(transaction);
-		} catch (HttpRuntimeIoException e) {
-			throw new AccountConnectionException(account.getId(), e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new AccountConnectionException(account.getId(), e);
 		}
 	}
