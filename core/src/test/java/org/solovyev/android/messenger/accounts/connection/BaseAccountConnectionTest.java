@@ -83,7 +83,7 @@ public class BaseAccountConnectionTest {
 
 
 		public TestAccountConnection() {
-			super(mock(Account.class), mock(Context.class), false);
+			super(mock(Account.class), mock(Context.class));
 		}
 
 		@Override

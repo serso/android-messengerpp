@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public class TestAccountConnection extends BaseAccountConnection<TestAccount> {
 
 	public TestAccountConnection(@Nonnull TestAccount account, @Nonnull Context context) {
-		super(account, context, false);
+		super(account, context);
 	}
 
 	@Override
@@ -34,6 +34,5 @@ public class TestAccountConnection extends BaseAccountConnection<TestAccount> {
 
 	@Override
 	protected void stop0() {
-		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }

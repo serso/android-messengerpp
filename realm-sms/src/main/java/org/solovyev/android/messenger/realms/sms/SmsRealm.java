@@ -74,7 +74,7 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 
 	@Inject
 	public SmsRealm(@Nonnull Application context) {
-		super(REALM_ID, R.string.mpp_sms_name, R.drawable.mpp_sms_icon, SmsAccountConfigurationFragment.class, SmsAccountConfiguration.class, true, SmsEditUserFragment.class);
+		super(REALM_ID, R.string.mpp_sms_name, R.drawable.mpp_sms_icon, SmsAccountConfigurationFragment.class, SmsAccountConfiguration.class, true, SmsEditUserFragment.class, false);
 		this.context = context;
 	}
 

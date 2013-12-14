@@ -24,4 +24,7 @@ public interface AccountConnectionsService {
 
 	void tryStartAll();
 
+	// todo serso: move this method to ACL's NetworkStateService
+	@Deprecated
+	boolean isInternetConnectionExists();
 }

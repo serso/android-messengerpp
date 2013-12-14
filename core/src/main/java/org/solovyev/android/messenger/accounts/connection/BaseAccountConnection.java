@@ -43,18 +43,15 @@ public abstract class BaseAccountConnection<A extends Account> implements Accoun
 	@Nonnull
 	private final AtomicBoolean stopped = new AtomicBoolean(true);
 
-	private final boolean internetConnectionRequired;
-
 	private final int retryCount;
 
-	protected BaseAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
-		this(account, context, internetConnectionRequired, DEFAULT_RETRY_COUNT);
+	protected BaseAccountConnection(@Nonnull A account, @Nonnull Context context) {
+		this(account, context, DEFAULT_RETRY_COUNT);
 	}
 
-	protected BaseAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired, int retryCount) {
+	protected BaseAccountConnection(@Nonnull A account, @Nonnull Context context, int retryCount) {
 		this.account = account;
 		this.context = context;
-		this.internetConnectionRequired = internetConnectionRequired;
 		this.retryCount = retryCount;
 	}
 
@@ -99,7 +96,7 @@ public abstract class BaseAccountConnection<A extends Account> implements Accoun
 
 	@Override
 	public boolean isInternetConnectionRequired() {
-		return internetConnectionRequired;
+		return getAccount().getRealm().isInternetConnectionRequired();
 	}
 
 	@Override

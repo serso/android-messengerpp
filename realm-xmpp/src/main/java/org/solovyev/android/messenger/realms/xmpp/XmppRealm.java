@@ -68,7 +68,7 @@ public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	private Application context;
 
 	protected XmppRealm(@Nonnull String realmId, int nameResId, int iconResId, @Nonnull Class<? extends XmppAccountConfigurationFragment> configurationFragmentClass) {
-		super(realmId, nameResId, iconResId, configurationFragmentClass, XmppAccountConfiguration.class, false, null);
+		super(realmId, nameResId, iconResId, configurationFragmentClass, XmppAccountConfiguration.class, false, null, true);
 	}
 
 	@Nonnull

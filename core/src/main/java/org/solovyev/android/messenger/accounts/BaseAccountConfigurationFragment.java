@@ -20,13 +20,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
+import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmFragmentReuseCondition;
+import org.solovyev.android.network.NetworkData;
+import org.solovyev.android.network.NetworkStateListener;
+import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
@@ -51,6 +56,22 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	@Nonnull
 	private static final String TAG = "AccountConfiguration";
 
+	/*
+	**********************************************************************
+	*
+	*                           AUTO INJECTED FIELDS
+	*
+	**********************************************************************
+	*/
+
+	@Inject
+	@Nonnull
+	private NetworkStateService networkStateService;
+
+	@Inject
+	@Nonnull
+	private AccountConnectionsService accountConnectionsService;
+
     /*
 	**********************************************************************
     *
@@ -61,6 +82,9 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 
 	@Nonnull
 	private final EditButtons buttons = new AccountEditButtons<A>(this);
+
+	@Nullable
+	private NetworkStateListener networkListener;
 
 	protected BaseAccountConfigurationFragment(int layoutResId) {
 		super(layoutResId, true);
@@ -95,8 +119,29 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	public void onResume() {
 		super.onResume();
 
+		final Realm realm = getRealm();
+		if (realm.isInternetConnectionRequired()) {
+			if (!accountConnectionsService.isInternetConnectionExists()) {
+				NoInternetConnectionDialog.show(getActivity());
+			} else {
+				networkListener = new AccountNetworkStateListener();
+				networkStateService.addListener(networkListener);
+			}
+		}
+
+
 		getTaskListeners().addTaskListener(AccountSaverCallable.TASK_NAME, newAccountSaverListener(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+	}
+
+	@Override
+	public void onPause() {
+		if (networkListener != null) {
+			networkStateService.removeListener(networkListener);
+			networkListener = null;
+		}
+
+		super.onPause();
 	}
 
 	public A getEditedAccount() {
@@ -117,5 +162,17 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	protected CharSequence getFragmentTitle() {
 		final String realmName = getString(getRealm().getNameResId());
 		return getString(R.string.mpp_account_configuration, realmName);
+	}
+
+	private class AccountNetworkStateListener implements NetworkStateListener {
+		@Override
+		public void onNetworkEvent(@Nonnull NetworkData networkData) {
+			switch (networkData.getState()) {
+				case UNKNOWN:
+				case NOT_CONNECTED:
+					NoInternetConnectionDialog.show(getActivity());
+					break;
+			}
+		}
 	}
 }

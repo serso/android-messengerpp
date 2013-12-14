@@ -121,6 +121,7 @@
 	</string>
 	<string name="mpp_wizard_final_translate">Translate</string>
 	<string name="mpp_wizard_final_contribute">Contribute to development</string>
+	<string name="mpp_turn_on_internet">Turn on internet</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message</item>
 		<item quantity="other">There are %s unread messages</item>

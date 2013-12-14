@@ -27,7 +27,7 @@ import org.solovyev.common.msg.MessageType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static android.provider.Settings.ACTION_WIRELESS_SETTINGS;
+import static android.provider.Settings.ACTION_SETTINGS;
 import static org.solovyev.android.Activities.startActivity;
 
 public final class Notifications {
@@ -105,7 +105,7 @@ public final class Notifications {
 
 		@Override
 		public void solve(@Nonnull Notification notification) {
-			startActivity(new Intent(ACTION_WIRELESS_SETTINGS), App.getApplication());
+			startActivity(new Intent(ACTION_SETTINGS), App.getApplication());
 		}
 	}
 

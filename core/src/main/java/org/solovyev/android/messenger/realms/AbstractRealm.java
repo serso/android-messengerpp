@@ -55,13 +55,16 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	@Nullable
 	private final Class<? extends BaseEditUserFragment<?>> createUserFragmentClass;
 
+	private final boolean internetConnectionRequired;
+
 	protected AbstractRealm(@Nonnull String id,
 							int nameResId,
 							int iconResId,
 							@Nonnull Class<? extends BaseAccountConfigurationFragment<?>> configurationFragmentClass,
 							@Nonnull Class<? extends C> configurationClass,
 							boolean shouldWaitForDeliveryReport,
-							@Nullable Class<? extends BaseEditUserFragment<?>> createUserFragmentClass) {
+							@Nullable Class<? extends BaseEditUserFragment<?>> createUserFragmentClass,
+							boolean internetConnectionRequired) {
 		this.id = id;
 		this.nameResId = nameResId;
 		this.iconResId = iconResId;
@@ -69,6 +72,7 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 		this.configurationClass = configurationClass;
 		this.shouldWaitForDeliveryReport = shouldWaitForDeliveryReport;
 		this.createUserFragmentClass = createUserFragmentClass;
+		this.internetConnectionRequired = internetConnectionRequired;
 	}
 
 	@Nonnull
@@ -194,4 +198,8 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 		return createUserFragmentClass;
 	}
 
+	@Override
+	public boolean isInternetConnectionRequired() {
+		return internetConnectionRequired;
+	}
 }

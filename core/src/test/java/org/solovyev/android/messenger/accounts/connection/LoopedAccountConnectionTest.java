@@ -17,7 +17,6 @@
 package org.solovyev.android.messenger.accounts.connection;
 
 import android.content.Context;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -93,7 +92,7 @@ public class LoopedAccountConnectionTest {
 		private volatile boolean disconnectCalled = false;
 
 		protected TestLoopedConnection(int maxCount) {
-			super(mock(Account.class), mock(Context.class), false, LOOP_TIME);
+			super(mock(Account.class), mock(Context.class), LOOP_TIME);
 			this.maxCount = maxCount;
 		}
 
@@ -105,7 +104,7 @@ public class LoopedAccountConnectionTest {
 		@Override
 		protected void reconnectIfDisconnected() throws AccountConnectionException {
 			count++;
-			if(count >= maxCount) {
+			if (count >= maxCount) {
 				throw new AccountConnectionException("test");
 			}
 		}

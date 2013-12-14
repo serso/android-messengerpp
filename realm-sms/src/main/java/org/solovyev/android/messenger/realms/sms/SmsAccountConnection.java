@@ -89,7 +89,7 @@ final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 	private final CallListener callListener;
 
 	SmsAccountConnection(@Nonnull SmsAccount account, @Nonnull Context context) {
-		super(account, context, false);
+		super(account, context);
 		callListener = new CallListener(context);
 	}
 

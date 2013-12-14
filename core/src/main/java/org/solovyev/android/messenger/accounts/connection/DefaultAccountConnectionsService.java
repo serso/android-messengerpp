@@ -98,7 +98,8 @@ public class DefaultAccountConnectionsService implements AccountConnectionsServi
 		accountConnections.startConnectionsFor(accounts, isInternetConnectionExists());
 	}
 
-	boolean isInternetConnectionExists() {
+	@Override
+	public boolean isInternetConnectionExists() {
 		final NetworkData networkData = networkStateService.getNetworkData();
 		if (networkData.getState() == NetworkState.UNKNOWN) {
 			return isConnected();

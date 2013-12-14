@@ -37,20 +37,20 @@ public abstract class LoopedAccountConnection<A extends Account> extends BaseAcc
 	@Nullable
 	private volatile Thread thread;
 
-	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired) {
-		this(account, context, internetConnectionRequired, DEFAULT_WAIT_MILLIS);
+	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context) {
+		this(account, context, DEFAULT_WAIT_MILLIS);
 	}
 
-	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired, long waitMillis) {
-		super(account, context, internetConnectionRequired);
+	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, long waitMillis) {
+		super(account, context);
 		if (waitMillis < MIN_WAIT_MILLIS) {
 			Log.w(TAG, "Too small connection wait time may lead to fast battery drain. Wait time should be more than 5 minutes.");
 		}
 		this.waitMillis = waitMillis;
 	}
 
-	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, boolean internetConnectionRequired, long waitTime, @Nonnull TimeUnit waitTimeUnit) {
-		this(account, context, internetConnectionRequired, waitTimeUnit.toMillis(waitTime));
+	protected LoopedAccountConnection(@Nonnull A account, @Nonnull Context context, long waitTime, @Nonnull TimeUnit waitTimeUnit) {
+		this(account, context, waitTimeUnit.toMillis(waitTime));
 	}
 
 	@Override

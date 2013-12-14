@@ -38,7 +38,7 @@ public abstract class LongPollAccountConnection extends BaseAccountConnection<Ac
 										@Nonnull Context context,
 										@Nonnull RealmLongPollService realmLongPollService,
 										int retryCount) {
-		super(account, context, true, retryCount);
+		super(account, context, retryCount);
 		this.realmLongPollService = realmLongPollService;
 	}
 
