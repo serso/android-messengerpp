@@ -1,16 +1,15 @@
 package org.solovyev.android.messenger.about;
 
 import android.app.Activity;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.core.R;
 
+import javax.annotation.Nonnull;
+
 public enum AboutType implements Identifiable {
 
-	about(R.string.mpp_about) {
+	about(R.string.mpp_about, R.drawable.mpp_li_about_states) {
 		@Nonnull
 		@Override
 		public MultiPaneFragmentDef newFragmentDef(@Nonnull Activity activity, boolean addToBackStack) {
@@ -18,7 +17,7 @@ public enum AboutType implements Identifiable {
 		}
 	},
 
-	third_parties_licenses(R.string.mpp_about_third_party_licenses) {
+	third_parties_licenses(R.string.mpp_about_third_party_licenses, R.drawable.mpp_li_3rd_parties_licenses_states) {
 		@Nonnull
 		@Override
 		public MultiPaneFragmentDef newFragmentDef(@Nonnull Activity activity, boolean addToBackStack) {
@@ -27,13 +26,19 @@ public enum AboutType implements Identifiable {
 	};
 
 	private final int titleResId;
+	private final int iconResId;
 
-	AboutType(int titleResId) {
+	AboutType(int titleResId, int iconResId) {
 		this.titleResId = titleResId;
+		this.iconResId = iconResId;
 	}
 
 	public int getTitleResId() {
 		return titleResId;
+	}
+
+	public int getIconResId() {
+		return iconResId;
 	}
 
 	@Nonnull

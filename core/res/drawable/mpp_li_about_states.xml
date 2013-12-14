@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <!--
   ~ Copyright 2013 serso aka se.solovyev
   ~
@@ -16,17 +17,17 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  style="?mpp_list_item">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- pressed -->
+	<item android:state_pressed="true" android:drawable="@drawable/mpp_li_about_inverted"/>
 
-	<ImageView
-			a:id="@+id/mpp_li_about_icon_imageview"
-			style="?mpp_list_item_icon"/>
+	<!--
+	For normal size screens selected and not selected states must be the same
+	as there is no second pane on which additional content is shown
+	-->
+	<!-- list item selected-->
+	<item android:state_activated="true" android:drawable="@drawable/mpp_li_about"/>
 
-	<TextView
-			a:id="@+id/mpp_li_about_name_textview"
-			style="?mpp_list_item_name"
-			a:singleLine="false"
-			a:ellipsize="none"/>
-
-</LinearLayout>
+	<!-- default, list item not selected -->
+	<item android:drawable="@drawable/mpp_li_about"/>
+</selector>

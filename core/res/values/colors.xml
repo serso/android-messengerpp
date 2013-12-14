@@ -17,7 +17,7 @@
   -->
 
 <resources>
-	<color name="mpp_text">#ff363636</color>
+	<color name="mpp_text">#ff5f5f5f</color>
 	<color name="mpp_text_inverted">#ffffffff</color>
 	<color name="mpp_text_selected">#ffffffff</color>
 	<color name="mpp_text_secondary">#ff939393</color>
@@ -25,9 +25,6 @@
 	<color name="mpp_bg">#ffffffff</color>
 
 	<color name="mpp_button">#ffe8e8e8</color>
-	<color name="text_name">#ff0e1825</color>
-	<!--<color name="text_link">#ff3266a2</color>-->
-	<color name="text_link">#ff363636</color>
 	<color name="mpp_selected">#ff33b5e5</color>
 	<color name="mpp_blue">#ff33b5e5</color>
 	<color name="mpp_black">#ff000000</color>
