@@ -25,6 +25,7 @@ import org.solovyev.android.messenger.realms.vk.VkRealm;
 import org.solovyev.android.messenger.realms.xmpp.CustomXmppRealm;
 import org.solovyev.android.messenger.realms.xmpp.FacebookXmppRealm;
 import org.solovyev.android.messenger.realms.xmpp.GoogleXmppRealm;
+import org.solovyev.android.messenger.realms.xmpp.YandexXmppRealm;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -53,6 +54,10 @@ public class DefaultConfiguration implements Configuration {
 
 	@Inject
 	@Nonnull
+	private YandexXmppRealm yandexXmppRealm;
+
+	@Inject
+	@Nonnull
 	private VkRealm vkRealm;
 
 	@Inject
@@ -74,6 +79,7 @@ public class DefaultConfiguration implements Configuration {
 				realms.add(xmppRealm);
 				realms.add(facebookXmppRealm);
 				realms.add(googleXmppRealm);
+				realms.add(yandexXmppRealm);
 				realms.add(vkRealm);
 				realms.add(smsRealm);
 				if (isMonkeyRunner()) {

@@ -107,6 +107,10 @@ public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 		return new XmppRealmConfigurationCipherer(App.getSecurityService().getStringSecurityService().getCipherer());
 	}
 
+	public boolean useLoginWithDomain() {
+		return true;
+	}
+
     /*
 	**********************************************************************
     *

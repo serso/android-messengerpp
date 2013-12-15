@@ -25,7 +25,6 @@ import org.solovyev.android.messenger.accounts.AbstractAccountBuilder;
 import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.accounts.AccountSyncData;
 import org.solovyev.android.messenger.entities.Entities;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
@@ -41,10 +40,16 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 	@Nullable
 	private Connection connection;
 
-	public XmppAccountBuilder(@Nonnull Realm realm,
+	public XmppAccountBuilder(@Nonnull XmppRealm realm,
 							  @Nullable XmppAccount editedAccount,
 							  @Nonnull XmppAccountConfiguration configuration) {
 		super(realm, configuration, editedAccount);
+	}
+
+	@Nonnull
+	@Override
+	public XmppRealm getRealm() {
+		return (XmppRealm) super.getRealm();
 	}
 
 	@Nonnull
@@ -58,7 +63,7 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 			try {
 				user = toAccountUser(accountId, accountUserId, null, connection);
 			} catch (XMPPException e) {
-				Log.e("XmppRealmBuilder", e.getMessage(), e);
+				Log.e(XmppRealm.TAG, e.getMessage(), e);
 				user = newEmptyUser(Entities.newEntity(accountId, accountUserId));
 			}
 		} else {
@@ -104,7 +109,7 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 		try {
 			if (connection != null) {
 				final XmppAccountConfiguration configuration = getConfiguration();
-				connection.login(configuration.getLogin(), configuration.getPassword());
+				connection.login(configuration.getLogin(getRealm()), configuration.getPassword());
 			} else {
 				throw new InvalidCredentialsException("Not connected!");
 			}

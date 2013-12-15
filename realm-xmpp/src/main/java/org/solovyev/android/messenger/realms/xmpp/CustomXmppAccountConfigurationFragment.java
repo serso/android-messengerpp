@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.Realm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigurationFragment {
 
@@ -41,4 +42,21 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 		root.findViewById(R.id.mpp_xmpp_resource_edittext).setVisibility(View.VISIBLE);
 		root.findViewById(R.id.mpp_xmpp_resource_label).setVisibility(View.VISIBLE);
 	}
+
+	@Nullable
+	@Override
+	protected String getServer() {
+		return null;
+	}
+
+	protected int getLoginHintResId() {
+		return R.string.mpp_xmpp_login_hint_custom;
+	}
+
+	@Nullable
+	@Override
+	protected String getDefaultDomain() {
+		return null;
+	}
+
 }

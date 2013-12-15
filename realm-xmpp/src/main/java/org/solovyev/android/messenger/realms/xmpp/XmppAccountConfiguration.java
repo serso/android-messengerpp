@@ -23,6 +23,7 @@ import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.common.JObject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class XmppAccountConfiguration extends JObject implements AccountConfiguration {
 
@@ -32,6 +33,8 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	@Nonnull
 	private static final String DEFAULT_RESOURCE = "Messenger++";
+
+	static final char AT = '@';
 
 	@Nonnull
 	private String server;
@@ -60,12 +63,17 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	@Nonnull
 	public String getAccountUserId() {
-		final int index = login.indexOf('@');
+		final int index = login.indexOf(AT);
 		if (index < 0) {
-			return login + '@' + server;
+			return login + AT + server;
 		} else {
 			return login;
 		}
+	}
+
+	@Nullable
+	private String getDomain() {
+		return getAfterAt(login);
 	}
 
 	@Nonnull
@@ -76,6 +84,22 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	@Nonnull
 	public String getLogin() {
 		return login;
+	}
+
+	@Nonnull
+	public String getLogin(@Nonnull XmppRealm realm) {
+		final String login;
+		if (realm.useLoginWithDomain()) {
+			login = getLogin();
+		} else {
+			login = getLoginWithoutDomain();
+		}
+		return login;
+	}
+
+	@Nonnull
+	public String getLoginWithoutDomain() {
+		return getBeforeAt(login);
 	}
 
 	@Nonnull
@@ -103,7 +127,7 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	@Nonnull
 	public AndroidConnectionConfiguration toXmppConfiguration() {
-		final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, null);
+		final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, getDomain());
 
 		if (App.isDebuggable()) {
 			connectionConfiguration.setDebuggerEnabled(DEBUG);
@@ -162,5 +186,33 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	public void setPassword(@Nonnull String password) {
 		this.password = password;
+	}
+
+	/*
+	**********************************************************************
+	*
+	*                           STATIC
+	*
+	**********************************************************************
+	*/
+
+	@Nullable
+	public static String getAfterAt(@Nonnull String s) {
+		final int index = s.indexOf(AT);
+		if (index < 0) {
+			return null;
+		} else {
+			return s.substring(index + 1);
+		}
+	}
+
+	@Nonnull
+	public static String getBeforeAt(@Nonnull String s) {
+		final int index = s.indexOf(AT);
+		if (index < 0) {
+			return s;
+		} else {
+			return s.substring(0, index);
+		}
 	}
 }

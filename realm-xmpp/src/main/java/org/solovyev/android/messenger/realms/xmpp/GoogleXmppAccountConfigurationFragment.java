@@ -40,8 +40,9 @@ public class GoogleXmppAccountConfigurationFragment extends XmppAccountConfigura
 		return "talk.google.com";
 	}
 
+	@Nullable
 	@Override
-	protected int getLoginHintResId() {
-		return R.string.mpp_xmpp_login_hint_google;
+	protected String getDefaultDomain() {
+		return "gmail.com";
 	}
 }

@@ -30,6 +30,8 @@ import javax.annotation.Nullable;
 import static android.view.View.GONE;
 import static android.view.View.NO_ID;
 import static org.solovyev.android.messenger.App.showToast;
+import static org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguration.AT;
+import static org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguration.getAfterAt;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public abstract class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
@@ -113,9 +115,7 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	}
 
 	@Nullable
-	protected String getServer() {
-		return null;
-	}
+	protected abstract String getServer();
 
 	protected int getLoginHintResId() {
 		return R.string.mpp_xmpp_login_hint;
@@ -128,8 +128,35 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 		final String password = passwordEditText.getText().toString();
 		final String resource = resourceEditText.getText().toString();
 
-		return validateData(server, login, password, resource);
+		return validateData(server, prepareLogin(login), password, resource);
 	}
+
+	@Nullable
+	private String prepareLogin(@Nullable String login) {
+		if (isEmpty(login)) {
+			return login;
+		}
+
+		final String defaultDomain = getDefaultDomain();
+		if (isEmpty(defaultDomain)) {
+			return login;
+		}
+
+		final String domain = getAfterAt(login);
+		if (domain == null) {
+			// no domain and no @ symbol
+			return login + AT + defaultDomain;
+		} else if (domain.isEmpty()) {
+			// no domain, but @ exists
+			return login + defaultDomain;
+		} else {
+			// domains exists, override defaults
+			return login;
+		}
+	}
+
+	@Nullable
+	protected abstract String getDefaultDomain();
 
 	@Nullable
 	private XmppAccountConfiguration validateData(@Nullable String server, @Nullable String login, @Nullable String password, @Nullable String resource) {

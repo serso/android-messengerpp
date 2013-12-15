@@ -3,10 +3,10 @@
 <resources>
 	<string name="mpp_xmpp_name">XMPP</string>
 	<string name="mpp_xmpp_name_facebook">Facebook</string>
+	<string name="mpp_xmpp_name_yandex">Yandex</string>
 	<string name="mpp_xmpp_name_google">Google Talk</string>
-	<string name="mpp_xmpp_login_hint">user_name@domain.xx</string>
-	<string name="mpp_xmpp_login_hint_facebook">user_name</string>
-	<string name="mpp_xmpp_login_hint_google">user_name@gmail.com</string>
+	<string name="mpp_xmpp_login_hint_custom">user_name@domain.xx</string>
+	<string name="mpp_xmpp_login_hint">user_name</string>
 	<string name="mpp_xmpp_server">Server</string>
 	<string name="mpp_xmpp_login">Login</string>
 	<string name="mpp_xmpp_password">Password</string>

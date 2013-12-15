@@ -22,11 +22,11 @@ import org.solovyev.android.messenger.realms.Realm;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class FacebookXmppAccountConfigurationFragment extends XmppAccountConfigurationFragment {
+public class YandexXmppAccountConfigurationFragment extends XmppAccountConfigurationFragment {
 
 	@Inject
 	@Nonnull
-	private FacebookXmppRealm realm;
+	private YandexXmppRealm realm;
 
 	@Nonnull
 	@Override
@@ -37,12 +37,12 @@ public class FacebookXmppAccountConfigurationFragment extends XmppAccountConfigu
 	@Nullable
 	@Override
 	protected String getServer() {
-		return "chat.facebook.com";
+		return "xmpp.yandex.ru";
 	}
 
 	@Nullable
 	@Override
 	protected String getDefaultDomain() {
-		return null;
+		return "ya.ru";
 	}
 }

@@ -16,33 +16,17 @@
 
 package org.solovyev.android.messenger.realms.xmpp;
 
-import com.google.inject.Inject;
-import org.solovyev.android.messenger.realms.Realm;
+import com.google.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+@Singleton
+public class YandexXmppRealm extends XmppRealm {
 
-public class FacebookXmppAccountConfigurationFragment extends XmppAccountConfigurationFragment {
-
-	@Inject
-	@Nonnull
-	private FacebookXmppRealm realm;
-
-	@Nonnull
-	@Override
-	public Realm getRealm() {
-		return realm;
+	public YandexXmppRealm() {
+		super("xmpp-yandex", R.string.mpp_xmpp_name_yandex, R.drawable.mpp_xmpp_yandex_icon, YandexXmppAccountConfigurationFragment.class);
 	}
 
-	@Nullable
 	@Override
-	protected String getServer() {
-		return "chat.facebook.com";
-	}
-
-	@Nullable
-	@Override
-	protected String getDefaultDomain() {
-		return null;
+	public boolean useLoginWithDomain() {
+		return false;
 	}
 }
