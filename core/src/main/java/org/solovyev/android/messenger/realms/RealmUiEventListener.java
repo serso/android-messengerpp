@@ -42,6 +42,9 @@ public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 			case realm_clicked:
 				if (activity.isDualPane()) {
 					mpfm.setSecondFragment(newCreateAccountConfigurationFragmentDef(activity, realm, false));
+					if (activity.isTriplePane()) {
+						mpfm.emptifyThirdFragment();
+					}
 				} else {
 					mpfm.setMainFragment(newCreateAccountConfigurationFragmentDef(activity, realm, true));
 				}

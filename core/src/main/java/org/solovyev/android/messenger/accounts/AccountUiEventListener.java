@@ -58,6 +58,9 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 		final MultiPaneFragmentDef fragmentDef = newEditAccountConfigurationFragmentDef(activity, account, true);
 		if (activity.isDualPane()) {
 			mpfm.setSecondFragment(fragmentDef);
+			if (activity.isTriplePane()) {
+				mpfm.emptifyThirdFragment();
+			}
 		} else {
 			mpfm.setMainFragment(fragmentDef);
 		}
