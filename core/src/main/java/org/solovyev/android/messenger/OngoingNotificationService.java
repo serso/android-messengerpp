@@ -18,6 +18,7 @@ package org.solovyev.android.messenger;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import org.solovyev.android.messenger.core.R;
@@ -34,6 +35,7 @@ public final class OngoingNotificationService extends RoboService {
     */
 
 	private static final int NOTIFICATION_ID_APP_IS_RUNNING = 10002029;
+    public static boolean isRunning = false;
 
 	public OngoingNotificationService() {
 	}
@@ -47,7 +49,9 @@ public final class OngoingNotificationService extends RoboService {
 	public void onCreate() {
 		super.onCreate();
 
-		final NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
+        isRunning = true;
+
+        final NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
 		nb.setOngoing(true);
 		nb.setSmallIcon(R.drawable.mpp_sb_icon);
 		nb.setContentTitle(getString(R.string.mpp_notification_title));
@@ -55,4 +59,10 @@ public final class OngoingNotificationService extends RoboService {
 		nb.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, StartActivity.class), 0));
 		startForeground(NOTIFICATION_ID_APP_IS_RUNNING, nb.getNotification());
 	}
+
+    public void onDestroy() {
+        isRunning = false;
+
+        super.onDestroy();
+    }
 }

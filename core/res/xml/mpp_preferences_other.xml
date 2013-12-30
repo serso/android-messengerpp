@@ -24,6 +24,11 @@
 			a:title="@string/mpp_preferences_start_on_boot_data_title"
 			a:summary="@string/mpp_preferences_start_on_boot_data_summary"/>
 
+    <CheckBoxPreference
+        a:key="isOngoingNotificationEnabled"
+        a:title="@string/mpp_preferences_is_ongoing_notification_enabled_title"
+        a:summary="@string/mpp_preferences_is_ongoing_notification_enabled_summary"/>
+
 	<Preference
 			a:key="reloadData"
 			a:title="@string/mpp_preferences_reload_local_data_title"
