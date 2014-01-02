@@ -202,4 +202,9 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	public boolean isInternetConnectionRequired() {
 		return internetConnectionRequired;
 	}
+
+	@Override
+	public boolean isHtmlMessage() {
+		return false;
+	}
 }

@@ -109,6 +109,8 @@ public interface Realm<C extends AccountConfiguration> extends Identifiable {
 
 	boolean isInternetConnectionRequired();
 
+	boolean isHtmlMessage();
+
 	/*
 	**********************************************************************
     *

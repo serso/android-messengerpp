@@ -31,9 +31,10 @@ import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerPreferences;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
@@ -54,22 +55,27 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	private static final String TAG_PREFIX = "message_list_item_";
 
 	@Nonnull
+	private final Account account;
+
+	@Nonnull
 	private Chat chat;
 
 	private final boolean userMessage;
 
-	private MessageListItem(@Nonnull Chat chat,
+	private MessageListItem(@Nonnull Account account,
+							@Nonnull Chat chat,
 							@Nonnull Message message,
 							boolean userMessage) {
 		super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
+		this.account = account;
 		this.chat = chat;
 		this.userMessage = userMessage;
 	}
 
 	@Nonnull
-	public static MessageListItem newMessageListItem(@Nonnull User user, @Nonnull Chat chat, @Nonnull Message message) {
-		final boolean userMessage = user.getEntity().equals(message.getAuthor());
-		return new MessageListItem(chat, message, userMessage);
+	public static MessageListItem newMessageListItem(@Nonnull Account account, @Nonnull Chat chat, @Nonnull Message message) {
+		final boolean userMessage = account.getUser().getEntity().equals(message.getAuthor());
+		return new MessageListItem(account, chat, message, userMessage);
 	}
 
 	@Override
@@ -115,6 +121,12 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 		}
 
 		String messageBody = message.getBody();
+
+		final Realm realm = account.getRealm();
+		if (!realm.isHtmlMessage()) {
+			messageBody = messageBody.replace("\n", "<br>");
+		}
+
 		final ImageView messageIcon = viewTag.getViewById(R.id.mpp_li_message_icon_imageview);
 
 		final SharedPreferences preferences = getPreferences();

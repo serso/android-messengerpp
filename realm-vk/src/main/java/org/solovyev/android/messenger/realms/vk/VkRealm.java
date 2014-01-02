@@ -230,6 +230,11 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 		return Notifications.newNotification(R.string.mpp_vk_notification_error, MessageType.error, e.getError().getErrorDescription()).causedBy(e);
 	}
 
+	@Override
+	public boolean isHtmlMessage() {
+		return true;
+	}
+
 	/*
     **********************************************************************
     *

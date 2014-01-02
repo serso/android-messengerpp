@@ -23,12 +23,12 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.BaseListItemAdapter;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.chats.ChatEventType;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +72,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> {
     */
 
 	@Nonnull
-	private final User user;
+	private final Account account;
 
 	@Nonnull
 	private Chat chat;
@@ -104,9 +104,9 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> {
 		}
 	});
 
-	public MessagesAdapter(@Nonnull Context context, @Nonnull User user, @Nonnull Chat chat) {
+	public MessagesAdapter(@Nonnull Context context, @Nonnull Account account, @Nonnull Chat chat) {
 		super(context, new ArrayList<MessageListItem>(), false, false);
-		this.user = user;
+		this.account = account;
 		this.chat = chat;
 	}
 
@@ -275,7 +275,7 @@ public class MessagesAdapter extends BaseListItemAdapter<MessageListItem> {
 
 	@Nonnull
 	private MessageListItem newMessageListItem(@Nonnull Message message) {
-		return MessageListItem.newMessageListItem(user, chat, message);
+		return MessageListItem.newMessageListItem(account, chat, message);
 	}
 
 	protected void removeListItem(@Nonnull Message message) {

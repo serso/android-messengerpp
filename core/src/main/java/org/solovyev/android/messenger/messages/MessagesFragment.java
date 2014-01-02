@@ -49,6 +49,7 @@ import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
@@ -115,7 +116,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 	@Inject
 	@Nonnull
-
 	private NotificationService notificationService;
 
 
@@ -313,13 +313,19 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	}
 
 	private void sendMessage(@Nonnull EditText messageEditText, @Nullable User recipient) {
-		final Message message = trySendMessage(getActivity(), account, chat, recipient, toHtml(messageEditText.getText()));
+		String messageBody = String.valueOf(messageEditText.getText());
+
+		final Realm realm = account.getRealm();
+		if (realm.isHtmlMessage()) {
+			messageBody = toHtml(messageBody);
+		}
+
+		final Message message = trySendMessage(getActivity(), account, chat, recipient, messageBody);
 		if (message != null) {
 			messageEditText.setText("");
 			final MessagesAdapter adapter = getAdapter();
 			adapter.addSendingMessage(message);
 			getListView().smoothScrollToPosition(adapter.getCount());
-
 		}
 	}
 
@@ -418,7 +424,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	@Nonnull
 	@Override
 	protected MessagesAdapter createAdapter() {
-		return new MessagesAdapter(getActivity(), getUser(), chat);
+		return new MessagesAdapter(getActivity(), account, chat);
 	}
 
 	@Override
@@ -494,7 +500,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		@Nonnull
 		@Override
 		protected MessageListItem createListItem(@Nonnull Message message) {
-			return newMessageListItem(getUser(), chat, message);
+			return newMessageListItem(account, chat, message);
 		}
 	}
 

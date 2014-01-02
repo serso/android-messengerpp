@@ -16,11 +16,6 @@
 
 package org.solovyev.android.messenger.messages;
 
-import java.util.Arrays;
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,20 +25,19 @@ import org.solovyev.android.messenger.chats.ChatEvent;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Random;
+
 import static java.lang.Math.max;
 import static java.lang.System.currentTimeMillis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.solovyev.android.messenger.chats.ChatEventType.message_added;
-import static org.solovyev.android.messenger.chats.ChatEventType.messages_added;
-import static org.solovyev.android.messenger.chats.ChatEventType.message_changed;
-import static org.solovyev.android.messenger.chats.ChatEventType.message_state_changed;
-import static org.solovyev.android.messenger.chats.ChatEventType.user_is_not_typing;
-import static org.solovyev.android.messenger.chats.ChatEventType.user_is_typing;
+import static org.solovyev.android.messenger.chats.ChatEventType.*;
 import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 
 public class MessagesAdapterTest extends DefaultMessengerTest {
-	
+
 	@Nonnull
 	private MessagesAdapter adapter;
 
@@ -66,7 +60,7 @@ public class MessagesAdapterTest extends DefaultMessengerTest {
 		accountData = getAccountData1();
 		chat = accountData.getChats().get(0);
 		contact = chat.getParticipantsExcept(accountData.getAccount().getUser()).get(0);
-		adapter = new MessagesAdapter(getApplication(), accountData.getAccount().getUser(), chat.getChat()){
+		adapter = new MessagesAdapter(getApplication(), accountData.getAccount(), chat.getChat()) {
 			@Nonnull
 			@Override
 			String getTypingMessageBody() {
@@ -95,11 +89,11 @@ public class MessagesAdapterTest extends DefaultMessengerTest {
 	}
 
 	private void fireRandomEventsAndCheck(boolean sendStopTypingEvent, @Nonnull Runnable checker) throws InterruptedException {
-		for(int i = 0; i < 100; i++) {
+		for (int i = 0; i < 100; i++) {
 			Thread.sleep(r.nextInt(10));
 
 			final ChatEvent event;
-			switch (r.nextInt(5)){
+			switch (r.nextInt(5)) {
 				case 0:
 					event = message_added.newEvent(chat.getChat(), newMessage(i));
 					break;
@@ -108,7 +102,7 @@ public class MessagesAdapterTest extends DefaultMessengerTest {
 					break;
 				case 2:
 					final int position = r.nextInt(max(1, adapter.getCount()));
-					if(position < adapter.getCount()) {
+					if (position < adapter.getCount()) {
 						final Message message = adapter.getItem(position).getMessage();
 						if (r.nextBoolean()) {
 							final MessageState newState = MessageState.values()[r.nextInt(MessageState.values().length)];
@@ -158,8 +152,8 @@ public class MessagesAdapterTest extends DefaultMessengerTest {
 			boolean found = false;
 			for (int j = 0; j < adapter.getCount(); j++) {
 				final MessageListItem item = adapter.getItem(j);
-				if(item.getId().endsWith(MessagesAdapter.TYPING_POSTFIX)) {
-					if(found) {
+				if (item.getId().endsWith(MessagesAdapter.TYPING_POSTFIX)) {
+					if (found) {
 						Assert.fail();
 					} else {
 						found = true;
