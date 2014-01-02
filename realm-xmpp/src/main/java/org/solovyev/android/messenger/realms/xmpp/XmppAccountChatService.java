@@ -38,10 +38,10 @@ import java.util.List;
 import static com.google.common.collect.Lists.transform;
 import static org.solovyev.android.messenger.realms.xmpp.XmppAccount.toMessages;
 
-class XmppAccountChatService extends AbstractXmppRealmService implements AccountChatService {
+class XmppAccountChatService extends AbstractXmppAccountService implements AccountChatService {
 
-	public XmppAccountChatService(@Nonnull XmppAccount realm, @Nonnull XmppConnectionAware connectionAware) {
-		super(realm, connectionAware);
+	public XmppAccountChatService(@Nonnull XmppAccount account, @Nonnull XmppConnectionAware connectionAware) {
+		super(account, connectionAware);
 	}
 
 	@Nonnull

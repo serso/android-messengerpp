@@ -20,7 +20,7 @@ import org.solovyev.android.messenger.accounts.AccountConnectionException;
 
 import javax.annotation.Nonnull;
 
-public abstract class AbstractXmppRealmService {
+public abstract class AbstractXmppAccountService {
 
 	@Nonnull
 	private final XmppAccount account;
@@ -28,13 +28,13 @@ public abstract class AbstractXmppRealmService {
 	@Nonnull
 	private final XmppConnectionAware connectionAware;
 
-	protected AbstractXmppRealmService(@Nonnull XmppAccount account, @Nonnull XmppConnectionAware connectionAware) {
+	protected AbstractXmppAccountService(@Nonnull XmppAccount account, @Nonnull XmppConnectionAware connectionAware) {
 		this.account = account;
 		this.connectionAware = connectionAware;
 	}
 
 	@Nonnull
-	public XmppAccount getAccount() {
+	protected XmppAccount getAccount() {
 		return account;
 	}
 

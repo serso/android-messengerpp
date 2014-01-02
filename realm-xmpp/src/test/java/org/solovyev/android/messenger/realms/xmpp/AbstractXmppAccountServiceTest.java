@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
-public class AbstractXmppRealmServiceTest {
+public class AbstractXmppAccountServiceTest {
 
 	@Test
 	public void testShouldRethrowAccountException() throws Exception {
@@ -53,7 +53,7 @@ public class AbstractXmppRealmServiceTest {
 		}
 	}
 
-	private static class TestXmppAccountService extends AbstractXmppRealmService {
+	private static class TestXmppAccountService extends AbstractXmppAccountService {
 
 		protected TestXmppAccountService(@Nonnull XmppAccount account, @Nonnull XmppConnectionAware connectionAware) {
 			super(account, connectionAware);

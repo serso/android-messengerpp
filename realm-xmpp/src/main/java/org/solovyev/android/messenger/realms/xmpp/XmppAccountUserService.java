@@ -42,7 +42,7 @@ import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
 
-class XmppAccountUserService extends AbstractXmppRealmService implements AccountUserService {
+class XmppAccountUserService extends AbstractXmppAccountService implements AccountUserService {
 
 	@Nonnull
 	private final UserService userService;
