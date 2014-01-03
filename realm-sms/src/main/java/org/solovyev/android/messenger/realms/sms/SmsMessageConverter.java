@@ -76,15 +76,7 @@ class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
 			throw new IllegalArgumentException("Body must not be empty");
 		}
 
-		final String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-		final SmsAccountConnection connection = account.getAccountConnection();
-		final Entity participant;
-		if (connection == null) {
-			throw new IllegalArgumentException();
-		} else {
-			participant = connection.findOrCreateContact(address, getUserService().getContacts(user)).getEntity();
-		}
-
+		final Entity participant = getParticipant(cursor, user);
 		message.setRead(getBoolean(cursor, "read"));
 		message.setSendDate(getDate(cursor, "date"));
 		final boolean incoming = getBoolean(cursor, "type");
@@ -108,6 +100,34 @@ class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
 		}
 
 		return message;
+	}
+
+	@Nonnull
+	private Entity getParticipant(@Nonnull Cursor cursor, @Nonnull Entity user) {
+		final Entity participant;
+
+		final SmsAccountConnection connection = tryGetConnection();
+
+		final String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+		if (!isEmpty(address)) {
+			participant = connection.findOrCreateContact(address, getUserService().getContacts(user)).getEntity();
+			if (!participant.isAccountEntityIdSet()) {
+				throw new IllegalArgumentException("No account entity id is set");
+			}
+		} else {
+			throw new IllegalArgumentException("No address, probably draft message");
+		}
+
+		return participant;
+	}
+
+	@Nonnull
+	private SmsAccountConnection tryGetConnection() throws IllegalArgumentException {
+		final SmsAccountConnection connection = account.getAccountConnection();
+		if (connection == null) {
+			throw new IllegalArgumentException("No connection");
+		}
+		return connection;
 	}
 
 	@Nonnull
