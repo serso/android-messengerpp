@@ -17,10 +17,7 @@
 package org.solovyev.android.messenger.accounts.tasks;
 
 import android.app.Activity;
-import android.widget.Toast;
 import com.google.common.util.concurrent.FutureCallback;
-
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MessengerContextCallback;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountAlreadyExistsException;
@@ -35,11 +32,6 @@ import static org.solovyev.android.messenger.accounts.AccountUiEventType.Finishe
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
 import static org.solovyev.android.tasks.Tasks.toUiThreadFutureCallback;
 
-/**
- * User: serso
- * Date: 4/13/13
- * Time: 1:47 PM
- */
 public final class AccountSaverListener extends MessengerContextCallback<Activity, Account> {
 
 	private AccountSaverListener() {
@@ -62,6 +54,7 @@ public final class AccountSaverListener extends MessengerContextCallback<Activit
 		} else if (e instanceof AccountAlreadyExistsException) {
 			showToast(R.string.mpp_same_account_configured);
 		} else {
+			showToast(R.string.mpp_notification_undefined_error);
 			super.onFailure(context, e);
 		}
 	}
