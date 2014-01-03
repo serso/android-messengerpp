@@ -30,6 +30,7 @@ function copyTranslations {
 copyTranslations "en" ""
 copyTranslations "ru" "-ru"
 copyTranslations "uk" "-uk"
+copyTranslations "it" "-it"
 
 
 rm -r translations

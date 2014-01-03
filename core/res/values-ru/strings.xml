@@ -104,14 +104,15 @@
 	<string name="mpp_pick_contact_to_start_chat">Выберите контакт чтобы начать чат</string>
 	<string name="mpp_about_third_party_licenses">Сторонние лицензии</string>
 	<string name="mpp_about">О приложении</string>
+	<string name="mpp_account_removal_confirmation">Вы действительно хотите удалить аккаунт?</string>
 	<string name="mpp_wizard_welcome">Добро пожаловать</string>
 	<string name="mpp_wizard_welcome_text">Спасибо за выбор Мессенджера++!\n\nВизард поможет вам настроить приложение и
 		покажет его основные особенности.
 	</string>
-	<string name="mpp_wizard_choose_theme">Выбор темы</string>
-	<string name="mpp_wizard_add_accounts">Добавить аккаунты</string>
+	<string name="mpp_wizard_choose_theme">Выберите тему</string>
+	<string name="mpp_wizard_add_accounts">Добавьте аккаунты</string>
 	<string name="mpp_wizard_add_accounts_text">Для начала общения требуется добавить аккаунты. Вы можете пропустить
-		этот шаг и настроить аккаунты позже
+		этот шаг и настроить аккаунты позже.
 	</string>
 	<string name="mpp_wizard_add_accounts_now">Добавить аккаунты сейчас</string>
 	<string name="mpp_wizard_final">Ещё чуть-чуть!</string>

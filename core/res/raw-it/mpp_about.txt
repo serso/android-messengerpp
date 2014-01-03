@@ -1,0 +1,11 @@
+Messenger++ è un  client di messaggistica istantanea open source multiprotocollo per Android.
+
+Versione: ${app.version}
+
+Creato e supportato da Sergey Solovyev (e-mail: se.solovyev@gmail.com, pagina web: http://se.solovyev.org/).
+
+Il codice sorgente è disponibile su github: https://github.com/serso/android-messengerpp. Se volete partecipare allo sviluppo, per favore, scrivere un'e-mail: se.solovyev@gmail.com.
+
+Se volete aiutarci a tradurre il progetto, vi invitiamo a visitare il seguente link: http://crowdin.net/project/messengerpp
+
+Se avete qualche suggerimento o avete trovato un bug, per favore, lasciate una nota su github: https://github.com/serso/android-messengerpp/issues

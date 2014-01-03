@@ -105,6 +105,25 @@
 	<string name="mpp_pick_contact_to_start_chat">Виберіть контакт, щоб почати чат</string>
 	<string name="mpp_about_third_party_licenses">Ліцензії третіх сторін</string>
 	<string name="mpp_about">Про програму</string>
+	<string name="mpp_account_removal_confirmation">Ви дійсно хочете видалити обліковий запис?</string>
+	<string name="mpp_wizard_welcome">Вітаємо</string>
+	<string name="mpp_wizard_welcome_text">Дякуємо вам за вибір Messenger++!\n\nДотримуйтеся вказівок майстра для
+		налаштування програми і дізнайтеся про її особливості.
+	</string>
+	<string name="mpp_wizard_choose_theme">Вибрати тему</string>
+	<string name="mpp_wizard_add_accounts">Додати облікові записи</string>
+	<string name="mpp_wizard_add_accounts_text">Перш ніж можна буде поспілкуватись потрібно налаштувати облікові записи.
+		Пізніше ви можете пропустити цей крок і налаштування облікових записів.
+	</string>
+	<string name="mpp_wizard_add_accounts_now">Додати облікові записи зараз</string>
+	<string name="mpp_wizard_final">Майже готово!</string>
+	<string name="mpp_wizard_final_text">Messenger++ є вільна програма з відкритим вихідним кодом: всі можливості
+		надаються безкоштовно і вихідний код можна знайти на github.
+	</string>
+	<string name="mpp_wizard_final_ways_to_help">Допоможіть проекту:</string>
+	<string name="mpp_wizard_final_translate">Перекласти</string>
+	<string name="mpp_wizard_final_contribute">Сприяти розрозбці</string>
+	<string name="mpp_turn_on_internet">Увімкнути інтернет</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">У Вас одне непрочитане повідомлення.</item>
 		<item quantity="few">У Вас %s непрочитаних повідомлень.</item>
