@@ -86,7 +86,7 @@
 		<activity android:launchMode="singleTop" android:name=".wizard.WizardActivity"
 				  android:theme="@style/mpp_theme_holo_dialog"/>
 
-		<service android:name=".OngoingNotificationService"/>
+		<service android:name=".StickyService"/>
 
 		<receiver android:name=".OnBootBroadcastReceiver">
 			<intent-filter>

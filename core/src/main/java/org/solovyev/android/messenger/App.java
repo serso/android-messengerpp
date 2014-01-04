@@ -194,7 +194,9 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		} else if (MessengerPreferences.startOnBoot.isSameKey(key)) {
 			final Boolean startOnBoot = MessengerPreferences.startOnBoot.getPreference(preferences);
 			enableComponent(application, OnBootBroadcastReceiver.class, startOnBoot);
-		}
+		} else if (MessengerPreferences.isOngoingNotificationEnabled.isSameKey(key)) {
+            startBackgroundService();
+        }
 	}
 	/*
 	**********************************************************************
@@ -306,7 +308,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		getAccountConnectionsService().tryStopAll();
 
 		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
+		serviceIntent.setClass(instance.application, StickyService.class);
 		instance.application.stopService(serviceIntent);
 
 		activity.finish();
@@ -347,10 +349,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	}
 
 	public static void startBackgroundService() {
-		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
-		instance.application.startService(serviceIntent);
-	}
+        final Intent serviceIntent = new Intent();
+        serviceIntent.setClass(instance.application, StickyService.class);
+        instance.application.startService(serviceIntent);
+    }
 
 	public static boolean isDebuggable() {
 		final ApplicationInfo applicationInfo = getApplication().getApplicationInfo();

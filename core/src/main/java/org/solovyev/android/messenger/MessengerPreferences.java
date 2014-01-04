@@ -39,6 +39,7 @@ public final class MessengerPreferences {
 		Gui.theme.tryPutDefault(preferences);
 		Gui.Chat.Message.showIcon.tryPutDefault(preferences);
 		startOnBoot.tryPutDefault(preferences);
+        isOngoingNotificationEnabled.tryPutDefault(preferences);
 
 		final int versionCode = getAppVersionCode(context);
 		final Integer version = MessengerPreferences.version.getPreference(preferences);
@@ -55,6 +56,7 @@ public final class MessengerPreferences {
 	}
 
 	public static Preference<Boolean> startOnBoot = BooleanPreference.of("startOnBoot", true);
+    public static Preference<Boolean> isOngoingNotificationEnabled = BooleanPreference.of("isOngoingNotificationEnabled", false);
 	public static Preference<Integer> version = IntegerPreference.of("version", NO_VERSION);
 	public static Preference<Integer> previousVersion = IntegerPreference.of("previousVersion", NO_VERSION);
 	public static Preference<Integer> startCount = IntegerPreference.of("startCount", 0);
