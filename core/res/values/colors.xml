@@ -17,7 +17,7 @@
   -->
 
 <resources>
-	<color name="mpp_text">#ff5f5f5f</color>
+	<color name="mpp_text">#ff525252</color>
 	<color name="mpp_text_inverted">#ffffffff</color>
 	<color name="mpp_text_selected">#ffffffff</color>
 	<color name="mpp_text_secondary">#ff939393</color>
