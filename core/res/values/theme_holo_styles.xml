@@ -288,7 +288,7 @@
 	</style>
 
 	<style name="mpp_section_name" parent="mpp_text">
-		<item name="android:paddingTop">10dp</item>
+		<item name="android:paddingTop">@dimen/mpp_section_padding_top</item>
 		<item name="android:textAllCaps">true</item>
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>

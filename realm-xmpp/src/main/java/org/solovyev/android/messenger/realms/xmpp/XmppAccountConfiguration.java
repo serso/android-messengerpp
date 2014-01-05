@@ -29,7 +29,7 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	private static final boolean DEBUG = true;
 
-	private static final int DEFAULT_PORT = 5222;
+	static final int DEFAULT_PORT = 5222;
 
 	@Nonnull
 	private static final String DEFAULT_RESOURCE = "Messenger++";

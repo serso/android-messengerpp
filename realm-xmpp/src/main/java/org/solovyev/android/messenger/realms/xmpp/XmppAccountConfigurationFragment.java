@@ -19,9 +19,7 @@ package org.solovyev.android.messenger.realms.xmpp;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
-import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 
 import javax.annotation.Nonnull;
@@ -35,18 +33,6 @@ import static org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguratio
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public abstract class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
-
-    /*
-	**********************************************************************
-    *
-    *                           AUTO INJECTED FIELDS
-    *
-    **********************************************************************
-    */
-
-	@Inject
-	@Nonnull
-	private AccountService accountService;
 
     /*
     **********************************************************************
@@ -65,11 +51,12 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	@Nonnull
 	private EditText passwordEditText;
 
-	@Nonnull
-	private EditText resourceEditText;
-
 	public XmppAccountConfigurationFragment() {
-		super(R.layout.mpp_realm_conf_xmpp);
+		super(R.layout.mpp_realm_conf_xmpp_default);
+	}
+
+	protected XmppAccountConfigurationFragment(int layoutResId) {
+		super(layoutResId);
 	}
 
 	@Override
@@ -79,7 +66,6 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 		serverEditText = (EditText) root.findViewById(R.id.mpp_xmpp_server_edittext);
 		loginEditText = (EditText) root.findViewById(R.id.mpp_xmpp_login_edittext);
 		passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
-		resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
 
 		if (!isNewAccount()) {
 			final XmppAccount realm = getEditedAccount();
@@ -92,7 +78,6 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 			loginEditText.setEnabled(false);
 
 			passwordEditText.setText(configuration.getPassword());
-			resourceEditText.setText(configuration.getResource());
 		} else {
 			setupServerInput(root);
 		}
@@ -126,9 +111,8 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 		final String server = serverEditText.getText().toString();
 		final String login = loginEditText.getText().toString();
 		final String password = passwordEditText.getText().toString();
-		final String resource = resourceEditText.getText().toString();
 
-		return validateData(server, prepareLogin(login), password, resource);
+		return validateData(server, prepareLogin(login), password);
 	}
 
 	@Nullable
@@ -159,7 +143,9 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	protected abstract String getDefaultDomain();
 
 	@Nullable
-	private XmppAccountConfiguration validateData(@Nullable String server, @Nullable String login, @Nullable String password, @Nullable String resource) {
+	protected XmppAccountConfiguration validateData(@Nullable String server,
+													@Nullable String login,
+													@Nullable String password) {
 		boolean ok = true;
 
 		if (isEmpty(server)) {
@@ -178,11 +164,7 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 		}
 
 		if (ok) {
-			final XmppAccountConfiguration result = new XmppAccountConfiguration(server, login, password);
-			if (resource != null) {
-				result.setResource(resource);
-			}
-			return result;
+			return new XmppAccountConfiguration(server, login, password);
 		} else {
 			return null;
 		}

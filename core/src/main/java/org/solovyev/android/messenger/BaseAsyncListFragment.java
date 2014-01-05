@@ -150,7 +150,7 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		if (isViewWasCreated()) {
+		if (wasViewCreated()) {
 			outState.putInt(BUNDLE_MAX_SIZE, maxSize);
 		}
 	}

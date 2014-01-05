@@ -182,18 +182,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Nonnull
 	private RoboListeners listeners;
 
-	/**
-	 * Last saved instance state (the last state which has been passed through onCreate method)
-	 * <p/>
-	 * Problem: When fragment is in back stack and has not been shown during activity lifecycle then
-	 * onSaveInstanceState() saves nothing on activity destruction (as no view has been created). If later we return to this fragment using back button we loose state.
-	 * <p/>
-	 * Solution: Save last state and if fragment hsa not been shown - use it.
-	 */
-	@Nullable
-	private Bundle lastSavedInstanceState;
-
-	private boolean viewWasCreated = false;
+	@Nonnull
+	private final FragmentUi fragmentUi = new FragmentUi(this);
 
 	@Nullable
 	private AdapterSelection<LI> restoredAdapterSelection;
@@ -318,8 +308,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		return listViewFilter != null ? listViewFilter.getFilterText() : null;
 	}
 
-	public boolean isViewWasCreated() {
-		return viewWasCreated;
+	public boolean wasViewCreated() {
+		return fragmentUi.wasViewCreated();
 	}
 
 	public boolean isViewCreated() {
@@ -356,8 +346,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 		createAdapter(savedInstanceState);
 
-		lastSavedInstanceState = savedInstanceState;
-		viewWasCreated = false;
+		fragmentUi.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -404,7 +393,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 		Log.d(tag, "onViewCreated");
-		viewWasCreated = true;
+		fragmentUi.onViewCreated();
 
 		if (listViewFilter != null) {
 			listViewFilter.onViewCreated();
@@ -601,7 +590,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		if (viewWasCreated) {
+		if (fragmentUi.wasViewCreated()) {
 			adapter.saveState(outState);
 
 			if (listViewFilter != null) {
@@ -615,12 +604,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				outState.putParcelable(BUNDLE_LISTVIEW_STATE, restoredListViewState);
 			}
 		} else {
-			if (lastSavedInstanceState != null) {
-				outState.putAll(lastSavedInstanceState);
-			}
+			fragmentUi.copyLastSavedInstanceState(outState);
 		}
 
-		lastSavedInstanceState = null;
+		fragmentUi.clearLastSavedInstanceState();
 	}
 
 	@Override
@@ -656,7 +643,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		Log.d(tag, "onListLoaded");
 		final Activity activity = getActivity();
 
-		if (activity != null && !activity.isFinishing() && !isDetached() && viewWasCreated) {
+		if (activity != null && !activity.isFinishing() && !isDetached() && fragmentUi.wasViewCreated()) {
 			Log.d(tag, "Restoring list properties");
 			restoreListViewState();
 

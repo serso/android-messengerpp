@@ -16,26 +16,15 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  a:orientation="horizontal"
-			  a:layout_width="match_parent"
-			  a:layout_height="wrap_content"
-			  a:paddingTop="@dimen/mpp_section_padding_top">
+<ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
+			a:layout_width="match_parent"
+			a:layout_height="match_parent">
 
-	<Button
-			a:id="@id/mpp_back_button"
-			a:text="@string/mpp_back"
-			style="?mpp_form_button"/>
+	<LinearLayout style="?mpp_fragment">
 
-	<Button
-			a:id="@id/mpp_remove_button"
-			a:visibility="gone"
-			a:text="@string/mpp_remove"
-			style="?mpp_form_button"/>
+		<include layout="@layout/mpp_realm_conf_xmpp_fields"/>
 
-	<Button
-			a:id="@id/mpp_save_button"
-			a:text="@string/mpp_save"
-			style="?mpp_form_button"/>
+		<include layout="@layout/mpp_fragment_edit_buttons"/>
 
-</LinearLayout>
+	</LinearLayout>
+</ScrollView>
