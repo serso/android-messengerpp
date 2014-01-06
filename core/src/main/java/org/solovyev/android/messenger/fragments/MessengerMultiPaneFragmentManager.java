@@ -16,7 +16,11 @@
 
 package org.solovyev.android.messenger.fragments;
 
+import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.BaseFragmentActivity;
@@ -69,7 +73,37 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 	}
 
 	public void clearBackStack() {
+		hideKeyboard();
 		final FragmentManager fm = getActivity().getSupportFragmentManager();
 		fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+	}
+
+	public void hideKeyboard() {
+		// todo serso: make hideKeyboard() from parent class accessable
+		final FragmentActivity activity = getActivity();
+		final View focusedView = activity.getCurrentFocus();
+
+		if (focusedView != null) {
+			final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+		}
+	}
+
+	public void goBack() {
+		// todo serso: fix in ACL
+		hideKeyboard();
+		super.goBack();
+	}
+
+	public boolean goBackImmediately() {
+		// todo serso: fix in ACL
+		hideKeyboard();
+		return super.goBackImmediately();
+	}
+
+	public void goBack(@Nonnull String tag) {
+		// todo serso: fix in ACL
+		hideKeyboard();
+		super.goBack(tag);
 	}
 }
