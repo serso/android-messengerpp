@@ -123,6 +123,8 @@
 	<string name="mpp_wizard_final_translate">Traduci</string>
 	<string name="mpp_wizard_final_contribute">Contribuisci allo sviluppo</string>
 	<string name="mpp_turn_on_internet">Abilita internet</string>
+	<string name="acl_yes">Sì</string>
+	<string name="acl_no">No</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">C\'è un messaggio non letto</item>
 		<item quantity="other">Ci sono %s messaggi non letti</item>

@@ -14,4 +14,8 @@
 	<string name="mpp_xmpp_server_must_be_set">Сервер должен быть указан</string>
 	<string name="mpp_xmpp_login_must_be_set">Логин должен быть указан</string>
 	<string name="mpp_xmpp_password_must_be_set">Пароль должен быть введён</string>
+	<string name="mpp_xmpp_port">Порт</string>
+	<string name="mpp_xmpp_show_advanced_options"><![CDATA[<a href="#">Показать дополнительные настройки</a>]]></string>
+	<string name="mpp_xmpp_hide_advanced_options"><![CDATA[<a href="#">Скрыть дополнительные настройки</a>]]></string>
+	<string name="mpp_xmpp_invalid_port_number">Недопустимый порт</string>
 </resources>

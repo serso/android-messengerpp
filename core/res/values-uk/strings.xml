@@ -124,6 +124,8 @@
 	<string name="mpp_wizard_final_translate">Перекласти</string>
 	<string name="mpp_wizard_final_contribute">Сприяти розрозбці</string>
 	<string name="mpp_turn_on_internet">Увімкнути інтернет</string>
+	<string name="acl_yes">Так</string>
+	<string name="acl_no">Ні</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">У Вас одне непрочитане повідомлення.</item>
 		<item quantity="few">У Вас %s непрочитаних повідомлень.</item>

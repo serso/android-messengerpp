@@ -123,6 +123,8 @@
 	<string name="mpp_wizard_final_translate">Перевести язык</string>
 	<string name="mpp_wizard_final_contribute">Учавствовать в разработке</string>
 	<string name="mpp_turn_on_internet">Включить интернет</string>
+	<string name="acl_yes">Да</string>
+	<string name="acl_no">Нет</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">Есть 1 непрочитанное сообщение.</item>
 		<item quantity="few">Есть %s непрочитанных сообщений.</item>

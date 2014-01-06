@@ -14,4 +14,8 @@
 	<string name="mpp_xmpp_server_must_be_set">Треба вказати сервер!</string>
 	<string name="mpp_xmpp_login_must_be_set">Логін повинен бути вказаний!</string>
 	<string name="mpp_xmpp_password_must_be_set">Треба вказати пароль!</string>
+	<string name="mpp_xmpp_port">Порт</string>
+	<string name="mpp_xmpp_show_advanced_options"><![CDATA[<a href="#">Показати додаткові параметри</a>]]></string>
+	<string name="mpp_xmpp_hide_advanced_options"><![CDATA[<a href="#">Приховати додаткові параметри</a>]]></string>
+	<string name="mpp_xmpp_invalid_port_number">Невірний номер порту</string>
 </resources>
