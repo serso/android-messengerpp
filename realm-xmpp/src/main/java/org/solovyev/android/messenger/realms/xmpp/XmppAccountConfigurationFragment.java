@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.realms.xmpp;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 
 import javax.annotation.Nonnull;
@@ -35,7 +34,7 @@ import static org.solovyev.common.text.Strings.isEmpty;
 public abstract class XmppAccountConfigurationFragment extends BaseAccountConfigurationFragment<XmppAccount> {
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           FIELDS
     *
@@ -107,7 +106,7 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	}
 
 	@Override
-	public AccountConfiguration validateData() {
+	public XmppAccountConfiguration validateData() {
 		final String server = serverEditText.getText().toString();
 		final String login = loginEditText.getText().toString();
 		final String password = passwordEditText.getText().toString();
@@ -164,9 +163,15 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 		}
 
 		if (ok) {
-			return new XmppAccountConfiguration(server, login, password);
+			final XmppAccountConfiguration configuration = new XmppAccountConfiguration(server, login, password);
+			configuration.setUseLoginWithDomain(isUseLoginWithDomain());
+			return configuration;
 		} else {
 			return null;
 		}
+	}
+
+	protected boolean isUseLoginWithDomain() {
+		return true;
 	}
 }

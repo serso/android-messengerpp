@@ -15,7 +15,14 @@
 	<string name="mpp_xmpp_login_must_be_set">Login must be set</string>
 	<string name="mpp_xmpp_password_must_be_set">Password must be set</string>
 	<string name="mpp_xmpp_port">Port</string>
-	<string name="mpp_xmpp_show_advanced_options"><![CDATA[<a href="#">Show advanced options</a>]]></string>
-	<string name="mpp_xmpp_hide_advanced_options"><![CDATA[<a href="#">Hide advanced options</a>]]></string>
+	<string name="mpp_xmpp_show_advanced_options">Show advanced options</string>
+	<string name="mpp_xmpp_hide_advanced_options">Hide advanced options</string>
 	<string name="mpp_xmpp_invalid_port_number">Invalid port number</string>
+	<string name="mpp_xmpp_security_mode">TLS</string>
+	<string name="mpp_xmpp_security_mode_required">Use always</string>
+	<string name="mpp_xmpp_security_mode_enabled">Use if supported by server</string>
+	<string name="mpp_xmpp_security_mode_disabled">Don\'t use</string>
+	<string name="mpp_xmpp_use_username_without_domain_as_login">Use username without domain as login (remove
+		@domain.xx)
+	</string>
 </resources>

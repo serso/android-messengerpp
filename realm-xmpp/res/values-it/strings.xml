@@ -14,4 +14,9 @@
 	<string name="mpp_xmpp_server_must_be_set">Dev\'essere impostato un server</string>
 	<string name="mpp_xmpp_login_must_be_set">Devi impostare un login</string>
 	<string name="mpp_xmpp_password_must_be_set">Dev\'essere impostata una password</string>
+	<string name="mpp_xmpp_port">Porta</string>
+	<string name="mpp_xmpp_show_advanced_options">Mostra opzioni avanzate</string>
+	<string name="mpp_xmpp_hide_advanced_options">Nascondi opzioni avanzate</string>
+	<string name="mpp_xmpp_invalid_port_number">Numero di porta non valido</string>
+	<string name="mpp_xmpp_security_mode">TLS</string>
 </resources>

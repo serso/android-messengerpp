@@ -18,19 +18,21 @@ package org.solovyev.android.messenger.realms.xmpp;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.Realm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-import static android.text.Html.fromHtml;
+import static android.graphics.Color.BLUE;
+import static android.graphics.Paint.UNDERLINE_TEXT_FLAG;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.showToast;
-import static org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguration.DEFAULT_PORT;
+import static org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguration.*;
 
 public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigurationFragment {
 
@@ -69,6 +71,12 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 	@Nonnull
 	private EditText portEditText;
 
+	@Nonnull
+	private Spinner securityModeSpinner;
+
+	@Nonnull
+	private CheckBox useUsernameWithoutDomainCheckbox;
+
 	public CustomXmppAccountConfigurationFragment() {
 		super(R.layout.mpp_realm_conf_xmpp_custom);
 	}
@@ -78,20 +86,46 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 		super.onViewCreated(root, savedInstanceState);
 
 		resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
+		useUsernameWithoutDomainCheckbox = (CheckBox) root.findViewById(R.id.mpp_xmpp_use_username_without_domain_checkbox);
 		portEditText = (EditText) root.findViewById(R.id.mpp_xmpp_port_edittext);
+		securityModeSpinner = (Spinner) root.findViewById(R.id.mpp_xmpp_security_mode_spinner);
+		securityModeSpinner.setAdapter(createAdapter());
+		securityModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (parent.getChildCount() > 0) {
+					final View child = parent.getChildAt(0);
+					if (child instanceof TextView) {
+						((TextView) child).setTextColor(portEditText.getCurrentTextColor());
+					}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+
 		advancedOptionsView = root.findViewById(R.id.mpp_xmpp_advanced_options);
 
 		if (!isNewAccount()) {
 			final XmppAccount realm = getEditedAccount();
 			final XmppAccountConfiguration configuration = realm.getConfiguration();
 
-			portEditText.setText(configuration.getPort());
+			portEditText.setText(String.valueOf(configuration.getPort()));
 			resourceEditText.setText(configuration.getResource());
+			securityModeSpinner.setSelection(configuration.getSecurityMode().ordinal());
+			useUsernameWithoutDomainCheckbox.setChecked(!configuration.isUseLoginWithDomain());
 		} else {
 			portEditText.setText(String.valueOf(DEFAULT_PORT));
+			resourceEditText.setText(DEFAULT_RESOURCE);
+			securityModeSpinner.setSelection(DEFAULT_SECURITY_MODE.ordinal());
+			useUsernameWithoutDomainCheckbox.setChecked(!DEFAULT_USE_LOGIN_WITH_DOMAIN);
 		}
 
 		advancedOptionsLinkTextView = (TextView) root.findViewById(R.id.mpp_xmpp_advanced_options_link);
+		advancedOptionsLinkTextView.setTextColor(BLUE);
+		advancedOptionsLinkTextView.setPaintFlags(advancedOptionsLinkTextView.getPaintFlags() | UNDERLINE_TEXT_FLAG);
 		advancedOptionsLinkTextView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -106,6 +140,19 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 		}
 	}
 
+
+	@Nonnull
+	private ArrayAdapter<String> createAdapter() {
+		final List<String> items = new ArrayList<String>();
+		for (XmppSecurityMode mode : XmppSecurityMode.values()) {
+			items.add(getString(mode.getNameResId()));
+		}
+		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getThemeContext(), android.R.layout.simple_spinner_item, items);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		return adapter;
+	}
+
+
 	private void toggleAdvancedOptions(boolean show) {
 		if (show) {
 			showAdvancedOptions();
@@ -115,12 +162,12 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 	}
 
 	private void showAdvancedOptions() {
-		advancedOptionsLinkTextView.setText(fromHtml(getString(R.string.mpp_xmpp_hide_advanced_options)));
+		advancedOptionsLinkTextView.setText(getString(R.string.mpp_xmpp_hide_advanced_options));
 		advancedOptionsView.setVisibility(VISIBLE);
 	}
 
 	private void hideAdvancedOptions() {
-		advancedOptionsLinkTextView.setText(fromHtml(getString(R.string.mpp_xmpp_show_advanced_options)));
+		advancedOptionsLinkTextView.setText(getString(R.string.mpp_xmpp_show_advanced_options));
 		advancedOptionsView.setVisibility(GONE);
 	}
 
@@ -142,6 +189,9 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 			if (resource != null) {
 				configuration.setResource(resource);
 			}
+
+			configuration.setSecurityMode(XmppSecurityMode.values()[securityModeSpinner.getSelectedItemPosition()]);
+			configuration.setUseLoginWithDomain(!useUsernameWithoutDomainCheckbox.isChecked());
 
 			final String port = portEditText.getText().toString();
 			if (port != null) {

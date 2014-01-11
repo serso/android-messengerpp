@@ -100,7 +100,7 @@ public class XmppAccountConnection extends LoopedAccountConnection<XmppAccount> 
 			connection.connect();
 			if (!connection.isAuthenticated()) {
 				final XmppAccountConfiguration configuration = realm.getConfiguration();
-				connection.login(configuration.getLogin((XmppRealm) realm.getRealm()), configuration.getPassword(), configuration.getResource());
+				connection.login(configuration.getLoginForConnection(), configuration.getPassword(), configuration.getResource());
 			}
 		}
 	}

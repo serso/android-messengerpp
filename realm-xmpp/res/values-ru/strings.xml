@@ -15,7 +15,14 @@
 	<string name="mpp_xmpp_login_must_be_set">Логин должен быть указан</string>
 	<string name="mpp_xmpp_password_must_be_set">Пароль должен быть введён</string>
 	<string name="mpp_xmpp_port">Порт</string>
-	<string name="mpp_xmpp_show_advanced_options"><![CDATA[<a href="#">Показать дополнительные настройки</a>]]></string>
-	<string name="mpp_xmpp_hide_advanced_options"><![CDATA[<a href="#">Скрыть дополнительные настройки</a>]]></string>
+	<string name="mpp_xmpp_show_advanced_options">Показать дополнительные настройки</string>
+	<string name="mpp_xmpp_hide_advanced_options">Скрыть дополнительные настройки</string>
 	<string name="mpp_xmpp_invalid_port_number">Недопустимый порт</string>
+	<string name="mpp_xmpp_security_mode">TLS</string>
+	<string name="mpp_xmpp_security_mode_required">Использовать всегда</string>
+	<string name="mpp_xmpp_security_mode_enabled">Использовать, если поддерживается сервером</string>
+	<string name="mpp_xmpp_security_mode_disabled">Не использовать</string>
+	<string name="mpp_xmpp_use_username_without_domain_as_login">Использовать в качестве логина имя пользователя без
+		домена (убрать @домен.xx)
+	</string>
 </resources>

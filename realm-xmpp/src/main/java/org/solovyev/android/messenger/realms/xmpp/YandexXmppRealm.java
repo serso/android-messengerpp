@@ -24,9 +24,4 @@ public class YandexXmppRealm extends XmppRealm {
 	public YandexXmppRealm() {
 		super("xmpp-yandex", R.string.mpp_xmpp_name_yandex, R.drawable.mpp_xmpp_yandex_icon, YandexXmppAccountConfigurationFragment.class);
 	}
-
-	@Override
-	public boolean useLoginWithDomain() {
-		return false;
-	}
 }

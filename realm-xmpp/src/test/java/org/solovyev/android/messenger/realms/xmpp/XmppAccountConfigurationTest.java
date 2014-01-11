@@ -16,11 +16,14 @@
 
 package org.solovyev.android.messenger.realms.xmpp;
 
+import com.google.gson.Gson;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import javax.annotation.Nonnull;
+
+import static org.junit.Assert.*;
 import static org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguration.getAfterAt;
+import static org.solovyev.android.messenger.realms.xmpp.XmppSecurityMode.disabled;
 
 public class XmppAccountConfigurationTest {
 
@@ -42,5 +45,49 @@ public class XmppAccountConfigurationTest {
 		assertEquals("test2", getAfterAt("test@test2"));
 		assertEquals("e", getAfterAt("@e"));
 		assertEquals("qwer@trew", getAfterAt("test@qwer@trew"));
+	}
+
+	@Test
+	public void testToJson() throws Exception {
+		final XmppAccountConfiguration expected = newTestConfiguration();
+
+		final XmppAccountConfiguration actual = toAndFromJson(expected);
+
+		assertTrue(expected.isSame(actual));
+	}
+
+	@Nonnull
+	private XmppAccountConfiguration toAndFromJson(@Nonnull XmppAccountConfiguration expected) {
+		final Gson gson = new Gson();
+		final String json = gson.toJson(expected);
+		return gson.fromJson(json, XmppAccountConfiguration.class);
+	}
+
+	@Nonnull
+	private static XmppAccountConfiguration newTestConfiguration() {
+		final XmppAccountConfiguration expected = new XmppAccountConfiguration("server", "login", "password");
+		expected.setPort(100);
+		expected.setResource("M++");
+		return expected;
+	}
+
+	@Test
+	public void testShouldRestoreFromJson() throws Exception {
+		final String json = "{\"server\":\"server\",\"login\":\"login\",\"password\":\"password\",\"resource\":\"M++\",\"port\":100}";
+
+		final Gson gson = new Gson();
+		final XmppAccountConfiguration actual = gson.fromJson(json, XmppAccountConfiguration.class);
+
+		assertTrue(newTestConfiguration().isSame(actual));
+	}
+
+	@Test
+	public void testShouldSaveSecurityMode() throws Exception {
+		final XmppAccountConfiguration expected = newTestConfiguration();
+		expected.setSecurityMode(disabled);
+
+		final XmppAccountConfiguration actual = toAndFromJson(expected);
+
+		assertTrue(expected.isSame(actual));
 	}
 }

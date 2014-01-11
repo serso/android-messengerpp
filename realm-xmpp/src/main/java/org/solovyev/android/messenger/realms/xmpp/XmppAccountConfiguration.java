@@ -31,10 +31,14 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	static final int DEFAULT_PORT = 5222;
 
+	static final XmppSecurityMode DEFAULT_SECURITY_MODE = XmppSecurityMode.enabled;
+
 	@Nonnull
-	private static final String DEFAULT_RESOURCE = "Messenger++";
+	static final String DEFAULT_RESOURCE = "Messenger++";
 
 	static final char AT = '@';
+
+	static final boolean DEFAULT_USE_LOGIN_WITH_DOMAIN = true;
 
 	@Nonnull
 	private String server;
@@ -50,6 +54,11 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	@Nonnull
 	private Integer port = DEFAULT_PORT;
+
+	@Nonnull
+	private XmppSecurityMode securityMode = DEFAULT_SECURITY_MODE;
+
+	private boolean useLoginWithDomain = DEFAULT_USE_LOGIN_WITH_DOMAIN;
 
 	// for gson
 	public XmppAccountConfiguration() {
@@ -87,9 +96,9 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Nonnull
-	public String getLogin(@Nonnull XmppRealm realm) {
+	public String getLoginForConnection() {
 		final String login;
-		if (realm.useLoginWithDomain()) {
+		if (useLoginWithDomain) {
 			login = getLogin();
 		} else {
 			login = getLoginWithoutDomain();
@@ -116,6 +125,23 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Nonnull
+	public XmppSecurityMode getSecurityMode() {
+		return securityMode;
+	}
+
+	public void setSecurityMode(@Nonnull XmppSecurityMode securityMode) {
+		this.securityMode = securityMode;
+	}
+
+	public boolean isUseLoginWithDomain() {
+		return useLoginWithDomain;
+	}
+
+	public void setUseLoginWithDomain(boolean useLoginWithDomain) {
+		this.useLoginWithDomain = useLoginWithDomain;
+	}
+
+	@Nonnull
 	public String getResource() {
 		return resource;
 	}
@@ -127,13 +153,15 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 	@Nonnull
 	public AndroidConnectionConfiguration toXmppConfiguration() {
-		final AndroidConnectionConfiguration connectionConfiguration = new AndroidConnectionConfiguration(this.server, this.port, getDomain());
+		final AndroidConnectionConfiguration configuration = new AndroidConnectionConfiguration(this.server, this.port, getDomain());
 
 		if (App.isDebuggable()) {
-			connectionConfiguration.setDebuggerEnabled(DEBUG);
+			configuration.setDebuggerEnabled(DEBUG);
 		}
 
-		return connectionConfiguration;
+		configuration.setSecurityMode(securityMode.toSmackMode());
+
+		return configuration;
 	}
 
 	@Override
@@ -164,7 +192,17 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 		boolean same = isSameCredentials(c);
 		if (same) {
 			final XmppAccountConfiguration that = (XmppAccountConfiguration) c;
-			same = this.resource.equals(that.resource);
+			if (!this.resource.equals(that.resource)) {
+				return false;
+			}
+
+			if (!this.securityMode.equals(that.securityMode)) {
+				return false;
+			}
+
+			if (this.useLoginWithDomain != that.useLoginWithDomain) {
+				return false;
+			}
 		}
 		return same;
 	}

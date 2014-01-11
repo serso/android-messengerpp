@@ -35,6 +35,11 @@
 					  a:layout_height="wrap_content"
 					  a:visibility="gone">
 
+			<CheckBox
+					a:id="@+id/mpp_xmpp_use_username_without_domain_checkbox"
+					a:text="@string/mpp_xmpp_use_username_without_domain_as_login"
+					style="?mpp_form_checkbox"/>
+
 			<TextView
 					a:id="@+id/mpp_xmpp_port_label"
 					a:text="@string/mpp_xmpp_port"
@@ -47,13 +52,21 @@
 					style="?mpp_form_edittext"/>
 
 			<TextView
+					a:id="@+id/mpp_xmpp_security_mode_label"
+					a:text="@string/mpp_xmpp_security_mode"
+					style="?mpp_form_label"/>
+
+			<Spinner
+					a:id="@+id/mpp_xmpp_security_mode_spinner"
+					style="?mpp_form_spinner"/>
+
+			<TextView
 					a:id="@+id/mpp_xmpp_resource_label"
 					a:text="@string/mpp_xmpp_resource"
 					style="?mpp_form_label"/>
 
 			<EditText
 					a:id="@+id/mpp_xmpp_resource_edittext"
-					a:text="Messenger++"
 					style="?mpp_form_edittext"/>
 
 		</LinearLayout>

@@ -109,7 +109,7 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 		try {
 			if (connection != null) {
 				final XmppAccountConfiguration configuration = getConfiguration();
-				connection.login(configuration.getLogin(getRealm()), configuration.getPassword());
+				connection.login(configuration.getLoginForConnection(), configuration.getPassword());
 			} else {
 				throw new InvalidCredentialsException("Not connected!");
 			}

@@ -45,4 +45,9 @@ public class YandexXmppAccountConfigurationFragment extends XmppAccountConfigura
 	protected String getDefaultDomain() {
 		return "ya.ru";
 	}
+
+	@Override
+	protected boolean isUseLoginWithDomain() {
+		return false;
+	}
 }

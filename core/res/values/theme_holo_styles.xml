@@ -239,6 +239,9 @@
 		<item name="android:scrollHorizontally">false</item>
 	</style>
 
+	<style name="mpp_form_spinner" parent="mpp_section_content">
+	</style>
+
 	<style name="mpp_form_password_edittext" parent="mpp_form_edittext">
 		<item name="android:inputType">textPassword</item>
 	</style>
