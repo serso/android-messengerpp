@@ -26,6 +26,7 @@ import org.solovyev.android.messenger.realms.vk.VkAccount;
 import org.solovyev.android.messenger.realms.vk.http.AbstractVkHttpTransaction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<String> {
@@ -62,6 +63,7 @@ public class VkMessagesSendHttpTransaction extends AbstractVkHttpTransaction<Str
 		return result;
 	}
 
+	@Nullable
 	@Override
 	protected String getResponseFromJson(@Nonnull String json) throws IllegalJsonException {
 		return JsonResult.asString(json);

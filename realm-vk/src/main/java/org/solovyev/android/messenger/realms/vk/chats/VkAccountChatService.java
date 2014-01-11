@@ -159,7 +159,11 @@ public class VkAccountChatService implements AccountChatService {
 	@Nonnull
 	@Override
 	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
-		return executeHttpRequest(new VkMessagesSendHttpTransaction(account, message, chat));
+		final String messageId = executeHttpRequest(new VkMessagesSendHttpTransaction(account, message, chat));
+		if (messageId == null) {
+			throw new AccountConnectionException("Messages was not sent - no id was found in response");
+		}
+		return messageId;
 	}
 
 	private <R> R executeHttpRequest(HttpTransaction<R> transaction) throws AccountConnectionException {
