@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 serso aka se.solovyev
+ * Copyright 2014 serso aka se.solovyev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,40 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.realms.xmpp;
 
+import com.google.inject.Inject;
 import org.solovyev.android.messenger.realms.Realm;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+import javax.annotation.Nullable;
 
-public interface Configuration {
+public class QipXmppAccountConfigurationFragment extends XmppAccountConfigurationFragment {
 
-	/**
-	 * @return list of all realms which are available in the app
-	 */
+	@Inject
 	@Nonnull
-	Collection<Realm> getRealms();
+	private QipXmppRealm realm;
 
+	@Nonnull
+	@Override
+	public Realm getRealm() {
+		return realm;
+	}
+
+	@Nullable
+	@Override
+	protected String getServer() {
+		return "webim.qip.ru";
+	}
+
+	@Nullable
+	@Override
+	protected String getDefaultDomain() {
+		return "qip.ru";
+	}
+
+	@Override
+	protected boolean isUseLoginWithDomain() {
+		return false;
+	}
 }

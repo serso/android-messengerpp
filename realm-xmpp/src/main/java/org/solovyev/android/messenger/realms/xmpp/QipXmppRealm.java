@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 serso aka se.solovyev
+ * Copyright 2014 serso aka se.solovyev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.realms.xmpp;
 
-import org.solovyev.android.messenger.realms.Realm;
+import com.google.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import java.util.Collection;
+@Singleton
+public class QipXmppRealm extends XmppRealm {
 
-public interface Configuration {
-
-	/**
-	 * @return list of all realms which are available in the app
-	 */
-	@Nonnull
-	Collection<Realm> getRealms();
-
+	public QipXmppRealm() {
+		super("xmpp-qip", R.string.mpp_xmpp_name_qip, R.drawable.mpp_xmpp_qip_icon, QipXmppAccountConfigurationFragment.class);
+	}
 }
