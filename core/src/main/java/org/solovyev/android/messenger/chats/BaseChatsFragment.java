@@ -16,7 +16,6 @@
 
 package org.solovyev.android.messenger.chats;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.view.Menu;
@@ -26,7 +25,10 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.BaseAsyncListFragment;
+import org.solovyev.android.messenger.SyncRefreshListener;
+import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
+import org.solovyev.android.messenger.UiThreadEventListener;
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
@@ -43,8 +45,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.solovyev.android.messenger.UiEventType.new_message;
 
 public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, ChatListItem> implements DetachableFragment {
 
@@ -164,22 +164,8 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 
 		menuItems.add(new ToggleFilterInputMenuItem(this));
-		menuItems.add(new NewMessageMenuItem());
 
 		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
 		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
-	}
-
-	private static class NewMessageMenuItem implements IdentifiableMenuItem<MenuItem> {
-		@Nonnull
-		@Override
-		public Integer getItemId() {
-			return R.id.mpp_menu_new_message;
-		}
-
-		@Override
-		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
-			App.getEventManager(context).fire(new_message.newEvent());
-		}
 	}
 }
