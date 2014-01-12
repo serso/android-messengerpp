@@ -25,4 +25,7 @@
 	<string name="mpp_xmpp_use_username_without_domain_as_login">Использовать в качестве логина имя пользователя без
 		домена (убрать @домен.xx)
 	</string>
+	<string name="mpp_xmpp_no_domain_in_username">Имя домена должно присутствовать в имени пользователя
+		(имя_пользователя@домен.хх)
+	</string>
 </resources>

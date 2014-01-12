@@ -58,6 +58,16 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 		super(layoutResId);
 	}
 
+	@Nonnull
+	protected EditText getLoginEditText() {
+		return loginEditText;
+	}
+
+	@Nonnull
+	protected EditText getServerEditText() {
+		return serverEditText;
+	}
+
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);

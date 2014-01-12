@@ -26,4 +26,5 @@
 	<string name="mpp_xmpp_use_username_without_domain_as_login">Use username without domain as login (remove
 		@domain.xx)
 	</string>
+	<string name="mpp_xmpp_no_domain_in_username">Domain must be set in username (username@domain.xx)</string>
 </resources>

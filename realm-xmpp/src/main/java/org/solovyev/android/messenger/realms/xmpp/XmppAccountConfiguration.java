@@ -81,7 +81,7 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Nullable
-	private String getDomain() {
+	public String getDomain() {
 		return getAfterAt(login);
 	}
 
@@ -107,7 +107,7 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 	}
 
 	@Nonnull
-	public String getLoginWithoutDomain() {
+	private String getLoginWithoutDomain() {
 		return getBeforeAt(login);
 	}
 

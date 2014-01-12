@@ -109,12 +109,50 @@ public class XmppAccountBuilder extends AbstractAccountBuilder<XmppAccount, Xmpp
 		try {
 			if (connection != null) {
 				final XmppAccountConfiguration configuration = getConfiguration();
-				connection.login(configuration.getLoginForConnection(), configuration.getPassword());
+
+				XMPPException exception = null;
+				try {
+					connection.login(configuration.getLoginForConnection(), configuration.getPassword());
+				} catch (XMPPException e) {
+					exception = e;
+				}
+
+				if (exception != null) {
+					if (!tryLoginWithChangedConfiguration(configuration)) {
+						// if failed to login - throw original exception
+						throw exception;
+					}
+				}
+
 			} else {
 				throw new InvalidCredentialsException("Not connected!");
 			}
 		} catch (XMPPException e) {
 			throw new InvalidCredentialsException(e);
 		}
+	}
+
+	private boolean tryLoginWithChangedConfiguration(@Nonnull XmppAccountConfiguration configuration) {
+		boolean success = false;
+
+		final boolean useLoginWithDomain = configuration.isUseLoginWithDomain();
+		try {
+			// we must to reconnect in order to clear some SMACK parameters (for example, saslAuthentication which stores currentMechanism)
+			disconnect();
+			connect();
+
+			if (this.connection != null) {
+				configuration.setUseLoginWithDomain(!useLoginWithDomain);
+				this.connection.login(configuration.getLoginForConnection(), configuration.getPassword());
+				success = true;
+			}
+		} catch (XMPPException e) {
+			// in case of a error we must return use provided data
+			configuration.setUseLoginWithDomain(useLoginWithDomain);
+		} catch (ConnectionException e) {
+			// we rethrow original exception after exiting this method
+		}
+
+		return success;
 	}
 }

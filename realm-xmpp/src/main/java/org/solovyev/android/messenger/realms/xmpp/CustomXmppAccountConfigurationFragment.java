@@ -33,6 +33,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.realms.xmpp.XmppAccountConfiguration.*;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigurationFragment {
 
@@ -84,6 +85,9 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
+
+		final EditText loginEditText = getLoginEditText();
+		loginEditText.setOnFocusChangeListener(new LoginOnFocusChangeListener(loginEditText, getServerEditText()));
 
 		resourceEditText = (EditText) root.findViewById(R.id.mpp_xmpp_resource_edittext);
 		useUsernameWithoutDomainCheckbox = (CheckBox) root.findViewById(R.id.mpp_xmpp_use_username_without_domain_checkbox);
@@ -193,13 +197,19 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 			configuration.setSecurityMode(XmppSecurityMode.values()[securityModeSpinner.getSelectedItemPosition()]);
 			configuration.setUseLoginWithDomain(!useUsernameWithoutDomainCheckbox.isChecked());
 
+			final String domain = configuration.getDomain();
+			if (isEmpty(domain)) {
+				showToast(R.string.mpp_xmpp_no_domain_in_username);
+				return null;
+			}
+
 			final String port = portEditText.getText().toString();
 			if (port != null) {
 				try {
 					configuration.setPort(Integer.valueOf(port));
 				} catch (NumberFormatException e) {
 					showToast(R.string.mpp_xmpp_invalid_port_number);
-					configuration = null;
+					return null;
 				}
 			}
 		}
@@ -229,4 +239,42 @@ public class CustomXmppAccountConfigurationFragment extends XmppAccountConfigura
 		return null;
 	}
 
+	/**
+	 * This listeners tries to add domain.xx(=server) to login if it doesn't exist.
+	 */
+	private static class LoginOnFocusChangeListener implements View.OnFocusChangeListener {
+
+		@Nonnull
+		private final EditText loginEditText;
+
+		@Nonnull
+		private final EditText serverEditText;
+
+		public LoginOnFocusChangeListener(@Nonnull EditText loginEditText, @Nonnull EditText serverEditText) {
+			this.loginEditText = loginEditText;
+			this.serverEditText = serverEditText;
+		}
+
+		@Override
+		public void onFocusChange(View v, boolean hasFocus) {
+			if (!hasFocus) {
+				final String login = loginEditText.getText().toString();
+				if (!isEmpty(login)) {
+					final String server = serverEditText.getText().toString();
+					if (!isEmpty(server)) {
+						// login and server fields are set => let's check if domain exists in login
+						final String domain = XmppAccountConfiguration.getAfterAt(login);
+						if (isEmpty(domain)) {
+							// no domain => set it manually
+							if (login.endsWith(String.valueOf(XmppAccountConfiguration.AT))) {
+								loginEditText.setText(login + server);
+							} else {
+								loginEditText.setText(login + XmppAccountConfiguration.AT + server);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
