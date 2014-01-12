@@ -109,18 +109,6 @@ public class ContactFragment extends BaseUserFragment {
 		root.findViewById(R.id.mpp_save_button).setVisibility(GONE);
 		root.findViewById(R.id.mpp_remove_button).setVisibility(GONE);
 
-		final View backButton = root.findViewById(R.id.mpp_back_button);
-		if(getMultiPaneManager().isTriplePane(activity)) {
-			backButton.setVisibility(GONE);
-		} else {
-			backButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					getFragmentManager().popBackStack();
-				}
-			});
-		}
-
 		getMultiPaneManager().showTitle(getSherlockActivity(), this, contact.getDisplayName());
 	}
 
@@ -188,7 +176,7 @@ public class ContactFragment extends BaseUserFragment {
 
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
-			if(getAccount().getRealm().canEditUsers()) {
+			if (getAccount().getRealm().canEditUsers()) {
 				getEventManager().fire(ContactUiEventType.edit_contact.newEvent(getUser()));
 			}
 		}

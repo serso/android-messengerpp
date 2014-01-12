@@ -23,11 +23,6 @@
 			  a:paddingTop="@dimen/mpp_section_padding_top">
 
 	<Button
-			a:id="@id/mpp_back_button"
-			a:text="@string/mpp_back"
-			style="?mpp_form_button"/>
-
-	<Button
 			a:id="@id/mpp_remove_button"
 			a:visibility="gone"
 			a:text="@string/mpp_remove"

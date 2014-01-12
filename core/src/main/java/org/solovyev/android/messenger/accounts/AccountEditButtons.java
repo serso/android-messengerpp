@@ -16,15 +16,12 @@
 
 package org.solovyev.android.messenger.accounts;
 
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
 import org.solovyev.android.messenger.core.R;
 
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.back;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
+import javax.annotation.Nonnull;
+
 import static org.solovyev.android.messenger.accounts.tasks.AccountSaverListener.newAccountSaverListener;
-import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_edit_finished;
 
 public class AccountEditButtons<A extends Account<?>> extends BaseAccountButtons<A, BaseAccountConfigurationFragment<A>> {
 
@@ -41,24 +38,9 @@ public class AccountEditButtons<A extends Account<?>> extends BaseAccountButtons
 		}
 	}
 
-	protected void onBackButtonPressed() {
-		final BaseAccountConfigurationFragment<A> fragment = getFragment();
-		A editedAccount = fragment.getEditedAccount();
-		if (editedAccount != null) {
-			fragment.getEventManager().fire(account_edit_finished.newEvent(editedAccount, back));
-		} else {
-			fragment.getEventManager().fire(realm_edit_finished.newEvent(fragment.getRealm()));
-		}
-	}
-
 	@Override
 	protected boolean isRemoveButtonVisible() {
 		return !getFragment().isNewAccount();
-	}
-
-	@Override
-	protected boolean isBackButtonVisible() {
-		return true;
 	}
 
 	public void saveAccount(@Nonnull AccountBuilder accountBuilder) {

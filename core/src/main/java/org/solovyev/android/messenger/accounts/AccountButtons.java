@@ -3,16 +3,15 @@ package org.solovyev.android.messenger.accounts;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
+
+import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getSyncService;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
 
-public class AccountButtons extends BaseAccountButtons<Account<?>, AccountFragment>{
+public class AccountButtons extends BaseAccountButtons<Account<?>, AccountFragment> {
 
 	public AccountButtons(@Nonnull AccountFragment fragment) {
 		super(fragment);
@@ -63,17 +62,7 @@ public class AccountButtons extends BaseAccountButtons<Account<?>, AccountFragme
 	}
 
 	@Override
-	protected boolean isBackButtonVisible() {
-		return !getFragment().getMultiPaneManager().isDualPane(getActivity());
-	}
-
-	@Override
 	protected void onSaveButtonPressed() {
-	}
-
-	@Override
-	protected void onBackButtonPressed() {
-		getActivity().getSupportFragmentManager().popBackStack();
 	}
 
 	void updateAccountViews(@Nonnull Account<?> account, @Nonnull View root) {

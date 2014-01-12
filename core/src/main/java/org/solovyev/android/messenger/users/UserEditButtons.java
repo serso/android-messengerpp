@@ -33,11 +33,6 @@ public class UserEditButtons<A extends Account<?>> extends EditButtons<BaseEditU
 	}
 
 	@Override
-	protected void onBackButtonPressed() {
-		getActivity().getSupportFragmentManager().popBackStack();
-	}
-
-	@Override
 	protected boolean isRemoveButtonVisible() {
 		final User user = getFragment().getUser();
 		if (user != null) {
@@ -53,12 +48,6 @@ public class UserEditButtons<A extends Account<?>> extends EditButtons<BaseEditU
 	protected void onRemoveButtonPressed() {
 		App.getUserService().removeUser(getFragment().getUser());
 		getActivity().getMultiPaneFragmentManager().clearBackStack();
-	}
-
-	@Override
-	protected boolean isBackButtonVisible() {
-		// in multi pane layout we don't want to show 'Back' button as there is no 'Back' (in one pane we reuse pane for showing more than one fragment and back means to return to the previous fragment)
-		return !(getFragment().isNewUser() && getFragment().getMultiPaneManager().isDualPane(getActivity()));
 	}
 
 	@Override

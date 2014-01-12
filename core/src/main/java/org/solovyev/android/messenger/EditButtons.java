@@ -18,14 +18,12 @@ package org.solovyev.android.messenger;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
+import org.solovyev.android.messenger.core.R;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.solovyev.android.messenger.core.R;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -34,9 +32,6 @@ public abstract class EditButtons<F extends Fragment> {
 
 	@Nonnull
 	private final F fragment;
-
-	@Nullable
-	private Button backButton;
 
 	@Nullable
 	private Button saveButton;
@@ -49,22 +44,6 @@ public abstract class EditButtons<F extends Fragment> {
 	}
 
 	public void onViewCreated(View root, Bundle savedInstanceState) {
-		backButton = (Button) root.findViewById(R.id.mpp_back_button);
-
-		if (backButton != null) {
-			if (isBackButtonVisible()) {
-				backButton.setVisibility(VISIBLE);
-				backButton.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onBackButtonPressed();
-					}
-				});
-			} else {
-				backButton.setVisibility(GONE);
-			}
-		}
-
 		removeButton = (Button) root.findViewById(R.id.mpp_remove_button);
 		if (removeButton != null) {
 			if (isRemoveButtonVisible()) {
@@ -106,9 +85,6 @@ public abstract class EditButtons<F extends Fragment> {
 
 	protected abstract void onRemoveButtonPressed();
 
-	protected abstract boolean isBackButtonVisible();
-
 	protected abstract void onSaveButtonPressed();
 
-	protected abstract void onBackButtonPressed();
 }
