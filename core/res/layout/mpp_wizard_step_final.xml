@@ -31,6 +31,11 @@
 			  a:layout_marginTop="10dp"
 			  a:text="@string/mpp_wizard_final_ways_to_help"/>
 
+	<Button a:id="@+id/mpp_wizard_final_become_tester_button"
+			a:layout_height="wrap_content"
+			a:layout_width="match_parent"
+			a:text="@string/mpp_wizard_final_become_tester"/>
+
 	<Button a:id="@+id/mpp_wizard_final_translate_button"
 			a:layout_height="wrap_content"
 			a:layout_width="match_parent"

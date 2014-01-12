@@ -19,13 +19,18 @@ package org.solovyev.android.messenger.wizard;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ScrollView;
 
 import javax.annotation.Nonnull;
 
 public class BaseWizardStep extends Fragment {
 
 	@Nonnull
-	protected <V extends View> V inflateView(int layoutResId) {
-		return (V) LayoutInflater.from(getActivity()).inflate(layoutResId, null);
+	protected View inflateView(int layoutResId) {
+		final View view = LayoutInflater.from(getActivity()).inflate(layoutResId, null);
+
+		final ScrollView scrollView = new ScrollView(getActivity());
+		scrollView.addView(view);
+		return scrollView;
 	}
 }

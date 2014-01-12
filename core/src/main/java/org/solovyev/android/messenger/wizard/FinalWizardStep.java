@@ -25,8 +25,7 @@ import android.view.ViewGroup;
 import org.solovyev.android.messenger.core.R;
 
 import static android.content.Intent.ACTION_VIEW;
-import static org.solovyev.android.messenger.App.CROWDIN_URL;
-import static org.solovyev.android.messenger.App.GITHUB_URL;
+import static org.solovyev.android.messenger.App.*;
 
 public class FinalWizardStep extends BaseWizardStep {
 
@@ -38,6 +37,14 @@ public class FinalWizardStep extends BaseWizardStep {
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
+
+		final View becomeTesterButton = root.findViewById(R.id.mpp_wizard_final_become_tester_button);
+		becomeTesterButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showUrl(GOOGLE_PLUS_TESTERS_URL);
+			}
+		});
 
 		final View translateButton = root.findViewById(R.id.mpp_wizard_final_translate_button);
 		translateButton.setOnClickListener(new View.OnClickListener() {

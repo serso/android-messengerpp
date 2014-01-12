@@ -66,6 +66,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	private static final boolean MONKEY_RUNNER = false;
 
+	public static final String GOOGLE_PLUS_TESTERS_URL = "https://plus.google.com/u/0/communities/112145635211244043975";
 	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";
 	public static final String GITHUB_URL = "https://github.com/serso/android-messengerpp";
 
