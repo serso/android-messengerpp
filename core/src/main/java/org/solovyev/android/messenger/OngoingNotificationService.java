@@ -17,21 +17,16 @@
 package org.solovyev.android.messenger;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import org.solovyev.android.messenger.core.R;
 import roboguice.service.RoboService;
 
-public final class OngoingNotificationService extends RoboService {
+import javax.annotation.Nonnull;
 
-    /*
-	**********************************************************************
-    *
-    *                           STATIC
-    *
-    **********************************************************************
-    */
+public final class OngoingNotificationService extends RoboService {
 
 	private static final int NOTIFICATION_ID_APP_IS_RUNNING = 10002029;
 
@@ -54,5 +49,17 @@ public final class OngoingNotificationService extends RoboService {
 		nb.setContentText(getString(R.string.mpp_notification_text));
 		nb.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, StartActivity.class), 0));
 		startForeground(NOTIFICATION_ID_APP_IS_RUNNING, nb.getNotification());
+	}
+
+	static void startOngoingNotificationService(@Nonnull Context context) {
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(context, OngoingNotificationService.class);
+		context.startService(serviceIntent);
+	}
+
+	static void stopOngoingNotificationService(@Nonnull Context context) {
+		final Intent serviceIntent = new Intent();
+		serviceIntent.setClass(context, OngoingNotificationService.class);
+		context.stopService(serviceIntent);
 	}
 }

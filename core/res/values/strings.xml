@@ -44,7 +44,7 @@
 	<string name="mpp_menu_view">View</string>
 	<string name="mpp_account_configuration">Configuration of %1$s</string>
 	<string name="mpp_notification_title">Messenger++</string>
-	<string name="mpp_notification_text">Click to open app</string>
+	<string name="mpp_notification_text">Click to open the app</string>
 	<string name="mpp_private_chat_title">%1$s</string>
 	<string name="mpp_public_chat_title">Chat</string>
 	<string name="mpp_saving_account_title">Saving…</string>
@@ -125,6 +125,12 @@
 	<string name="acl_yes">Yes</string>
 	<string name="acl_no">No</string>
 	<string name="mpp_wizard_final_become_tester">Become tester</string>
+	<string name="mpp_preferences_show_ongoing_notification">Show ongoing notification</string>
+	<string name="mpp_attention">Attention</string>
+	<string name="mpp_ongoing_notification_alert">Disabling the notification may cause closing the app by OS. We
+		recommend always showing the notification and exiting the app via exit button.
+	</string>
+	<string name="mpp_ok">OK</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message</item>
 		<item quantity="other">There are %s unread messages</item>

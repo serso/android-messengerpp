@@ -51,7 +51,7 @@ public class StartActivity extends RoboActivity {
 
 		// we must start service from here because Android can cache application
 		// and Application#onCreate() is never called!
-		App.startBackgroundService();
+		App.tryStartBackgroundService();
 		App.getAccountConnectionsService().tryStartAll();
 
 		this.finish();

@@ -17,12 +17,16 @@
 package org.solovyev.android.messenger.preferences;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.RoboListeners;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -30,6 +34,7 @@ import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.MessengerPreferences.Gui.Notification.showOngoingNotification;
 import static org.solovyev.android.messenger.preferences.MessengerPreferenceListFragment.newPreferencesListFragmentDef;
 
 public final class PreferencesActivity extends BaseFragmentActivity implements PreferenceListFragment.OnPreferenceAttachedListener {
@@ -45,6 +50,9 @@ public final class PreferencesActivity extends BaseFragmentActivity implements P
 	@Inject
 	@Nonnull
 	private SyncService syncService;
+
+	@Nonnull
+	private final SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new OnPreferencesChangeListener();
 
 	public static void start(@Nonnull Activity activity) {
 		final Intent result = new Intent();
@@ -68,8 +76,17 @@ public final class PreferencesActivity extends BaseFragmentActivity implements P
 	protected void onResume() {
 		super.onResume();
 
+		App.getPreferences().registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+
 		final RoboListeners listeners = getListeners();
 		listeners.add(PreferenceUiEvent.Clicked.class, new OnPreferenceClickedListener());
+	}
+
+	@Override
+	protected void onPause() {
+		App.getPreferences().unregisterOnSharedPreferenceChangeListener(preferenceChangeListener);
+
+		super.onPause();
 	}
 
 	@Override
@@ -94,5 +111,26 @@ public final class PreferencesActivity extends BaseFragmentActivity implements P
 				fm.setMainFragment(newPreferencesListFragmentDef(PreferencesActivity.this, preferencesResId, true));
 			}
 		}
+	}
+
+
+	private class OnPreferencesChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+			if (showOngoingNotification.isSameKey(key)) {
+				if (!showOngoingNotification.getPreference(preferences)) {
+					showOngoingNotificationAlert();
+				}
+			}
+		}
+	}
+
+	private void showOngoingNotificationAlert() {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.mpp_attention);
+		builder.setMessage(R.string.mpp_ongoing_notification_alert);
+		builder.setPositiveButton(R.string.mpp_ok, null);
+		builder.create().show();
 	}
 }

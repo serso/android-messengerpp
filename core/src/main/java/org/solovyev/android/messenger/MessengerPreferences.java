@@ -36,6 +36,7 @@ public final class MessengerPreferences {
 	public static void setDefaultValues(@Nonnull Context context) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+		Gui.Notification.showOngoingNotification.tryPutDefault(preferences);
 		Gui.theme.tryPutDefault(preferences);
 		Gui.Chat.Message.showIcon.tryPutDefault(preferences);
 		startOnBoot.tryPutDefault(preferences);
@@ -74,6 +75,10 @@ public final class MessengerPreferences {
 			public static final class Message {
 				public static Preference<Boolean> showIcon = BooleanPreference.of("gui.chat.message.showIcon", false);
 			}
+		}
+
+		public static final class Notification {
+			public static Preference<Boolean> showOngoingNotification = BooleanPreference.of("gui.notification.showOngoingNotification", true);
 		}
 
 	}

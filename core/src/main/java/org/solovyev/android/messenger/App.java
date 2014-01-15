@@ -19,7 +19,6 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Handler;
@@ -55,6 +54,11 @@ import javax.annotation.Nonnull;
 import static android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static org.solovyev.android.Android.enableComponent;
+import static org.solovyev.android.messenger.MessengerPreferences.Gui;
+import static org.solovyev.android.messenger.MessengerPreferences.Gui.Notification.showOngoingNotification;
+import static org.solovyev.android.messenger.MessengerPreferences.startOnBoot;
+import static org.solovyev.android.messenger.OngoingNotificationService.startOngoingNotificationService;
+import static org.solovyev.android.messenger.OngoingNotificationService.stopOngoingNotificationService;
 
 public final class App implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -190,11 +194,18 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-		if (MessengerPreferences.Gui.theme.isSameKey(key)) {
-			theme = MessengerPreferences.Gui.theme.getPreferenceNoError(preferences);
-		} else if (MessengerPreferences.startOnBoot.isSameKey(key)) {
-			final Boolean startOnBoot = MessengerPreferences.startOnBoot.getPreference(preferences);
-			enableComponent(application, OnBootBroadcastReceiver.class, startOnBoot);
+		if (Gui.theme.isSameKey(key)) {
+			theme = Gui.theme.getPreferenceNoError(preferences);
+		} else if (startOnBoot.isSameKey(key)) {
+			final Boolean shouldStartOnBoot = startOnBoot.getPreference(preferences);
+			enableComponent(application, OnBootBroadcastReceiver.class, shouldStartOnBoot);
+		} else if (showOngoingNotification.isSameKey(key)) {
+			final boolean showOngoingNotification = Gui.Notification.showOngoingNotification.getPreference(preferences);
+			if (showOngoingNotification) {
+				startOngoingNotificationService(instance.application);
+			} else {
+				stopOngoingNotificationService(instance.application);
+			}
 		}
 	}
 	/*
@@ -306,9 +317,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	public static void exit(Activity activity) {
 		getAccountConnectionsService().tryStopAll();
 
-		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
-		instance.application.stopService(serviceIntent);
+		stopOngoingNotificationService(instance.application);
 
 		activity.finish();
 	}
@@ -344,13 +353,13 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	@Nonnull
 	public static MessengerTheme getThemeFromPreferences() {
-		return MessengerPreferences.Gui.theme.getPreferenceNoError(getPreferences());
+		return Gui.theme.getPreferenceNoError(getPreferences());
 	}
 
-	public static void startBackgroundService() {
-		final Intent serviceIntent = new Intent();
-		serviceIntent.setClass(instance.application, OngoingNotificationService.class);
-		instance.application.startService(serviceIntent);
+	public static void tryStartBackgroundService() {
+		if (showOngoingNotification.getPreference(getPreferences())) {
+			startOngoingNotificationService(instance.application);
+		}
 	}
 
 	public static boolean isDebuggable() {
