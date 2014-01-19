@@ -29,8 +29,8 @@
 			a:title="@string/mpp_preferences_show_icon_in_chat_title"
 			a:summary="@string/mpp_preferences_show_icon_in_chat_summary"/>
 
-	<CheckBoxPreference
+	<!--<CheckBoxPreference
 			a:key="gui.notification.showOngoingNotification"
-			a:title="@string/mpp_preferences_show_ongoing_notification"/>
+			a:title="@string/mpp_preferences_show_ongoing_notification"/>-->
 
 </PreferenceScreen>
