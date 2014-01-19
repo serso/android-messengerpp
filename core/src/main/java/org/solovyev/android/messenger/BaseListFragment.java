@@ -69,6 +69,7 @@ import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
 import static org.solovyev.android.messenger.AdapterSelection.newSelection;
 import static org.solovyev.android.messenger.AdapterSelection.restoreSelection;
+import static org.solovyev.android.messenger.App.getTheme;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.common.text.Strings.isEmpty;
 
@@ -386,7 +387,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	private void updateActionBar() {
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
 		actionBar.setTitle(titleResId);
-		actionBar.setIcon(R.drawable.mpp_app_icon);
+		actionBar.setIcon(getTheme().getActionBarIconResId());
 	}
 
 	@Override
