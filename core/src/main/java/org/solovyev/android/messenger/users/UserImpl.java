@@ -16,13 +16,7 @@
 
 package org.solovyev.android.messenger.users;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Splitter;
 import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperties;
@@ -31,7 +25,11 @@ import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
 import org.solovyev.common.text.Strings;
 
-import com.google.common.base.Splitter;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.solovyev.android.messenger.users.Users.newOnlineProperty;
 
@@ -98,7 +96,12 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 
 		if (!firstNameExists && !lastNameExists) {
 			// first and last names are empty
-			result.append(this.getEntity().getAccountEntityId());
+			final String login = getLogin();
+			if (!Strings.isEmpty(login)) {
+				result.append(login);
+			} else {
+				result.append(this.getEntity().getAccountEntityId());
+			}
 		} else {
 
 			if (firstNameExists) {

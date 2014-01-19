@@ -41,6 +41,7 @@ import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.realms.xmpp.XmppRealm.TAG;
 import static org.solovyev.android.messenger.users.Users.newUser;
 import static org.solovyev.android.properties.Properties.newProperty;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 class XmppAccountUserService extends AbstractXmppAccountService implements AccountUserService {
 
@@ -207,6 +208,10 @@ class XmppAccountUserService extends AbstractXmppAccountService implements Accou
 				final String fullName = userCard.getField("FN");
 				Users.tryParseNameProperties(result, fullName);
 			} catch (XMPPException e) {
+				if (!isEmpty(name)) {
+					Users.tryParseNameProperties(result, name);
+				}
+
 				// For some reason vcard loading may return timeout exception => investigate this behaviour
 				// NOTE: pidgin loads user information also very slow
 				Log.w(TAG, e.getMessage(), e);
