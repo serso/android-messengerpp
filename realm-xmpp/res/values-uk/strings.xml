@@ -4,6 +4,7 @@
 	<string name="mpp_xmpp_name">XMPP</string>
 	<string name="mpp_xmpp_name_facebook">Facebook</string>
 	<string name="mpp_xmpp_name_yandex">Yandex</string>
+	<string name="mpp_xmpp_name_qip">QIP</string>
 	<string name="mpp_xmpp_name_google">Google Talk</string>
 	<string name="mpp_xmpp_login_hint_custom">ім\'я_користувача@домен.хх</string>
 	<string name="mpp_xmpp_login_hint">ім\'я_користувача</string>
@@ -19,4 +20,11 @@
 	<string name="mpp_xmpp_hide_advanced_options">Приховати додаткові параметри</string>
 	<string name="mpp_xmpp_invalid_port_number">Невірний номер порту</string>
 	<string name="mpp_xmpp_security_mode">TLS</string>
+	<string name="mpp_xmpp_security_mode_required">Завжди використовувати</string>
+	<string name="mpp_xmpp_security_mode_enabled">Використовувати, якщо підтримується сервером</string>
+	<string name="mpp_xmpp_security_mode_disabled">Не використовувати</string>
+	<string name="mpp_xmpp_use_username_without_domain_as_login">Використовувати ім\'я користувача без домену для входу
+		(видалити @domain.xx)
+	</string>
+	<string name="mpp_xmpp_no_domain_in_username">Домен повинен бути заданий в користувача (username@domain.xx)</string>
 </resources>

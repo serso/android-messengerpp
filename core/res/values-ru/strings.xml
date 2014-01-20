@@ -129,9 +129,9 @@
 	<string name="mpp_preferences_show_ongoing_notification">Показывать оповещение о работе приложения</string>
 	<string name="mpp_attention">Внимание</string>
 	<string name="mpp_ongoing_notification_alert">После выключения оповещения приложение может быть автоматически
-		закрыто ОС. Мы рекомендуем оставлять его включенным и выходить из приложения с помощью кнопки "Выход".
+		закрыто ОС. Мы рекомендуем оставлять его включенным и выходить из приложения с помощью кнопки \"Выход\".
 	</string>
-	<string name="mpp_ok">ОК</string>
+	<string name="mpp_ok">OK</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">Есть 1 непрочитанное сообщение.</item>
 		<item quantity="few">Есть %s непрочитанных сообщений.</item>

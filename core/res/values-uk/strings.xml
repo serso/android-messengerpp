@@ -126,6 +126,13 @@
 	<string name="mpp_turn_on_internet">Увімкнути інтернет</string>
 	<string name="acl_yes">Так</string>
 	<string name="acl_no">Ні</string>
+	<string name="mpp_wizard_final_become_tester">Стати тестером</string>
+	<string name="mpp_preferences_show_ongoing_notification">Показати сповіщення про роботу програми</string>
+	<string name="mpp_attention">Увага</string>
+	<string name="mpp_ongoing_notification_alert">Після виключення оповіщення програма може бути автоматично закрита ОС.
+		Ми рекомендуємо залишати це увімкненим і виходити з програми за допомогою кнопки \"Вихід\".
+	</string>
+	<string name="mpp_ok">Гаразд</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">У Вас одне непрочитане повідомлення.</item>
 		<item quantity="few">У Вас %s непрочитаних повідомлень.</item>

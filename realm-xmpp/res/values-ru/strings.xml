@@ -4,6 +4,7 @@
 	<string name="mpp_xmpp_name">XMPP</string>
 	<string name="mpp_xmpp_name_facebook">Facebook</string>
 	<string name="mpp_xmpp_name_yandex">Яндекс</string>
+	<string name="mpp_xmpp_name_qip">QIP</string>
 	<string name="mpp_xmpp_name_google">Google Talk</string>
 	<string name="mpp_xmpp_login_hint_custom">имя_пользователя@домен.хх</string>
 	<string name="mpp_xmpp_login_hint">имя_пользователя</string>
