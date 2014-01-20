@@ -5,7 +5,7 @@ import org.solovyev.android.messenger.core.R;
 public enum MessengerTheme {
 
 	holo(R.string.mpp_preferences_theme_holo, R.style.mpp_theme_holo, R.style.mpp_theme_holo_fragment, R.style.mpp_theme_holo_dialog, R.drawable.mpp_app_icon),
-	holo_light_action_bar(R.string.mpp_preferences_theme_holo_light_action_bar, R.style.mpp_theme_holo_light, R.style.mpp_theme_holo_fragment, R.style.mpp_theme_holo_light_dialog, R.drawable.mpp_app_icon_contrast);
+	holo_light_action_bar(R.string.mpp_preferences_theme_holo_light_action_bar, R.style.mpp_theme_holo_light, R.style.mpp_theme_holo_fragment, R.style.mpp_theme_holo_light_dialog, R.drawable.mpp_app_icon_blue);
 
 	private final int nameResId;
 	private final int themeResId;
