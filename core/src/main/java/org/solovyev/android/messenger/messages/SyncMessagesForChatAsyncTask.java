@@ -37,10 +37,19 @@ public class SyncMessagesForChatAsyncTask extends MessengerAsyncTask<SyncMessage
 	@Nullable
 	private PullToRefreshListViewProvider listViewProvider;
 
-	public SyncMessagesForChatAsyncTask(@Nullable PullToRefreshListViewProvider listViewProvider,
-										@Nonnull Context context) {
+	SyncMessagesForChatAsyncTask(@Nullable PullToRefreshListViewProvider listViewProvider,
+										 @Nonnull Context context) {
 		super(context);
 		this.listViewProvider = listViewProvider;
+	}
+
+	public static void tryExecute(@Nullable PullToRefreshListViewProvider listViewProvider,
+								  @Nullable Context context,
+								  @Nonnull Input input) {
+		if (context != null) {
+			final SyncMessagesForChatAsyncTask task = new SyncMessagesForChatAsyncTask(listViewProvider, context);
+			task.executeInParallel(input);
+		}
 	}
 
 	@Override

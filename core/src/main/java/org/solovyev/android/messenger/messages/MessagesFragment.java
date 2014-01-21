@@ -18,6 +18,7 @@ package org.solovyev.android.messenger.messages;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -157,7 +158,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 			setTranscriptMode(getListView(), ListView.TRANSCRIPT_MODE_NORMAL);
 		}
 
-		new SyncMessagesForChatAsyncTask(null, getActivity()).executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+		SyncMessagesForChatAsyncTask.tryExecute(null, getActivity(), new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 	}
 
 	@Override
@@ -371,7 +372,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		return new AbstractOnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				new SyncMessagesForChatAsyncTask(this, getActivity()).executeInParallel(new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
+				SyncMessagesForChatAsyncTask.tryExecute(this, getActivity(), new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
 			}
 		};
 	}
@@ -385,7 +386,8 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 	private void syncOlderMessages() {
 		final ListView lv = getListViewById();
-		if (lv != null) {
+		final FragmentActivity activity = getActivity();
+		if (lv != null && activity != null) {
 			final Integer transcriptMode = lv.getTranscriptMode();
 			lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
 
@@ -394,7 +396,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 				pullToRefreshListView.setRefreshingInternal(false);
 			}
 
-			new SyncMessagesForChatAsyncTask(this, getActivity()) {
+			new SyncMessagesForChatAsyncTask(this, activity) {
 				@Override
 				protected void onSuccessPostExecute(@Nonnull Input result) {
 					try {
