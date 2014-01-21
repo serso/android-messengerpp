@@ -104,7 +104,7 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 			final Account account = accountService.getAccountById(accountId);
 			final Throwable cause = e.getCause();
 
-			if (cause != e) {
+			if (cause != e && cause != null) {
 				handled = account.getRealm().handleException(cause, account);
 			} else {
 				handled = account.getRealm().handleException(e, account);
