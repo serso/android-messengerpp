@@ -21,6 +21,7 @@ import android.util.Log;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.ChatStateManager;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
+import org.solovyev.android.messenger.accounts.AccountDisconnectedException;
 import org.solovyev.android.messenger.accounts.connection.LoopedAccountConnection;
 
 import javax.annotation.Nonnull;
@@ -146,9 +147,13 @@ public class XmppAccountConnection extends LoopedAccountConnection<XmppAccount> 
 
 	@Override
 	public <R> R doOnConnection(@Nonnull XmppConnectedCallable<R> callable) throws XMPPException, AccountConnectionException {
-		final Connection connection = tryGetConnection();
-		synchronized (connection) {
-			return callable.call(connection);
+		if (!isStopped()) {
+			final Connection connection = tryGetConnection();
+			synchronized (connection) {
+				return callable.call(connection);
+			}
+		} else {
+			throw new AccountDisconnectedException(getAccount().getId());
 		}
 	}
 

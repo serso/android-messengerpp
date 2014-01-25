@@ -131,7 +131,7 @@ public class DefaultAccountConnectionsService implements AccountConnectionsServi
 	}
 
 	@Override
-	public void onNetworkEvent(@Nonnull NetworkData networkData) {
+	public void onNetworkEvent(@Nonnull final NetworkData networkData) {
 		switch (networkData.getState()) {
 			case CONNECTED:
 				notificationService.remove(NO_INTERNET_NOTIFICATION);

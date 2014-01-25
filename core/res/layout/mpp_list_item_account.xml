@@ -41,9 +41,14 @@
 	</LinearLayout>
 
 	<ImageView
+			a:id="@+id/mpp_li_contact_online_view"
+			style="?mpp_list_item_contact_online"
+			a:visibility="gone"/>
+
+	<ImageView
 			a:id="@+id/mpp_li_account_warning_imageview"
 			a:background="@drawable/mpp_li_warning_states"
-			style="?mpp_list_item_icon"
+			style="@style/mpp_list_item_right_button"
 			a:visibility="gone"/>
 
 

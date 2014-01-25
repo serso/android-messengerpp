@@ -28,7 +28,6 @@ import org.solovyev.android.messenger.users.CompositeUserChoice;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 public interface Account<C extends AccountConfiguration> extends Identifiable {
@@ -71,6 +70,8 @@ public interface Account<C extends AccountConfiguration> extends Identifiable {
 
 	@Nonnull
 	Entity newMessageEntity(@Nonnull String accountMessageId, @Nonnull String entityId);
+
+	boolean isOnline();
 
 	boolean same(@Nonnull Account that);
 

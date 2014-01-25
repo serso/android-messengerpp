@@ -60,6 +60,8 @@ public class AccountsAdapter extends BaseListItemAdapter<AccountListItem> {
 			case configuration_changed:
 			case sync_data_changed:
 			case changed:
+			case start:
+			case stop:
 				final AccountListItem listItem = findInAllElements(account);
 				if (listItem != null) {
 					listItem.onAccountChangedEvent(account);

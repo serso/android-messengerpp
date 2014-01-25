@@ -71,8 +71,8 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 
 	@Nullable
 	@Override
-	protected synchronized SmsAccountConnection getAccountConnection() {
-		return (SmsAccountConnection) super.getAccountConnection();
+	protected synchronized SmsAccountConnection getConnection() {
+		return (SmsAccountConnection) super.getConnection();
 	}
 
 	@Nonnull
@@ -193,7 +193,7 @@ final class SmsAccount extends AbstractAccount<SmsAccountConfiguration> {
 		final PhoneNumber phoneNumber = newPhoneNumber(contact.getPhoneNumber());
 		if (phoneNumber.isCallable()) {
 			// we need to return after call to application => enable listener
-			final SmsAccountConnection connection = getAccountConnection();
+			final SmsAccountConnection connection = getConnection();
 			if (connection != null) {
 				connection.setCallFromUs(phoneNumber.getNumber());
 			}

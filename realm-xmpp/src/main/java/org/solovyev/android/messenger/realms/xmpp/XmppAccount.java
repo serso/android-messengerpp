@@ -94,7 +94,7 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 
 	@Nonnull
 	private XmppConnectionAware getXmppConnectionAware() {
-		XmppConnectionAware realmAware = getAccountConnection();
+		XmppConnectionAware realmAware = getConnection();
 		if (realmAware == null) {
 			realmAware = TemporaryXmppConnectionAware.newInstance(this);
 			Log.w(TAG, "Creation of temporary xmpp connection!");
@@ -103,8 +103,8 @@ public final class XmppAccount extends AbstractAccount<XmppAccountConfiguration>
 	}
 
 	@Nullable
-	protected XmppAccountConnection getAccountConnection() {
-		return (XmppAccountConnection) super.getAccountConnection();
+	protected XmppAccountConnection getConnection() {
+		return (XmppAccountConnection) super.getConnection();
 	}
 
 	@Nonnull

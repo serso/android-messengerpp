@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.solovyev.android.messenger.Background;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountsTest;
 
@@ -48,15 +49,23 @@ public class AccountConnectionsTest {
 	@Nonnull
 	private AccountConnection connection;
 
+	@Nonnull
+	private final Executor executor = new Executor() {
+		@Override
+		public void execute(@Nonnull Runnable command) {
+			command.run();
+		}
+	};
+	;
+
 	@Before
 	public void setUp() throws Exception {
 		connections = new DefaultAccountConnections(application);
-		connections.setExecutor(new Executor() {
-			@Override
-			public void execute(@Nonnull Runnable command) {
-				command.run();
-			}
-		});
+		connections.setExecutor(executor);
+		final Background background = new Background();
+		background.setHighPriorityExecutor(executor);
+		background.setLowPriorityExecutor(executor);
+		connections.setBackground(background);
 		account = AccountsTest.newMockAccountWithStaticConnection();
 		connection = AccountsTest.prepareStaticConnectionForAccount(account);
 	}
@@ -292,7 +301,7 @@ public class AccountConnectionsTest {
 		public void assertStoppedUpTo(int upTo) {
 			for (int i = 0; i < upTo; i++) {
 				final AccountConnection connection = connections.get(i);
-				verify(connection, times(1)).stop();
+				verify(connection, atLeastOnce()).stop();
 				assertTrue(connection.isStopped());
 			}
 		}

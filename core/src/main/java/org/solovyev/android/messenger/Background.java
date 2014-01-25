@@ -16,15 +16,13 @@
 
 package org.solovyev.android.messenger;
 
+import com.google.inject.Singleton;
+import org.solovyev.android.TimeLoggingExecutor;
+
+import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nonnull;
-
-import org.solovyev.android.TimeLoggingExecutor;
-
-import com.google.inject.Singleton;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
@@ -37,10 +35,10 @@ public final class Background implements Executor {
 	private final AtomicInteger count = new AtomicInteger();
 
 	@Nonnull
-	private final Executor lowPriorityExecutor = newFixedThreadPool(POOL_SIZE, new BackgroundThreadFactory(Thread.MIN_PRIORITY));
+	private Executor lowPriorityExecutor = newFixedThreadPool(POOL_SIZE, new BackgroundThreadFactory(Thread.MIN_PRIORITY));
 
 	@Nonnull
-	private final Executor highPriorityExecutor = newFixedThreadPool(POOL_SIZE, new BackgroundThreadFactory(Thread.MAX_PRIORITY));
+	private Executor highPriorityExecutor = newFixedThreadPool(POOL_SIZE, new BackgroundThreadFactory(Thread.MAX_PRIORITY));
 
 	@Override
 	public void execute(@Nonnull Runnable command) {
@@ -55,6 +53,14 @@ public final class Background implements Executor {
 	@Nonnull
 	public Executor getHighPriorityExecutor() {
 		return highPriorityExecutor;
+	}
+
+	public void setLowPriorityExecutor(@Nonnull Executor lowPriorityExecutor) {
+		this.lowPriorityExecutor = lowPriorityExecutor;
+	}
+
+	public void setHighPriorityExecutor(@Nonnull Executor highPriorityExecutor) {
+		this.highPriorityExecutor = highPriorityExecutor;
 	}
 
 	private class BackgroundThreadFactory implements ThreadFactory {

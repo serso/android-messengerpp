@@ -161,6 +161,9 @@ public class XmppAccountConfiguration extends JObject implements AccountConfigur
 
 		configuration.setSecurityMode(securityMode.toSmackMode());
 
+		// we manually manage the connectivity (see https://github.com/serso/android-messengerpp/issues/62)
+		configuration.setReconnectionAllowed(false);
+
 		return configuration;
 	}
 

@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.PredicateSpy;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.Background;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.sync.SyncAllTaskIsAlreadyRunning;
 import org.solovyev.android.messenger.sync.SyncService;
@@ -72,6 +73,10 @@ public final class DefaultAccountConnections implements AccountConnections {
 	@Nonnull
 	private final Context context;
 
+	@Inject
+	@Nonnull
+	private Background background;
+
 	@GuardedBy("connections")
 	@Nonnull
 	private final Set<AccountConnection> connections = new HashSet<AccountConnection>();
@@ -92,6 +97,10 @@ public final class DefaultAccountConnections implements AccountConnections {
 
 	void setExecutor(@Nonnull Executor executor) {
 		this.executor = executor;
+	}
+
+	void setBackground(@Nonnull Background background) {
+		this.background = background;
 	}
 
 	@Override
@@ -157,40 +166,59 @@ public final class DefaultAccountConnections implements AccountConnections {
 
 	@Override
 	public void tryStopAll() {
+		final List<AccountConnection> toBeStopped = new ArrayList<AccountConnection>();
+
 		synchronized (this.connections) {
 			for (AccountConnection connection : connections) {
-				if (!connection.isStopped()) {
-					connection.stop();
-				}
+				toBeStopped.add(connection);
 			}
 		}
+
+		stopConnections(toBeStopped);
 	}
 
 	@Override
 	public boolean onNoInternetConnection() {
 		boolean stopped = false;
 
+		final List<AccountConnection> toBeStopped = new ArrayList<AccountConnection>();
+
 		synchronized (this.connections) {
 			for (AccountConnection connection : connections) {
-				if (connection.isInternetConnectionRequired() && !connection.isStopped()) {
+				if (connection.isInternetConnectionRequired()) {
 					stopped = true;
-					connection.stop();
+					toBeStopped.add(connection);
 				}
 			}
 		}
+
+		for (AccountConnection connection : toBeStopped) {
+			connection.stopDelayed();
+		}
+
+		background.getHighPriorityExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				stopConnections(toBeStopped);
+			}
+		});
 
 		return stopped;
 	}
 
 	@Override
 	public void tryStopFor(@Nonnull Account account) {
+		final List<AccountConnection> toBeStopped = new ArrayList<AccountConnection>();
+
 		synchronized (this.connections) {
-			for (AccountConnection connection : connections) {
-				if (account.equals(connection.getAccount()) && !connection.isStopped()) {
-					connection.stop();
+			for (AccountConnection connection : this.connections) {
+				if (account.equals(connection.getAccount())) {
+					toBeStopped.add(connection);
 				}
 			}
 		}
+
+		stopConnections(toBeStopped);
 	}
 
 	@Override
@@ -213,24 +241,29 @@ public final class DefaultAccountConnections implements AccountConnections {
 
 	@Override
 	public void removeConnectionFor(@Nonnull Account account) {
+		final List<AccountConnection> removedConnections = new ArrayList<AccountConnection>();
+
 		synchronized (this.connections) {
 			// remove account connections belonged to specified realm
-			final List<AccountConnection> removedConnections = new ArrayList<AccountConnection>();
 			Iterables.removeIf(this.connections, PredicateSpy.spyOn(new ConnectionFinder(account), removedConnections));
+		}
 
-			// stop them
-			for (AccountConnection removedConnection : removedConnections) {
-				if (!removedConnection.isStopped()) {
-					removedConnection.stop();
-				}
-			}
+		stopConnections(removedConnections);
+	}
+
+	private void stopConnections(@Nonnull List<AccountConnection> connections) {
+		assert !Thread.holdsLock(this.connections);
+
+		for (AccountConnection connection : connections) {
+			connection.stop();
 		}
 	}
 
 	@Override
 	public void restartConnectionForChangedAccount(@Nonnull Account account, boolean internetConnectionExists) {
+		removeConnectionFor(account);
+
 		synchronized (this.connections) {
-			removeConnectionFor(account);
 			startConnectionsFor(Arrays.asList(account), internetConnectionExists);
 		}
 	}

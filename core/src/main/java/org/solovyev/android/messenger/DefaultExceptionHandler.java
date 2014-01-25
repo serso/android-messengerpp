@@ -28,6 +28,7 @@ import org.solovyev.android.network.NetworkState;
 import org.solovyev.android.network.NetworkStateService;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 
 import static org.solovyev.android.messenger.notifications.Notifications.*;
 
@@ -64,18 +65,39 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 
 		if (e instanceof UnsupportedAccountException) {
 			notification = ACCOUNT_NOT_SUPPORTED_NOTIFICATION;
+		} else if (e instanceof AccountDisconnectedException) {
+			// no internet notification should be added by notification service
 		} else if (e instanceof AccountConnectionException) {
 			final boolean handled = handleAccountException((AccountException) e);
 			if (!handled) {
-				if (networkStateService.getNetworkData().getState() == NetworkState.CONNECTED) {
-					// if we are not connected show nothing
-					notification = newAccountConnectionErrorNotification();
+				final Throwable cause = e.getCause();
+				if (cause instanceof AccountConnectionException && cause != e) {
+					handleException(cause);
+					return;
+				} else {
+					if (networkStateService.getNetworkData().getState() == NetworkState.CONNECTED) {
+						if (isInternetException(e)) {
+							// even if we are connected most probably that internet connection is not good
+							// or we are disconnecting. In that case we don't want to bother user with
+							// error notifications
+						} else {
+							notification = newAccountConnectionErrorNotification();
+						}
+					} else {
+						// we are not connected and this might be the reason why we the exception has been raised
+					}
 				}
 			}
 		} else if (e instanceof AccountException) {
 			final boolean handled = handleAccountException((AccountException) e);
 			if (!handled) {
-				notification = newAccountErrorNotification();
+				final Throwable cause = e.getCause();
+				if (cause instanceof AccountException && cause != e) {
+					handleException(cause);
+					return;
+				} else {
+					notification = newAccountErrorNotification();
+				}
 			}
 		} else if (e instanceof HttpRuntimeIoException) {
 			notification = NO_INTERNET_NOTIFICATION;
@@ -83,6 +105,7 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 			notification = newInvalidResponseNotification();
 		} else if (e instanceof AccountRuntimeException) {
 			handleException(new AccountException((AccountRuntimeException) e));
+			return;
 		} else {
 			notification = newUndefinedErrorNotification();
 		}
@@ -93,6 +116,17 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 		}
 
 		Log.e(App.TAG, e.getMessage(), e);
+	}
+
+	private boolean isInternetException(Throwable e) {
+		final Throwable cause = e.getCause();
+		if (e instanceof IOException) {
+			return true;
+		} else if (cause == null || cause == e) {
+			return false;
+		} else {
+			return isInternetException(cause);
+		}
 	}
 
 	private boolean handleAccountException(@Nonnull AccountException e) {
@@ -108,6 +142,11 @@ public final class DefaultExceptionHandler implements ExceptionHandler {
 				handled = account.getRealm().handleException(cause, account);
 			} else {
 				handled = account.getRealm().handleException(e, account);
+			}
+
+			if (!handled) {
+				// account connection has been stopped => no need to warn user
+				handled = !account.isOnline();
 			}
 		} catch (UnsupportedAccountException e1) {
 			Log.e(App.TAG, e1.getMessage(), e1);

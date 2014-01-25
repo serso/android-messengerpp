@@ -152,7 +152,7 @@ final class SmsAccountChatService implements AccountChatService {
 			final Intent deliveredIntent = new Intent(makeSmsDeliveredAction(message.getId()));
 			deliveredIntent.putExtra(INTENT_EXTRA_SMS_ID, message.getEntity().getEntityId());
 
-			final SmsAccountConnection connection = account.getAccountConnection();
+			final SmsAccountConnection connection = account.getConnection();
 			if (connection != null) {
 				final BroadcastReceiver receiver = connection.getReceiver();
 				application.registerReceiver(receiver, new IntentFilter(sentIntent.getAction()));

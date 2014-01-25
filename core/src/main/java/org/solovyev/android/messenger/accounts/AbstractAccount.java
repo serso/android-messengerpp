@@ -56,7 +56,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	 * Last created account connection
 	 */
 	@Nullable
-	private volatile AccountConnection accountConnection;
+	private volatile AccountConnection connection;
 
 	public AbstractAccount(@Nonnull String id,
 						   @Nonnull Realm realm,
@@ -209,7 +209,7 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	@Override
 	public final synchronized AccountConnection newConnection(@Nonnull Context context) {
 		final AccountConnection connection = createConnection(context);
-		this.accountConnection = connection;
+		this.connection = connection;
 		return connection;
 	}
 
@@ -217,8 +217,14 @@ public abstract class AbstractAccount<C extends AccountConfiguration> extends JO
 	protected abstract AccountConnection createConnection(@Nonnull Context context);
 
 	@Nullable
-	protected synchronized AccountConnection getAccountConnection() {
-		return accountConnection;
+	protected synchronized AccountConnection getConnection() {
+		return connection;
+	}
+
+	@Override
+	public boolean isOnline() {
+		final AccountConnection c = connection;
+		return c != null && !c.isStopped();
 	}
 
 	@Override

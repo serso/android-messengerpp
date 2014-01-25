@@ -45,6 +45,12 @@ public interface AccountConnection {
 	 */
 	void stop();
 
+	/**
+	 * Comparing to stop() this method just notifies about stopping and doesn't do real stop. Real stop must be done
+	 * afterwards by calling stop() method
+	 */
+	void stopDelayed();
+
 	boolean isStopped();
 
 	boolean isInternetConnectionRequired();

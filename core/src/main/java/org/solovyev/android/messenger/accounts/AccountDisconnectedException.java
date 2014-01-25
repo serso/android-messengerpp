@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 serso aka se.solovyev
+ * Copyright 2014 serso aka se.solovyev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,9 @@ package org.solovyev.android.messenger.accounts;
 
 import javax.annotation.Nonnull;
 
-public class AccountConnectionException extends AccountException {
+public final class AccountDisconnectedException extends AccountConnectionException {
 
-	public AccountConnectionException(@Nonnull String accountId) {
+	public AccountDisconnectedException(@Nonnull String accountId) {
 		super(accountId);
-	}
-
-	public AccountConnectionException(@Nonnull String accountId, @Nonnull Throwable throwable) {
-		super(accountId, throwable);
 	}
 }

@@ -43,6 +43,9 @@ public abstract class BaseAccountConnection<A extends Account> implements Accoun
 	@Nonnull
 	private final AtomicBoolean stopped = new AtomicBoolean(true);
 
+	@Nonnull
+	private final AtomicBoolean stopping = new AtomicBoolean(false);
+
 	private final int retryCount;
 
 	protected BaseAccountConnection(@Nonnull A account, @Nonnull Context context) {
@@ -70,12 +73,13 @@ public abstract class BaseAccountConnection<A extends Account> implements Accoun
 	}
 
 	public boolean isStopped() {
-		return stopped.get();
+		return stopped.get() || stopping.get();
 	}
 
 	@Override
 	public final void start() throws AccountConnectionException {
 		stopped.compareAndSet(true, false);
+		stopping.set(false);
 
 		start0();
 	}
@@ -86,12 +90,19 @@ public abstract class BaseAccountConnection<A extends Account> implements Accoun
 
 	@Override
 	public final void stop() {
-		if (stopped.compareAndSet(false, true)) {
+		if (stopped.compareAndSet(false, true) || stopping.get()) {
 			Log.d(TAG, "Trying to stop connection");
+			stopping.set(false);
 			stop0();
 		} else {
 			Log.d(TAG, "Connection is already stopped");
 		}
+	}
+
+	@Override
+	public final void stopDelayed() {
+		stopped.set(true);
+		stopping.set(true);
 	}
 
 	@Override

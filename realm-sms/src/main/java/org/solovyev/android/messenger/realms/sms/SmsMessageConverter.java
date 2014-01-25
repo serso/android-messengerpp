@@ -123,7 +123,7 @@ class SmsMessageConverter implements Converter<Cursor, MutableMessage> {
 
 	@Nonnull
 	private SmsAccountConnection tryGetConnection() throws IllegalArgumentException {
-		final SmsAccountConnection connection = account.getAccountConnection();
+		final SmsAccountConnection connection = account.getConnection();
 		if (connection == null) {
 			throw new IllegalArgumentException("No connection");
 		}

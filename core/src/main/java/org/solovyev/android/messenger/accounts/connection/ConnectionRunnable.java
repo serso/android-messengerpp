@@ -56,7 +56,10 @@ class ConnectionRunnable implements Runnable {
 				onMaxAttemptsReached(lastError);
 				break;
 			} else {
-				lastError = startConnectionDelayed(attempt++, lastError);
+				lastError = startConnectionDelayed(attempt++);
+				if (connection.isStopped()) {
+					break;
+				}
 			}
 		}
 	}
@@ -93,27 +96,28 @@ class ConnectionRunnable implements Runnable {
 
 		if (!connection.isStopped()) {
 			connection.stop();
-		}
 
-		if (lastError != null) {
-			getExceptionHandler().handleException(lastError);
-		}
+			if (lastError != null) {
+				getExceptionHandler().handleException(lastError);
+			}
 
-		getAccountService().changeAccountState(connection.getAccount(), disabled_by_app);
+			getAccountService().changeAccountState(connection.getAccount(), disabled_by_app);
+		}
 	}
 
-	private AccountConnectionException startConnectionDelayed(int attempt, @Nullable AccountConnectionException lastException) {
+	private AccountConnectionException startConnectionDelayed(int attempt) {
+		AccountConnectionException exception = null;
+
 		try {
 			// let's wait a little bit - may be the exception was caused by connectivity problem
 			Thread.sleep(recoverySleepMillis);
 		} catch (InterruptedException e) {
-			Log.e(TAG, e.getMessage(), e);
 		} finally {
 			if (!connection.isStopped()) {
-				return startConnection(attempt + 1);
-			} else {
-				return null;
+				exception = startConnection(attempt + 1);
 			}
 		}
+
+		return exception;
 	}
 }
