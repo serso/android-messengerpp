@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger.fragments;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -28,6 +29,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.messages.EmptyFragment;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,5 +107,11 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		// todo serso: fix in ACL
 		hideKeyboard();
 		super.goBack(tag);
+	}
+
+	@Nullable
+	public Fragment getFirstFragment() {
+		final FragmentManager fm = getActivity().getSupportFragmentManager();
+		return fm.findFragmentById(R.id.content_first_pane);
 	}
 }

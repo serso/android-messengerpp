@@ -367,6 +367,16 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		params.gravity = CENTER_VERTICAL;
 		root.addView(listViewParent, params);
 
+		tryUpdateActionBar();
+
+		multiPaneManager.onCreatePane(getActivity(), container, root);
+
+		initViewStates(savedInstanceState);
+
+		return root;
+	}
+
+	void tryUpdateActionBar() {
 		if (!getMultiPaneManager().isDualPane(getActivity())) {
 			// only one pane is shown => can update action bar options
 			updateActionBar();
@@ -376,12 +386,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				updateActionBar();
 			}
 		}
-
-		multiPaneManager.onCreatePane(getActivity(), container, root);
-
-		initViewStates(savedInstanceState);
-
-		return root;
 	}
 
 	private void updateActionBar() {
@@ -409,6 +413,12 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		if (onListLoadedCallNeeded) {
 			onListLoaded();
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		tryUpdateActionBar();
 	}
 
 	public void toggleFilterBox() {

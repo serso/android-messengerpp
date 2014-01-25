@@ -19,6 +19,7 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -252,6 +253,11 @@ public final class MainActivity extends BaseFragmentActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		} else {
 			actionBar.setDisplayHomeAsUpEnabled(false);
+		}
+
+		final Fragment firstFragment = getMultiPaneFragmentManager().getFirstFragment();
+		if (firstFragment instanceof BaseListFragment) {
+			((BaseListFragment) firstFragment).tryUpdateActionBar();
 		}
 	}
 

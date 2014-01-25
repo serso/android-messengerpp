@@ -19,6 +19,7 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import com.actionbarsherlock.app.ActionBar;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
 import roboguice.RoboGuice;
@@ -26,6 +27,8 @@ import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static org.solovyev.android.sherlock.AndroidSherlockUtils.getSupportActionBar;
 
 public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -96,6 +99,21 @@ public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeLis
 	public void onBeforeCreate() {
 		theme = App.getTheme();
 		activity.setTheme(dialog ? theme.getDialogThemeResId() : theme.getThemeResId());
+
+		final ActionBar actionBar = getActionBar();
+		if (actionBar != null) {
+			actionBar.setIcon(theme.getActionBarIconResId());
+		}
+	}
+
+	@Nullable
+	private ActionBar getActionBar() {
+		try {
+			return getSupportActionBar(activity);
+		} catch (IllegalArgumentException e) {
+		}
+
+		return null;
 	}
 
 	public void onCreate(@Nullable Bundle savedInstanceState) {
