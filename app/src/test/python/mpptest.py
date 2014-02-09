@@ -17,13 +17,14 @@ class MppTest(AndroidTest):
         if self.should_skip_wizard:
             self.skip_wizard()
 
-    def create_desired_capabilities(self):
+    def create_capabilities(self):
         return {'device': DEVICE_ANDROID,
                 'browserName': '',
                 'version': '4.2',
                 'app': '/home/serso/projects/java/android/messengerpp/app/target/android-messenger-app.apk',
                 'app-package': PACKAGE_NAME,
                 'app-wait-activity': '.wizard.WizardActivity',
+                'device-ready-timeout': 5,
                 'app-activity': '.StartActivity'}
 
     def skip_wizard(self):

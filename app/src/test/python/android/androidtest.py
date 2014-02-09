@@ -7,7 +7,7 @@ from appiumtest import AppiumTest, get_env_variable
 
 DEVICE_WAIT_TIME = 10
 
-DEVICE_ANDROID = "Android"
+DEVICE_ANDROID = "android"
 DEVICE_SELENDROID = "selendroid"
 
 # last available port
@@ -47,8 +47,8 @@ class AndroidTest(AppiumTest):
             waiting_process.terminate()
             raise Exception("Too long wait time for AVD with serial: " + serial)
 
-    def check_desired_capabilities(self, capabilities):
-        super(AndroidTest, self).check_desired_capabilities(capabilities)
+    def check_capabilities(self, capabilities):
+        super(AndroidTest, self).check_capabilities(capabilities)
 
         device = capabilities['device']
         if device != DEVICE_ANDROID and device != DEVICE_SELENDROID:

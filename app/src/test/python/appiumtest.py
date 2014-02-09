@@ -11,6 +11,8 @@ class AppiumTest(unittest.TestCase):
 
     nodejs_process = None
 
+    overridden_capabilities = {}
+
     #
     # SETUP/TEARDOWN
     #
@@ -23,8 +25,13 @@ class AppiumTest(unittest.TestCase):
 
             self.prepare_device()
 
-            capabilities = self.create_desired_capabilities()
-            self.check_desired_capabilities(capabilities)
+            capabilities = self.create_capabilities()
+
+            # override default capabilities (is used when test is run from the command line)
+            for k, v in AppiumTest.overridden_capabilities.iteritems():
+                capabilities[k] = v
+
+            self.check_capabilities(capabilities)
             self.driver = webdriver.Remote('http://localhost:4723/wd/hub', capabilities)
 
             self.on_setup_done()
@@ -70,10 +77,10 @@ class AppiumTest(unittest.TestCase):
     def on_setup_done(self):
         pass
 
-    def create_desired_capabilities(self):
-        raise NotImplementedError("create_desired_capabilities must be implemented")
+    def create_capabilities(self):
+        return {}
 
-    def check_desired_capabilities(self, capabilities):
+    def check_capabilities(self, capabilities):
         if len(capabilities) == 0:
             raise ValueError("Capabilities must be set properly")
 
@@ -117,11 +124,18 @@ def get_env_variable(name, description=None, example=None):
     return appium_home
 
 
+def process_tests(tests):
+    pass
+
+
 def run_tests(directory=None, pattern="test*.py"):
     """Method runs all test files located in the directory and its subdirectories"""
     if not directory:
         raise ValueError("Tests directory must be set")
 
     suite = unittest.defaultTestLoader.discover(start_dir=directory, pattern=pattern)
+    if hasattr(suite, '_tests'):
+        process_tests(suite._tests)
+
     runner = unittest.TextTestRunner()
     runner.run(suite)
