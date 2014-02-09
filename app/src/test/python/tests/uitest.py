@@ -1,6 +1,6 @@
 import unittest
 
-from idtype import IdType
+from android.androidtest import IdType
 from mpptest import MppTest
 
 

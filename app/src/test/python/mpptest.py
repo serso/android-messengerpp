@@ -1,8 +1,12 @@
-import unittest
+from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
 
-from androidtest import AndroidTest, DEVICE_ANDROID
+from android.androidtest import AndroidTest, DEVICE_ANDROID
+from appiumtest import run_tests
+
+
+PACKAGE_NAME = 'org.solovyev.android.messenger'
 
 
 class MppTest(AndroidTest):
@@ -18,7 +22,7 @@ class MppTest(AndroidTest):
                 'browserName': '',
                 'version': '4.2',
                 'app': '/home/serso/projects/java/android/messengerpp/app/target/android-messenger-app.apk',
-                'app-package': 'org.solovyev.android.messenger',
+                'app-package': PACKAGE_NAME,
                 'app-wait-activity': '.wizard.WizardActivity',
                 'app-activity': '.StartActivity'}
 
@@ -33,8 +37,25 @@ class MppTest(AndroidTest):
             except NoSuchElementException:
                 next_button = None
 
+    def add_test_account(self):
+        self.open_realms()
+        test_realm = self.find_element_by_name("Test")
+        test_realm.click()
+        sleep(0.5)
+        save_button = self.find_element_by_id("mpp_save_button")
+        save_button.click()
+        sleep(0.5)
+
+    def open_realms(self):
+        self.open_accounts()
+        realms_menu_item = self.find_element_by_id("mpp_menu_add_account")
+        realms_menu_item.click()
+
+    def open_accounts(self):
+        self.open_menu()
+        accounts_menu_item = self.find_element_by_name('Accounts')
+        accounts_menu_item.click()
+
 
 if __name__ == '__main__':
-    suite = unittest.defaultTestLoader.discover(start_dir="tests", pattern="*test.py")
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+    run_tests("tests", "*test.py")

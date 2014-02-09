@@ -62,6 +62,8 @@ class AppiumTest(unittest.TestCase):
             else:
                 break
 
+        sleep(0.5)
+
     def prepare_device(self):
         pass
 
@@ -69,11 +71,15 @@ class AppiumTest(unittest.TestCase):
         pass
 
     def create_desired_capabilities(self):
-        return {}
+        raise NotImplementedError("create_desired_capabilities must be implemented")
 
     def check_desired_capabilities(self, capabilities):
         if len(capabilities) == 0:
             raise ValueError("Capabilities must be set properly")
+
+        device = capabilities['device']
+        if device is None:
+            raise ValueError("Device must be set")
 
     def tearDown(self):
         super(AppiumTest, self).tearDown()
@@ -109,3 +115,13 @@ def get_env_variable(name, description=None, example=None):
     if not appium_home:
         raise new_no_env_variable_exception(name, description, example)
     return appium_home
+
+
+def run_tests(directory=None, pattern="test*.py"):
+    """Method runs all test files located in the directory and its subdirectories"""
+    if not directory:
+        raise ValueError("Tests directory must be set")
+
+    suite = unittest.defaultTestLoader.discover(start_dir=directory, pattern=pattern)
+    runner = unittest.TextTestRunner()
+    runner.run(suite)

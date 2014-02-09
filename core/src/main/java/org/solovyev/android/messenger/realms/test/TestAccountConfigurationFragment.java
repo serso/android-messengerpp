@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.realms.test;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ public class TestAccountConfigurationFragment extends BaseAccountConfigurationFr
 	private TestRealm realm;
 
 	public TestAccountConfigurationFragment() {
-		super(0);
+		super(R.layout.mpp_realm_conf_test);
 	}
 
 	@Nullable
