@@ -44,7 +44,8 @@ import org.solovyev.common.listeners.JEventListener;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static org.solovyev.android.messenger.App.*;
+import static org.solovyev.android.messenger.App.getUiHandler;
+import static org.solovyev.android.messenger.App.getWizards;
 import static org.solovyev.android.messenger.MessengerPreferences.isNewInstallation;
 import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.android.messenger.chats.Chats.openUnreadChat;
@@ -166,13 +167,11 @@ public final class MainActivity extends BaseFragmentActivity {
 		listeners.add(ContactUiEvent.class, new ContactUiEventListener(this, getAccountService()));
 		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
 
-		if (!isMonkeyRunner()) {
-			if (isNewInstallation()) {
-				final Wizards wizards = getWizards();
-				final Wizard wizard = wizards.getWizard(FIRST_TIME_WIZARD);
-				if (!wizard.isFinished()) {
-					continueWizard(wizards, wizard.getName(), this);
-				}
+		if (isNewInstallation()) {
+			final Wizards wizards = getWizards();
+			final Wizard wizard = wizards.getWizard(FIRST_TIME_WIZARD);
+			if (!wizard.isFinished()) {
+				continueWizard(wizards, wizard.getName(), this);
 			}
 		}
 	}

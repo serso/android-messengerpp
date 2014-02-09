@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.solovyev.android.messenger.App.isMonkeyRunner;
+import static org.solovyev.android.messenger.App.isEmulator;
 
 @Singleton
 public class DefaultConfiguration implements Configuration {
@@ -84,7 +84,7 @@ public class DefaultConfiguration implements Configuration {
 				realms.add(qipXmppRealm);
 				realms.add(vkRealm);
 				realms.add(smsRealm);
-				if (isMonkeyRunner()) {
+				if (isEmulator()) {
 					realms.add(testRealm);
 				}
 			}

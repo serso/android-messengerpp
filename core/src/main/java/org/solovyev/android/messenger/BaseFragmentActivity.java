@@ -43,11 +43,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Stack;
 
-import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.find;
 import static java.util.Arrays.asList;
-import static org.solovyev.android.messenger.App.isMonkeyRunner;
 import static org.solovyev.android.messenger.App.newTag;
 
 public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity implements FragmentManager.OnBackStackChangedListener {
@@ -100,7 +98,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	private NotificationService notificationService;
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           OWN FIELDS
     *
@@ -215,11 +213,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
-
-		// let's disable locking of screen for monkeyrunner
-		if (isMonkeyRunner()) {
-			getWindow().addFlags(FLAG_DISMISS_KEYGUARD);
-		}
 
 		onBackStackChanged();
 	}

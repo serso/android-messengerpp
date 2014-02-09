@@ -21,25 +21,18 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.Threads;
-import org.solovyev.android.messenger.accounts.AccountAlreadyExistsException;
-import org.solovyev.android.messenger.accounts.AccountConfiguration;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.RealmService;
-import org.solovyev.android.messenger.realms.UnsupportedRealmException;
-import org.solovyev.android.messenger.realms.test.TestAccountBuilder;
-import org.solovyev.android.messenger.realms.test.TestAccountConfiguration;
-import org.solovyev.android.messenger.realms.test.TestRealm;
-import org.solovyev.android.messenger.security.InvalidCredentialsException;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
@@ -53,6 +46,7 @@ import javax.annotation.Nonnull;
 
 import static android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static java.util.Arrays.binarySearch;
 import static org.solovyev.android.Android.enableComponent;
 import static org.solovyev.android.messenger.MessengerPreferences.Gui;
 import static org.solovyev.android.messenger.MessengerPreferences.Gui.Notification.showOngoingNotification;
@@ -68,7 +62,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static final String TAG_TIME = App.newTag("Time");
 
-	private static final boolean MONKEY_RUNNER = false;
+	private static final String[] EMULATOR_PRODUCTS = new String[]{"google_sdk", "sdk", "full_x86"};
 
 	public static final String GOOGLE_PLUS_TESTERS_URL = "https://plus.google.com/u/0/communities/112145635211244043975";
 	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";
@@ -170,26 +164,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		unreadMessagesNotifier.init();
 		unreadMessagesCounter.init();
 
-		if (isMonkeyRunner()) {
-			prepareMonkeyRunnerData();
-		}
-
 		// must be done after all loadings
 		accountConnectionsService.init();
 
 		networkStateService.startListening(application);
-	}
-
-	private void prepareMonkeyRunnerData() {
-		accountService.removeAllAccounts();
-
-		try {
-			final Realm<? extends AccountConfiguration> realm = realmService.getRealmById(TestRealm.REALM_ID);
-			accountService.saveAccount(new TestAccountBuilder(realm, new TestAccountConfiguration(), null));
-		} catch (UnsupportedRealmException e) {
-		} catch (InvalidCredentialsException e) {
-		} catch (AccountAlreadyExistsException e) {
-		}
 	}
 
 	@Override
@@ -367,9 +345,8 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		return (applicationInfo.flags & FLAG_DEBUGGABLE) == FLAG_DEBUGGABLE;
 	}
 
-	public static boolean isMonkeyRunner() {
-		// NOTE: this code is only for monkeyrunner
-		return MONKEY_RUNNER;
+	public static boolean isEmulator() {
+		return binarySearch(EMULATOR_PRODUCTS, Build.PRODUCT) >= 0;
 	}
 
 	public static void executeInBackground(@Nonnull final Runnable runnable) {
