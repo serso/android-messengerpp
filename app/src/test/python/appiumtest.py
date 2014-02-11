@@ -112,7 +112,7 @@ def new_no_env_variable_exception(name, description=None, example=None):
     message += ". "
 
     if example:
-        message = "For example, '" + example + "'"
+        message += "For example, '" + example + "'"
 
     return ValueError(message)
 

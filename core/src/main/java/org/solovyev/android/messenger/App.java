@@ -66,7 +66,8 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	public static final String TAG_TIME = App.newTag("Time");
 
 	private static final List<String> EMULATOR_PRODUCTS = asList("google_sdk", "sdk", "full_x86", "sdk_x86");
-    private static final Boolean emulator = !isEmpty(Build.PRODUCT) && EMULATOR_PRODUCTS.contains(Build.PRODUCT);
+    private static final boolean EMULATOR = !isEmpty(Build.PRODUCT) && EMULATOR_PRODUCTS.contains(Build.PRODUCT);
+    private static final boolean APPIUM = false;
 
 	public static final String GOOGLE_PLUS_TESTERS_URL = "https://plus.google.com/u/0/communities/112145635211244043975";
 	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";
@@ -350,7 +351,10 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	}
 
 	public static boolean isEmulator() {
-		return emulator;
+		return EMULATOR;
+	}
+	public static boolean isAppium() {
+		return APPIUM || isEmulator();
 	}
 
 	public static void executeInBackground(@Nonnull final Runnable runnable) {

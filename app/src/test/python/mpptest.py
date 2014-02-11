@@ -3,7 +3,7 @@ from time import sleep
 from selenium.common.exceptions import NoSuchElementException
 
 from android.androidtest import AndroidTest, DEVICE_ANDROID
-from appiumtest import run_tests
+from appiumtest import run_tests, get_env_variable
 
 
 PACKAGE_NAME = 'org.solovyev.android.messenger'
@@ -18,10 +18,13 @@ class MppTest(AndroidTest):
             self.skip_wizard()
 
     def create_capabilities(self):
+        mpp_home = get_env_variable("MPP_HOME", "Messenger++ project root",
+                                    "/home/serso/projects/java/android/messengerpp")
+
         return {'device': DEVICE_ANDROID,
                 'browserName': '',
                 'version': '4.2',
-                'app': '/home/serso/projects/java/android/messengerpp/app/target/android-messenger-app.apk',
+                'app': mpp_home + '/app/target/android-messenger-app.apk',
                 'app-package': PACKAGE_NAME,
                 'app-wait-activity': '.wizard.WizardActivity',
                 'device-ready-timeout': 5,
