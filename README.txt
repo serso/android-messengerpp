@@ -1,7 +1,7 @@
 DESCRIPTION
 
 Messenger++ is a multi-protocol instant messaging client for Android OS. It's free and open-source.
-Alpha version of application is available here: https://docs.google.com/file/d/0B2cXSv6b94RbczJVdEk0R0ZuTEU/edit?usp=sharing
+M++ is available on Google Play: https://play.google.com/store/apps/details?id=org.solovyev.android.messenger
 
 INSTALLATION
 
