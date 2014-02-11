@@ -464,7 +464,7 @@
 						</sourceDirectories>
 
 						<sdk>
-							<platform>17</platform>
+							<platform>19</platform>
 						</sdk>
 
 						<zipalign>

@@ -103,9 +103,11 @@ final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 			receiver = new ReportsBroadcastReceiver();
 			final Application application = getApplication();
 
-			final IntentFilter intentReceivedFilter = new IntentFilter(INTENT_RECEIVED);
-			intentReceivedFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
-			application.registerReceiver(receiver, intentReceivedFilter);
+			final IntentFilter intentFilter = new IntentFilter();
+			intentFilter.addAction(INTENT_RECEIVED);
+			intentFilter.addAction(INTENT_SMS_DELIVER);
+			intentFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+			application.registerReceiver(receiver, intentFilter, android.Manifest.permission.BROADCAST_SMS, null);
 		}
 
 		getTelephonyManager().listen(callListener.phoneStateListener, LISTEN_CALL_STATE);

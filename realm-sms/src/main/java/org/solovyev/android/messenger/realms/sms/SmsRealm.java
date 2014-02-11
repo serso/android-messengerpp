@@ -54,6 +54,8 @@ public final class SmsRealm extends AbstractRealm<SmsAccountConfiguration> {
 	static final String USER_ID = "self";
 
 	public static final String INTENT_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+	public static final String INTENT_SMS_DELIVER = "android.provider.Telephony.SMS_DELIVER";
+	public static final String INTENT_MMS_DELIVER = "android.provider.Telephony.WAP_PUSH_DELIVER";
 	public static final String INTENT_SENT_PREFIX = "SMS_SENT";
 	public static final String INTENT_DELIVERED_PREFIX = "SMS_DELIVERED";
 	public static final String INTENT_EXTRA_SMS_ID = "sms_id";
