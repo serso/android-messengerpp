@@ -42,17 +42,20 @@ import org.solovyev.tasks.TaskService;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import static android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-import static java.util.Arrays.binarySearch;
+import static java.util.Arrays.asList;
 import static org.solovyev.android.Android.enableComponent;
 import static org.solovyev.android.messenger.MessengerPreferences.Gui;
 import static org.solovyev.android.messenger.MessengerPreferences.Gui.Notification.showOngoingNotification;
 import static org.solovyev.android.messenger.MessengerPreferences.startOnBoot;
 import static org.solovyev.android.messenger.OngoingNotificationService.startOngoingNotificationService;
 import static org.solovyev.android.messenger.OngoingNotificationService.stopOngoingNotificationService;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 public final class App implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -62,8 +65,8 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static final String TAG_TIME = App.newTag("Time");
 
-	private static final String[] EMULATOR_PRODUCTS = new String[]{"google_sdk", "sdk", "full_x86", "sdk_x86"};
-	private static final Boolean emulator = binarySearch(EMULATOR_PRODUCTS, Build.PRODUCT) >= 0;
+	private static final List<String> EMULATOR_PRODUCTS = asList("google_sdk", "sdk", "full_x86", "sdk_x86");
+    private static final Boolean emulator = !isEmpty(Build.PRODUCT) && EMULATOR_PRODUCTS.contains(Build.PRODUCT);
 
 	public static final String GOOGLE_PLUS_TESTERS_URL = "https://plus.google.com/u/0/communities/112145635211244043975";
 	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";
