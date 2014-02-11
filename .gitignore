@@ -1,5 +1,17 @@
 app/target
+app-test/target
 core/target
 realm-vk/target
 realm-sms/target
 realm-xmpp/target
+*.iml
+core/misc/screenshots-new
+*.pyc
+.idea/
+out/
+target/
+coverage-error.log
+messengerpp.zip
+*$py.class
+app/gen-external-apklibs/
+app/proguard_logs/
