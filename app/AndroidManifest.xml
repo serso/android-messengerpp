@@ -48,7 +48,7 @@
 				 android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name"
 				 android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
 
-		<activity android:label="@string/mpp_app_name" android:name=".StartActivity"
+		<activity android:label="@string/mpp_app_short_name" android:name=".StartActivity"
 				  android:windowSoftInputMode="adjustPan">
 
 		<intent-filter>
