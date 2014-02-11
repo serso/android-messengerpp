@@ -1,0 +1,3 @@
+[submodule "app/src/test/python/appium"]
+	path = app/src/test/python/appium
+	url = https://github.com/serso/python-appium

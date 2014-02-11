@@ -1,5 +1,8 @@
 from time import sleep
 
+import sys
+sys.path.append('appium')
+
 from selenium.common.exceptions import NoSuchElementException
 
 from android.androidtest import AndroidTest, DEVICE_ANDROID
