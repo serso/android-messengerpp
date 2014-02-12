@@ -1,3 +1,4 @@
+from time import sleep
 import unittest
 
 from mpptest import MppTest
@@ -6,6 +7,7 @@ from mpptest import MppTest
 class ContactsTest(MppTest):
     def test_contacts_should_be_sorted_correctly(self):
         self.add_test_account()
+        sleep(1)
         self.open_contacts()
 
         contacts = self.find_elements_by_id("mpp_li_contact_name_textview")

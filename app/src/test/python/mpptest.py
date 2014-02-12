@@ -1,7 +1,6 @@
 from time import sleep
 
 import sys
-
 sys.path.append('appium')
 
 from selenium.common.exceptions import NoSuchElementException
@@ -32,9 +31,9 @@ class MppTest(AndroidTest):
                 'app': mpp_home + '/app/target/android-messenger-app.apk',
                 'app-package': PACKAGE_NAME,
                 'app-resource-package': RESOURCE_PACKAGE_NAME,
-                'app-wait-activity': 'org.solovyev.android.messenger.wizard.WizardActivity',
+                'app-wait-activity': RESOURCE_PACKAGE_NAME + '.wizard.WizardActivity',
                 'device-ready-timeout': 5,
-                'app-activity': 'org.solovyev.android.messenger.StartActivity'}
+                'app-activity': RESOURCE_PACKAGE_NAME + '.StartActivity'}
 
     def skip_wizard(self):
         counter = 0
