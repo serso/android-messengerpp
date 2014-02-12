@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.widget.ImageView;
 import android.widget.TextView;
+import org.joda.time.DateTime;
 import org.solovyev.android.list.ListAdapter;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListItemOnClickData;
@@ -42,7 +43,6 @@ import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 import static org.solovyev.android.messenger.users.ContactUiEventType.mark_all_messages_read;
-import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UiContact.newUiContact;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
@@ -58,12 +58,12 @@ public final class ContactListItem extends BaseMessengerListItem<UiContact> {
 
 	@Nonnull
 	public static ContactListItem newEmpty(@Nonnull User contact) {
-		return newContactListItem(newUiContact(contact, 0, null));
+		return newContactListItem(newUiContact(contact, 0, null, null));
 	}
 
 	@Nonnull
 	public static ContactListItem loadContactListItem(@Nonnull User contact) {
-		return new ContactListItem(loadUiContact(contact));
+		return new ContactListItem(UiContact.loadRecentUiContact(contact));
 	}
 
 	@Nonnull
@@ -120,6 +120,10 @@ public final class ContactListItem extends BaseMessengerListItem<UiContact> {
 
 	public void onContactChanged(@Nonnull User newContact) {
 		setData(getData().copyForNewUser(newContact));
+	}
+
+	public void onLastMessageDataChanged(@Nonnull DateTime lastMessageDate) {
+		setData(getData().copyForNewLastMessageDate(lastMessageDate));
 	}
 
 	@Nonnull

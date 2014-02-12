@@ -20,7 +20,6 @@ import android.text.Html;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.core.R;
@@ -41,9 +40,7 @@ import static org.solovyev.android.messenger.App.getApplication;
 import static org.solovyev.android.messenger.accounts.AccountService.NO_ACCOUNT_ID;
 import static org.solovyev.android.messenger.entities.Entities.generateEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
-import static org.solovyev.android.messenger.messages.MessageState.received;
-import static org.solovyev.android.messenger.messages.MessageState.sending;
-import static org.solovyev.android.messenger.messages.MessageState.sent;
+import static org.solovyev.android.messenger.messages.MessageState.*;
 
 public final class Messages {
 
@@ -154,6 +151,18 @@ public final class Messages {
 			return -1;
 		} else {
 			return -lm.getSendDate().compareTo(rm.getSendDate());
+		}
+	}
+
+	public static int compareSendDatesLatestFirst(@Nullable DateTime lm, @Nullable DateTime rm) {
+		if (lm == null && rm == null) {
+			return 0;
+		} else if (lm == null) {
+			return 1;
+		} else if (rm == null) {
+			return -1;
+		} else {
+			return -lm.compareTo(rm);
 		}
 	}
 

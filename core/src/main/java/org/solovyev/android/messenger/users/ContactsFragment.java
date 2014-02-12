@@ -19,19 +19,33 @@ package org.solovyev.android.messenger.users;
 import android.util.Log;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
+import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public class ContactsFragment extends BaseContactsFragment {
+
+	@Nullable
+	private JEventListener<ChatEvent> chatEventListener;
 
 	@Nonnull
 	@Override
 	protected BaseListItemAdapter<ContactListItem> createAdapter() {
 		Log.d(tag, "Creating adapter, filter text: " + getFilterText());
 		return new ContactsAdapter(getActivity(), isRecentContacts());
+	}
+
+	@Nonnull
+	@Override
+	protected ContactsAdapter getAdapter() {
+		return (ContactsAdapter) super.getAdapter();
 	}
 
 	private boolean isRecentContacts() {
@@ -51,6 +65,35 @@ public class ContactsFragment extends BaseContactsFragment {
 			((ContactsAdapter) adapter).setRecentContacts(true);
 			((BaseContactsAdapter) adapter).setQuery(null);
 			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, getMaxSize());
+		}
+	}
+
+	@Override
+	protected void attachListeners() {
+		super.attachListeners();
+
+		chatEventListener = onUiThread(this, new ChatEventListener());
+		getChatService().addListener(chatEventListener);
+	}
+
+	@Override
+	protected void detachListeners() {
+		super.detachListeners();
+
+		if (chatEventListener != null) {
+			getChatService().removeListener(chatEventListener);
+		}
+
+	}
+
+	private class ChatEventListener extends AbstractJEventListener<ChatEvent> {
+		public ChatEventListener() {
+			super(ChatEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull ChatEvent event) {
+			getAdapter().onEvent(event);
 		}
 	}
 }

@@ -22,7 +22,6 @@ import android.util.Log;
 import android.widget.Filter;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import org.solovyev.android.list.AdapterFilter;
 import org.solovyev.android.messenger.BaseListItemAdapter;
@@ -36,6 +35,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.android.messenger.users.ContactListItem.loadContactListItem;
@@ -196,9 +196,8 @@ public abstract class BaseContactsAdapter extends BaseListItemAdapter<ContactLis
 
 	@Nullable
 	protected ContactListItem findInAllElements(@Nonnull User contact) {
-		return Iterables.find(getAllElements(), Predicates.<ContactListItem>equalTo(ContactListItem.newEmpty(contact)), null);
+		return Iterables.find(getAllElements(), equalTo(ContactListItem.newEmpty(contact)), null);
 	}
-
 
 	protected void removeListItem(@Nonnull String contactId) {
 		final User contact = Users.newEmptyUser(contactId);

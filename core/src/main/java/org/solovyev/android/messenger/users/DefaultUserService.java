@@ -31,6 +31,7 @@ import org.solovyev.android.messenger.chats.AccountChat;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.common.collections.multimap.ThreadSafeMultimap;
 import org.solovyev.common.listeners.AbstractJEventListener;
@@ -51,6 +52,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static org.solovyev.android.Threads.isUiThread;
 import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_contacts;
+import static org.solovyev.android.messenger.users.UiContact.loadRecentUiContact;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UserEventType.*;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
@@ -388,10 +390,22 @@ public class DefaultUserService implements UserService {
 	public List<UiContact> getLastChatedContacts(int count) {
 		final List<Chat> chats = chatService.getLastChats(true, count);
 		final List<UiContact> result = new ArrayList<UiContact>(chats.size());
+
+		boolean lastMessageExists = true;
 		for (Chat chat : chats) {
 			if (chat.isPrivate()) {
 				final User contact = getUserById(chat.getSecondUser());
-				result.add(loadUiContact(contact));
+
+				final Message lastMessage;
+				if (lastMessageExists) {
+					lastMessage = chatService.getLastMessage(chat.getEntity());
+					lastMessageExists = lastMessage != null;
+				} else {
+					// as chats are sorted according to the date of the last message there is no point of
+					// checking last message of a chat which has no messages at all
+					lastMessage = null;
+				}
+				result.add(loadRecentUiContact(contact, lastMessage != null ? lastMessage.getSendDate() : null));
 			}
 		}
 		return result;

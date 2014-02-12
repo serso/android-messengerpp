@@ -18,14 +18,23 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.widget.Filter;
+import org.joda.time.DateTime;
 import org.solovyev.android.list.AdapterFilter;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;
 
+import static org.solovyev.android.messenger.messages.Messages.compareSendDatesLatestFirst;
+import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
 import static org.solovyev.android.messenger.users.Users.DEFAULT_CONTACTS_MODE;
+import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.Objects.areEqual;
 
 public class ContactsAdapter extends BaseContactsAdapter {
@@ -76,6 +85,52 @@ public class ContactsAdapter extends BaseContactsAdapter {
 	@Nullable
 	@Override
 	protected Comparator<? super ContactListItem> getComparator() {
-		return recentContacts ? null : super.getComparator();
+		if (recentContacts) {
+			return RecentContactListItemComparator.getInstance();
+		} else {
+			return super.getComparator();
+		}
+	}
+
+	public void onEvent(@Nonnull ChatEvent event) {
+		final Chat eventChat = event.getChat();
+
+		switch (event.getType()) {
+			case last_message_changed:
+				if (recentContacts && eventChat.isPrivate()) {
+					final Message lastMessage = event.getDataAsMessage();
+					final DateTime lastMessageDate = lastMessage.getSendDate();
+
+					final Entity participant = eventChat.getSecondUser();
+					final ContactListItem listItem = findInAllElements(newEmptyUser(participant));
+
+					boolean changed = false;
+					if (listItem != null) {
+						listItem.onLastMessageDataChanged(lastMessageDate);
+						changed = true;
+					} else {
+						final int count = getCount();
+						if (count > 0) {
+							// some contacts exist => need to check if we can be shown (if we are later than the
+							// last shown contact)
+							final ContactListItem lastItem = getItem(count - 1);
+							if (compareSendDatesLatestFirst(lastItem.getData().getLastMessageDate(), lastMessageDate) <= 0) {
+								add(newContactListItem(UiContact.loadRecentUiContact(App.getUserService().getUserById(participant), lastMessageDate)));
+								changed = true;
+							}
+						} else {
+							// no contacts, just add
+							add(newContactListItem(UiContact.loadRecentUiContact(App.getUserService().getUserById(participant), lastMessageDate)));
+							changed = true;
+						}
+					}
+
+					if (changed) {
+						notifyDataSetChanged();
+					}
+
+				}
+				break;
+		}
 	}
 }
