@@ -65,15 +65,16 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static final String TAG_TIME = App.newTag("Time");
 
-	private static final List<String> EMULATOR_PRODUCTS = asList("google_sdk", "sdk", "full_x86", "sdk_x86");
+    private static final List<String> EMULATOR_PRODUCTS = asList("google_sdk", "sdk", "full_x86", "sdk_x86");
     private static final boolean EMULATOR = !isEmpty(Build.PRODUCT) && EMULATOR_PRODUCTS.contains(Build.PRODUCT);
     private static final boolean APPIUM = false;
 
 	public static final String GOOGLE_PLUS_TESTERS_URL = "https://plus.google.com/u/0/communities/112145635211244043975";
 	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";
 	public static final String GITHUB_URL = "https://github.com/serso/android-messengerpp";
+    public static final String DEV_PACKAGE_NAME = "org.solovyev.android.messenger.dev";
 
-	@Nonnull
+    @Nonnull
 	private static App instance = new App();
 
 	@Nonnull
@@ -353,11 +354,16 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	public static boolean isEmulator() {
 		return EMULATOR;
 	}
+
 	public static boolean isAppium() {
-		return APPIUM || isEmulator();
+		return APPIUM || isEmulator() || isDevVersion();
 	}
 
-	public static void executeInBackground(@Nonnull final Runnable runnable) {
+    private static boolean isDevVersion() {
+        return getApplication().getPackageName().equals(DEV_PACKAGE_NAME);
+    }
+
+    public static void executeInBackground(@Nonnull final Runnable runnable) {
 		instance.background.execute(new Runnable() {
 			@Override
 			public void run() {

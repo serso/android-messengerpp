@@ -1,15 +1,17 @@
 from time import sleep
 
 import sys
+
 sys.path.append('appium')
 
 from selenium.common.exceptions import NoSuchElementException
 
-from android.androidtest import AndroidTest, DEVICE_ANDROID
+from android.androidtest import AndroidTest, DEVICE_ANDROID, uninstall_app
 from appiumtest import run_tests, get_env_variable
 
 
-PACKAGE_NAME = 'org.solovyev.android.messenger'
+PACKAGE_NAME = 'org.solovyev.android.messenger.dev'
+RESOURCE_PACKAGE_NAME = 'org.solovyev.android.messenger'
 
 
 class MppTest(AndroidTest):
@@ -29,9 +31,10 @@ class MppTest(AndroidTest):
                 'version': '4.2',
                 'app': mpp_home + '/app/target/android-messenger-app.apk',
                 'app-package': PACKAGE_NAME,
-                'app-wait-activity': '.wizard.WizardActivity',
+                'app-resource-package': RESOURCE_PACKAGE_NAME,
+                'app-wait-activity': 'org.solovyev.android.messenger.wizard.WizardActivity',
                 'device-ready-timeout': 5,
-                'app-activity': '.StartActivity'}
+                'app-activity': 'org.solovyev.android.messenger.StartActivity'}
 
     def skip_wizard(self):
         counter = 0
@@ -53,16 +56,27 @@ class MppTest(AndroidTest):
         save_button.click()
         sleep(0.5)
 
+
+    def open_contacts(self):
+        self.go_home()
+        self.open_tab(0)
+
+    def open_chats(self):
+        self.go_home()
+        self.open_tab(1)
+
     def open_realms(self):
         self.open_accounts()
         realms_menu_item = self.find_element_by_id("mpp_menu_add_account")
         realms_menu_item.click()
 
     def open_accounts(self):
+        self.go_home()
         self.open_menu()
         accounts_menu_item = self.find_element_by_name('Accounts')
         accounts_menu_item.click()
 
 
 if __name__ == '__main__':
+    uninstall_app(PACKAGE_NAME)
     run_tests("tests", "*test.py")
