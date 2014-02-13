@@ -23,10 +23,15 @@ import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.MutableEntity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 
 public interface MutableMessage extends Message {
+
+	@Nonnull
+	@Override
+	MutableEntity getEntity();
 
 	void setOriginalId(@Nonnull String id);
 
@@ -65,6 +70,9 @@ public interface MutableMessage extends Message {
 
 	@Nonnull
 	MutableMessage cloneWithNewChat(@Nonnull Entity chat);
+
+	@Nonnull
+	MutableMessage cloneWithNewEntity(@Nonnull MutableEntity entity);
 
 	@Nonnull
 	@Override

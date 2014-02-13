@@ -55,7 +55,6 @@ class MppTest(AndroidTest):
         save_button.click()
         sleep(0.5)
 
-
     def open_contacts(self):
         self.go_home()
         self.open_tab(0)
@@ -74,6 +73,26 @@ class MppTest(AndroidTest):
         self.open_menu()
         accounts_menu_item = self.find_element_by_name('Accounts')
         accounts_menu_item.click()
+
+    def find_contact(self, contact):
+        self.open_contacts()
+        contacts = self.find_elements_by_id("mpp_li_contact_name_textview")
+        contacts_found = [c for c in contacts if c.text == contact or c.text.startswith(contact + ' (')]
+        if len(contacts_found) > 1:
+            raise Exception("More than one count found: " + contact)
+        return contacts_found[0]
+
+    def open_contact(self, contact):
+        self.find_contact(contact).click()
+
+    def send_message(self, to, message):
+        self.open_contact(to)
+
+        message_edittext = self.find_element_by_id('mpp_message_bubble_body_edittext')
+        message_edittext.send_keys(message)
+
+        send_button = self.find_element_by_id('mpp_message_bubble_send_button')
+        send_button.click()
 
 
 if __name__ == '__main__':

@@ -179,7 +179,7 @@ public final class Messages {
 	}
 
 	@Nonnull
-	static MutableMessage copySentMessage(@Nonnull Message message, @Nonnull Account account, @Nonnull String accountMessageId) {
+	public static MutableMessage copySentMessage(@Nonnull Message message, @Nonnull Account account, @Nonnull String accountMessageId) {
 		final Realm realm = account.getRealm();
 		final Entity messageId;
 		if(accountMessageId.equals(NO_ACCOUNT_ID)) {

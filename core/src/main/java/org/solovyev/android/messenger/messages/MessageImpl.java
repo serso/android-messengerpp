@@ -21,6 +21,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.solovyev.android.messenger.AbstractIdentifiable;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.entities.MutableEntity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 
@@ -167,17 +168,26 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 	@Nonnull
 	@Override
 	public MessageImpl clone() {
-		final MessageImpl clone = (MessageImpl) super.clone();
+		return cloneTo((MessageImpl) super.clone());
+	}
 
-		clone.author = this.author.clone();
-		clone.chat = this.chat.clone();
-		clone.properties = this.properties.clone();
+	@Nonnull
+	private MessageImpl cloneTo(@Nonnull MessageImpl that) {
+		that.author = this.author.clone();
+		that.chat = this.chat.clone();
+		that.properties = this.properties.clone();
 
 		if (this.recipient != null) {
-			clone.recipient = this.recipient.clone();
+			that.recipient = this.recipient.clone();
 		}
 
-		return clone;
+		return that;
+	}
+
+	@Nonnull
+	@Override
+	protected AbstractIdentifiable cloneWithNewEntity0(@Nonnull MutableEntity entity) {
+		return cloneTo((MessageImpl) super.cloneWithNewEntity0(entity));
 	}
 
 	@Nonnull
@@ -213,6 +223,12 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 		} else {
 			return this;
 		}
+	}
+
+	@Nonnull
+	@Override
+	public MutableMessage cloneWithNewEntity(@Nonnull MutableEntity entity) {
+		return (MutableMessage) cloneWithNewEntity0(entity);
 	}
 
 	@Nonnull

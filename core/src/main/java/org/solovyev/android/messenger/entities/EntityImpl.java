@@ -138,11 +138,6 @@ public class EntityImpl extends JObject implements JCloneable<EntityImpl>, Mutab
 		return !NO_ACCOUNT_ID.equals(accountEntityId);
 	}
 
-	@Override
-	public void setAccountEntityId(@Nonnull String accountEntityId) {
-		this.accountEntityId = accountEntityId;
-	}
-
 	@Nonnull
 	@Override
 	public String getAppAccountEntityId() {

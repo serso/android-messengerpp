@@ -33,6 +33,7 @@ import java.util.Comparator;
 
 import static org.solovyev.android.messenger.messages.Messages.compareSendDatesLatestFirst;
 import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
+import static org.solovyev.android.messenger.users.UiContact.loadRecentUiContact;
 import static org.solovyev.android.messenger.users.Users.DEFAULT_CONTACTS_MODE;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.Objects.areEqual;
@@ -104,10 +105,9 @@ public class ContactsAdapter extends BaseContactsAdapter {
 					final Entity participant = eventChat.getSecondUser();
 					final ContactListItem listItem = findInAllElements(newEmptyUser(participant));
 
-					boolean changed = false;
 					if (listItem != null) {
 						listItem.onLastMessageDataChanged(lastMessageDate);
-						changed = true;
+						sort(getComparator());
 					} else {
 						final int count = getCount();
 						if (count > 0) {
@@ -115,22 +115,19 @@ public class ContactsAdapter extends BaseContactsAdapter {
 							// last shown contact)
 							final ContactListItem lastItem = getItem(count - 1);
 							if (compareSendDatesLatestFirst(lastItem.getData().getLastMessageDate(), lastMessageDate) <= 0) {
-								add(newContactListItem(UiContact.loadRecentUiContact(App.getUserService().getUserById(participant), lastMessageDate)));
-								changed = true;
+								addListItem(participant, lastMessageDate);
 							}
 						} else {
 							// no contacts, just add
-							add(newContactListItem(UiContact.loadRecentUiContact(App.getUserService().getUserById(participant), lastMessageDate)));
-							changed = true;
+							addListItem(participant, lastMessageDate);
 						}
 					}
-
-					if (changed) {
-						notifyDataSetChanged();
-					}
-
 				}
 				break;
 		}
+	}
+
+	private void addListItem(@Nonnull Entity contact, @Nullable DateTime lastMessageDate) {
+		add(newContactListItem(loadRecentUiContact(App.getUserService().getUserById(contact), lastMessageDate)));
 	}
 }

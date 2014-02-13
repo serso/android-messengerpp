@@ -85,4 +85,13 @@ public abstract class AbstractIdentifiable extends JObject implements Identifiab
 
 		return clone;
 	}
+
+	@Nonnull
+	protected AbstractIdentifiable cloneWithNewEntity0(@Nonnull MutableEntity entity) {
+		final AbstractIdentifiable clone = (AbstractIdentifiable) super.clone();
+
+		clone.entity = entity;
+
+		return clone;
+	}
 }

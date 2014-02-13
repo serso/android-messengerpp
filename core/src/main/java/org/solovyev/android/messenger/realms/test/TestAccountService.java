@@ -18,8 +18,10 @@ package org.solovyev.android.messenger.realms.test;
 
 import com.google.common.base.Splitter;
 import org.joda.time.DateTime;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.chats.*;
+import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.Messages;
@@ -30,12 +32,11 @@ import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.joda.time.DateTime.now;
+import static org.solovyev.android.messenger.messages.Messages.copySentMessage;
 import static org.solovyev.android.messenger.users.Users.*;
 
 public class TestAccountService implements AccountUserService, AccountChatService {
@@ -142,7 +143,10 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 			"Adam Ornelas\n";
 
 	@Nonnull
-	private static AtomicLong nextSendDate = new AtomicLong(now().getMillis());
+	private static AtomicLong nextSendDate = new AtomicLong(DateTime.parse("2013-01-01T08:15:30-05:00").getMillis());
+
+	@Nonnull
+	private final Map<Entity, MutableAccountChat> chats = new HashMap<Entity, MutableAccountChat>();
 
 	@Nonnull
 	private final TestAccount account;
@@ -212,20 +216,29 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 
 	@Nonnull
 	@Override
-	public List<AccountChat> getChats() {
-		final List<User> contacts = getContacts();
-		final User user = account.getUser();
+	public synchronized List<AccountChat> getChats() {
+		return new ArrayList<AccountChat>(getChatsMap().values());
+	}
 
-		final List<AccountChat> chats = new ArrayList<AccountChat>();
-		for (int i = 0; i < contacts.size(); i++) {
-			User contact = contacts.get(i);
-			chats.add(createChat(user, contact, i, contacts.size()));
+	@Nonnull
+	private synchronized Map<Entity, MutableAccountChat> getChatsMap() {
+		if (chats.isEmpty()) {
+			final List<User> contacts = getContacts();
+			final User user = account.getUser();
+
+			for (int i = 0; i < contacts.size(); i++) {
+				User contact = contacts.get(i);
+				final MutableAccountChat chat = createChat(user, contact, i, contacts.size());
+				chats.put(chat.getChat().getEntity(), chat);
+			}
 		}
+
 		return chats;
 	}
 
 	private MutableAccountChat createChat(@Nonnull User user, @Nonnull User contact, int position, int size) {
-		final MutableAccountChat chat = Chats.newAccountChat(account.newChatEntity(contact.getId()), true);
+		final Entity privateChatId = App.getChatService().getPrivateChatId(user.getEntity(), contact.getEntity());
+		final MutableAccountChat chat = Chats.newAccountChat(privateChatId, true);
 		chat.addParticipant(user);
 		chat.addParticipant(contact);
 
@@ -265,7 +278,7 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	private MutableMessage newOutgoingMessage(@Nonnull MutableAccountChat chat, @Nonnull String textBody) {
 		final MutableMessage message = Messages.newOutgoingMessage(account, chat.getChat(), textBody, null);
 		message.setSendDate(getNextSendDate());
-		return message;
+		return message.cloneWithNewEntity(Entities.newEntity(account.getId(), getMessageId(message)));
 	}
 
 	@Nonnull
@@ -277,13 +290,24 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 	private MutableMessage newIncomingMessage(@Nonnull User contact, @Nonnull MutableAccountChat chat, @Nonnull String textBody) {
 		final MutableMessage message = Messages.newIncomingMessage(account, chat.getChat(), textBody, null, contact.getEntity());
 		message.setSendDate(getNextSendDate());
-		return message;
+		return message.cloneWithNewEntity(Entities.newEntity(account.getId(), getMessageId(message)));
 	}
 
 	@Nonnull
 	@Override
-	public String sendMessage(@Nonnull Chat chat, @Nonnull Message message) {
-		return "test_message_id";
+	public synchronized String sendMessage(@Nonnull Chat chat, @Nonnull Message message) throws AccountConnectionException {
+		final MutableAccountChat mutableChat = getChatsMap().get(chat.getEntity());
+		if (mutableChat != null) {
+			final String messageId = getMessageId(message);
+			mutableChat.addMessage(copySentMessage(message, this.account, messageId));
+			return messageId;
+		} else {
+			throw new AccountConnectionException("Chat doesn't exist: " + chat.getId());
+		}
+	}
+
+	private String getMessageId(@Nonnull Message message) {
+		return String.valueOf(message.getSendDate().getMillis());
 	}
 
 	@Override
