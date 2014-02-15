@@ -34,6 +34,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -41,6 +44,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.solovyev.android.list.ListItem;
 import org.solovyev.android.list.ListViewScroller;
 import org.solovyev.android.list.ListViewScrollerListener;
+import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.accounts.AccountService;
 import org.solovyev.android.messenger.chats.ChatService;
@@ -50,10 +54,12 @@ import org.solovyev.android.messenger.messages.MessageService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.view.FragmentMenu;
 import org.solovyev.android.messenger.view.MessengerListItem;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.OnRefreshListener2Adapter;
+import org.solovyev.common.Builder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import roboguice.event.EventManager;
 
@@ -105,7 +111,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
     *
     **********************************************************************
     */
-
 
 	@Inject
 	@Nonnull
@@ -197,6 +202,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Nullable
 	private BaseListFragment<LI>.AdapterChangedObserver adapterChangedObserver;
 
+	@Nullable
+	private final FragmentMenu menu;
+
 
     /*
     **********************************************************************
@@ -215,6 +223,18 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			this.listViewFilter = null;
 		}
 		this.selectFirstItemByDefault = selectFirstItemByDefault;
+
+		final Builder<ActivityMenu<Menu, MenuItem>> menuBuilder = newMenuBuilder();
+		if (menuBuilder != null) {
+			menu = new FragmentMenu(this, menuBuilder);
+		} else {
+			menu = null;
+		}
+	}
+
+	@Nullable
+	protected Builder<ActivityMenu<Menu, MenuItem>> newMenuBuilder() {
+		return null;
 	}
 
     /*
@@ -731,6 +751,25 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			adapterChangedObserver = new AdapterChangedObserver();
 			adapter.registerDataSetObserver(adapterChangedObserver);
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (this.menu != null) {
+			this.menu.onCreateOptionsMenu(menu);
+		}
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		if (this.menu != null) {
+			this.menu.onPrepareOptionsMenu(menu);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return this.menu != null && this.menu.onOptionsItemSelected(item);
 	}
 
     /*

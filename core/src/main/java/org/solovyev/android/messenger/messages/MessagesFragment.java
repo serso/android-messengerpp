@@ -30,7 +30,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
@@ -60,6 +59,7 @@ import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
@@ -136,8 +136,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	private JEventListener<ChatEvent> chatEventListener;
 
 	private EditText messageBody;
-
-	private ActivityMenu<Menu, MenuItem> menu;
 
 	public MessagesFragment() {
 		super(TAG, R.string.mpp_chat, false, false);
@@ -517,40 +515,10 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
     **********************************************************************
     */
 
+	@Nullable
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return this.menu.onOptionsItemSelected(this.getActivity(), item);
-	}
-
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		final boolean triplePane = getMultiPaneManager().isTriplePane(getActivity());
-
-		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
-
-		final ViewContactMenuItem viewContactMenuItem = new ViewContactMenuItem();
-		menuItems.add(viewContactMenuItem);
-
-		final ViewContactsMenuItem viewContactsMenuItem = new ViewContactsMenuItem();
-		menuItems.add(viewContactsMenuItem);
-
-		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_messages, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
-			@Override
-			public boolean apply(@Nullable AMenuItem<MenuItem> menuItem) {
-				if (menuItem == viewContactMenuItem) {
-					return triplePane || !chat.isPrivate();
-				} else if (menuItem == viewContactsMenuItem) {
-					return triplePane || chat.isPrivate();
-				}
-				return false;
-			}
-		});
-		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+	protected Builder<ActivityMenu<Menu, MenuItem>> newMenuBuilder() {
+		return new MenuBuilder();
 	}
 
 	private class ViewContactMenuItem implements IdentifiableMenuItem<MenuItem> {
@@ -578,6 +546,34 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
 			getEventManager().fire(ChatUiEventType.show_participants.newEvent(chat));
+		}
+	}
+
+	private final class MenuBuilder implements Builder<ActivityMenu<Menu, MenuItem>> {
+		@Nonnull
+		@Override
+		public ActivityMenu<Menu, MenuItem> build() {
+			final boolean triplePane = getMultiPaneManager().isTriplePane(getActivity());
+
+			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
+
+			final ViewContactMenuItem viewContactMenuItem = new ViewContactMenuItem();
+			menuItems.add(viewContactMenuItem);
+
+			final ViewContactsMenuItem viewContactsMenuItem = new ViewContactsMenuItem();
+			menuItems.add(viewContactsMenuItem);
+
+			return ListActivityMenu.fromResource(R.menu.mpp_menu_messages, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
+				@Override
+				public boolean apply(@Nullable AMenuItem<MenuItem> menuItem) {
+					if (menuItem == viewContactMenuItem) {
+						return triplePane || !chat.isPrivate();
+					} else if (menuItem == viewContactsMenuItem) {
+						return triplePane || chat.isPrivate();
+					}
+					return false;
+				}
+			});
 		}
 	}
 }

@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.users;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
@@ -33,6 +32,7 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.sync.SyncTask;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+import org.solovyev.common.Builder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,8 +45,6 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 
 	@Nonnull
 	private static String TAG = "ContactsFragment";
-
-	private ActivityMenu<Menu, MenuItem> menu;
 
 	public BaseContactsFragment() {
 		super(TAG, R.string.mpp_contacts, true, true);
@@ -93,15 +91,10 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
     **********************************************************************
     */
 
+	@Nullable
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (this.menu == null) {
-			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
-			menuItems.add(new ToggleFilterInputMenuItem(this));
-			menuItems.add(new AddContactMenuItem());
-			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_contacts, menuItems, SherlockMenuHelper.getInstance());
-		}
-		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+	protected Builder<ActivityMenu<Menu, MenuItem>> newMenuBuilder() {
+		return new MenuBuilder();
 	}
 
 	@Override
@@ -112,12 +105,7 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 				item.setVisible(getAccountService().canCreateUsers());
 			}
 		}
-		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return this.menu.onOptionsItemSelected(this.getActivity(), item) || super.onOptionsItemSelected(item);
+		super.onPrepareOptionsMenu(menu);
 	}
 
 	private final class AddContactMenuItem implements IdentifiableMenuItem<MenuItem> {
@@ -131,6 +119,17 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
 			getEventManager().fire(new_contact.newEvent());
+		}
+	}
+
+	private class MenuBuilder implements Builder<ActivityMenu<Menu, MenuItem>> {
+		@Nonnull
+		@Override
+		public ActivityMenu<Menu, MenuItem> build() {
+			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
+			menuItems.add(new ToggleFilterInputMenuItem(BaseContactsFragment.this));
+			menuItems.add(new AddContactMenuItem());
+			return ListActivityMenu.fromResource(R.menu.mpp_menu_contacts, menuItems, SherlockMenuHelper.getInstance());
 		}
 	}
 }

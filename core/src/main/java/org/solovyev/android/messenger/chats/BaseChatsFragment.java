@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.chats;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
@@ -38,6 +37,7 @@ import org.solovyev.android.messenger.users.BaseUserFragment;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
+import org.solovyev.common.Builder;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -148,25 +148,21 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
     **********************************************************************
     */
 
-	private ActivityMenu<Menu, MenuItem> menu;
-
+	@Nullable
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return this.menu.onOptionsItemSelected(this.getActivity(), item);
+	protected Builder<ActivityMenu<Menu, MenuItem>> newMenuBuilder() {
+		return new MenuBuilder();
 	}
 
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
-	}
+	private class MenuBuilder implements Builder<ActivityMenu<Menu, MenuItem>> {
+		@Nonnull
+		@Override
+		public ActivityMenu<Menu, MenuItem> build() {
+			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
+			menuItems.add(new ToggleFilterInputMenuItem(BaseChatsFragment.this));
 
-		menuItems.add(new ToggleFilterInputMenuItem(this));
-
-		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
-		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
+			return ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
+		}
 	}
 }

@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
@@ -28,8 +27,10 @@ import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
+import org.solovyev.common.Builder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +41,6 @@ public class AccountsFragment extends BaseAccountsFragment {
 
 	@Nonnull
 	public static final String FRAGMENT_TAG = "accounts";
-
-	private ActivityMenu<Menu, MenuItem> menu;
 
 	public AccountsFragment() {
 		super("Accounts", R.string.mpp_accounts, false, true);
@@ -74,23 +73,16 @@ public class AccountsFragment extends BaseAccountsFragment {
     **********************************************************************
     */
 
+	@Nullable
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (this.menu == null) {
-			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_accounts, AccountsMenu.class, SherlockMenuHelper.getInstance());
-		}
-
-		this.menu.onCreateOptionsMenu(this.getActivity(), menu);
-	}
-
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		this.menu.onPrepareOptionsMenu(this.getActivity(), menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return this.menu.onOptionsItemSelected(this.getActivity(), item) || super.onOptionsItemSelected(item);
+	protected Builder<ActivityMenu<Menu, MenuItem>> newMenuBuilder() {
+		return new Builder<ActivityMenu<Menu, MenuItem>>() {
+			@Nonnull
+			@Override
+			public ActivityMenu<Menu, MenuItem> build() {
+				return ListActivityMenu.fromResource(R.menu.mpp_menu_accounts, AccountsMenu.class, SherlockMenuHelper.getInstance());
+			}
+		};
 	}
 
 	private static enum AccountsMenu implements IdentifiableMenuItem<MenuItem> {
