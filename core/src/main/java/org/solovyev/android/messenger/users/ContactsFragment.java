@@ -78,12 +78,12 @@ public class ContactsFragment extends BaseContactsFragment {
 
 	@Override
 	protected void detachListeners() {
-		super.detachListeners();
-
 		if (chatEventListener != null) {
 			getChatService().removeListener(chatEventListener);
+			chatEventListener = null;
 		}
 
+		super.detachListeners();
 	}
 
 	private class ChatEventListener extends AbstractJEventListener<ChatEvent> {

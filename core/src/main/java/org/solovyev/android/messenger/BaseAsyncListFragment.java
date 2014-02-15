@@ -139,10 +139,12 @@ public abstract class BaseAsyncListFragment<T, LI extends MessengerListItem> ext
 	protected void detachListeners() {
 		if (userEventListener != null) {
 			getUserService().removeListener(userEventListener);
+			userEventListener = null;
 		}
 
 		if (accountEventListener != null) {
 			getAccountService().removeListener(accountEventListener);
+			accountEventListener = null;
 		}
 	}
 

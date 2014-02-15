@@ -174,6 +174,16 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		this.chatService.addListener(chatEventListener);
 	}
 
+	@Override
+	protected void detachListeners() {
+		if (chatEventListener != null) {
+			chatService.removeListener(chatEventListener);
+			chatEventListener = null;
+		}
+
+		super.detachListeners();
+	}
+
 	@Nonnull
 	public Chat getChat() {
 		return chat;
@@ -333,14 +343,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	@Nonnull
 	private User getUser() {
 		return account.getUser();
-	}
-
-	@Override
-	protected void detachListeners() {
-		if (chatEventListener != null) {
-			this.chatService.removeListener(chatEventListener);
-		}
-		super.detachListeners();
 	}
 
 	@Override
