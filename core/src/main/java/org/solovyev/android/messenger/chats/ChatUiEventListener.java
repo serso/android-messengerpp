@@ -18,6 +18,7 @@ package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountConnectionException;
 import org.solovyev.android.messenger.accounts.AccountRunnable;
@@ -37,6 +38,7 @@ import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.messages.MessagesFragment.newMessagesFragmentDef;
 import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
 import static org.solovyev.android.messenger.users.ContactsInfoFragment.newViewContactsFragmentDef;
+import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.users.Users.showViewUsersFragment;
 
 public class ChatUiEventListener implements EventListener<ChatUiEvent> {
@@ -88,18 +90,36 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 	}
 
 	private void onOpenChatEvent(@Nonnull final Chat chat) {
-		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
+		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
+
+		fm.clearBackStack();
 		if (activity.getMultiPaneManager().isDualPane(activity)) {
-			final BaseChatsFragment fragment = mpfm.getFragment(CHATS_FRAGMENT_TAG);
-			if (fragment != null && fragment.isVisible()) {
-				if (!fragment.clickItemById(chat.getId())) {
-					mpfm.setSecondFragment(newMessagesFragmentDef(activity, chat, true));
-				}
+			final boolean fragmentSet;
+
+			final BaseListFragment<?> chatsFragment = fm.getFragment(CHATS_FRAGMENT_TAG);
+			if (chatsFragment != null && chatsFragment.isVisible()) {
+				fragmentSet = chatsFragment.clickItemById(chat.getId());
 			} else {
-				mpfm.setSecondFragment(newMessagesFragmentDef(activity, chat, true));
+				if (chat.isPrivate()) {
+					final Entity contact = chat.getSecondUser();
+					final BaseListFragment<?> contactsFragment = fm.getFragment(CONTACTS_FRAGMENT_TAG);
+					if (contactsFragment != null && contactsFragment.isVisible()) {
+						fragmentSet = contactsFragment.clickItemById(contact.getEntityId());
+					} else {
+						fragmentSet = false;
+					}
+				} else {
+					fragmentSet = false;
+				}
 			}
+
+			if (!fragmentSet) {
+				fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
+			}
+
+			updateThirdPaneForNewChat(chat, fm);
 		} else {
-			mpfm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
+			fm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
 		}
 	}
 
@@ -115,22 +135,25 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 	private void onChatClickedEvent(@Nonnull final Chat chat) {
 		final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 
+		fm.clearBackStack();
 		if (activity.isDualPane()) {
-			fm.clearBackStack();
 			fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
-			if (activity.isTriplePane()) {
-				final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
-
-				if (chat.isPrivate()) {
-					fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
-				} else {
-					final List<User> participants = activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
-					fm.setThirdFragment(newViewContactsFragmentDef(activity, participants, false));
-				}
-			}
-
+			updateThirdPaneForNewChat(chat, fm);
 		} else {
 			fm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
+		}
+	}
+
+	private void updateThirdPaneForNewChat(@Nonnull Chat chat, @Nonnull MessengerMultiPaneFragmentManager fm) {
+		if (activity.isTriplePane()) {
+			final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
+
+			if (chat.isPrivate()) {
+				fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
+			} else {
+				final List<User> participants = activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
+				fm.setThirdFragment(newViewContactsFragmentDef(activity, participants, false));
+			}
 		}
 	}
 }
