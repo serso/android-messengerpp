@@ -13,9 +13,7 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto"
-		  android:versionCode="24" android:versionName="1.0" package="org.solovyev.android.messenger">
+  --><manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionCode="25" android:versionName="1.01" package="org.solovyev.android.messenger">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -44,12 +42,9 @@
 
 	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18"/>
 
-	<application android:allowBackup="true" android:debuggable="true" android:hardwareAccelerated="true"
-				 android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name"
-				 android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
+	<application android:allowBackup="true" android:debuggable="false" android:hardwareAccelerated="true" android:icon="@drawable/mpp_app_icon" android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
 
-		<activity android:label="@string/mpp_app_short_name" android:name=".StartActivity"
-				  android:windowSoftInputMode="adjustPan">
+		<activity android:label="@string/mpp_app_short_name" android:name=".StartActivity" android:windowSoftInputMode="adjustPan">
 
 		<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -68,23 +63,17 @@
 		</activity>
 
 
-		<activity android:label="@string/mpp_app_short_name" android:launchMode="singleTask"
-				  android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_app_short_name" android:launchMode="singleTask" android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
 
-		<activity android:label="@string/mpp_preferences" android:launchMode="singleTask"
-				  android:name=".preferences.PreferencesActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_preferences" android:launchMode="singleTask" android:name=".preferences.PreferencesActivity" android:windowSoftInputMode="stateHidden"/>
 
-		<activity android:label="@string/mpp_about" android:launchMode="singleTask" android:name=".about.AboutActivity"
-				  android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_about" android:launchMode="singleTask" android:name=".about.AboutActivity" android:windowSoftInputMode="stateHidden"/>
 
-		<activity android:label="@string/mpp_accounts" android:launchMode="singleTask"
-				  android:name=".accounts.AccountsActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_accounts" android:launchMode="singleTask" android:name=".accounts.AccountsActivity" android:windowSoftInputMode="stateHidden"/>
 
-		<activity android:label="@string/mpp_new_contact" android:launchMode="singleTask"
-				  android:name=".NewContactActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:label="@string/mpp_new_contact" android:launchMode="singleTask" android:name=".NewContactActivity" android:windowSoftInputMode="stateHidden"/>
 
-		<activity android:launchMode="singleTop" android:name=".wizard.WizardActivity"
-				  android:theme="@style/mpp_theme_holo_dialog"/>
+		<activity android:launchMode="singleTop" android:name=".wizard.WizardActivity" android:theme="@style/mpp_theme_holo_dialog"/>
 
 		<service android:name=".OngoingNotificationService"/>
 
