@@ -17,7 +17,6 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
-import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
@@ -44,13 +43,6 @@ public class AccountsFragment extends BaseAccountsFragment {
 
 	public AccountsFragment() {
 		super("Accounts", R.string.mpp_accounts, false, true);
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setHasOptionsMenu(true);
 	}
 
 	@Nonnull

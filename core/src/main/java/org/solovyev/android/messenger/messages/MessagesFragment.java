@@ -205,8 +205,6 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 			account = accountService.getAccountById(chat.getEntity().getAccountId());
 		}
 
-		setHasOptionsMenu(true);
-
 		super.onCreate(savedInstanceState);
 	}
 

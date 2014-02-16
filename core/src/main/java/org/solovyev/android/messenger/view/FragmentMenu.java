@@ -47,7 +47,7 @@ public final class FragmentMenu implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (fragment.isVisible()) {
+		if (shouldShowMenu()) {
 			this.menu = menuBuilder.build();
 			return this.menu.onCreateOptionsMenu(fragment.getActivity(), menu);
 		} else {
@@ -56,13 +56,17 @@ public final class FragmentMenu implements
 		}
 	}
 
+	private boolean shouldShowMenu() {
+		return fragment.isVisible();
+	}
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		return fragment.isVisible() && this.menu != null && this.menu.onPrepareOptionsMenu(fragment.getActivity(), menu);
+		return shouldShowMenu() && this.menu != null && this.menu.onPrepareOptionsMenu(fragment.getActivity(), menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return fragment.isVisible() && this.menu != null && menu.onOptionsItemSelected(fragment.getActivity(), item);
+		return shouldShowMenu() && this.menu != null && menu.onOptionsItemSelected(fragment.getActivity(), item);
 	}
 }

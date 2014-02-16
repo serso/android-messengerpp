@@ -16,7 +16,6 @@
 
 package org.solovyev.android.messenger.chats;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -56,13 +55,6 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 
 	public BaseChatsFragment() {
 		super(TAG, R.string.mpp_messages, true, true);
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setHasOptionsMenu(true);
 	}
 
 	@Override

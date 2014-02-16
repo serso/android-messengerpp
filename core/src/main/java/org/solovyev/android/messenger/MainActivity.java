@@ -78,7 +78,7 @@ public final class MainActivity extends BaseFragmentActivity {
 
 	private boolean tabsEnabled = false;
 
-	@Nonnull
+	@Nullable
 	private ActivityMenu<Menu, MenuItem> menu;
 
 	@Nullable
@@ -119,9 +119,6 @@ public final class MainActivity extends BaseFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// menu must be initialized before fragments as some fragments might add entries to menu
-		this.menu = new MainMenu(new HomeButtonListener());
 
 		initTabs(savedInstanceState);
 
@@ -237,6 +234,9 @@ public final class MainActivity extends BaseFragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
+		if (this.menu == null) {
+			this.menu = new MainMenu(new HomeButtonListener());
+		}
 		return this.menu.onCreateOptionsMenu(this, menu);
 	}
 

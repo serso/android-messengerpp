@@ -368,6 +368,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		createAdapter(savedInstanceState);
 
 		fragmentUi.onCreate(savedInstanceState);
+
+		if (menu != null) {
+			setHasOptionsMenu(true);
+		}
 	}
 
 	@Override

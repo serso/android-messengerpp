@@ -48,8 +48,6 @@ public abstract class BaseContactsFragment extends BaseAsyncListFragment<UiConta
 
 	public BaseContactsFragment() {
 		super(TAG, R.string.mpp_contacts, true, true);
-
-		setHasOptionsMenu(true);
 	}
 
 	@Override
