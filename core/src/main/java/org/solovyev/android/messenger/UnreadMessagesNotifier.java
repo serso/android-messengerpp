@@ -67,20 +67,26 @@ public final class UnreadMessagesNotifier extends AbstractJEventListener<Messeng
 				// cancel last notification (if needed new notification will be created later)
 				nm.cancel(NOTIFICATION_ID_UNREAD_MESSAGES);
 
-				final ActivityManager.RunningTaskInfo foregroundTask = getForegroundTask();
-				if (foregroundTask == null || !foregroundTask.topActivity.getPackageName().equals(context.getPackageName())) {
-					// todo serso: make proper notification (unread messages text, small icon, etc)
-					// we are not at the top => show notification
-					final NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
-					nb.setSmallIcon(R.drawable.mpp_sb_unread_messages_icon);
-					nb.setContentTitle(context.getResources().getQuantityString(R.plurals.mpp_unread_messages_count_notification, unreadMessagesCount, unreadMessagesCount));
-					nb.setContentText(context.getString(R.string.mpp_notification_text));
-					nb.setContentIntent(getActivity(context, 0, newUnreadMessagesStartIntent(context), 0));
-					nb.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-					nm.notify(NOTIFICATION_ID_UNREAD_MESSAGES, nb.getNotification());
+				if (unreadMessagesCount > 0) {
+					if (!isAppShown()) {
+						// todo serso: make proper notification (unread messages text, small icon, etc)
+						// we are not at the top => show notification
+						final NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
+						nb.setSmallIcon(R.drawable.mpp_sb_unread_messages_icon);
+						nb.setContentTitle(context.getResources().getQuantityString(R.plurals.mpp_unread_messages_count_notification, unreadMessagesCount, unreadMessagesCount));
+						nb.setContentText(context.getString(R.string.mpp_notification_text));
+						nb.setContentIntent(getActivity(context, 0, newUnreadMessagesStartIntent(context), 0));
+						nb.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+						nm.notify(NOTIFICATION_ID_UNREAD_MESSAGES, nb.getNotification());
+					}
 				}
 				break;
 		}
+	}
+
+	private boolean isAppShown() {
+		final ActivityManager.RunningTaskInfo foregroundTask = getForegroundTask();
+		return foregroundTask != null && foregroundTask.topActivity.getPackageName().equals(context.getPackageName());
 	}
 
 	@Nonnull
