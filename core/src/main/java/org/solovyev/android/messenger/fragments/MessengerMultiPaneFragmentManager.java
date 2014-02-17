@@ -80,35 +80,6 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 		fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 	}
 
-	public void hideKeyboard() {
-		// todo serso: make hideKeyboard() from parent class accessable
-		final FragmentActivity activity = getActivity();
-		final View focusedView = activity.getCurrentFocus();
-
-		if (focusedView != null) {
-			final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-		}
-	}
-
-	public void goBack() {
-		// todo serso: fix in ACL
-		hideKeyboard();
-		super.goBack();
-	}
-
-	public boolean goBackImmediately() {
-		// todo serso: fix in ACL
-		hideKeyboard();
-		return super.goBackImmediately();
-	}
-
-	public void goBack(@Nonnull String tag) {
-		// todo serso: fix in ACL
-		hideKeyboard();
-		super.goBack(tag);
-	}
-
 	@Nullable
 	public Fragment getFirstFragment() {
 		final FragmentManager fm = getActivity().getSupportFragmentManager();
