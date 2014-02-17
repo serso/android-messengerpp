@@ -21,6 +21,7 @@ import com.actionbarsherlock.ActionBarSherlock;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.messenger.BaseListFragment;
 import org.solovyev.common.Builder;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ public final class FragmentMenu implements
 		ActionBarSherlock.OnPrepareOptionsMenuListener {
 
 	@Nonnull
-	private final Fragment fragment;
+	private final BaseListFragment<?> fragment;
 
 	@Nonnull
 	private final Builder<ActivityMenu<Menu, MenuItem>> menuBuilder;
@@ -40,7 +41,7 @@ public final class FragmentMenu implements
 	@Nullable
 	private ActivityMenu<Menu, MenuItem> menu;
 
-	public FragmentMenu(@Nonnull Fragment fragment, @Nonnull Builder<ActivityMenu<Menu, MenuItem>> menuBuilder) {
+	public FragmentMenu(@Nonnull BaseListFragment<?> fragment, @Nonnull Builder<ActivityMenu<Menu, MenuItem>> menuBuilder) {
 		this.fragment = fragment;
 		this.menuBuilder = menuBuilder;
 	}
@@ -57,6 +58,12 @@ public final class FragmentMenu implements
 	}
 
 	private boolean shouldShowMenu() {
+		if (!fragment.wasViewCreated()) {
+			// view is not created but it requests menu => show it
+			return true;
+		}
+
+		// show menu if fragment is visible
 		return fragment.isVisible();
 	}
 
