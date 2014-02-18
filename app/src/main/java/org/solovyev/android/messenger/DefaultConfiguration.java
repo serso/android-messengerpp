@@ -22,6 +22,7 @@ import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.realms.sms.SmsRealm;
 import org.solovyev.android.messenger.realms.test.TestRealm;
 import org.solovyev.android.messenger.realms.vk.VkRealm;
+import org.solovyev.android.messenger.realms.whatsapp.WhatsAppRealm;
 import org.solovyev.android.messenger.realms.xmpp.*;
 
 import javax.annotation.Nonnull;
@@ -67,6 +68,10 @@ public class DefaultConfiguration implements Configuration {
 
 	@Inject
 	@Nonnull
+	private WhatsAppRealm whatsAppRealm;
+
+	@Inject
+	@Nonnull
 	private TestRealm testRealm;
 
 	public DefaultConfiguration() {
@@ -84,6 +89,7 @@ public class DefaultConfiguration implements Configuration {
 				realms.add(qipXmppRealm);
 				realms.add(vkRealm);
 				realms.add(smsRealm);
+				realms.add(whatsAppRealm);
 				if (isAppium()) {
 					realms.add(testRealm);
 				}

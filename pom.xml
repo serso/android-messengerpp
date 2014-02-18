@@ -15,6 +15,7 @@
 		<module>realm-vk</module>
 		<module>realm-xmpp</module>
 		<module>realm-sms</module>
+		<module>realm-whatsapp</module>
 		<module>app</module>
 		<module>app-test</module>
 	</modules>
@@ -120,6 +121,13 @@
 			<dependency>
 				<groupId>org.solovyev.android.messenger</groupId>
 				<artifactId>android-messenger-realm-sms</artifactId>
+				<version>1.04</version>
+				<type>apklib</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.solovyev.android.messenger</groupId>
+				<artifactId>android-messenger-realm-whatsapp</artifactId>
 				<version>1.04</version>
 				<type>apklib</type>
 			</dependency>
