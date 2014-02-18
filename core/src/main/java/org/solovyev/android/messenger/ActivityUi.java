@@ -19,6 +19,7 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import com.actionbarsherlock.app.ActionBar;
 import com.google.inject.Inject;
 import org.solovyev.android.Activities;
@@ -31,6 +32,9 @@ import javax.annotation.Nullable;
 import static org.solovyev.android.sherlock.AndroidSherlockUtils.getSupportActionBar;
 
 public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+	@Nonnull
+	private static final String TAG = "ActivityUi";
 
 	/*
 	**********************************************************************
@@ -100,7 +104,12 @@ public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeLis
 		theme = App.getTheme();
 		activity.setTheme(dialog ? theme.getDialogThemeResId() : theme.getThemeResId());
 
+		prepareActionBar();
+	}
+
+	private void prepareActionBar() {
 		final ActionBar actionBar = getActionBar();
+		// if activity is a dialog - no action bar will be provided
 		if (actionBar != null) {
 			actionBar.setIcon(theme.getActionBarIconResId());
 		}
@@ -108,9 +117,14 @@ public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeLis
 
 	@Nullable
 	private ActionBar getActionBar() {
-		try {
-			return getSupportActionBar(activity);
-		} catch (IllegalArgumentException e) {
+		if (!dialog) {
+			try {
+				return getSupportActionBar(activity);
+			} catch (IllegalStateException e) {
+				Log.e(TAG, e.getMessage(), e);
+			} catch (IllegalArgumentException e) {
+				Log.e(TAG, e.getMessage(), e);
+			}
 		}
 
 		return null;
