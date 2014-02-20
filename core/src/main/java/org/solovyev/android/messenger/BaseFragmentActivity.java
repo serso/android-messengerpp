@@ -209,8 +209,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(true);
 
-		getSupportFragmentManager().addOnBackStackChangedListener(this);
-
 		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
 
@@ -387,10 +385,14 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	protected void onResume() {
 		super.onResume();
 		ui.onResume();
+
+		getSupportFragmentManager().addOnBackStackChangedListener(this);
 	}
 
 	@Override
 	protected void onPause() {
+		getSupportFragmentManager().removeOnBackStackChangedListener(this);
+
 		ui.onPause();
 		super.onPause();
 	}
