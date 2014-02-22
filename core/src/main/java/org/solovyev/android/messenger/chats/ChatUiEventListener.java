@@ -149,7 +149,7 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 			final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
 
 			if (chat.isPrivate()) {
-				fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
+				fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser()));
 			} else {
 				final List<User> participants = activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
 				fm.setThirdFragment(newViewContactsFragmentDef(activity, participants, false));

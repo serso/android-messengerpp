@@ -22,6 +22,7 @@ import android.view.View;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.accounts.tasks.UserSaverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
@@ -54,14 +55,14 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 	@Nonnull
 	public static MultiPaneFragmentDef newCreateUserFragmentDef(@Nonnull Context context, @Nonnull Account account, boolean addToBackStack) {
 		final Realm realm = account.getRealm();
-		final Bundle arguments = newAccountArguments(account);
+		final Bundle arguments = Accounts.newAccountArguments(account);
 		return MultiPaneFragmentDef.forClass(Users.CREATE_USER_FRAGMENT_TAG, addToBackStack, realm.getCreateUserFragmentClass(), context, arguments);
 	}
 
 	@Nonnull
 	public static MultiPaneFragmentDef newEditUserFragmentDef(@Nonnull Context context, @Nonnull Account account, @Nonnull User user, boolean addToBackStack) {
 		final Realm realm = account.getRealm();
-		final Bundle arguments = newUserArguments(account, user);
+		final Bundle arguments = Users.newUserArguments(account, user);
 		return MultiPaneFragmentDef.forClass(Users.CREATE_USER_FRAGMENT_TAG, addToBackStack, realm.getCreateUserFragmentClass(), context, arguments);
 	}
 

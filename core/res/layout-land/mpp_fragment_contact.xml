@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright 2013 serso aka se.solovyev
+  ~ Copyright 2014 serso aka se.solovyev
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -26,17 +26,23 @@
 				a:id="@+id/mpp_fragment_title"
 				style="?mpp_fragment_title"/>
 
-		<ImageView
-				a:id="@+id/mpp_contact_icon_imageview"
-				style="?mpp_fragment_icon"/>
+		<LinearLayout a:layout_width="match_parent"
+					  a:layout_height="match_parent"
+					  a:orientation="horizontal">
 
-		<LinearLayout
-				a:id="@+id/mpp_contact_properties_viewgroup"
-				a:layout_width="match_parent"
-				a:layout_height="wrap_content"
-				a:gravity="top|left"
-				a:orientation="vertical"
-				a:paddingBottom="10dp"/>
+			<ImageView
+					a:id="@+id/mpp_contact_icon_imageview"
+					style="?mpp_fragment_icon"/>
+
+			<LinearLayout
+					a:id="@+id/mpp_contact_properties_viewgroup"
+					a:layout_width="match_parent"
+					a:layout_height="wrap_content"
+					a:gravity="top|left"
+					a:orientation="vertical"
+					a:paddingBottom="10dp"/>
+
+		</LinearLayout>
 
 		<include layout="@layout/mpp_fragment_edit_buttons"/>
 

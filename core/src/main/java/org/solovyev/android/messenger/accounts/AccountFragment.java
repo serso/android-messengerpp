@@ -21,15 +21,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.common.JPredicate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
 
@@ -89,7 +88,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 	@Nonnull
 	public static Bundle newAccountArguments(@Nonnull Account account) {
-		return BaseAccountFragment.newAccountArguments(account);
+		return Accounts.newAccountArguments(account);
 	}
 
 	protected void onAccountStateChanged(@Nonnull Account<?> account, @Nullable View root) {

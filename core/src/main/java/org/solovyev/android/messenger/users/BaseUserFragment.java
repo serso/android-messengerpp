@@ -21,13 +21,13 @@ import android.support.v4.app.FragmentActivity;
 import com.google.inject.Inject;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.BaseAccountFragment;
-import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.common.listeners.AbstractJEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
+import static org.solovyev.android.messenger.users.Users.getUserIdFromArguments;
 
 public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccountFragment<A> {
 	/*
@@ -37,9 +37,6 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 	*
 	**********************************************************************
 	*/
-
-	@Nonnull
-	protected static final String ARG_USER_ID = "user_id";
 
 	/*
 	**********************************************************************
@@ -68,7 +65,7 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 
 		final Bundle arguments = getArguments();
 		if (arguments != null) {
-			final String userId = arguments.getString(ARG_USER_ID);
+			final String userId = getUserIdFromArguments(arguments);
 			if (userId != null) {
 				user = userService.getUserById(newEntityFromEntityId(userId));
 
@@ -103,18 +100,6 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 	}
 
 	protected void onUserChanged(@Nonnull User user) {
-	}
-
-	@Nonnull
-	protected static Bundle newUserArguments(@Nonnull Account account, @Nonnull User user) {
-		return newUserArguments(account, user.getEntity());
-	}
-
-	@Nonnull
-	protected static Bundle newUserArguments(@Nonnull Account account, @Nonnull Entity user) {
-		final Bundle arguments = newAccountArguments(account);
-		arguments.putString(ARG_USER_ID, user.getEntityId());
-		return arguments;
 	}
 
 	private final class UserEventListener extends AbstractJEventListener<UserEvent> {

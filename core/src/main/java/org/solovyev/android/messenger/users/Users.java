@@ -17,13 +17,13 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
-import org.joda.time.DateTime;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountSyncData;
+import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
@@ -57,6 +57,9 @@ public final class Users {
 
 	@Nonnull
 	public static final String CREATE_USER_FRAGMENT_TAG = "create_user";
+
+	@Nonnull
+	private static final String ARG_USER_ID = "user_id";
 
 	@Nonnull
 	static final ContactsDisplayMode DEFAULT_CONTACTS_MODE = ContactsDisplayMode.all_contacts;
@@ -156,9 +159,9 @@ public final class Users {
 			@Override
 			public void run() {
 				if (activity.isDualPane()) {
-					mpfm.setSecondFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
+					mpfm.setSecondFragment(newViewContactFragmentDef(activity, account, user.getEntity()));
 				} else {
-					mpfm.setMainFragment(newViewContactFragmentDef(activity, account, user.getEntity(), true));
+					mpfm.setMainFragment(newViewContactFragmentDef(activity, account, user.getEntity()));
 				}
 			}
 		});
@@ -218,5 +221,22 @@ public final class Users {
 
 			contactDivider.setVisibility(VISIBLE);
 		}
+	}
+
+	@Nonnull
+	static Bundle newUserArguments(@Nonnull Account account, @Nonnull User user) {
+		return newUserArguments(account, user.getEntity());
+	}
+
+	@Nonnull
+	static Bundle newUserArguments(@Nonnull Account account, @Nonnull Entity user) {
+		final Bundle arguments = Accounts.newAccountArguments(account);
+		arguments.putString(ARG_USER_ID, user.getEntityId());
+		return arguments;
+	}
+
+	@Nullable
+	public static String getUserIdFromArguments(@Nonnull Bundle arguments) {
+		return arguments.getString(Users.ARG_USER_ID);
 	}
 }

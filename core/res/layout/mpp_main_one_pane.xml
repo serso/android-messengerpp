@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright 2013 serso aka se.solovyev
+  ~ Copyright 2014 serso aka se.solovyev
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,18 +16,6 @@
   ~ limitations under the License.
   -->
 
-<resources>
-	<color name="mpp_text">#ff525252</color>
-	<color name="mpp_text_inverted">#ffffffff</color>
-	<color name="mpp_text_selected">#ffffffff</color>
-	<color name="mpp_text_secondary">#ff939393</color>
-
-	<color name="mpp_bg">#ffffffff</color>
-
-	<color name="mpp_button">#ffe8e8e8</color>
-	<color name="mpp_selected">#ff33b5e5</color>
-	<color name="mpp_blue">#ff33b5e5</color>
-	<color name="mpp_black">#ff000000</color>
-	<color name="mpp_blue_darker">#ff247697</color>
-
-</resources>
+<FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
+			 a:id="@+id/content_first_pane"
+			 style="?mpp_content"/>

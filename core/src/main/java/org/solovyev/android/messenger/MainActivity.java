@@ -87,6 +87,8 @@ public final class MainActivity extends BaseFragmentActivity {
 	@Nullable
 	private JEventListener<MessengerEvent> messengerEventListener;
 
+	private static boolean running = false;
+
     /*
 	**********************************************************************
     *
@@ -96,9 +98,11 @@ public final class MainActivity extends BaseFragmentActivity {
     */
 
 	public static void start(@Nonnull Activity activity) {
-		final Intent result = new Intent();
-		result.setClass(activity, MainActivity.class);
-		activity.startActivity(result);
+		if (!running) {
+			final Intent result = new Intent();
+			result.setClass(activity, MainActivity.class);
+			activity.startActivity(result);
+		}
 	}
 
 	public static void startForUnreadMessages(@Nonnull Activity activity) {
@@ -118,6 +122,7 @@ public final class MainActivity extends BaseFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		running = true;
 		super.onCreate(savedInstanceState);
 
 		initTabs(savedInstanceState);
@@ -219,6 +224,13 @@ public final class MainActivity extends BaseFragmentActivity {
 		}
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		running = false;
+	}
+
 	/*
     **********************************************************************
     *
@@ -247,16 +259,18 @@ public final class MainActivity extends BaseFragmentActivity {
 
 	@Override
 	public void onBackStackChanged() {
-		final ActionBar actionBar = getSupportActionBar();
-		if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		} else {
-			actionBar.setDisplayHomeAsUpEnabled(false);
-		}
+		if (!isDialog()) {
+			final ActionBar actionBar = getSupportActionBar();
+			if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+				actionBar.setDisplayHomeAsUpEnabled(true);
+			} else {
+				actionBar.setDisplayHomeAsUpEnabled(false);
+			}
 
-		final Fragment firstFragment = getMultiPaneFragmentManager().getFirstFragment();
-		if (firstFragment instanceof BaseListFragment) {
-			((BaseListFragment) firstFragment).tryUpdateActionBar();
+			final Fragment firstFragment = getMultiPaneFragmentManager().getFirstFragment();
+			if (firstFragment instanceof BaseListFragment) {
+				((BaseListFragment) firstFragment).tryUpdateActionBar();
+			}
 		}
 	}
 

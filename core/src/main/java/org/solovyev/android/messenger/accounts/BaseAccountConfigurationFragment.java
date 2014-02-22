@@ -96,7 +96,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 																			  boolean addToBackStack) {
 		final Realm realm = account.getRealm();
 		final JPredicate<Fragment> reuseCondition = new RealmFragmentReuseCondition(realm);
-		final Bundle args = newAccountArguments(account);
+		final Bundle args = Accounts.newAccountArguments(account);
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, realm.getConfigurationFragmentClass(), context, args, reuseCondition);
 	}
 

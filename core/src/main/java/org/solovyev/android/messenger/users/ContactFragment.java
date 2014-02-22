@@ -34,6 +34,7 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
@@ -50,6 +51,8 @@ import java.util.Map;
 
 import static android.view.View.GONE;
 import static org.solovyev.android.messenger.App.getUserService;
+import static org.solovyev.android.messenger.users.Users.getUserIdFromArguments;
+import static org.solovyev.common.text.Strings.isEmpty;
 
 public class ContactFragment extends BaseUserFragment {
 
@@ -63,9 +66,26 @@ public class ContactFragment extends BaseUserFragment {
 	}
 
 	@Nonnull
-	public static MultiPaneFragmentDef newViewContactFragmentDef(@Nonnull Context context, @Nonnull Account account, @Nonnull Entity contact, boolean addToBackStack) {
-		final Bundle arguments = newUserArguments(account, contact);
-		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, ContactFragment.class, context, arguments, new ContactFragmentReuseCondition(contact));
+	public static MultiPaneFragmentDef newViewContactFragmentDef(@Nonnull Context context, @Nonnull Account account, @Nonnull Entity contact) {
+		final Bundle arguments = Users.newUserArguments(account, contact);
+		return newViewContactFragmentDef(context, arguments);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newViewContactFragmentDef(@Nonnull Context context, @Nonnull Bundle arguments) {
+		final String accountId = Accounts.getAccountIdFromArguments(arguments);
+		final String contactId = getUserIdFromArguments(arguments);
+
+		if (isEmpty(accountId)) {
+			throw new IllegalArgumentException("Account id must be provided in arguments");
+		}
+
+		if (isEmpty(contactId)) {
+			throw new IllegalArgumentException("Contact id must be provided in arguments");
+		}
+
+		assert contactId != null;
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, false, ContactFragment.class, context, arguments, new ContactFragmentReuseCondition(contactId));
 	}
 
 	@Override

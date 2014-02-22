@@ -47,7 +47,7 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		themeContext = new ContextThemeWrapper(activity, App.getTheme().getContentThemeResId());
+		themeContext = new ContextThemeWrapper(activity, App.getTheme().getContentThemeResId(isDialog()));
 	}
 
 	@Override
@@ -104,6 +104,15 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 	@Nonnull
 	public MultiPaneManager getMultiPaneManager() {
 		return multiPaneManager;
+	}
+
+	@Override
+	public BaseFragmentActivity getSherlockActivity() {
+		return (BaseFragmentActivity) super.getSherlockActivity();
+	}
+
+	protected boolean isDialog() {
+		return getSherlockActivity().isDialog();
 	}
 
 	@Nonnull

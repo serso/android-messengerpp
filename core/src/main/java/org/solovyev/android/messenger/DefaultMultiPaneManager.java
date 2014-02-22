@@ -17,16 +17,12 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.view.View;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.solovyev.android.Views;
 import org.solovyev.android.messenger.core.R;
 
@@ -36,12 +32,7 @@ import javax.annotation.Nullable;
 @Singleton
 public class DefaultMultiPaneManager implements MultiPaneManager {
 
-	@Nonnull
-	private final Application context;
-
-	@Inject
-	public DefaultMultiPaneManager(@Nonnull Application context) {
-		this.context = context;
+	public DefaultMultiPaneManager() {
 	}
 
 	@Override
@@ -81,14 +72,14 @@ public class DefaultMultiPaneManager implements MultiPaneManager {
 	public void onCreatePane(@Nonnull Activity activity, @Nullable View paneParent, @Nonnull View pane) {
 		if (this.isDualPane(activity)) {
 			if (this.isFirstPane(paneParent)) {
-				pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_right));
+				pane.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.mpp_border_right));
 				// border may add padding => set to zeros
 				pane.setPadding(0, 0, 0, 0);
 			} else if (this.isSecondPane(paneParent)) {
 				// activity background should be used
 			} else if (this.isTriplePane(activity) && this.isThirdPane(paneParent)) {
 				if (Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE) {
-					pane.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mpp_border_left));
+					pane.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.mpp_border_left));
 				}
 			}
 		}
@@ -97,10 +88,14 @@ public class DefaultMultiPaneManager implements MultiPaneManager {
 	@Override
 	public void showTitle(@Nonnull SherlockFragmentActivity activity, @Nonnull Fragment pane, @Nullable CharSequence title) {
 		final ActionBar actionBar = activity.getSupportActionBar();
-		if (isDualPane(activity)) {
-			actionBar.setTitle(title);
-		} else if (pane.getId() == R.id.content_first_pane) {
-			actionBar.setTitle(title);
+		if (actionBar != null) {
+			// action bar is null in dialogs
+
+			if (isDualPane(activity)) {
+				actionBar.setTitle(title);
+			} else if (pane.getId() == R.id.content_first_pane) {
+				actionBar.setTitle(title);
+			}
 		}
 	}
 }

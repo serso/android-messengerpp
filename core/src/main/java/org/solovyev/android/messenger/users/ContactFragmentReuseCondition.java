@@ -23,28 +23,24 @@ import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 
-/**
- * User: serso
- * Date: 3/5/13
- * Time: 1:57 PM
- */
 public final class ContactFragmentReuseCondition extends AbstractFragmentReuseCondition<ContactFragment> {
 
 	@Nonnull
-	private final Entity contact;
+	private final String contactId;
 
-	public ContactFragmentReuseCondition(@Nonnull Entity contact) {
+	public ContactFragmentReuseCondition(@Nonnull String contactId) {
 		super(ContactFragment.class);
-		this.contact = contact;
+		this.contactId = contactId;
 	}
 
 	@Nonnull
 	public static JPredicate<Fragment> forContact(@Nonnull Entity contact) {
-		return new ContactFragmentReuseCondition(contact);
+		return new ContactFragmentReuseCondition(contact.getEntityId());
 	}
 
 	@Override
 	protected boolean canReuseFragment(@Nonnull ContactFragment fragment) {
-		return contact.equals(fragment.getUser());
+		final User user = fragment.getUser();
+		return user != null && contactId.equals(user.getId());
 	}
 }

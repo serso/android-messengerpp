@@ -29,6 +29,8 @@ import roboguice.event.EventManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.solovyev.android.messenger.accounts.Accounts.getAccountIdFromArguments;
+
 public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFragment {
 
 	/*
@@ -39,9 +41,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	**********************************************************************
 	*/
 
-	@Nonnull
-	protected static final String ARG_ACCOUNT_ID = "account_id";
-	
 	/*
 	**********************************************************************
     *
@@ -59,7 +58,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	private EventManager eventManager;
 	
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           FIELDS
     *
@@ -85,7 +84,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 
 		final Bundle arguments = getArguments();
 		if (arguments != null) {
-			final String accountId = arguments.getString(ARG_ACCOUNT_ID);
+			final String accountId = getAccountIdFromArguments(arguments);
 			if (accountId != null) {
 				account = (A) accountService.getAccountById(accountId);
 
@@ -129,13 +128,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	*
 	**********************************************************************
 	*/
-
-	@Nonnull
-	protected static Bundle newAccountArguments(@Nonnull Account account) {
-		final Bundle result = new Bundle();
-		result.putString(ARG_ACCOUNT_ID, account.getId());
-		return result;
-	}
 
 	private final class AccountEventListener extends AbstractJEventListener<AccountEvent> {
 

@@ -29,8 +29,8 @@ public enum MessengerTheme {
 		return themeResId;
 	}
 
-	public int getContentThemeResId() {
-		return contentThemeResId;
+	public int getContentThemeResId(boolean dialog) {
+		return dialog ? dialogThemeResId : contentThemeResId;
 	}
 
 	public int getDialogThemeResId() {

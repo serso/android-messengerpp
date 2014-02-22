@@ -1,9 +1,14 @@
 package org.solovyev.android.messenger.accounts;
 
+import android.os.Bundle;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class Accounts {
+
+	@Nonnull
+	private static final String ARG_ACCOUNT_ID = "account_id";
 
 	private Accounts() {
 	}
@@ -32,5 +37,17 @@ public final class Accounts {
 				}
 			}
 		};
+	}
+
+	@Nonnull
+	public static Bundle newAccountArguments(@Nonnull Account account) {
+		final Bundle result = new Bundle();
+		result.putString(ARG_ACCOUNT_ID, account.getId());
+		return result;
+	}
+
+	@Nullable
+	public static String getAccountIdFromArguments(@Nonnull Bundle arguments) {
+		return arguments.getString(Accounts.ARG_ACCOUNT_ID);
 	}
 }

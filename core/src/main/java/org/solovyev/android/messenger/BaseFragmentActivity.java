@@ -114,13 +114,13 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	private ViewGroup thirdPane;
 
 	@Nonnull
-	private final MessengerMultiPaneFragmentManager multiPaneFragmentManager;
+	protected final MessengerMultiPaneFragmentManager fragmentManager;
 
 	@Nonnull
-	private final ActivityUi ui = new ActivityUi(this);
+	private final ActivityUi ui;
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTRUCTORS
     *
@@ -128,8 +128,13 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
     */
 
 	public BaseFragmentActivity() {
-		this.layoutId = R.layout.mpp_main;
-		this.multiPaneFragmentManager = new MessengerMultiPaneFragmentManager(this);
+		this(false, R.layout.mpp_main);
+	}
+
+	public BaseFragmentActivity(boolean dialog, int layoutResId) {
+		this.ui = new ActivityUi(this, dialog);
+		this.layoutId = layoutResId;
+		this.fragmentManager = new MessengerMultiPaneFragmentManager(this);
 	}
 
     /*
@@ -175,7 +180,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	@Nonnull
 	public MessengerMultiPaneFragmentManager getMultiPaneFragmentManager() {
-		return multiPaneFragmentManager;
+		return fragmentManager;
 	}
 
 	@Nonnull
@@ -185,6 +190,10 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	public RoboListeners getListeners() {
 		return ui.getListeners();
+	}
+
+	public boolean isDialog() {
+		return ui.isDialog();
 	}
 
 	/*
@@ -203,16 +212,16 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		setContentView(layoutId);
 
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayUseLogoEnabled(false);
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setDisplayShowHomeEnabled(true);
-		actionBar.setDisplayShowTitleEnabled(true);
+		if (!isDialog()) {
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayUseLogoEnabled(false);
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setDisplayShowHomeEnabled(true);
+			actionBar.setDisplayShowTitleEnabled(true);
+		}
 
 		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
-
-		onBackStackChanged();
 	}
 
 	protected void initFragments() {
@@ -293,7 +302,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 						fragmentDefs.push(fragmentDef);
 					} else {
 						// nothing to pop => stop
-						if (fragmentDefs.isEmpty()) {
+						if (fragmentDefs.isEmpty() && !isDialog()) {
 							final ActionBar.Tab selectedTab = getSupportActionBar().getSelectedTab();
 							if (selectedTab != null) {
 								selectedTab.select();
@@ -386,6 +395,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		super.onResume();
 		ui.onResume();
 
+		onBackStackChanged();
+
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 	}
 
@@ -413,8 +424,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	@Nullable
 	public ActionBar.Tab findTabByTag(@Nonnull String tag) {
-		final ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
+		if (!isDialog()) {
+			final ActionBar actionBar = getSupportActionBar();
 			for (int i = 0; i < actionBar.getTabCount(); i++) {
 				final ActionBar.Tab tab = actionBar.getTabAt(i);
 				if (tab != null && tag.equals(tab.getTag())) {
@@ -428,7 +439,25 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	@Override
 	public void onBackStackChanged() {
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		if (!isDialog()) {
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 	}
+
+	/*protected void tryUpdateNavigationMode(@Nonnull ActionBar actionBar) {
+		final Fragment mainFragment = fragmentManager.getFirstFragment();
+		if (mainFragment != null && !isEmpty(mainFragment.getTag())) {
+			if (findTabByTag(mainFragment.getTag()) == null) {
+				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				actionBar.setDisplayShowTitleEnabled(false);
+			} else {
+				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+				actionBar.setDisplayShowTitleEnabled(true);
+			}
+		} else {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			actionBar.setDisplayShowTitleEnabled(true);
+		}
+	}*/
 }

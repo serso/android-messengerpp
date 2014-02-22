@@ -207,7 +207,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTRUCTORS
     *
@@ -341,6 +341,15 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		this.onListLoadedCallNeeded = onListLoadedCallNeeded;
 	}
 
+	@Override
+	public BaseFragmentActivity getSherlockActivity() {
+		return (BaseFragmentActivity) super.getSherlockActivity();
+	}
+
+	protected boolean isDialog() {
+		return getSherlockActivity().isDialog();
+	}
+
 	/*
     **********************************************************************
     *
@@ -352,7 +361,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		themeContext = new ContextThemeWrapper(activity, App.getTheme().getContentThemeResId());
+		themeContext = new ContextThemeWrapper(activity, App.getTheme().getContentThemeResId(isDialog()));
 	}
 
 	@Override
@@ -401,13 +410,15 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	void tryUpdateActionBar() {
-		if (!getMultiPaneManager().isDualPane(getActivity())) {
-			// only one pane is shown => can update action bar options
-			updateActionBar();
-		} else {
-			// several panes are shown
-			if (getId() != R.id.content_first_pane) {
+		if (!getSherlockActivity().isDialog()) {
+			if (!getMultiPaneManager().isDualPane(getActivity())) {
+				// only one pane is shown => can update action bar options
 				updateActionBar();
+			} else {
+				// several panes are shown
+				if (getId() != R.id.content_first_pane) {
+					updateActionBar();
+				}
 			}
 		}
 	}

@@ -76,7 +76,7 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 				onEditContact(contact);
 				break;
 			case view_contact:
-				onViewContact(contact);
+				ContactActivity.open(activity, contact, false);
 				break;
 			case mark_all_messages_read:
 				onMarkAllMessagesRead(contact);
@@ -112,10 +112,6 @@ public final class ContactUiEventListener implements EventListener<ContactUiEven
 
 	private void onEditContact(@Nonnull User contact) {
 		Users.tryShowEditUserFragment(contact, activity);
-	}
-
-	private void onViewContact(@Nonnull User contact) {
-		Users.showViewUserFragment(contact, activity);
 	}
 
 	private void fireEvent(@Nonnull ContactUiEvent event) {

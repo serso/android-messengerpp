@@ -55,7 +55,7 @@ public final class MessengerPreferenceListFragment extends PreferenceListFragmen
 
 	@Nonnull
 	public static MultiPaneFragmentDef newPreferencesListFragmentDef(@Nonnull Context context, int preferencesResId, boolean addToBackStack) {
-		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, App.getTheme().getContentThemeResId());
+		final Bundle arguments = newPreferencesArguments(preferencesResId, R.layout.mpp_fragment_preferences, App.getTheme().getContentThemeResId(false));
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, MessengerPreferenceListFragment.class, context, arguments, PreferenceListFragmentReuseCondition.newInstance(preferencesResId));
 	}
 

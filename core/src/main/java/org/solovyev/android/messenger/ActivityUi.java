@@ -156,6 +156,10 @@ public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeLis
 	**********************************************************************
 	*/
 
+	public boolean isDialog() {
+		return dialog;
+	}
+
 	@Nonnull
 	public RoboListeners getListeners() {
 		return listeners;

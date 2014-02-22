@@ -23,6 +23,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import org.solovyev.android.Threads;
@@ -42,12 +44,12 @@ import org.solovyev.tasks.TaskService;
 import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static java.lang.Math.sqrt;
 import static java.util.Arrays.asList;
 import static org.solovyev.android.Android.enableComponent;
 import static org.solovyev.android.messenger.MessengerPreferences.Gui;
@@ -65,16 +67,17 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static final String TAG_TIME = App.newTag("Time");
 
-    private static final List<String> EMULATOR_PRODUCTS = asList("google_sdk", "sdk", "full_x86", "sdk_x86");
-    private static final boolean EMULATOR = !isEmpty(Build.PRODUCT) && EMULATOR_PRODUCTS.contains(Build.PRODUCT);
-    private static final boolean APPIUM = false;
+	private static final List<String> EMULATOR_PRODUCTS = asList("google_sdk", "sdk", "full_x86", "sdk_x86");
+	private static final boolean EMULATOR = !isEmpty(Build.PRODUCT) && EMULATOR_PRODUCTS.contains(Build.PRODUCT);
+	private static final boolean APPIUM = false;
+	private static final double BIG_SCREEN_SIZE = 3d;
 
 	public static final String GOOGLE_PLUS_TESTERS_URL = "https://plus.google.com/u/0/communities/112145635211244043975";
 	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";
 	public static final String GITHUB_URL = "https://github.com/serso/android-messengerpp";
-    public static final String DEV_PACKAGE_NAME = "org.solovyev.android.messenger.dev";
+	public static final String DEV_PACKAGE_NAME = "org.solovyev.android.messenger.dev";
 
-    @Nonnull
+	@Nonnull
 	private static App instance = new App();
 
 	@Nonnull
@@ -359,11 +362,11 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		return APPIUM || isEmulator() || isDevVersion();
 	}
 
-    private static boolean isDevVersion() {
-        return getApplication().getPackageName().equals(DEV_PACKAGE_NAME);
-    }
+	private static boolean isDevVersion() {
+		return getApplication().getPackageName().equals(DEV_PACKAGE_NAME);
+	}
 
-    public static void executeInBackground(@Nonnull final Runnable runnable) {
+	public static void executeInBackground(@Nonnull final Runnable runnable) {
 		instance.background.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -374,6 +377,21 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 				}
 			}
 		});
+	}
+
+	public static boolean isBigScreen(@Nonnull Activity activity) {
+		return getScreenDiagonal(activity) > BIG_SCREEN_SIZE;
+	}
+
+	private static double getScreenDiagonal(@Nonnull Activity activity) {
+		final Display display = activity.getWindowManager().getDefaultDisplay();
+		final DisplayMetrics displayMetrics = new DisplayMetrics();
+		display.getMetrics(displayMetrics);
+
+		final float width = displayMetrics.widthPixels / displayMetrics.densityDpi;
+		final float height = displayMetrics.heightPixels / displayMetrics.densityDpi;
+
+		return sqrt(width * width + height * height);
 	}
 
 	/*
