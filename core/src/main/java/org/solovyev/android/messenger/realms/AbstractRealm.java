@@ -144,8 +144,6 @@ public abstract class AbstractRealm<C extends AccountConfiguration> implements R
 	public List<AProperty> getUserDisplayProperties(@Nonnull User user, @Nonnull Context context) {
 		final List<AProperty> result = new ArrayList<AProperty>(user.getPropertiesCollection().size());
 
-		addUserProperty(context, result, R.string.mpp_name, user.getDisplayName());
-
 		final String nickname = user.getPropertyValueByName(User.PROPERTY_NICKNAME);
 		if (!isEmpty(nickname)) {
 			addUserProperty(context, result, R.string.mpp_nickname, nickname);

@@ -583,18 +583,15 @@ public class DefaultChatService implements ChatService {
 		for (String chatId : chatIds) {
 			final Chat chat = getChatById(newEntityFromEntityId(chatId));
 			if (chat != null) {
-				final Message lastMessage = getLastMessage(chat.getEntity());
-				if (lastMessage != null) {
-					final UiChat uiChat;
-					if (user != null) {
-						uiChat = loadUiChat(user, chat);
-					} else {
-						uiChat = loadUiChat(chat);
-					}
+				final UiChat uiChat;
+				if (user != null) {
+					uiChat = loadUiChat(user, chat);
+				} else {
+					uiChat = loadUiChat(chat);
+				}
 
-					if (chatFilter.apply(uiChat.getDisplayName())) {
-						result.add(uiChat);
-					}
+				if (chatFilter.apply(uiChat.getDisplayName())) {
+					result.add(uiChat);
 				}
 			}
 		}

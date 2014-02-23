@@ -21,6 +21,7 @@ import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -425,8 +426,18 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	private void updateActionBar() {
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setTitle(titleResId);
-		actionBar.setIcon(getTheme().getActionBarIconResId());
+		actionBar.setTitle(getActionBatTitle());
+		actionBar.setIcon(getActionBatIcon());
+	}
+
+	@Nonnull
+	protected Drawable getActionBatIcon() {
+		return getThemeContext().getResources().getDrawable(getTheme().getActionBarIconResId());
+	}
+
+	@Nonnull
+	protected CharSequence getActionBatTitle() {
+		return getThemeContext().getResources().getString(titleResId);
 	}
 
 	@Override

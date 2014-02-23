@@ -19,6 +19,12 @@
 <menu xmlns:a="http://schemas.android.com/apk/res/android">
 
 	<item
+			a:id="@+id/mpp_menu_chat_contact"
+			a:title="@string/mpp_new_message"
+			a:icon="?attr/mpp_ab_new_message_icon"
+			a:showAsAction="always"/>
+
+	<item
 			a:id="@+id/mpp_menu_edit_contact"
 			a:title="@string/mpp_menu_edit"
 			a:icon="?attr/mpp_ab_edit_icon"

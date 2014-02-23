@@ -66,13 +66,13 @@ public class ContactFragment extends BaseUserFragment {
 	}
 
 	@Nonnull
-	public static MultiPaneFragmentDef newViewContactFragmentDef(@Nonnull Context context, @Nonnull Account account, @Nonnull Entity contact) {
+	public static MultiPaneFragmentDef newViewContactFragmentDef(@Nonnull Context context, @Nonnull Account account, @Nonnull Entity contact, boolean addToBackStack) {
 		final Bundle arguments = Users.newUserArguments(account, contact);
-		return newViewContactFragmentDef(context, arguments);
+		return newViewContactFragmentDef(context, arguments, addToBackStack);
 	}
 
 	@Nonnull
-	public static MultiPaneFragmentDef newViewContactFragmentDef(@Nonnull Context context, @Nonnull Bundle arguments) {
+	public static MultiPaneFragmentDef newViewContactFragmentDef(@Nonnull Context context, @Nonnull Bundle arguments, boolean addToBackStack) {
 		final String accountId = Accounts.getAccountIdFromArguments(arguments);
 		final String contactId = getUserIdFromArguments(arguments);
 
@@ -85,7 +85,7 @@ public class ContactFragment extends BaseUserFragment {
 		}
 
 		assert contactId != null;
-		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, false, ContactFragment.class, context, arguments, new ContactFragmentReuseCondition(contactId));
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, ContactFragment.class, context, arguments, new ContactFragmentReuseCondition(contactId));
 	}
 
 	@Override
@@ -104,6 +104,12 @@ public class ContactFragment extends BaseUserFragment {
 
 		final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon_imageview);
 		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
+
+		final TextView contactName = (TextView) root.findViewById(R.id.mpp_contact_name_textview);
+		contactName.setText(contact.getDisplayName());
+
+		final TextView accountName = (TextView) root.findViewById(R.id.mpp_contact_account_textview);
+		accountName.setText(Accounts.getAccountName(getAccount()));
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
 
@@ -173,6 +179,7 @@ public class ContactFragment extends BaseUserFragment {
 
 		final EditContactMenuItem editContactMenuItem = new EditContactMenuItem();
 		menuItems.add(editContactMenuItem);
+		menuItems.add(new OpenChatMenuItem());
 
 		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_contact, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
 			@Override
@@ -197,8 +204,22 @@ public class ContactFragment extends BaseUserFragment {
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
 			if (getAccount().getRealm().canEditUsers()) {
-				getEventManager().fire(ContactUiEventType.edit_contact.newEvent(getUser()));
+				getEventManager().fire(new ContactUiEvent.Edit(getUser(), getAccount()));
 			}
+		}
+	}
+
+	private class OpenChatMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_chat_contact;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
+			getEventManager().fire(new ContactUiEvent.OpenChat(getUser(), getAccount()));
 		}
 	}
 }

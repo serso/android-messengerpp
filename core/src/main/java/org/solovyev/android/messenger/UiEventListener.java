@@ -21,6 +21,7 @@ import org.solovyev.android.messenger.about.AboutActivity;
 import org.solovyev.android.messenger.accounts.AccountsActivity;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.PreferencesActivity;
+import org.solovyev.android.messenger.users.ContactsActivity;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -56,17 +57,13 @@ public class UiEventListener implements EventListener<UiEvent> {
 			case show_accounts:
 				AccountsActivity.start(activity);
 				break;
+			case show_contacts:
+				ContactsActivity.start(activity);
+				break;
 			case exit:
 				App.exit(activity);
 				break;
-			case new_contact:
-				onNewContactEvent();
-				break;
 		}
-	}
-
-	private void onNewContactEvent() {
-		NewContactActivity.start(activity);
 	}
 
 	private void onNewMessageEvent() {

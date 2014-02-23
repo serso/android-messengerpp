@@ -16,24 +16,68 @@
 
 package org.solovyev.android.messenger.users;
 
-import org.solovyev.common.listeners.AbstractTypedJEvent;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.common.listeners.JEvent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class ContactUiEvent extends AbstractTypedJEvent<User, ContactUiEventType> {
-
-	public ContactUiEvent(@Nonnull User contact, @Nonnull ContactUiEventType type, @Nullable Object data) {
-		super(contact, type, data);
-	}
+public abstract class ContactUiEvent implements JEvent {
 
 	@Nonnull
-	public User getContact() {
-		return getEventObject();
+	public final User contact;
+
+	protected ContactUiEvent(@Nonnull User contact) {
+		this.contact = contact;
 	}
 
-	@Nonnull
-	public ContactUiEventType getDataAsEventType() {
-		return (ContactUiEventType) getData();
+	public static class Clicked extends ContactUiEvent {
+
+		public Clicked(@Nonnull User contact) {
+			super(contact);
+		}
+	}
+
+	public static class OpenChat extends ContactUiEvent {
+
+		@Nonnull
+		public final Account account;
+
+		public OpenChat(@Nonnull User contact, @Nonnull Account account) {
+			super(contact);
+			this.account = account;
+		}
+	}
+
+	public static class Edit extends ContactUiEvent {
+
+		@Nonnull
+		public final Account account;
+
+		public Edit(@Nonnull User contact, @Nonnull Account account) {
+			super(contact);
+			this.account = account;
+		}
+	}
+
+	public static class ShowCompositeDialog extends ContactUiEvent {
+
+		@Nonnull
+		public final ContactUiEventType nextEventType;
+
+		public ShowCompositeDialog(@Nonnull User contact, @Nonnull ContactUiEventType nextEventType) {
+			super(contact);
+			this.nextEventType = nextEventType;
+		}
+	}
+
+	public static class Typed extends ContactUiEvent {
+
+		@Nonnull
+		public final ContactUiEventType type;
+
+		public Typed(@Nonnull User contact, @Nonnull ContactUiEventType type) {
+			super(contact);
+			this.type = type;
+		}
 	}
 }

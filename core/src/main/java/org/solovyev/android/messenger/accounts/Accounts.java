@@ -1,6 +1,8 @@
 package org.solovyev.android.messenger.accounts;
 
+import android.content.Context;
 import android.os.Bundle;
+import org.solovyev.android.messenger.App;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,5 +51,19 @@ public final class Accounts {
 	@Nullable
 	public static String getAccountIdFromArguments(@Nonnull Bundle arguments) {
 		return arguments.getString(Accounts.ARG_ACCOUNT_ID);
+	}
+
+	@Nonnull
+	public static String getAccountName(@Nonnull Account account) {
+		return getAccountName(App.getApplication(), App.getAccountService(), account);
+	}
+
+	@Nonnull
+	public static String getAccountName(@Nonnull Context context, @Nonnull AccountService accountService, @Nonnull Account account) {
+		if (accountService.isOneAccount(account.getRealm())) {
+			return account.getDisplayName(context);
+		} else {
+			return account.getDisplayName(context) + "/" + account.getUser().getDisplayName();
+		}
 	}
 }

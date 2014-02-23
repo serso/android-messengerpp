@@ -54,7 +54,7 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 	private JEventListener<ChatEvent> chatEventListener;
 
 	public BaseChatsFragment() {
-		super(TAG, R.string.mpp_messages, true, true);
+		super(TAG, R.string.mpp_chats, true, true);
 	}
 
 	@Override

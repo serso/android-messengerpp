@@ -19,6 +19,7 @@ package org.solovyev.android.messenger;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
@@ -29,10 +30,14 @@ import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
+import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatUiEvent;
 import org.solovyev.android.messenger.chats.ChatUiEventListener;
+import org.solovyev.android.messenger.chats.Chats;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
+import org.solovyev.android.messenger.users.CompositeUserDialogFragment;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.ContactUiEventListener;
 import org.solovyev.android.view.SwipeGestureListener;
@@ -40,6 +45,7 @@ import org.solovyev.android.wizard.Wizard;
 import org.solovyev.android.wizard.Wizards;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,6 +73,8 @@ public final class MainActivity extends BaseFragmentActivity {
 	private static final String SELECTED_TAB = "selected_tab";
 
 	private static final String INTENT_SHOW_UNREAD_MESSAGES_ACTION = "show_unread_messages";
+	private static final String INTENT_OPEN_CHAT_ACTION = "open_chat";
+	private static final String INTENT_OPEN_CHAT_ACTION_CHAT_ID = "chat_id";
 
     /*
 	**********************************************************************
@@ -97,18 +105,30 @@ public final class MainActivity extends BaseFragmentActivity {
     **********************************************************************
     */
 
-	public static void start(@Nonnull Activity activity) {
-		if (!running) {
+	public static boolean tryStart(@Nonnull Activity activity) {
+		final boolean shouldStart = !running;
+
+		if (shouldStart) {
 			final Intent result = new Intent();
 			result.setClass(activity, MainActivity.class);
 			activity.startActivity(result);
 		}
+
+		return shouldStart;
 	}
 
 	public static void startForUnreadMessages(@Nonnull Activity activity) {
 		final Intent result = new Intent();
 		result.setClass(activity, MainActivity.class);
 		result.setAction(INTENT_SHOW_UNREAD_MESSAGES_ACTION);
+		activity.startActivity(result);
+	}
+
+	public static void startForChat(@Nonnull Activity activity, @Nonnull Chat chat) {
+		final Intent result = new Intent();
+		result.setClass(activity, MainActivity.class);
+		result.setAction(INTENT_OPEN_CHAT_ACTION);
+		result.putExtra(INTENT_OPEN_CHAT_ACTION_CHAT_ID, chat.getEntity());
 		activity.startActivity(result);
 	}
 
@@ -133,13 +153,24 @@ public final class MainActivity extends BaseFragmentActivity {
 	}
 
 	private void handleIntent(@Nonnull Intent intent) {
-		if (areEqual(intent.getAction(), INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
+		final String action = intent.getAction();
+		if (areEqual(action, INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
 			getUiHandler().post(new Runnable() {
 				@Override
 				public void run() {
 					openUnreadChat(MainActivity.this);
 				}
 			});
+		} else if (areEqual(action, INTENT_OPEN_CHAT_ACTION)) {
+			final Parcelable chatId = intent.getParcelableExtra(INTENT_OPEN_CHAT_ACTION_CHAT_ID);
+			if (chatId instanceof Entity) {
+				getUiHandler().post(new Runnable() {
+					@Override
+					public void run() {
+						Chats.openChat(MainActivity.this, (Entity) chatId);
+					}
+				});
+			}
 		}
 	}
 
@@ -166,7 +197,13 @@ public final class MainActivity extends BaseFragmentActivity {
 
 		listeners.add(UiEvent.class, new UiEventListener(this));
 		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
-		listeners.add(ContactUiEvent.class, new ContactUiEventListener(this, getAccountService()));
+		listeners.add(ContactUiEvent.Typed.class, new ContactUiEventListener(this, getAccountService()));
+		listeners.add(ContactUiEvent.ShowCompositeDialog.class, new EventListener<ContactUiEvent.ShowCompositeDialog>() {
+			@Override
+			public void onEvent(ContactUiEvent.ShowCompositeDialog event) {
+				CompositeUserDialogFragment.show(event.contact, event.nextEventType, MainActivity.this);
+			}
+		});
 		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
 
 		if (isNewInstallation()) {
@@ -198,29 +235,39 @@ public final class MainActivity extends BaseFragmentActivity {
 	private void initTabs(@Nullable Bundle savedInstanceState) {
 		final ActionBar actionBar = getSupportActionBar();
 
-		tabsEnabled = false;
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		final boolean showTabs = tabFragments.size() > 1;
+		if (showTabs) {
+			tabsEnabled = false;
 
-		for (PrimaryFragment tabFragment : tabFragments) {
-			addTab(tabFragment);
-		}
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		int selectedTab = -1;
-		if (savedInstanceState != null) {
-			selectedTab = savedInstanceState.getInt(SELECTED_TAB, -1);
-		}
+			for (PrimaryFragment tabFragment : tabFragments) {
+				addTab(tabFragment);
+			}
 
-		if (selectedTab >= 0) {
-			actionBar.setSelectedNavigationItem(selectedTab);
-		}
+			int selectedTab = -1;
+			if (savedInstanceState != null) {
+				selectedTab = savedInstanceState.getInt(SELECTED_TAB, -1);
+			}
 
-		gestureDetector = new GestureDetector(this, new SwipeTabsGestureListener());
+			if (selectedTab >= 0) {
+				actionBar.setSelectedNavigationItem(selectedTab);
+			}
 
-		tabsEnabled = true;
+			gestureDetector = new GestureDetector(this, new SwipeTabsGestureListener());
 
-		// activity created first time => we must select first tab
-		if (selectedTab == -1) {
-			actionBar.setSelectedNavigationItem(0);
+			tabsEnabled = true;
+
+			if (selectedTab == -1) {
+				// activity created first time => we must select first tab
+				actionBar.setSelectedNavigationItem(0);
+			}
+		} else {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			if (savedInstanceState == null) {
+				// activity created first time => we must set main fragment
+				fragmentManager.setMainFragment(tabFragments.get(0));
+			}
 		}
 	}
 

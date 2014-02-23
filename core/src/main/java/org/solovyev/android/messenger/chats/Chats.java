@@ -45,8 +45,8 @@ public final class Chats {
 	}
 
 	@Nonnull
-	static String getDisplayName(@Nonnull Chat chat, @Nullable Message lastMessage, @Nonnull User user, int unreadMessagesCount) {
-		String result = getDisplayName(chat, lastMessage, user);
+	static String getDisplayName(@Nonnull Chat chat, @Nullable Message lastMessage, int unreadMessagesCount) {
+		String result = getDisplayName(chat, lastMessage);
 		if (unreadMessagesCount > 0) {
 			result += " (" + unreadMessagesCount + ")";
 		}
@@ -54,7 +54,7 @@ public final class Chats {
 	}
 
 	@Nonnull
-	static String getDisplayName(@Nonnull Chat chat, @Nullable Message message, @Nonnull User user) {
+	public static String getDisplayName(@Nonnull Chat chat, @Nullable Message message) {
 		final String chatTitle = chat.getTitle();
 		if (isEmptyTitle(chatTitle)) {
 			final String messageTitle = message != null ? message.getTitle() : null;
@@ -66,9 +66,11 @@ public final class Chats {
 					return "";
 				}
 			} else {
+				assert messageTitle != null;
 				return messageTitle;
 			}
 		} else {
+			assert chatTitle != null;
 			return chatTitle;
 		}
 	}
@@ -133,10 +135,14 @@ public final class Chats {
 	public static void openUnreadChat(@Nonnull Context context) {
 		final Entity chatId = getUnreadMessagesCounter().getUnreadChat();
 		if (chatId != null) {
-			final Chat chat = getChatService().getChatById(chatId);
-			if (chat != null) {
-				getEventManager(context).fire(ChatUiEventType.open_chat.newEvent(chat));
-			}
+			openChat(context, chatId);
+		}
+	}
+
+	public static void openChat(@Nonnull Context context, @Nonnull Entity chatId) {
+		final Chat chat = getChatService().getChatById(chatId);
+		if (chat != null) {
+			getEventManager(context).fire(ChatUiEventType.open_chat.newEvent(chat));
 		}
 	}
 }

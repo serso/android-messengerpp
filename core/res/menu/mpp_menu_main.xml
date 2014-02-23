@@ -32,6 +32,11 @@
 			a:showAsAction="always|withText"/>
 
 	<item
+			a:id="@+id/mpp_menu_contacts"
+			a:title="@string/mpp_contacts"
+			a:showAsAction="never"/>
+
+	<item
 			a:id="@+id/mpp_menu_accounts"
 			a:title="@string/mpp_menu_accounts"
 			a:showAsAction="never"/>

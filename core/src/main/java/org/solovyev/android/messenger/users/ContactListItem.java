@@ -29,6 +29,7 @@ import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
@@ -41,7 +42,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.users.ContactUiEventType.contact_clicked;
 import static org.solovyev.android.messenger.users.ContactUiEventType.mark_all_messages_read;
 import static org.solovyev.android.messenger.users.UiContact.newUiContact;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
@@ -76,7 +76,7 @@ public final class ContactListItem extends BaseMessengerListItem<UiContact> {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull final Context context, @Nonnull final ListAdapter<? extends ListItem> adapter) {
-				getEventManager(context).fire(contact_clicked.newEvent(getContact()));
+				getEventManager(context).fire(new ContactUiEvent.Clicked(getContact()));
 			}
 		};
 	}
@@ -165,15 +165,11 @@ public final class ContactListItem extends BaseMessengerListItem<UiContact> {
 		} else {
 			accountName.setVisibility(VISIBLE);
 			if (account != null) {
-				if (accountService.isOneAccount(account.getRealm())) {
-					accountName.setText(account.getDisplayName(context));
-				} else {
-					accountName.setText(account.getDisplayName(context) + "/" + account.getUser().getDisplayName());
-				}
+				accountName.setText(Accounts.getAccountName(context, accountService, account));
 			}
 		}
 
-		fillContactPresenceViews(context, viewTag, contact, account);
+		fillContactPresenceViews(context, viewTag, contact, account, false);
 	}
 
 	/*

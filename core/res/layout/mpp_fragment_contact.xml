@@ -26,9 +26,31 @@
 				a:id="@+id/mpp_fragment_title"
 				style="?mpp_fragment_title"/>
 
-		<ImageView
-				a:id="@+id/mpp_contact_icon_imageview"
-				style="?mpp_fragment_icon"/>
+		<LinearLayout a:layout_width="match_parent"
+					  a:layout_height="wrap_content"
+					  a:orientation="horizontal">
+
+			<ImageView
+					a:id="@+id/mpp_contact_icon_imageview"
+					style="?mpp_fragment_icon"/>
+
+			<LinearLayout a:layout_width="match_parent"
+						  a:layout_height="wrap_content"
+						  a:layout_gravity="center_vertical|left"
+						  a:orientation="vertical">
+
+				<TextView
+						a:paddingTop="0dp"
+						a:id="@+id/mpp_contact_name_textview"
+						style="?attr/mpp_section_name"/>
+
+				<TextView
+						a:id="@+id/mpp_contact_account_textview"
+						style="?attr/mpp_section_content"/>
+
+			</LinearLayout>
+
+		</LinearLayout>
 
 		<LinearLayout
 				a:id="@+id/mpp_contact_properties_viewgroup"

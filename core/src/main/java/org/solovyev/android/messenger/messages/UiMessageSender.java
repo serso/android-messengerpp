@@ -17,10 +17,10 @@
 package org.solovyev.android.messenger.messages;
 
 import android.support.v4.app.FragmentActivity;
-
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.common.text.Strings;
 
@@ -31,7 +31,6 @@ import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.messages.SendMessageAsyncTask.SendingMessage.newSendingMessage;
 import static org.solovyev.android.messenger.users.ContactUiEventType.resend_message;
-import static org.solovyev.android.messenger.users.ContactUiEventType.show_composite_user_dialog;
 
 final class UiMessageSender {
 
@@ -115,7 +114,7 @@ final class UiMessageSender {
 		if (account.isCompositeUser(contact)) {
 			if (!account.isCompositeUserDefined(contact)) {
 				result = false;
-				getEventManager(activity).fire(show_composite_user_dialog.newEvent(contact, resend_message));
+				getEventManager(activity).fire(new ContactUiEvent.ShowCompositeDialog(contact, resend_message));
 			}
 		}
 

@@ -49,9 +49,9 @@
 				 android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
 
 		<activity android:label="@string/mpp_app_short_name" android:name=".StartActivity"
-				  android:windowSoftInputMode="adjustPan">
+				  android:theme="@android:style/Theme.Translucent.NoTitleBar">
 
-		<intent-filter>
+			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
@@ -80,6 +80,9 @@
 
 		<activity android:label="@string/mpp_accounts"
 				  android:name=".accounts.AccountsActivity"/>
+
+		<activity android:label="@string/mpp_contacts"
+				  android:name=".users.ContactsActivity"/>
 
 		<activity android:label="@string/mpp_new_contact"
 				  android:name=".NewContactActivity"/>

@@ -17,36 +17,17 @@
 package org.solovyev.android.messenger.users;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public enum ContactUiEventType {
 
 	contact_clicked,
 	call_contact,
 	resend_message,
-	edit_contact,
 	view_contact,
-	mark_all_messages_read,
-	open_contact_chat,
-	show_composite_user_dialog {
-		@Override
-		protected void checkData(@Nullable Object data) {
-			assert data instanceof ContactUiEventType;
-		}
-	};
+	mark_all_messages_read;
 
 	@Nonnull
 	public ContactUiEvent newEvent(@Nonnull User contact) {
-		return newEvent(contact, null);
-	}
-
-	@Nonnull
-	public ContactUiEvent newEvent(@Nonnull User contact, @Nullable Object data) {
-		checkData(data);
-		return new ContactUiEvent(contact, this, data);
-	}
-
-	protected void checkData(@Nullable Object data) {
-		assert data == null;
+		return new ContactUiEvent.Typed(contact, this);
 	}
 }

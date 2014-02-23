@@ -104,7 +104,7 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 	@Nonnull
 	@Override
 	protected String getDisplayName(@Nonnull UiChat uiChat, @Nonnull Context context) {
-		return Chats.getDisplayName(uiChat.getChat(), uiChat.getLastMessage(), uiChat.getUser(), uiChat.getUnreadMessagesCount());
+		return Chats.getDisplayName(uiChat.getChat(), uiChat.getLastMessage(), uiChat.getUnreadMessagesCount());
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 
 	private void fillContactPresence(@Nonnull UiChat uiChat, @Nonnull ViewAwareTag viewTag, @Nonnull Context context) {
 		final Entity secondUser = uiChat.getChat().getSecondUser();
-		fillContactPresenceViews(context, viewTag, getUserService().getUserById(secondUser), uiChat.getAccount());
+		fillContactPresenceViews(context, viewTag, getUserService().getUserById(secondUser), uiChat.getAccount(), true);
 	}
 
 	private void fillContactPresences(UiChat uiChat, ViewAwareTag viewTag) {

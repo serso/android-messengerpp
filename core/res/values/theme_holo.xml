@@ -138,7 +138,7 @@
 		<item name="mpp_form_button">@style/mpp_form_button</item>
 		<item name="mpp_form_checkbox">@style/mpp_form_checkbox</item>
 		<item name="mpp_list_fragment">@style/mpp_list_fragment</item>
-		<item name="mpp_fragment">@style/mpp_fragment</item>
+		<item name="mpp_fragment">@style/mpp_fragment_dialog</item>
 		<item name="mpp_fragment_icon">@style/mpp_fragment_icon</item>
 		<item name="mpp_fragment_title">@style/mpp_fragment_title</item>
 		<item name="mpp_section_name">@style/mpp_section_name</item>

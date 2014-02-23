@@ -104,6 +104,7 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 			menuItems.add(new SettingsMenuItem());
 			menuItems.add(new AboutMenuItem());
 			menuItems.add(new AccountsMenuItem());
+			menuItems.add(new ContactsMenuItem());
 			menuItems.add(new MenuItemAppExitMenuItem());
 
 			this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_main, menuItems, SherlockMenuHelper.getInstance());
@@ -262,6 +263,20 @@ final class MainMenu implements ActivityMenu<Menu, MenuItem> {
 		@Override
 		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
 			getEventManager(context).fire(UiEventType.show_accounts.newEvent());
+		}
+	}
+
+	private static final class ContactsMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_contacts;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			getEventManager(context).fire(UiEventType.show_contacts.newEvent());
 		}
 	}
 }

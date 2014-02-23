@@ -45,8 +45,9 @@ public class StartActivity extends RoboActivity {
 		if (areEqual(intent.getAction(), INTENT_SHOW_UNREAD_MESSAGES_ACTION)) {
 			MainActivity.startForUnreadMessages(this);
 		} else {
-			updateStartCounter();
-			MainActivity.start(this);
+			if (MainActivity.tryStart(this)) {
+				updateStartCounter();
+			}
 		}
 
 		// we must start service from here because Android can cache application

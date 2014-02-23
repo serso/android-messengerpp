@@ -281,12 +281,12 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	@Override
 	public void onResume() {
 		super.onResume();
-		getListeners().add(ContactUiEvent.class, new EventListener<ContactUiEvent>() {
+		getListeners().add(ContactUiEvent.Typed.class, new EventListener<ContactUiEvent.Typed>() {
 			@Override
-			public void onEvent(ContactUiEvent event) {
-				switch (event.getType()) {
+			public void onEvent(ContactUiEvent.Typed event) {
+				switch (event.type) {
 					case resend_message:
-						sendMessage(event.getContact());
+						sendMessage(event.contact);
 						break;
 				}
 			}
@@ -425,6 +425,13 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 	@Override
 	protected MessagesAdapter createAdapter() {
 		return new MessagesAdapter(getActivity(), account, chat);
+	}
+
+	@Nonnull
+	@Override
+	protected CharSequence getActionBatTitle() {
+		final String displayName = Chats.getDisplayName(chat, null);
+		return isEmpty(displayName) ? super.getActionBatTitle() : displayName;
 	}
 
 	@Override

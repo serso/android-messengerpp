@@ -75,7 +75,7 @@ public final class UiChat implements Identifiable, EntityAware {
 	static UiChat loadUiChat(@Nonnull User user, @Nonnull Chat chat, @Nullable Account account) {
 		final Message lastMessage = getLastMessage(chat);
 		final int unreadMessagesCount = getUnreadMessagesCount(chat);
-		final String displayName = Chats.getDisplayName(chat, lastMessage, user, unreadMessagesCount);
+		final String displayName = Chats.getDisplayName(chat, lastMessage, unreadMessagesCount);
 		final boolean online = isParticipantsOnline(user, chat);
 
 		return new UiChat(user, chat, account, lastMessage, unreadMessagesCount, displayName, online);

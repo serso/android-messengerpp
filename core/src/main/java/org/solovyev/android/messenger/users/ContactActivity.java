@@ -62,7 +62,7 @@ public class ContactActivity extends BaseFragmentActivity {
 		final Bundle arguments = intent.getBundleExtra(ARGS_BUNDLE);
 		if (arguments != null) {
 			try {
-				fragmentManager.setMainFragment(newViewContactFragmentDef(this, arguments));
+				fragmentManager.setMainFragment(newViewContactFragmentDef(this, arguments, false));
 			} catch (IllegalArgumentException e) {
 				Log.e(TAG, e.getMessage(), e);
 				finish();

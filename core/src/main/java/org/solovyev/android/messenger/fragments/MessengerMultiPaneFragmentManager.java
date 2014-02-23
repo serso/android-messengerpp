@@ -30,8 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
-import static org.solovyev.android.messenger.fragments.PrimaryFragment.contacts;
-import static org.solovyev.android.messenger.fragments.PrimaryFragment.messages;
+import static org.solovyev.android.messenger.fragments.PrimaryFragment.chats;
 
 public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager {
 
@@ -39,8 +38,7 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 
 	static {
 		final List<PrimaryFragment> mutableTabFragments = new ArrayList<PrimaryFragment>();
-		mutableTabFragments.add(contacts);
-		mutableTabFragments.add(messages);
+		mutableTabFragments.add(chats);
 		tabFragments = unmodifiableList(mutableTabFragments);
 	}
 

@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.users;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
@@ -27,7 +26,6 @@ import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
-import org.solovyev.android.messenger.realms.Realm;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
@@ -44,8 +42,6 @@ import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.getUiHandler;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
-import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserFragmentDef;
-import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
 import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
 import static org.solovyev.android.messenger.users.ContactsInfoFragment.newViewContactsFragmentDef;
 import static org.solovyev.android.properties.Properties.newProperty;
@@ -122,51 +118,6 @@ public final class Users {
 		}
 	}
 
-	public static boolean tryShowEditUserFragment(@Nonnull final User user, @Nonnull final BaseFragmentActivity activity) {
-		final Account account = App.getAccountService().getAccountByEntity(user.getEntity());
-		final Realm realm = account.getRealm();
-		if (realm.canCreateUsers()) {
-			final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-			// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
-			getUiHandler().post(new Runnable() {
-				@Override
-				public void run() {
-					final MultiPaneFragmentDef fragmentDef = newEditUserFragmentDef(activity, account, user, true);
-
-					if (activity.isDualPane()) {
-						if (activity.isTriplePane()) {
-							mpfm.setThirdFragment(fragmentDef);
-						} else {
-							mpfm.setSecondFragment(fragmentDef);
-						}
-					} else {
-						mpfm.setMainFragment(fragmentDef);
-					}
-				}
-			});
-			return true;
-		}
-
-		return false;
-	}
-
-	public static void showViewUserFragment(@Nonnull final User user, @Nonnull final BaseFragmentActivity activity) {
-		final Account account = App.getAccountService().getAccountByEntity(user.getEntity());
-
-		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-		// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
-		getUiHandler().post(new Runnable() {
-			@Override
-			public void run() {
-				if (activity.isDualPane()) {
-					mpfm.setSecondFragment(newViewContactFragmentDef(activity, account, user.getEntity()));
-				} else {
-					mpfm.setMainFragment(newViewContactFragmentDef(activity, account, user.getEntity()));
-				}
-			}
-		});
-	}
-
 	public static void showViewUsersFragment(@Nonnull final List<User> users, @Nonnull final BaseFragmentActivity activity) {
 		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
 		// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
@@ -190,21 +141,14 @@ public final class Users {
 	public static void fillContactPresenceViews(@Nonnull final Context context,
 												@Nonnull ViewAwareTag viewTag,
 												@Nonnull final User contact,
-												@Nullable Account account) {
+												@Nullable Account account,
+												boolean showCall) {
 		final View contactOnline = viewTag.getViewById(R.id.mpp_li_contact_online_view);
 		final View contactCall = viewTag.getViewById(R.id.mpp_li_contact_call_view);
 		final View contactDivider = viewTag.getViewById(R.id.mpp_li_contact_divider_view);
-		if (account == null || !account.canCall(contact)) {
-			contactCall.setOnClickListener(null);
-			contactCall.setVisibility(GONE);
-			contactDivider.setVisibility(GONE);
 
-			if (contact.isOnline()) {
-				contactOnline.setVisibility(VISIBLE);
-			} else {
-				contactOnline.setVisibility(GONE);
-			}
-		} else {
+		final boolean canCall = account != null && account.canCall(contact);
+		if (showCall && canCall) {
 			contactOnline.setVisibility(GONE);
 
 			// for some reason following properties set from styles xml are not applied => apply them manually
@@ -220,6 +164,16 @@ public final class Users {
 			});
 
 			contactDivider.setVisibility(VISIBLE);
+		} else {
+			contactCall.setOnClickListener(null);
+			contactCall.setVisibility(GONE);
+			contactDivider.setVisibility(GONE);
+
+			if (contact.isOnline()) {
+				contactOnline.setVisibility(VISIBLE);
+			} else {
+				contactOnline.setVisibility(GONE);
+			}
 		}
 	}
 
