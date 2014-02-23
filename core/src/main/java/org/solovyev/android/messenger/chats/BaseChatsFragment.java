@@ -16,6 +16,7 @@
 
 package org.solovyev.android.messenger.chats;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -23,10 +24,7 @@ import org.solovyev.android.fragments.DetachableFragment;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
-import org.solovyev.android.messenger.BaseAsyncListFragment;
-import org.solovyev.android.messenger.SyncRefreshListener;
-import org.solovyev.android.messenger.ToggleFilterInputMenuItem;
-import org.solovyev.android.messenger.UiThreadEventListener;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
@@ -132,7 +130,12 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 		}
 	}
 
-    /*
+	@Override
+	protected void onEmptyList(@Nonnull BaseFragmentActivity activity) {
+		// we don't want to emptify other fragments
+	}
+
+	/*
 	**********************************************************************
     *
     *                           MENU
@@ -153,8 +156,22 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 			final List<IdentifiableMenuItem<MenuItem>> menuItems = new ArrayList<IdentifiableMenuItem<MenuItem>>();
 
 			menuItems.add(new ToggleFilterInputMenuItem(BaseChatsFragment.this));
+			menuItems.add(new NewChatMenuItem());
 
 			return ListActivityMenu.fromResource(R.menu.mpp_menu_chats, menuItems, SherlockMenuHelper.getInstance());
+		}
+	}
+
+	private class NewChatMenuItem implements IdentifiableMenuItem<MenuItem> {
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_new_chat;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem data, @Nonnull Context context) {
+			getEventManager().fire(UiEventType.new_chat.newEvent());
 		}
 	}
 }

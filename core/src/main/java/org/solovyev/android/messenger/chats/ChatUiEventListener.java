@@ -98,12 +98,18 @@ public class ChatUiEventListener implements EventListener<ChatUiEvent> {
 		final BaseListFragment<?> chatsFragment = fm.getFragment(CHATS_FRAGMENT_TAG);
 		if (chatsFragment != null && chatsFragment.isVisible()) {
 			fragmentSet = chatsFragment.clickItemById(chat.getId());
+			if (!fragmentSet) {
+				chatsFragment.unselect();
+			}
 		} else {
 			if (chat.isPrivate()) {
 				final Entity contact = chat.getSecondUser();
 				final BaseListFragment<?> contactsFragment = fm.getFragment(CONTACTS_FRAGMENT_TAG);
 				if (contactsFragment != null && contactsFragment.isVisible()) {
 					fragmentSet = contactsFragment.clickItemById(contact.getEntityId());
+					if (!fragmentSet) {
+						contactsFragment.unselect();
+					}
 				} else {
 					fragmentSet = false;
 				}

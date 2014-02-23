@@ -29,7 +29,9 @@ import org.solovyev.android.messenger.core.R;
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.isBigScreen;
+import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserFragmentDef;
 import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
+import static org.solovyev.android.messenger.users.Users.newEditUserArguments;
 import static org.solovyev.android.messenger.users.Users.newUserArguments;
 
 public class ContactActivity extends BaseFragmentActivity {
@@ -41,7 +43,7 @@ public class ContactActivity extends BaseFragmentActivity {
 	static void open(@Nonnull Activity activity, @Nonnull User contact, boolean edit) {
 		final Account account = App.getAccountService().getAccountByEntity(contact.getEntity());
 		final Intent intent = new Intent(activity, isBigScreen(activity) ? ContactActivity.Dialog.class : ContactActivity.class);
-		intent.putExtra(ARGS_BUNDLE, newUserArguments(account, contact));
+		intent.putExtra(ARGS_BUNDLE, edit ? newEditUserArguments(account, contact) : newUserArguments(account, contact));
 		intent.putExtra(ARGS_EDIT, edit);
 		Activities.startActivity(intent, activity);
 	}
@@ -60,9 +62,14 @@ public class ContactActivity extends BaseFragmentActivity {
 
 		final Intent intent = getIntent();
 		final Bundle arguments = intent.getBundleExtra(ARGS_BUNDLE);
+		final boolean edit = intent.getBooleanExtra(ARGS_EDIT, false);
 		if (arguments != null) {
 			try {
-				fragmentManager.setMainFragment(newViewContactFragmentDef(this, arguments, false));
+				if (edit) {
+					fragmentManager.setMainFragment(newEditUserFragmentDef(this, arguments, false));
+				} else {
+					fragmentManager.setMainFragment(newViewContactFragmentDef(this, arguments, false));
+				}
 			} catch (IllegalArgumentException e) {
 				Log.e(TAG, e.getMessage(), e);
 				finish();

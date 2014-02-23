@@ -74,8 +74,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.FrameLayout.LayoutParams;
 import static android.widget.LinearLayout.VERTICAL;
-import static org.solovyev.android.messenger.AdapterSelection.newSelection;
-import static org.solovyev.android.messenger.AdapterSelection.restoreSelection;
+import static org.solovyev.android.messenger.AdapterSelection.*;
 import static org.solovyev.android.messenger.App.getTheme;
 import static org.solovyev.android.messenger.App.newTag;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -91,8 +90,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
     *
     **********************************************************************
     */
-
-	protected static final int NOT_SELECTED_POSITION = -1;
 
 	/**
 	 * Constants are copied from list fragment, see {@link android.support.v4.app.ListFragment}
@@ -239,7 +236,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           GETTERS
     *
@@ -620,7 +617,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			final int position = selection.getPosition();
 
 			if (position < 0) {
-				final int defaultPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED_POSITION;
+				final int defaultPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED;
 				if (savedInstanceState != null) {
 					restoredAdapterSelection = restoreSelection(savedInstanceState, defaultPosition);
 				} else {
@@ -873,6 +870,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				}
 			}
 		}
+	}
+
+	public void unselect() {
+		adapter.getSelectionHelper().unselect();
 	}
 
     /*

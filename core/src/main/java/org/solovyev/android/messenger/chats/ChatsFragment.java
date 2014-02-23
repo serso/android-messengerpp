@@ -18,8 +18,10 @@ package org.solovyev.android.messenger.chats;
 
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
+import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public final class ChatsFragment extends BaseChatsFragment {
@@ -37,5 +39,11 @@ public final class ChatsFragment extends BaseChatsFragment {
 		final String query = filterText == null ? null : filterText.toString();
 		((BaseChatsAdapter) adapter).setQuery(query);
 		return new ChatsAsyncLoader(getActivity(), adapter, onPostExecute, query, getMaxSize());
+	}
+
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return null;
 	}
 }

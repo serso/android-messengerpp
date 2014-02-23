@@ -385,11 +385,12 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	private static double getScreenDiagonal(@Nonnull Activity activity) {
 		final Display display = activity.getWindowManager().getDefaultDisplay();
-		final DisplayMetrics displayMetrics = new DisplayMetrics();
-		display.getMetrics(displayMetrics);
 
-		final float width = displayMetrics.widthPixels / displayMetrics.densityDpi;
-		final float height = displayMetrics.heightPixels / displayMetrics.densityDpi;
+		final DisplayMetrics dm = new DisplayMetrics();
+		display.getMetrics(dm);
+
+		final double width = dm.widthPixels / dm.xdpi;
+		final double height = dm.heightPixels / dm.ydpi;
 
 		return sqrt(width * width + height * height);
 	}

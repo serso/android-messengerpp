@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 serso aka se.solovyev
+ * Copyright 2014 serso aka se.solovyev
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,12 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger;
+package org.solovyev.android.messenger.users;
 
 import javax.annotation.Nonnull;
 
-public enum UiEventType {
-	show_realms,
-	new_chat,
-	new_contact,
-	exit,
-	show_settings,
-	show_contacts,
-	show_about,
-	show_accounts;
+public class PickContactFragment extends ContactsFragment {
 
 	@Nonnull
-	private UiEvent uiEvent;
-
-	private UiEventType() {
-		this.uiEvent = new UiEvent(this, null);
-	}
-
-	@Nonnull
-	public UiEvent newEvent() {
-		return uiEvent;
-	}
+	public static final String FRAGMENT_TAG = "pick_contact";
 }

@@ -19,7 +19,6 @@ package org.solovyev.android.messenger;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -58,7 +57,7 @@ public class ListViewFilter {
     */
 
 	@Nonnull
-	private final ListFragment fragment;
+	private final BaseListFragment fragment;
 
 	@Nonnull
 	private final FilterableListView filterableListView;
@@ -71,7 +70,7 @@ public class ListViewFilter {
 	@Nullable
 	private Bundle lastSavedInstanceState;
 
-	public ListViewFilter(@Nonnull ListFragment fragment, @Nonnull FilterableListView filterableListView) {
+	public ListViewFilter(@Nonnull BaseListFragment fragment, @Nonnull FilterableListView filterableListView) {
 		this.fragment = fragment;
 		this.filterableListView = filterableListView;
 	}
@@ -82,40 +81,36 @@ public class ListViewFilter {
 
 	@Nonnull
 	public View createView(@Nullable Bundle savedInstanceState) {
-		final FragmentActivity activity = fragment.getActivity();
-		if (activity != null) {
-			final ViewGroup result = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_list_filter).build(activity);
+		final Context context = fragment.getThemeContext();
+		final ViewGroup result = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_list_filter).build(context);
 
-			filterEditText = (EditText) result.findViewById(R.id.mpp_filter_edittext);
-			if (savedInstanceState != null) {
-				filterEditText.setText(savedInstanceState.getString(BUNDLE_FILTER));
-			}
-			filterEditText.addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				}
-
-				@Override
-				public void onTextChanged(CharSequence s, int start, int before, int count) {
-					/**
-					 *  Fragment's {@link android.support.v4.app.Fragment#restoreViewState()} is called after {@link android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)} =>
-					 *  => we need to update view visibility according to restored values
-					 */
-					if (!Strings.isEmpty(s)) {
-						setFilterBoxVisible(true);
-					}
-					filterableListView.filter(s);
-				}
-
-				@Override
-				public void afterTextChanged(Editable s) {
-				}
-			});
-
-			return result;
-		} else {
-			throw new IllegalStateException("Activity must be attached to fragment before creating filter!");
+		filterEditText = (EditText) result.findViewById(R.id.mpp_filter_edittext);
+		if (savedInstanceState != null) {
+			filterEditText.setText(savedInstanceState.getString(BUNDLE_FILTER));
 		}
+		filterEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				/**
+				 *  Fragment's {@link android.support.v4.app.Fragment#restoreViewState()} is called after {@link android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)} =>
+				 *  => we need to update view visibility according to restored values
+				 */
+				if (!Strings.isEmpty(s)) {
+					setFilterBoxVisible(true);
+				}
+				filterableListView.filter(s);
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+
+		return result;
 	}
 
 	public void onViewCreated() {
@@ -194,7 +189,7 @@ public class ListViewFilter {
 	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           STATIC
     *

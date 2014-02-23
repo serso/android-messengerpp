@@ -19,7 +19,6 @@ package org.solovyev.android.messenger.users;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -34,7 +33,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.getUiHandler;
-import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserFragmentDef;
 import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
 
 public class ContactsActivity extends BaseFragmentActivity {
@@ -86,28 +84,11 @@ public class ContactsActivity extends BaseFragmentActivity {
 		listeners.add(ContactUiEvent.Edit.class, new EventListener<ContactUiEvent.Edit>() {
 			@Override
 			public void onEvent(ContactUiEvent.Edit event) {
-				final User contact = event.contact;
 				final Account account = event.account;
 
 				final Realm realm = account.getRealm();
 				if (realm.canCreateUsers()) {
-					// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
-					getUiHandler().post(new Runnable() {
-						@Override
-						public void run() {
-							final MultiPaneFragmentDef fragmentDef = newEditUserFragmentDef(ContactsActivity.this, account, contact, true);
-
-							if (isDualPane()) {
-								if (isTriplePane()) {
-									fragmentManager.setThirdFragment(fragmentDef);
-								} else {
-									fragmentManager.setSecondFragment(fragmentDef);
-								}
-							} else {
-								fragmentManager.setMainFragment(fragmentDef);
-							}
-						}
-					});
+					ContactActivity.open(ContactsActivity.this, event.contact, true);
 				}
 			}
 		});

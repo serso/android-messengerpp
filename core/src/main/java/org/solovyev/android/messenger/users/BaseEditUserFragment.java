@@ -22,10 +22,8 @@ import android.view.View;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.accounts.tasks.UserSaverCallable;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.realms.Realm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,16 +52,23 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 
 	@Nonnull
 	public static MultiPaneFragmentDef newCreateUserFragmentDef(@Nonnull Context context, @Nonnull Account account, boolean addToBackStack) {
-		final Realm realm = account.getRealm();
-		final Bundle arguments = Accounts.newAccountArguments(account);
-		return MultiPaneFragmentDef.forClass(Users.CREATE_USER_FRAGMENT_TAG, addToBackStack, realm.getCreateUserFragmentClass(), context, arguments);
+		final Bundle arguments = Users.newCreateUserArguments(account);
+		return newEditUserFragmentDef(context, arguments, addToBackStack);
 	}
 
 	@Nonnull
 	public static MultiPaneFragmentDef newEditUserFragmentDef(@Nonnull Context context, @Nonnull Account account, @Nonnull User user, boolean addToBackStack) {
-		final Realm realm = account.getRealm();
-		final Bundle arguments = Users.newUserArguments(account, user);
-		return MultiPaneFragmentDef.forClass(Users.CREATE_USER_FRAGMENT_TAG, addToBackStack, realm.getCreateUserFragmentClass(), context, arguments);
+		final Bundle arguments = Users.newEditUserArguments(account, user);
+		return newEditUserFragmentDef(context, arguments, addToBackStack);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newEditUserFragmentDef(@Nonnull Context context, @Nonnull Bundle arguments, boolean addToBackStack) {
+		Class<? extends BaseEditUserFragment> clazz = Users.getCreateUserFragmentClassFromArguments(arguments);
+		if (clazz == null) {
+			throw new IllegalArgumentException("Class must be set");
+		}
+		return MultiPaneFragmentDef.forClass(Users.CREATE_USER_FRAGMENT_TAG, addToBackStack, clazz, context, arguments);
 	}
 
 	@Override

@@ -451,7 +451,10 @@ public class DefaultUserService implements UserService {
 		for (User addedContact : addedContacts) {
 			userEvents.add(UserEventType.added.newEvent(addedContact));
 		}
-		userEvents.add(UserEventType.contacts_added.newEvent(user, addedContacts));
+
+		if (!addedContacts.isEmpty()) {
+			userEvents.add(UserEventType.contacts_added.newEvent(user, addedContacts));
+		}
 
 
 		for (String removedContactId : result.getRemovedObjectIds()) {

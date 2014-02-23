@@ -55,7 +55,6 @@ import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.users.Users;
 import org.solovyev.android.messenger.view.PublicPullToRefreshListView;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
-import org.solovyev.android.view.AbstractOnRefreshListener;
 import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.android.view.PullToRefreshListViewProvider;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -357,22 +356,12 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 	@Override
 	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
-		return new AbstractOnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				syncOlderMessages();
-			}
-		};
+		return null;
 	}
 
 	@Override
 	protected ListViewAwareOnRefreshListener getBottomPullRefreshListener() {
-		return new AbstractOnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				SyncMessagesForChatAsyncTask.tryExecute(this, getActivity(), new SyncMessagesForChatAsyncTask.Input(getUser().getEntity(), chat.getEntity(), false));
-			}
-		};
+		return null;
 	}
 
 	@Override

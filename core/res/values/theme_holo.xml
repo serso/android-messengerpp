@@ -104,6 +104,7 @@
 		<item name="mpp_fragment_title">@style/mpp_fragment_title</item>
 		<item name="mpp_section_name">@style/mpp_section_name</item>
 		<item name="mpp_section_content">@style/mpp_section_content</item>
+		<item name="mpp_content">@style/mpp_content</item>
 	</style>
 
 	<style name="mpp_theme_holo_dialog" parent="Theme.Sherlock.Dialog">
@@ -132,6 +133,7 @@
 		<item name="mpp_button_bright">@style/mpp_button_bright</item>
 		<item name="mpp_form_label">@style/mpp_form_label</item>
 		<item name="mpp_form_textview">@style/mpp_form_textview</item>
+		<item name="mpp_form_edittext">@style/mpp_form_edittext</item>
 		<item name="mpp_form_spinner">@style/mpp_form_spinner</item>
 		<item name="mpp_form_password_edittext">@style/mpp_form_password_edittext</item>
 		<item name="mpp_form_buttons">@style/mpp_form_buttons</item>

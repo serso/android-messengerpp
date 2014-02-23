@@ -20,6 +20,7 @@ import android.util.Log;
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.ChatEvent;
+import org.solovyev.android.view.ListViewAwareOnRefreshListener;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
 
@@ -84,6 +85,12 @@ public class ContactsFragment extends BaseContactsFragment {
 		}
 
 		super.detachListeners();
+	}
+
+	@Nullable
+	@Override
+	protected ListViewAwareOnRefreshListener getTopPullRefreshListener() {
+		return null;
 	}
 
 	private class ChatEventListener extends AbstractJEventListener<ChatEvent> {

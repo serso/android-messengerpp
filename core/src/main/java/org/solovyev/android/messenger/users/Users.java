@@ -32,6 +32,7 @@ import org.solovyev.android.properties.AProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -56,6 +57,9 @@ public final class Users {
 
 	@Nonnull
 	private static final String ARG_USER_ID = "user_id";
+
+	@Nonnull
+	private static final String ARG_EDIT_CLASS_NAME = "edit_class_name";
 
 	@Nonnull
 	static final ContactsDisplayMode DEFAULT_CONTACTS_MODE = ContactsDisplayMode.all_contacts;
@@ -180,6 +184,38 @@ public final class Users {
 	@Nonnull
 	static Bundle newUserArguments(@Nonnull Account account, @Nonnull User user) {
 		return newUserArguments(account, user.getEntity());
+	}
+
+	@Nonnull
+	static Bundle newEditUserArguments(@Nonnull Account account, @Nonnull User user) {
+		final Bundle arguments = newUserArguments(account, user.getEntity());
+		putCreateUserFragmentClass(account, arguments);
+		return arguments;
+	}
+
+	private static void putCreateUserFragmentClass(@Nonnull Account account, @Nonnull Bundle arguments) {
+		final Class createUserFragmentClass = account.getRealm().getCreateUserFragmentClass();
+		if (createUserFragmentClass == null) {
+			throw new IllegalArgumentException("Create/edit user fragment class must be set");
+		}
+		arguments.putSerializable(ARG_EDIT_CLASS_NAME, createUserFragmentClass);
+	}
+
+	@Nullable
+	public static Class<? extends BaseEditUserFragment> getCreateUserFragmentClassFromArguments(@Nonnull Bundle arguments) {
+		final Serializable serializable = arguments.getSerializable(ARG_EDIT_CLASS_NAME);
+		if (serializable instanceof Class) {
+			return (Class) serializable;
+		} else {
+			return null;
+		}
+	}
+
+	@Nonnull
+	static Bundle newCreateUserArguments(@Nonnull Account account) {
+		final Bundle arguments = Accounts.newAccountArguments(account);
+		putCreateUserFragmentClass(account, arguments);
+		return arguments;
 	}
 
 	@Nonnull

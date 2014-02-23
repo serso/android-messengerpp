@@ -102,6 +102,7 @@
 	<string name="mpp_messages">Повідомлення</string>
 	<string name="mpp_contacts">Контакти</string>
 	<string name="mpp_chat">Чат</string>
+	<string name="mpp_pick_contact">Виберіть контакт</string>
 	<string name="mpp_pick_contact_to_start_chat">Виберіть контакт, щоб почати чат</string>
 	<string name="mpp_about_third_party_licenses">Ліцензії третіх сторін</string>
 	<string name="mpp_about">Про програму</string>

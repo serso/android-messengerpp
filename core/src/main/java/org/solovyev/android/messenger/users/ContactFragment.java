@@ -18,7 +18,6 @@ package org.solovyev.android.messenger.users;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -61,6 +60,8 @@ public class ContactFragment extends BaseUserFragment {
 
 	private ActivityMenu<Menu, MenuItem> menu;
 
+	private boolean updateUiOnResume = false;
+
 	public ContactFragment() {
 		super(R.layout.mpp_fragment_contact);
 	}
@@ -99,8 +100,12 @@ public class ContactFragment extends BaseUserFragment {
 	public void onViewCreated(@Nonnull View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
+		updateUi(root);
+	}
+
+	private void updateUi(@Nonnull View root) {
 		final User contact = getUser();
-		final FragmentActivity activity = getActivity();
+		final Context context = getThemeContext();
 
 		final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon_imageview);
 		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
@@ -112,14 +117,15 @@ public class ContactFragment extends BaseUserFragment {
 		accountName.setText(Accounts.getAccountName(getAccount()));
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
+		propertiesViewGroup.removeAllViews();
 
 		final Multimap<String, String> properties = ArrayListMultimap.create();
-		for (AProperty property : getAccountService().getUserProperties(contact, activity)) {
+		for (AProperty property : getAccountService().getUserProperties(contact, context)) {
 			properties.put(property.getName(), property.getValue());
 		}
 
 		for (Map.Entry<String, Collection<String>> entry : properties.asMap().entrySet()) {
-			final View propertyView = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property).build(activity);
+			final View propertyView = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property).build(context);
 
 			final TextView propertyLabel = (TextView) propertyView.findViewById(R.id.mpp_property_label);
 			propertyLabel.setText(entry.getKey());
@@ -142,10 +148,16 @@ public class ContactFragment extends BaseUserFragment {
 	protected void onUserChanged(@Nonnull User user) {
 		super.onUserChanged(user);
 
-		final View view = getView();
-		if (view != null) {
-			final TextView contactName = (TextView) view.findViewById(R.id.mpp_fragment_title);
-			contactName.setText(user.getDisplayName());
+		updateUiOnResume = true;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (updateUiOnResume) {
+			updateUi(getView());
+			updateUiOnResume = false;
 		}
 	}
 
@@ -179,13 +191,17 @@ public class ContactFragment extends BaseUserFragment {
 
 		final EditContactMenuItem editContactMenuItem = new EditContactMenuItem();
 		menuItems.add(editContactMenuItem);
-		menuItems.add(new OpenChatMenuItem());
+
+		final OpenChatMenuItem openChatMenuItem = new OpenChatMenuItem();
+		menuItems.add(openChatMenuItem);
 
 		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_contact, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
 			@Override
 			public boolean apply(@Nullable AMenuItem<MenuItem> menuItem) {
 				if (menuItem == editContactMenuItem) {
 					return !getAccount().getRealm().canEditUsers();
+				} else if (menuItem == openChatMenuItem) {
+					return !(getSherlockActivity() instanceof ContactsActivity);
 				}
 				return false;
 			}

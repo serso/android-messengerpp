@@ -16,19 +16,15 @@
 
 package org.solovyev.android.messenger;
 
-import com.actionbarsherlock.app.ActionBar;
 import org.solovyev.android.messenger.about.AboutActivity;
 import org.solovyev.android.messenger.accounts.AccountsActivity;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.PreferencesActivity;
 import org.solovyev.android.messenger.users.ContactsActivity;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
-import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 
 public class UiEventListener implements EventListener<UiEvent> {
 
@@ -45,8 +41,8 @@ public class UiEventListener implements EventListener<UiEvent> {
 			case show_realms:
 				onShowRealmsEvent();
 				break;
-			case new_message:
-				onNewMessageEvent();
+			case new_chat:
+				onNewChatEvent();
 				break;
 			case show_settings:
 				PreferencesActivity.start(activity);
@@ -66,12 +62,8 @@ public class UiEventListener implements EventListener<UiEvent> {
 		}
 	}
 
-	private void onNewMessageEvent() {
-		showToast(R.string.mpp_pick_contact_to_start_chat);
-		final ActionBar.Tab tab = activity.findTabByTag(CONTACTS_FRAGMENT_TAG);
-		if (tab != null) {
-			tab.select();
-		}
+	private void onNewChatEvent() {
+
 	}
 
 	private void onShowRealmsEvent() {

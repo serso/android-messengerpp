@@ -99,6 +99,7 @@
 	<string name="mpp_messages">Messages</string>
 	<string name="mpp_contacts">Contacts</string>
 	<string name="mpp_chat">Chat</string>
+	<string name="mpp_pick_contact">Pick contact</string>
 	<string name="mpp_pick_contact_to_start_chat">Pick contact to start chat</string>
 	<string name="mpp_about_third_party_licenses">Third party licenses</string>
 	<string name="mpp_about">About</string>

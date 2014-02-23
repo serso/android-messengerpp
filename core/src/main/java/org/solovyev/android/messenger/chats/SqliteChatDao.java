@@ -539,7 +539,7 @@ public class SqliteChatDao extends AbstractSQLiteHelper implements ChatDao {
 		@Nonnull
 		@Override
 		public Cursor createCursor(@Nonnull SQLiteDatabase db) {
-			String start = "select c.id, m.send_time from chats c, user_chats uc left join messages m on c.id = m.chat_id where uc.chat_id = c.id ";
+			String start = "select c.id, m.send_time from chats c, messages m, user_chats uc where c.id = m.chat_id and uc.chat_id = c.id ";
 			if (privateChat) {
 				start += "and exists (select * from chat_properties cp where cp.chat_id = c.id and cp.property_name = 'private' and cp.property_value = 'true') ";
 			}
