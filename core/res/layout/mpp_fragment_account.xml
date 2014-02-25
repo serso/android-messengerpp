@@ -22,13 +22,8 @@
 
 	<LinearLayout style="?mpp_fragment">
 
-		<TextView
-				a:id="@+id/mpp_fragment_title"
-				style="?mpp_fragment_title"/>
-
-		<ImageView
-				a:id="@+id/mpp_realm_icon_imageview"
-				style="?mpp_fragment_icon"/>
+		<include a:id="@+id/mpp_account_header" layout="@layout/mpp_property"/>
+		<include a:id="@+id/mpp_account_status" layout="@layout/mpp_property"/>
 
 		<LinearLayout style="?mpp_form_buttons">
 

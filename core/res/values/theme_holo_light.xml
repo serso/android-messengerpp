@@ -109,6 +109,20 @@
 		<item name="mpp_section_name">@style/mpp_section_name</item>
 		<item name="mpp_section_content">@style/mpp_section_content</item>
 		<item name="mpp_content">@style/mpp_content</item>
+
+        <item name="mpp_ab_search_icon">@drawable/mpp_ab_search_light</item>
+        <item name="mpp_ab_contact_icon">@drawable/mpp_ab_contact_light</item>
+        <item name="mpp_ab_contacts_icon">@drawable/mpp_ab_contacts_light</item>
+        <item name="mpp_ab_edit_icon">@drawable/mpp_ab_edit_light</item>
+        <item name="mpp_ab_add_account_icon">@drawable/mpp_ab_add_account_light_lower</item>
+        <item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add_contact_light_lower</item>
+        <item name="mpp_ab_unread_messages_counter_icon">@drawable/mpp_ab_unread_messages_counter_light</item>
+        <item name="mpp_ab_notification_icon">@drawable/mpp_ab_notification_light</item>
+        <item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_2_light</item>
+        <item name="mpp_ab_settings_icon">@drawable/mpp_ab_settings_light</item>
+        <!--todo serso: change icon-->
+        <item name="mpp_ab_about_icon">@drawable/mpp_ab_settings_light</item>
+        <item name="mpp_ab_accounts_icon">@drawable/mpp_ab_accounts_light</item>
 	</style>
 
 </resources>

@@ -132,7 +132,8 @@
 		recommend always showing the notification and exiting the app via exit button.
 	</string>
 	<string name="mpp_ok">OK</string>
-	<plurals name="mpp_unread_messages_count_notification">
+    <string name="mpp_status">Status</string>
+    <plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message</item>
 		<item quantity="other">There are %s unread messages</item>
 	</plurals>

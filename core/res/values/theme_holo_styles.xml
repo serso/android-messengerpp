@@ -293,30 +293,40 @@
 		<item name="android:contentDescription">@string/mpp_icon</item>
 	</style>
 
-	<style name="mpp_section_name" parent="mpp_text">
-		<item name="android:paddingTop">@dimen/mpp_section_padding_top</item>
-		<item name="android:textAllCaps">true</item>
+    <style name="mpp_section_container">
+        <item name="android:paddingEnd">?android:attr/scrollbarSize</item>
+        <item name="android:paddingRight">?android:attr/scrollbarSize</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+	<style name="mpp_section_name">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textStyle">bold</item>
 		<item name="android:gravity">center_vertical</item>
-		<item name="android:paddingLeft">8dip</item>
-		<item name="android:textSize">14sp</item>
 	</style>
 
+    <style name="mpp_section_content">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">4</item>
+    </style>
+
 	<style name="mpp_content">
-		<item name="android:background">@color/mpp_bg</item>
+        <item name="android:background">@color/mpp_bg</item>
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">match_parent</item>
 		<item name="android:orientation">horizontal</item>
 		<item name="android:baselineAligned">false</item>
-	</style>
-
-	<style name="mpp_section_content" parent="mpp_text">
-		<item name="android:paddingLeft">8dip</item>
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textSize">14sp</item>
 	</style>
 
 	<style name="mpp_fragment_title" parent="mpp_text">

@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.users.Users.getUserIdFromArguments;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -107,15 +108,6 @@ public class ContactFragment extends BaseUserFragment {
 		final User contact = getUser();
 		final Context context = getThemeContext();
 
-		final ImageView contactIcon = (ImageView) root.findViewById(R.id.mpp_contact_icon_imageview);
-		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
-
-		final TextView contactName = (TextView) root.findViewById(R.id.mpp_contact_name_textview);
-		contactName.setText(contact.getDisplayName());
-
-		final TextView accountName = (TextView) root.findViewById(R.id.mpp_contact_account_textview);
-		accountName.setText(Accounts.getAccountName(getAccount()));
-
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
 		propertiesViewGroup.removeAllViews();
 
@@ -124,18 +116,38 @@ public class ContactFragment extends BaseUserFragment {
 			properties.put(property.getName(), property.getValue());
 		}
 
+		final ViewFromLayoutBuilder<View> propertyDividerBuilder = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property_divider);
+
+		final ViewFromLayoutBuilder<View> propertyViewBuilder = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property);
+		final View headerView = propertyViewBuilder.build(context);
+
+		final ImageView contactIcon = (ImageView) headerView.findViewById(R.id.mpp_property_icon);
+		contactIcon.setVisibility(VISIBLE);
+		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
+
+		final TextView contactName = (TextView) headerView.findViewById(R.id.mpp_property_label);
+		contactName.setText(contact.getDisplayName());
+
+		final TextView accountName = (TextView) headerView.findViewById(R.id.mpp_property_value);
+		accountName.setText(Accounts.getAccountName(getAccount()));
+
+		propertiesViewGroup.addView(headerView);
+
 		for (Map.Entry<String, Collection<String>> entry : properties.asMap().entrySet()) {
-			final View propertyView = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property).build(context);
-
-			final TextView propertyLabel = (TextView) propertyView.findViewById(R.id.mpp_property_label);
-			propertyLabel.setText(entry.getKey());
-
 			for (String propertyValue : entry.getValue()) {
+				// add divider first
+				propertiesViewGroup.addView(propertyDividerBuilder.build(context));
+
+				final View propertyView = propertyViewBuilder.build(context);
+
+				final TextView propertyLabel = (TextView) propertyView.findViewById(R.id.mpp_property_label);
+				propertyLabel.setText(entry.getKey());
+
 				final TextView propertyValueTextView = (TextView) propertyView.findViewById(R.id.mpp_property_value);
 				propertyValueTextView.setText(propertyValue);
-			}
 
-			propertiesViewGroup.addView(propertyView);
+				propertiesViewGroup.addView(propertyView);
+			}
 		}
 
 		root.findViewById(R.id.mpp_save_button).setVisibility(GONE);

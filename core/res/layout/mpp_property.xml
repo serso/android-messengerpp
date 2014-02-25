@@ -17,16 +17,47 @@
   -->
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  a:layout_width="match_parent"
-			  a:layout_height="match_parent"
-			  a:orientation="vertical">
+    style="@style/mpp_section_container">
 
-	<TextView
-			a:id="@+id/mpp_property_label"
-			style="?attr/mpp_section_name"/>
+    <ImageView
+        a:id="@+id/mpp_property_icon"
+        style="?mpp_fragment_icon"
 
-	<TextView
-			a:id="@+id/mpp_property_value"
-			style="?attr/mpp_section_content"/>
+        a:layout_marginRight="6dip"
+        a:layout_marginEnd="6dip"
+
+        a:visibility="gone"/>
+
+    <LinearLayout
+        a:layout_marginStart="8dip"
+        a:layout_marginLeft="8dip"
+
+        a:layout_marginEnd="6dip"
+        a:layout_marginRight="6dip"
+
+        a:layout_marginTop="6dip"
+        a:layout_marginBottom="6dip"
+
+        a:layout_width="0dp"
+        a:layout_height="wrap_content"
+        a:layout_weight="1"
+        a:orientation="vertical">
+
+        <TextView
+            a:id="@+id/mpp_property_label"
+            style="?attr/mpp_section_name" />
+
+        <TextView
+            a:id="@+id/mpp_property_value"
+            style="?attr/mpp_section_content" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        a:id="@+id/mpp_property_widget"
+        a:layout_width="wrap_content"
+        a:layout_height="match_parent"
+        a:gravity="center_vertical"
+        a:visibility="gone"/>
 
 </LinearLayout>

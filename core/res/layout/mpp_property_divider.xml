@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<View xmlns:a="http://schemas.android.com/apk/res/android"
+    a:layout_width="match_parent"
+    a:layout_height="1dp"
+    a:id="@+id/mpp_property_divider"
+    a:background="?android:attr/listDivider" />

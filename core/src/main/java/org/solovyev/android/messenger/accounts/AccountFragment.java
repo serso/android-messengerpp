@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.core.R;
@@ -55,14 +56,39 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		super.onViewCreated(root, savedInstanceState);
 
 		final Account<?> account = getAccount();
-		final Realm realm = account.getRealm();
 
-		final ImageView realmIconImageView = (ImageView) root.findViewById(R.id.mpp_realm_icon_imageview);
-		realmIconImageView.setImageDrawable(getResources().getDrawable(realm.getIconResId()));
+		updateHeaderView(root, account);
+		updateStatusView(root, account);
 
 		buttons.onViewCreated(root, savedInstanceState);
 
 		onAccountStateChanged(account, root);
+	}
+
+	private void updateStatusView(@Nonnull View root, @Nonnull Account<?> account) {
+		final View status = root.findViewById(R.id.mpp_account_status);
+
+		final TextView statusLabel = (TextView) status.findViewById(R.id.mpp_property_label);
+		statusLabel.setText(R.string.mpp_status);
+
+		final TextView statusValue = (TextView) status.findViewById(R.id.mpp_property_value);
+		statusValue.setText(account.getUser().getDisplayName());
+	}
+
+	private void updateHeaderView(@Nonnull View root, @Nonnull Account<?> account) {
+		final Realm realm = account.getRealm();
+
+		final View header = root.findViewById(R.id.mpp_account_header);
+
+		final ImageView accountIcon = (ImageView) header.findViewById(R.id.mpp_property_icon);
+		accountIcon.setImageDrawable(getResources().getDrawable(realm.getIconResId()));
+		accountIcon.setVisibility(View.VISIBLE);
+
+		final TextView realmName = (TextView) header.findViewById(R.id.mpp_property_label);
+		realmName.setText(realm.getNameResId());
+
+		final TextView userName = (TextView) header.findViewById(R.id.mpp_property_value);
+		userName.setText(account.getUser().getDisplayName());
 	}
 
 	@Override
@@ -93,6 +119,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 	protected void onAccountStateChanged(@Nonnull Account<?> account, @Nullable View root) {
 		if (root != null) {
+			updateHeaderView(root, account);
 			buttons.updateAccountViews(account, root);
 		}
 	}

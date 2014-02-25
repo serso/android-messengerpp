@@ -17,51 +17,21 @@
   -->
 
 <ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
-			a:layout_width="match_parent"
-			a:layout_height="match_parent">
+    a:layout_width="match_parent"
+    a:layout_height="match_parent">
 
-	<LinearLayout style="?mpp_fragment">
+    <LinearLayout style="?mpp_fragment" a:padding="0dp">
 
-		<TextView
-				a:id="@+id/mpp_fragment_title"
-				style="?mpp_fragment_title"/>
+        <LinearLayout
+            a:id="@+id/mpp_contact_properties_viewgroup"
+            a:layout_width="match_parent"
+            a:layout_height="wrap_content"
+            a:gravity="top|left"
+            a:orientation="vertical"
+            a:paddingBottom="10dp" />
 
-		<LinearLayout a:layout_width="match_parent"
-					  a:layout_height="wrap_content"
-					  a:orientation="horizontal">
+        <include layout="@layout/mpp_fragment_edit_buttons" />
 
-			<ImageView
-					a:id="@+id/mpp_contact_icon_imageview"
-					style="?mpp_fragment_icon"/>
-
-			<LinearLayout a:layout_width="match_parent"
-						  a:layout_height="wrap_content"
-						  a:layout_gravity="center_vertical|left"
-						  a:orientation="vertical">
-
-				<TextView
-						a:paddingTop="0dp"
-						a:id="@+id/mpp_contact_name_textview"
-						style="?attr/mpp_section_name"/>
-
-				<TextView
-						a:id="@+id/mpp_contact_account_textview"
-						style="?attr/mpp_section_content"/>
-
-			</LinearLayout>
-
-		</LinearLayout>
-
-		<LinearLayout
-				a:id="@+id/mpp_contact_properties_viewgroup"
-				a:layout_width="match_parent"
-				a:layout_height="wrap_content"
-				a:gravity="top|left"
-				a:orientation="vertical"
-				a:paddingBottom="10dp"/>
-
-		<include layout="@layout/mpp_fragment_edit_buttons"/>
-
-	</LinearLayout>
+    </LinearLayout>
 
 </ScrollView>
