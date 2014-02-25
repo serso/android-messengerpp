@@ -20,10 +20,16 @@
 			a:layout_width="match_parent"
 			a:layout_height="match_parent">
 
-	<LinearLayout style="?mpp_fragment">
+	<LinearLayout style="?mpp_fragment" a:padding="0dp">
 
 		<include a:id="@+id/mpp_account_header" layout="@layout/mpp_property"/>
+		<include layout="@layout/mpp_property_divider"/>
+
 		<include a:id="@+id/mpp_account_status" layout="@layout/mpp_property"/>
+		<include layout="@layout/mpp_property_divider"/>
+
+		<include a:id="@+id/mpp_account_sync" layout="@layout/mpp_property"/>
+		<include layout="@layout/mpp_property_divider"/>
 
 		<LinearLayout style="?mpp_form_buttons">
 

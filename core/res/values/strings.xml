@@ -54,7 +54,9 @@
 	<string name="mpp_saving_user_title">Saving…</string>
 	<string name="mpp_saving_user_message">Wait a second while app is saving user</string>
 	<string name="mpp_disable">Disable</string>
+	<string name="mpp_disabled">Disabled</string>
 	<string name="mpp_enable">Enable</string>
+	<string name="mpp_enabled">Enabled</string>
 	<string name="mpp_menu_notifications">Notifications</string>
 	<string name="mpp_notification_network_problem">No internet connection available: connect to the network and try
 		again
@@ -132,8 +134,8 @@
 		recommend always showing the notification and exiting the app via exit button.
 	</string>
 	<string name="mpp_ok">OK</string>
-    <string name="mpp_status">Status</string>
-    <plurals name="mpp_unread_messages_count_notification">
+	<string name="mpp_status">Status</string>
+	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message</item>
 		<item quantity="other">There are %s unread messages</item>
 	</plurals>

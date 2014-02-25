@@ -39,17 +39,6 @@ public class AccountButtons extends BaseAccountButtons<Account<?>, AccountFragme
 				SyncAllAsyncTask.newForAccount(getActivity(), getSyncService(), account).executeInParallel((Void) null);
 			}
 		});
-
-		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
-		changeStateButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				changeState();
-			}
-		});
-		if (!account.getRealm().isEnabled()) {
-			changeStateButton.setEnabled(false);
-		}
 	}
 
 	void editAccount() {
@@ -67,12 +56,9 @@ public class AccountButtons extends BaseAccountButtons<Account<?>, AccountFragme
 
 	void updateAccountViews(@Nonnull Account<?> account, @Nonnull View root) {
 		final Button syncButton = (Button) root.findViewById(R.id.mpp_account_sync_button);
-		final Button changeStateButton = (Button) root.findViewById(R.id.mpp_account_state_button);
 		if (account.isEnabled()) {
-			changeStateButton.setText(R.string.mpp_disable);
 			syncButton.setVisibility(View.VISIBLE);
 		} else {
-			changeStateButton.setText(R.string.mpp_enable);
 			syncButton.setVisibility(View.GONE);
 		}
 	}

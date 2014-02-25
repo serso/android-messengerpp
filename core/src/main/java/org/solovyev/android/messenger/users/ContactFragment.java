@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -36,6 +35,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
+import org.solovyev.android.messenger.view.PropertyView;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -52,6 +52,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getUserService;
 import static org.solovyev.android.messenger.users.Users.getUserIdFromArguments;
+import static org.solovyev.android.messenger.view.PropertyView.newPropertyView;
 import static org.solovyev.common.text.Strings.isEmpty;
 
 public class ContactFragment extends BaseUserFragment {
@@ -118,35 +119,26 @@ public class ContactFragment extends BaseUserFragment {
 
 		final ViewFromLayoutBuilder<View> propertyDividerBuilder = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property_divider);
 
-		final ViewFromLayoutBuilder<View> propertyViewBuilder = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property);
-		final View headerView = propertyViewBuilder.build(context);
+		final PropertyView header = newPropertyView(context);
 
-		final ImageView contactIcon = (ImageView) headerView.findViewById(R.id.mpp_property_icon);
+		final ImageView contactIcon = header.getIconView();
 		contactIcon.setVisibility(VISIBLE);
 		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 
-		final TextView contactName = (TextView) headerView.findViewById(R.id.mpp_property_label);
-		contactName.setText(contact.getDisplayName());
+		header.setLabel(contact.getDisplayName());
+		header.setValue(Accounts.getAccountName(getAccount()));
 
-		final TextView accountName = (TextView) headerView.findViewById(R.id.mpp_property_value);
-		accountName.setText(Accounts.getAccountName(getAccount()));
-
-		propertiesViewGroup.addView(headerView);
+		propertiesViewGroup.addView(header.getView());
 
 		for (Map.Entry<String, Collection<String>> entry : properties.asMap().entrySet()) {
 			for (String propertyValue : entry.getValue()) {
 				// add divider first
 				propertiesViewGroup.addView(propertyDividerBuilder.build(context));
 
-				final View propertyView = propertyViewBuilder.build(context);
-
-				final TextView propertyLabel = (TextView) propertyView.findViewById(R.id.mpp_property_label);
-				propertyLabel.setText(entry.getKey());
-
-				final TextView propertyValueTextView = (TextView) propertyView.findViewById(R.id.mpp_property_value);
-				propertyValueTextView.setText(propertyValue);
-
-				propertiesViewGroup.addView(propertyView);
+				propertiesViewGroup.addView(newPropertyView(context)
+						.setLabel(entry.getKey())
+						.setValue(propertyValue)
+						.getView());
 			}
 		}
 

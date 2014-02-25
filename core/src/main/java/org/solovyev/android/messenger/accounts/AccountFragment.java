@@ -20,18 +20,25 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.sync.SyncAllAsyncTask;
+import org.solovyev.android.messenger.view.PropertyView;
+import org.solovyev.android.messenger.view.SwitchView;
 import org.solovyev.common.JPredicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static org.solovyev.android.messenger.App.getSyncService;
 import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
+import static org.solovyev.android.messenger.view.PropertyView.newPropertyView;
 
 public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
@@ -39,6 +46,12 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	public static final String FRAGMENT_TAG = "account";
 
 	private final AccountButtons buttons = new AccountButtons(this);
+
+	private PropertyView headerView;
+	private PropertyView statusView;
+	private SwitchView statusSwitch;
+	private PropertyView syncView;
+	private ImageView syncButton;
 
 	public AccountFragment() {
 		super(R.layout.mpp_fragment_account, true);
@@ -56,39 +69,58 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		super.onViewCreated(root, savedInstanceState);
 
 		final Account<?> account = getAccount();
+		final Context context = getThemeContext();
 
-		updateHeaderView(root, account);
-		updateStatusView(root, account);
+		headerView = newPropertyView(R.id.mpp_account_header, root);
+
+		statusView = newPropertyView(R.id.mpp_account_status, root);
+
+		statusSwitch = new SwitchView(context);
+		statusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				final Account<?> account = getAccount();
+				if (account.isEnabled() != isChecked) {
+					buttons.changeState();
+				}
+			}
+		});
+
+		syncButton = new ImageView(context);
+		syncButton.setImageDrawable(getResources().getDrawable(R.drawable.mpp_ab_refresh_light));
+		syncView = newPropertyView(R.id.mpp_account_sync, root);
+		syncView.getView().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SyncAllAsyncTask.newForAccount(getActivity(), getSyncService(), account).executeInParallel((Void) null);
+			}
+		});
+
+		updateView(account);
 
 		buttons.onViewCreated(root, savedInstanceState);
 
 		onAccountStateChanged(account, root);
 	}
 
-	private void updateStatusView(@Nonnull View root, @Nonnull Account<?> account) {
-		final View status = root.findViewById(R.id.mpp_account_status);
-
-		final TextView statusLabel = (TextView) status.findViewById(R.id.mpp_property_label);
-		statusLabel.setText(R.string.mpp_status);
-
-		final TextView statusValue = (TextView) status.findViewById(R.id.mpp_property_value);
-		statusValue.setText(account.getUser().getDisplayName());
-	}
-
-	private void updateHeaderView(@Nonnull View root, @Nonnull Account<?> account) {
+	private void updateView(@Nonnull Account<?> account) {
 		final Realm realm = account.getRealm();
 
-		final View header = root.findViewById(R.id.mpp_account_header);
+		statusSwitch.setChecked(account.isEnabled());
 
-		final ImageView accountIcon = (ImageView) header.findViewById(R.id.mpp_property_icon);
-		accountIcon.setImageDrawable(getResources().getDrawable(realm.getIconResId()));
-		accountIcon.setVisibility(View.VISIBLE);
+		headerView.setLabel(realm.getNameResId())
+				.setValue(account.getUser().getDisplayName())
+				.setIcon(realm.getIconResId());
 
-		final TextView realmName = (TextView) header.findViewById(R.id.mpp_property_label);
-		realmName.setText(realm.getNameResId());
+		statusView.setLabel(R.string.mpp_status)
+				.setValue(account.isEnabled() ? R.string.mpp_enabled : R.string.mpp_disabled)
+				.setWidget(statusSwitch.getView());
 
-		final TextView userName = (TextView) header.findViewById(R.id.mpp_property_value);
-		userName.setText(account.getUser().getDisplayName());
+		final DateTime lastSyncDate = account.getSyncData().getLastContactsSyncDate();
+		syncView.setLabel(R.string.mpp_sync)
+				.setValue(lastSyncDate == null ? null : lastSyncDate.toString(DateTimeFormat.mediumDateTime()))
+				.setWidget(syncButton)
+				.getView().setEnabled(account.isEnabled());
 	}
 
 	@Override
@@ -119,7 +151,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 	protected void onAccountStateChanged(@Nonnull Account<?> account, @Nullable View root) {
 		if (root != null) {
-			updateHeaderView(root, account);
+			updateView(account);
 			buttons.updateAccountViews(account, root);
 		}
 	}
