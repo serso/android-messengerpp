@@ -56,7 +56,7 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 	private UserEventListener userEventListener;
 
 	protected BaseUserFragment(int layoutResId) {
-		super(layoutResId, true);
+		super(layoutResId);
 	}
 
 	@Override

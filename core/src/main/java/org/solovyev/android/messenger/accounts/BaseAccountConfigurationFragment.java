@@ -87,7 +87,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	private NetworkStateListener networkListener;
 
 	protected BaseAccountConfigurationFragment(int layoutResId) {
-		super(layoutResId, true);
+		super(layoutResId);
 	}
 
 	@Nonnull

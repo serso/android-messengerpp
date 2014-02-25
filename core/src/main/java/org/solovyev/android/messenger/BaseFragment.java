@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 import com.google.inject.Inject;
-import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
@@ -28,8 +27,6 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 
 	private final int layoutResId;
 
-	private final boolean addPadding;
-
 	@Nonnull
 	private Context themeContext;
 
@@ -39,9 +36,8 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 	@Nonnull
 	private final FragmentUi fragmentUi = new FragmentUi(this);
 
-	public BaseFragment(int layoutResId, boolean addPadding) {
+	public BaseFragment(int layoutResId) {
 		this.layoutResId = layoutResId;
-		this.addPadding = addPadding;
 	}
 
 	@Override
@@ -62,11 +58,6 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 		final View root = ViewFromLayoutBuilder.newInstance(layoutResId).build(themeContext);
 
 		getMultiPaneManager().onCreatePane(this.getActivity(), container, root);
-
-		if (addPadding) {
-			final int padding = getThemeContext().getResources().getDimensionPixelSize(R.dimen.mpp_fragment_padding);
-			root.setPadding(padding, padding, padding, padding);
-		}
 
 		root.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 

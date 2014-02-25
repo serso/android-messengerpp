@@ -5,17 +5,15 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.Resources;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragment;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.text.Strings;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
 
 import static org.solovyev.android.Resources.readRawResourceAsString;
 
@@ -24,7 +22,7 @@ public class ThirdPartyLicensesFragment extends BaseFragment {
 	public static final String FRAGMENT_TAG = "third-party-licenses";
 
 	public ThirdPartyLicensesFragment() {
-		super(R.layout.mpp_about, true);
+		super(R.layout.mpp_about);
 	}
 
 	@Override

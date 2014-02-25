@@ -48,8 +48,9 @@
 	<attr name="mpp_fragment" format="reference"/>
 	<attr name="mpp_fragment_icon" format="reference"/>
 	<attr name="mpp_fragment_title" format="reference"/>
-	<attr name="mpp_section_name" format="reference"/>
-	<attr name="mpp_section_content" format="reference"/>
+	<attr name="mpp_property_label" format="reference"/>
+	<attr name="mpp_property_value" format="reference"/>
+	<attr name="mpp_property_group" format="reference"/>
 	<attr name="mpp_content" format="reference"/>
 
 	<declare-styleable name="mpp_attributes">
@@ -57,6 +58,7 @@
 		<attr name="mpp_ab_contact_icon" format="reference"/>
 		<attr name="mpp_ab_contacts_icon" format="reference"/>
 		<attr name="mpp_ab_edit_icon" format="reference"/>
+		<attr name="mpp_ab_remove_icon" format="reference"/>
 		<attr name="mpp_ab_add_account_icon" format="reference"/>
 		<attr name="mpp_ab_add_contact_icon" format="reference"/>
 		<attr name="mpp_ab_unread_messages_counter_icon" format="reference"/>

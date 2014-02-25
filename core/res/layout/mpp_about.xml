@@ -4,8 +4,12 @@
 			a:layout_width="match_parent"
 			a:layout_height="match_parent">
 
-<TextView a:id="@+id/mpp_about_textview"
-			  a:layout_width="match_parent"
-			  a:layout_height="wrap_content"/>
+	<FrameLayout style="?mpp_fragment">
+
+		<TextView a:id="@+id/mpp_about_textview"
+				  a:layout_width="match_parent"
+				  a:layout_height="wrap_content"/>
+
+	</FrameLayout>
 
 </ScrollView>

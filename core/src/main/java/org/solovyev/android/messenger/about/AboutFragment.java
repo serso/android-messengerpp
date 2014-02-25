@@ -21,7 +21,7 @@ public class AboutFragment extends BaseFragment {
 	public static final String FRAGMENT_TAG = "about";
 
 	public AboutFragment() {
-		super(R.layout.mpp_about, true);
+		super(R.layout.mpp_about);
 	}
 
 	@Override

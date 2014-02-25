@@ -45,11 +45,11 @@
 
 		<TextView
 				a:id="@+id/mpp_property_label"
-				style="?attr/mpp_section_name"/>
+				style="?attr/mpp_property_label"/>
 
 		<TextView
 				a:id="@+id/mpp_property_value"
-				style="?attr/mpp_section_content"
+				style="?attr/mpp_property_value"
 				a:visibility="gone"/>
 
 	</LinearLayout>

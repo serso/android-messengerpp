@@ -26,13 +26,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.inject.Inject;
 import org.solovyev.android.Views;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.App;
@@ -42,8 +37,10 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 
-import com.google.common.base.Function;
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
@@ -69,7 +66,7 @@ public class ContactsInfoFragment extends BaseFragment {
 	private Iterable<String> contactIds;
 
 	public ContactsInfoFragment() {
-		super(R.layout.mpp_fragment_contacts, true);
+		super(R.layout.mpp_fragment_contacts);
 	}
 
 	@Nonnull

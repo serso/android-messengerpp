@@ -218,7 +218,7 @@
 	<style name="mpp_button_bright" parent="mpp_button">
 	</style>
 
-	<style name="mpp_form_label" parent="mpp_section_name">
+	<style name="mpp_form_label" parent="mpp_property_label">
 	</style>
 
 	<style name="mpp_form_textview">
@@ -226,8 +226,8 @@
 		<item name="android:layout_height">wrap_content</item>
 	</style>
 
-	<style name="mpp_form_edittext" parent="mpp_section_content">
-		<item name="android:inputType">textNoSuggestions</item>
+	<style name="mpp_form_edittext" parent="mpp_property_value">
+	<item name="android:inputType">textNoSuggestions</item>
 		<item name="android:textStyle">normal</item>
 		<item name="android:lines">1</item>
 		<item name="android:maxLines">1</item>
@@ -235,7 +235,7 @@
 		<item name="android:scrollHorizontally">false</item>
 	</style>
 
-	<style name="mpp_form_spinner" parent="mpp_section_content">
+	<style name="mpp_form_spinner" parent="mpp_property_value">
 	</style>
 
 	<style name="mpp_form_password_edittext" parent="mpp_form_edittext">
@@ -276,10 +276,10 @@
 
 	<style name="mpp_fragment">
 		<!--NOTE: separate definition in order to override them-->
-		<item name="android:paddingTop">5dp</item>
-		<item name="android:paddingBottom">5dp</item>
-		<item name="android:paddingLeft">5dp</item>
-		<item name="android:paddingRight">5dp</item>
+		<item name="android:paddingTop">@dimen/mpp_fragment_padding</item>
+		<item name="android:paddingBottom">@dimen/mpp_fragment_padding</item>
+		<item name="android:paddingLeft">@dimen/mpp_fragment_padding</item>
+		<item name="android:paddingRight">@dimen/mpp_fragment_padding</item>
 
 		<item name="android:orientation">vertical</item>
 		<item name="android:layout_width">match_parent</item>
@@ -304,8 +304,8 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-	<style name="mpp_section_name">
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+	<style name="mpp_property_label">
+	<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
 
 		<item name="android:layout_width">match_parent</item>
@@ -313,8 +313,8 @@
 		<item name="android:gravity">center_vertical</item>
 	</style>
 
-    <style name="mpp_section_content">
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+	<style name="mpp_property_value">
+	<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

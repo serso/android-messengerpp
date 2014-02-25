@@ -30,8 +30,7 @@ import org.solovyev.common.text.Strings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import static android.view.View.*;
 
 public final class PropertyView {
 
@@ -87,6 +86,18 @@ public final class PropertyView {
 			setIcon(null);
 		}
 
+		return this;
+	}
+
+	@Nonnull
+	public PropertyView setRightIcon(int iconResId) {
+		if (iconResId != NO_ID) {
+			final ImageView rightIconView = new ImageView(view.getContext());
+			rightIconView.setImageDrawable(resources.getDrawable(iconResId));
+			setWidget(rightIconView);
+		} else {
+			setWidget(null);
+		}
 		return this;
 	}
 
@@ -175,5 +186,17 @@ public final class PropertyView {
 	@Nonnull
 	public View getView() {
 		return view;
+	}
+
+	@Nonnull
+	public PropertyView setOnClickListener(View.OnClickListener l) {
+		view.setOnClickListener(l);
+		return this;
+	}
+
+	@Nonnull
+	public PropertyView setOnLongClickListener(View.OnLongClickListener l) {
+		view.setOnLongClickListener(l);
+		return this;
 	}
 }

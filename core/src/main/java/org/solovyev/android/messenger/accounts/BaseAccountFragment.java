@@ -70,8 +70,8 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	@Nullable
 	private JEventListener<AccountEvent> accountEventListener;
 
-	protected BaseAccountFragment(int layoutResId, boolean addPadding) {
-		super(layoutResId, addPadding);
+	protected BaseAccountFragment(int layoutResId) {
+		super(layoutResId);
 	}
 
 	public BaseFragmentActivity getFragmentActivity() {
@@ -95,6 +95,9 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	}
 
 	protected void onAccountStateChanged(@Nonnull A account, @Nullable View root) {
+	}
+
+	protected void onAccountChanged(@Nonnull A account, @Nullable View root) {
 	}
 
 	@Override
@@ -144,6 +147,7 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 				case changed:
 					if (eventAccount.equals(account)) {
 						account = (A) eventAccount;
+						onAccountChanged(account, getView());
 					}
 					break;
 				case state_changed:

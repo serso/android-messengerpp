@@ -33,7 +33,7 @@ public final class FragmentMenu implements
 		ActionBarSherlock.OnPrepareOptionsMenuListener {
 
 	@Nonnull
-	private final BaseListFragment<?> fragment;
+	private final Fragment fragment;
 
 	@Nonnull
 	private final Builder<ActivityMenu<Menu, MenuItem>> menuBuilder;
@@ -41,7 +41,7 @@ public final class FragmentMenu implements
 	@Nullable
 	private ActivityMenu<Menu, MenuItem> menu;
 
-	public FragmentMenu(@Nonnull BaseListFragment<?> fragment, @Nonnull Builder<ActivityMenu<Menu, MenuItem>> menuBuilder) {
+	public FragmentMenu(@Nonnull Fragment fragment, @Nonnull Builder<ActivityMenu<Menu, MenuItem>> menuBuilder) {
 		this.fragment = fragment;
 		this.menuBuilder = menuBuilder;
 	}
@@ -58,7 +58,7 @@ public final class FragmentMenu implements
 	}
 
 	private boolean shouldShowMenu() {
-		if (!fragment.wasViewCreated()) {
+		if (fragment instanceof BaseListFragment && !((BaseListFragment) fragment).wasViewCreated()) {
 			// view is not created but it requests menu => show it
 			return true;
 		}
