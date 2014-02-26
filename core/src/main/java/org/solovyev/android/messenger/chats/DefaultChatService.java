@@ -28,6 +28,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.solovyev.android.list.PrefixFilter;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.core.R;
@@ -680,11 +681,11 @@ public class DefaultChatService implements ChatService {
 				final User participant = otherParticipants.get(0);
 				userService.getIconsService().setUserIcon(participant, imageView);
 			} else {
-				userService.getIconsService().setUsersIcon(account, otherParticipants, imageView);
+				imageView.setImageDrawable(App.getIconGenerator().getIcon(chat));
 			}
 		} else {
 			// just in case...
-			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user));
+			imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_user_red));
 		}
 	}
 

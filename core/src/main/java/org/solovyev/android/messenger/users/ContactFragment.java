@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,6 @@ import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.MainActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.Accounts;
-import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.view.PropertyView;
@@ -60,7 +60,6 @@ import java.util.Map;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getUserService;
-import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
 import static org.solovyev.android.messenger.users.Users.getUserIdFromArguments;
 import static org.solovyev.android.messenger.view.PropertyView.newPropertyView;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -117,7 +116,9 @@ public class ContactFragment extends BaseUserFragment {
 
 	private void updateUi(@Nonnull View root) {
 		final User contact = getUser();
+
 		final Context context = getThemeContext();
+		final Resources resources = context.getResources();
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
 		propertiesViewGroup.removeAllViews();
@@ -133,6 +134,10 @@ public class ContactFragment extends BaseUserFragment {
 
 		final ImageView contactIcon = header.getIconView();
 		contactIcon.setVisibility(VISIBLE);
+		final int iconSize = resources.getDimensionPixelSize(R.dimen.mpp_fragment_icon_size);
+		contactIcon.getLayoutParams().height = iconSize;
+		contactIcon.getLayoutParams().width = iconSize;
+		contactIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
 
 		header.setLabel(contact.getDisplayName());
@@ -140,11 +145,16 @@ public class ContactFragment extends BaseUserFragment {
 
 		propertiesViewGroup.addView(header.getView());
 
+		propertiesViewGroup.addView(propertyDividerBuilder.build(context));
+
+		boolean first = true;
 		for (Map.Entry<String, Collection<String>> entry : properties.asMap().entrySet()) {
 			for (String propertyValue : entry.getValue()) {
-				// add divider first
-				propertiesViewGroup.addView(propertyDividerBuilder.build(context));
-
+				if (first) {
+					first = false;
+				} else {
+					propertiesViewGroup.addView(propertyDividerBuilder.build(context));
+				}
 				propertiesViewGroup.addView(newPropertyView(context)
 						.setLabel(entry.getKey())
 						.setValue(propertyValue)
@@ -152,10 +162,14 @@ public class ContactFragment extends BaseUserFragment {
 			}
 		}
 
+		final View actionsDivider = root.findViewById(R.id.mpp_contact_actions_divider);
+		actionsDivider.setVisibility(first ? GONE : VISIBLE);
+
 		updateActionsVisibility(root);
 
+		final boolean canEditContact = canEditContact();
 		newPropertyView(R.id.mpp_contact_edit, root)
-				.setVisibility(canEditContact() ? VISIBLE : GONE)
+				.setVisibility(canEditContact ? VISIBLE : GONE)
 				.setLabel(R.string.mpp_edit)
 				.setRightIcon(R.drawable.mpp_ab_edit_light)
 				.setOnClickListener(new View.OnClickListener() {
@@ -165,8 +179,9 @@ public class ContactFragment extends BaseUserFragment {
 					}
 				});
 
+		final boolean canRemoveContact = canRemoveContact();
 		newPropertyView(R.id.mpp_contact_remove, root)
-				.setVisibility(canRemoveContact() ? VISIBLE : GONE)
+				.setVisibility(canRemoveContact ? VISIBLE : GONE)
 				.setLabel(R.string.mpp_remove)
 				.setRightIcon(R.drawable.mpp_ab_remove_light)
 				.setOnClickListener(new View.OnClickListener() {
@@ -176,10 +191,11 @@ public class ContactFragment extends BaseUserFragment {
 					}
 				});
 
-		getMultiPaneManager().showTitle(getSherlockActivity(), this, contact.getDisplayName());
+		final View editRemoveDivider = root.findViewById(R.id.mpp_contact_edit_remove_divider);
+		editRemoveDivider.setVisibility(canEditContact && canRemoveContact ? VISIBLE : GONE);
 	}
 
-	private void updateActionsVisibility(@Nonnull View root) {
+	private boolean updateActionsVisibility(@Nonnull View root) {
 		final BaseFragmentActivity activity = getSherlockActivity();
 
 		boolean showActions = true;
@@ -188,6 +204,8 @@ public class ContactFragment extends BaseUserFragment {
 		}
 
 		root.findViewById(R.id.mpp_contact_actions).setVisibility(showActions ? VISIBLE : GONE);
+
+		return showActions;
 	}
 
 	private void editContact() {
@@ -252,7 +270,7 @@ public class ContactFragment extends BaseUserFragment {
 	@Nullable
 	@Override
 	protected CharSequence getFragmentTitle() {
-		return getUser().getDisplayName();
+		return getString(R.string.mpp_contact_info);
 	}
 
 		/*

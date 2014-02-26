@@ -17,6 +17,8 @@
 package org.solovyev.android.messenger.realms.test;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.widget.ImageView;
 import com.google.inject.Singleton;
 import org.solovyev.android.messenger.App;
@@ -72,11 +74,20 @@ public class TestRealm extends AbstractRealm {
 		return new RealmIconService() {
 			@Override
 			public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-				imageView.setImageDrawable(App.getApplication().getResources().getDrawable(getContactIconResId(user)));
+				final int contactIconResId = getContactIconResId(user);
+
+				final Drawable icon;
+				if (contactIconResId != View.NO_ID) {
+					icon = App.getApplication().getResources().getDrawable(contactIconResId);
+				} else {
+					icon = App.getIconGenerator().getIcon(user);
+				}
+
+				imageView.setImageDrawable(icon);
 			}
 
 			private int getContactIconResId(User user) {
-				int iconResId = R.drawable.mpp_icon_user;
+				int iconResId = View.NO_ID;
 
 				try {
 					final Integer accountEntityId = Integer.valueOf(user.getEntity().getAccountEntityId());
@@ -110,7 +121,7 @@ public class TestRealm extends AbstractRealm {
 
 			@Override
 			public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
-				imageView.setImageDrawable(App.getApplication().getResources().getDrawable(R.drawable.mpp_icon_users));
+				imageView.setImageDrawable(App.getApplication().getResources().getDrawable(R.drawable.mpp_icon_users_red));
 			}
 		};
 	}

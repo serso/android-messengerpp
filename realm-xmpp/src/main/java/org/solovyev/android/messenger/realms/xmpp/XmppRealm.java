@@ -98,7 +98,7 @@ public class XmppRealm extends AbstractRealm<XmppAccountConfiguration> {
 	@Nonnull
 	@Override
 	public RealmIconService getRealmIconService() {
-		return new XmppRealmIconService(context, R.drawable.mpp_icon_user, R.drawable.mpp_icon_users);
+		return new XmppRealmIconService(context);
 	}
 
 	@Nullable

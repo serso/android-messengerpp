@@ -107,7 +107,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	private volatile HttpRealmIconService iconService;
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           CONSTRUCTORS
     *
@@ -196,7 +196,7 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 	@Override
 	public synchronized RealmIconService getRealmIconService() {
 		if (iconService == null) {
-			iconService = new HttpRealmIconService(context, imageLoader, R.drawable.mpp_icon_user, R.drawable.mpp_icon_users, iconUrlGetter, photoUrlGetter);
+			iconService = new HttpRealmIconService(context, imageLoader, iconUrlGetter, photoUrlGetter);
 		}
 		return iconService;
 	}
@@ -248,14 +248,14 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 		@Nullable
 		@Override
 		public String getUrl(@Nonnull User user) {
-			String result = user.getPropertyValueByName("photoRec");
-
-			if (result == null) {
-				result = user.getPropertyValueByName("photoBig");
-			}
+			String result = user.getPropertyValueByName("photoBig");
 
 			if (result == null) {
 				result = user.getPropertyValueByName("photo");
+			}
+
+			if (result == null) {
+				result = user.getPropertyValueByName("photoRec");
 			}
 
 			return result;

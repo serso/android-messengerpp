@@ -21,8 +21,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.view.IconGenerator;
 import org.solovyev.android.security.base64.ABase64StringDecoder;
 
 import javax.annotation.Nonnull;
@@ -34,14 +36,12 @@ public class XmppRealmIconService implements RealmIconService {
 	@Nonnull
 	private final Context context;
 
-	private final int defaultUserIconResId;
+	@Nonnull
+	private final IconGenerator iconGenerator;
 
-	private final int defaultUsersIconResId;
-
-	public XmppRealmIconService(@Nonnull Context context, int defaultUserIconResId, int defaultUsersIconResId) {
+	public XmppRealmIconService(@Nonnull Context context) {
 		this.context = context;
-		this.defaultUserIconResId = defaultUserIconResId;
-		this.defaultUsersIconResId = defaultUsersIconResId;
+		this.iconGenerator = App.getIconGenerator();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class XmppRealmIconService implements RealmIconService {
 		if (drawable != null) {
 			imageView.setImageDrawable(drawable);
 		} else {
-			imageView.setImageDrawable(context.getResources().getDrawable(defaultUserIconResId));
+			imageView.setImageDrawable(iconGenerator.getIcon(user));
 		}
 	}
 
@@ -66,7 +66,7 @@ public class XmppRealmIconService implements RealmIconService {
 
 	@Override
 	public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
-		imageView.setImageDrawable(context.getResources().getDrawable(defaultUsersIconResId));
+		imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_users_red));
 	}
 
 	@Nullable

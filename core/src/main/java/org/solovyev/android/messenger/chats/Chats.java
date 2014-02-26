@@ -76,7 +76,7 @@ public final class Chats {
 	}
 
 	private static boolean isEmptyTitle(@Nullable String title) {
-		return isEmpty(title) || title.equals(" ... ");
+		return isEmpty(title) || title.equals(" ... ") || title.equals("...");
 	}
 
 	@Nonnull

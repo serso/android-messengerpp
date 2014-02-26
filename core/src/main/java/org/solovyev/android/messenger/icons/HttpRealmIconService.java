@@ -18,21 +18,17 @@ package org.solovyev.android.messenger.icons;
 
 import android.content.Context;
 import android.widget.ImageView;
-
-import java.util.List;
+import org.solovyev.android.http.ImageLoader;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.users.User;
+import org.solovyev.android.messenger.view.IconGenerator;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-import org.solovyev.android.http.ImageLoader;
-import org.solovyev.android.messenger.users.User;
-import org.solovyev.common.text.Strings;
-
-/**
- * User: serso
- * Date: 3/14/13
- * Time: 8:07 PM
- */
 public final class HttpRealmIconService implements RealmIconService {
 
 	@Nonnull
@@ -41,28 +37,24 @@ public final class HttpRealmIconService implements RealmIconService {
 	@Nonnull
 	private final ImageLoader imageLoader;
 
-	private final int defaultUserIconResId;
-
-	private final int defaultUsersIconResId;
-
 	@Nonnull
 	private final UrlGetter iconUrlGetter;
 
 	@Nonnull
 	private final UrlGetter photoUrlGetter;
 
+	@Nonnull
+	private final IconGenerator iconGenerator;
+
 	public HttpRealmIconService(@Nonnull Context context,
 								@Nonnull ImageLoader imageLoader,
-								int defaultUserIconResId,
-								int defaultUsersIconResId,
 								@Nonnull UrlGetter iconUrlGetter,
 								@Nonnull UrlGetter photoUrlGetter) {
 		this.context = context;
 		this.imageLoader = imageLoader;
-		this.defaultUserIconResId = defaultUserIconResId;
-		this.defaultUsersIconResId = defaultUsersIconResId;
 		this.iconUrlGetter = iconUrlGetter;
 		this.photoUrlGetter = photoUrlGetter;
+		this.iconGenerator = App.getIconGenerator();
 	}
 
 	@Override
@@ -70,9 +62,9 @@ public final class HttpRealmIconService implements RealmIconService {
 		final String userIconUrl = iconUrlGetter.getUrl(user);
 		if (!Strings.isEmpty(userIconUrl)) {
 			assert userIconUrl != null;
-			this.imageLoader.loadImage(userIconUrl, imageView, defaultUserIconResId);
+			this.imageLoader.loadImage(userIconUrl, imageView, iconGenerator.getIconResId(user));
 		} else {
-			imageView.setImageDrawable(context.getResources().getDrawable(defaultUserIconResId));
+			imageView.setImageDrawable(iconGenerator.getIcon(user));
 		}
 	}
 
@@ -81,9 +73,9 @@ public final class HttpRealmIconService implements RealmIconService {
 		final String userPhotoUrl = photoUrlGetter.getUrl(user);
 		if (!Strings.isEmpty(userPhotoUrl)) {
 			assert userPhotoUrl != null;
-			this.imageLoader.loadImage(userPhotoUrl, imageView, defaultUserIconResId);
+			this.imageLoader.loadImage(userPhotoUrl, imageView, iconGenerator.getIconResId(user));
 		} else {
-			imageView.setImageDrawable(context.getResources().getDrawable(defaultUserIconResId));
+			imageView.setImageDrawable(iconGenerator.getIcon(user));
 		}
 	}
 
@@ -96,7 +88,7 @@ public final class HttpRealmIconService implements RealmIconService {
 
 	@Override
 	public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
-		imageView.setImageDrawable(context.getResources().getDrawable(defaultUsersIconResId));
+		imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_users_red));
 	}
 
 	public void fetchUserIcon(@Nonnull User user) {

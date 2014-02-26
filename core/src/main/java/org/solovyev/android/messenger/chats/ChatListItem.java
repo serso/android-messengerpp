@@ -37,8 +37,7 @@ import javax.annotation.Nullable;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.App.getUserService;
+import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_clicked;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.chats.UiChat.newEmptyUiChat;
@@ -50,6 +49,9 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 
 	@Nonnull
 	private static final String TAG_PREFIX = "chat_list_item_";
+
+	@Nonnull
+	private final ChatIconOnClickListener iconOnClickListener = new ChatIconOnClickListener();
 
 	private ChatListItem(@Nonnull UiChat chat) {
 		super(TAG_PREFIX, chat, R.layout.mpp_list_item_chat);
@@ -108,12 +110,16 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 	}
 
 	@Override
-	protected void fillView(@Nonnull UiChat uiChat, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
+	protected void fillView(@Nonnull UiChat uiChat, @Nonnull final Context context, @Nonnull ViewAwareTag viewTag) {
 		final Chat chat = uiChat.getChat();
 		final User user = uiChat.getUser();
 
 		final ImageView chatIcon = viewTag.getViewById(R.id.mpp_li_chat_icon_imageview);
 		getChatService().setChatIcon(chat, chatIcon);
+
+		chatIcon.setOnClickListener(iconOnClickListener);
+		iconOnClickListener.chat = chat;
+		iconOnClickListener.context = context;
 
 		final Message lastMessage = getLastMessage();
 
@@ -129,7 +135,14 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 		final TextView lastMessageText = viewTag.getViewById(R.id.mpp_li_last_message_text_textview);
 		if (lastMessage != null) {
 			lastMessageText.setText(getMessageTitle(chat, lastMessage, user));
-			lastMessageTextTime.setText(getMessageTime(lastMessage));
+			final CharSequence messageTime = getMessageTime(lastMessage);
+
+			if (getAccountService().isOneAccount()) {
+				lastMessageTextTime.setText(messageTime);
+			} else {
+				final String realmName = context.getString(uiChat.getAccount().getRealm().getNameResId());
+				lastMessageTextTime.setText(realmName + ", " + messageTime);
+			}
 		} else {
 			lastMessageText.setText("");
 			lastMessageTextTime.setText("");
@@ -210,5 +223,19 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 		}
 
 		return changed;
+	}
+
+	private static class ChatIconOnClickListener implements View.OnClickListener {
+
+		@Nonnull
+		private Chat chat;
+
+		@Nonnull
+		private Context context;
+
+		@Override
+		public void onClick(View v) {
+			getEventManager(context).fire(ChatUiEventType.show_participants.newEvent(chat));
+		}
 	}
 }

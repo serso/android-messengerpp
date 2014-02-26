@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger.chats;
 
 import com.google.common.base.Predicate;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.Identifiable;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.entities.Entity;
@@ -45,7 +46,7 @@ public final class UiChat implements Identifiable, EntityAware {
 	private int unreadMessagesCount;
 
 	@Nullable
-	private final Account account;
+	private Account account;
 
 	@Nullable
 	private Message lastMessage;
@@ -137,8 +138,11 @@ public final class UiChat implements Identifiable, EntityAware {
 		return online;
 	}
 
-	@Nullable
+	@Nonnull
 	public Account getAccount() {
+		if (account == null) {
+			account = App.getAccountService().getAccountByEntity(chat.getEntity());
+		}
 		return account;
 	}
 

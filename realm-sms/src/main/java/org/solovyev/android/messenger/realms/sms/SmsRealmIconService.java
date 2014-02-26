@@ -33,6 +33,8 @@ import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.List;
 
+import static org.solovyev.android.messenger.App.getIconGenerator;
+
 final class SmsRealmIconService implements RealmIconService {
 
 	@Nonnull
@@ -59,7 +61,7 @@ final class SmsRealmIconService implements RealmIconService {
 
 	@Override
 	public void setUsersIcon(@Nonnull List<User> users, @Nonnull ImageView imageView) {
-		imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_users));
+		imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_users_green));
 	}
 
 	@Nonnull
@@ -78,7 +80,7 @@ final class SmsRealmIconService implements RealmIconService {
 			}
 		}
 
-		return context.getResources().getDrawable(R.drawable.mpp_icon_user);
+		return getIconGenerator().getIcon(user);
 	}
 
 	private Bitmap loadContactPhoto(long id) {

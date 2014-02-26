@@ -38,6 +38,7 @@ import org.solovyev.android.messenger.realms.RealmService;
 import org.solovyev.android.messenger.security.MessengerSecurityService;
 import org.solovyev.android.messenger.sync.SyncService;
 import org.solovyev.android.messenger.users.UserService;
+import org.solovyev.android.messenger.view.IconGenerator;
 import org.solovyev.android.network.NetworkStateService;
 import org.solovyev.android.wizard.Wizards;
 import org.solovyev.tasks.TaskService;
@@ -151,11 +152,15 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	private Handler uiHandler;
 
 	@Nonnull
+	private IconGenerator iconGenerator;
+
+	@Nonnull
 	private MessengerTheme theme;
 
 	private void init0(@Nonnull Application application) {
 		this.application = application;
 		this.uiHandler = Threads.newUiHandler();
+		this.iconGenerator = new IconGenerator(application);
 
 		final SharedPreferences preferences = getPreferences();
 		preferences.registerOnSharedPreferenceChangeListener(this);
@@ -327,6 +332,11 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	public static Class<? extends Activity> getMainActivityClass() {
 		return MainActivity.class;
+	}
+
+	@Nonnull
+	public static IconGenerator getIconGenerator() {
+		return instance.iconGenerator;
 	}
 
 	@Nonnull

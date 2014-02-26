@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import com.actionbarsherlock.view.Menu;
@@ -192,7 +191,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 	@Override
 	protected CharSequence getFragmentTitle() {
-		return getAccount().getDisplayName(getActivity());
+		return getString(R.string.mpp_account_info);
 	}
 
 	@Override

@@ -136,8 +136,11 @@
 	<string name="mpp_ok">OK</string>
 	<string name="mpp_status">Status</string>
 	<string name="mpp_actions">Actions</string>
-    <string name="mpp_contact_removal_confirmation">Du you really want to remove contact?</string>
-    <plurals name="mpp_unread_messages_count_notification">
+	<string name="mpp_contact_removal_confirmation">Do you really want to remove contact?</string>
+	<string name="mpp_contact_info">Contact info</string>
+	<string name="mpp_account_info">Account info</string>
+	<string name="mpp_at_time">at</string>
+	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">There is one unread message</item>
 		<item quantity="other">There are %s unread messages</item>
 	</plurals>

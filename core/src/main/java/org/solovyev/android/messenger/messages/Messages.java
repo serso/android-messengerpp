@@ -67,31 +67,30 @@ public final class Messages {
 			return getApplication().getString(R.string.mpp_yesterday_at) + " " + shortTime().print(localSendDateTime);
 		} else {
 			// the days before yesterday
-			return shortDate().print(localSendDateTime);
+			return shortDate().print(localSendDateTime) + " " + getApplication().getString(R.string.mpp_at_time) + " " + shortTime().print(localSendDateTime);
 		}
 	}
 
 	@Nonnull
 	public static CharSequence getMessageTitle(@Nonnull Chat chat, @Nonnull Message message, @Nonnull User user) {
-		final String authorName = getMessageAuthorDisplayName(chat, message, user);
-		if (Strings.isEmpty(authorName)) {
+		final String authorPrefix = getMessageAuthorPrefix(chat, message, user);
+		if (Strings.isEmpty(authorPrefix)) {
 			return Html.fromHtml(message.getBody());
 		} else {
-			return authorName + ": " + Html.fromHtml(message.getBody());
+			return authorPrefix + " " + Html.fromHtml(message.getBody());
 		}
 	}
 
 	@Nonnull
-	private static String getMessageAuthorDisplayName(@Nonnull Chat chat, @Nonnull Message message, @Nonnull User user) {
+	private static String getMessageAuthorPrefix(@Nonnull Chat chat, @Nonnull Message message, @Nonnull User user) {
 		final Entity author = message.getAuthor();
 		if (user.getEntity().equals(author)) {
-			// todo serso: translate
-			return "Me";
+			return "◀";
 		} else {
 			if (!chat.isPrivate()) {
-				return Users.getDisplayNameFor(author);
+				return "▶ " + Users.getDisplayNameFor(author) + ":";
 			} else {
-				return "";
+				return "▶";
 			}
 		}
 	}
@@ -143,7 +142,7 @@ public final class Messages {
 	}
 
 	public static int compareSendDatesLatestFirst(@Nullable Message lm, @Nullable Message rm) {
-		if(lm == null && rm == null) {
+		if (lm == null && rm == null) {
 			return 0;
 		} else if (lm == null) {
 			return 1;
@@ -167,7 +166,7 @@ public final class Messages {
 	}
 
 	public static int compareSendDates(@Nullable Message lm, @Nullable Message rm) {
-		if(lm == null && rm == null) {
+		if (lm == null && rm == null) {
 			return 0;
 		} else if (lm == null) {
 			return 1;
@@ -182,7 +181,7 @@ public final class Messages {
 	public static MutableMessage copySentMessage(@Nonnull Message message, @Nonnull Account account, @Nonnull String accountMessageId) {
 		final Realm realm = account.getRealm();
 		final Entity messageId;
-		if(accountMessageId.equals(NO_ACCOUNT_ID)) {
+		if (accountMessageId.equals(NO_ACCOUNT_ID)) {
 			// auto-generated id
 			messageId = message.getEntity();
 		} else {
@@ -193,13 +192,13 @@ public final class Messages {
 
 		result.setChat(message.getChat());
 		result.setAuthor(message.getAuthor());
-		if(message.isPrivate()) {
+		if (message.isPrivate()) {
 			result.setRecipient(message.getRecipient());
 		}
 		result.setBody(message.getBody());
 		result.setTitle(message.getTitle());
 		result.setSendDate(message.getSendDate());
-		if(realm.shouldWaitForDeliveryReport()) {
+		if (realm.shouldWaitForDeliveryReport()) {
 			result.setState(sending);
 		} else {
 			result.setState(sent);
@@ -207,7 +206,7 @@ public final class Messages {
 		result.setRead(true);
 		result.getProperties().setPropertiesFrom(message.getProperties().getPropertiesCollection());
 
-		if(!messageId.equals(message.getEntity())) {
+		if (!messageId.equals(message.getEntity())) {
 			// id has changed => need to set original message id
 			result.setOriginalId(message.getEntity().getEntityId());
 		}
