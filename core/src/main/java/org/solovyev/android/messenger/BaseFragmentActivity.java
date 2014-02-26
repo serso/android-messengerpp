@@ -332,18 +332,6 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 			getMultiPaneFragmentManager().setSecondFragment(fragmentDef);
 		}
-
-		if (first) {
-			final Fragment secondFragment = fm.findFragmentById(R.id.content_second_pane);
-			if (secondFragment == null) {
-				fragmentManager.emptifySecondFragment();
-			}
-		}
-
-		final Fragment thirdPane = fm.findFragmentById(R.id.content_third_pane);
-		if (thirdPane == null) {
-			fragmentManager.emptifyThirdFragment();
-		}
 	}
 
 	@Nonnull
