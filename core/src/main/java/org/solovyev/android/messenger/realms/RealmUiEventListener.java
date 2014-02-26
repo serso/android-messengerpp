@@ -49,9 +49,6 @@ public class RealmUiEventListener implements EventListener<RealmUiEvent> {
 					mpfm.setMainFragment(newCreateAccountConfigurationFragmentDef(activity, realm, true));
 				}
 				break;
-			case realm_edit_finished:
-				mpfm.goBack();
-				break;
 		}
 	}
 }

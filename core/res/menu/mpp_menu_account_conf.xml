@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright 2013 serso aka se.solovyev
+  ~ Copyright 2014 serso aka se.solovyev
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,18 +16,12 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-    style="?attr/mpp_form_buttons">
+<menu xmlns:a="http://schemas.android.com/apk/res/android">
 
-    <Button
-        a:id="@id/mpp_remove_button"
-        a:visibility="gone"
-        a:text="@string/mpp_remove"
-        style="?mpp_form_button" />
+	<item
+			a:id="@+id/mpp_menu_save_account"
+			a:title="@string/mpp_save"
+			a:icon="?attr/mpp_ab_remove_icon"
+			a:showAsAction="always"/>
 
-    <Button
-        a:id="@id/mpp_save_button"
-        a:text="@string/mpp_save"
-        style="?mpp_form_button" />
-
-</LinearLayout>
+</menu>

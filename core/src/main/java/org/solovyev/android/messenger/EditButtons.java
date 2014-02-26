@@ -16,7 +16,6 @@
 
 package org.solovyev.android.messenger;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +42,19 @@ public abstract class EditButtons<F extends Fragment> {
 		this.fragment = fragment;
 	}
 
-	public void onViewCreated(View root, Bundle savedInstanceState) {
+	public void hide(@Nonnull View root) {
+		removeButton = (Button) root.findViewById(R.id.mpp_remove_button);
+		if (removeButton != null) {
+			removeButton.setVisibility(GONE);
+		}
+
+		saveButton = (Button) root.findViewById(R.id.mpp_save_button);
+		if (saveButton != null) {
+			saveButton.setVisibility(GONE);
+		}
+	}
+
+	public void onViewCreated(@Nonnull View root) {
 		removeButton = (Button) root.findViewById(R.id.mpp_remove_button);
 		if (removeButton != null) {
 			if (isRemoveButtonVisible()) {

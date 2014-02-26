@@ -24,11 +24,6 @@ import javax.annotation.Nullable;
 import org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment;
 import org.solovyev.common.JPredicate;
 
-/**
- * User: serso
- * Date: 3/7/13
- * Time: 9:32 PM
- */
 public class RealmFragmentReuseCondition implements JPredicate<Fragment> {
 
 	@Nonnull

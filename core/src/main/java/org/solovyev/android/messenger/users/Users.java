@@ -205,7 +205,11 @@ public final class Users {
 	public static Class<? extends BaseEditUserFragment> getCreateUserFragmentClassFromArguments(@Nonnull Bundle arguments) {
 		final Serializable serializable = arguments.getSerializable(ARG_EDIT_CLASS_NAME);
 		if (serializable instanceof Class) {
-			return (Class) serializable;
+			try {
+				return (Class) serializable;
+			} catch (ClassCastException e) {
+				throw new IllegalArgumentException(e);
+			}
 		} else {
 			return null;
 		}

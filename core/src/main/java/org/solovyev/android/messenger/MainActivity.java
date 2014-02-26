@@ -196,7 +196,7 @@ public final class MainActivity extends BaseFragmentActivity {
 		final RoboListeners listeners = getListeners();
 
 		listeners.add(UiEvent.class, new UiEventListener(this));
-		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
+		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener(this));
 		listeners.add(ContactUiEvent.Typed.class, new ContactUiEventListener(this, getAccountService()));
 		listeners.add(ContactUiEvent.ShowCompositeDialog.class, new EventListener<ContactUiEvent.ShowCompositeDialog>() {
 			@Override

@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ import org.solovyev.android.messenger.view.FragmentMenu;
 import org.solovyev.android.messenger.view.PropertyView;
 import org.solovyev.android.messenger.view.SwitchView;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
+import org.solovyev.android.view.ConfirmationDialogBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
@@ -78,6 +80,12 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		final Bundle args = newAccountArguments(account);
 		final JPredicate<Fragment> reuseCondition = AccountFragmentReuseCondition.forAccount(account);
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, AccountFragment.class, context, args, reuseCondition);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newAccountFragmentDef(@Nonnull Context context, @Nonnull Bundle arguments, boolean addToBackStack) {
+		final JPredicate<Fragment> reuseCondition = new AccountFragmentReuseCondition(Accounts.getAccountIdFromArguments(arguments), AccountFragment.class);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, AccountFragment.class, context, arguments, reuseCondition);
 	}
 
 	@Override
@@ -152,12 +160,14 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	}
 
 	private void tryRemoveAccount() {
-		// todo serso: remove class creation
-		new BaseAccountButtons<Account<?>, AccountFragment>(AccountFragment.this) {
+		final ConfirmationDialogBuilder builder = ConfirmationDialogBuilder.newInstance(getSherlockActivity(), "account-removal-confirmation", R.string.mpp_account_removal_confirmation);
+		builder.setPositiveHandler(new DialogInterface.OnClickListener() {
 			@Override
-			protected void onSaveButtonPressed() {
+			public void onClick(DialogInterface dialog, int which) {
+				getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 			}
-		}.onRemoveButtonPressed();
+		});
+		builder.build().show();
 	}
 
 	private void updateView(@Nonnull Account<?> account) {

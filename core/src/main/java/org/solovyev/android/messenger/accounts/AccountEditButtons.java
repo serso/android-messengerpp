@@ -16,6 +16,7 @@
 
 package org.solovyev.android.messenger.accounts;
 
+import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
 import org.solovyev.android.messenger.core.R;
 
@@ -23,7 +24,7 @@ import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.accounts.tasks.AccountSaverListener.newAccountSaverListener;
 
-public class AccountEditButtons<A extends Account<?>> extends BaseAccountButtons<A, BaseAccountConfigurationFragment<A>> {
+public class AccountEditButtons<A extends Account<?>> extends EditButtons<BaseAccountConfigurationFragment<A>> {
 
 	public AccountEditButtons(@Nonnull BaseAccountConfigurationFragment<A> fragment) {
 		super(fragment);
@@ -40,7 +41,11 @@ public class AccountEditButtons<A extends Account<?>> extends BaseAccountButtons
 
 	@Override
 	protected boolean isRemoveButtonVisible() {
-		return !getFragment().isNewAccount();
+		return false;
+	}
+
+	@Override
+	protected void onRemoveButtonPressed() {
 	}
 
 	public void saveAccount(@Nonnull AccountBuilder accountBuilder) {

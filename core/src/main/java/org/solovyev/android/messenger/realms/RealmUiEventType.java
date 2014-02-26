@@ -23,12 +23,7 @@ public enum RealmUiEventType {
 	/**
 	 * Fired when realm is clicked in the list of realms
 	 */
-	realm_clicked,
-
-	/**
-	 * Fired when editing of account in this realm is finished: either by pressing back or by saving account
-	 */
-	realm_edit_finished;
+	realm_clicked;
 
 	@Nonnull
 	public RealmUiEvent newEvent(@Nonnull Realm realm) {

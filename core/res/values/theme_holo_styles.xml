@@ -202,12 +202,11 @@
 		<item name="android:background">@null</item>
 	</style>
 
-	<style name="mpp_button">
+	<style name="mpp_button" parent="mpp_text">
 		<item name="android:focusable">true</item>
-		<item name="android:layout_width">80dp</item>
+		<item name="android:layout_width">140dp</item>
 		<item name="android:layout_height">45dp</item>
 		<item name="android:minHeight">45dp</item>
-		<item name="android:textSize">15sp</item>
 
 		<item name="android:singleLine">true</item>
 		<item name="android:ellipsize">marquee</item>
@@ -260,6 +259,7 @@
 	</style>
 
 	<style name="mpp_form_buttons">
+		<item name="android:gravity">center</item>
 		<item name="android:orientation">horizontal</item>
 		<item name="android:baselineAligned">false</item>
 		<item name="android:layout_width">match_parent</item>
@@ -267,8 +267,6 @@
 	</style>
 
 	<style name="mpp_form_button" parent="mpp_button">
-		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_weight">1</item>
 	</style>
 
 	<style name="mpp_list_fragment" parent="mpp_fragment">

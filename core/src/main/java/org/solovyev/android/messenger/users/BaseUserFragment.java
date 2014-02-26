@@ -19,9 +19,12 @@ package org.solovyev.android.messenger.users;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.google.inject.Inject;
+import org.solovyev.android.messenger.UiEventListener;
+import org.solovyev.android.messenger.UiThreadEventListener;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.BaseAccountFragment;
 import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +56,7 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 	private User user;
 
 	@Nullable
-	private UserEventListener userEventListener;
+	private JEventListener<UserEvent> userEventListener;
 
 	protected BaseUserFragment(int layoutResId) {
 		super(layoutResId);
@@ -69,7 +72,7 @@ public abstract class BaseUserFragment<A extends Account<?>> extends BaseAccount
 			if (userId != null) {
 				user = userService.getUserById(newEntityFromEntityId(userId));
 
-				userEventListener = new UserEventListener();
+				userEventListener = UiThreadEventListener.onUiThread(this, new UserEventListener());
 				userService.addListener(userEventListener);
 			}
 		}

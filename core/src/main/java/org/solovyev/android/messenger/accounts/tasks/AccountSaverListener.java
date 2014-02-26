@@ -21,6 +21,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import org.solovyev.android.messenger.MessengerContextCallback;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountAlreadyExistsException;
+import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.security.InvalidCredentialsException;
 
@@ -28,8 +29,7 @@ import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.showToast;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.saved;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
+import static org.solovyev.android.messenger.accounts.AccountUiEvent.FinishedState.saved;
 import static org.solovyev.android.tasks.Tasks.toUiThreadFutureCallback;
 
 public final class AccountSaverListener extends MessengerContextCallback<Activity, Account> {
@@ -44,7 +44,7 @@ public final class AccountSaverListener extends MessengerContextCallback<Activit
 
 	@Override
 	public void onSuccess(@Nonnull Activity context, Account account) {
-		getEventManager(context).fire(account_edit_finished.newEvent(account, saved));
+		getEventManager(context).fire(new AccountUiEvent.EditFinished(account, saved));
 	}
 
 	@Override

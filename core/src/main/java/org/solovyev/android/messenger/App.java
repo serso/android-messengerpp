@@ -70,7 +70,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	private static final List<String> EMULATOR_PRODUCTS = asList("google_sdk", "sdk", "full_x86", "sdk_x86");
 	private static final boolean EMULATOR = !isEmpty(Build.PRODUCT) && EMULATOR_PRODUCTS.contains(Build.PRODUCT);
 	private static final boolean APPIUM = false;
-	private static final double BIG_SCREEN_SIZE = 4d;
+	private static final double BIG_SCREEN_SIZE = 5d;
 
 	public static final String GOOGLE_PLUS_TESTERS_URL = "https://plus.google.com/u/0/communities/112145635211244043975";
 	public static final String CROWDIN_URL = "http://crowdin.net/project/messengerpp";

@@ -16,7 +16,10 @@
 
 package org.solovyev.android.messenger.users;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +29,24 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.solovyev.android.Views;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.menu.AMenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.MainActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.Accounts;
+import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.view.PropertyView;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
+import org.solovyev.android.view.ConfirmationDialogBuilder;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.JPredicate;
 
@@ -51,6 +60,7 @@ import java.util.Map;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getUserService;
+import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
 import static org.solovyev.android.messenger.users.Users.getUserIdFromArguments;
 import static org.solovyev.android.messenger.view.PropertyView.newPropertyView;
 import static org.solovyev.common.text.Strings.isEmpty;
@@ -142,17 +152,76 @@ public class ContactFragment extends BaseUserFragment {
 			}
 		}
 
-		root.findViewById(R.id.mpp_save_button).setVisibility(GONE);
-		root.findViewById(R.id.mpp_remove_button).setVisibility(GONE);
+		updateActionsVisibility(root);
+
+		newPropertyView(R.id.mpp_contact_edit, root)
+				.setVisibility(canEditContact() ? VISIBLE : GONE)
+				.setLabel(R.string.mpp_edit)
+				.setRightIcon(R.drawable.mpp_ab_edit_light)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						editContact();
+					}
+				});
+
+		newPropertyView(R.id.mpp_contact_remove, root)
+				.setVisibility(canRemoveContact() ? VISIBLE : GONE)
+				.setLabel(R.string.mpp_remove)
+				.setRightIcon(R.drawable.mpp_ab_remove_light)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						tryRemoveContact();
+					}
+				});
 
 		getMultiPaneManager().showTitle(getSherlockActivity(), this, contact.getDisplayName());
 	}
 
-	@Override
-	protected void onUserChanged(@Nonnull User user) {
-		super.onUserChanged(user);
+	private void updateActionsVisibility(@Nonnull View root) {
+		final BaseFragmentActivity activity = getSherlockActivity();
 
-		updateUiOnResume = true;
+		boolean showActions = true;
+		if (activity instanceof MainActivity) {
+			showActions = Views.getScreenOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE;
+		}
+
+		root.findViewById(R.id.mpp_contact_actions).setVisibility(showActions ? VISIBLE : GONE);
+	}
+
+	private void editContact() {
+		if (canEditContact()) {
+			getEventManager().fire(new ContactUiEvent.Edit(getUser(), getAccount()));
+		}
+	}
+
+	private boolean canEditContact() {
+		return getAccount().getRealm().canEditUsers();
+	}
+
+	private boolean canRemoveContact() {
+		final User user = getUser();
+		if (user != null) {
+			final Account account = getAccount();
+			final boolean accountUser = account.getUser().equals(user);
+			return !accountUser;
+		} else {
+			return false;
+		}
+	}
+
+	private void tryRemoveContact() {
+		final ConfirmationDialogBuilder builder = ConfirmationDialogBuilder.newInstance(getSherlockActivity(), "contact-removal-confirmation", R.string.mpp_contact_removal_confirmation);
+		builder.setPositiveHandler(new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				final User contact = getUser();
+				App.getUserService().removeUser(contact);
+				getEventManager().fire(new ContactUiEvent.Removed(contact));
+			}
+		});
+		builder.build().show();
 	}
 
 	@Override
@@ -162,6 +231,21 @@ public class ContactFragment extends BaseUserFragment {
 		if (updateUiOnResume) {
 			updateUi(getView());
 			updateUiOnResume = false;
+		}
+
+		updateActionsVisibility(getView());
+	}
+
+
+	@Override
+	protected void onUserChanged(@Nonnull User user) {
+		super.onUserChanged(user);
+
+		final View view = getView();
+		if (view == null) {
+			updateUiOnResume = true;
+		} else {
+			updateUi(view);
 		}
 	}
 
@@ -196,17 +280,26 @@ public class ContactFragment extends BaseUserFragment {
 		final EditContactMenuItem editContactMenuItem = new EditContactMenuItem();
 		menuItems.add(editContactMenuItem);
 
+		final RemoveContactMenuItem removeContactMenuItem = new RemoveContactMenuItem();
+		menuItems.add(removeContactMenuItem);
+
 		final OpenChatMenuItem openChatMenuItem = new OpenChatMenuItem();
 		menuItems.add(openChatMenuItem);
 
 		this.menu = ListActivityMenu.fromResource(R.menu.mpp_menu_contact, menuItems, SherlockMenuHelper.getInstance(), new JPredicate<AMenuItem<MenuItem>>() {
 			@Override
 			public boolean apply(@Nullable AMenuItem<MenuItem> menuItem) {
+				final Activity activity = getSherlockActivity();
+				final boolean showActions = !(activity instanceof MainActivity);
+
 				if (menuItem == editContactMenuItem) {
-					return !getAccount().getRealm().canEditUsers();
+					return !canEditContact() || !showActions;
 				} else if (menuItem == openChatMenuItem) {
 					return !(getSherlockActivity() instanceof ContactsActivity);
+				} else if (menuItem == removeContactMenuItem) {
+					return !canRemoveContact() || !showActions;
 				}
+
 				return false;
 			}
 		});
@@ -223,9 +316,21 @@ public class ContactFragment extends BaseUserFragment {
 
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
-			if (getAccount().getRealm().canEditUsers()) {
-				getEventManager().fire(new ContactUiEvent.Edit(getUser(), getAccount()));
-			}
+			editContact();
+		}
+	}
+
+	private class RemoveContactMenuItem implements IdentifiableMenuItem<MenuItem> {
+
+		@Nonnull
+		@Override
+		public Integer getItemId() {
+			return R.id.mpp_menu_remove_contact;
+		}
+
+		@Override
+		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
+			tryRemoveContact();
 		}
 	}
 

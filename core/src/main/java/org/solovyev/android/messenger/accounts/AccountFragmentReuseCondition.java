@@ -26,23 +26,28 @@ import javax.annotation.Nonnull;
  * Fragment will be reused if it's instance of {@link org.solovyev.android.messenger.accounts.AccountFragment} and
  * contains same realm as one passed in constructor
  */
-class AccountFragmentReuseCondition extends AbstractFragmentReuseCondition<AccountFragment> {
+class AccountFragmentReuseCondition<F extends BaseAccountFragment> extends AbstractFragmentReuseCondition<F> {
 
 	@Nonnull
-	private final Account account;
+	private final String id;
 
-	AccountFragmentReuseCondition(@Nonnull Account account) {
-		super(AccountFragment.class);
-		this.account = account;
+	AccountFragmentReuseCondition(@Nonnull Account account, @Nonnull Class<F> fragmentClass) {
+		this(account.getId(), fragmentClass);
+	}
+
+	AccountFragmentReuseCondition(@Nonnull String id, @Nonnull Class<F> fragmentClass) {
+		super(fragmentClass);
+		this.id = id;
 	}
 
 	@Nonnull
 	public static JPredicate<Fragment> forAccount(@Nonnull Account account) {
-		return new AccountFragmentReuseCondition(account);
+		return new AccountFragmentReuseCondition<AccountFragment>(account, AccountFragment.class);
 	}
 
 	@Override
-	protected boolean canReuseFragment(@Nonnull AccountFragment fragment) {
-		return account.equals(fragment.getAccount());
+	protected boolean canReuseFragment(@Nonnull F fragment) {
+		final Account<?> account = fragment.getAccount();
+		return account != null && id.equals(account.getId());
 	}
 }

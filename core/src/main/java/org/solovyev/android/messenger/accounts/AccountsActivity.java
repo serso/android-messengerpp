@@ -19,13 +19,12 @@ package org.solovyev.android.messenger.accounts;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.RoboListeners;
-import org.solovyev.android.messenger.UiEvent;
-import org.solovyev.android.messenger.UiEventListener;
+import android.support.v4.app.Fragment;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.realms.RealmUiEvent;
 import org.solovyev.android.messenger.realms.RealmUiEventListener;
+import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
@@ -74,7 +73,26 @@ public final class AccountsActivity extends BaseFragmentActivity {
 		final RoboListeners listeners = getListeners();
 
 		listeners.add(UiEvent.class, new UiEventListener(this));
-		listeners.add(AccountUiEvent.class, new AccountUiEventListener(this));
+		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener(this));
+		listeners.add(AccountUiEvent.EditFinished.class, new EventListener<AccountUiEvent.EditFinished>() {
+			@Override
+			public void onEvent(AccountUiEvent.EditFinished event) {
+				switch (event.state) {
+					case back:
+						fragmentManager.goBack();
+						break;
+					case removed:
+						fragmentManager.clearBackStack();
+						break;
+					case status_changed:
+						// do nothing as we can change state only from account info fragment and that is OK
+						break;
+					case saved:
+						fragmentManager.goBack();
+						break;
+				}
+			}
+		});
 		listeners.add(RealmUiEvent.class, new RealmUiEventListener(this));
 	}
 }

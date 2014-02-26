@@ -17,12 +17,14 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import com.actionbarsherlock.app.ActionBar;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
-import org.solovyev.android.messenger.EditButtons;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
@@ -37,6 +39,10 @@ import org.solovyev.common.JPredicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static com.actionbarsherlock.app.ActionBar.DISPLAY_SHOW_CUSTOM;
+import static com.actionbarsherlock.app.ActionBar.DISPLAY_SHOW_HOME;
+import static com.actionbarsherlock.app.ActionBar.DISPLAY_SHOW_TITLE;
 import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
 import static org.solovyev.android.messenger.accounts.tasks.AccountSaverListener.newAccountSaverListener;
 
@@ -81,7 +87,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
     */
 
 	@Nonnull
-	private final EditButtons buttons = new AccountEditButtons<A>(this);
+	private final AccountEditButtons buttons = new AccountEditButtons<A>(this);
 
 	@Nullable
 	private NetworkStateListener networkListener;
@@ -95,9 +101,19 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 																			  @Nonnull Account account,
 																			  boolean addToBackStack) {
 		final Realm realm = account.getRealm();
-		final JPredicate<Fragment> reuseCondition = new RealmFragmentReuseCondition(realm);
+		final JPredicate<Fragment> reuseCondition = new AccountFragmentReuseCondition(account, realm.getConfigurationFragmentClass());
 		final Bundle args = Accounts.newAccountArguments(account);
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, realm.getConfigurationFragmentClass(), context, args, reuseCondition);
+	}
+
+	@Nonnull
+	public static MultiPaneFragmentDef newEditAccountConfigurationFragmentDef(@Nonnull Context context,
+																			  @Nonnull Bundle arguments,
+																			  boolean addToBackStack) {
+		final String accountId = Accounts.getAccountIdFromArguments(arguments);
+		final Class<? extends BaseAccountFragment> fragmentClass = Accounts.getEditAccountFragmentClassFromArguments(arguments);
+		final JPredicate<Fragment> reuseCondition = new AccountFragmentReuseCondition(accountId, fragmentClass);
+		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, fragmentClass, context, arguments, reuseCondition);
 	}
 
 	@Nonnull
@@ -112,7 +128,50 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		buttons.onViewCreated(root, savedInstanceState);
+		prepareButtons(root);
+
+	}
+
+	private void prepareButtons(@Nonnull View root) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && !isDialog() && getSherlockActivity() instanceof AccountActivity && false) {
+			prepareActionbarButtons(root);
+		} else {
+			prepareButtonsPreHoneycomb(root);
+		}
+	}
+
+	private void prepareActionbarButtons(@Nonnull View root) {
+		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+
+		final LayoutInflater inflater = LayoutInflater.from(actionBar.getThemedContext());
+		final View actionBarView = inflater.inflate(R.layout.mpp_ab_done_cancel, null);
+		actionBarView.findViewById(R.id.mpp_ab_done).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						buttons.onSaveButtonPressed();
+					}
+				});
+		actionBarView.findViewById(R.id.mpp_ab_cancel).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						getSherlockActivity().onBackPressed();
+					}
+				});
+
+		actionBar.setDisplayOptions(
+				DISPLAY_SHOW_CUSTOM,
+				DISPLAY_SHOW_CUSTOM | DISPLAY_SHOW_HOME | DISPLAY_SHOW_TITLE);
+		actionBar.setCustomView(actionBarView, new ActionBar.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+
+		actionBar.setDisplayHomeAsUpEnabled(false);
+
+		buttons.hide(root);
+	}
+
+	private void prepareButtonsPreHoneycomb(@Nonnull View root) {
+		buttons.onViewCreated(root);
 	}
 
 	@Override

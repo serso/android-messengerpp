@@ -20,20 +20,14 @@ import android.app.Activity;
 import com.google.common.util.concurrent.FutureCallback;
 import org.solovyev.android.messenger.MessengerContextCallback;
 import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.tasks.Tasks;
+import org.solovyev.android.messenger.accounts.AccountUiEvent;
 
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.FinishedState.removed;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_edit_finished;
+import static org.solovyev.android.messenger.accounts.AccountUiEvent.FinishedState.removed;
 import static org.solovyev.android.tasks.Tasks.toUiThreadFutureCallback;
 
-/**
- * User: serso
- * Date: 4/13/13
- * Time: 1:44 PM
- */
 public final class AccountRemoverListener extends MessengerContextCallback<Activity, Account> {
 
 	private AccountRemoverListener() {
@@ -46,6 +40,6 @@ public final class AccountRemoverListener extends MessengerContextCallback<Activ
 
 	@Override
 	public void onSuccess(@Nonnull Activity activity, Account account) {
-		getEventManager(activity).fire(account_edit_finished.newEvent(account, removed));
+		getEventManager(activity).fire(new AccountUiEvent.EditFinished(account, removed));
 	}
 }

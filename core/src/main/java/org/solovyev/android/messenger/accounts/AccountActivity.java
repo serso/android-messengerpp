@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.solovyev.android.messenger.users;
+package org.solovyev.android.messenger.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,38 +23,35 @@ import android.util.Log;
 import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.RoboListeners;
-import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.users.User;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.isBigScreen;
-import static org.solovyev.android.messenger.users.BaseEditUserFragment.newEditUserFragmentDef;
-import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
-import static org.solovyev.android.messenger.users.Users.newEditUserArguments;
-import static org.solovyev.android.messenger.users.Users.newUserArguments;
+import static org.solovyev.android.messenger.accounts.Accounts.newAccountArguments;
+import static org.solovyev.android.messenger.accounts.Accounts.newEditAccountArguments;
+import static org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment.newEditAccountConfigurationFragmentDef;
 
-public class ContactActivity extends BaseFragmentActivity {
+public class AccountActivity extends BaseFragmentActivity {
 
 	private final static String ARGS_BUNDLE = "bundle";
 	private final static String ARGS_EDIT = "edit";
-	private static final String TAG = App.newTag(ContactActivity.class.getSimpleName());
+	private static final String TAG = App.newTag(AccountActivity.class.getSimpleName());
 
-	static void open(@Nonnull Activity activity, @Nonnull User contact, boolean edit) {
-		final Account account = App.getAccountService().getAccountByEntity(contact.getEntity());
-		final Intent intent = new Intent(activity, isBigScreen(activity) ? ContactActivity.Dialog.class : ContactActivity.class);
-		intent.putExtra(ARGS_BUNDLE, edit ? newEditUserArguments(account, contact) : newUserArguments(account, contact));
+	static void open(@Nonnull Activity activity, @Nonnull Account account, boolean edit) {
+		final Intent intent = new Intent(activity, isBigScreen(activity) ? AccountActivity.Dialog.class : AccountActivity.class);
+		intent.putExtra(ARGS_BUNDLE, edit ? newEditAccountArguments(account) : newAccountArguments(account));
 		intent.putExtra(ARGS_EDIT, edit);
 		Activities.startActivity(intent, activity);
 	}
 
-	public ContactActivity() {
+	public AccountActivity() {
 		super(false, R.layout.mpp_main_one_pane);
 	}
 
-	public ContactActivity(boolean dialog, int layoutResId) {
+	public AccountActivity(boolean dialog, int layoutResId) {
 		super(dialog, layoutResId);
 	}
 
@@ -68,21 +65,21 @@ public class ContactActivity extends BaseFragmentActivity {
 		if (arguments != null) {
 			try {
 				if (edit) {
-					fragmentManager.setMainFragment(newEditUserFragmentDef(this, arguments, false));
+					fragmentManager.setMainFragment(newEditAccountConfigurationFragmentDef(this, arguments, false));
 				} else {
-					fragmentManager.setMainFragment(newViewContactFragmentDef(this, arguments, false));
+					fragmentManager.setMainFragment(AccountFragment.newAccountFragmentDef(this, arguments, false));
 				}
 			} catch (IllegalArgumentException e) {
 				Log.e(TAG, e.getMessage(), e);
 				finish();
 			}
 		} else {
-			Log.e(TAG, "Arguments must be provided for " + ContactActivity.class);
+			Log.e(TAG, "Arguments must be provided for " + AccountActivity.class);
 			finish();
 		}
 	}
 
-	public static final class Dialog extends ContactActivity {
+	public static final class Dialog extends AccountActivity {
 		public Dialog() {
 			super(true, R.layout.mpp_dialog);
 		}
@@ -92,12 +89,10 @@ public class ContactActivity extends BaseFragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
-		final RoboListeners listeners = getListeners();
-		listeners.add(ContactUiEvent.Edit.class, new ContactsActivity.EditContactListener(this));
-		listeners.add(ContactUiEvent.Removed.class, new EventListener<ContactUiEvent.Removed>() {
+		getListeners().add(AccountUiEvent.EditFinished.class, new EventListener<AccountUiEvent.EditFinished>() {
 			@Override
-			public void onEvent(ContactUiEvent.Removed removed) {
-				finish();
+			public void onEvent(AccountUiEvent.EditFinished event) {
+				AccountActivity.this.finish();
 			}
 		});
 	}

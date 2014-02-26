@@ -34,20 +34,11 @@ public class UserEditButtons<A extends Account<?>> extends EditButtons<BaseEditU
 
 	@Override
 	protected boolean isRemoveButtonVisible() {
-		final User user = getFragment().getUser();
-		if (user != null) {
-			final A account = getFragment().getAccount();
-			final boolean accountUser = account.getUser().equals(user);
-			return !accountUser;
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	@Override
 	protected void onRemoveButtonPressed() {
-		App.getUserService().removeUser(getFragment().getUser());
-		getActivity().getMultiPaneFragmentManager().clearBackStack();
 	}
 
 	@Override

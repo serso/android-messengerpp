@@ -59,18 +59,16 @@ public final class NewContactActivity extends BaseFragmentActivity {
 		super.onResume();
 
 		final RoboListeners listeners = getListeners();
-		listeners.add(AccountUiEvent.class, new AccountUiEventListener());
+		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener());
 	}
 
-	private final class AccountUiEventListener implements EventListener<AccountUiEvent> {
+	private final class AccountUiEventListener implements EventListener<AccountUiEvent.Typed> {
 
 		@Override
-		public void onEvent(@Nonnull AccountUiEvent event) {
-			final Account account = event.getAccount();
-
-			switch (event.getType()) {
+		public void onEvent(@Nonnull AccountUiEvent.Typed event) {
+			switch (event.type) {
 				case account_picked:
-					tryShowCreateUserFragment(account);
+					tryShowCreateUserFragment(event.account);
 					if (isTriplePane()) {
 						getMultiPaneFragmentManager().emptifyThirdFragment();
 					}

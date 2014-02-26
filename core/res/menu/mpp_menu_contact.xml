@@ -28,6 +28,12 @@
 			a:id="@+id/mpp_menu_edit_contact"
 			a:title="@string/mpp_menu_edit"
 			a:icon="?attr/mpp_ab_edit_icon"
-			a:showAsAction="always"/>
+			a:showAsAction="never"/>
+
+    <item
+        a:id="@+id/mpp_menu_remove_contact"
+        a:title="@string/mpp_remove"
+        a:icon="?attr/mpp_ab_remove_icon"
+        a:showAsAction="never"/>
 
 </menu>

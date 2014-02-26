@@ -30,38 +30,10 @@ public enum AccountUiEventType {
 	/**
 	 * Fired when editing of account is requested (e.g. 'Edit' button clicked)
 	 */
-	edit_account,
-
-	/**
-	 * Fired when editing of account is finished (e.g. user pressed 'Back' or 'Save' button)
-	 * Data; state (FinishedState)
-	 */
-	account_edit_finished {
-		@Override
-		protected void checkData(@Nullable Object data) {
-			assert data instanceof FinishedState;
-		}
-	};
+	edit_account;
 
 	@Nonnull
 	public AccountUiEvent newEvent(@Nonnull Account account) {
-		return newEvent(account, null);
-	}
-
-	@Nonnull
-	public AccountUiEvent newEvent(@Nonnull Account account, @Nullable Object data) {
-		checkData(data);
-		return new AccountUiEvent(account, this, data);
-	}
-
-	protected void checkData(@Nullable Object data) {
-		assert data == null;
-	}
-
-	public static enum FinishedState {
-		back,
-		removed,
-		status_changed,
-		saved
+		return new AccountUiEvent.Typed(account, this);
 	}
 }

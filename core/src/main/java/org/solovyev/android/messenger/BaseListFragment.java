@@ -406,6 +406,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	void tryUpdateActionBar() {
+		tryUpdateActionBar(false);
+	}
+
+	private void tryUpdateActionBar(boolean useFirstPane) {
 		if (!getMultiPaneManager().isDualPane(getActivity())) {
 			// only one pane is shown => can update action bar options
 			if (getId() == R.id.content_first_pane) {
@@ -413,8 +417,14 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			}
 		} else {
 			// several panes are shown
-			if (getId() == R.id.content_second_pane) {
-				updateActionBar();
+			if (useFirstPane) {
+				if (getId() == R.id.content_first_pane) {
+					updateActionBar();
+				}
+			} else {
+				if (getId() == R.id.content_second_pane) {
+					updateActionBar();
+				}
 			}
 		}
 
@@ -926,7 +936,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				}
 			}
 
-			tryUpdateActionBar();
+			tryUpdateActionBar(true);
 		}
 	}
 

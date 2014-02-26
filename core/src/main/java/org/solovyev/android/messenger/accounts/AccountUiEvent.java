@@ -16,19 +16,43 @@
 
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.common.listeners.AbstractTypedJEvent;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public final class AccountUiEvent extends AbstractTypedJEvent<Account, AccountUiEventType> {
-
-	public AccountUiEvent(@Nonnull Account account, @Nonnull AccountUiEventType type, @Nullable Object data) {
-		super(account, type, data);
-	}
+public abstract class AccountUiEvent {
 
 	@Nonnull
-	public Account getAccount() {
-		return getEventObject();
+	public final Account account;
+
+	public AccountUiEvent(@Nonnull Account account) {
+		this.account = account;
+	}
+
+	public static enum FinishedState {
+		back,
+		removed,
+		status_changed,
+		saved
+	}
+
+	public static final class Typed extends AccountUiEvent{
+
+		@Nonnull
+		public final AccountUiEventType type;
+
+		public Typed(@Nonnull Account account, @Nonnull AccountUiEventType type) {
+			super(account);
+			this.type = type;
+		}
+	}
+
+	public static final class EditFinished extends AccountUiEvent {
+
+		@Nonnull
+		public final FinishedState state;
+
+		public EditFinished(@Nonnull Account account, @Nonnull FinishedState state) {
+			super(account);
+			this.state = state;
+		}
 	}
 }

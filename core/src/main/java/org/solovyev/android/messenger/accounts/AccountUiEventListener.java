@@ -16,7 +16,6 @@
 
 package org.solovyev.android.messenger.accounts;
 
-import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import roboguice.event.EventListener;
@@ -24,10 +23,9 @@ import roboguice.event.EventListener;
 import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.accounts.AccountFragment.newAccountFragmentDef;
-import static org.solovyev.android.messenger.accounts.BaseAccountConfigurationFragment.newEditAccountConfigurationFragmentDef;
 
 
-public final class AccountUiEventListener implements EventListener<AccountUiEvent> {
+public final class AccountUiEventListener implements EventListener<AccountUiEvent.Typed> {
 
 	@Nonnull
 	private final BaseFragmentActivity activity;
@@ -37,33 +35,21 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 	}
 
 	@Override
-	public void onEvent(@Nonnull AccountUiEvent event) {
-		final Account account = event.getAccount();
+	public void onEvent(@Nonnull AccountUiEvent.Typed event) {
+		final Account account = event.account;
 
-		switch (event.getType()) {
+		switch (event.type) {
 			case show_account:
 				onShowAccountEvent(account);
 				break;
 			case edit_account:
 				onAccountEditRequestedEvent(account);
 				break;
-			case account_edit_finished:
-				onAccountEditFinishedEvent(event);
-				break;
 		}
 	}
 
 	private void onAccountEditRequestedEvent(@Nonnull Account account) {
-		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-		final MultiPaneFragmentDef fragmentDef = newEditAccountConfigurationFragmentDef(activity, account, true);
-		if (activity.isDualPane()) {
-			mpfm.setSecondFragment(fragmentDef);
-			if (activity.isTriplePane()) {
-				mpfm.emptifyThirdFragment();
-			}
-		} else {
-			mpfm.setMainFragment(fragmentDef);
-		}
+		AccountActivity.open(activity, account, true);
 	}
 
 	private void onShowAccountEvent(@Nonnull Account account) {
@@ -77,25 +63,6 @@ public final class AccountUiEventListener implements EventListener<AccountUiEven
 			}
 		} else {
 			mpfm.setMainFragment(newAccountFragmentDef(activity, account, true));
-		}
-	}
-
-	private void onAccountEditFinishedEvent(@Nonnull AccountUiEvent event) {
-		final AccountUiEventType.FinishedState state = (AccountUiEventType.FinishedState) event.getData();
-		assert state != null;
-		switch (state) {
-			case back:
-				activity.getMultiPaneFragmentManager().goBack();
-				break;
-			case removed:
-				activity.getMultiPaneFragmentManager().clearBackStack();
-				break;
-			case status_changed:
-				// do nothing as we can change state only from realm info fragment and that is OK
-				break;
-			case saved:
-				activity.getMultiPaneFragmentManager().goBack();
-				break;
 		}
 	}
 }

@@ -27,10 +27,31 @@
             a:layout_width="match_parent"
             a:layout_height="wrap_content"
             a:gravity="top|left"
-            a:orientation="vertical"
-            a:paddingBottom="10dp" />
+            a:orientation="vertical"/>
 
-        <include layout="@layout/mpp_fragment_edit_buttons" />
+        <LinearLayout
+            a:layout_width="match_parent"
+            a:layout_height="wrap_content"
+            a:orientation="vertical"
+            a:id="@+id/mpp_contact_actions">
+
+            <TextView
+                a:layout_width="match_parent"
+                a:layout_height="wrap_content"
+                style="?mpp_property_group"
+                a:text="@string/mpp_actions" />
+
+            <include
+                a:id="@+id/mpp_contact_edit"
+                layout="@layout/mpp_property" />
+
+            <include layout="@layout/mpp_property_divider" />
+
+            <include
+                a:id="@+id/mpp_contact_remove"
+                layout="@layout/mpp_property" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

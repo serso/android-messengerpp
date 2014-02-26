@@ -96,6 +96,12 @@
 				  android:name=".users.ContactActivity$Dialog"
 				  android:theme="@style/mpp_theme_holo_dialog"/>
 
+        <activity android:label="@string/mpp_accounts"
+            android:name=".accounts.AccountActivity"/>
+        <activity android:label="@string/mpp_accounts"
+            android:name=".accounts.AccountActivity$Dialog"
+            android:theme="@style/mpp_theme_holo_dialog"/>
+
 		<service android:name=".OngoingNotificationService"/>
 
 		<receiver android:name=".OnBootBroadcastReceiver">

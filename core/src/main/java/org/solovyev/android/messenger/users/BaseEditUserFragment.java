@@ -74,7 +74,7 @@ public abstract class BaseEditUserFragment<A extends Account<?>> extends BaseUse
 	@Override
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
-		editButtons.onViewCreated(root, savedInstanceState);
+		editButtons.onViewCreated(root);
 
 		final User user = getUser();
 		if (user != null) {

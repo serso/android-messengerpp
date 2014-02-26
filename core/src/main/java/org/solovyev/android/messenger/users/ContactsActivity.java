@@ -73,6 +73,9 @@ public class ContactsActivity extends BaseFragmentActivity {
 					public void run() {
 						if (isDualPane()) {
 							fragmentManager.setSecondFragment(newViewContactFragmentDef(ContactsActivity.this, account, contact.getEntity(), false));
+							if (isTriplePane()) {
+								fragmentManager.emptifyThirdFragment();
+							}
 						} else {
 							fragmentManager.setMainFragment(newViewContactFragmentDef(ContactsActivity.this, account, contact.getEntity(), true));
 						}
@@ -81,15 +84,11 @@ public class ContactsActivity extends BaseFragmentActivity {
 			}
 		});
 
-		listeners.add(ContactUiEvent.Edit.class, new EventListener<ContactUiEvent.Edit>() {
+		listeners.add(ContactUiEvent.Edit.class, new EditContactListener(this));
+		listeners.add(ContactUiEvent.Removed.class, new EventListener<ContactUiEvent.Removed>() {
 			@Override
-			public void onEvent(ContactUiEvent.Edit event) {
-				final Account account = event.account;
-
-				final Realm realm = account.getRealm();
-				if (realm.canCreateUsers()) {
-					ContactActivity.open(ContactsActivity.this, event.contact, true);
-				}
+			public void onEvent(ContactUiEvent.Removed removed) {
+				fragmentManager.clearBackStack();
 			}
 		});
 
@@ -135,5 +134,25 @@ public class ContactsActivity extends BaseFragmentActivity {
 				}
 			}
 		});
+	}
+
+	static class EditContactListener implements EventListener<ContactUiEvent.Edit> {
+
+		@Nonnull
+		private final Activity activity;
+
+		EditContactListener(@Nonnull Activity activity) {
+			this.activity = activity;
+		}
+
+		@Override
+		public void onEvent(ContactUiEvent.Edit event) {
+			final Account account = event.account;
+
+			final Realm realm = account.getRealm();
+			if (realm.canCreateUsers()) {
+				ContactActivity.open(activity, event.contact, true);
+			}
+		}
 	}
 }

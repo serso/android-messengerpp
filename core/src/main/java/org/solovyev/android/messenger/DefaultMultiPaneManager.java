@@ -92,9 +92,20 @@ public class DefaultMultiPaneManager implements MultiPaneManager {
 			// action bar is null in dialogs
 
 			if (isDualPane(activity)) {
-				actionBar.setTitle(title);
+				if (pane.getId() == R.id.content_second_pane) {
+					actionBar.setTitle(title);
+				}
 			} else if (pane.getId() == R.id.content_first_pane) {
 				actionBar.setTitle(title);
+			}
+		} else {
+			// set dialog title
+			if (isDualPane(activity)) {
+				if (pane.getId() == R.id.content_second_pane) {
+					activity.setTitle(title);
+				}
+			} else if (pane.getId() == R.id.content_first_pane) {
+				activity.setTitle(title);
 			}
 		}
 	}
