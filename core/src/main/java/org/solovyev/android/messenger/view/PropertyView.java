@@ -20,9 +20,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.text.Strings;
@@ -44,7 +43,7 @@ public final class PropertyView {
 	private TextView labelView;
 
 	@Nullable
-	private TextView valueView;
+	private View valueView;
 
 	@Nullable
 	private ImageView iconView;
@@ -53,8 +52,7 @@ public final class PropertyView {
 	private FrameLayout widgetView;
 
 	private PropertyView(int viewId, @Nonnull View parent) {
-		view = parent.findViewById(viewId);
-		resources = parent.getResources();
+		this(parent.findViewById(viewId));
 	}
 
 	private PropertyView(@Nonnull View view) {
@@ -112,7 +110,7 @@ public final class PropertyView {
 
 	@Nonnull
 	public PropertyView setValue(@Nullable CharSequence value) {
-		final TextView valueView = getValueView();
+		final TextView valueView = getValueTextView();
 		valueView.setText(value);
 		valueView.setVisibility(Strings.isEmpty(value) ? GONE : VISIBLE);
 		return this;
@@ -138,11 +136,20 @@ public final class PropertyView {
 
 	@Nonnull
 	public PropertyView setWidget(@Nullable View widget) {
+		return setWidget(widget, null);
+	}
+
+	@Nonnull
+	public PropertyView setWidget(@Nullable View widget, @Nullable ViewGroup.LayoutParams params) {
 		final FrameLayout widgetView = getWidgetView();
 
 		widgetView.removeAllViews();
 		if (widget != null) {
-			widgetView.addView(widget);
+			if (params != null) {
+				widgetView.addView(widget, params);
+			} else {
+				widgetView.addView(widget);
+			}
 			widgetView.setVisibility(VISIBLE);
 		} else {
 			widgetView.setVisibility(GONE);
@@ -152,7 +159,7 @@ public final class PropertyView {
 	}
 
 	@Nonnull
-	private TextView getLabelView() {
+	public TextView getLabelView() {
 		if (labelView == null) {
 			labelView = (TextView) view.findViewById(R.id.mpp_property_label);
 		}
@@ -160,9 +167,9 @@ public final class PropertyView {
 	}
 
 	@Nonnull
-	private TextView getValueView() {
+	public View getValueView() {
 		if (valueView == null) {
-			valueView = (TextView) view.findViewById(R.id.mpp_property_value);
+			valueView = view.findViewById(R.id.mpp_property_value);
 		}
 		return valueView;
 	}
@@ -198,5 +205,26 @@ public final class PropertyView {
 	public PropertyView setOnLongClickListener(View.OnLongClickListener l) {
 		view.setOnLongClickListener(l);
 		return this;
+	}
+
+	@Nonnull
+	public PropertyView setVisibility(int visibility) {
+		view.setVisibility(visibility);
+		return this;
+	}
+
+	@Nonnull
+	public TextView getValueTextView() {
+		return (TextView) getValueView();
+	}
+
+	@Nonnull
+	public EditText getValueEditView() {
+		return (EditText) getValueView();
+	}
+
+	@Nonnull
+	public Spinner getValueSpinner() {
+		return (Spinner) getValueView();
 	}
 }

@@ -17,36 +17,32 @@
   -->
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  style="?mpp_list_item">
+			  style="@style/mpp_property_layout">
 
 	<ImageView
-			a:id="@+id/mpp_li_account_icon_imageview"
-			style="?mpp_list_item_icon"/>
+			a:id="@+id/mpp_property_icon"
+            style="@style/mpp_property_icon"
+			a:visibility="gone"/>
 
-	<LinearLayout
-			a:orientation="vertical"
-			a:layout_weight="1"
-			a:layout_width="0dp"
-			a:layout_height="wrap_content"
-			a:layout_gravity="center_vertical">
+    <LinearLayout
+        style="@style/mpp_property_content">
 
-		<TextView
-				a:id="@+id/mpp_li_account_user_name_textview"
-				style="?mpp_list_item_name"/>
+        <TextView
+            a:textStyle="bold"
+            a:id="@+id/mpp_property_label"
+            style="?attr/mpp_property_label"/>
 
-		<TextView
-				a:id="@+id/mpp_li_account_name_textview"
-				style="?mpp_list_item_text_secondary"/>
+		<Spinner
+				a:id="@+id/mpp_property_value"
+				style="?attr/mpp_property_label"/>
 
 	</LinearLayout>
 
-	<include layout="@layout/mpp_online" a:id="@+id/mpp_li_account_online_view"/>
-
-	<ImageView
-			a:id="@+id/mpp_li_account_warning_imageview"
-			a:background="@drawable/mpp_li_warning_states"
-			style="@style/mpp_list_item_right_button"
+	<FrameLayout
+			a:id="@+id/mpp_property_widget"
+			a:layout_width="wrap_content"
+			a:layout_height="match_parent"
+			a:gravity="center_vertical"
 			a:visibility="gone"/>
-
 
 </LinearLayout>

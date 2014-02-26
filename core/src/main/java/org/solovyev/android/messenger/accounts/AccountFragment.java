@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.accounts;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import com.actionbarsherlock.view.Menu;
@@ -38,6 +39,7 @@ import org.solovyev.android.messenger.view.FragmentMenu;
 import org.solovyev.android.messenger.view.PropertyView;
 import org.solovyev.android.messenger.view.SwitchView;
 import org.solovyev.android.sherlock.menu.SherlockMenuHelper;
+import org.solovyev.android.view.ViewFromLayoutBuilder;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 
@@ -46,6 +48,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getSyncService;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
 import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
@@ -60,6 +64,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	private PropertyView statusView;
 	private SwitchView statusSwitch;
 	private PropertyView syncView;
+	private View accountOnline;
 
 	@Nonnull
 	private final FragmentMenu menu = new FragmentMenu(this, new MenuBuilder());
@@ -89,7 +94,14 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		final Account<?> account = getAccount();
 		final Context context = getThemeContext();
 
+		final Realm realm = account.getRealm();
+
+		accountOnline = ViewFromLayoutBuilder.newInstance(R.layout.mpp_online).build(context);
+
 		headerView = newPropertyView(R.id.mpp_account_header, root);
+		headerView.setLabel(realm.getNameResId())
+				.setIcon(realm.getIconResId())
+				.setWidget(accountOnline);
 
 		statusView = newPropertyView(R.id.mpp_account_status, root);
 
@@ -149,13 +161,14 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	}
 
 	private void updateView(@Nonnull Account<?> account) {
-		final Realm realm = account.getRealm();
-
 		statusSwitch.setChecked(account.isEnabled());
 
-		headerView.setLabel(realm.getNameResId())
-				.setValue(account.getUser().getDisplayName())
-				.setIcon(realm.getIconResId());
+		headerView.setValue(account.getUser().getDisplayName());
+		if (account.isEnabled()) {
+			accountOnline.setVisibility(account.isOnline() ? VISIBLE : GONE);
+		} else {
+			accountOnline.setVisibility(GONE);
+		}
 
 		statusView.setLabel(R.string.mpp_status)
 				.setValue(account.isEnabled() ? R.string.mpp_enabled : R.string.mpp_disabled)

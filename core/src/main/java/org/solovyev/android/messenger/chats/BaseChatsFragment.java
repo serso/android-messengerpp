@@ -130,11 +130,6 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 		}
 	}
 
-	@Override
-	protected void onEmptyList(@Nonnull BaseFragmentActivity activity) {
-		// we don't want to emptify other fragments
-	}
-
 	/*
 	**********************************************************************
     *

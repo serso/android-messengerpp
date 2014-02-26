@@ -22,14 +22,14 @@
 
 	<LinearLayout style="?mpp_fragment">
 
-		<TextView
-				a:id="@+id/mpp_fragment_title"
-				style="?mpp_fragment_title"/>
+        <LinearLayout style="@style/mpp_form_fields">
 
-		<CheckBox
-				a:id="@+id/mpp_sms_conf_stop_processing_checkbox"
-				a:text="@string/mpp_sms_do_not_put_sms_into_system_inbox"
-				style="?mpp_form_checkbox"/>
+            <CheckBox
+                    a:id="@+id/mpp_sms_conf_stop_processing_checkbox"
+                    a:text="@string/mpp_sms_do_not_put_sms_into_system_inbox"
+                    style="?mpp_form_checkbox"/>
+
+        </LinearLayout>
 
 		<include layout="@layout/mpp_fragment_edit_buttons"/>
 

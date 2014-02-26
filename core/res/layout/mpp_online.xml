@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ImageView xmlns:a="http://schemas.android.com/apk/res/android"
+    style="?mpp_list_item_contact_online"
+    a:visibility="gone" />

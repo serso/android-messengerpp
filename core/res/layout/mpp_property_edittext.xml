@@ -24,17 +24,17 @@
         style="@style/mpp_property_icon"
         a:visibility="gone"/>
 
-	<LinearLayout
+    <LinearLayout
         style="@style/mpp_property_content">
 
-		<TextView
-				a:id="@+id/mpp_property_label"
-				style="?attr/mpp_property_label"/>
+        <TextView
+            a:textStyle="bold"
+            a:id="@+id/mpp_property_label"
+            style="?attr/mpp_property_label"/>
 
-		<TextView
+		<EditText
 				a:id="@+id/mpp_property_value"
-				style="?attr/mpp_property_value"
-				a:visibility="gone"/>
+				style="?attr/mpp_property_label"/>
 
 	</LinearLayout>
 

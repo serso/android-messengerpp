@@ -21,7 +21,10 @@ import com.actionbarsherlock.ActionBarSherlock;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.messenger.BaseFragment;
+import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.BaseListFragment;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.Builder;
 
 import javax.annotation.Nonnull;
@@ -58,13 +61,21 @@ public final class FragmentMenu implements
 	}
 
 	private boolean shouldShowMenu() {
-		if (fragment instanceof BaseListFragment && !((BaseListFragment) fragment).wasViewCreated()) {
-			// view is not created but it requests menu => show it
-			return true;
+		if (fragment instanceof BaseListFragment) {
+			final BaseListFragment f = (BaseListFragment) fragment;
+			if (!f.getSherlockActivity().isDualPane()) {
+				return f.getId() == R.id.content_first_pane;
+			}
 		}
 
-		// show menu if fragment is visible
-		return fragment.isVisible();
+		if (fragment instanceof BaseFragment) {
+			final BaseFragment f = (BaseFragment) fragment;
+			if (!f.getSherlockActivity().isDualPane()) {
+				return f.getId() == R.id.content_first_pane;
+			}
+		}
+
+		return true;
 	}
 
 	@Override

@@ -45,6 +45,9 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	private EditText serverEditText;
 
 	@Nonnull
+	private View serverFields;
+
+	@Nonnull
 	private EditText loginEditText;
 
 	@Nonnull
@@ -72,6 +75,7 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
+		serverFields = root.findViewById(R.id.mpp_xmpp_server_fields);
 		serverEditText = (EditText) root.findViewById(R.id.mpp_xmpp_server_edittext);
 		loginEditText = (EditText) root.findViewById(R.id.mpp_xmpp_login_edittext);
 		passwordEditText = (EditText) root.findViewById(R.id.mpp_xmpp_password_edittext);
@@ -98,13 +102,10 @@ public abstract class XmppAccountConfigurationFragment extends BaseAccountConfig
 	}
 
 	private void setupServerInput(@Nonnull View root) {
-		final View serverLabel = root.findViewById(R.id.mpp_xmpp_server_label);
-
 		final String server = getServer();
 		if (!isEmpty(server)) {
 			serverEditText.setText(server);
-			serverEditText.setVisibility(GONE);
-			serverLabel.setVisibility(GONE);
+			serverFields.setVisibility(GONE);
 		}
 	}
 

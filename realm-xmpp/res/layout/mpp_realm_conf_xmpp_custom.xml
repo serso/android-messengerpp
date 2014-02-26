@@ -17,61 +17,79 @@
   -->
 
 <ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
-			a:layout_width="match_parent"
-			a:layout_height="match_parent">
+    a:layout_width="match_parent"
+    a:layout_height="match_parent">
 
-	<LinearLayout style="?mpp_fragment">
+    <LinearLayout style="?mpp_fragment">
 
-		<include layout="@layout/mpp_realm_conf_xmpp_fields"/>
+        <include layout="@layout/mpp_realm_conf_xmpp_fields" />
 
-		<TextView
-				a:id="@+id/mpp_xmpp_advanced_options_link"
-				a:text="@string/mpp_xmpp_show_advanced_options"
-				style="?mpp_form_label"/>
+        <LinearLayout style="@style/mpp_form_fields">
 
-		<LinearLayout a:id="@+id/mpp_xmpp_advanced_options"
-					  a:orientation="vertical"
-					  a:layout_width="match_parent"
-					  a:layout_height="wrap_content"
-					  a:visibility="gone">
+            <TextView
+                a:id="@+id/mpp_xmpp_advanced_options_link"
+                a:text="@string/mpp_xmpp_show_advanced_options"
+                style="?mpp_form_label" />
 
-			<CheckBox
-					a:id="@+id/mpp_xmpp_use_username_without_domain_checkbox"
-					a:text="@string/mpp_xmpp_use_username_without_domain_as_login"
-					style="?mpp_form_checkbox"/>
+        </LinearLayout>
 
-			<TextView
-					a:id="@+id/mpp_xmpp_port_label"
-					a:text="@string/mpp_xmpp_port"
-					style="?mpp_form_label"/>
+        <LinearLayout
+            a:id="@+id/mpp_xmpp_advanced_options"
+            a:orientation="vertical"
+            a:layout_width="match_parent"
+            a:layout_height="wrap_content"
+            a:visibility="gone">
 
-			<EditText
-					a:id="@+id/mpp_xmpp_port_edittext"
-					a:inputType="number"
-					a:digits="0123456789"
-					style="?mpp_form_edittext"/>
+            <LinearLayout style="@style/mpp_form_fields">
 
-			<TextView
-					a:id="@+id/mpp_xmpp_security_mode_label"
-					a:text="@string/mpp_xmpp_security_mode"
-					style="?mpp_form_label"/>
+                <CheckBox
+                    a:id="@+id/mpp_xmpp_use_username_without_domain_checkbox"
+                    a:text="@string/mpp_xmpp_use_username_without_domain_as_login"
+                    style="?mpp_form_textview" />
+            </LinearLayout>
 
-			<Spinner
-					a:id="@+id/mpp_xmpp_security_mode_spinner"
-					style="?mpp_form_spinner"/>
+            <LinearLayout style="@style/mpp_form_fields">
 
-			<TextView
-					a:id="@+id/mpp_xmpp_resource_label"
-					a:text="@string/mpp_xmpp_resource"
-					style="?mpp_form_label"/>
+                <TextView
+                    a:id="@+id/mpp_xmpp_port_label"
+                    a:text="@string/mpp_xmpp_port"
+                    style="?mpp_form_label" />
 
-			<EditText
-					a:id="@+id/mpp_xmpp_resource_edittext"
-					style="?mpp_form_edittext"/>
+                <EditText
+                    a:id="@+id/mpp_xmpp_port_edittext"
+                    a:inputType="number"
+                    a:digits="0123456789"
+                    style="?mpp_form_edittext" />
+            </LinearLayout>
 
-		</LinearLayout>
+            <LinearLayout style="@style/mpp_form_fields">
 
-		<include layout="@layout/mpp_fragment_edit_buttons"/>
+                <TextView
+                    a:id="@+id/mpp_xmpp_security_mode_label"
+                    a:text="@string/mpp_xmpp_security_mode"
+                    style="?mpp_form_label" />
 
-	</LinearLayout>
+                <Spinner
+                    a:id="@+id/mpp_xmpp_security_mode_spinner"
+                    style="?mpp_form_spinner" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/mpp_form_fields">
+
+                <TextView
+                    a:id="@+id/mpp_xmpp_resource_label"
+                    a:text="@string/mpp_xmpp_resource"
+                    style="?mpp_form_label" />
+
+                <EditText
+                    a:id="@+id/mpp_xmpp_resource_edittext"
+                    style="?mpp_form_edittext" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include layout="@layout/mpp_fragment_edit_buttons" />
+
+    </LinearLayout>
 </ScrollView>

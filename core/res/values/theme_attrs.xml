@@ -40,7 +40,6 @@
 	<attr name="mpp_form_textview" format="reference"/>
 	<attr name="mpp_form_edittext" format="reference"/>
 	<attr name="mpp_form_spinner" format="reference"/>
-	<attr name="mpp_form_password_edittext" format="reference"/>
 	<attr name="mpp_form_buttons" format="reference"/>
 	<attr name="mpp_form_button" format="reference"/>
 	<attr name="mpp_form_checkbox" format="reference"/>

@@ -398,8 +398,6 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		params.gravity = CENTER_VERTICAL;
 		root.addView(listViewParent, params);
 
-		tryUpdateActionBar();
-
 		multiPaneManager.onCreatePane(getActivity(), container, root);
 
 		initViewStates(savedInstanceState);
@@ -408,23 +406,32 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	void tryUpdateActionBar() {
-		if (!getSherlockActivity().isDialog()) {
-			if (!getMultiPaneManager().isDualPane(getActivity())) {
-				// only one pane is shown => can update action bar options
+		if (!getMultiPaneManager().isDualPane(getActivity())) {
+			// only one pane is shown => can update action bar options
+			if (getId() == R.id.content_first_pane) {
 				updateActionBar();
-			} else {
-				// several panes are shown
-				if (getId() != R.id.content_first_pane) {
-					updateActionBar();
-				}
+			}
+		} else {
+			// several panes are shown
+			if (getId() == R.id.content_second_pane) {
+				updateActionBar();
 			}
 		}
+
+		updateMenus();
 	}
 
 	private void updateActionBar() {
-		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setTitle(getActionBatTitle());
-		actionBar.setIcon(getActionBatIcon());
+		final BaseFragmentActivity activity = getSherlockActivity();
+		if (!activity.isDialog()) {
+			final ActionBar actionBar = activity.getSupportActionBar();
+			actionBar.setTitle(getActionBatTitle());
+			actionBar.setIcon(getActionBatIcon());
+		}
+	}
+
+	private void updateMenus() {
+		getSherlockActivity().invalidateOptionsMenu();
 	}
 
 	@Nonnull
@@ -919,7 +926,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				}
 			}
 
-			updateActionBar();
+			tryUpdateActionBar();
 		}
 	}
 

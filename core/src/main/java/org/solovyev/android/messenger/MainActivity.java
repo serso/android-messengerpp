@@ -313,11 +313,17 @@ public final class MainActivity extends BaseFragmentActivity {
 			} else {
 				actionBar.setDisplayHomeAsUpEnabled(false);
 			}
+		}
 
-			final Fragment firstFragment = getMultiPaneFragmentManager().getFirstFragment();
-			if (firstFragment instanceof BaseListFragment) {
-				((BaseListFragment) firstFragment).tryUpdateActionBar();
-			}
+		tryUpdateActionBar();
+	}
+
+	private void tryUpdateActionBar() {
+		final Fragment firstFragment = getMultiPaneFragmentManager().getFirstFragment();
+		if (firstFragment instanceof BaseListFragment) {
+			((BaseListFragment) firstFragment).tryUpdateActionBar();
+		} else {
+			invalidateOptionsMenu();
 		}
 	}
 

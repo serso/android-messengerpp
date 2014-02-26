@@ -22,27 +22,33 @@
 
 	<LinearLayout style="?mpp_fragment">
 
-		<TextView
-				a:id="@+id/mpp_fragment_title"
-				style="?mpp_fragment_title"/>
+        <LinearLayout
+            style="@style/mpp_form_fields">
 
-		<TextView
-				a:text="@string/mpp_vk_login"
-				style="?mpp_form_label"/>
+            <TextView
+                    a:text="@string/mpp_vk_login"
+                    style="?mpp_form_label"/>
 
-		<EditText
-				a:id="@+id/mpp_vk_login_edittext"
-				style="?mpp_form_edittext"/>
+            <EditText
+                    a:id="@+id/mpp_vk_login_edittext"
+                    style="?mpp_form_edittext"/>
 
-		<TextView
-				a:text="@string/mpp_vk_password"
-				style="?mpp_form_label"/>
+        </LinearLayout>
 
-		<EditText
-				a:id="@+id/mpp_vk_password_edittext"
-				style="?mpp_form_password_edittext"/>
+        <LinearLayout style="@style/mpp_form_fields">
 
-		<include layout="@layout/mpp_fragment_edit_buttons"/>
+            <TextView
+                a:text="@string/mpp_vk_password"
+                style="?mpp_form_label" />
+
+            <EditText
+                a:id="@+id/mpp_vk_password_edittext"
+                a:password="true"
+                style="?mpp_form_edittext"/>
+        </LinearLayout>
+
+
+        <include layout="@layout/mpp_fragment_edit_buttons"/>
 
 	</LinearLayout>
 </ScrollView>

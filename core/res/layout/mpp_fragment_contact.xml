@@ -20,7 +20,7 @@
     a:layout_width="match_parent"
     a:layout_height="match_parent">
 
-    <LinearLayout style="?mpp_fragment" a:padding="0dp">
+    <LinearLayout style="?mpp_fragment">
 
         <LinearLayout
             a:id="@+id/mpp_contact_properties_viewgroup"

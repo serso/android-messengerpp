@@ -17,38 +17,48 @@
   -->
 
 <merge xmlns:a="http://schemas.android.com/apk/res/android"
-	   a:layout_width="match_parent"
-	   a:layout_height="match_parent">
+    a:layout_width="match_parent"
+    a:layout_height="match_parent">
 
-	<TextView
-			a:id="@+id/mpp_fragment_title"
-			style="?mpp_fragment_title"/>
+    <LinearLayout style="@style/mpp_form_fields" a:id="@+id/mpp_xmpp_server_fields">
 
-	<TextView
-			a:id="@+id/mpp_xmpp_server_label"
-			a:text="@string/mpp_xmpp_server"
-			style="?mpp_form_label"/>
+        <TextView
+            a:id="@+id/mpp_xmpp_server_label"
+            a:text="@string/mpp_xmpp_server"
+            style="?mpp_form_label" />
 
-	<EditText
-			a:id="@+id/mpp_xmpp_server_edittext"
-			style="?mpp_form_edittext"/>
 
-	<TextView
-			a:id="@+id/mpp_xmpp_login_label"
-			a:text="@string/mpp_xmpp_login"
-			style="?mpp_form_label"/>
+        <EditText
+            a:id="@+id/mpp_xmpp_server_edittext"
+            style="?mpp_form_edittext" />
 
-	<EditText
-			a:id="@+id/mpp_xmpp_login_edittext"
-			style="?mpp_form_edittext"/>
+    </LinearLayout>
 
-	<TextView
-			a:id="@+id/mpp_xmpp_password_label"
-			a:text="@string/mpp_xmpp_password"
-			style="?mpp_form_label"/>
+    <LinearLayout style="@style/mpp_form_fields">
 
-	<EditText
-			a:id="@+id/mpp_xmpp_password_edittext"
-			style="?mpp_form_password_edittext"/>
+        <TextView
+            a:id="@+id/mpp_xmpp_login_label"
+            a:text="@string/mpp_xmpp_login"
+            style="?mpp_form_label" />
+
+        <EditText
+            a:id="@+id/mpp_xmpp_login_edittext"
+            style="?mpp_form_edittext" />
+    </LinearLayout>
+
+
+    <LinearLayout style="@style/mpp_form_fields">
+
+        <TextView
+            a:id="@+id/mpp_xmpp_password_label"
+            a:text="@string/mpp_xmpp_password"
+            style="?mpp_form_label" />
+
+        <EditText
+            a:id="@+id/mpp_xmpp_password_edittext"
+            a:password="true"
+            style="?mpp_form_edittext" />
+    </LinearLayout>
+
 
 </merge>

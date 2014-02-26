@@ -104,7 +104,7 @@ public final class AccountListItem extends BaseMessengerListItem<Account> {
 		final TextView nameTextView = viewTag.getViewById(R.id.mpp_li_account_name_textview);
 		nameTextView.setText(account.getDisplayName(context));
 
-		final View onlineView = viewTag.getViewById(R.id.mpp_li_contact_online_view);
+		final View onlineView = viewTag.getViewById(R.id.mpp_li_account_online_view);
 		final View warningView = viewTag.getViewById(R.id.mpp_li_account_warning_imageview);
 		if (account.isEnabled()) {
 			warningView.setVisibility(GONE);
