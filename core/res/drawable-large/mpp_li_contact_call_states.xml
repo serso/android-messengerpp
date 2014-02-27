@@ -25,5 +25,5 @@
 	<item android:state_activated="true" android:drawable="@drawable/mpp_contact_call_inverted"/>
 
 	<!-- default, list item not selected -->
-	<item android:drawable="@drawable/mpp_contact_call"/>
+	<item android:drawable="@drawable/mpp_contact_call_green"/>
 </selector>

@@ -44,10 +44,10 @@
 		<item name="android:background">@drawable/mpp_li_states</item>
 
 		<!--NOTE: separate definition in order to override them-->
-		<item name="android:paddingTop">5dp</item>
-		<item name="android:paddingBottom">5dp</item>
-		<item name="android:paddingLeft">5dp</item>
-		<item name="android:paddingRight">5dp</item>
+		<item name="android:paddingTop">@dimen/mpp_list_item_padding</item>
+		<item name="android:paddingBottom">@dimen/mpp_list_item_padding</item>
+		<item name="android:paddingLeft">@dimen/mpp_list_item_padding</item>
+		<item name="android:paddingRight">@dimen/mpp_list_item_padding</item>
 
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
@@ -124,7 +124,6 @@
 	<style name="mpp_list_item_filter_text" parent="mpp_list_item_block">
 		<item name="android:background">@android:color/transparent</item>
 		<item name="android:singleLine">true</item>
-		<item name="android:paddingLeft">5dp</item>
 		<item name="android:layout_gravity">center_vertical|left</item>
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
@@ -182,6 +181,7 @@
 	<style name="mpp_list_item_contact_divider">
 		<item name="android:layout_height">match_parent</item>
 		<item name="android:layout_width">1dp</item>
+		<item name="android:layout_marginRight">@dimen/mpp_list_item_padding</item>
 	</style>
 
 	<style name="mpp_list_item_contact_call" parent="mpp_list_item_right_button">

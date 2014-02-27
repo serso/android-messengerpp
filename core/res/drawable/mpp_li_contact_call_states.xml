@@ -26,8 +26,8 @@
 	as there is no second pane on which additional content is shown
 	-->
 	<!-- list item selected-->
-	<item android:state_activated="true" android:drawable="@drawable/mpp_contact_call"/>
+	<item android:state_activated="true" android:drawable="@drawable/mpp_contact_call_green"/>
 
 	<!-- default, list item not selected -->
-	<item android:drawable="@drawable/mpp_contact_call"/>
+	<item android:drawable="@drawable/mpp_contact_call_green"/>
 </selector>

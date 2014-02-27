@@ -22,4 +22,5 @@
 	<dimen name="mpp_list_item_icon_size">50dp</dimen>
 	<dimen name="mpp_popup_notification_width">200dp</dimen>
 	<dimen name="mpp_section_padding_top">10dp</dimen>
+	<dimen name="mpp_list_item_padding">5dp</dimen>
 </resources>
