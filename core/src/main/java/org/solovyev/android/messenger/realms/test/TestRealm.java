@@ -112,7 +112,7 @@ public class TestRealm extends AbstractRealm {
 
 			@Override
 			public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-				imageView.setImageDrawable(App.getApplication().getResources().getDrawable(getContactIconResId(user)));
+				setUserIcon(user, imageView);
 			}
 
 			@Override
