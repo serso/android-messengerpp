@@ -74,6 +74,7 @@ import static org.solovyev.android.messenger.messages.Messages.newIncomingMessag
 import static org.solovyev.android.messenger.messages.Messages.newOutgoingMessage;
 import static org.solovyev.android.messenger.realms.sms.Call.newNoCall;
 import static org.solovyev.android.messenger.realms.sms.SmsRealm.*;
+import static org.solovyev.android.messenger.realms.sms.SmsRealm.TAG;
 import static org.solovyev.android.messenger.users.PhoneNumber.newPhoneNumber;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONE;
 import static org.solovyev.android.messenger.users.User.PROPERTY_PHONES;
@@ -214,9 +215,16 @@ final class SmsAccountConnection extends BaseAccountConnection<SmsAccount> {
 			final StringBuilder message = new StringBuilder(255 * smsExtras.length);
 			for (Object smsExtra : smsExtras) {
 				final SmsMessage smsMessage = createFromPdu((byte[]) smsExtra);
-				message.append(smsMessage.getMessageBody());
-				fromAddress = smsMessage.getOriginatingAddress();
-				sendTime = smsMessage.getTimestampMillis();
+				if (smsMessage != null) {
+					try {
+						message.append(smsMessage.getMessageBody());
+						fromAddress = smsMessage.getOriginatingAddress();
+						sendTime = smsMessage.getTimestampMillis();
+					} catch (NullPointerException e) {
+						// on Android 2.x NPE is possible inside SmsMessage.getMessageBody function
+						Log.e(TAG, e.getMessage(), e);
+					}
+				}
 			}
 
 			if (!isEmpty(message) && !isEmpty(fromAddress) && sendTime != null) {
