@@ -349,7 +349,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	}
 
 	/*
-    **********************************************************************
+	**********************************************************************
     *
     *                           LIFECYCLE
     *
@@ -700,11 +700,10 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	@Override
 	public void onPause() {
 		listeners.clearAll();
-		if (isVisible()) {
-			// if fragment is not visible => it isn't shown => selection must have already been saved
-			restoredAdapterSelection = adapter.getSelectionHelper().getSelection();
-			restoredListViewState = createListViewState();
-		}
+
+		restoredAdapterSelection = adapter.getSelectionHelper().getSelection();
+		restoredListViewState = createListViewState();
+
 		Log.d(tag, "Saving view states:\nselection=" + restoredAdapterSelection + "\nlist view state=" + restoredListViewState);
 		super.onPause();
 	}

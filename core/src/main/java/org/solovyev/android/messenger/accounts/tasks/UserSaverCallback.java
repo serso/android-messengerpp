@@ -19,13 +19,14 @@ package org.solovyev.android.messenger.accounts.tasks;
 
 import com.google.common.util.concurrent.FutureCallback;
 import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.NewContactActivity;
-import org.solovyev.android.messenger.users.ContactActivity;
+import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.tasks.ContextCallback;
 import org.solovyev.android.tasks.Tasks;
 
 import javax.annotation.Nonnull;
+
+import static org.solovyev.android.messenger.App.getEventManager;
 
 public class UserSaverCallback implements ContextCallback<BaseFragmentActivity, User> {
 
@@ -34,11 +35,7 @@ public class UserSaverCallback implements ContextCallback<BaseFragmentActivity, 
 
 	@Override
 	public void onSuccess(@Nonnull BaseFragmentActivity activity, User user) {
-		if (activity instanceof NewContactActivity || activity instanceof ContactActivity) {
-			activity.finish();
-		} else {
-			activity.getSupportFragmentManager().popBackStack();
-		}
+		getEventManager(activity).fire(new ContactUiEvent.Saved(user));
 	}
 
 	@Override

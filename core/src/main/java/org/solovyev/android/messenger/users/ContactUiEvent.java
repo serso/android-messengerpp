@@ -80,4 +80,10 @@ public abstract class ContactUiEvent implements JEvent {
 			this.type = type;
 		}
 	}
+
+	public static class Saved extends ContactUiEvent {
+		public Saved(@Nonnull User contact) {
+			super(contact);
+		}
+	}
 }

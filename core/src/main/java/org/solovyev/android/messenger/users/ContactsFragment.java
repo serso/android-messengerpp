@@ -33,6 +33,8 @@ import static org.solovyev.common.text.Strings.isEmpty;
 
 public class ContactsFragment extends BaseContactsFragment {
 
+	private static final boolean RECENT_ENABLED = false;
+
 	@Nullable
 	private JEventListener<ChatEvent> chatEventListener;
 
@@ -60,8 +62,9 @@ public class ContactsFragment extends BaseContactsFragment {
 		Log.d(tag, "Creating loader, filter text: " + filterText);
 		if (!isEmpty(filterText)) {
 			((ContactsAdapter) adapter).setRecentContacts(false);
-			((BaseContactsAdapter) adapter).setQuery(filterText.toString());
-			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, filterText.toString(), getMaxSize());
+			final String query = filterText == null ? null : filterText.toString();
+			((BaseContactsAdapter) adapter).setQuery(query);
+			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, query, getMaxSize());
 		} else {
 			((ContactsAdapter) adapter).setRecentContacts(true);
 			((BaseContactsAdapter) adapter).setQuery(null);

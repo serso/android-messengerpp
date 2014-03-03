@@ -27,14 +27,7 @@ public abstract class AccountUiEvent {
 		this.account = account;
 	}
 
-	public static enum FinishedState {
-		back,
-		removed,
-		status_changed,
-		saved
-	}
-
-	public static final class Typed extends AccountUiEvent{
+	public static final class Typed extends AccountUiEvent {
 
 		@Nonnull
 		public final AccountUiEventType type;
@@ -45,14 +38,10 @@ public abstract class AccountUiEvent {
 		}
 	}
 
-	public static final class EditFinished extends AccountUiEvent {
+	public static final class Saved extends AccountUiEvent {
 
-		@Nonnull
-		public final FinishedState state;
-
-		public EditFinished(@Nonnull Account account, @Nonnull FinishedState state) {
+		public Saved(@Nonnull Account account) {
 			super(account);
-			this.state = state;
 		}
 	}
 }

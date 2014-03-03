@@ -25,6 +25,7 @@ import android.view.View;
 import com.actionbarsherlock.app.ActionBar;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
+import org.solovyev.android.messenger.EmptyFutureCallback;
 import org.solovyev.android.messenger.accounts.connection.AccountConnectionsService;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.accounts.tasks.AccountSaverCallable;
@@ -40,10 +41,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static com.actionbarsherlock.app.ActionBar.DISPLAY_SHOW_CUSTOM;
-import static com.actionbarsherlock.app.ActionBar.DISPLAY_SHOW_HOME;
-import static com.actionbarsherlock.app.ActionBar.DISPLAY_SHOW_TITLE;
-import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
+import static com.actionbarsherlock.app.ActionBar.*;
 import static org.solovyev.android.messenger.accounts.tasks.AccountSaverListener.newAccountSaverListener;
 
 public abstract class BaseAccountConfigurationFragment<A extends Account<?>> extends BaseAccountFragment<A> {
@@ -190,7 +188,7 @@ public abstract class BaseAccountConfigurationFragment<A extends Account<?>> ext
 
 
 		getTaskListeners().addTaskListener(AccountSaverCallable.TASK_NAME, newAccountSaverListener(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, EmptyFutureCallback.instance, getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	@Override

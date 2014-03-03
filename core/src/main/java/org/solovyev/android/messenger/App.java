@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -46,6 +47,7 @@ import roboguice.RoboGuice;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE;
@@ -406,6 +408,23 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 		final double height = dm.heightPixels / dm.ydpi;
 
 		return sqrt(width * width + height * height);
+	}
+
+	static boolean isRunning() {
+		final ActivityManager.RunningTaskInfo foregroundTask = getForegroundTask();
+		return foregroundTask != null && foregroundTask.topActivity.getPackageName().equals(getApplication().getPackageName());
+	}
+
+	@Nullable
+	private static ActivityManager.RunningTaskInfo getForegroundTask() {
+		final ActivityManager am = (ActivityManager) getApplication().getSystemService(Context.ACTIVITY_SERVICE);
+		// The first in the list of RunningTasks is always the foreground task.
+		final List<ActivityManager.RunningTaskInfo> foregroundTasks = am.getRunningTasks(1);
+		if (foregroundTasks != null && !foregroundTasks.isEmpty()) {
+			return foregroundTasks.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	/*

@@ -31,6 +31,7 @@ import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
+import org.solovyev.android.messenger.EmptyFutureCallback;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
@@ -53,7 +54,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getSyncService;
 import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
-import static org.solovyev.android.messenger.accounts.tasks.AccountRemoverListener.newAccountRemoverListener;
 import static org.solovyev.android.messenger.view.PropertyView.newPropertyView;
 
 public class AccountFragment extends BaseAccountFragment<Account<?>> {
@@ -163,7 +163,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 		builder.setPositiveHandler(new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+				getTaskListeners().run(AccountRemoverCallable.TASK_NAME, new AccountRemoverCallable(getAccount()), null, getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 			}
 		});
 		builder.build().show();
@@ -200,8 +200,8 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 		updateView(getAccount());
 
-		getTaskListeners().addTaskListener(AccountChangeStateCallable.TASK_NAME, AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
-		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, newAccountRemoverListener(getActivity()), getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
+		getTaskListeners().addTaskListener(AccountChangeStateCallable.TASK_NAME, EmptyFutureCallback.instance, getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+		getTaskListeners().addTaskListener(AccountRemoverCallable.TASK_NAME, EmptyFutureCallback.instance, getActivity(), R.string.mpp_removing_account_title, R.string.mpp_removing_account_message);
 	}
 
 	void editAccount() {
@@ -209,7 +209,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	}
 
 	void changeState() {
-		getTaskListeners().run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(getAccount()), AccountChangeStateListener.newInstance(getActivity()), getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
+		getTaskListeners().run(AccountChangeStateCallable.TASK_NAME, new AccountChangeStateCallable(getAccount()), null, getActivity(), R.string.mpp_saving_account_title, R.string.mpp_saving_account_message);
 	}
 
 	/*

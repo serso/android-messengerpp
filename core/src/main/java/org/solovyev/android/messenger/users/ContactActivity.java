@@ -23,8 +23,10 @@ import android.util.Log;
 import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.RoboListeners;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.core.R;
+import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
@@ -107,6 +109,13 @@ public class ContactActivity extends BaseFragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
-		getListeners().add(ContactUiEvent.Edit.class, new ContactsActivity.EditContactListener(this));
+		final RoboListeners listeners = getListeners();
+		listeners.add(ContactUiEvent.Edit.class, new ContactsActivity.EditContactListener(this));
+		listeners.add(ContactUiEvent.Saved.class, new EventListener<ContactUiEvent.Saved>() {
+			@Override
+			public void onEvent(ContactUiEvent.Saved event) {
+				finish();
+			}
+		});
 	}
 }

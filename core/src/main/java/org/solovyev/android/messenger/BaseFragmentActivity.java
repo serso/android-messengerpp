@@ -495,6 +495,10 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		tryDoAction(ActionOnResume.clear_back_stack);
 	}
 
+	protected void tryGoBack() {
+		tryDoAction(ActionOnResume.go_back);
+	}
+
 	protected void onContactRemoved(@Nonnull String contactId) {
 	}
 
@@ -554,6 +558,13 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 			@Override
 			void doAction(@Nonnull BaseFragmentActivity activity) {
 				activity.fragmentManager.clearBackStack();
+			}
+		},
+
+		go_back {
+			@Override
+			void doAction(@Nonnull BaseFragmentActivity activity) {
+				activity.fragmentManager.goBackImmediately();
 			}
 		};
 

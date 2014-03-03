@@ -20,7 +20,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.BaseFragmentActivity;
+import org.solovyev.android.messenger.RoboListeners;
+import org.solovyev.android.messenger.UiEvent;
+import org.solovyev.android.messenger.UiEventListener;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.realms.RealmUiEvent;
 import org.solovyev.android.messenger.realms.RealmUiEventListener;
@@ -67,6 +70,20 @@ public final class AccountsActivity extends BaseFragmentActivity {
 	}
 
 	@Override
+	protected void onAccountDisabled(@Nonnull Account account) {
+		if (account.getState() == AccountState.removed && !isDualPane()) {
+			final Fragment fragment = fragmentManager.getFirstFragment();
+			if (fragment instanceof BaseAccountFragment) {
+				final BaseAccountFragment af = (BaseAccountFragment) fragment;
+				final Account fragmentAccount = af.getAccount();
+				if (fragmentAccount != null && fragmentAccount.equals(account)) {
+					tryGoBack();
+				}
+			}
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 
@@ -74,23 +91,10 @@ public final class AccountsActivity extends BaseFragmentActivity {
 
 		listeners.add(UiEvent.class, new UiEventListener(this));
 		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener(this));
-		listeners.add(AccountUiEvent.EditFinished.class, new EventListener<AccountUiEvent.EditFinished>() {
+		listeners.add(AccountUiEvent.Saved.class, new EventListener<AccountUiEvent.Saved>() {
 			@Override
-			public void onEvent(AccountUiEvent.EditFinished event) {
-				switch (event.state) {
-					case back:
-						fragmentManager.goBack();
-						break;
-					case removed:
-						fragmentManager.clearBackStack();
-						break;
-					case status_changed:
-						// do nothing as we can change state only from account info fragment and that is OK
-						break;
-					case saved:
-						fragmentManager.goBack();
-						break;
-				}
+			public void onEvent(AccountUiEvent.Saved event) {
+				fragmentManager.goBack();
 			}
 		});
 		listeners.add(RealmUiEvent.class, new RealmUiEventListener(this));

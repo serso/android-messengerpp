@@ -65,7 +65,7 @@ public class ContactsActivity extends BaseFragmentActivity {
 				final User user = uf.getUser();
 
 				if (user.getId().equals(contactId)) {
-					tryClearBackStack();
+					tryGoBack();
 				}
 			}
 		}
@@ -141,6 +141,13 @@ public class ContactsActivity extends BaseFragmentActivity {
 						NewContactActivity.start(ContactsActivity.this);
 						break;
 				}
+			}
+		});
+
+		listeners.add(ContactUiEvent.Saved.class, new EventListener<ContactUiEvent.Saved>() {
+			@Override
+			public void onEvent(ContactUiEvent.Saved event) {
+				fragmentManager.goBackImmediately();
 			}
 		});
 	}

@@ -24,7 +24,6 @@ import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.core.R;
-import org.solovyev.android.messenger.users.User;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -89,9 +88,9 @@ public class AccountActivity extends BaseFragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
-		getListeners().add(AccountUiEvent.EditFinished.class, new EventListener<AccountUiEvent.EditFinished>() {
+		getListeners().add(AccountUiEvent.Saved.class, new EventListener<AccountUiEvent.Saved>() {
 			@Override
-			public void onEvent(AccountUiEvent.EditFinished event) {
+			public void onEvent(AccountUiEvent.Saved event) {
 				AccountActivity.this.finish();
 			}
 		});

@@ -94,8 +94,6 @@ public final class MainActivity extends BaseFragmentActivity {
 	@Nonnull
 	private final JEventListener<MessengerEvent> messengerEventListener = onUiThread(this, new MessengerEventListener());
 
-	private static boolean running = false;
-
     /*
 	**********************************************************************
     *
@@ -105,7 +103,9 @@ public final class MainActivity extends BaseFragmentActivity {
     */
 
 	public static boolean tryStart(@Nonnull Activity activity) {
-		final boolean shouldStart = !running;
+		// todo serso: currently if app is opened via Ongoing Notification activity stack is cleared and and MainActivity is shown
+		// instead of last opened activity (e.g. AccountsActivity)
+		final boolean shouldStart = true;
 
 		if (shouldStart) {
 			final Intent result = new Intent();
@@ -141,7 +141,6 @@ public final class MainActivity extends BaseFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		running = true;
 		super.onCreate(savedInstanceState);
 
 		initTabs(savedInstanceState);
@@ -281,13 +280,6 @@ public final class MainActivity extends BaseFragmentActivity {
 		}
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		running = false;
-	}
-
 	/*
     **********************************************************************
     *
@@ -406,7 +398,7 @@ public final class MainActivity extends BaseFragmentActivity {
 
 				if (chat.isPrivate()) {
 					if (chat.getSecondUser().getEntityId().equals(contactId)) {
-						tryClearBackStack();
+						tryGoBack();
 					}
 				}
 			}
@@ -422,7 +414,7 @@ public final class MainActivity extends BaseFragmentActivity {
 				final Chat chat = mf.getChat();
 
 				if (chat.getId().equals(chatId)) {
-					tryClearBackStack();
+					tryGoBack();
 				}
 			}
 		}
@@ -438,7 +430,7 @@ public final class MainActivity extends BaseFragmentActivity {
 				final Chat chat = mf.getChat();
 				final Account chatAccount = getAccountService().getAccountByEntity(chat.getEntity());
 				if (account.equals(chatAccount)) {
-					tryClearBackStack();
+					tryGoBack();
 				}
 			}
 		}

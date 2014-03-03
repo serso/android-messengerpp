@@ -16,7 +16,6 @@
 
 package org.solovyev.android.messenger;
 
-import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -28,8 +27,6 @@ import org.solovyev.android.messenger.core.R;
 import org.solovyev.common.listeners.AbstractJEventListener;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 import static android.app.PendingIntent.getActivity;
 import static org.solovyev.android.messenger.StartActivity.newUnreadMessagesStartIntent;
@@ -68,7 +65,7 @@ public final class UnreadMessagesNotifier extends AbstractJEventListener<Messeng
 				nm.cancel(NOTIFICATION_ID_UNREAD_MESSAGES);
 
 				if (unreadMessagesCount > 0) {
-					if (!isAppShown()) {
+					if (!App.isRunning()) {
 						// todo serso: make proper notification (unread messages text, small icon, etc)
 						// we are not at the top => show notification
 						final NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
@@ -84,25 +81,8 @@ public final class UnreadMessagesNotifier extends AbstractJEventListener<Messeng
 		}
 	}
 
-	private boolean isAppShown() {
-		final ActivityManager.RunningTaskInfo foregroundTask = getForegroundTask();
-		return foregroundTask != null && foregroundTask.topActivity.getPackageName().equals(context.getPackageName());
-	}
-
 	@Nonnull
 	private NotificationManager getNotificationManager() {
 		return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-	}
-
-	@Nullable
-	private ActivityManager.RunningTaskInfo getForegroundTask() {
-		final ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		// The first in the list of RunningTasks is always the foreground task.
-		final List<ActivityManager.RunningTaskInfo> foregroundTasks = am.getRunningTasks(1);
-		if (foregroundTasks != null && !foregroundTasks.isEmpty()) {
-			return foregroundTasks.get(0);
-		} else {
-			return null;
-		}
 	}
 }

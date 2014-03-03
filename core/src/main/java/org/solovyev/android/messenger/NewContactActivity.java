@@ -23,6 +23,7 @@ import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.users.ContactUiEvent;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -60,6 +61,12 @@ public final class NewContactActivity extends BaseFragmentActivity {
 
 		final RoboListeners listeners = getListeners();
 		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener());
+		listeners.add(ContactUiEvent.Saved.class, new EventListener<ContactUiEvent.Saved>() {
+			@Override
+			public void onEvent(ContactUiEvent.Saved event) {
+				finish();
+			}
+		});
 	}
 
 	private final class AccountUiEventListener implements EventListener<AccountUiEvent.Typed> {
