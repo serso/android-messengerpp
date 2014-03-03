@@ -19,11 +19,11 @@ package org.solovyev.android.messenger.messages;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.ClipboardManager;
 import android.text.util.Linkify;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.solovyev.android.list.ListItemOnClickData;
@@ -47,7 +47,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
-import static org.solovyev.android.messenger.messages.MessageBubbleViews.fillMessageBubbleViews;
 
 public final class MessageListItem extends BaseMessengerListItem<Message> /*, ChatEventListener*/ {
 
@@ -62,11 +61,16 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 
 	private final boolean userMessage;
 
+	private static final Layout layout = Layout.wrap_content;
+
+	private static final Style userStyle = Style.light_grey;
+	private static final Style contactStyle = Style.blue;
+
 	private MessageListItem(@Nonnull Account account,
 							@Nonnull Chat chat,
 							@Nonnull Message message,
 							boolean userMessage) {
-		super(TAG_PREFIX, message, R.layout.mpp_list_item_message, false);
+		super(TAG_PREFIX + (userMessage ? "0_" : "1_"), message, layout.getLayoutResId(userMessage), false);
 		this.account = account;
 		this.chat = chat;
 		this.userMessage = userMessage;
@@ -100,8 +104,6 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 
 	@Override
 	protected void fillView(@Nonnull Message message, @Nonnull Context context, @Nonnull ViewAwareTag viewTag) {
-		final ViewGroup messageLayout = viewTag.getViewById(R.id.mpp_li_message_linearlayout);
-
 		final TextView messageTextView = viewTag.getViewById(R.id.mpp_li_message_body_textview);
 
 		final TextView messageDate = viewTag.getViewById(R.id.mpp_li_message_date_textview);
@@ -143,9 +145,11 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 		messageTextView.setText(fromHtml(messageBody));
 		Linkify.addLinks(messageTextView, Linkify.ALL);
 
-		final View root = viewTag.getView();
-
-		fillMessageBubbleViews(context, root, messageLayout, messageTextView, messageDate, userMessage);
+		if (userMessage) {
+			userStyle.prepareLayout(userMessage, viewTag);
+		} else {
+			contactStyle.prepareLayout(userMessage, viewTag);
+		}
 
 		if (message.canRead()) {
 			final Message readMessage = message.cloneRead();
@@ -223,5 +227,61 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	@Nonnull
 	public Message getMessage() {
 		return getData();
+	}
+
+	public static enum Style {
+
+		grey(R.drawable.mpp_message_bubble_right_gray, R.drawable.mpp_message_bubble_left_gray, R.color.mpp_text),
+		light_grey(R.drawable.mpp_message_bubble_right_gray_light, R.drawable.mpp_message_bubble_left_gray_light, R.color.mpp_text),
+		light_blue(R.drawable.mpp_message_bubble_right_blue_light, R.drawable.mpp_message_bubble_left_blue_light, R.color.mpp_text),
+		blue(R.drawable.mpp_message_bubble_right_blue, R.drawable.mpp_message_bubble_left_blue, R.color.mpp_text_inverted);
+
+		private final int userDrawable;
+		private final int contactDrawable;
+		private final int textColorResId;
+
+		Style(int userDrawable, int contactDrawable, int textColorResId) {
+			this.userDrawable = userDrawable;
+			this.contactDrawable = contactDrawable;
+			this.textColorResId = textColorResId;
+		}
+
+		public void prepareLayout(boolean userMessage, @Nonnull ViewAwareTag viewTag) {
+			final Resources resources = viewTag.getView().getResources();
+
+			final View messageLayout = viewTag.getViewById(R.id.mpp_li_message_linearlayout);
+			final TextView messageText = viewTag.getViewById(R.id.mpp_li_message_body_textview);
+			final TextView messageDateText = viewTag.getViewById(R.id.mpp_li_message_date_textview);
+
+			messageLayout.setBackgroundResource(userMessage ? userDrawable : contactDrawable);
+
+			applyTextColor(resources, messageText, textColorResId);
+			applyTextColor(resources, messageDateText, textColorResId);
+		}
+	}
+
+	private static void applyTextColor(Resources resources, TextView textView, int colorResId) {
+		final int textColor = resources.getColor(colorResId);
+		textView.setTextColor(textColor);
+		textView.setHintTextColor(textColor);
+		textView.setLinkTextColor(textColor);
+		textView.setHighlightColor(textColor);
+	}
+
+	public static enum Layout {
+		match_parent {
+			@Override
+			public int getLayoutResId(boolean userMessage) {
+				return userMessage ? R.layout.mpp_list_item_message_mp_user : R.layout.mpp_list_item_message_mp_contact;
+			}
+		},
+
+		wrap_content {
+			public int getLayoutResId(boolean userMessage) {
+				return userMessage ? R.layout.mpp_list_item_message_wc_user : R.layout.mpp_list_item_message_wc_contact;
+			}
+		};
+
+		public abstract int getLayoutResId(boolean userMessage);
 	}
 }

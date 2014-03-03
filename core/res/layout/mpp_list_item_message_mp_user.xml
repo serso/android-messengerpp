@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright 2013 serso aka se.solovyev
+  ~ Copyright 2014 serso aka se.solovyev
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,22 +19,22 @@
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
 			 a:layout_width="match_parent"
 			 a:layout_height="match_parent"
-			 a:paddingRight="14dp"
-			 a:paddingTop="2dp"
-			 a:paddingBottom="2dp">
+			 a:paddingLeft="13dp"
+			 a:paddingTop="3dp"
+			 a:paddingBottom="3dp"
+			 a:paddingRight="2dp">
 
 	<LinearLayout
 			a:id="@+id/mpp_li_message_linearlayout"
-			a:background="@drawable/mpp_message_bubble_left_gray_light"
-			a:paddingLeft="25dp"
+			a:background="@drawable/mpp_message_bubble_right_blue_light"
+			a:paddingRight="16dp"
 			style="?mpp_list_item">
 
 		<ImageView
 				a:id="@+id/mpp_li_message_icon_imageview"
 				a:layout_gravity="top"
 				style="?mpp_list_item_icon"
-				a:visibility="gone"
-				a:src="@drawable/mpp_icon_user"/>
+				a:visibility="gone"/>
 
 		<LinearLayout
 				style="?mpp_list_item_block"

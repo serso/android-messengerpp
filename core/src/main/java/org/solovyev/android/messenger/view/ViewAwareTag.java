@@ -16,16 +16,15 @@
 
 package org.solovyev.android.messenger.view;
 
+import android.util.SparseArray;
 import android.view.View;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class ViewAwareTag {
 
 	@Nonnull
-	private final Map<Integer, View> views = new HashMap<Integer, View>();
+	private final SparseArray<View> views = new SparseArray<View>();
 
 	@Nonnull
 	private String tag;

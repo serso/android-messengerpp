@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="-1328.3524"
-     inkscape:cy="835.307"
+     inkscape:zoom="1"
+     inkscape:cx="-771.76534"
+     inkscape:cy="1337.7308"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -36,10 +36,10 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-grids="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="988"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4"
+     inkscape:window-width="1920"
+     inkscape:window-height="1028"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1">
     <sodipodi:guide
        orientation="-0.70710678,0.70710678"
@@ -89,6 +89,53 @@
        orientation="0,1"
        position="-2105.7143,547.85714"
        id="guide3074" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-590.00327,1702.9893"
+       id="guide3025" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-269.70426,1911.5602"
+       id="guide3027" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-495,1690"
+       id="guide3031" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-491,1595"
+       id="guide3033" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid3011" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-569.10715,1710"
+       id="guide3013" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-680,1640"
+       id="guide3015" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-665,1645"
+       id="guide3017" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-570,1690"
+       id="guide3019" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-645,1595"
+       id="guide3021" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-545,1700"
+       id="guide3023" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-540,1700"
+       id="guide3026" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -143,8 +190,8 @@
        inkscape:export-ydpi="19.85"
        inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_right_gray_light.png" />
     <path
-       style="fill:#eeeeee;fill-opacity:1;stroke:#b6b6b6;stroke-opacity:1"
-       d="m -1209.4122,-498.33103 316.57939,0 0.1705,317.40603 -372.36119,-0.2154 55.6113,-46.0148 z"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#b6b6b6;stroke-opacity:1"
+       d="m -1196.5551,-671.18817 316.57943,0 0.1705,317.40603 -372.36123,-0.2154 55.6113,-46.0148 z"
        id="rect2987-3-7-7"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
@@ -152,8 +199,8 @@
        inkscape:export-ydpi="19.85"
        inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_message_bubble_left_gray_light.png" />
     <path
-       style="fill:#d4d4d4;fill-opacity:1;stroke:#7e7e7e;stroke-opacity:1"
-       d="m -1166.9858,-132.65581 316.5793,0 0.1706,317.40603 -372.3612,-0.2154 55.6113,-46.0148 z"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#cccccc;stroke-opacity:1"
+       d="m -1179.843,-226.94152 316.57935,0 0.1706,317.406026 -372.36125,-0.2154 55.6113,-46.0148 z"
        id="rect2987-3-9"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc"
@@ -187,5 +234,37 @@
        inkscape:export-filename="C:\Users\Solovyev_S\Projects\org.solovyev\android\messenger\core\misc\resources\mpp_notification_bubble_white.png"
        inkscape:export-xdpi="19"
        inkscape:export-ydpi="19" />
+    <path
+       style="fill:#f2f2f2;stroke:#ffffff"
+       d="m -1246.3697,-356.68569 c 0.3975,-0.6432 12.0001,-10.44677 25.7836,-21.78571 l 25.0607,-20.61627 0.015,-135.35715 0.015,-135.35714 157.1429,0 157.14286,0 0,157.14286 0,157.14285 -182.94146,0 c -100.6178,0 -182.6162,-0.52625 -182.2187,-1.16944 z"
+       id="path3003"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#d4d4d4;fill-opacity:1;stroke:#7e7e7e;stroke-opacity:1"
+       d="m -590.00327,-652.63784 110.00327,3e-5 0,109.99999 -165,0 54.99673,-45 z"
+       id="rect2987-3-9-5"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="18.333645"
+       inkscape:export-ydpi="18.333645"
+       inkscape:export-filename="/home/serso/projects/java/android/messengerpp/core/res/drawable/mpp_message_bubble_left_gray.9.png" />
+    <path
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#b3b3b3;stroke-opacity:1"
+       d="m -397.26976,-783.1974 88.72226,-4e-5 0,113.9764 -144.33356,-3e-5 55.6113,-46.0148 z"
+       id="rect2987-3-9-5-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="19.85"
+       inkscape:export-ydpi="19.85"
+       inkscape:export-filename="/home/serso/projects/java/android/messengerpp/core/res/drawable/mpp_message_bubble_left_gray_light.9.png" />
+    <path
+       style="fill:#d7eef4;fill-opacity:1;stroke:#afdde9;stroke-opacity:1"
+       d="m -362.21856,-652.63784 -110.00327,3e-5 0,109.99999 165,0 -54.99673,-45 z"
+       id="rect2987-3-9-5-0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc"
+       inkscape:export-xdpi="18.333645"
+       inkscape:export-ydpi="18.333645"
+       inkscape:export-filename="/home/serso/projects/java/android/messengerpp/core/res/drawable/mpp_message_bubble_right_blue.9.png" />
   </g>
 </svg>
