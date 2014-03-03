@@ -234,9 +234,7 @@ public class ContactFragment extends BaseUserFragment {
 		builder.setPositiveHandler(new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				final User contact = getUser();
-				App.getUserService().removeUser(contact);
-				getEventManager().fire(new ContactUiEvent.Removed(contact));
+				App.getUserService().removeUser(getUser());
 			}
 		});
 		builder.build().show();

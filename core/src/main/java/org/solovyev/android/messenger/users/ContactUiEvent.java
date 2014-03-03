@@ -48,13 +48,6 @@ public abstract class ContactUiEvent implements JEvent {
 		}
 	}
 
-	public static class Removed extends ContactUiEvent {
-
-		protected Removed(@Nonnull User contact) {
-			super(contact);
-		}
-	}
-
 	public static class Edit extends ContactUiEvent {
 
 		@Nonnull

@@ -23,10 +23,8 @@ import android.util.Log;
 import org.solovyev.android.Activities;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
-import org.solovyev.android.messenger.RoboListeners;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.core.R;
-import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
@@ -41,6 +39,9 @@ public class ContactActivity extends BaseFragmentActivity {
 	private final static String ARGS_BUNDLE = "bundle";
 	private final static String ARGS_EDIT = "edit";
 	private static final String TAG = App.newTag(ContactActivity.class.getSimpleName());
+
+	@Nonnull
+	private String contactId;
 
 	static void open(@Nonnull Activity activity, @Nonnull User contact, boolean edit) {
 		final Account account = App.getAccountService().getAccountByEntity(contact.getEntity());
@@ -66,14 +67,21 @@ public class ContactActivity extends BaseFragmentActivity {
 		final Bundle arguments = intent.getBundleExtra(ARGS_BUNDLE);
 		final boolean edit = intent.getBooleanExtra(ARGS_EDIT, false);
 		if (arguments != null) {
-			try {
-				if (edit) {
-					fragmentManager.setMainFragment(newEditUserFragmentDef(this, arguments, false));
-				} else {
-					fragmentManager.setMainFragment(newViewContactFragmentDef(this, arguments, false));
+			final String contactId = Users.getUserIdFromArguments(arguments);
+			if (contactId != null) {
+				try {
+					this.contactId = contactId;
+					if (edit) {
+						fragmentManager.setMainFragment(newEditUserFragmentDef(this, arguments, false));
+					} else {
+						fragmentManager.setMainFragment(newViewContactFragmentDef(this, arguments, false));
+					}
+				} catch (IllegalArgumentException e) {
+					Log.e(TAG, e.getMessage(), e);
+					finish();
 				}
-			} catch (IllegalArgumentException e) {
-				Log.e(TAG, e.getMessage(), e);
+			} else {
+				Log.e(TAG, "User id must be provided for " + ContactActivity.class);
 				finish();
 			}
 		} else {
@@ -89,16 +97,16 @@ public class ContactActivity extends BaseFragmentActivity {
 	}
 
 	@Override
+	protected void onContactRemoved(@Nonnull String contactId) {
+		if (this.contactId.equals(contactId)) {
+			tryFinish();
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 
-		final RoboListeners listeners = getListeners();
-		listeners.add(ContactUiEvent.Edit.class, new ContactsActivity.EditContactListener(this));
-		listeners.add(ContactUiEvent.Removed.class, new EventListener<ContactUiEvent.Removed>() {
-			@Override
-			public void onEvent(ContactUiEvent.Removed removed) {
-				finish();
-			}
-		});
+		getListeners().add(ContactUiEvent.Edit.class, new ContactsActivity.EditContactListener(this));
 	}
 }

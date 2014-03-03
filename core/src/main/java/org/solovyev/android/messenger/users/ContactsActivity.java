@@ -19,6 +19,7 @@ package org.solovyev.android.messenger.users;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountException;
@@ -56,6 +57,21 @@ public class ContactsActivity extends BaseFragmentActivity {
 	}
 
 	@Override
+	protected void onContactRemoved(@Nonnull String contactId) {
+		if (!isDualPane()) {
+			final Fragment fragment = fragmentManager.getFirstFragment();
+			if (fragment instanceof BaseUserFragment) {
+				final BaseUserFragment uf = (BaseUserFragment) fragment;
+				final User user = uf.getUser();
+
+				if (user.getId().equals(contactId)) {
+					tryClearBackStack();
+				}
+			}
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 
@@ -85,13 +101,6 @@ public class ContactsActivity extends BaseFragmentActivity {
 		});
 
 		listeners.add(ContactUiEvent.Edit.class, new EditContactListener(this));
-		listeners.add(ContactUiEvent.Removed.class, new EventListener<ContactUiEvent.Removed>() {
-			@Override
-			public void onEvent(ContactUiEvent.Removed removed) {
-				fragmentManager.clearBackStack();
-			}
-		});
-
 		listeners.add(ContactUiEvent.OpenChat.class, new EventListener<ContactUiEvent.OpenChat>() {
 			@Override
 			public void onEvent(ContactUiEvent.OpenChat event) {

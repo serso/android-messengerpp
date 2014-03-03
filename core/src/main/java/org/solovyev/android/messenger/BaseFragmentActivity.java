@@ -26,7 +26,10 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
+import org.solovyev.android.messenger.accounts.Account;
+import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.accounts.AccountService;
+import org.solovyev.android.messenger.accounts.AccountState;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
@@ -34,9 +37,12 @@ import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.messages.EmptyFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
@@ -47,6 +53,7 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.find;
 import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.App.newTag;
+import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
 
 public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity implements FragmentManager.OnBackStackChangedListener {
 
@@ -118,6 +125,16 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 	@Nonnull
 	private final ActivityUi ui;
+
+	@Nonnull
+	private final JEventListener<UserEvent> userEventListener = onUiThread(this, new UserEventListener());
+
+	@Nonnull
+	private final JEventListener<AccountEvent> accountEventListener = onUiThread(this, new AccountEventListener());
+
+	@Nullable
+	private ActionOnResume actionOnResume;
+
 
     /*
 	**********************************************************************
@@ -222,6 +239,9 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		this.secondPane = (ViewGroup) findViewById(R.id.content_second_pane);
 		this.thirdPane = (ViewGroup) findViewById(R.id.content_third_pane);
+
+		accountService.addListener(accountEventListener);
+		userService.addListener(userEventListener);
 	}
 
 	protected void initFragments() {
@@ -398,6 +418,11 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		onBackStackChanged();
 
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+		if (actionOnResume != null) {
+			actionOnResume.doAction(this);
+			actionOnResume = null;
+		}
 	}
 
 	@Override
@@ -406,6 +431,14 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		ui.onPause();
 		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		userService.removeListener(userEventListener);
+		accountService.removeListener(accountEventListener);
 	}
 
 	@Override
@@ -443,5 +476,87 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
+	}
+
+	protected void tryFinish() {
+		tryDoAction(ActionOnResume.finish);
+	}
+
+	private void tryDoAction(@Nonnull ActionOnResume action) {
+		if (ui.isPaused()) {
+			// schedule on resume
+			actionOnResume = action;
+		} else {
+			action.doAction(this);
+		}
+	}
+
+	protected void tryClearBackStack() {
+		tryDoAction(ActionOnResume.clear_back_stack);
+	}
+
+	protected void onContactRemoved(@Nonnull String contactId) {
+	}
+
+	protected void onChatRemoved(@Nonnull String chatId) {
+	}
+
+	protected void onAccountDisabled(@Nonnull Account account) {
+	}
+
+	private class UserEventListener extends AbstractJEventListener<UserEvent> {
+
+		public UserEventListener() {
+			super(UserEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull UserEvent event) {
+			switch (event.getType()) {
+				case chat_removed:
+					onChatRemoved(event.getDataAsChatId());
+					break;
+				case contact_removed:
+					onContactRemoved(event.getDataAsUserId());
+					break;
+			}
+		}
+	}
+
+	private class AccountEventListener extends AbstractJEventListener<AccountEvent> {
+
+		protected AccountEventListener() {
+			super(AccountEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull AccountEvent event) {
+			switch (event.getType()) {
+				case state_changed:
+					final Account account = event.getAccount();
+					if (account.getState() != AccountState.enabled) {
+						onAccountDisabled(account);
+					}
+					break;
+			}
+		}
+	}
+
+	private enum ActionOnResume {
+		finish {
+			@Override
+			void doAction(@Nonnull BaseFragmentActivity activity) {
+				activity.finish();
+			}
+		},
+
+		clear_back_stack {
+			@Override
+			void doAction(@Nonnull BaseFragmentActivity activity) {
+				activity.fragmentManager.clearBackStack();
+			}
+		};
+
+		abstract void doAction(@Nonnull BaseFragmentActivity activity);
 	}
 }

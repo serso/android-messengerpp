@@ -28,12 +28,14 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
+import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
+import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.android.messenger.users.CompositeUserDialogFragment;
 import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.ContactUiEventListener;
@@ -81,7 +83,7 @@ public final class MainActivity extends BaseFragmentActivity {
     **********************************************************************
     */
 
-	private boolean tabsEnabled = false;
+	private boolean tabsEnabled;
 
 	@Nullable
 	private ActivityMenu<Menu, MenuItem> menu;
@@ -89,8 +91,8 @@ public final class MainActivity extends BaseFragmentActivity {
 	@Nullable
 	private GestureDetector gestureDetector;
 
-	@Nullable
-	private JEventListener<MessengerEvent> messengerEventListener;
+	@Nonnull
+	private final JEventListener<MessengerEvent> messengerEventListener = onUiThread(this, new MessengerEventListener());
 
 	private static boolean running = false;
 
@@ -187,7 +189,6 @@ public final class MainActivity extends BaseFragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
-		this.messengerEventListener = onUiThread(this, new MessengerEventListener());
 		this.getMessengerListeners().addListener(messengerEventListener);
 
 		final RoboListeners listeners = getListeners();
@@ -211,16 +212,18 @@ public final class MainActivity extends BaseFragmentActivity {
 			}
 		}
 
-		final Fragment fragment = fragmentManager.getFirstFragment();
-		if (fragment instanceof ChatsFragment) {
-			final ChatListItem item = ((ChatsFragment) fragment).getAdapter().getSelectedItem();
-			if (item != null) {
-				getUiHandler().post(new Runnable() {
-					@Override
-					public void run() {
-						getEventManager().fire(ChatUiEventType.chat_clicked.newEvent(item.getChat()));
-					}
-				});
+		if (isDualPane()) {
+			final Fragment fragment = fragmentManager.getFirstFragment();
+			if (fragment instanceof ChatsFragment) {
+				final ChatListItem item = ((ChatsFragment) fragment).getAdapter().getSelectedItem();
+				if (item != null) {
+					getUiHandler().post(new Runnable() {
+						@Override
+						public void run() {
+							getEventManager().fire(ChatUiEventType.chat_clicked.newEvent(item.getChat()));
+						}
+					});
+				}
 			}
 		}
 	}
@@ -234,10 +237,7 @@ public final class MainActivity extends BaseFragmentActivity {
 
 	@Override
 	protected void onPause() {
-		if (this.messengerEventListener != null) {
-			this.getMessengerListeners().removeListener(messengerEventListener);
-			this.messengerEventListener = null;
-		}
+		this.getMessengerListeners().removeListener(messengerEventListener);
 
 		super.onPause();
 	}
@@ -395,6 +395,55 @@ public final class MainActivity extends BaseFragmentActivity {
 		});
 		actionBar.addTab(tab);
 	}
+
+	@Override
+	protected void onContactRemoved(@Nonnull String contactId) {
+		if (!isDualPane()) {
+			final Fragment fragment = fragmentManager.getFirstFragment();
+			if (fragment instanceof MessagesFragment) {
+				final MessagesFragment mf = (MessagesFragment) fragment;
+				final Chat chat = mf.getChat();
+
+				if (chat.isPrivate()) {
+					if (chat.getSecondUser().getEntityId().equals(contactId)) {
+						tryClearBackStack();
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void onChatRemoved(@Nonnull String chatId) {
+		if (!isDualPane()) {
+			final Fragment fragment = fragmentManager.getFirstFragment();
+			if (fragment instanceof MessagesFragment) {
+				final MessagesFragment mf = (MessagesFragment) fragment;
+				final Chat chat = mf.getChat();
+
+				if (chat.getId().equals(chatId)) {
+					tryClearBackStack();
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void onAccountDisabled(@Nonnull Account account) {
+		if (!isDualPane()) {
+			final Fragment fragment = fragmentManager.getFirstFragment();
+			if (fragment instanceof MessagesFragment) {
+				final MessagesFragment mf = (MessagesFragment) fragment;
+
+				final Chat chat = mf.getChat();
+				final Account chatAccount = getAccountService().getAccountByEntity(chat.getEntity());
+				if (account.equals(chatAccount)) {
+					tryClearBackStack();
+				}
+			}
+		}
+	}
+
 
 	private class MessengerEventListener extends AbstractJEventListener<MessengerEvent> {
 

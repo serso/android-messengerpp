@@ -62,6 +62,7 @@ import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import org.solovyev.common.text.Strings;
 import roboguice.RoboGuice;
 import roboguice.event.EventListener;
 
@@ -428,7 +429,12 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		super.onPause();
 
 		if (chat != null && messageBody != null) {
-			getChatService().saveDraftMessage(chat, messageBody.getText().toString());
+			final String message = messageBody.getText().toString();
+			if (!Strings.isEmpty(message)) {
+				// todo serso: here chat might be already deleted and we will get SQLite exception in logs, need to add
+				// check
+				getChatService().saveDraftMessage(chat, message);
+			}
 		}
 	}
 

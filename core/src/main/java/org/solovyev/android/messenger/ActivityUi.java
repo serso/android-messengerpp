@@ -66,6 +66,8 @@ public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeLis
 
 	private final boolean dialog;
 
+	private boolean paused;
+
 	public ActivityUi(@Nonnull Activity activity) {
 		this(activity, false);
 	}
@@ -138,9 +140,13 @@ public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeLis
 	public void onResume() {
 		tryUpdateTheme();
 		App.getPreferences().registerOnSharedPreferenceChangeListener(this);
+
+		paused = false;
 	}
 
 	public void onPause() {
+		paused = true;
+
 		App.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
 
 		if (listeners != null) {
@@ -173,5 +179,9 @@ public class ActivityUi implements SharedPreferences.OnSharedPreferenceChangeLis
 	@Nonnull
 	protected Activity getActivity() {
 		return activity;
+	}
+
+	public boolean isPaused() {
+		return paused;
 	}
 }
