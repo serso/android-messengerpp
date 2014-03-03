@@ -157,12 +157,15 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 	@Nonnull
 	private MessengerTheme theme;
 
+	@Nonnull
+	private SharedPreferences preferences;
+
 	private void init0(@Nonnull Application application) {
 		this.application = application;
 		this.uiHandler = Threads.newUiHandler();
 		this.iconGenerator = new IconGenerator(application);
+		this.preferences = getDefaultSharedPreferences(getApplication());
 
-		final SharedPreferences preferences = getPreferences();
 		preferences.registerOnSharedPreferenceChangeListener(this);
 		theme = getThemeFromPreferences();
 
@@ -321,7 +324,7 @@ public final class App implements SharedPreferences.OnSharedPreferenceChangeList
 
 	@Nonnull
 	public static SharedPreferences getPreferences() {
-		return getDefaultSharedPreferences(getApplication());
+		return instance.preferences;
 	}
 
 	@Nonnull

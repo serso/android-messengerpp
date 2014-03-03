@@ -104,7 +104,7 @@ public abstract class BaseChatsFragment extends BaseAsyncListFragment<UiChat, Ch
 	protected abstract BaseChatsAdapter createAdapter();
 
 	@Nonnull
-	protected BaseChatsAdapter getAdapter() {
+	public BaseChatsAdapter getAdapter() {
 		return (BaseChatsAdapter) super.getAdapter();
 	}
 

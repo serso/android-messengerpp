@@ -30,10 +30,7 @@ import com.actionbarsherlock.view.MenuItem;
 import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.messenger.accounts.AccountUiEvent;
 import org.solovyev.android.messenger.accounts.AccountUiEventListener;
-import org.solovyev.android.messenger.chats.Chat;
-import org.solovyev.android.messenger.chats.ChatUiEvent;
-import org.solovyev.android.messenger.chats.ChatUiEventListener;
-import org.solovyev.android.messenger.chats.Chats;
+import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
@@ -211,6 +208,19 @@ public final class MainActivity extends BaseFragmentActivity {
 			final Wizard wizard = wizards.getWizard(FIRST_TIME_WIZARD);
 			if (!wizard.isFinished()) {
 				continueWizard(wizards, wizard.getName(), this);
+			}
+		}
+
+		final Fragment fragment = fragmentManager.getFirstFragment();
+		if (fragment instanceof ChatsFragment) {
+			final ChatListItem item = ((ChatsFragment) fragment).getAdapter().getSelectedItem();
+			if (item != null) {
+				getUiHandler().post(new Runnable() {
+					@Override
+					public void run() {
+						getEventManager().fire(ChatUiEventType.chat_clicked.newEvent(item.getChat()));
+					}
+				});
 			}
 		}
 	}

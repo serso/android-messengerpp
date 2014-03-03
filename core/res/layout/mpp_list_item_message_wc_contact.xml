@@ -22,13 +22,12 @@
 			  a:paddingLeft="2dp"
 			  a:paddingTop="3dp"
 			  a:paddingBottom="3dp"
-			  a:paddingRight="2dp"
+			  a:paddingRight="13dp"
 			  a:orientation="horizontal"
 			  a:gravity="left">
 
 	<LinearLayout
 			a:paddingLeft="18dp"
-			a:layout_marginRight="@dimen/mpp_list_item_icon_size"
 			a:id="@+id/mpp_li_message_linearlayout"
 			a:background="@drawable/mpp_message_bubble_left_gray_light"
 			a:layout_width="wrap_content"

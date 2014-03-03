@@ -37,7 +37,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.chats.ChatListItem.newChatListItem;
 
-abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
+public abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem> {
 
 	@Nonnull
 	private String query = "";

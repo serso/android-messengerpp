@@ -444,20 +444,4 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
-
-	/*protected void tryUpdateNavigationMode(@Nonnull ActionBar actionBar) {
-		final Fragment mainFragment = fragmentManager.getFirstFragment();
-		if (mainFragment != null && !isEmpty(mainFragment.getTag())) {
-			if (findTabByTag(mainFragment.getTag()) == null) {
-				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				actionBar.setDisplayShowTitleEnabled(false);
-			} else {
-				actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-				actionBar.setDisplayShowTitleEnabled(true);
-			}
-		} else {
-			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-			actionBar.setDisplayShowTitleEnabled(true);
-		}
-	}*/
 }

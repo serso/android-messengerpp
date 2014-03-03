@@ -66,6 +66,9 @@ public interface Chat extends Identifiable, EntityAware, Mergeable<Chat> {
 	@Nonnull
 	Chat cloneWithNewProperty(@Nonnull AProperty property);
 
+	@Nonnull
+	Chat cloneWithoutProperty(@Nonnull String propertyName);
+
 	@Nullable
 	String getPropertyValueByName(@Nonnull String name);
 }

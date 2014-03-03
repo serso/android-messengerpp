@@ -131,6 +131,14 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 		return clone;
 	}
 
+	@Nonnull
+	@Override
+	public Chat cloneWithoutProperty(@Nonnull String propertyName) {
+		final ChatImpl clone = clone();
+		clone.properties.removeProperty(propertyName);
+		return clone;
+	}
+
 	@Nullable
 	@Override
 	public String getPropertyValueByName(@Nonnull String name) {

@@ -136,6 +136,8 @@ public interface ChatService extends JEventListeners<JEventListener<ChatEvent>, 
 
 	void saveDraftMessage(@Nonnull Chat chat, @Nullable String message);
 
+	void removeDraftMessage(@Nonnull Chat chat);
+
 	@Nullable
 	String getDraftMessage(@Nonnull Chat chat);
 

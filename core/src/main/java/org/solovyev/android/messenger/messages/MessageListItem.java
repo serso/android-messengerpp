@@ -54,17 +54,21 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	private static final String TAG_PREFIX = "message_list_item_";
 
 	@Nonnull
+	private static final MessageLayout layout = MessageLayout.wrap_content;
+
+	@Nonnull
+	private static final MessageStyle userStyle = MessageStyle.light_grey;
+
+	@Nonnull
+	private static final MessageStyle contactStyle = MessageStyle.blue;
+
+	@Nonnull
 	private final Account account;
 
 	@Nonnull
 	private Chat chat;
 
 	private final boolean userMessage;
-
-	private static final Layout layout = Layout.wrap_content;
-
-	private static final Style userStyle = Style.light_grey;
-	private static final Style contactStyle = Style.blue;
 
 	private MessageListItem(@Nonnull Account account,
 							@Nonnull Chat chat,
@@ -227,61 +231,5 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	@Nonnull
 	public Message getMessage() {
 		return getData();
-	}
-
-	public static enum Style {
-
-		grey(R.drawable.mpp_message_bubble_right_gray, R.drawable.mpp_message_bubble_left_gray, R.color.mpp_text),
-		light_grey(R.drawable.mpp_message_bubble_right_gray_light, R.drawable.mpp_message_bubble_left_gray_light, R.color.mpp_text),
-		light_blue(R.drawable.mpp_message_bubble_right_blue_light, R.drawable.mpp_message_bubble_left_blue_light, R.color.mpp_text),
-		blue(R.drawable.mpp_message_bubble_right_blue, R.drawable.mpp_message_bubble_left_blue, R.color.mpp_text_inverted);
-
-		private final int userDrawable;
-		private final int contactDrawable;
-		private final int textColorResId;
-
-		Style(int userDrawable, int contactDrawable, int textColorResId) {
-			this.userDrawable = userDrawable;
-			this.contactDrawable = contactDrawable;
-			this.textColorResId = textColorResId;
-		}
-
-		public void prepareLayout(boolean userMessage, @Nonnull ViewAwareTag viewTag) {
-			final Resources resources = viewTag.getView().getResources();
-
-			final View messageLayout = viewTag.getViewById(R.id.mpp_li_message_linearlayout);
-			final TextView messageText = viewTag.getViewById(R.id.mpp_li_message_body_textview);
-			final TextView messageDateText = viewTag.getViewById(R.id.mpp_li_message_date_textview);
-
-			messageLayout.setBackgroundResource(userMessage ? userDrawable : contactDrawable);
-
-			applyTextColor(resources, messageText, textColorResId);
-			applyTextColor(resources, messageDateText, textColorResId);
-		}
-	}
-
-	private static void applyTextColor(Resources resources, TextView textView, int colorResId) {
-		final int textColor = resources.getColor(colorResId);
-		textView.setTextColor(textColor);
-		textView.setHintTextColor(textColor);
-		textView.setLinkTextColor(textColor);
-		textView.setHighlightColor(textColor);
-	}
-
-	public static enum Layout {
-		match_parent {
-			@Override
-			public int getLayoutResId(boolean userMessage) {
-				return userMessage ? R.layout.mpp_list_item_message_mp_user : R.layout.mpp_list_item_message_mp_contact;
-			}
-		},
-
-		wrap_content {
-			public int getLayoutResId(boolean userMessage) {
-				return userMessage ? R.layout.mpp_list_item_message_wc_user : R.layout.mpp_list_item_message_wc_contact;
-			}
-		};
-
-		public abstract int getLayoutResId(boolean userMessage);
 	}
 }
