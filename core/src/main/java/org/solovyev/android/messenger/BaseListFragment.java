@@ -701,10 +701,12 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 	public void onPause() {
 		listeners.clearAll();
 
-		restoredAdapterSelection = adapter.getSelectionHelper().getSelection();
-		restoredListViewState = createListViewState();
+		if (!fragmentUi.isExistsLastSavedInstanceState()) {
+			restoredAdapterSelection = adapter.getSelectionHelper().getSelection();
+			restoredListViewState = createListViewState();
+			Log.d(tag, "Saving view states:\nselection=" + restoredAdapterSelection + "\nlist view state=" + restoredListViewState);
+		}
 
-		Log.d(tag, "Saving view states:\nselection=" + restoredAdapterSelection + "\nlist view state=" + restoredListViewState);
 		super.onPause();
 	}
 

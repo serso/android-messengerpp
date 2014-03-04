@@ -79,4 +79,8 @@ public class FragmentUi {
 	public void clearLastSavedInstanceState() {
 		lastSavedInstanceState = null;
 	}
+
+	public boolean isExistsLastSavedInstanceState() {
+		return lastSavedInstanceState != null;
+	}
 }
