@@ -39,6 +39,7 @@ import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.MainActivity;
+import org.solovyev.android.messenger.MessengerTheme;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.core.R;
@@ -119,6 +120,7 @@ public class ContactFragment extends BaseUserFragment {
 
 		final Context context = getThemeContext();
 		final Resources resources = context.getResources();
+		final MessengerTheme.Icons icons = getIcons();
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
 		propertiesViewGroup.removeAllViews();
@@ -171,7 +173,7 @@ public class ContactFragment extends BaseUserFragment {
 		newPropertyView(R.id.mpp_contact_edit, root)
 				.setVisibility(canEditContact ? VISIBLE : GONE)
 				.setLabel(R.string.mpp_edit)
-				.setRightIcon(R.drawable.mpp_ab_edit_light)
+				.setRightIcon(icons.edit)
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -183,7 +185,7 @@ public class ContactFragment extends BaseUserFragment {
 		newPropertyView(R.id.mpp_contact_remove, root)
 				.setVisibility(canRemoveContact ? VISIBLE : GONE)
 				.setLabel(R.string.mpp_remove)
-				.setRightIcon(R.drawable.mpp_ab_remove_light)
+				.setRightIcon(icons.remove)
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {

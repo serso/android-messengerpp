@@ -32,6 +32,7 @@ import org.solovyev.android.menu.ActivityMenu;
 import org.solovyev.android.menu.IdentifiableMenuItem;
 import org.solovyev.android.menu.ListActivityMenu;
 import org.solovyev.android.messenger.EmptyFutureCallback;
+import org.solovyev.android.messenger.MessengerTheme;
 import org.solovyev.android.messenger.accounts.tasks.AccountRemoverCallable;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.realms.Realm;
@@ -100,6 +101,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 		final Account<?> account = getAccount();
 		final Context context = getThemeContext();
+		final MessengerTheme.Icons icons = getIcons();
 
 		final Realm realm = account.getRealm();
 
@@ -114,7 +116,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 		newPropertyView(R.id.mpp_account_edit, root)
 				.setLabel(R.string.mpp_edit)
-				.setRightIcon(R.drawable.mpp_ab_edit_light)
+				.setRightIcon(icons.edit)
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -124,7 +126,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 
 		newPropertyView(R.id.mpp_account_remove, root)
 				.setLabel(R.string.mpp_remove)
-				.setRightIcon(R.drawable.mpp_ab_remove_light)
+				.setRightIcon(icons.remove)
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {

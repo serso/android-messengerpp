@@ -17,39 +17,41 @@
   -->
 
 <ScrollView xmlns:a="http://schemas.android.com/apk/res/android"
-			a:layout_width="match_parent"
-			a:layout_height="match_parent">
+	a:layout_width="match_parent"
+	a:layout_height="match_parent">
 
 	<LinearLayout style="?mpp_fragment">
 
 		<LinearLayout
-				a:id="@+id/mpp_contact_properties_viewgroup"
-				a:layout_width="match_parent"
-				a:layout_height="wrap_content"
-				a:gravity="top|left"
-				a:orientation="vertical"/>
+			a:id="@+id/mpp_contact_properties_viewgroup"
+			a:layout_width="match_parent"
+			a:layout_height="wrap_content"
+			a:gravity="top|left"
+			a:orientation="vertical" />
 
 		<LinearLayout
-				a:layout_width="match_parent"
-				a:layout_height="wrap_content"
-				a:orientation="vertical"
-				a:id="@+id/mpp_contact_actions">
+			a:layout_width="match_parent"
+			a:layout_height="wrap_content"
+			a:orientation="vertical"
+			a:id="@+id/mpp_contact_actions">
 
 			<TextView
-					a:id="@+id/mpp_contact_actions_divider"
-					a:layout_width="match_parent"
-					a:layout_height="wrap_content"
-					style="?mpp_property_group"/>
+				a:id="@+id/mpp_contact_actions_divider"
+				a:layout_width="match_parent"
+				a:layout_height="wrap_content"
+				style="?mpp_property_group" />
 
 			<include
-					a:id="@+id/mpp_contact_edit"
-					layout="@layout/mpp_property"/>
-
-			<include layout="@layout/mpp_property_divider" a:id="@+id/mpp_contact_edit_remove_divider"/>
+				a:id="@+id/mpp_contact_edit"
+				layout="@layout/mpp_property" />
 
 			<include
-					a:id="@+id/mpp_contact_remove"
-					layout="@layout/mpp_property"/>
+				layout="@layout/mpp_property_divider"
+				a:id="@+id/mpp_contact_edit_remove_divider" />
+
+			<include
+				a:id="@+id/mpp_contact_remove"
+				layout="@layout/mpp_property" />
 		</LinearLayout>
 
 

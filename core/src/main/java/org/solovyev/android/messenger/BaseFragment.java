@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static org.solovyev.android.messenger.App.getTaskService;
+import static org.solovyev.android.messenger.App.getTheme;
 
 public abstract class BaseFragment extends RoboSherlockFragment {
 
@@ -87,6 +88,10 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 		}
 
 		fragmentUi.clearLastSavedInstanceState();
+	}
+
+	protected MessengerTheme.Icons getIcons() {
+		return getTheme().getIcons(isDialog());
 	}
 
 	@Nullable
