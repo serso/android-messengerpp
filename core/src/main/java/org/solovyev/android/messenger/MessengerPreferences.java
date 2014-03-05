@@ -38,7 +38,6 @@ public final class MessengerPreferences {
 
 		Gui.Notification.showOngoingNotification.tryPutDefault(preferences);
 		Gui.theme.tryPutDefault(preferences);
-		Gui.Chat.Message.showIcon.tryPutDefault(preferences);
 		startOnBoot.tryPutDefault(preferences);
 
 		final int versionCode = getAppVersionCode(context);
@@ -73,7 +72,6 @@ public final class MessengerPreferences {
 		public static final class Chat {
 
 			public static final class Message {
-				public static Preference<Boolean> showIcon = BooleanPreference.of("gui.chat.message.showIcon", false);
 			}
 		}
 

@@ -16,52 +16,43 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  a:layout_width="match_parent"
-			  a:layout_height="match_parent"
-			  a:paddingRight="2dp"
-			  a:paddingTop="3dp"
-			  a:paddingBottom="3dp"
-			  a:paddingLeft="13dp"
-			  a:orientation="horizontal"
-			  a:gravity="right">
+<FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
+	a:layout_width="match_parent"
+	a:layout_height="match_parent"
+	style="?mpp_list_item"
+	a:orientation="horizontal">
+
+	<ImageView
+		a:id="@+id/mpp_li_message_icon_imageview"
+		a:layout_gravity="right|top"
+		style="?mpp_list_item_icon"
+		a:layout_marginRight="0dp" />
 
 	<LinearLayout
-			a:paddingRight="18dp"
-			a:id="@+id/mpp_li_message_linearlayout"
-			a:background="@drawable/mpp_message_bubble_right_blue_light"
+		a:paddingRight="18dp"
+		a:layout_gravity="right|top"
+		a:layout_marginRight="@dimen/mpp_message_padding"
+		a:id="@+id/mpp_li_message_linearlayout"
+		a:background="@drawable/mpp_message_bubble_right_blue_light"
+		a:layout_width="wrap_content"
+		style="@style/mpp_list_item_message">
+
+		<TextView
+			a:id="@+id/mpp_li_message_body_textview"
 			a:layout_width="wrap_content"
-			style="?mpp_list_item">
+			style="?mpp_list_item_message_text" />
 
 		<ImageView
-				a:id="@+id/mpp_li_message_icon_imageview"
-				a:layout_gravity="top"
-				style="?mpp_list_item_icon"
-				a:visibility="gone"/>
+			a:id="@+id/mpp_li_message_progress_imageview"
+			a:layout_width="wrap_content"
+			style="?mpp_list_item_message_progress" />
 
-		<LinearLayout
-				style="?mpp_list_item_block"
-				a:layout_margin="0dp"
-				a:layout_width="wrap_content"
-				a:orientation="vertical">
-
-			<TextView
-					a:id="@+id/mpp_li_message_body_textview"
-					a:layout_width="wrap_content"
-					style="?mpp_list_item_message_text"/>
-
-			<ImageView
-					a:id="@+id/mpp_li_message_progress_imageview"
-					a:layout_width="wrap_content"
-					style="?mpp_list_item_message_progress"/>
-
-			<TextView
-					a:id="@+id/mpp_li_message_date_textview"
-					a:layout_width="wrap_content"
-					style="?mpp_list_item_message_date"
-					a:layout_gravity="right"/>
-
-		</LinearLayout>
+		<TextView
+			a:id="@+id/mpp_li_message_date_textview"
+			a:layout_width="wrap_content"
+			style="?mpp_list_item_message_date"
+			a:layout_gravity="left" />
 
 	</LinearLayout>
-</LinearLayout>
+
+</FrameLayout>

@@ -164,9 +164,6 @@ public class ContactFragment extends BaseUserFragment {
 			}
 		}
 
-		final View actionsDivider = root.findViewById(R.id.mpp_contact_actions_divider);
-		actionsDivider.setVisibility(first ? GONE : VISIBLE);
-
 		updateActionsVisibility(root);
 
 		final boolean canEditContact = canEditContact();
@@ -195,6 +192,10 @@ public class ContactFragment extends BaseUserFragment {
 
 		final View editRemoveDivider = root.findViewById(R.id.mpp_contact_edit_remove_divider);
 		editRemoveDivider.setVisibility(canEditContact && canRemoveContact ? VISIBLE : GONE);
+
+		final View actionsDivider = root.findViewById(R.id.mpp_contact_actions_divider);
+		actionsDivider.setVisibility(first ? GONE : (canEditContact || canRemoveContact ? VISIBLE : GONE));
+
 	}
 
 	private boolean updateActionsVisibility(@Nonnull View root) {

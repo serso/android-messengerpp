@@ -256,7 +256,7 @@ public abstract class BaseMessengerListItem<D extends Identifiable> implements M
 
 		final ImageView contactCallView = (ImageView) view.findViewById(R.id.mpp_li_contact_call_view);
 		if (contactCallView != null) {
-			final int drawableResId = selected ? R.drawable.mpp_contact_call_inverted : R.drawable.mpp_contact_call;
+			final int drawableResId = selected ? R.drawable.mpp_contact_call_inverted : R.drawable.mpp_contact_call_green;
 			contactCallView.setImageDrawable(resources.getDrawable(drawableResId));
 		}
 	}

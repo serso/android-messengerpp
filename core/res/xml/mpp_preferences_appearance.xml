@@ -17,17 +17,13 @@
   -->
 
 <PreferenceScreen xmlns:a="http://schemas.android.com/apk/res/android"
-				  a:title="@string/mpp_preferences_appearance">
+	a:title="@string/mpp_preferences_appearance">
 
-	<ListPreference a:key="gui.theme"
-					a:title="@string/mpp_preferences_theme_title"
-					a:entryValues="@array/mpp_theme_keys"
-					a:entries="@array/mpp_theme_names"/>
-
-	<CheckBoxPreference
-			a:key="gui.chat.message.showIcon"
-			a:title="@string/mpp_preferences_show_icon_in_chat_title"
-			a:summary="@string/mpp_preferences_show_icon_in_chat_summary"/>
+	<ListPreference
+		a:key="gui.theme"
+		a:title="@string/mpp_preferences_theme_title"
+		a:entryValues="@array/mpp_theme_keys"
+		a:entries="@array/mpp_theme_names" />
 
 	<!--<CheckBoxPreference
 			a:key="gui.notification.showOngoingNotification"

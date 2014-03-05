@@ -22,11 +22,6 @@ import org.solovyev.android.messenger.users.User;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-/**
- * User: serso
- * Date: 3/13/13
- * Time: 9:46 PM
- */
 public interface RealmIconService {
 
 	void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView);

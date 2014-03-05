@@ -18,8 +18,6 @@ package org.solovyev.android.messenger.messages;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.drawable.AnimationDrawable;
 import android.text.ClipboardManager;
 import android.text.util.Linkify;
@@ -30,12 +28,12 @@ import org.solovyev.android.list.ListItemOnClickData;
 import org.solovyev.android.list.SimpleMenuOnClick;
 import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.MessengerPreferences;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.core.R;
+import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.Users;
+import org.solovyev.android.messenger.users.ContactUiEventType;
 import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
@@ -45,7 +43,8 @@ import java.util.Arrays;
 import static android.text.Html.fromHtml;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static org.solovyev.android.messenger.App.*;
+import static org.solovyev.android.messenger.App.getEventManager;
+import static org.solovyev.android.messenger.App.showToast;
 import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 
 public final class MessageListItem extends BaseMessengerListItem<Message> /*, ChatEventListener*/ {
@@ -60,7 +59,7 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	private static final MessageStyle userStyle = MessageStyle.light_grey;
 
 	@Nonnull
-	private static final MessageStyle contactStyle = MessageStyle.blue;
+	private static final MessageStyle contactStyle = MessageStyle.light_grey;
 
 	@Nonnull
 	private final Account account;
@@ -69,6 +68,9 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	private Chat chat;
 
 	private final boolean userMessage;
+
+	@Nonnull
+	private final IconOnClickListener iconOnClickListener = new IconOnClickListener();
 
 	private MessageListItem(@Nonnull Account account,
 							@Nonnull Chat chat,
@@ -134,32 +136,26 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 		}
 
 		final ImageView messageIcon = viewTag.getViewById(R.id.mpp_li_message_icon_imageview);
-
-		final SharedPreferences preferences = getPreferences();
-		if (MessengerPreferences.Gui.Chat.Message.showIcon.getPreference(preferences)) {
-			messageIcon.setVisibility(View.VISIBLE);
-			App.getMessageService().setMessageIcon(message, messageIcon);
-		} else {
-			messageIcon.setVisibility(View.GONE);
-			if (!chat.isPrivate() && !userMessage) {
-				messageBody = "<b>" + Users.getDisplayNameFor(message.getAuthor()) + ":</b> " + messageBody;
-			}
-		}
+		messageIcon.setOnClickListener(iconOnClickListener);
+		iconOnClickListener.message = message;
+		iconOnClickListener.context = context;
+		App.getMessageService().setMessageIcon(message, messageIcon);
 
 		messageTextView.setText(fromHtml(messageBody));
 		Linkify.addLinks(messageTextView, Linkify.ALL);
 
-		if (userMessage) {
-			userStyle.prepareLayout(userMessage, viewTag);
-		} else {
-			contactStyle.prepareLayout(userMessage, viewTag);
-		}
+		getStyle().prepareLayout(userMessage, true, viewTag);
 
 		if (message.canRead()) {
 			final Message readMessage = message.cloneRead();
 			setData(readMessage);
 			getEventManager(context).fire(chat_message_read.newEvent(chat, readMessage));
 		}
+	}
+
+	@Nonnull
+	private MessageStyle getStyle() {
+		return userMessage ? userStyle : contactStyle;
 	}
 
 	void onMessageChanged(@Nonnull Message message) {
@@ -231,5 +227,20 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	@Nonnull
 	public Message getMessage() {
 		return getData();
+	}
+
+	private static class IconOnClickListener implements View.OnClickListener {
+
+		@Nonnull
+		private Message message;
+
+		@Nonnull
+		private Context context;
+
+		@Override
+		public void onClick(View v) {
+			final Entity author = message.getAuthor();
+			getEventManager(context).fire(ContactUiEventType.view_contact.newEvent(App.getUserService().getUserById(author)));
+		}
 	}
 }

@@ -17,43 +17,36 @@
   -->
 
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			 a:layout_width="match_parent"
-			 a:layout_height="match_parent"
-			 a:paddingLeft="13dp"
-			 a:paddingTop="3dp"
-			 a:paddingBottom="3dp"
-			 a:paddingRight="2dp">
+	a:layout_width="match_parent"
+	a:layout_height="match_parent"
+	style="?mpp_list_item">
+
+	<ImageView
+		a:id="@+id/mpp_li_message_icon_imageview"
+		a:layout_gravity="right|top"
+		style="?mpp_list_item_icon"
+		a:layout_marginRight="0dp" />
 
 	<LinearLayout
-			a:id="@+id/mpp_li_message_linearlayout"
-			a:background="@drawable/mpp_message_bubble_right_blue_light"
-			a:paddingRight="16dp"
-			style="?mpp_list_item">
+		a:id="@+id/mpp_li_message_linearlayout"
+		a:background="@drawable/mpp_message_bubble_right_blue_light"
+		a:paddingRight="18dp"
+		a:layout_gravity="right|top"
+		a:layout_marginRight="@dimen/mpp_message_padding"
+		style="@style/mpp_list_item_message">
+
+		<TextView
+			a:id="@+id/mpp_li_message_body_textview"
+			style="?mpp_list_item_message_text" />
 
 		<ImageView
-				a:id="@+id/mpp_li_message_icon_imageview"
-				a:layout_gravity="top"
-				style="?mpp_list_item_icon"
-				a:visibility="gone"/>
+			a:id="@+id/mpp_li_message_progress_imageview"
+			style="?mpp_list_item_message_progress" />
 
-		<LinearLayout
-				style="?mpp_list_item_block"
-				a:orientation="vertical">
-
-			<TextView
-					a:id="@+id/mpp_li_message_body_textview"
-					style="?mpp_list_item_message_text"/>
-
-			<ImageView
-					a:id="@+id/mpp_li_message_progress_imageview"
-					style="?mpp_list_item_message_progress"/>
-
-			<TextView
-					a:id="@+id/mpp_li_message_date_textview"
-					style="?mpp_list_item_message_date"
-					a:gravity="right"/>
-
-		</LinearLayout>
+		<TextView
+			a:id="@+id/mpp_li_message_date_textview"
+			style="?mpp_list_item_message_date"
+			a:gravity="left" />
 
 	</LinearLayout>
 </FrameLayout>

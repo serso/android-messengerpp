@@ -154,6 +154,21 @@
 		<item name="android:layout_margin">0dp</item>
 	</style>
 
+	<style name="mpp_list_item_message" parent="mpp_text">
+		<item name="android:minHeight">@dimen/mpp_list_item_icon_size</item>
+
+		<item name="android:paddingTop">2dp</item>
+		<item name="android:paddingBottom">2dp</item>
+		<item name="android:paddingLeft">@dimen/mpp_list_item_padding</item>
+		<item name="android:paddingRight">@dimen/mpp_list_item_padding</item>
+
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+
+		<item name="android:orientation">vertical</item>
+		<item name="android:gravity">center_vertical|left</item>
+	</style>
+
 	<style name="mpp_list_item_message_date" parent="mpp_list_item_message_text">
 		<item name="android:textColor">@color/mpp_text_secondary</item>
 		<item name="android:lines">1</item>
@@ -221,15 +236,13 @@
 		<item name="android:padding">5dp</item>
 	</style>
 
-	<style name="mpp_button_bright" parent="mpp_button">
-	</style>
+	<style name="mpp_button_bright" parent="mpp_button"></style>
 
 	<style name="mpp_form_label" parent="mpp_property_label">
 		<item name="android:textStyle">bold</item>
 	</style>
 
-	<style name="mpp_form_value" parent="mpp_property_value">
-	</style>
+	<style name="mpp_form_value" parent="mpp_property_value"></style>
 
 	<style name="mpp_form_fields" parent="mpp_property_layout">
 		<item name="android:layout_marginStart">8dip</item>
@@ -259,11 +272,9 @@
 		<item name="android:scrollHorizontally">false</item>
 	</style>
 
-	<style name="mpp_form_checkbox" parent="mpp_form_textview">
-	</style>
+	<style name="mpp_form_checkbox" parent="mpp_form_textview"></style>
 
-	<style name="mpp_form_spinner" parent="mpp_form_value">
-	</style>
+	<style name="mpp_form_spinner" parent="mpp_form_value"></style>
 
 	<style name="mpp_form_buttons">
 		<item name="android:gravity">center</item>
@@ -273,8 +284,7 @@
 		<item name="android:layout_height">wrap_content</item>
 	</style>
 
-	<style name="mpp_form_button" parent="mpp_button">
-	</style>
+	<style name="mpp_form_button" parent="mpp_button"></style>
 
 	<style name="mpp_list_fragment" parent="mpp_fragment">
 		<!--NOTE: separate definition in order to override them-->
