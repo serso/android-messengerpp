@@ -88,6 +88,7 @@
 	-->
 
 	<style name="mpp_list_item_icon" parent="mpp_list_item_block">
+		<item name="android:scaleType">centerCrop</item>
 		<item name="android:layout_width">@dimen/mpp_list_item_icon_size</item>
 		<item name="android:layout_height">@dimen/mpp_list_item_icon_size</item>
 		<item name="android:contentDescription">@string/mpp_icon</item>
@@ -315,6 +316,7 @@
 	</style>
 
 	<style name="mpp_fragment_icon">
+		<item name="android:scaleType">centerCrop</item>
 		<item name="android:layout_width">@dimen/mpp_fragment_icon_size</item>
 		<item name="android:layout_height">@dimen/mpp_fragment_icon_size</item>
 		<item name="android:contentDescription">@string/mpp_icon</item>
