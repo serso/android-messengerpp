@@ -119,7 +119,6 @@ public class ContactFragment extends BaseUserFragment {
 		final User contact = getUser();
 
 		final Context context = getThemeContext();
-		final Resources resources = context.getResources();
 		final MessengerTheme.Icons icons = getIcons();
 
 		final ViewGroup propertiesViewGroup = (ViewGroup) root.findViewById(R.id.mpp_contact_properties_viewgroup);
@@ -130,23 +129,9 @@ public class ContactFragment extends BaseUserFragment {
 			properties.put(property.getName(), property.getValue());
 		}
 
+		propertiesViewGroup.addView(createContactHeaderView(contact, getAccount(), context));
+
 		final ViewFromLayoutBuilder<View> propertyDividerBuilder = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property_divider);
-
-		final PropertyView header = newPropertyView(context);
-
-		final ImageView contactIcon = header.getIconView();
-		contactIcon.setVisibility(VISIBLE);
-		final int iconSize = resources.getDimensionPixelSize(R.dimen.mpp_fragment_icon_size);
-		contactIcon.getLayoutParams().height = iconSize;
-		contactIcon.getLayoutParams().width = iconSize;
-		contactIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
-
-		header.setLabel(contact.getDisplayName());
-		header.setValue(Accounts.getAccountName(getAccount()));
-
-		propertiesViewGroup.addView(header.getView());
-
 		propertiesViewGroup.addView(propertyDividerBuilder.build(context));
 
 		boolean first = true;
@@ -196,6 +181,28 @@ public class ContactFragment extends BaseUserFragment {
 		final View actionsDivider = root.findViewById(R.id.mpp_contact_actions_divider);
 		actionsDivider.setVisibility(first ? GONE : (canEditContact || canRemoveContact ? VISIBLE : GONE));
 
+	}
+
+	@Nonnull
+	public static View createContactHeaderView(@Nonnull User contact,
+											   @Nullable Account account,
+											   @Nonnull Context context) {
+		final Resources resources = context.getResources();
+
+		final PropertyView header = newPropertyView(context);
+
+		final ImageView contactIcon = header.getIconView();
+		contactIcon.setVisibility(VISIBLE);
+		final int iconSize = resources.getDimensionPixelSize(R.dimen.mpp_fragment_icon_size);
+		contactIcon.getLayoutParams().height = iconSize;
+		contactIcon.getLayoutParams().width = iconSize;
+		getUserService().getIconsService().setUserPhoto(contact, contactIcon);
+
+		header.setLabel(contact.getDisplayName());
+		if (account != null) {
+			header.setValue(Accounts.getAccountName(account));
+		}
+		return header.getView();
 	}
 
 	private boolean updateActionsVisibility(@Nonnull View root) {

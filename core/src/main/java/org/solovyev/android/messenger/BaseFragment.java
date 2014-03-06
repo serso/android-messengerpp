@@ -12,6 +12,7 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import com.google.inject.Inject;
 import org.solovyev.android.tasks.TaskListeners;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +26,10 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 	@Inject
 	@Nonnull
 	private MultiPaneManager multiPaneManager;
+
+	@Inject
+	@Nonnull
+	private EventManager eventManager;
 
 	private final int layoutResId;
 
@@ -123,5 +128,10 @@ public abstract class BaseFragment extends RoboSherlockFragment {
 
 	public boolean wasViewCreated() {
 		return fragmentUi.wasViewCreated();
+	}
+
+	@Nonnull
+	protected EventManager getEventManager() {
+		return eventManager;
 	}
 }

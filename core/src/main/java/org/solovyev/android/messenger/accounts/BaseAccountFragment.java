@@ -53,10 +53,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	@Nonnull
 	private AccountService accountService;
 
-	@Inject
-	@Nonnull
-	private EventManager eventManager;
-	
 	/*
 	**********************************************************************
     *
@@ -113,11 +109,6 @@ public abstract class BaseAccountFragment<A extends Account<?>> extends BaseFrag
 	@Nonnull
 	protected AccountService getAccountService() {
 		return accountService;
-	}
-
-	@Nonnull
-	protected EventManager getEventManager() {
-		return eventManager;
 	}
 
 	public A getAccount() {

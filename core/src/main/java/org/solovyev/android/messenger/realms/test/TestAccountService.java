@@ -231,9 +231,22 @@ public class TestAccountService implements AccountUserService, AccountChatServic
 				final MutableAccountChat chat = createChat(user, contact, i, contacts.size());
 				chats.put(chat.getChat().getEntity(), chat);
 			}
+
+			final MutableAccountChat chat = Chats.newAccountChat(Entities.generateEntity(account), false);
+			addMucParticipant(chat, contacts.get(0));
+			addMucParticipant(chat, contacts.get(1));
+			addMucParticipant(chat, contacts.get(2));
+			addMucParticipant(chat, contacts.get(3));
+			// todo serso: add test MUC
+			//chats.put(chat.getChat().getEntity(), chat);
 		}
 
 		return chats;
+	}
+
+	private void addMucParticipant(MutableAccountChat chat, User contact) {
+		chat.addParticipant(contact);
+		chat.addMessage(newIncomingMessage(contact, chat, "Hi! My name is " + contact.getDisplayName()));
 	}
 
 	private MutableAccountChat createChat(@Nonnull User user, @Nonnull User contact, int position, int size) {

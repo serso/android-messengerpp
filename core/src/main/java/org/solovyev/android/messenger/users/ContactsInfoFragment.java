@@ -27,15 +27,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import org.solovyev.android.Views;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
-import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.BaseFragment;
-import org.solovyev.android.messenger.MultiPaneManager;
+import org.solovyev.android.messenger.*;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
+import org.solovyev.common.listeners.AbstractJEventListener;
+import org.solovyev.common.listeners.JEventListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +45,8 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
+import static org.solovyev.android.messenger.users.ContactFragment.createContactHeaderView;
+import static org.solovyev.android.messenger.users.ContactUiEventType.view_contact;
 
 public class ContactsInfoFragment extends BaseFragment {
 
@@ -65,6 +68,11 @@ public class ContactsInfoFragment extends BaseFragment {
 
 	private Iterable<String> contactIds;
 
+	@Nullable
+	private JEventListener<UserEvent> userEventListener;
+
+	private boolean updateUiOnResume = false;
+
 	public ContactsInfoFragment() {
 		super(R.layout.mpp_fragment_contacts);
 	}
@@ -80,6 +88,14 @@ public class ContactsInfoFragment extends BaseFragment {
 		}).toArray(new String[contacts.size()]));
 
 		return MultiPaneFragmentDef.forClass(FRAGMENT_TAG, addToBackStack, ContactsInfoFragment.class, context, arguments);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		userEventListener = UiThreadEventListener.onUiThread(this, new UserEventListener());
+		userService.addListener(userEventListener);
 	}
 
 	@Override
@@ -114,41 +130,107 @@ public class ContactsInfoFragment extends BaseFragment {
 	public void onViewCreated(View root, Bundle savedInstanceState) {
 		super.onViewCreated(root, savedInstanceState);
 
-		final ViewGroup contactsView = (ViewGroup) root.findViewById(R.id.contacts_container);
+		updateUi(root);
+	}
 
-		final boolean portrait = Views.getScreenOrientation(this.getActivity()) == Configuration.ORIENTATION_PORTRAIT;
+	private void updateUi(@Nonnull View root) {
+		final ViewGroup contactsView = (ViewGroup) root.findViewById(R.id.mpp_contacts_viewgroup);
+		contactsView.removeAllViews();
 
-		ViewGroup contactsRow = null;
-		for (int i = 0; i < this.contacts.size(); i++) {
-			final User contact = this.contacts.get(i);
-
-			final LinearLayout contactContainer;
-			if (i % 2 == 0) {
-				contactsRow = ViewFromLayoutBuilder.<ViewGroup>newInstance(R.layout.mpp_fragment_contacts_row).build(this.getActivity());
-				contactsView.addView(contactsRow);
-				contactContainer = (LinearLayout) contactsRow.findViewById(R.id.left_contact_container);
-			} else {
-				contactContainer = (LinearLayout) contactsRow.findViewById(R.id.right_contact_container);
-			}
-
-			if (portrait) {
-				contactContainer.setOrientation(LinearLayout.HORIZONTAL);
-			} else {
-				contactContainer.setOrientation(LinearLayout.VERTICAL);
-			}
-
-			final TextView contactName = (TextView) contactContainer.findViewById(R.id.mpp_contact_name_textview);
-			contactName.setText(contact.getDisplayName());
-
-			final ImageView contactIcon = (ImageView) contactContainer.findViewById(R.id.mpp_contact_icon_imageview);
-			App.getUserService().getIconsService().setUserPhoto(contact, contactIcon);
+		final Context context = getThemeContext();
+		final ViewFromLayoutBuilder<View> propertyDividerBuilder = ViewFromLayoutBuilder.newInstance(R.layout.mpp_property_divider);
+		for (final User contact : contacts) {
+			final View view = createContactHeaderView(contact, null, context);
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getEventManager().fire(view_contact.newEvent(contact));
+				}
+			});
+			contactsView.addView(view);
+			contactsView.addView(propertyDividerBuilder.build(context));
+			// todo serso: add spacing between items?
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (updateUiOnResume) {
+			updateUi(getView());
+			updateUiOnResume = false;
+		}
+	}
+
+	private void onContactsUpdated() {
+		final View view = getView();
+		if (view != null) {
+			updateUi(view);
+		} else {
+			updateUiOnResume = true;
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		if (userEventListener != null) {
+			userService.removeListener(userEventListener);
+			userEventListener = null;
+		}
+
+		super.onDestroy();
 	}
 
 	@Nullable
 	@Override
 	protected CharSequence getFragmentTitle() {
 		return getString(R.string.mpp_chat_participants);
+	}
+
+	private class UserEventListener extends AbstractJEventListener<UserEvent> {
+
+		protected UserEventListener() {
+			super(UserEvent.class);
+		}
+
+		@Override
+		public void onEvent(@Nonnull UserEvent event) {
+			final User user = event.getUser();
+
+			boolean contactsUpdated = false;
+
+			if (contacts != null && !contacts.isEmpty()) {
+				switch (event.getType()) {
+					case changed:
+						contactsUpdated |= onContactChanged(user);
+						break;
+					case contacts_changed:
+						for (User contact : event.getDataAsUsers()) {
+							contactsUpdated |= onContactChanged(contact);
+						}
+						break;
+					case contact_removed:
+						final String contactId = event.getDataAsUserId();
+						contactsUpdated |= Iterables.removeIf(contacts, new EntityAwareByIdFinder(contactId));
+						break;
+				}
+			}
+
+			if(contactsUpdated) {
+				onContactsUpdated();
+			}
+		}
+
+		private boolean onContactChanged(User user) {
+			final int index = contacts.indexOf(user);
+			if (index >= 0) {
+				contacts.set(index, user);
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 }
 
