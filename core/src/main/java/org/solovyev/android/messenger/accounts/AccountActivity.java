@@ -39,7 +39,7 @@ public class AccountActivity extends BaseFragmentActivity {
 	private final static String ARGS_EDIT = "edit";
 	private static final String TAG = App.newTag(AccountActivity.class.getSimpleName());
 
-	static void open(@Nonnull Activity activity, @Nonnull Account account, boolean edit) {
+	public static void open(@Nonnull Activity activity, @Nonnull Account account, boolean edit) {
 		final Intent intent = new Intent(activity, isBigScreen(activity) ? AccountActivity.Dialog.class : AccountActivity.class);
 		intent.putExtra(ARGS_BUNDLE, edit ? newEditAccountArguments(account) : newAccountArguments(account));
 		intent.putExtra(ARGS_EDIT, edit);

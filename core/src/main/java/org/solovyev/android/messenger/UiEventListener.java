@@ -16,22 +16,23 @@
 
 package org.solovyev.android.messenger;
 
+import android.app.Activity;
 import org.solovyev.android.messenger.about.AboutActivity;
 import org.solovyev.android.messenger.accounts.AccountsActivity;
+import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.preferences.PreferencesActivity;
+import org.solovyev.android.messenger.realms.RealmsActivity;
 import org.solovyev.android.messenger.users.ContactsActivity;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
-
 public class UiEventListener implements EventListener<UiEvent> {
 
 	@Nonnull
-	private final BaseFragmentActivity activity;
+	private final Activity activity;
 
-	public UiEventListener(@Nonnull BaseFragmentActivity activity) {
+	public UiEventListener(@Nonnull Activity activity) {
 		this.activity = activity;
 	}
 
@@ -39,10 +40,11 @@ public class UiEventListener implements EventListener<UiEvent> {
 	public void onEvent(@Nonnull UiEvent event) {
 		switch (event.getType()) {
 			case show_realms:
-				onShowRealmsEvent();
+				RealmsActivity.start(activity);
 				break;
 			case new_chat:
-				onNewChatEvent();
+				App.showToast(R.string.mpp_pick_contact_to_start_chat);
+				ContactsActivity.start(activity);
 				break;
 			case show_settings:
 				PreferencesActivity.start(activity);
@@ -60,13 +62,5 @@ public class UiEventListener implements EventListener<UiEvent> {
 				App.exit(activity);
 				break;
 		}
-	}
-
-	private void onNewChatEvent() {
-
-	}
-
-	private void onShowRealmsEvent() {
-		activity.getMultiPaneFragmentManager().setMainFragment(realms);
 	}
 }

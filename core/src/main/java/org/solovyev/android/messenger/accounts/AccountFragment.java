@@ -54,7 +54,6 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getSyncService;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.edit_account;
 import static org.solovyev.android.messenger.view.PropertyView.newPropertyView;
 
 public class AccountFragment extends BaseAccountFragment<Account<?>> {
@@ -207,7 +206,7 @@ public class AccountFragment extends BaseAccountFragment<Account<?>> {
 	}
 
 	void editAccount() {
-		getEventManager().fire(edit_account.newEvent(getAccount()));
+		getEventManager().fire(new AccountUiEvent.Edit(getAccount()));
 	}
 
 	void changeState() {

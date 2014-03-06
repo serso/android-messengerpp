@@ -26,7 +26,6 @@ import org.solovyev.android.messenger.accounts.AccountException;
 import org.solovyev.android.messenger.api.MessengerAsyncTask;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
-import org.solovyev.android.messenger.realms.Realm;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
@@ -100,7 +99,6 @@ public class ContactsActivity extends BaseFragmentActivity {
 			}
 		});
 
-		listeners.add(ContactUiEvent.Edit.class, new EditContactListener(this));
 		listeners.add(ContactUiEvent.OpenChat.class, new EventListener<ContactUiEvent.OpenChat>() {
 			@Override
 			public void onEvent(ContactUiEvent.OpenChat event) {
@@ -150,25 +148,5 @@ public class ContactsActivity extends BaseFragmentActivity {
 				fragmentManager.goBackImmediately();
 			}
 		});
-	}
-
-	static class EditContactListener implements EventListener<ContactUiEvent.Edit> {
-
-		@Nonnull
-		private final Activity activity;
-
-		EditContactListener(@Nonnull Activity activity) {
-			this.activity = activity;
-		}
-
-		@Override
-		public void onEvent(ContactUiEvent.Edit event) {
-			final Account account = event.account;
-
-			final Realm realm = account.getRealm();
-			if (realm.canCreateUsers()) {
-				ContactActivity.open(activity, event.contact, true);
-			}
-		}
 	}
 }

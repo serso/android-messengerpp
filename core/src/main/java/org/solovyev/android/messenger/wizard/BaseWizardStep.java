@@ -16,14 +16,20 @@
 
 package org.solovyev.android.messenger.wizard;
 
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ScrollView;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
+import roboguice.event.EventManager;
 
 import javax.annotation.Nonnull;
 
-public class BaseWizardStep extends Fragment {
+public class BaseWizardStep extends RoboSherlockFragment {
+
+	@Inject
+	@Nonnull
+	private EventManager eventManager;
 
 	@Nonnull
 	protected View inflateView(int layoutResId) {
@@ -32,5 +38,10 @@ public class BaseWizardStep extends Fragment {
 		final ScrollView scrollView = new ScrollView(getActivity());
 		scrollView.addView(view);
 		return scrollView;
+	}
+
+	@Nonnull
+	protected EventManager getEventManager() {
+		return eventManager;
 	}
 }

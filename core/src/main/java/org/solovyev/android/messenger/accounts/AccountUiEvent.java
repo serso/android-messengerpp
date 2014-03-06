@@ -27,20 +27,26 @@ public abstract class AccountUiEvent {
 		this.account = account;
 	}
 
-	public static final class Typed extends AccountUiEvent {
-
-		@Nonnull
-		public final AccountUiEventType type;
-
-		public Typed(@Nonnull Account account, @Nonnull AccountUiEventType type) {
+	public static final class Edit extends AccountUiEvent {
+		public Edit(@Nonnull Account account) {
 			super(account);
-			this.type = type;
+		}
+	}
+
+	public static final class Open extends AccountUiEvent {
+		public Open(@Nonnull Account account) {
+			super(account);
 		}
 	}
 
 	public static final class Saved extends AccountUiEvent {
-
 		public Saved(@Nonnull Account account) {
+			super(account);
+		}
+	}
+
+	public static final class Clicked extends AccountUiEvent {
+		public Clicked(@Nonnull Account account) {
 			super(account);
 		}
 	}

@@ -30,10 +30,12 @@ import org.solovyev.android.menu.LabeledMenuItem;
 import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.chats.Chat;
+import org.solovyev.android.messenger.chats.ChatUiEvent;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.realms.Realm;
-import org.solovyev.android.messenger.users.ContactUiEventType;
+import org.solovyev.android.messenger.users.ContactUiEvent;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.messenger.view.BaseMessengerListItem;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
@@ -45,7 +47,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
 import static org.solovyev.android.messenger.App.showToast;
-import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_message_read;
 
 public final class MessageListItem extends BaseMessengerListItem<Message> /*, ChatEventListener*/ {
 
@@ -149,7 +150,7 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 		if (message.canRead()) {
 			final Message readMessage = message.cloneRead();
 			setData(readMessage);
-			getEventManager(context).fire(chat_message_read.newEvent(chat, readMessage));
+			getEventManager(context).fire(new ChatUiEvent.MarkMessageRead(chat, readMessage));
 		}
 	}
 
@@ -240,7 +241,8 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 		@Override
 		public void onClick(View v) {
 			final Entity author = message.getAuthor();
-			getEventManager(context).fire(ContactUiEventType.view_contact.newEvent(App.getUserService().getUserById(author)));
+			final User user = App.getUserService().getUserById(author);
+			getEventManager(context).fire(new ContactUiEvent.Open(user));
 		}
 	}
 }

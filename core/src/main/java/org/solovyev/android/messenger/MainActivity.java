@@ -27,34 +27,44 @@ import android.view.MotionEvent;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.inject.Inject;
 import org.solovyev.android.menu.ActivityMenu;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountUiEvent;
-import org.solovyev.android.messenger.accounts.AccountUiEventListener;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.chats.*;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
+import org.solovyev.android.messenger.messages.Message;
 import org.solovyev.android.messenger.messages.MessagesFragment;
 import org.solovyev.android.messenger.users.CompositeUserDialogFragment;
 import org.solovyev.android.messenger.users.ContactUiEvent;
-import org.solovyev.android.messenger.users.ContactUiEventListener;
+import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.view.SwipeGestureListener;
 import org.solovyev.android.wizard.Wizard;
 import org.solovyev.android.wizard.Wizards;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import roboguice.RoboGuice;
 import roboguice.event.EventListener;
+import roboguice.event.EventManager;
+import roboguice.event.Observes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-import static org.solovyev.android.messenger.App.getUiHandler;
-import static org.solovyev.android.messenger.App.getWizards;
+import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.MessengerPreferences.isNewInstallation;
 import static org.solovyev.android.messenger.UiThreadEventListener.onUiThread;
+import static org.solovyev.android.messenger.accounts.Accounts.withAccountException;
+import static org.solovyev.android.messenger.chats.Chats.CHATS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.chats.Chats.openUnreadChat;
 import static org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager.tabFragments;
+import static org.solovyev.android.messenger.messages.MessagesFragment.newMessagesFragmentDef;
+import static org.solovyev.android.messenger.users.ContactFragment.newViewContactFragmentDef;
+import static org.solovyev.android.messenger.users.ContactUiEventType.call;
+import static org.solovyev.android.messenger.users.ContactsInfoFragment.newViewContactsFragmentDef;
+import static org.solovyev.android.messenger.users.Users.CONTACTS_FRAGMENT_TAG;
 import static org.solovyev.android.messenger.wizard.MessengerWizards.FIRST_TIME_WIZARD;
 import static org.solovyev.android.wizard.WizardUi.continueWizard;
 import static org.solovyev.common.Objects.areEqual;
@@ -143,6 +153,8 @@ public final class MainActivity extends BaseFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		ChatUiEventListener.listenTo(this);
+
 		initTabs(savedInstanceState);
 
 		initFragments();
@@ -192,8 +204,6 @@ public final class MainActivity extends BaseFragmentActivity {
 
 		final RoboListeners listeners = getListeners();
 
-		listeners.add(UiEvent.class, new UiEventListener(this));
-		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener(this));
 		listeners.add(ContactUiEvent.Typed.class, new ContactUiEventListener(this, getAccountService()));
 		listeners.add(ContactUiEvent.ShowCompositeDialog.class, new EventListener<ContactUiEvent.ShowCompositeDialog>() {
 			@Override
@@ -201,7 +211,6 @@ public final class MainActivity extends BaseFragmentActivity {
 				CompositeUserDialogFragment.show(event.contact, event.nextEventType, MainActivity.this);
 			}
 		});
-		listeners.add(ChatUiEvent.class, new ChatUiEventListener(this, getChatService()));
 
 		if (isNewInstallation()) {
 			final Wizards wizards = getWizards();
@@ -219,7 +228,7 @@ public final class MainActivity extends BaseFragmentActivity {
 					getUiHandler().post(new Runnable() {
 						@Override
 						public void run() {
-							getEventManager().fire(ChatUiEventType.chat_clicked.newEvent(item.getChat()));
+							getEventManager().fire(new ChatUiEvent.Clicked(item.getChat()));
 						}
 					});
 				}
@@ -483,6 +492,175 @@ public final class MainActivity extends BaseFragmentActivity {
 					tab.select();
 				}
 			}
+		}
+	}
+
+	private static final class ContactUiEventListener implements EventListener<ContactUiEvent.Typed> {
+
+		@Nonnull
+		private final BaseFragmentActivity activity;
+
+		@Nonnull
+		private final AccountService accountService;
+
+		private ContactUiEventListener(@Nonnull BaseFragmentActivity activity, @Nonnull AccountService accountService) {
+			this.activity = activity;
+			this.accountService = accountService;
+		}
+
+		@Override
+		public void onEvent(@Nonnull ContactUiEvent.Typed event) {
+			final User contact = event.contact;
+
+			final Account account = accountService.getAccountByEntity(contact.getEntity());
+			switch (event.type) {
+				case call:
+					if (account.isCompositeUser(contact)) {
+						if (!account.isCompositeUserDefined(contact)) {
+							fireEvent(new ContactUiEvent.ShowCompositeDialog(contact, call));
+						} else {
+							onCallContactChat(contact);
+						}
+					} else {
+						onCallContactChat(contact);
+					}
+					break;
+				case mark_all_messages_read:
+					onMarkAllMessagesRead(contact);
+					break;
+			}
+		}
+
+		private void onCallContactChat(@Nonnull User contact) throws UnsupportedAccountException {
+			final Account account = App.getAccountService().getAccountByEntity(contact.getEntity());
+			if (account.canCall(contact)) {
+				account.call(contact, activity);
+			}
+		}
+
+		private void onMarkAllMessagesRead(@Nonnull User contact) throws UnsupportedAccountException {
+			final Account account = App.getAccountService().getAccountByEntity(contact.getEntity());
+			final Chat chat = App.getChatService().getPrivateChat(account.getUser().getEntity(), contact.getEntity());
+			if (chat != null) {
+				final EventManager eventManager = App.getEventManager(activity);
+				for (Message message : getMessageService().getMessages(chat.getEntity())) {
+					if (message.canRead()) {
+						eventManager.fire(new ChatUiEvent.MarkMessageRead(chat, message.cloneRead()));
+					}
+				}
+			}
+		}
+
+		private void fireEvent(@Nonnull ContactUiEvent event) {
+			App.getEventManager(activity).fire(event);
+		}
+	}
+
+	private static final class ChatUiEventListener {
+
+		@Nonnull
+		private final BaseFragmentActivity activity;
+
+		@Inject
+		@Nonnull
+		private ChatService chatService;
+
+		public ChatUiEventListener(@Nonnull BaseFragmentActivity activity) {
+			this.activity = activity;
+		}
+
+		public void onShowParticipantsEvent(@Observes @Nonnull final ChatUiEvent.ShowParticipants event) {
+			if (event.chat.isPrivate()) {
+				final Entity contactId = chatService.getSecondUser(event.chat);
+				if (contactId != null) {
+					final User contact = App.getUserService().getUserById(contactId);
+					App.getEventManager(activity).fire(new ContactUiEvent.Open(contact));
+				}
+			} else {
+				ChatParticipantsActivity.open(activity, event.chat);
+			}
+		}
+
+		public void onOpenChatEvent(@Observes @Nonnull final ChatUiEvent.Open event) {
+			final Chat chat = event.chat;
+			final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
+
+			fm.clearBackStack();
+			final boolean fragmentSet;
+
+			final BaseListFragment<?> chatsFragment = fm.getFragment(CHATS_FRAGMENT_TAG);
+			if (chatsFragment != null && chatsFragment.isVisible()) {
+				fragmentSet = chatsFragment.clickItemById(chat.getId());
+				if (!fragmentSet) {
+					chatsFragment.unselect();
+				}
+			} else {
+				if (chat.isPrivate()) {
+					final Entity contact = chat.getSecondUser();
+					final BaseListFragment<?> contactsFragment = fm.getFragment(CONTACTS_FRAGMENT_TAG);
+					if (contactsFragment != null && contactsFragment.isVisible()) {
+						fragmentSet = contactsFragment.clickItemById(contact.getEntityId());
+						if (!fragmentSet) {
+							contactsFragment.unselect();
+						}
+					} else {
+						fragmentSet = false;
+					}
+				} else {
+					fragmentSet = false;
+				}
+			}
+
+			if (!fragmentSet) {
+				if (activity.isDualPane()) {
+					fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
+				}
+			}
+
+			if (!activity.isDualPane()) {
+				fm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
+			}
+
+			updateThirdPaneForNewChat(chat, fm);
+		}
+
+		public void onMessageReadEvent(@Observes @Nonnull final ChatUiEvent.MarkMessageRead event) {
+			executeInBackground(withAccountException(new AccountRunnable() {
+				@Override
+				public void run() throws AccountConnectionException {
+					chatService.markMessageRead(event.chat, event.message);
+				}
+			}));
+		}
+
+		public void onChatClickedEvent(@Observes @Nonnull final ChatUiEvent.Clicked event) {
+			final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
+
+			fm.clearBackStack();
+			if (activity.isDualPane()) {
+				fm.setSecondFragment(newMessagesFragmentDef(activity, event.chat, false));
+				updateThirdPaneForNewChat(event.chat, fm);
+			} else {
+				fm.setMainFragment(newMessagesFragmentDef(activity, event.chat, true));
+			}
+		}
+
+		private void updateThirdPaneForNewChat(@Nonnull Chat chat, @Nonnull MessengerMultiPaneFragmentManager fm) {
+			if (activity.isTriplePane()) {
+				final Account account = activity.getAccountService().getAccountByEntity(chat.getEntity());
+
+				if (chat.isPrivate()) {
+					fm.setThirdFragment(newViewContactFragmentDef(activity, account, chat.getSecondUser(), false));
+				} else {
+					final List<User> participants = activity.getChatService().getParticipantsExcept(chat.getEntity(), account.getUser().getEntity());
+					fm.setThirdFragment(newViewContactsFragmentDef(activity, participants, false));
+				}
+			}
+		}
+
+		public static void listenTo(@Nonnull BaseFragmentActivity activity) {
+			final ChatUiEventListener listener = new ChatUiEventListener(activity);
+			RoboGuice.getInjector(activity).injectMembers(listener);
 		}
 	}
 }

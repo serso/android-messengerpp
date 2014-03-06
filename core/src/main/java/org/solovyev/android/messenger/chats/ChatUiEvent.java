@@ -16,30 +16,46 @@
 
 package org.solovyev.android.messenger.chats;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.solovyev.android.messenger.messages.Message;
-import org.solovyev.common.listeners.AbstractTypedJEvent;
+import org.solovyev.common.listeners.JEvent;
 
-/**
- * User: serso
- * Date: 8/17/12
- * Time: 1:02 AM
- */
-public final class ChatUiEvent extends AbstractTypedJEvent<Chat, ChatUiEventType> {
+import javax.annotation.Nonnull;
 
-	public ChatUiEvent(@Nonnull Chat chat, @Nonnull ChatUiEventType type, @Nullable Object data) {
-		super(chat, type, data);
-	}
+public abstract class ChatUiEvent implements JEvent {
 
 	@Nonnull
-	public Chat getChat() {
-		return getEventObject();
+	public final Chat chat;
+
+	protected ChatUiEvent(@Nonnull Chat chat) {
+		this.chat = chat;
 	}
 
-	@Nonnull
-	public Message getDataAsMessage() {
-		return (Message) getData();
+	public static final class Clicked extends ChatUiEvent {
+		public Clicked(@Nonnull Chat chat) {
+			super(chat);
+		}
+	}
+
+	public static final class Open extends ChatUiEvent {
+		public Open(@Nonnull Chat chat) {
+			super(chat);
+		}
+	}
+
+	public static final class ShowParticipants extends ChatUiEvent {
+		public ShowParticipants(@Nonnull Chat chat) {
+			super(chat);
+		}
+	}
+
+	public static final class MarkMessageRead extends ChatUiEvent {
+
+		@Nonnull
+		public final Message message;
+
+		public MarkMessageRead(@Nonnull Chat chat, @Nonnull Message message) {
+			super(chat);
+			this.message = message;
+		}
 	}
 }

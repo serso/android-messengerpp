@@ -45,7 +45,7 @@ public class ContactActivity extends BaseFragmentActivity {
 	@Nonnull
 	private String contactId;
 
-	static void open(@Nonnull Activity activity, @Nonnull User contact, boolean edit) {
+	public static void open(@Nonnull Activity activity, @Nonnull User contact, boolean edit) {
 		final Account account = App.getAccountService().getAccountByEntity(contact.getEntity());
 		final Intent intent = new Intent(activity, isBigScreen(activity) ? ContactActivity.Dialog.class : ContactActivity.class);
 		intent.putExtra(ARGS_BUNDLE, edit ? newEditUserArguments(account, contact) : newUserArguments(account, contact));
@@ -110,7 +110,6 @@ public class ContactActivity extends BaseFragmentActivity {
 		super.onResume();
 
 		final RoboListeners listeners = getListeners();
-		listeners.add(ContactUiEvent.Edit.class, new ContactsActivity.EditContactListener(this));
 		listeners.add(ContactUiEvent.Saved.class, new EventListener<ContactUiEvent.Saved>() {
 			@Override
 			public void onEvent(ContactUiEvent.Saved event) {

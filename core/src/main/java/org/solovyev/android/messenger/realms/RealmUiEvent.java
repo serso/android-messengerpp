@@ -16,20 +16,22 @@
 
 package org.solovyev.android.messenger.realms;
 
-import org.solovyev.common.listeners.AbstractTypedJEvent;
+import org.solovyev.common.listeners.JEvent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public final class RealmUiEvent extends AbstractTypedJEvent<Realm, RealmUiEventType> {
-
-	RealmUiEvent(@Nonnull Realm realm, @Nonnull RealmUiEventType type, @Nullable Object data) {
-		super(realm, type, data);
-	}
+public abstract class RealmUiEvent implements JEvent {
 
 	@Nonnull
-	public Realm getRealm() {
-		return getEventObject();
+	public final Realm realm;
+
+	public RealmUiEvent(@Nonnull Realm realm) {
+		this.realm = realm;
 	}
 
+	public static final class Clicked extends RealmUiEvent {
+		public Clicked(@Nonnull Realm realm) {
+			super(realm);
+		}
+	}
 }

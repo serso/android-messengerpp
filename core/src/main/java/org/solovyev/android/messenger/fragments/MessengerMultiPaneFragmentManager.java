@@ -18,6 +18,7 @@ package org.solovyev.android.messenger.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
 import org.solovyev.android.fragments.MultiPaneFragmentManager;
 import org.solovyev.android.messenger.BaseFragmentActivity;
@@ -71,7 +72,13 @@ public class MessengerMultiPaneFragmentManager extends MultiPaneFragmentManager 
 	public void clearBackStack() {
 		hideKeyboard();
 		final FragmentManager fm = getActivity().getSupportFragmentManager();
-		fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		try {
+			if (fm.getBackStackEntryCount() > 0) {
+				fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			}
+		} catch (IllegalStateException e) {
+			Log.w("MultiPaneFragmentManager", e.getMessage(), e);
+		}
 	}
 
 	@Nullable

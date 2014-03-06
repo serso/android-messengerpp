@@ -37,8 +37,8 @@ public enum PrimaryFragment implements FragmentDef {
 	contacts(ContactsFragment.class, Users.CONTACTS_FRAGMENT_TAG, R.string.mpp_contacts),
 	chats(ChatsFragment.class, CHATS_FRAGMENT_TAG, R.string.mpp_chats),
 	accounts(AccountsFragment.class, AccountsFragment.FRAGMENT_TAG, R.string.mpp_accounts),
-	pick_account(PickAccountFragment.class, PickAccountFragment.FRAGMENT_TAG, R.string.mpp_pick_account, false),
-	realms(RealmsFragment.class, RealmsFragment.FRAGMENT_TAG, R.string.mpp_accounts, true),
+	pick_account(PickAccountFragment.class, PickAccountFragment.FRAGMENT_TAG, R.string.mpp_pick_account),
+	realms(RealmsFragment.class, RealmsFragment.FRAGMENT_TAG, R.string.mpp_accounts),
 	settings(PreferenceGroupsFragment.class, PreferenceGroupsFragment.FRAGMENT_TAG, R.string.mpp_preferences),
 	about(AboutItemsFragment.class, AboutItemsFragment.FRAGMENT_TAG, R.string.mpp_about),;
 
@@ -50,17 +50,10 @@ public enum PrimaryFragment implements FragmentDef {
 
 	private final int titleResId;
 
-	private final boolean addToBackStack;
-
-	PrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId) {
-		this(fragmentClass, fragmentTag, titleResId, false);
-	}
-
-	private PrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId, boolean addToBackStack) {
+	private PrimaryFragment(@Nonnull Class<? extends Fragment> fragmentClass, @Nonnull String fragmentTag, int titleResId) {
 		this.fragmentClass = fragmentClass;
 		this.fragmentTag = fragmentTag;
 		this.titleResId = titleResId;
-		this.addToBackStack = addToBackStack;
 	}
 
 	@Override
@@ -81,6 +74,6 @@ public enum PrimaryFragment implements FragmentDef {
 
 	@Override
 	public boolean isAddToBackStack() {
-		return addToBackStack;
+		return false;
 	}
 }

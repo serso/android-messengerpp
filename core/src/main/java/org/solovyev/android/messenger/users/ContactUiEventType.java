@@ -20,10 +20,9 @@ import javax.annotation.Nonnull;
 
 public enum ContactUiEventType {
 
-	contact_clicked,
-	call_contact,
+	clicked,
+	call,
 	resend_message,
-	view_contact,
 	mark_all_messages_read;
 
 	@Nonnull

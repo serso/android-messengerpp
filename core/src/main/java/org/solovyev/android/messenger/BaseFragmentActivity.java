@@ -26,10 +26,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
-import org.solovyev.android.messenger.accounts.Account;
-import org.solovyev.android.messenger.accounts.AccountEvent;
-import org.solovyev.android.messenger.accounts.AccountService;
-import org.solovyev.android.messenger.accounts.AccountState;
+import org.solovyev.android.messenger.accounts.*;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
@@ -37,13 +34,18 @@ import org.solovyev.android.messenger.fragments.PrimaryFragment;
 import org.solovyev.android.messenger.messages.EmptyFragment;
 import org.solovyev.android.messenger.messages.UnreadMessagesCounter;
 import org.solovyev.android.messenger.notifications.NotificationService;
+import org.solovyev.android.messenger.realms.Realm;
+import org.solovyev.android.messenger.users.ContactActivity;
+import org.solovyev.android.messenger.users.ContactUiEvent;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.users.UserService;
 import org.solovyev.common.Builder;
 import org.solovyev.common.JPredicate;
 import org.solovyev.common.listeners.AbstractJEventListener;
 import org.solovyev.common.listeners.JEventListener;
+import roboguice.RoboGuice;
 import roboguice.event.EventManager;
+import roboguice.event.Observes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -155,7 +157,7 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           GETTERS/SETTERS
     *
@@ -242,6 +244,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		accountService.addListener(accountEventListener);
 		userService.addListener(userEventListener);
+
+		EventsListener.listenTo(this);
 	}
 
 	protected void initFragments() {
@@ -419,6 +423,8 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 
 		getSupportFragmentManager().addOnBackStackChangedListener(this);
 
+		getListeners().add(UiEvent.class, new UiEventListener(this));
+
 		if (actionOnResume != null) {
 			actionOnResume.doAction(this);
 			actionOnResume = null;
@@ -569,5 +575,37 @@ public abstract class BaseFragmentActivity extends RoboSherlockFragmentActivity 
 		};
 
 		abstract void doAction(@Nonnull BaseFragmentActivity activity);
+	}
+
+	private static final class EventsListener {
+
+		@Nonnull
+		private final BaseFragmentActivity activity;
+
+		public EventsListener(@Nonnull BaseFragmentActivity activity) {
+			this.activity = activity;
+		}
+
+		public static void listenTo(@Nonnull BaseFragmentActivity activity) {
+			final EventsListener listener = new EventsListener(activity);
+			RoboGuice.getInjector(activity).injectMembers(listener);
+		}
+
+		public void onOpenContactEvent(@Observes @Nonnull ContactUiEvent.Open event) {
+			ContactActivity.open(activity, event.contact, false);
+		}
+
+		public void onEditContactEvent(@Observes @Nonnull ContactUiEvent.Edit event) {
+			final Account account = event.account;
+
+			final Realm realm = account.getRealm();
+			if (realm.canCreateUsers()) {
+				ContactActivity.open(activity, event.contact, true);
+			}
+		}
+
+		public void onEditAccountEvent(@Observes @Nonnull AccountUiEvent.Edit event) {
+			AccountActivity.open(activity, event.account, true);
+		}
 	}
 }

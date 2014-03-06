@@ -49,7 +49,7 @@ public final class NewContactActivity extends BaseFragmentActivity {
 		if (savedInstanceState == null) {
 			// first time
 			final Collection<Account> accounts = getAccountService().getAccountsCreatingUsers();
-			getMultiPaneFragmentManager().setMainFragment(pick_account, newPickAccountArguments(accounts));
+			fragmentManager.setMainFragment(pick_account, newPickAccountArguments(accounts));
 		}
 
 		initFragments();
@@ -60,28 +60,21 @@ public final class NewContactActivity extends BaseFragmentActivity {
 		super.onResume();
 
 		final RoboListeners listeners = getListeners();
-		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener());
 		listeners.add(ContactUiEvent.Saved.class, new EventListener<ContactUiEvent.Saved>() {
 			@Override
 			public void onEvent(ContactUiEvent.Saved event) {
 				finish();
 			}
 		});
-	}
-
-	private final class AccountUiEventListener implements EventListener<AccountUiEvent.Typed> {
-
-		@Override
-		public void onEvent(@Nonnull AccountUiEvent.Typed event) {
-			switch (event.type) {
-				case account_picked:
-					tryShowCreateUserFragment(event.account);
-					if (isTriplePane()) {
-						getMultiPaneFragmentManager().emptifyThirdFragment();
-					}
-					break;
+		listeners.add(AccountUiEvent.Clicked.class, new EventListener<AccountUiEvent.Clicked>() {
+			@Override
+			public void onEvent(AccountUiEvent.Clicked event) {
+				tryShowCreateUserFragment(event.account);
+				if (isTriplePane()) {
+					getMultiPaneFragmentManager().emptifyThirdFragment();
+				}
 			}
-		}
+		});
 	}
 
 	public boolean tryShowCreateUserFragment(@Nonnull Account account) {

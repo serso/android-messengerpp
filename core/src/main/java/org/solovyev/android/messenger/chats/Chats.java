@@ -142,7 +142,7 @@ public final class Chats {
 	public static void openChat(@Nonnull Context context, @Nonnull Entity chatId) {
 		final Chat chat = getChatService().getChatById(chatId);
 		if (chat != null) {
-			getEventManager(context).fire(ChatUiEventType.open_chat.newEvent(chat));
+			getEventManager(context).fire(new ChatUiEvent.Open(chat));
 		}
 	}
 }

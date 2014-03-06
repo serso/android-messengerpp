@@ -17,21 +17,19 @@
 package org.solovyev.android.messenger.users;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import org.solovyev.android.Views;
 import org.solovyev.android.fragments.MultiPaneFragmentDef;
-import org.solovyev.android.messenger.*;
+import org.solovyev.android.messenger.BaseFragment;
+import org.solovyev.android.messenger.EntityAwareByIdFinder;
+import org.solovyev.android.messenger.MultiPaneManager;
+import org.solovyev.android.messenger.UiThreadEventListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entities;
 import org.solovyev.android.view.ViewFromLayoutBuilder;
@@ -46,7 +44,6 @@ import java.util.List;
 import static com.google.common.collect.Lists.transform;
 import static java.util.Arrays.asList;
 import static org.solovyev.android.messenger.users.ContactFragment.createContactHeaderView;
-import static org.solovyev.android.messenger.users.ContactUiEventType.view_contact;
 
 public class ContactsInfoFragment extends BaseFragment {
 
@@ -144,7 +141,7 @@ public class ContactsInfoFragment extends BaseFragment {
 			view.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					getEventManager().fire(view_contact.newEvent(contact));
+					getEventManager().fire(new ContactUiEvent.Open(contact));
 				}
 			});
 			contactsView.addView(view);

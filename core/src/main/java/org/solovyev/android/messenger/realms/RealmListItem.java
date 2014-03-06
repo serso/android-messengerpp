@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.realms.RealmUiEventType.realm_clicked;
 
 class RealmListItem extends BaseMessengerListItem<Realm> {
 
@@ -47,7 +46,7 @@ class RealmListItem extends BaseMessengerListItem<Realm> {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter) {
-				getEventManager(context).fire(realm_clicked.newEvent(getRealm()));
+				getEventManager(context).fire(new RealmUiEvent.Clicked(getRealm()));
 			}
 		};
 	}

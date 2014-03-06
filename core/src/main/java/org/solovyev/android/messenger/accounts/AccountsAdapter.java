@@ -29,16 +29,11 @@ public class AccountsAdapter extends BaseListItemAdapter<AccountListItem> {
 
 	private final boolean canAddAccounts;
 
-	@Nonnull
-	private final AccountUiEventType eventType;
-
 	public AccountsAdapter(@Nonnull Context context,
 						   @Nonnull List<? extends AccountListItem> listItems,
-						   boolean canAddAccounts,
-						   @Nonnull AccountUiEventType eventType) {
+						   boolean canAddAccounts) {
 		super(context, listItems);
 		this.canAddAccounts = canAddAccounts;
-		this.eventType = eventType;
 	}
 
     /*
@@ -94,6 +89,6 @@ public class AccountsAdapter extends BaseListItemAdapter<AccountListItem> {
 
 	@Nonnull
 	private AccountListItem createListItem(@Nonnull Account account) {
-		return new AccountListItem(account, eventType);
+		return new AccountListItem(account);
 	}
 }

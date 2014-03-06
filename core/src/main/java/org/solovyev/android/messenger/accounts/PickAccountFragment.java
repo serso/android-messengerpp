@@ -17,21 +17,17 @@
 package org.solovyev.android.messenger.accounts;
 
 import android.os.Bundle;
-
 import com.google.common.base.Function;
-
 import org.solovyev.android.messenger.BaseListItemAdapter;
 import org.solovyev.android.messenger.core.R;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.collect.Iterables.toArray;
 import static com.google.common.collect.Iterables.transform;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.account_picked;
 import static org.solovyev.common.collections.Collections.isEmpty;
 
 public class PickAccountFragment extends BaseAccountsFragment {
@@ -66,10 +62,10 @@ public class PickAccountFragment extends BaseAccountsFragment {
 		final String[] accountIds = getArguments().getStringArray(ARG_ACCOUNT_IDS);
 		if (!isEmpty(accountIds)) {
 			for (String accountId : accountIds) {
-				listItems.add(new AccountListItem(getAccountService().getAccountById(accountId), account_picked));
+				listItems.add(new AccountListItem(getAccountService().getAccountById(accountId)));
 			}
 		}
 
-		return new AccountsAdapter(getActivity(), listItems, false, account_picked);
+		return new AccountsAdapter(getActivity(), listItems, false);
 	}
 }

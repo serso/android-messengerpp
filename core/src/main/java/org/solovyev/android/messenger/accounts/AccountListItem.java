@@ -39,9 +39,6 @@ public final class AccountListItem extends BaseMessengerListItem<Account> {
 	@Nonnull
 	private static final String TAG_PREFIX = "account_list_item_";
 
-	@Nonnull
-	private final AccountUiEventType eventType;
-
     /*
 	**********************************************************************
     *
@@ -51,9 +48,8 @@ public final class AccountListItem extends BaseMessengerListItem<Account> {
     */
 
 
-	public AccountListItem(@Nonnull Account account, @Nonnull AccountUiEventType eventType) {
+	public AccountListItem(@Nonnull Account account) {
 		super(TAG_PREFIX, account, R.layout.mpp_list_item_account);
-		this.eventType = eventType;
 	}
 
 	@Nullable
@@ -62,7 +58,7 @@ public final class AccountListItem extends BaseMessengerListItem<Account> {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter) {
-				getEventManager(context).fire(eventType.newEvent(getAccount()));
+				getEventManager(context).fire(new AccountUiEvent.Clicked(getAccount()));
 			}
 		};
 	}

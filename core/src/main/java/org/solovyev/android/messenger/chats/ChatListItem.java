@@ -38,7 +38,6 @@ import javax.annotation.Nullable;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.*;
-import static org.solovyev.android.messenger.chats.ChatUiEventType.chat_clicked;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.chats.UiChat.newEmptyUiChat;
 import static org.solovyev.android.messenger.messages.Messages.getMessageTime;
@@ -78,7 +77,7 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 		return new OnClickAction() {
 			@Override
 			public void onClick(@Nonnull Context context, @Nonnull ListAdapter<? extends ListItem> adapter) {
-				getEventManager(context).fire(chat_clicked.newEvent(getChat()));
+				getEventManager(context).fire(new ChatUiEvent.Clicked(getChat()));
 			}
 		};
 	}
@@ -235,7 +234,7 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 
 		@Override
 		public void onClick(View v) {
-			getEventManager(context).fire(ChatUiEventType.show_participants.newEvent(chat));
+			getEventManager(context).fire(new ChatUiEvent.ShowParticipants(chat));
 		}
 	}
 }

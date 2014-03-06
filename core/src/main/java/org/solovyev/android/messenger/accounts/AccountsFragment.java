@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.solovyev.android.messenger.UiEventType.show_realms;
-import static org.solovyev.android.messenger.accounts.AccountUiEventType.show_account;
 
 public class AccountsFragment extends BaseAccountsFragment {
 
@@ -51,10 +50,10 @@ public class AccountsFragment extends BaseAccountsFragment {
 		final List<AccountListItem> listItems = new ArrayList<AccountListItem>();
 		for (Account account : getAccountService().getAccounts()) {
 			if (account.getState() != AccountState.removed) {
-				listItems.add(new AccountListItem(account, show_account));
+				listItems.add(new AccountListItem(account));
 			}
 		}
-		return new AccountsAdapter(getActivity(), listItems, true, show_account);
+		return new AccountsAdapter(getActivity(), listItems, true);
 	}
 
     /*

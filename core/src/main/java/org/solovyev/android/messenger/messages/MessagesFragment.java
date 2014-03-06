@@ -531,7 +531,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
-			getEventManager().fire(ChatUiEventType.show_participants.newEvent(chat));
+			getEventManager().fire(new ChatUiEvent.ShowParticipants(chat));
 		}
 	}
 
@@ -545,7 +545,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 
 		@Override
 		public void onClick(@Nonnull MenuItem menuItem, @Nonnull Context context) {
-			getEventManager().fire(ChatUiEventType.show_participants.newEvent(chat));
+			getEventManager().fire(new ChatUiEvent.ShowParticipants(chat));
 		}
 	}
 

@@ -22,21 +22,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.RoboListeners;
-import org.solovyev.android.messenger.UiEvent;
-import org.solovyev.android.messenger.UiEventListener;
 import org.solovyev.android.messenger.fragments.PrimaryFragment;
-import org.solovyev.android.messenger.realms.RealmUiEvent;
-import org.solovyev.android.messenger.realms.RealmUiEventListener;
 import roboguice.event.EventListener;
 
 import javax.annotation.Nonnull;
 
-import static org.solovyev.android.messenger.fragments.PrimaryFragment.realms;
+import static org.solovyev.android.messenger.accounts.AccountFragment.newAccountFragmentDef;
 
 public final class AccountsActivity extends BaseFragmentActivity {
-
-	@Nonnull
-	private static final String EXTRA_NEW_ACCOUNTS = "new-accounts";
 
 	public static void start(@Nonnull Activity activity) {
 		final Intent intent = new Intent();
@@ -44,26 +37,13 @@ public final class AccountsActivity extends BaseFragmentActivity {
 		activity.startActivity(intent);
 	}
 
-	public static void startForNewAccounts(@Nonnull Activity activity) {
-		final Intent intent = new Intent();
-		intent.putExtra(EXTRA_NEW_ACCOUNTS, true);
-		intent.setClass(activity, AccountsActivity.class);
-		activity.startActivity(intent);
-	}
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		if (savedInstanceState == null) {
 			// first time
-			getMultiPaneFragmentManager().setMainFragment(PrimaryFragment.accounts);
-
-			// show realms if needed
-			if (getIntent().getBooleanExtra(EXTRA_NEW_ACCOUNTS, false)) {
-				getMultiPaneFragmentManager().setMainFragment(realms);
-			}
+			fragmentManager.setMainFragment(PrimaryFragment.accounts);
 		}
 
 		initFragments();
@@ -89,14 +69,23 @@ public final class AccountsActivity extends BaseFragmentActivity {
 
 		final RoboListeners listeners = getListeners();
 
-		listeners.add(UiEvent.class, new UiEventListener(this));
-		listeners.add(AccountUiEvent.Typed.class, new AccountUiEventListener(this));
-		listeners.add(AccountUiEvent.Saved.class, new EventListener<AccountUiEvent.Saved>() {
+		listeners.add(AccountUiEvent.Clicked.class, new EventListener<AccountUiEvent.Clicked>() {
+
+			@Nonnull
+			private final BaseFragmentActivity activity = AccountsActivity.this;
+
 			@Override
-			public void onEvent(AccountUiEvent.Saved event) {
-				fragmentManager.goBack();
+			public void onEvent(AccountUiEvent.Clicked event) {
+				if (isDualPane()) {
+					fragmentManager.clearBackStack();
+					fragmentManager.setSecondFragment(newAccountFragmentDef(activity, event.account, false));
+					if (isTriplePane()) {
+						fragmentManager.emptifyThirdFragment();
+					}
+				} else {
+					fragmentManager.setMainFragment(newAccountFragmentDef(activity, event.account, true));
+				}
 			}
 		});
-		listeners.add(RealmUiEvent.class, new RealmUiEventListener(this));
 	}
 }

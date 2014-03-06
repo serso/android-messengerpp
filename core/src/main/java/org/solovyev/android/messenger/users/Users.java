@@ -20,12 +20,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import org.solovyev.android.messenger.App;
-import org.solovyev.android.messenger.BaseFragmentActivity;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.accounts.Accounts;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.entities.Entity;
-import org.solovyev.android.messenger.fragments.MessengerMultiPaneFragmentManager;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 import org.solovyev.android.properties.AProperties;
 import org.solovyev.android.properties.AProperty;
@@ -40,11 +38,9 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.getEventManager;
-import static org.solovyev.android.messenger.App.getUiHandler;
 import static org.solovyev.android.messenger.entities.Entities.newEntity;
 import static org.solovyev.android.messenger.entities.Entities.newEntityFromEntityId;
-import static org.solovyev.android.messenger.users.ContactUiEventType.call_contact;
-import static org.solovyev.android.messenger.users.ContactsInfoFragment.newViewContactsFragmentDef;
+import static org.solovyev.android.messenger.users.ContactUiEventType.call;
 import static org.solovyev.android.properties.Properties.newProperty;
 
 public final class Users {
@@ -122,21 +118,6 @@ public final class Users {
 		}
 	}
 
-	public static void showViewUsersFragment(@Nonnull final List<User> users, @Nonnull final BaseFragmentActivity activity) {
-		final MessengerMultiPaneFragmentManager mpfm = activity.getMultiPaneFragmentManager();
-		// fix for EventManager. Event manager doesn't support removal/creation of listeners in onEvent() method => let's do it on the next main loop cycle
-		getUiHandler().post(new Runnable() {
-			@Override
-			public void run() {
-				if (activity.isDualPane()) {
-					mpfm.setSecondFragment(newViewContactsFragmentDef(activity, users, true));
-				} else {
-					mpfm.setMainFragment(newViewContactsFragmentDef(activity, users, true));
-				}
-			}
-		});
-	}
-
 	@Nonnull
 	public static AProperty newOnlineProperty(boolean online) {
 		return newProperty(User.PROPERTY_ONLINE, String.valueOf(online));
@@ -163,7 +144,7 @@ public final class Users {
 			contactCall.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					getEventManager(context).fire(call_contact.newEvent(contact));
+					getEventManager(context).fire(call.newEvent(contact));
 				}
 			});
 

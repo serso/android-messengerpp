@@ -26,13 +26,19 @@ public abstract class ContactUiEvent implements JEvent {
 	@Nonnull
 	public final User contact;
 
-	protected ContactUiEvent(@Nonnull User contact) {
+	public ContactUiEvent(@Nonnull User contact) {
 		this.contact = contact;
 	}
 
 	public static class Clicked extends ContactUiEvent {
 
 		public Clicked(@Nonnull User contact) {
+			super(contact);
+		}
+	}
+
+	public static class Open extends ContactUiEvent {
+		public Open(@Nonnull User contact) {
 			super(contact);
 		}
 	}

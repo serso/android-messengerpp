@@ -20,6 +20,8 @@ import android.os.Bundle;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import org.solovyev.android.messenger.ActivityUi;
 import org.solovyev.android.messenger.App;
+import org.solovyev.android.messenger.UiEvent;
+import org.solovyev.android.messenger.UiEventListener;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.wizard.*;
 
@@ -44,6 +46,7 @@ public class WizardActivity extends RoboSherlockFragmentActivity implements Fini
 	protected void onResume() {
 		super.onResume();
 		ui.onResume();
+		ui.getListeners().add(UiEvent.class, new UiEventListener(this));
 	}
 
 	@Override
