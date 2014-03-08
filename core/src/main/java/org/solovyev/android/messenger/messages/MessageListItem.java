@@ -57,10 +57,10 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	private static final MessageLayout layout = MessageLayout.wrap_content;
 
 	@Nonnull
-	private static final MessageStyle userStyle = MessageStyle.light_grey;
+	private static final MessageStyle userStyle = MessageStyle.hangouts_white;
 
 	@Nonnull
-	private static final MessageStyle contactStyle = MessageStyle.light_grey;
+	private static final MessageStyle contactStyle = MessageStyle.hangouts_white;
 
 	@Nonnull
 	private final Account account;
@@ -145,7 +145,7 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 		messageTextView.setText(fromHtml(messageBody));
 		Linkify.addLinks(messageTextView, Linkify.ALL);
 
-		getStyle().prepareLayout(userMessage, true, viewTag);
+		getStyle().prepareLayout(userMessage, viewTag);
 
 		if (message.canRead()) {
 			final Message readMessage = message.cloneRead();

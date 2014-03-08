@@ -19,20 +19,21 @@
 <FrameLayout xmlns:a="http://schemas.android.com/apk/res/android"
 	a:layout_width="match_parent"
 	a:layout_height="match_parent"
+	a:background="@null"
 	style="?mpp_list_item">
 
 	<ImageView
 		a:id="@+id/mpp_li_message_icon_imageview"
-		a:layout_gravity="right|top"
+		a:layout_gravity="right|bottom"
 		style="?mpp_list_item_icon"
 		a:layout_marginRight="0dp" />
 
 	<LinearLayout
 		a:id="@+id/mpp_li_message_linearlayout"
-		a:background="@drawable/mpp_message_bubble_right_blue_light"
-		a:paddingRight="18dp"
+		a:background="@drawable/msg_bubble_otr_right_selector"
+		a:paddingRight="@dimen/mpp_hangouts_message_arrow_size"
 		a:layout_gravity="right|top"
-		a:layout_marginRight="@dimen/mpp_message_padding"
+		a:layout_marginRight="@dimen/mpp_list_item_icon_size"
 		style="@style/mpp_list_item_message">
 
 		<TextView
@@ -41,12 +42,13 @@
 
 		<ImageView
 			a:id="@+id/mpp_li_message_progress_imageview"
-			style="?mpp_list_item_message_progress" />
+			style="?mpp_list_item_message_progress"
+			a:layout_gravity="left|bottom" />
 
 		<TextView
 			a:id="@+id/mpp_li_message_date_textview"
 			style="?mpp_list_item_message_date"
-			a:gravity="left" />
+			a:layout_gravity="left|bottom" />
 
 	</LinearLayout>
 </FrameLayout>

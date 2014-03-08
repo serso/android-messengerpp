@@ -213,13 +213,13 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		final ViewGroup root = super.onCreateView(inflater, container, savedInstanceState);
 		final Context context = getThemeContext();
 
-		final View messageLayoutParent = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(context);
+		final View chatFooter = ViewFromLayoutBuilder.newInstance(R.layout.mpp_list_item_message_editor).build(context);
 		if (!account.canSendMessage(chat)) {
-			messageLayoutParent.setVisibility(View.GONE);
+			chatFooter.setVisibility(View.GONE);
 		}
 
-		final EditText messageText = (EditText) messageLayoutParent.findViewById(R.id.mpp_message_bubble_body_edittext);
-		messageText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		final EditText messageEditText = (EditText) chatFooter.findViewById(R.id.mpp_message_bubble_body_edittext);
+		messageEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				boolean handled = false;
@@ -231,7 +231,7 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 			}
 		});
 
-		root.addView(messageLayoutParent, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+		root.addView(chatFooter, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
 		return root;
 	}
@@ -353,6 +353,16 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 		lv.setDividerHeight(0);
 		lv.setStackFromBottom(true);
 		lv.setFastScrollEnabled(false);
+		lv.setSelector(R.drawable.mpp_empty);
+		lv.setClipToPadding(false);
+	}
+
+	@Override
+	protected void fillListViewContainer(@Nonnull View view, @Nonnull Context context) {
+		super.fillListViewContainer(view, context);
+		view.setBackgroundResource(R.drawable.mpp_border_chat);
+		// 1px padding to separate message editor from list view
+		view.setPadding(0, 0, 0, 1);
 	}
 
 	@Override

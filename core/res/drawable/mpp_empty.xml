@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright 2013 serso aka se.solovyev
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2014 serso aka se.solovyev
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,8 +16,4 @@
   ~ limitations under the License.
   -->
 
-<resources>
-	<dimen name="mpp_fragment_title_text_size">26sp</dimen>
-	<dimen name="mpp_fragment_icon_size">100dp</dimen>
-	<dimen name="mpp_list_item_icon_size">65dp</dimen>
-</resources>
+<selector />

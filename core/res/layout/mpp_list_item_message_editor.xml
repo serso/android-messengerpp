@@ -17,17 +17,15 @@
   -->
 
 <LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-			  a:id="@+id/mpp_message_bubble_linearlayout"
-			  a:paddingRight="14dp"
-			  a:paddingLeft="14dp"
-			  style="?mpp_list_item">
+	a:id="@+id/mpp_message_bubble_linearlayout"
+	style="?mpp_list_item">
 
 	<EditText
-			a:id="@+id/mpp_message_bubble_body_edittext"
-			style="?mpp_list_item_message_text_editor"/>
+		a:id="@+id/mpp_message_bubble_body_edittext"
+		style="?mpp_list_item_message_text_editor" />
 
 	<ImageButton
-			a:id="@+id/mpp_message_bubble_send_button"
-			style="?mpp_send_button"/>
+		a:id="@+id/mpp_message_bubble_send_button"
+		style="?mpp_send_button" />
 
 </LinearLayout>

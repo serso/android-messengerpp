@@ -510,6 +510,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		final ProgressBar progress = new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
 		progressContainer.addView(progress, new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
+		fillListViewProgress(progressContainer, context);
+
 		root.addView(progressContainer, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
 		// ------------------------------------------------------------------
@@ -536,6 +538,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		}
 
 		listViewContainer.addView(listView, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
+
+		fillListViewContainer(root, context);
 
 		root.addView(listViewContainer, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
@@ -586,6 +590,12 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		fillListView((ListView) listView, context);
 		listView.setId(android.R.id.list);
 		return listView;
+	}
+
+	protected void fillListViewProgress(@Nonnull View progress, @Nonnull Context context) {
+	}
+
+	protected void fillListViewContainer(@Nonnull View view, @Nonnull Context context) {
 	}
 
 	protected void fillListView(@Nonnull ListView lv, @Nonnull Context context) {

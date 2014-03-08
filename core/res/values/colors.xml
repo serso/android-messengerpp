@@ -24,6 +24,7 @@
 
 	<color name="mpp_bg">#ffffffff</color>
 
+	<color name="mpp_chat_bg">#ffcacaca</color>
 	<color name="mpp_button">#ffe8e8e8</color>
 	<color name="mpp_selected">#ff33b5e5</color>
 	<color name="mpp_blue">#ff33b5e5</color>
