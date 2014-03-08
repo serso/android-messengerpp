@@ -118,8 +118,6 @@ public enum MessageStyle {
 		if (shadowSizeResId != 0) {
 			final int shadowSize = resources.getDimensionPixelSize(shadowSizeResId);
 			if (shadowSize > 0) {
-				view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + shadowSize, view.getPaddingRight(), view.getPaddingBottom());
-
 				messageLayout.setMinimumHeight(iconSize + shadowSize);
 				if (userMessage) {
 					final ImageView messageIcon = viewTag.getViewById(R.id.mpp_li_message_icon_imageview);

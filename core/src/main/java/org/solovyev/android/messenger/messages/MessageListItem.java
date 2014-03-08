@@ -73,6 +73,10 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 	@Nonnull
 	private final IconOnClickListener iconOnClickListener = new IconOnClickListener();
 
+	@Nonnull
+	private final SimpleMenuOnClick<MessageListItem> onClick = new SimpleMenuOnClick<MessageListItem>(Arrays.<LabeledMenuItem<ListItemOnClickData<MessageListItem>>>asList(MenuItems.values()), this, "message-context-menu");
+	;
+
 	private MessageListItem(@Nonnull Account account,
 							@Nonnull Chat chat,
 							@Nonnull Message message,
@@ -91,12 +95,12 @@ public final class MessageListItem extends BaseMessengerListItem<Message> /*, Ch
 
 	@Override
 	public OnClickAction getOnClickAction() {
-		return new SimpleMenuOnClick<MessageListItem>(Arrays.<LabeledMenuItem<ListItemOnClickData<MessageListItem>>>asList(MenuItems.values()), this, "message-context-menu");
+		return onClick;
 	}
 
 	@Override
 	public OnClickAction getOnLongClickAction() {
-		return null;
+		return onClick;
 	}
 
 	@Nonnull
