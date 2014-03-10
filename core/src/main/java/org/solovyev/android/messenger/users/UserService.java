@@ -132,16 +132,13 @@ public interface UserService {
 	void onContactPresenceChanged(@Nonnull User user, @Nonnull User contact, boolean available);
 
 	@Nonnull
-	List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count);
+	List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count, @Nonnull ContactsSearchStrategy strategy, @Nonnull Collection<UiContact> except);
 
 	@Nonnull
-	List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count, @Nonnull Collection<UiContact> except);
+	List<UiContact> findContacts(@Nullable String query, int count, @Nonnull ContactsSearchStrategy strategy);
 
 	@Nonnull
-	List<UiContact> findContacts(@Nullable String query, int count);
-
-	@Nonnull
-	List<UiContact> findContacts(@Nullable String query, int count, @Nonnull Collection<UiContact> except);
+	List<UiContact> findContacts(@Nullable String query, int count, @Nonnull ContactsSearchStrategy strategy, @Nonnull Collection<UiContact> except);
 
 	@Nonnull
 	List<UiContact> getLastChatedContacts(int count);
@@ -217,4 +214,9 @@ public interface UserService {
 	int getUnreadMessagesCount(@Nonnull Entity contact);
 
 	void fireEvents(@Nonnull Collection<UserEvent> userEvents);
+
+	public static enum ContactsSearchStrategy {
+		alphabetically,
+		evenly_between_accounts;
+	}
 }

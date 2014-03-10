@@ -121,7 +121,7 @@ public class BaseListItemAdapter<LI extends ListItem & Identifiable> extends Lis
 
 		@Override
 		public int compare(ListItem lhs, ListItem rhs) {
-			return Objects.compare(lhs.toString(), rhs.toString());
+			return StringComparator.compareStrings(lhs.toString(), rhs.toString());
 		}
 	}
 

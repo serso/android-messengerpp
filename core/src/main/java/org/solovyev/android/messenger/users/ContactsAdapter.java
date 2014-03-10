@@ -46,7 +46,7 @@ public class ContactsAdapter extends BaseContactsAdapter {
 	private boolean recentContacts;
 
 	public ContactsAdapter(@Nonnull Context context, boolean recentContacts) {
-		super(context, false);
+		super(context, true);
 		this.recentContacts = recentContacts;
 	}
 
@@ -70,17 +70,21 @@ public class ContactsAdapter extends BaseContactsAdapter {
 	@Nonnull
 	@Override
 	protected Filter createFilter() {
-		return new AdapterFilter<ContactListItem>(new AdapterHelper()) {
-			@Override
-			protected JPredicate<ContactListItem> getFilter(@Nullable CharSequence prefix) {
-				return new JPredicate<ContactListItem>() {
-					@Override
-					public boolean apply(@Nullable ContactListItem contactListItem) {
-						return true;
-					}
-				};
-			}
-		};
+		if (recentContacts) {
+			return new AdapterFilter<ContactListItem>(new AdapterHelper()) {
+				@Override
+				protected JPredicate<ContactListItem> getFilter(@Nullable CharSequence prefix) {
+					return new JPredicate<ContactListItem>() {
+						@Override
+						public boolean apply(@Nullable ContactListItem contactListItem) {
+							return true;
+						}
+					};
+				}
+			};
+		} else {
+			return super.createFilter();
+		}
 	}
 
 	@Nullable

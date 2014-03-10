@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static org.solovyev.android.messenger.users.ContactListItem.newContactListItem;
+import static org.solovyev.android.messenger.users.UserService.ContactsSearchStrategy.alphabetically;
 
 final class ContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListItem> {
 
@@ -46,7 +47,7 @@ final class ContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListIt
 
 	@Nonnull
 	protected List<UiContact> getElements(@Nonnull Context context) {
-		return App.getUserService().findContacts(query, maxCount);
+		return App.getUserService().findContacts(query, maxCount, alphabetically);
 	}
 
 	@Nonnull

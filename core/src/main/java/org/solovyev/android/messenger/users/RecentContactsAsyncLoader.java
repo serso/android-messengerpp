@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.getUserService;
+import static org.solovyev.android.messenger.users.UserService.ContactsSearchStrategy.evenly_between_accounts;
 
 final class RecentContactsAsyncLoader extends BaseAsyncLoader<UiContact, ContactListItem> {
 
@@ -44,7 +45,7 @@ final class RecentContactsAsyncLoader extends BaseAsyncLoader<UiContact, Contact
 		final List<UiContact> contacts = getUserService().getLastChatedContacts(maxCount);
 		final int spaceLeft = maxCount - contacts.size();
 		if (spaceLeft > 0) {
-			contacts.addAll(getUserService().findContacts(null, spaceLeft, contacts));
+			contacts.addAll(getUserService().findContacts(null, spaceLeft, evenly_between_accounts, contacts));
 		}
 		return contacts;
 	}

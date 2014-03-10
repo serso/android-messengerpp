@@ -55,6 +55,8 @@ import static org.solovyev.android.messenger.users.ContactsDisplayMode.all_conta
 import static org.solovyev.android.messenger.users.UiContact.loadRecentUiContact;
 import static org.solovyev.android.messenger.users.UiContact.loadUiContact;
 import static org.solovyev.android.messenger.users.UserEventType.*;
+import static org.solovyev.android.messenger.users.UserService.ContactsSearchStrategy.alphabetically;
+import static org.solovyev.android.messenger.users.UserService.ContactsSearchStrategy.evenly_between_accounts;
 import static org.solovyev.android.messenger.users.Users.newEmptyUser;
 import static org.solovyev.common.text.Strings.fromStackTrace;
 
@@ -322,9 +324,9 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count, @Nonnull Collection<UiContact> except) {
+	public List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count, @Nonnull ContactsSearchStrategy strategy, @Nonnull Collection<UiContact> except) {
 		Log.d(TAG, "Find contacts for user: " + user.getLogin() + ", query: " + query);
-		final List<UiContact> result = new ArrayList<UiContact>();
+		final List<UiContact> result = new ArrayList<UiContact>(count);
 
 		final List<User> contacts = getContacts(user.getEntity());
 		final ContactFilter filter = new ContactFilter(query, all_contacts);
@@ -335,16 +337,25 @@ public class DefaultUserService implements UserService {
 			if (!isExceptedUser(except, contact)) {
 				if (filter.apply(contact)) {
 					result.add(loadUiContact(contact, account));
-					if (result.size() >= count) {
-						break;
+					if (strategy == evenly_between_accounts) {
+						if (result.size() >= count) {
+							break;
+						}
 					}
 				}
 			}
 		}
 
-		Log.d(TAG, "Found contacts count: " + result.size());
+		if (strategy == evenly_between_accounts) {
+			Log.d(TAG, "Found contacts count: " + result.size());
 
-		return result;
+			return result;
+		} else if (strategy == alphabetically) {
+			Collections.sort(result, UiContact.getComparator());
+			return result.subList(0, min(result.size(), count));
+		} else {
+			throw new UnsupportedOperationException(strategy + " is not supported");
+		}
 	}
 
 	private boolean isExceptedUser(@Nonnull Collection<UiContact> exceptions, @Nonnull final User contact) {
@@ -358,22 +369,33 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<UiContact> findContacts(@Nonnull User user, @Nullable String query, int count) {
-		return findContacts(user, query, count, Collections.<UiContact>emptyList());
-	}
-
-	@Nonnull
-	@Override
-	public List<UiContact> findContacts(@Nullable String query, int count, @Nonnull Collection<UiContact> except) {
-		final List<UiContact> result = new ArrayList<UiContact>();
+	public List<UiContact> findContacts(@Nullable String query, int count, @Nonnull ContactsSearchStrategy strategy, @Nonnull Collection<UiContact> except) {
+		final List<UiContact> result = new ArrayList<UiContact>(count);
 
 		final Collection<User> accountUsers = accountService.getEnabledAccountUsers();
 		final int accountsSize = accountUsers.size();
 		if (accountsSize > 0) {
-			final int accountCount = max(2 * except.size() / accountsSize + count / accountsSize, 1);
-			for (User user : accountUsers) {
-				result.addAll(findContacts(user, query, accountCount, except));
+			final int accountCount;
+			switch (strategy) {
+				case alphabetically:
+					accountCount = count;
+					break;
+				case evenly_between_accounts:
+					accountCount = max(2 * except.size() / accountsSize + count / accountsSize, 1);
+					break;
+				default:
+					accountCount = 0;
 			}
+
+			for (User user : accountUsers) {
+				result.addAll(findContacts(user, query, accountCount, strategy, except));
+			}
+		}
+
+		switch (strategy) {
+			case alphabetically:
+				Collections.sort(result, UiContact.getComparator());
+				break;
 		}
 
 		return result.subList(0, min(result.size(), count));
@@ -381,8 +403,8 @@ public class DefaultUserService implements UserService {
 
 	@Nonnull
 	@Override
-	public List<UiContact> findContacts(@Nullable String query, int count) {
-		return findContacts(query, count, Collections.<UiContact>emptyList());
+	public List<UiContact> findContacts(@Nullable String query, int count, @Nonnull ContactsSearchStrategy strategy) {
+		return findContacts(query, count, strategy, Collections.<UiContact>emptyList());
 	}
 
 	@Nonnull

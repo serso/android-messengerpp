@@ -248,14 +248,14 @@ public class VkRealm extends AbstractRealm<VkAccountConfiguration> {
 		@Nullable
 		@Override
 		public String getUrl(@Nonnull User user) {
-			String result = user.getPropertyValueByName("photoBig");
+			String result = user.getPropertyValueByName("photoRec");
 
 			if (result == null) {
 				result = user.getPropertyValueByName("photo");
 			}
 
 			if (result == null) {
-				result = user.getPropertyValueByName("photoRec");
+				result = user.getPropertyValueByName("photoBig");
 			}
 
 			return result;

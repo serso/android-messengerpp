@@ -21,7 +21,8 @@ import android.util.SparseIntArray;
 import android.widget.SectionIndexer;
 
 import javax.annotation.Nonnull;
-import java.text.Collator;
+
+import static org.solovyev.android.messenger.StringComparator.compareStrings;
 
 /**
  * A helper class for adapters that implement the SectionIndexer interface.
@@ -55,11 +56,6 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 	private final SparseIntArray alphabetMap;
 
 	/**
-	 * Use a collator to compare strings in a localized manner.
-	 */
-	private final Collator collator;
-
-	/**
 	 * Constructs the indexer.
 	 *
 	 * @param alphabet string containing the alphabet, with space as the first character.
@@ -71,9 +67,6 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 		this.adapter = adapter;
 		this.alphabet = alphabet;
 		alphabetMap = new SparseIntArray(this.alphabet.getLength());
-		// Get a Collator for the current locale for string comparisons.
-		collator = java.text.Collator.getInstance();
-		collator.setStrength(java.text.Collator.PRIMARY);
 	}
 
 	@Nonnull
@@ -96,7 +89,17 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 		for (Object element : adapter.getAllElements()) {
 			final String s = element.toString();
 			if (s.length() > 0) {
-				alphabet.append(s.charAt(0));
+				final char newChar = s.charAt(0);
+				if (alphabet.length() > 0) {
+					final char lastChar = alphabet.charAt(alphabet.length() - 1);
+					if (lastChar != newChar) {
+						if (Character.toUpperCase(lastChar) != Character.toUpperCase(newChar)) {
+							alphabet.append(newChar);
+						}
+					}
+				} else {
+					alphabet.append(newChar);
+				}
 			}
 		}
 		return alphabet;
@@ -122,7 +125,7 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 			firstLetter = word.substring(0, 1);
 		}
 
-		return collator.compare(firstLetter, letter);
+		return compareStrings(firstLetter, letter);
 	}
 
 	/**
@@ -154,24 +157,23 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 			sectionIndex = alphabet.getLength() - 1;
 		}
 
-		int count = adapter.getCount();
+		final int count = adapter.getCount();
 		int start = 0;
 		int end = count;
-		int pos;
+		int position;
 
-		char letter = alphabet.getCharacterAt(sectionIndex);
-		String targetLetter = Character.toString(letter);
+		final char letter = alphabet.getCharacterAt(sectionIndex);
 		// Check map
-		if (Integer.MIN_VALUE != (pos = alphaMap.get(letter, Integer.MIN_VALUE))) {
+		if (Integer.MIN_VALUE != (position = alphaMap.get(letter, Integer.MIN_VALUE))) {
 			// Is it approximate? Using negative value to indicate that it's
 			// an approximation and positive value when it is the accurate
 			// position.
-			if (pos < 0) {
-				pos = -pos;
-				end = pos;
+			if (position < 0) {
+				position = -position;
+				end = position;
 			} else {
 				// Not approximate, this is the confirmed start of section, return it
-				return pos;
+				return position;
 			}
 		}
 
@@ -186,20 +188,21 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 
 		// Now that we have a possibly optimized start and end, let's binary search
 
-		pos = (end + start) / 2;
+		position = (end + start) / 2;
 
-		while (pos < end) {
+		final String l = Character.toString(letter);
+		while (position < end) {
 			// Get letter at pos
-			String curName = adapter.getItem(pos).toString();
-			if (curName == null) {
-				if (pos == 0) {
+			final String itemName = adapter.getItem(position).toString();
+			if (itemName == null) {
+				if (position == 0) {
 					break;
 				} else {
-					pos--;
+					position--;
 					continue;
 				}
 			}
-			int diff = compare(curName, targetLetter);
+			final int diff = compare(itemName, l);
 			if (diff != 0) {
 				// TODO: Commenting out approximation code because it doesn't work for certain
 				// lists with custom comparators
@@ -213,28 +216,28 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 				// }
 				// if (collator.compare(startingLetter, targetLetter) < 0) {
 				if (diff < 0) {
-					start = pos + 1;
+					start = position + 1;
 					if (start >= count) {
-						pos = count;
+						position = count;
 						break;
 					}
 				} else {
-					end = pos;
+					end = position;
 				}
 			} else {
 				// They're the same, but that doesn't mean it's the start
-				if (start == pos) {
+				if (start == position) {
 					// This is it
 					break;
 				} else {
 					// Need to go further lower to find the starting row
-					end = pos;
+					end = position;
 				}
 			}
-			pos = (start + end) / 2;
+			position = (start + end) / 2;
 		}
-		alphaMap.put(letter, pos);
-		return pos;
+		alphaMap.put(letter, position);
+		return position;
 	}
 
 	/**
@@ -267,6 +270,10 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 	@Override
 	public void onChanged() {
 		super.onChanged();
+		updateAlphabet();
+	}
+
+	private void updateAlphabet() {
 		alphabet = Alphabet.forCharacters(extractAlphabet(adapter));
 		alphabetMap.clear();
 	}
@@ -277,8 +284,7 @@ public final class AlphabetIndexer extends DataSetObserver implements SectionInd
 	@Override
 	public void onInvalidated() {
 		super.onInvalidated();
-		alphabet = Alphabet.forCharacters(extractAlphabet(adapter));
-		alphabetMap.clear();
+		updateAlphabet();
 	}
 }
 

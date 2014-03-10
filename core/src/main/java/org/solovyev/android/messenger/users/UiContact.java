@@ -29,6 +29,8 @@ import org.solovyev.android.messenger.messages.Message;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Comparator;
+
 import static org.solovyev.android.messenger.App.getAccountService;
 
 final class UiContact implements Identifiable, EntityAware {
@@ -168,4 +170,10 @@ final class UiContact implements Identifiable, EntityAware {
 	public Entity getEntity() {
 		return contact.getEntity();
 	}
+
+	@Nonnull
+	public static Comparator<UiContact> getComparator() {
+		return UserComparator.getInstance();
+	}
+
 }

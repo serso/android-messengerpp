@@ -34,6 +34,8 @@ import org.solovyev.android.view.ViewFromLayoutBuilder;
 
 import javax.annotation.Nonnull;
 
+import static org.solovyev.android.messenger.StringComparator.compareStrings;
+
 public abstract class BaseMessengerListItem<D extends Identifiable> implements MessengerListItem, Checkable, Comparable<BaseMessengerListItem<D>> {
 
 	private boolean checked;
@@ -200,8 +202,8 @@ public abstract class BaseMessengerListItem<D extends Identifiable> implements M
 	}
 
 	@Override
-	public final int compareTo(@Nonnull BaseMessengerListItem<D> another) {
-		return this.toString().compareTo(another.toString());
+	public final int compareTo(@Nonnull BaseMessengerListItem<D> that) {
+		return compareStrings(this.toString(), that.toString());
 	}
 
     /*

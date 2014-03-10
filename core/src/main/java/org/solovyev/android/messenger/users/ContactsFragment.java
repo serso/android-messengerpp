@@ -33,8 +33,6 @@ import static org.solovyev.common.text.Strings.isEmpty;
 
 public class ContactsFragment extends BaseContactsFragment {
 
-	private static final boolean RECENT_ENABLED = false;
-
 	@Nullable
 	private JEventListener<ChatEvent> chatEventListener;
 
@@ -42,7 +40,7 @@ public class ContactsFragment extends BaseContactsFragment {
 	@Override
 	protected BaseListItemAdapter<ContactListItem> createAdapter() {
 		Log.d(tag, "Creating adapter, filter text: " + getFilterText());
-		return new ContactsAdapter(getActivity(), isRecentContacts());
+		return new ContactsAdapter(getActivity(), false);
 	}
 
 	@Nonnull
@@ -51,25 +49,13 @@ public class ContactsFragment extends BaseContactsFragment {
 		return (ContactsAdapter) super.getAdapter();
 	}
 
-	private boolean isRecentContacts() {
-		return isEmpty(getFilterText());
-	}
-
 	@Nonnull
 	@Override
 	protected MessengerAsyncTask<Void, Void, List<UiContact>> createAsyncLoader(@Nonnull BaseListItemAdapter<ContactListItem> adapter, @Nonnull Runnable onPostExecute) {
 		final CharSequence filterText = getFilterText();
-		Log.d(tag, "Creating loader, filter text: " + filterText);
-		if (!isEmpty(filterText)) {
-			((ContactsAdapter) adapter).setRecentContacts(false);
-			final String query = filterText == null ? null : filterText.toString();
-			((BaseContactsAdapter) adapter).setQuery(query);
-			return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, query, getMaxSize());
-		} else {
-			((ContactsAdapter) adapter).setRecentContacts(true);
-			((BaseContactsAdapter) adapter).setQuery(null);
-			return new RecentContactsAsyncLoader(getActivity(), adapter, onPostExecute, getMaxSize());
-		}
+		final String query = filterText == null ? null : filterText.toString();
+		((BaseContactsAdapter) adapter).setQuery(query);
+		return new ContactsAsyncLoader(getActivity(), adapter, onPostExecute, query, getMaxSize());
 	}
 
 	@Override
