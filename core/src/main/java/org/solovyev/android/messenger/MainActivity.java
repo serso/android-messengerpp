@@ -220,7 +220,7 @@ public final class MainActivity extends BaseFragmentActivity {
 			}
 		}
 
-		if (isDualPane()) {
+		/*if (isDualPane()) {
 			final Fragment fragment = fragmentManager.getFirstFragment();
 			if (fragment instanceof ChatsFragment) {
 				final ChatListItem item = ((ChatsFragment) fragment).getAdapter().getSelectedItem();
@@ -233,7 +233,7 @@ public final class MainActivity extends BaseFragmentActivity {
 					});
 				}
 			}
-		}
+		}*/
 	}
 
 	@Override

@@ -870,22 +870,26 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		uiHandler.post(new Runnable() {
 			@Override
 			public void run() {
+				final ListItemAdapterSelectionHelper<LI> selectionHelper = adapter.getSelectionHelper();
+				final LI item = selectionHelper.getSelection().getItem();
 
 				Log.d(tag, "Initial click: position=" + position);
-				if (position >= 0 && position < adapter.getCount()) {
-					adapter.getSelectionHelper().onItemClick(position);
-				}
+				if (item == null) {
+					if (position >= 0 && position < adapter.getCount()) {
+						selectionHelper.onItemClick(position);
+					}
 
-				if (getMultiPaneManager().isDualPane(activity)) {
-					if (adapter.isEmpty()) {
-						onEmptyList((BaseFragmentActivity) activity);
-					} else if (!canReuseFragment((FragmentActivity) activity, adapter.getSelectedItem())) {
-						// in case of dual pane we need to make a real click (call click listener)
-						clickItem(activity, position, adapter);
+					if (getMultiPaneManager().isDualPane(activity)) {
+						if (adapter.isEmpty()) {
+							onEmptyList((BaseFragmentActivity) activity);
+						} else if (!canReuseFragment((FragmentActivity) activity, adapter.getSelectedItem())) {
+							// in case of dual pane we need to make a real click (call click listener)
+							clickItem(activity, position, adapter);
+						}
 					}
 				}
 
-				Log.d(tag, "Selection after initial click: " + adapter.getSelectionHelper().getSelection());
+				Log.d(tag, "Selection after initial click: " + selectionHelper.getSelection());
 			}
 		});
 	}
