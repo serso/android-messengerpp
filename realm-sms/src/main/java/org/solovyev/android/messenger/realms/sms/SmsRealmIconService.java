@@ -16,21 +16,13 @@
 
 package org.solovyev.android.messenger.realms.sms;
 
-import android.content.ContentUris;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.widget.ImageView;
+import org.solovyev.android.messenger.App;
 import org.solovyev.android.messenger.icons.RealmIconService;
 import org.solovyev.android.messenger.users.User;
 
 import javax.annotation.Nonnull;
-import java.io.InputStream;
 import java.util.List;
 
 import static org.solovyev.android.messenger.App.getIconGenerator;
@@ -40,18 +32,21 @@ final class SmsRealmIconService implements RealmIconService {
 	@Nonnull
 	private final Context context;
 
+	// todo serso: make proper singleton
+	private static SmsIconLoader iconLoader;
+
 	SmsRealmIconService(@Nonnull Context context) {
 		this.context = context;
 	}
 
 	@Override
 	public void setUserIcon(@Nonnull User user, @Nonnull ImageView imageView) {
-		imageView.setImageDrawable(loadContactPhoto(user));
+		loadContactPhoto(user, imageView);
 	}
 
 	@Override
 	public void setUserPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
-		imageView.setImageDrawable(loadContactPhoto(user));
+		loadContactPhoto(user, imageView);
 	}
 
 	@Override
@@ -64,31 +59,16 @@ final class SmsRealmIconService implements RealmIconService {
 		imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.mpp_icon_users_green));
 	}
 
-	@Nonnull
-	private Drawable loadContactPhoto(@Nonnull User user) {
+	private void loadContactPhoto(@Nonnull User user, @Nonnull ImageView imageView) {
 		final String accountEntityId = user.getEntity().getAccountEntityId();
 
 		if (user.getEntity().isAccountEntityIdSet() && !SmsRealm.USER_ID.equals(accountEntityId)) {
-			try {
-				final Integer contactId = Integer.valueOf(accountEntityId);
-				final Bitmap bitmap = loadContactPhoto(contactId);
-				if (bitmap != null) {
-					return new BitmapDrawable(bitmap);
-				}
-			} catch (NumberFormatException e) {
-				Log.e(SmsRealm.TAG, e.getMessage(), e);
+			if (iconLoader == null) {
+				iconLoader = new SmsIconLoader(context, "messenger-sms", App.getUiHandler());
 			}
+			iconLoader.loadImage(accountEntityId, imageView, getIconGenerator().getIconResId(user));
+		} else {
+			imageView.setImageDrawable(getIconGenerator().getIcon(user));
 		}
-
-		return getIconGenerator().getIcon(user);
-	}
-
-	private Bitmap loadContactPhoto(long id) {
-		final Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id);
-		final InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(), uri);
-		if (input == null) {
-			return null;
-		}
-		return BitmapFactory.decodeStream(input);
 	}
 }
