@@ -871,18 +871,23 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			public void run() {
 				final ListItemAdapterSelectionHelper<LI> selectionHelper = adapter.getSelectionHelper();
 				final LI item = selectionHelper.getSelection().getItem();
+				final boolean adapterForceUnselected = selectionHelper.getSelection().isForceUnselected();
+				final boolean forceUnselected = position == FORCE_NOT_SELECTED || adapterForceUnselected;
 
-				Log.d(tag, "Initial click: position=" + position);
+				Log.d(tag, "Initial click: position=" + position + ", force unselected=" + forceUnselected);
 				if (item == null) {
-					if (position >= 0 && position < adapter.getCount()) {
-						selectionHelper.onItemClick(position);
-					} else if (position == FORCE_NOT_SELECTED) {
+					if (forceUnselected) {
 						selectionHelper.forceUnselect();
+					} else if (position >= 0 && position < adapter.getCount()) {
+						selectionHelper.onItemClick(position);
 					}
 
 					if (getMultiPaneManager().isDualPane(activity)) {
 						if (adapter.isEmpty()) {
-							onEmptyList((BaseFragmentActivity) activity);
+							if (!forceUnselected) {
+								// don't emptify second pane if list was force unselected
+								onEmptyList((BaseFragmentActivity) activity);
+							}
 						} else if (!canReuseFragment((FragmentActivity) activity, adapter.getSelectedItem())) {
 							// in case of dual pane we need to make a real click (call click listener)
 							clickItem(activity, position, adapter);
@@ -913,6 +918,9 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 
 	public void forceUnselect() {
 		adapter.getSelectionHelper().forceUnselect();
+		if (restoredAdapterSelection != null) {
+			restoredAdapterSelection = newForceNotSelected();
+		}
 		adapter.notifyDataSetChanged();
 	}
 
