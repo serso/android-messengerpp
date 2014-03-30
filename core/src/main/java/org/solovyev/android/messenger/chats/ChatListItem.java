@@ -40,8 +40,6 @@ import static android.view.View.VISIBLE;
 import static org.solovyev.android.messenger.App.*;
 import static org.solovyev.android.messenger.chats.UiChat.loadUiChat;
 import static org.solovyev.android.messenger.chats.UiChat.newEmptyUiChat;
-import static org.solovyev.android.messenger.messages.Messages.getMessageTime;
-import static org.solovyev.android.messenger.messages.Messages.getMessageTitle;
 import static org.solovyev.android.messenger.users.Users.fillContactPresenceViews;
 
 public class ChatListItem extends BaseMessengerListItem<UiChat> {
@@ -133,8 +131,8 @@ public class ChatListItem extends BaseMessengerListItem<UiChat> {
 		final TextView lastMessageTextTime = viewTag.getViewById(R.id.mpp_li_last_message_text_time_textview);
 		final TextView lastMessageText = viewTag.getViewById(R.id.mpp_li_last_message_text_textview);
 		if (lastMessage != null) {
-			lastMessageText.setText(getMessageTitle(chat, lastMessage, user));
-			final CharSequence messageTime = getMessageTime(lastMessage);
+			lastMessageText.setText(uiChat.getLastMessageTitle());
+			final CharSequence messageTime = uiChat.getLastMessageTime();
 
 			if (getAccountService().isOneAccount()) {
 				lastMessageTextTime.setText(messageTime);

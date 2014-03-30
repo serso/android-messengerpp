@@ -31,6 +31,8 @@ import javax.annotation.Nullable;
 import static com.google.common.collect.Iterables.any;
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.android.messenger.App.getChatService;
+import static org.solovyev.android.messenger.messages.Messages.getMessageTime;
+import static org.solovyev.android.messenger.messages.Messages.getMessageTitle;
 
 /**
  * Chat for UI, contains additional parameters like user, last message to be shown on UI
@@ -51,6 +53,12 @@ public final class UiChat implements Identifiable, EntityAware {
 	@Nullable
 	private Message lastMessage;
 
+	@Nullable
+	private CharSequence lastMessageTitle;
+
+	@Nullable
+	private CharSequence lastMessageTime;
+
 	// precached display name in order to calculate it before shown (e.g. for sorting)
 	@Nonnull
 	private String displayName;
@@ -65,6 +73,17 @@ public final class UiChat implements Identifiable, EntityAware {
 		this.unreadMessagesCount = unreadMessagesCount;
 		this.displayName = displayName;
 		this.online = online;
+		onLastMessageUpdated();
+	}
+
+	private void onLastMessageUpdated() {
+		if (lastMessage != null) {
+			lastMessageTitle = getMessageTitle(chat, lastMessage, user);
+			lastMessageTime = getMessageTime(lastMessage);
+		} else {
+			lastMessageTitle = null;
+			lastMessageTime = null;
+		}
 	}
 
 	@Nonnull
@@ -191,7 +210,10 @@ public final class UiChat implements Identifiable, EntityAware {
 	}
 
 	public void setLastMessage(@Nullable Message lastMessage) {
-		this.lastMessage = lastMessage;
+		if (this.lastMessage != lastMessage) {
+			this.lastMessage = lastMessage;
+			onLastMessageUpdated();
+		}
 	}
 
 	public void setUnreadMessagesCount(int unreadMessagesCount) {
@@ -215,5 +237,15 @@ public final class UiChat implements Identifiable, EntityAware {
 	@Override
 	public Entity getEntity() {
 		return getChat().getEntity();
+	}
+
+	@Nullable
+	public CharSequence getLastMessageTitle() {
+		return lastMessageTitle;
+	}
+
+	@Nullable
+	public CharSequence getLastMessageTime() {
+		return lastMessageTime;
 	}
 }

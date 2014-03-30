@@ -26,8 +26,10 @@ import org.solovyev.android.properties.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static org.solovyev.android.properties.Properties.newProperties;
 
@@ -42,6 +44,9 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
     */
 
 	private boolean privateChat;
+
+	@Nullable
+	private Entity secondUser;
 
 	@Nonnull
 	private MutableAProperties properties;
@@ -164,8 +169,10 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 	@Override
 	public Entity getSecondUser() {
 		assert isPrivate();
-
-		return App.getChatService().getSecondUser(this);
+		if (secondUser == null) {
+			secondUser = App.getChatService().getSecondUser(this);
+		}
+		return secondUser;
 	}
 
 	@Override
