@@ -17,11 +17,12 @@
 package org.solovyev.android.messenger.users;
 
 import android.telephony.PhoneNumberUtils;
-
 import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.telephony.PhoneNumberUtils.isGlobalPhoneNumber;
 import static android.telephony.PhoneNumberUtils.isWellFormedSmsAddress;
@@ -36,6 +37,11 @@ public final class PhoneNumber {
 
 	private boolean sendable;
 
+	private String formattedNumber;
+
+	@Nonnull
+	private static final Map<String, PhoneNumber> cache = new HashMap<String, PhoneNumber>();
+
 	private PhoneNumber() {
 	}
 
@@ -46,11 +52,15 @@ public final class PhoneNumber {
 
 	@Nonnull
 	public static PhoneNumber newPhoneNumber(@Nullable String phoneNumber) {
-		final PhoneNumber result = new PhoneNumber();
-		if (!isEmpty(phoneNumber)) {
-			result.number = toStandardPhoneNumber(phoneNumber);
-			result.valid = isValidPhoneNumber(result.number);
-			result.sendable = isValidSmsPhoneNumber(result.number);
+		PhoneNumber result = cache.get(phoneNumber);
+		if (result == null) {
+			result = new PhoneNumber();
+			if (!isEmpty(phoneNumber)) {
+				result.number = toStandardPhoneNumber(phoneNumber);
+				result.valid = isValidPhoneNumber(result.number);
+				result.sendable = isValidSmsPhoneNumber(result.number);
+			}
+			cache.put(phoneNumber, result);
 		}
 		return result;
 	}
@@ -74,8 +84,11 @@ public final class PhoneNumber {
 
 	@Nonnull
 	private String getFormattedNumber() {
-		return PhoneNumberUtils.formatNumber(this.number);
-	};
+		if (formattedNumber == null) {
+			formattedNumber = PhoneNumberUtils.formatNumber(this.number);
+		}
+		return formattedNumber;
+	}
 
 	private static boolean isValidPhoneNumber(@Nullable String phoneNumber) {
 		if (!Strings.isEmpty(phoneNumber)) {
