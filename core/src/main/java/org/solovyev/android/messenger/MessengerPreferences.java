@@ -37,7 +37,13 @@ public final class MessengerPreferences {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
 		Gui.Notification.showOngoingNotification.tryPutDefault(preferences);
-		Gui.theme.tryPutDefault(preferences);
+		if (context.getPackageName().endsWith(".dev")) {
+			if (!Gui.theme.isSet(preferences)) {
+				Gui.theme.putPreference(preferences, MessengerTheme.holo_light_action_bar);
+			}
+		} else {
+			Gui.theme.tryPutDefault(preferences);
+		}
 		startOnBoot.tryPutDefault(preferences);
 
 		final int versionCode = getAppVersionCode(context);

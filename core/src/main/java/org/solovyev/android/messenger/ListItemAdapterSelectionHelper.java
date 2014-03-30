@@ -7,8 +7,7 @@ import org.solovyev.android.list.ListItem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static org.solovyev.android.messenger.AdapterSelection.newNotSelected;
-import static org.solovyev.android.messenger.AdapterSelection.newSelection;
+import static org.solovyev.android.messenger.AdapterSelection.*;
 
 public class ListItemAdapterSelectionHelper<LI extends ListItem & Identifiable> {
 
@@ -30,6 +29,11 @@ public class ListItemAdapterSelectionHelper<LI extends ListItem & Identifiable> 
 
 	public void unselect() {
 		selection = newNotSelected();
+		findAndSelectItem(null);
+	}
+
+	public void forceUnselect() {
+		selection = newForceNotSelected();
 		findAndSelectItem(null);
 	}
 

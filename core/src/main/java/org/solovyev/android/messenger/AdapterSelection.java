@@ -24,9 +24,10 @@ public class AdapterSelection<LI> {
 	private static final String BUNDLE_ID = "id";
 
 	static final int NOT_SELECTED = -1;
+	static final int FORCE_NOT_SELECTED = -2;
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           FIELDS
     *
@@ -57,6 +58,10 @@ public class AdapterSelection<LI> {
 
 	public static <LI extends ListItem & Identifiable> AdapterSelection<LI> newNotSelected() {
 		return newSelection(NOT_SELECTED, null, null);
+	}
+
+	public static <LI extends ListItem & Identifiable> AdapterSelection<LI> newForceNotSelected() {
+		return newSelection(FORCE_NOT_SELECTED, null, null);
 	}
 
 	public static <LI extends ListItem> AdapterSelection<LI> newSelection(int position, @Nullable LI item, @Nullable String id) {
@@ -98,6 +103,8 @@ public class AdapterSelection<LI> {
 
 	public void saveState(@Nonnull Bundle outState) {
 		if (position != NOT_SELECTED) {
+			// don't put NOT_SELECTED as we want to use default value in restore instead of NOT_SELECTED
+			// NOTE: we must put FORCE_NOT_SELECTED in order to restore it
 			outState.putInt(BUNDLE_POSITION, position);
 		}
 
@@ -125,5 +132,9 @@ public class AdapterSelection<LI> {
 				", id='" + id + '\'' +
 				", item=" + item +
 				'}';
+	}
+
+	public boolean isForceUnselected() {
+		return position == FORCE_NOT_SELECTED;
 	}
 }

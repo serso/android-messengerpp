@@ -17,11 +17,10 @@
 package org.solovyev.android.messenger.chats;
 
 import android.content.Context;
-
-import javax.annotation.Nonnull;
-
 import org.solovyev.android.list.PrefixFilter;
 import org.solovyev.android.messenger.users.User;
+
+import javax.annotation.Nonnull;
 
 import static org.solovyev.android.messenger.App.getAccountService;
 import static org.solovyev.common.Objects.areEqual;
@@ -40,12 +39,16 @@ public class ChatsAdapter extends BaseChatsAdapter {
 
 	@Override
 	protected boolean canAddChat(@Nonnull ChatListItem chatListItem) {
-		final String query = getQuery();
-		if (!areEqual(filterQuery, query)) {
-			filterQuery = query;
-			filter = new PrefixFilter<CharSequence>(filterQuery);
+		boolean canAdd = super.canAddChat(chatListItem);
+		if (canAdd) {
+			final String query = getQuery();
+			if (!areEqual(filterQuery, query)) {
+				filterQuery = query;
+				filter = new PrefixFilter<CharSequence>(filterQuery);
+			}
+			canAdd = filter.apply(chatListItem.getDisplayName());
 		}
-		return filter.apply(chatListItem.getDisplayName());
+		return canAdd;
 	}
 
 	@Override

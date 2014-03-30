@@ -142,7 +142,7 @@ public final class MainActivity extends BaseFragmentActivity {
 	}
 
     /*
-    **********************************************************************
+	**********************************************************************
     *
     *                           ACTIVITY LIFECYCLE METHODS
     *
@@ -586,13 +586,13 @@ public final class MainActivity extends BaseFragmentActivity {
 			final MessengerMultiPaneFragmentManager fm = activity.getMultiPaneFragmentManager();
 
 			fm.clearBackStack();
-			final boolean fragmentSet;
+			boolean fragmentSet = false;
 
-			final BaseListFragment<?> chatsFragment = fm.getFragment(CHATS_FRAGMENT_TAG);
+			final BaseListFragment<ChatListItem> chatsFragment = fm.getFragment(CHATS_FRAGMENT_TAG);
 			if (chatsFragment != null && chatsFragment.isVisible()) {
 				fragmentSet = chatsFragment.clickItemById(chat.getId());
 				if (!fragmentSet) {
-					chatsFragment.unselect();
+					chatsFragment.forceUnselect();
 				}
 			} else {
 				if (chat.isPrivate()) {
@@ -601,26 +601,19 @@ public final class MainActivity extends BaseFragmentActivity {
 					if (contactsFragment != null && contactsFragment.isVisible()) {
 						fragmentSet = contactsFragment.clickItemById(contact.getEntityId());
 						if (!fragmentSet) {
-							contactsFragment.unselect();
+							contactsFragment.forceUnselect();
 						}
-					} else {
-						fragmentSet = false;
 					}
-				} else {
-					fragmentSet = false;
 				}
 			}
 
 			if (!fragmentSet) {
-				if (activity.isDualPane()) {
+				if (!activity.isDualPane()) {
+					fm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
+				} else {
 					fm.setSecondFragment(newMessagesFragmentDef(activity, chat, false));
 				}
 			}
-
-			if (!activity.isDualPane()) {
-				fm.setMainFragment(newMessagesFragmentDef(activity, chat, true));
-			}
-
 			updateThirdPaneForNewChat(chat, fm);
 		}
 

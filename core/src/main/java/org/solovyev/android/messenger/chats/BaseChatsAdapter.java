@@ -115,7 +115,9 @@ public abstract class BaseChatsAdapter extends BaseListItemAdapter<ChatListItem>
 		});
 	}
 
-	protected abstract boolean canAddChat(@Nonnull ChatListItem chat);
+	protected boolean canAddChat(@Nonnull ChatListItem chat) {
+		return chat.getLastMessage() != null;
+	}
 
 	protected void addAll(@Nonnull Iterable<ChatListItem> iterable) {
 		super.addAll(newArrayList(iterable));

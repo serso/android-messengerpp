@@ -643,7 +643,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 			final AdapterSelection<LI> selection = adapter.getSelectionHelper().getSelection();
 			final int position = selection.getPosition();
 
-			if (position < 0) {
+			if (position == NOT_SELECTED) {
 				final int defaultPosition = isSelectFirstItemByDefault() ? 0 : NOT_SELECTED;
 				if (savedInstanceState != null) {
 					restoredAdapterSelection = restoreSelection(savedInstanceState, defaultPosition);
@@ -752,7 +752,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				position = adapter.getPositionById(selectedItemId);
 			}
 
-			if (position < 0) {
+			if (position == NOT_SELECTED) {
 				position = selectedPosition;
 			}
 
@@ -853,16 +853,15 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		for (int i = 0; i < size; i++) {
 			final MessengerListItem listItem = adapter.getItem(i);
 			if (listItem.getId().equals(listItemId)) {
-				clickItem(i);
-				return true;
+				return clickItem(i);
 			}
 		}
 
 		return false;
 	}
 
-	private void clickItem(int position) {
-		clickItem(this.getActivity(), position, adapter);
+	private boolean clickItem(int position) {
+		return clickItem(this.getActivity(), position, adapter);
 	}
 
 	protected void initialClickItem(@Nonnull final Activity activity, final int position, @Nonnull final BaseListItemAdapter<LI> adapter) {
@@ -877,6 +876,8 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				if (item == null) {
 					if (position >= 0 && position < adapter.getCount()) {
 						selectionHelper.onItemClick(position);
+					} else if (position == FORCE_NOT_SELECTED) {
+						selectionHelper.forceUnselect();
 					}
 
 					if (getMultiPaneManager().isDualPane(activity)) {
@@ -894,7 +895,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 		});
 	}
 
-	private void clickItem(@Nonnull Activity activity, int position, @Nonnull BaseListItemAdapter<LI> adapter) {
+	private boolean clickItem(@Nonnull Activity activity, int position, @Nonnull BaseListItemAdapter<LI> adapter) {
 		if (position >= 0 && position < adapter.getCount()) {
 			adapter.getSelectionHelper().onItemClick(position);
 
@@ -903,12 +904,16 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 				if (onClickAction != null) {
 					onClickAction.onClick(activity, adapter);
 				}
+				return true;
 			}
 		}
+
+		return false;
 	}
 
-	public void unselect() {
-		adapter.getSelectionHelper().unselect();
+	public void forceUnselect() {
+		adapter.getSelectionHelper().forceUnselect();
+		adapter.notifyDataSetChanged();
 	}
 
     /*
@@ -1030,7 +1035,7 @@ public abstract class BaseListFragment<LI extends MessengerListItem>
 						final int position = selection.getPosition();
 						if (position >= 0 && position < adapter.getCount()) {
 							clickItem(position);
-						} else if (!adapter.isEmpty()) {
+						} else if (!adapter.isEmpty() && !adapter.isForceUnselected()) {
 							clickItem(0);
 						}
 					}

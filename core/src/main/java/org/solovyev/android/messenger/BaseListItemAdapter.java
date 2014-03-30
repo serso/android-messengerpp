@@ -25,7 +25,6 @@ import org.solovyev.android.messenger.accounts.AccountEvent;
 import org.solovyev.android.messenger.entities.EntityAware;
 import org.solovyev.android.messenger.users.UserEvent;
 import org.solovyev.android.messenger.view.BaseMessengerListItem;
-import org.solovyev.common.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -107,6 +106,10 @@ public class BaseListItemAdapter<LI extends ListItem & Identifiable> extends Lis
 		}
 
 		return -1;
+	}
+
+	public boolean isForceUnselected() {
+		return selectionHelper.getSelection().isForceUnselected();
 	}
 
 	public static final class ListItemComparator implements Comparator<ListItem> {
