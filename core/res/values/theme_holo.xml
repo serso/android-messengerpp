@@ -64,7 +64,8 @@
 		<item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add_contact_lower</item>
 		<item name="mpp_ab_unread_messages_counter_icon">@drawable/mpp_ab_unread_messages_counter</item>
 		<item name="mpp_ab_notification_icon">@drawable/mpp_ab_notification</item>
-		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_2</item>
+		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message</item>
+		<item name="mpp_ab_new_chat_icon">@drawable/mpp_ab_new_chat</item>
 		<item name="mpp_ab_settings_icon">@drawable/mpp_ab_settings</item>
 		<!--todo serso: change icon-->
 		<item name="mpp_ab_about_icon">@drawable/mpp_ab_settings</item>
@@ -116,7 +117,8 @@
 		<item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add_contact_light_lower</item>
 		<item name="mpp_ab_unread_messages_counter_icon">@drawable/mpp_ab_unread_messages_counter_light</item>
 		<item name="mpp_ab_notification_icon">@drawable/mpp_ab_notification_light</item>
-		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_2_light</item>
+		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_light</item>
+		<item name="mpp_ab_new_chat_icon">@drawable/mpp_ab_new_chat_light</item>
 		<item name="mpp_ab_settings_icon">@drawable/mpp_ab_settings_light</item>
 		<!--todo serso: change icon-->
 		<item name="mpp_ab_about_icon">@drawable/mpp_ab_settings_light</item>
@@ -172,7 +174,8 @@
 		<item name="mpp_ab_add_contact_icon">@drawable/mpp_ab_add_contact_lower</item>
 		<item name="mpp_ab_unread_messages_counter_icon">@drawable/mpp_ab_unread_messages_counter</item>
 		<item name="mpp_ab_notification_icon">@drawable/mpp_ab_notification</item>
-		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message_2</item>
+		<item name="mpp_ab_new_message_icon">@drawable/mpp_ab_new_message</item>
+		<item name="mpp_ab_new_chat_icon">@drawable/mpp_ab_new_chat</item>
 		<item name="mpp_ab_settings_icon">@drawable/mpp_ab_settings</item>
 		<!--todo serso: change icon-->
 		<item name="mpp_ab_about_icon">@drawable/mpp_ab_settings</item>

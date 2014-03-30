@@ -21,8 +21,8 @@
 	<item
 			a:id="@+id/mpp_menu_new_chat"
 			a:title="@string/mpp_new_message"
-			a:icon="?attr/mpp_ab_new_message_icon"
-			a:showAsAction="always"/>
+		a:icon="?attr/mpp_ab_new_chat_icon"
+		a:showAsAction="always"/>
 
 	<item
 			a:id="@+id/mpp_menu_toggle_filter_box"
