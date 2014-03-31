@@ -24,6 +24,7 @@ import org.solovyev.android.messenger.users.BaseEditUserFragment;
 import org.solovyev.android.messenger.users.MutableUser;
 import org.solovyev.android.messenger.users.User;
 import org.solovyev.android.properties.MutableAProperties;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,15 +84,25 @@ public class SmsEditUserFragment extends BaseEditUserFragment<SmsAccount> {
 		boolean ok = true;
 
 		if (isEmpty(phone)) {
-			showToast(R.string.mpp_sms_phone_must_be_set);
-			ok = false;
+			final User oldUser = getUser();
+			if (oldUser == null || !Strings.isEmpty(oldUser.getPhoneNumber())) {
+				// we shall forbid saving NEW contact with no phone number but we shall allow save OLD contact with
+				// no number if it hadn't got it
+				showToast(R.string.mpp_sms_phone_must_be_set);
+				ok = false;
+			}
 		}
 
 		if (ok) {
 			final MutableUser user = getOrCreateUser();
 
 			final MutableAProperties properties = user.getProperties();
-			properties.setProperty(PROPERTY_PHONE, phone);
+			if (!Strings.isEmpty(phone)) {
+				properties.setProperty(PROPERTY_PHONE, phone);
+			} else {
+				properties.removeProperty(PROPERTY_PHONE);
+			}
+
 			if (!isEmpty(firstName)) {
 				properties.setProperty(PROPERTY_FIRST_NAME, firstName);
 			} else {

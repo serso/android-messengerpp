@@ -24,10 +24,10 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.messenger.entities.MutableEntity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
@@ -252,8 +252,14 @@ final class MessageImpl extends AbstractIdentifiable implements MutableMessage {
 				clone.title = that.getTitle();
 			}
 			clone.sendDate = that.getSendDate();
-			// NOTE: we don't remove properties here as some properties are application related, e.g. PROPERTY_ORIGINAL_ID
+
+			final String originalId = clone.properties.getPropertyValue(PROPERTY_ORIGINAL_ID);
+			clone.properties.clearProperties();
 			clone.properties.setPropertiesFrom(that.getProperties().getPropertiesCollection());
+			final String newOriginalId = clone.properties.getPropertyValue(PROPERTY_ORIGINAL_ID);
+			if (Strings.isEmpty(newOriginalId) && !Strings.isEmpty(originalId)) {
+				clone.properties.setProperty(PROPERTY_ORIGINAL_ID, originalId);
+			}
 			return clone;
 		}
 	}

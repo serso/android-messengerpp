@@ -23,6 +23,7 @@ import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 import org.solovyev.android.properties.MutableAProperties;
 import org.solovyev.android.properties.Properties;
+import org.solovyev.common.text.Strings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -195,7 +196,13 @@ public class ChatImpl extends AbstractIdentifiable implements MutableChat {
 			return this;
 		} else {
 			final ChatImpl clone = this.clone();
+			final String draftMessage = clone.properties.getPropertyValue(PROPERTY_DRAFT_MESSAGE);
+			clone.properties.clearProperties();
 			clone.properties.setPropertiesFrom(that.getPropertiesCollection());
+			final String newDraftMessage = clone.properties.getPropertyValue(PROPERTY_DRAFT_MESSAGE);
+			if (Strings.isEmpty(newDraftMessage) && !Strings.isEmpty(draftMessage)) {
+				clone.properties.setProperty(PROPERTY_DRAFT_MESSAGE, draftMessage);
+			}
 			return clone;
 		}
 	}

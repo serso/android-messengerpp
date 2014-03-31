@@ -184,8 +184,15 @@ final class UserImpl extends AbstractIdentifiable implements MutableUser {
 			return this;
 		} else {
 			final UserImpl clone = this.clone();
-			clone.displayName = that.getDisplayName();
+			clone.displayName = null;
+
+			final String phoneNumber = clone.getPhoneNumber();
+			clone.properties.clearProperties();
 			clone.properties.setPropertiesFrom(that.getPropertiesCollection());
+			final String newPhoneNumber = clone.getPhoneNumber();
+			if (Strings.isEmpty(newPhoneNumber) && !Strings.isEmpty(phoneNumber)) {
+				clone.properties.setProperty(PROPERTY_PHONE, phoneNumber);
+			}
 			return clone;
 		}
 	}
