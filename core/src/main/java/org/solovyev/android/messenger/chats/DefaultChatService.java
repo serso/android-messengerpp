@@ -477,7 +477,7 @@ public class DefaultChatService implements ChatService {
 			saveChat(getAccountByEntity(chat.getEntity()).getUser().getEntity(), accountChat);
 		}
 
-		final MergeDaoResult<Message, String> result;
+		final MessagesMergeDaoResult result;
 		synchronized (lock) {
 			result = getMessageDao().mergeMessages(chat.getId(), messages);
 
@@ -492,8 +492,16 @@ public class DefaultChatService implements ChatService {
 
 		events.add(ChatEventType.messages_added.newEvent(chat, result.getAddedObjects()));
 
-		for (Message updatedMessage : result.getUpdatedObjects()) {
+		final List<Message> updatedMessages = result.getUpdatedObjects();
+		for (Message updatedMessage : updatedMessages) {
 			events.add(ChatEventType.message_changed.newEvent(chat, updatedMessage));
+		}
+
+		for (Message readMessage : result.getReadMessages()) {
+			if (!updatedMessages.contains(readMessage)) {
+				events.add(ChatEventType.message_changed.newEvent(chat, readMessage));
+			}
+			events.add(ChatEventType.message_read.newEvent(chat, readMessage));
 		}
 
 		fireEvents(events);

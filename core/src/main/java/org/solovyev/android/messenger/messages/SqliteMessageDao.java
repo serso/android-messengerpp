@@ -28,8 +28,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.solovyev.android.db.*;
 import org.solovyev.android.db.properties.PropertyByIdDbQuery;
-import org.solovyev.android.messenger.MergeDaoResult;
-import org.solovyev.android.messenger.MergeDaoResultImpl;
 import org.solovyev.android.messenger.chats.Chat;
 import org.solovyev.android.messenger.chats.ChatService;
 import org.solovyev.android.messenger.db.StringIdMapper;
@@ -205,8 +203,8 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 
 	@Nonnull
 	@Override
-	public MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages) {
-		final MergeDaoResultImpl<Message, String> result = new MergeDaoResultImpl<Message, String>();
+	public MessagesMergeDaoResult mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages) {
+		final MessagesMergeDaoResult result = new MessagesMergeDaoResult();
 
 		final Chat chat = getChatService().getChatById(newEntityFromEntityId(chatId));
 
@@ -214,10 +212,15 @@ public class SqliteMessageDao extends AbstractSQLiteHelper implements MessageDao
 			for (Message message : messages) {
 				final Message messageFromDb = read(message.getId());
 				if (messageFromDb == null) {
-					result.addAddedObject(message);
+					result.addAddedMessage(message);
 				} else {
 					final Message mergedMessage = messageFromDb.merge(message);
-					result.addUpdatedObject(mergedMessage);
+					result.addUpdatedMessage(mergedMessage);
+					final boolean wasRead = messageFromDb.isRead();
+					final boolean nowRead = mergedMessage.isRead();
+					if (!wasRead && nowRead) {
+						result.addReadMessage(mergedMessage);
+					}
 				}
 			}
 

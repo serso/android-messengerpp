@@ -18,7 +18,6 @@ package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
 import org.solovyev.android.db.Dao;
-import org.solovyev.android.messenger.MergeDaoResult;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
 
@@ -36,7 +35,7 @@ public interface MessageDao extends Dao<Message> {
 	List<Message> readMessages(@Nonnull String chatId);
 
 	@Nonnull
-	MergeDaoResult<Message, String> mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages);
+	MessagesMergeDaoResult mergeMessages(@Nonnull String chatId, @Nonnull Collection<? extends Message> messages);
 
 	@Nonnull
 	List<String> readMessageIds(@Nonnull String chatId);
