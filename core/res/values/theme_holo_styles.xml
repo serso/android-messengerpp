@@ -191,6 +191,7 @@
 		<item name="android:background">@drawable/mpp_edit_text_holo_light</item>
 		<item name="android:hint">@string/mpp_type_message_hint</item>
 		<item name="android:imeOptions">actionSend</item>
+		<item name="android:inputType">textCapSentences|textAutoCorrect</item>
 		<item name="android:minLines">1</item>
 		<item name="android:layout_width">0dp</item>
 		<item name="android:layout_weight">1</item>
