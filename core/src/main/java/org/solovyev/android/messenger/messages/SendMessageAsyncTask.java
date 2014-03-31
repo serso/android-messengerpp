@@ -115,12 +115,14 @@ public class SendMessageAsyncTask extends MessengerAsyncTask<SendMessageAsyncTas
 
 		@Nonnull
 		public Message sendMessage() throws AccountException {
-			final MutableMessage result = createMessage();
+			final MutableMessage m = createMessage();
 
 			// on before send hook
-			account.getAccountChatService().beforeSendMessage(chat, recipient, result);
+			account.getAccountChatService().beforeSendMessage(chat, recipient, m);
 
-			return getMessageService().sendMessage(chat, result);
+			final Message result = getMessageService().sendMessage(chat, m);
+			App.getChatService().removeDraftMessage(chat);
+			return result;
 		}
 
 		@Nonnull

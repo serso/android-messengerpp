@@ -444,6 +444,8 @@ public final class MessagesFragment extends BaseAsyncListFragment<Message, Messa
 				// todo serso: here chat might be already deleted and we will get SQLite exception in logs, need to add
 				// check
 				getChatService().saveDraftMessage(chat, message);
+			} else {
+				getChatService().removeDraftMessage(chat);
 			}
 		}
 	}

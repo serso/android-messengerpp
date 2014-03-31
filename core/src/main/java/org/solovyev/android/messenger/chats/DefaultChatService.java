@@ -622,12 +622,20 @@ public class DefaultChatService implements ChatService {
 
 	@Override
 	public void saveDraftMessage(@Nonnull Chat chat, @Nullable String message) {
-		updateChat(chat.cloneWithNewProperty(newProperty(PROPERTY_DRAFT_MESSAGE, message)));
+		if (!Strings.isEmpty(message)) {
+			updateChat(chat.cloneWithNewProperty(newProperty(PROPERTY_DRAFT_MESSAGE, message)));
+		} else {
+			// empty draft message => try to remove it from the chat
+			removeDraftMessage(chat);
+		}
 	}
 
 	@Override
 	public void removeDraftMessage(@Nonnull Chat chat) {
-		updateChat(chat.cloneWithoutProperty(PROPERTY_DRAFT_MESSAGE));
+		final String draftMessage = chat.getPropertyValueByName(PROPERTY_DRAFT_MESSAGE);
+		if (!Strings.isEmpty(draftMessage)) {
+			updateChat(chat.cloneWithoutProperty(PROPERTY_DRAFT_MESSAGE));
+		}
 	}
 
 	@Nullable
