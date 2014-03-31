@@ -135,7 +135,7 @@
 			<dependency>
 				<groupId>com.google.android</groupId>
 				<artifactId>android</artifactId>
-				<version>4.0.1.2</version>
+				<version>4.1.1.4</version>
 				<scope>provided</scope>
 			</dependency>
 
@@ -464,7 +464,7 @@
 						</sourceDirectories>
 
 						<sdk>
-							<platform>17</platform>
+							<platform>19</platform>
 						</sdk>
 
 						<zipalign>

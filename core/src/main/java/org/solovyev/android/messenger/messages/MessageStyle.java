@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import org.solovyev.android.Views2;
 import org.solovyev.android.messenger.core.R;
 import org.solovyev.android.messenger.view.ViewAwareTag;
 
@@ -107,12 +108,16 @@ public enum MessageStyle {
 		final int arrowSize = resources.getDimensionPixelSize(arrowSizeResId);
 		final int iconSize = resources.getDimensionPixelSize(R.dimen.mpp_list_item_icon_size);
 		final int margin = iconSize - arrowSize;
+
+		final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) messageLayout.getLayoutParams();
 		if (userMessage) {
 			messageLayout.setPadding(0, 0, arrowSize, 0);
-			((ViewGroup.MarginLayoutParams) messageLayout.getLayoutParams()).rightMargin = margin;
+			lp.rightMargin = margin;
+			Views2.setMarginEnd(lp, margin);
 		} else {
 			messageLayout.setPadding(arrowSize, 0, 0, 0);
-			((ViewGroup.MarginLayoutParams) messageLayout.getLayoutParams()).leftMargin = margin;
+			lp.leftMargin = margin;
+			Views2.setMarginStart(lp, margin);
 		}
 
 		if (shadowSizeResId != 0) {
