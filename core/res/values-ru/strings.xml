@@ -102,7 +102,7 @@
 	<string name="mpp_contacts">Контакты</string>
 	<string name="mpp_chat">Чат</string>
 	<string name="mpp_pick_contact">Выберите контакт</string>
-	<string name="mpp_pick_contact_to_start_chat">Выберите контакт чтобы начать чат</string>
+	<string name="mpp_pick_contact_to_start_chat">Выберите контакт, чтобы начать чат</string>
 	<string name="mpp_about_third_party_licenses">Сторонние лицензии</string>
 	<string name="mpp_about">О приложении</string>
 	<string name="mpp_account_removal_confirmation">Вы действительно хотите удалить аккаунт?</string>
