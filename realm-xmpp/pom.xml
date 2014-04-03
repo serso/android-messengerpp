@@ -42,8 +42,16 @@
 		</dependency>
 
 		<dependency>
+			<groupId>android</groupId>
+			<artifactId>android</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!--this dependency is used only to provide XmlPull-->
+		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
+			<version>4.1.1.4</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -65,7 +73,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
+			<groupId>org.robolectric</groupId>
+			<artifactId>android-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+		<groupId>com.google.code.findbugs</groupId>
 			<artifactId>annotations</artifactId>
 		</dependency>
 
@@ -89,6 +103,12 @@
 			<groupId>org.solovyev.android.messenger</groupId>
 			<artifactId>android-messenger-core</artifactId>
 			<type>test-jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

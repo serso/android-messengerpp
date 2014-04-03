@@ -24,10 +24,10 @@ public final class XmppConfiguration {
 	public static final String USER_LOGIN2 = "messengerplusplus2@gmail.com";
 
 	@Nonnull
-	private final static XmppAccountConfiguration instance = new XmppAccountConfiguration("talk.google.com", USER_LOGIN, "Qwerty!@");
+	private final static XmppAccountConfiguration instance = new XmppAccountConfiguration("talk.google.com", USER_LOGIN, "messengerpptest");
 
 	@Nonnull
-	private final static XmppAccountConfiguration instance2 = new XmppAccountConfiguration("talk.google.com", USER_LOGIN2, "Qwerty!@");
+	private final static XmppAccountConfiguration instance2 = new XmppAccountConfiguration("talk.google.com", USER_LOGIN2, "messengerpptest");
 
 	private XmppConfiguration() {
 	}

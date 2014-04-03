@@ -17,6 +17,7 @@
 package org.solovyev.android.messenger.messages;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.solovyev.android.messenger.accounts.Account;
 import org.solovyev.android.messenger.entities.Entity;
 import org.solovyev.android.properties.AProperty;
@@ -24,6 +25,7 @@ import org.solovyev.android.properties.MutableAProperties;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.mockito.Mockito.mock;
@@ -80,6 +82,9 @@ public class MessagesMock {
 		when(message.getState()).thenReturn(created);
 
 		when(message.getSendDate()).thenReturn(sendDate);
+		final DateTime localDateTime = sendDate.toDateTime(DateTimeZone.forTimeZone(TimeZone.getDefault()));
+		when(message.getLocalSendDateTime()).thenReturn(localDateTime);
+		when(message.getLocalSendDate()).thenReturn(localDateTime.toLocalDate());
 		final MutableAProperties properties = newProperties(Collections.<AProperty>emptyList());
 		properties.setProperty("property_1", "test");
 		properties.setProperty("property_2", "42");

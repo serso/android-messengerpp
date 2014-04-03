@@ -109,8 +109,6 @@ public class MessageDaoTest extends DefaultDaoTest<Message> {
 
 		final Message actual = dao.read(expected.getId());
 		assertEquals("test2", actual.getProperties().getPropertyValue("property_1"));
-		// properties now are not removed in merge procedure
-		assertNotNull(actual.getProperties().getPropertyValue("property_2"));
 	}
 
 	@Test
