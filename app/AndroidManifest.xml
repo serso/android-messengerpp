@@ -13,11 +13,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:installLocation="auto"
-	android:versionCode="29"
-	android:versionName="1.05"
-	package="org.solovyev.android.messenger">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto"
+	android:versionCode="30" android:versionName="1.06" package="org.solovyev.android.messenger">
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -41,28 +38,15 @@
 	<supports-screens android:xlargeScreens="true" />
 	<supports-screens android:anyDensity="true" />
 
-	<uses-feature
-		android:name="android.hardware.wifi"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.telephony"
-		android:required="false" />
+	<uses-feature android:name="android.hardware.wifi" android:required="false" />
+	<uses-feature android:name="android.hardware.telephony" android:required="false" />
 
-	<uses-sdk
-		android:minSdkVersion="9"
-		android:targetSdkVersion="19" />
+	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19" />
 
-	<application
-		android:allowBackup="true"
-		android:hardwareAccelerated="true"
-		android:icon="@drawable/mpp_app_icon"
-		android:label="@string/mpp_app_name"
-		android:name=".MessengerApplication"
-		android:theme="@style/mpp_theme_holo">
+	<application android:allowBackup="true" android:hardwareAccelerated="true" android:icon="@drawable/mpp_app_icon"
+		android:label="@string/mpp_app_name" android:name=".MessengerApplication" android:theme="@style/mpp_theme_holo">
 
-		<activity
-			android:label="@string/mpp_app_short_name"
-			android:name=".StartActivity"
+		<activity android:label="@string/mpp_app_short_name" android:name=".StartActivity"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar">
 
 			<intent-filter>
@@ -75,71 +59,40 @@
 		<!--
 			Test
 		-->
-		<activity
-			android:label="@string/mpp_app_name"
-			android:name=".TestActivity">
+		<activity android:label="@string/mpp_app_name" android:name=".TestActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>
 		</activity>
 
 
-		<activity
-			android:label="@string/mpp_app_short_name"
-			android:launchMode="singleTask"
-			android:name=".MainActivity"
-			android:windowSoftInputMode="stateHidden" />
+		<activity android:label="@string/mpp_app_short_name" android:launchMode="singleTask"
+			android:name=".MainActivity" android:windowSoftInputMode="stateHidden" />
 
-		<activity
-			android:label="@string/mpp_preferences"
-			android:name=".preferences.PreferencesActivity" />
+		<activity android:label="@string/mpp_preferences" android:name=".preferences.PreferencesActivity" />
 
-		<activity
-			android:label="@string/mpp_about"
-			android:name=".about.AboutActivity" />
+		<activity android:label="@string/mpp_about" android:name=".about.AboutActivity" />
 
-		<activity
-			android:label="@string/mpp_accounts"
-			android:name=".accounts.AccountsActivity" />
+		<activity android:label="@string/mpp_accounts" android:name=".accounts.AccountsActivity" />
 
-		<activity
-			android:label="@string/mpp_accounts"
-			android:name=".realms.RealmsActivity" />
+		<activity android:label="@string/mpp_accounts" android:name=".realms.RealmsActivity" />
 
-		<activity
-			android:label="@string/mpp_contacts"
-			android:name=".users.ContactsActivity" />
+		<activity android:label="@string/mpp_contacts" android:name=".users.ContactsActivity" />
 
-		<activity
-			android:label="@string/mpp_new_contact"
-			android:name=".NewContactActivity" />
+		<activity android:label="@string/mpp_new_contact" android:name=".NewContactActivity" />
 
-		<activity
-			android:name=".wizard.WizardActivity"
+		<activity android:name=".wizard.WizardActivity" android:theme="@style/mpp_theme_holo_dialog" />
+
+		<activity android:label="@string/mpp_contact" android:name=".users.ContactActivity" />
+		<activity android:label="@string/mpp_contact" android:name=".users.ContactActivity$Dialog"
 			android:theme="@style/mpp_theme_holo_dialog" />
 
-		<activity
-			android:label="@string/mpp_contact"
-			android:name=".users.ContactActivity" />
-		<activity
-			android:label="@string/mpp_contact"
-			android:name=".users.ContactActivity$Dialog"
+		<activity android:label="@string/mpp_chat_participants" android:name=".chats.ChatParticipantsActivity" />
+		<activity android:label="@string/mpp_chat_participants" android:name=".chats.ChatParticipantsActivity$Dialog"
 			android:theme="@style/mpp_theme_holo_dialog" />
 
-		<activity
-			android:label="@string/mpp_chat_participants"
-			android:name=".chats.ChatParticipantsActivity" />
-		<activity
-			android:label="@string/mpp_chat_participants"
-			android:name=".chats.ChatParticipantsActivity$Dialog"
-			android:theme="@style/mpp_theme_holo_dialog" />
-
-		<activity
-			android:label="@string/mpp_accounts"
-			android:name=".accounts.AccountActivity" />
-		<activity
-			android:label="@string/mpp_accounts"
-			android:name=".accounts.AccountActivity$Dialog"
+		<activity android:label="@string/mpp_accounts" android:name=".accounts.AccountActivity" />
+		<activity android:label="@string/mpp_accounts" android:name=".accounts.AccountActivity$Dialog"
 			android:theme="@style/mpp_theme_holo_dialog" />
 
 		<service android:name=".OngoingNotificationService" />
