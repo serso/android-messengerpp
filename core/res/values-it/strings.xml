@@ -17,7 +17,6 @@
 	<string name="mpp_message_copied_to_clipboard">Messaggio copiato negli appunti</string>
 	<string name="mpp_sync_is_already_running">Sincronizzazione è già in esecuzione</string>
 	<string name="mpp_type_message_hint">Inserisci un messaggio</string>
-	<string name="mpp_send">Invia</string>
 	<string name="mpp_phone">Telefono</string>
 	<string name="mpp_clear">Pulisci</string>
 	<string name="mpp_male">Maschio</string>
@@ -37,8 +36,7 @@
 	<string name="mpp_city">Comune</string>
 	<string name="mpp_sync">Sincronizza</string>
 	<string name="mpp_icon">Icona</string>
-	<string name="mpp_user_is_typing">Utente sta scrivendo...
-	</string>
+	<string name="mpp_user_is_typing">Utente sta scrivendo...</string>
 	<string name="mpp_menu_unread_messages_counter">0</string>
 	<string name="mpp_menu_toggle_users">Online e Offline</string>
 	<string name="mpp_menu_edit">Modifica</string>
@@ -48,14 +46,16 @@
 	<string name="mpp_notification_text">Clicca per aprire app</string>
 	<string name="mpp_private_chat_title">%1$s</string>
 	<string name="mpp_public_chat_title">Conversazione</string>
-	<string name="mpp_saving_account_title">Salvando…</string>
+	<string name="mpp_saving_account_title">Salvando&#8230;</string>
 	<string name="mpp_saving_account_message">Aspetta un secondo, mentre l\'app salva l\'account</string>
 	<string name="mpp_removing_account_title">Rimozione...</string>
 	<string name="mpp_removing_account_message">Aspetta un secondo, mentre l\'app rimuove l\'account</string>
-	<string name="mpp_saving_user_title">Salvando…</string>
+	<string name="mpp_saving_user_title">Salvando&#8230;</string>
 	<string name="mpp_saving_user_message">Attendi un secondo mentre l\'app salva l\'utente</string>
 	<string name="mpp_disable">Disabilita</string>
+	<string name="mpp_disabled">Disabled</string>
 	<string name="mpp_enable">Abilita</string>
+	<string name="mpp_enabled">Enabled</string>
 	<string name="mpp_menu_notifications">Notifiche</string>
 	<string name="mpp_notification_network_problem">Nessuna connessione internet disponibile: Connettiti ad una rete e
 		riprova
@@ -101,6 +101,7 @@
 	<string name="mpp_messages">Messaggi</string>
 	<string name="mpp_contacts">Contatti</string>
 	<string name="mpp_chat">Conversazione</string>
+	<string name="mpp_pick_contact">Pick contact</string>
 	<string name="mpp_pick_contact_to_start_chat">Seleziona contatto per avviare la chat</string>
 	<string name="mpp_about_third_party_licenses">Licenze di terze parti</string>
 	<string name="mpp_about">Info</string>
@@ -125,6 +126,20 @@
 	<string name="mpp_turn_on_internet">Abilita internet</string>
 	<string name="acl_yes">Sì</string>
 	<string name="acl_no">No</string>
+	<string name="mpp_wizard_final_become_tester">Diventa tester</string>
+	<string name="mpp_preferences_show_ongoing_notification">Visualizza notifica in corso</string>
+	<string name="mpp_attention">Attenzione</string>
+	<string name="mpp_ongoing_notification_alert">La disattivazione della notifica può causare la chiusura
+		dell\'applicazione dal sistema operativo. Si consiglia sempre di mostrare la notifica e uscire dall\'app tramite
+		il tasto Esci.
+	</string>
+	<string name="mpp_ok">Ok</string>
+	<string name="mpp_status">Status</string>
+	<string name="mpp_actions">Actions</string>
+	<string name="mpp_contact_removal_confirmation">Do you really want to remove contact?</string>
+	<string name="mpp_contact_info">Contact info</string>
+	<string name="mpp_account_info">Account info</string>
+	<string name="mpp_at_time">at</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">C\'è un messaggio non letto</item>
 		<item quantity="other">Ci sono %s messaggi non letti</item>

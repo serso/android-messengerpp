@@ -17,7 +17,6 @@
 	<string name="mpp_message_copied_to_clipboard">Повідомлення було скопійовано до буферу обміну!</string>
 	<string name="mpp_sync_is_already_running">Синхронізація уже виконується!</string>
 	<string name="mpp_type_message_hint">Введіть повідомлення</string>
-	<string name="mpp_send">Надіслати</string>
 	<string name="mpp_phone">Телефон</string>
 	<string name="mpp_clear">Очистити</string>
 	<string name="mpp_male">Чоловік</string>
@@ -37,7 +36,7 @@
 	<string name="mpp_city">Місто</string>
 	<string name="mpp_sync">Синхронізувати</string>
 	<string name="mpp_icon">Зображення</string>
-	<string name="mpp_user_is_typing">Користувач друкує…</string>
+	<string name="mpp_user_is_typing">Користувач друкує&#8230;</string>
 	<string name="mpp_menu_unread_messages_counter">0</string>
 	<string name="mpp_menu_toggle_users">В мережі/Не в мережі</string>
 	<string name="mpp_menu_edit">Змінити</string>
@@ -47,14 +46,16 @@
 	<string name="mpp_notification_text">Натисніть щоб відкрити додаток</string>
 	<string name="mpp_private_chat_title">Розмова з %1$s</string>
 	<string name="mpp_public_chat_title">Чат</string>
-	<string name="mpp_saving_account_title">Збереження…</string>
+	<string name="mpp_saving_account_title">Збереження&#8230;</string>
 	<string name="mpp_saving_account_message">Зачекайте секунду, поки зберігається обліковий запис</string>
-	<string name="mpp_removing_account_title">Видаляється…</string>
+	<string name="mpp_removing_account_title">Видаляється&#8230;</string>
 	<string name="mpp_removing_account_message">Зачекайте секунду, поки видаляється обліковий запис</string>
-	<string name="mpp_saving_user_title">Збереження…</string>
+	<string name="mpp_saving_user_title">Збереження&#8230;</string>
 	<string name="mpp_saving_user_message">Зачекайте секунду, поки зберігається користувач</string>
 	<string name="mpp_disable">Вимкнено</string>
+	<string name="mpp_disabled">Disabled</string>
 	<string name="mpp_enable">Увімкнути</string>
+	<string name="mpp_enabled">Enabled</string>
 	<string name="mpp_menu_notifications">Сповіщення</string>
 	<string name="mpp_notification_network_problem">Немає з\'єднання з Інтернетом: з\'єднайтеся з мережею і повторіть
 		спробу
@@ -71,8 +72,8 @@
 	<string name="mpp_chat_participants">Учасники</string>
 	<string name="mpp_invalid_credentials">Неприпустимі облікові дані!</string>
 	<string name="mpp_same_account_configured">Обліковий запис вже настроєно!</string>
-	<string name="mpp_updating_chat">Оновлення чату…</string>
-	<string name="mpp_updating_contacts">Оновлення контактів…</string>
+	<string name="mpp_updating_chat">Оновлення чату&#8230;</string>
+	<string name="mpp_updating_contacts">Оновлення контактів&#8230;</string>
 	<string name="mpp_preferences_appearance">Налаштування вигляду</string>
 	<string name="mpp_preferences_other">Інші налаштування</string>
 	<string name="mpp_preferences_show_icon_in_chat_title">Показувати зображення користувача у списку повідомлень
@@ -102,7 +103,7 @@
 	<string name="mpp_messages">Повідомлення</string>
 	<string name="mpp_contacts">Контакти</string>
 	<string name="mpp_chat">Чат</string>
-	<string name="mpp_pick_contact">Виберіть контакт</string>
+	<string name="mpp_pick_contact">Pick contact</string>
 	<string name="mpp_pick_contact_to_start_chat">Виберіть контакт, щоб почати чат</string>
 	<string name="mpp_about_third_party_licenses">Ліцензії третіх сторін</string>
 	<string name="mpp_about">Про програму</string>
@@ -134,6 +135,12 @@
 		Ми рекомендуємо залишати це увімкненим і виходити з програми за допомогою кнопки \"Вихід\".
 	</string>
 	<string name="mpp_ok">Гаразд</string>
+	<string name="mpp_status">Status</string>
+	<string name="mpp_actions">Actions</string>
+	<string name="mpp_contact_removal_confirmation">Do you really want to remove contact?</string>
+	<string name="mpp_contact_info">Contact info</string>
+	<string name="mpp_account_info">Account info</string>
+	<string name="mpp_at_time">at</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">У Вас одне непрочитане повідомлення.</item>
 		<item quantity="few">У Вас %s непрочитаних повідомлень.</item>

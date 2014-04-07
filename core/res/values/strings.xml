@@ -17,7 +17,6 @@
 	<string name="mpp_message_copied_to_clipboard">Message copied to clipboard</string>
 	<string name="mpp_sync_is_already_running">Synchronization is already running</string>
 	<string name="mpp_type_message_hint">Enter message</string>
-	<string name="mpp_send">Send</string>
 	<string name="mpp_phone">Phone</string>
 	<string name="mpp_clear">Clear</string>
 	<string name="mpp_male">Male</string>
@@ -37,7 +36,7 @@
 	<string name="mpp_city">City</string>
 	<string name="mpp_sync">Synchronize</string>
 	<string name="mpp_icon">Icon</string>
-	<string name="mpp_user_is_typing">User is typing…</string>
+	<string name="mpp_user_is_typing">User is typing&#8230;</string>
 	<string name="mpp_menu_unread_messages_counter">0</string>
 	<string name="mpp_menu_toggle_users">Online/Offline</string>
 	<string name="mpp_menu_edit">Edit</string>
@@ -47,11 +46,11 @@
 	<string name="mpp_notification_text">Click to open the app</string>
 	<string name="mpp_private_chat_title">%1$s</string>
 	<string name="mpp_public_chat_title">Chat</string>
-	<string name="mpp_saving_account_title">Saving…</string>
+	<string name="mpp_saving_account_title">Saving&#8230;</string>
 	<string name="mpp_saving_account_message">Wait a second while app is saving account</string>
-	<string name="mpp_removing_account_title">Removing…</string>
+	<string name="mpp_removing_account_title">Removing&#8230;</string>
 	<string name="mpp_removing_account_message">Wait a second while app is removing account</string>
-	<string name="mpp_saving_user_title">Saving…</string>
+	<string name="mpp_saving_user_title">Saving&#8230;</string>
 	<string name="mpp_saving_user_message">Wait a second while app is saving user</string>
 	<string name="mpp_disable">Disable</string>
 	<string name="mpp_disabled">Disabled</string>
@@ -73,8 +72,8 @@
 	<string name="mpp_chat_participants">Participants</string>
 	<string name="mpp_invalid_credentials">Invalid credentials</string>
 	<string name="mpp_same_account_configured">Same account is already configured</string>
-	<string name="mpp_updating_chat">Updating chat…</string>
-	<string name="mpp_updating_contacts">Updating contacts…</string>
+	<string name="mpp_updating_chat">Updating chat&#8230;</string>
+	<string name="mpp_updating_contacts">Updating contacts&#8230;</string>
 	<string name="mpp_preferences_appearance">Appearance settings</string>
 	<string name="mpp_preferences_other">Other settings</string>
 	<string name="mpp_preferences_show_icon_in_chat_title">Show user icon in chat message</string>

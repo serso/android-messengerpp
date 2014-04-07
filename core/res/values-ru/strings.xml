@@ -17,7 +17,6 @@
 	<string name="mpp_message_copied_to_clipboard">Сообщение скопировано в буфер обмена</string>
 	<string name="mpp_sync_is_already_running">Синхронизация уже запущена</string>
 	<string name="mpp_type_message_hint">Введите сообщение</string>
-	<string name="mpp_send">Отправить</string>
 	<string name="mpp_phone">Телефон</string>
 	<string name="mpp_clear">Очистить</string>
 	<string name="mpp_male">Мужской</string>
@@ -37,7 +36,7 @@
 	<string name="mpp_city">Город</string>
 	<string name="mpp_sync">Синхронизировать</string>
 	<string name="mpp_icon">Иконка</string>
-	<string name="mpp_user_is_typing">Пользователь печатает…</string>
+	<string name="mpp_user_is_typing">Пользователь печатает&#8230;</string>
 	<string name="mpp_menu_unread_messages_counter">0</string>
 	<string name="mpp_menu_toggle_users">В сети/Не в сети</string>
 	<string name="mpp_menu_edit">Изменить</string>
@@ -47,14 +46,16 @@
 	<string name="mpp_notification_text">Нажмите, чтобы открыть приложение</string>
 	<string name="mpp_private_chat_title">%1$s</string>
 	<string name="mpp_public_chat_title">Беседа</string>
-	<string name="mpp_saving_account_title">Сохранение…</string>
+	<string name="mpp_saving_account_title">Сохранение&#8230;</string>
 	<string name="mpp_saving_account_message">Подождите пока сохраняется аккаунт</string>
-	<string name="mpp_removing_account_title">Удаление…</string>
+	<string name="mpp_removing_account_title">Удаление&#8230;</string>
 	<string name="mpp_removing_account_message">Подождите пока аккаунт удаляется</string>
-	<string name="mpp_saving_user_title">Сохранение…</string>
+	<string name="mpp_saving_user_title">Сохранение&#8230;</string>
 	<string name="mpp_saving_user_message">Подождите, пока приложение сохраняет настройки пользователя</string>
 	<string name="mpp_disable">Отключить</string>
+	<string name="mpp_disabled">Отключён</string>
 	<string name="mpp_enable">Включить</string>
+	<string name="mpp_enabled">Включён</string>
 	<string name="mpp_menu_notifications">Уведомления</string>
 	<string name="mpp_notification_network_problem">Нет подключения к Интернету: подключитесь к сети и повторите
 		попытку
@@ -71,8 +72,8 @@
 	<string name="mpp_chat_participants">Участники</string>
 	<string name="mpp_invalid_credentials">Недопустимые учетные данные</string>
 	<string name="mpp_same_account_configured">Этот аккаунт уже настроен</string>
-	<string name="mpp_updating_chat">Обновление чата…</string>
-	<string name="mpp_updating_contacts">Обновление контактов…</string>
+	<string name="mpp_updating_chat">Обновление чата&#8230;</string>
+	<string name="mpp_updating_contacts">Обновление контактов&#8230;</string>
 	<string name="mpp_preferences_appearance">Настройки внешнего вида</string>
 	<string name="mpp_preferences_other">Другие настройки</string>
 	<string name="mpp_preferences_show_icon_in_chat_title">Показать значок пользователя в сообщении чата</string>
@@ -122,7 +123,7 @@
 	</string>
 	<string name="mpp_wizard_final_ways_to_help">Помогите проекту:</string>
 	<string name="mpp_wizard_final_translate">Перевести язык</string>
-	<string name="mpp_wizard_final_contribute">Участвовать в разработке</string>
+	<string name="mpp_wizard_final_contribute">Учавствовать в разработке</string>
 	<string name="mpp_turn_on_internet">Включить интернет</string>
 	<string name="acl_yes">Да</string>
 	<string name="acl_no">Нет</string>
@@ -133,6 +134,12 @@
 		закрыто ОС. Мы рекомендуем оставлять его включенным и выходить из приложения с помощью кнопки \"Выход\".
 	</string>
 	<string name="mpp_ok">OK</string>
+	<string name="mpp_status">Статус</string>
+	<string name="mpp_actions">Действия</string>
+	<string name="mpp_contact_removal_confirmation">Вы действительно хотите удалить контакт?</string>
+	<string name="mpp_contact_info">Информация о контакте</string>
+	<string name="mpp_account_info">Информация об аккаунте</string>
+	<string name="mpp_at_time">в</string>
 	<plurals name="mpp_unread_messages_count_notification">
 		<item quantity="one">Есть 1 непрочитанное сообщение.</item>
 		<item quantity="few">Есть %s непрочитанных сообщений.</item>

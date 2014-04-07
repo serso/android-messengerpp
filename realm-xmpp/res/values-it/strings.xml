@@ -4,6 +4,7 @@
 	<string name="mpp_xmpp_name">XMPP</string>
 	<string name="mpp_xmpp_name_facebook">Facebook</string>
 	<string name="mpp_xmpp_name_yandex">Yandex</string>
+	<string name="mpp_xmpp_name_qip">QIP</string>
 	<string name="mpp_xmpp_name_google">Google Talk</string>
 	<string name="mpp_xmpp_login_hint_custom">nome_utente@domain.xx</string>
 	<string name="mpp_xmpp_login_hint">nome_utente</string>
@@ -19,4 +20,12 @@
 	<string name="mpp_xmpp_hide_advanced_options">Nascondi opzioni avanzate</string>
 	<string name="mpp_xmpp_invalid_port_number">Numero di porta non valido</string>
 	<string name="mpp_xmpp_security_mode">TLS</string>
+	<string name="mpp_xmpp_security_mode_required">Usa sempre</string>
+	<string name="mpp_xmpp_security_mode_enabled">Usa se supportato dal server</string>
+	<string name="mpp_xmpp_security_mode_disabled">Non usare</string>
+	<string name="mpp_xmpp_use_username_without_domain_as_login">Utilizzare il nome utente senza dominio come login
+		(Rimuovi @dominio.xx)
+	</string>
+	<string name="mpp_xmpp_no_domain_in_username">Il Dominio deve essere impostato in username (username@dominio.xx)
+	</string>
 </resources>
