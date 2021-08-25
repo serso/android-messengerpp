@@ -19,3 +19,6 @@ before_script:
   - $PWD/.travis_wait_for_emulator.sh
 
 script: mvn install -Pwith-tests,no-internet
+cache:
+  directories:
+  - $HOME/.m2
